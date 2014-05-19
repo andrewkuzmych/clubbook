@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:background="#40344a" >
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp" android:layout_centerHorizontal="true"
+            android:orientation="horizontal" android:id="@+id/linearLayout">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CLUBBOOK"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/textView" android:textSize="35dp" android:textStyle="bold"/>
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView" android:src="@drawable/logo_white"
+                android:layout_centerHorizontal="true" android:layout_alignParentTop="true" android:visibility="gone"/>
+
+    </RelativeLayout>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:id="@+id/intro_text"
+            android:gravity="center"
+            android:textSize="17dp" android:text="@string/splash_intro"
+            android:layout_alignRight="@+id/linearLayout" android:layout_below="@+id/linearLayout"
+            android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
+            android:layout_alignLeft="@+id/linearLayout"/>
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true" android:layout_alignParentTop="false"
+            android:layout_marginTop="0dp" android:layout_marginBottom="40dp">
+        <Button android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/login_fb"
+                style="@style/social_button"
+                android:id="@+id/login_fb"
+                android:layout_gravity="center_horizontal"
+                android:textColor="#ffffff"
+                android:textStyle="bold" android:singleLine="true"
+                android:background="@drawable/fb_button"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textSize="15dp" android:paddingLeft="45dp"/>
+
+
+        <ImageView
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/fb_image" android:layout_alignLeft="@+id/login_fb"
+                android:layout_alignBottom="@+id/login_fb"
+                android:layout_alignTop="@+id/login_fb" android:src="@drawable/fb"
+                android:cropToPadding="false" android:scaleType="center" android:background="@drawable/fb_view"/>
+    </RelativeLayout>
+
+
+</RelativeLayout>
