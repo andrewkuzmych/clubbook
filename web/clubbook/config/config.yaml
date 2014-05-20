@@ -1,0 +1,21 @@
+default:
+  db:
+    connection: "mongodb://root:root@ds035037.mongolab.com:35037/clubbook"
+  use_analitics: "false"
+  is_test_server: "true"
+  meta:
+    title: "clubbook"
+    type: "activity"
+    url: "http://www.clubbook.me"
+    image: "http://www.clubbook.me/img/icon_flat.png"
+    description: ""
+    admins: 100000896260238
+    app_id: 369491643181697
+  scan_time_limit: "60000" # 1000*60*1
+
+production:
+  db:
+    connection: "mongodb://root:root@ds035037.mongolab.com:35037/clubbook"
+  use_analitics: "true"
+  is_test_server: "false"
+  scan_time_limit: "43200000" # 1000*60*60*24

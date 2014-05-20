@@ -1,0 +1,100 @@
+mongoose = require('mongoose')
+__ = require("underscore")
+check = require('validator').check
+
+#-------------------------------------------------------------------------------------
+#  User
+#-------------------------------------------------------------------------------------
+UserSchema = new mongoose.Schema
+  created_on: { type: Date, 'default': Date.now }
+  updated_on: { type: Date, 'default': Date.now }
+
+  email: {type: String, trim: true, lowercase: true}
+  name: {type: String, trim: true, required: true}
+  gender: {type: String, trim: true, required: true, 'enum':["male", "female"]}
+  dob: { type: Date }
+  
+  ios_tokens: [{ type: String }]
+  android_tokens: [{ type: String }]
+          
+  fb_id: {type:String, unique: true, sparse: true}
+  fb_access_token: {type:String}
+  fb_token_expires: Number
+
+UserSchema.pre 'save', (next, done) ->
+  this.updated_on = new Date().toISOString()
+  next()
+
+UserSchema.virtual('avatar').get ()->
+  if this.fb_id
+    "https://graph.facebook.com/#{this.fb_id}/picture?width=200&height=200"
+  else
+    if this.gender is "male"
+      "http://socialmediababe.com/wp-content/uploads/2011/07/FB-profile-avatar.jpg"
+    else if this.gender is "female"
+      "http://smartcitiesindex.gsma.com/community/styles/default/xenforo/avatars/avatar_female_m.png"
+
+UserSchema.set('toJSON', { getters: true, virtuals: true })
+exports.User = mongoose.model 'User', UserSchema
+
+exports.User.schema.path('email').validate (value, respond)->
+    if value
+      try
+        check(value).len(6, 64).isEmail()
+        respond true
+      catch e
+        respond false
+    else
+      respond true
+  , 'Wrong email format'
+
+
+exports.User.schema.path('name').validate (value, respond)->
+    try
+      check(value).len(1, 50)
+      respond true
+    catch e
+      respond false
+  , 'Wrong first_name format'
+
+#-------------------------------------------------------------------------------------
+#  Venue
+#-------------------------------------------------------------------------------------
+VenueSchema = new mongoose.Schema
+  created_on: { type: Date, 'default': Date.now }
+  updated_on: { type: Date, 'default': Date.now }
+
+  title: {type: String, trim: true, required: true}
+  avatar: {type: String, trim: true}
+  address: {type: String, trim: true, required: true}
+  loc:
+    lng: Number
+    lat: Number
+  phone: {type: String, trim: true}
+  site: {type: String, trim: true}
+  description: {type: String, trim: true}
+
+VenueSchema.pre 'save', (next, done) ->
+  this.updated_on = new Date().toISOString()
+  next()
+
+VenueSchema.set('toJSON', { getters: true, virtuals: true })
+VenueSchema.index( { loc: "2d" } )
+exports.Venue = mongoose.model 'Venue', VenueSchema
+
+#-------------------------------------------------------------------------------------
+#  Checkin
+#-------------------------------------------------------------------------------------
+CheckinSchema = new mongoose.Schema
+  created_on: { type: Date, 'default': Date.now }
+  updated_on: { type: Date, 'default': Date.now }
+
+  venue: {type: mongoose.Schema.ObjectId, ref: 'Venue', required: true}
+  user: {type: mongoose.Schema.ObjectId, ref: 'User', required: true}
+
+CheckinSchema.pre 'save', (next, done) ->
+  this.updated_on = new Date().toISOString()
+  next()
+
+CheckinSchema.set('toJSON', { getters: true, virtuals: true })
+exports.Checkin = mongoose.model 'Checkin', CheckinSchema

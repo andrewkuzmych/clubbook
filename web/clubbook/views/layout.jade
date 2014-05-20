@@ -1,0 +1,213 @@
+!!! 5
+html.no-js(lang='en')
+  // BEGIN HEAD
+  head
+    meta(charset='utf-8')
+    title= title
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(content='width=device-width, initial-scale=1.0', name='viewport')
+    meta(content='', name='description')
+    meta(content='', name='author')
+    meta(name='MobileOptimized', content='320')
+    // BEGIN GLOBAL MANDATORY STYLES
+    link(href='/assets/plugins/font-awesome/css/font-awesome.min.css', rel='stylesheet', type='text/css')
+    link(href='/assets/plugins/bootstrap/css/bootstrap.min.css', rel='stylesheet', type='text/css')
+    link(href='/assets/plugins/uniform/css/uniform.default.css', rel='stylesheet', type='text/css')
+    // BEGIN PAGE LEVEL PLUGIN STYLES
+    link(href='/assets/plugins/select2/select2_metro.css', rel='stylesheet', type='text/css')
+    link(href='/assets/plugins/data-tables/DT_bootstrap.css', rel='stylesheet', type='text/css')
+    link(href='/assets/plugins/bootstrap-toastr/toastr.min.css', rel='stylesheet', type='text/css')
+    link(href='/assets/plugins/jquery-multi-select/css/multi-select.css', rel='stylesheet', type='text/css')
+    link(href='/assets/plugins/jquery-easy-pie-chart/jquery.easy-pie-chart.css', rel='stylesheet', type='text/css')
+
+
+    block page_plugin_styles
+    // BEGIN THEME STYLES
+    link(href='/assets/css/style-metronic.css', rel='stylesheet', type='text/css')
+    link(href='/assets/css/style.css', rel='stylesheet', type='text/css')
+    link(href='/assets/css/style-responsive.css', rel='stylesheet', type='text/css')
+    link(href='/assets/css/plugins.css', rel='stylesheet', type='text/css')
+    link#style_color(href='/assets/css/themes/default.css', rel='stylesheet', type='text/css')
+    link(href='/assets/css/custom.css', rel='stylesheet', type='text/css')
+
+
+    // END THEME STYLES
+    link(rel='shortcut icon', href='/images/favicon.ico')
+    // google charts api
+    script(type="text/javascript", src="https://www.google.com/jsapi")
+    script.
+      google.load("visualization", "1", {packages:["corechart", "geochart", "table"]});
+
+    // Open Graph meta tags
+    include util/open_graph
+
+  //  BEGIN BODY
+  body.page-header-fixed
+    include util/google_analitics
+
+    // BEGIN HEADER
+    .header.navbar.navbar-inverse.navbar-fixed-top
+      // BEGIN TOP NAVIGATION BAR
+      .header-inner
+        // BEGIN LOGO
+        a.navbar-brand(href='/home', style="margin-top:-14px;")
+          img.img-responsive(src='/img/logo-header-42.png', alt='logo', style="width:130px;height:38px;")
+        // END LOGO
+
+        // BEGIN RESPONSIVE MENU TOGGLER
+        a.navbar-toggle(href='javascript:;', data-toggle='collapse', data-target='.navbar-collapse')
+          img(src='/assets/img/menu-toggler.png', alt='')
+        //  END RESPONSIVE MENU TOGGLER
+
+        .hor-menu
+          ul.nav.navbar-nav
+            if(typeof(active_venue) !== 'undefined')
+              li(class=req_path.indexOf("/home/") != -1 ? "active":"")
+                if req_path.indexOf("/home/") != -1
+                  span.selected
+                a(data-toggle='dropdown', data-hover='dropdown', data-close-others='true', href='/home/#{active_venue._id}')
+                  | #{active_venue.title}
+                  i.fa.fa-angle-down
+                ul.dropdown-menu
+                  for venue in my_venues
+                    li
+                      a(href="/home/#{venue._id}") #{venue.title}
+
+            if current_user.is_admin
+              li(class=req_path.indexOf("/su/") != -1 ? "active":"")
+                if req_path.indexOf("/su/") != -1
+                  span.selected
+                a(href='/su/venue/list') #{__('super_admin')}
+
+            if !current_user.is_admin
+              li(class=req_path.indexOf("/payment/") != -1 ? "active":"")
+                if req_path.indexOf("/payment/") != -1
+                  span.selected
+                a(href='/payment/order/list')
+                  | Рахунки
+
+        // BEGIN TOP NAVIGATION MENU
+        ul.nav.navbar-nav.pull-right
+          -if(typeof(active_venue) !== 'undefined')
+            -if(typeof(payment_tip) !== 'undefined' && payment_tip != null)
+              // PAYMENT notification
+              li(style="font-size:16px;color:rgb(255, 235, 6);margin-top: 8px;")
+                span(style="font-size:18px;")
+                  -if(payment_tip.show_warning)
+                    i.fa.fa-warning(style="margin-right:5px;")
+                  -if(payment_tip.number || payment_tip.number === 0)
+                    b #{payment_tip.number}
+                span  #{payment_tip.message}
+              li(style="padding: 4px 10px 6px 9px")
+                button.btn.blue(onclick="window.location.href='/payment/pay_form?venue_id=#{active_venue._id}'")
+                  i.fa.fa-shopping-cart
+                  |  Проплатити
+
+          // BEGIN USER LOGIN DROPDOWN
+          li.dropdown.user
+            a.dropdown-toggle(href='#', data-toggle='dropdown', data-hover='dropdown', data-close-others='true')
+              img(alt='', src='/assets/img/avatar.png', style="height:29px;width:29px;")
+              span.username &nbsp #{current_user.login}
+              i.fa.fa-angle-down
+            ul.dropdown-menu
+              li
+                a(href='/payment/pay_form')
+                  | &nbsp Проплатити
+              li
+                a(href='/payment/order/list')
+                  | &nbsp Рахунки
+              li
+                a(href='/payment/data/view')
+                  | &nbsp Реквізити
+              li.divider
+              li
+                a(href='/home/?lng=uk')
+                  | &nbsp Українська
+              li
+                a(href='/home/?lng=ru')
+                  | &nbsp Русский
+              li
+                a(href='/home/?lng=pl')
+                  | &nbsp Polski
+              li.divider
+              li
+                a(href='/logout')
+                  i.fa.fa-key
+                  | &nbsp #{__('exit')}
+    .clearfix
+
+    // BEGIN CONTAINER
+    .page-container
+      block content
+
+    // BEGIN FOOTER
+    .footer
+      .footer-inner
+        | 2013 © HappyScan.me by Inc. All rights reserved.
+      .footer-tools
+        span.go-top
+          i.fa.fa-angle-up
+
+    // BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time)
+
+    // BEGIN CORE PLUGINS
+    //if lt IE 9
+
+    script(src='/assets/plugins/respond.min.js')
+    script(src='/assets/plugins/excanvas.min.js')
+    script(src='/assets/plugins/jquery-1.10.2.min.js', type='text/javascript')
+    script(src='/assets/plugins/jquery-migrate-1.2.1.min.js', type='text/javascript')
+    // IMPORTANT! Load jquery-ui-1.10.3.custom.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip
+    != css('//ajax.googleapis.com/ajax/libs/jqueryui/1.8.22/themes/base/jquery-ui.css')
+    script(src='/assets/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js', type='text/javascript')
+    script(type="text/javascript", src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/i18n/jquery-ui-i18n.min.js")
+    script(src='/assets/plugins/bootstrap/js/bootstrap.min.js', type='text/javascript')
+    script(src='/assets/plugins/bootstrap/js/bootstrap2-typeahead.min.js', type='text/javascript')
+    script(src='/assets/plugins/bootstrap-hover-dropdown/twitter-bootstrap-hover-dropdown.min.js', type='text/javascript')
+    script(src='/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js', type='text/javascript')
+    script(src='/assets/plugins/jquery.blockui.min.js', type='text/javascript')
+    script(src='/assets/plugins/jquery.cookie.min.js', type='text/javascript')
+    script(src='/assets/plugins/uniform/jquery.uniform.min.js', type='text/javascript')
+    // END CORE PLUGINS
+
+    // BEGIN PAGE LEVEL PLUGINS
+    script(src='/assets/plugins/select2/select2.min.js', type='text/javascript')
+    script(src='/assets/plugins/data-tables/jquery.dataTables.js', type='text/javascript')
+    script(src='/assets/plugins/data-tables/DT_bootstrap.js', type='text/javascript')
+    script(src='/assets/plugins/bootstrap-toastr/toastr.min.js', type='text/javascript')
+    script(src='/assets/plugins/jquery-multi-select/js/jquery.multi-select.js', type='text/javascript')
+    script(src='/assets/plugins/jquery-multi-select/js/jquery.quicksearch.js', type='text/javascript')
+    script(src='/assets/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js', type='text/javascript')
+    script(src='/assets/plugins/bootstrap-touchspin/bootstrap.touchspin.js', type='text/javascript')
+    script(src='/assets/plugins/jquery-easy-pie-chart/jquery.easy-pie-chart.js', type='text/javascript')
+
+
+    // BEGIN PAGE LEVEL PLUGINS
+    block page_plugin_scripts
+
+    // INIT COMMON SCRIPTS
+    != js('/js/base.js')
+    script(type="text/javascript")
+      $(function() {
+          window.init_language("#{locale}");
+      });
+
+    script(src='/assets/scripts/ui-toastr.js')
+
+    script(src='/assets/scripts/app.js')
+    script(src='/assets/scripts/table-managed.js')
+    script(src="/assets/scripts/form-components.js")
+
+
+    != js('/js/helper.js')
+    script
+        jQuery(document).ready(function() {
+          App.init();
+          TableManaged.init();
+          UIToastr.init();
+          FormComponents.init();
+        });
+
+
+    // BEGIN PAGE LEVEL SCRIPTS
+    block scripts

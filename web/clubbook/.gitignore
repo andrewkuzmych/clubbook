@@ -1,0 +1,11 @@
+node_modules
+/.git/
+.idea
+
+/*.js
+/email/*.js
+/routes/*.js
+/logic/*.js
+/assets/js/*.js
+*.map
+!server.js
