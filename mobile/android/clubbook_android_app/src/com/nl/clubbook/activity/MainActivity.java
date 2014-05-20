@@ -11,16 +11,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.NavDrawerListAdapter;
 import com.nl.clubbook.fragment.*;
+import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.model.NavDrawerItem;
+import com.sromku.simple.fb.SimpleFacebook;
+import com.sromku.simple.fb.listeners.OnLoginListener;
+import com.sromku.simple.fb.listeners.OnLogoutListener;
 
 import java.util.ArrayList;
 
@@ -35,6 +37,7 @@ public class MainActivity extends BaseActivity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
+    private SimpleFacebook mSimpleFacebook;
 
     // nav drawer title
     private CharSequence mDrawerTitle;
@@ -48,10 +51,34 @@ public class MainActivity extends BaseActivity {
 
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
+    SessionManager session;
+
+    private OnLogoutListener mOnLogoutListener = new OnLogoutListener() {
+        @Override
+        public void onLogout() {
+
+        }
+
+        @Override
+        public void onThinking() {
+
+        }
+
+        @Override
+        public void onException(Throwable throwable) {
+
+        }
+
+        @Override
+        public void onFail(String reason) {
+
+        }
+    };
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        session = new SessionManager(getApplicationContext());
 
         mTitle = mDrawerTitle = getTitle();
 
@@ -203,9 +230,27 @@ public class MainActivity extends BaseActivity {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        // Handle your other action bar items...
 
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_logout:
+                session.logoutUser();
+                mSimpleFacebook.logout(mOnLogoutListener);
+                Intent in = new Intent(getApplicationContext(),
+                        MainLoginActivity.class);
+                startActivity(in);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        // Handle your other action bar items...
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_actions, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -216,6 +261,13 @@ public class MainActivity extends BaseActivity {
         }
 
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSimpleFacebook = SimpleFacebook.getInstance(this);
+        //setUIState();
     }
 
     @Override
