@@ -8,35 +8,6 @@ email_sender = require("../email/email_sender")
 check = require('validator').check
 apn = require('apn')
 gcm = require('node-gcm')
-imager = require("imager")
-config_image = require('./image_config')
-alleup = require('alleup');
-
-exports.image = (req,res)->
-  al = new alleup(
-    storage: "aws"
-    config_file: "./alleap.json"
-  )
-
-  al.upload req, res, (err, file, res) ->
-  console.log "FILE UPLOADED: " + file
-  
-  # THIS YOU CAN SAVE FILE TO DATABASE FOR EXAMPLE
-  res.end()
-  return
-
-
-
-  ###console.log "aaaa"
-  im = new imager(config_image, "S3") # 'Rackspace' or 'S3'
-  console.log req.files.image 
-  im.upload [req.files.image], ((err, cdnUri, uploaded) ->
-    console.log uploaded
-    console.log cdnUri
-    console.log err
-    res.json
-          status: "ok"
-  ), "items"###
 
 
 exports.fb_signin = (req, res)->
