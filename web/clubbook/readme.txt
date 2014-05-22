@@ -18,3 +18,6 @@ http://stackoverflow.com/questions/1402776/how-do-i-commit-all-deleted-files-in-
 MongoLab
 akuzmych
 clubbook2014
+
+amazon
+https://console.aws.amazon.com/iam/home?#security_credential
