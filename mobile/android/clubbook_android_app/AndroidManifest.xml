@@ -5,6 +5,7 @@
           android:versionName="1.0">
     <uses-sdk android:minSdkVersion="8"/>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application  android:name=".ClubbookApplication" android:label="@string/app_name"  android:theme="@style/Theme.AppCompat.Light">
         <activity android:name=".activity.MainLoginActivity" android:theme="@style/Theme.AppCompat.Light">
@@ -22,6 +23,7 @@
         <activity android:name=".activity.MainActivity" android:theme="@style/Theme.AppCompat.Light"/>
 
 
+        <meta-data android:name="CLOUDINARY_URL" android:value="cloudinary://635173958253643:kc8bGmuk3HgDJCqQxMjuTbgTwJ0@ddsoyfjll"/>
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/fb_app_id"/>
     </application>
 </manifest> 

@@ -7,6 +7,8 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.InputStream;
+
 /**
  * Created by Andrew on 5/19/2014.
  */
@@ -31,7 +33,7 @@ public class DataStore {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers,JSONObject response_json) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
                 UserDto user = new UserDto();
                 try {
                     if (response_json.getString("status").equalsIgnoreCase("ok")) {
@@ -49,6 +51,53 @@ public class DataStore {
 
                 //failed = false;
                 onResultReady.onReady(user, failed);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                //if (failed)
+                //    onResultReady.onReady(null, true);
+            }
+        });
+    }
+
+    public static void file(InputStream file, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("image", file);
+
+        ClubbookRestClient.file(params, new JsonHttpResponseHandler() {
+            private boolean failed = true;
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers,JSONObject response_json) {
+                /*UserDto user = new UserDto();
+                try {
+                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
+                        JSONObject user_dto = response_json.getJSONObject("result").getJSONObject("user");
+                        user.setEmail(user_dto.getString("email"));
+                        user.setGender(user_dto.getString("gender"));
+                        user.setName(user_dto.getString("name"));
+                        user.setId(user_dto.getString("_id"));
+                        failed = false;
+                    } else
+                        failed = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }                     */
+
+                //failed = false;
+                onResultReady.onReady("ok", failed);
             }
 
             @Override

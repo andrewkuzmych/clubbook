@@ -61,7 +61,7 @@ app.use (req, res, next)->
   next()
 
 # all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 4000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use require('connect-assets')()
@@ -113,6 +113,7 @@ local_user = (req, res, next)->
 
 # landing page
 app.get '/', controller.index
+app.post '/_s/file', services.image
 
 #--------------------------------------------------------------------------------
 # Mobile API
