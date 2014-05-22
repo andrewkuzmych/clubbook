@@ -7,6 +7,35 @@ async = require("async")
 moment = require('moment-timezone')
 
 
+exports.save_user = (params, callback)->
+ 
+  db_model.User.findOne({"email":params.email}).exec (err, user)->
+    
+    if user 
+      callback 'user exists', null
+    else if __.isEmpty params.name?.trim()  
+      callback 'name is empty', null
+    else if __.isEmpty params.email?.trim()  
+      callback 'email is empty', null
+    else if __.isEmpty params.password?.trim()  
+      callback 'password is empty', null
+    
+
+    else
+      user = new db_model.User
+            gender: params.gender
+            name: params.name
+            email: params.email
+            password: params.password
+            dob: params.dob
+
+      user.photos.push { url: params.photos, profile:true}    
+
+      user.save (err)->
+        console.log err
+        callback err, user
+
+
 exports.save_or_update_fb_user = (params, callback)->
     if params.dob
         dobArray = params.dob.split(".")
@@ -74,6 +103,7 @@ exports.save_or_update_fb_user = (params, callback)->
               # SEND WELCOME MAIL
               #email_sender.welcome user, (err, info)->
               #  console.log 'welcome mail sent', user._id
+
 
               callback err, user
 

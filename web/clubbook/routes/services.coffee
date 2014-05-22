@@ -61,4 +61,27 @@ exports.fb_signin = (req, res)->
       fb_token_expires: req.body.fb_token_expires
 
     manager.save_or_update_fb_user params, (err, user)->
-      prepare_result req, res, user
+      prepare_result req, res, use
+
+exports.signup = (req, res)->
+  if req.body.dob
+    dobArray = req.body.dob.split(".")
+    dob = new Date(dobArray[0], parseInt(dobArray[1]) - 1, dobArray[2], 15, 0, 0, 0);
+
+  params = 
+      gender: req.body.gender
+      name: req.body.name
+      email: req.body.email
+      password: req.body.password
+      photos: req.body.photos
+      dob: dob
+  
+  manager.save_user params, (err, user)-> 
+    if err 
+      res.json
+        status: "error"
+        err:err
+    else
+      res.json
+        name: " Name : " + req.body.name
+        status: "test"
