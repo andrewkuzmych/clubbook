@@ -9,3 +9,4 @@ node_modules
 /assets/js/*.js
 *.map
 !server.js
+*.DS_Store

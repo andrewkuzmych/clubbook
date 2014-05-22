@@ -11,8 +11,12 @@ UserSchema = new mongoose.Schema
 
   email: {type: String, trim: true, lowercase: true}
   name: {type: String, trim: true, required: true}
+  
   gender: {type: String, trim: true, required: true, 'enum':["male", "female"]}
+  photos: [{url:{ type: String }, profile:{ type: Boolean, default:false }}]
   dob: { type: Date }
+
+  password: {type: String}
   
   ios_tokens: [{ type: String }]
   android_tokens: [{ type: String }]
