@@ -7,6 +7,24 @@ async = require("async")
 moment = require('moment-timezone')
 
 
+
+
+exports.signinmail = (params, callback)->
+  
+  if __.isEmpty params.email?.trim() 
+      callback 'email is empty', null
+  else if __.isEmpty params.password?.trim()  
+      callback 'password is empty', null
+  else
+    db_model.User.findOne({"email":params.email,"password":params.password }).exec (err, user)->
+      
+      if user
+        callback null, user
+      else
+        callback "Wrong User or password " ,user
+      
+    
+
 exports.save_user = (params, callback)->
  
   db_model.User.findOne({"email":params.email}).exec (err, user)->
@@ -34,6 +52,28 @@ exports.save_user = (params, callback)->
       user.save (err)->
         console.log err
         callback err, user
+
+
+exports.uploadphoto = (params, callback)->
+  if __.isEmpty params.userid?.trim() 
+      callback 'no user id', null
+  else if __.isEmpty params.photos?.trim()  
+      callback 'no photo url provided', null
+
+  db_model.User.findOne({_id: params.userid}).exec (err, user)->
+    if not user
+      callback 'user does not exists', null
+    else
+      photosArray = params.photos.split(";")
+      for photo in photosArray
+        user.photos.push { url: photo, profile:false}    
+
+      user.save (err)->
+        console.log err
+        callback err, user
+
+
+
 
 
 exports.save_or_update_fb_user = (params, callback)->

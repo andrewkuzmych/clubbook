@@ -63,6 +63,23 @@ exports.fb_signin = (req, res)->
     manager.save_or_update_fb_user params, (err, user)->
       prepare_result req, res, use
 
+
+exports.signinmail = (req, res)->
+    params = 
+        email: req.body.email
+        password: req.body.password
+
+    manager.signinmail params, (err, user)-> 
+      if err 
+        res.json
+          status: "error"
+          err:err
+      else
+        res.json
+          email: " email : " + req.body.email
+          status: "OK"
+
+
 exports.signup = (req, res)->
   if req.body.dob
     dobArray = req.body.dob.split(".")
@@ -84,4 +101,28 @@ exports.signup = (req, res)->
     else
       res.json
         name: " Name : " + req.body.name
-        status: "test"
+        status: "OK"
+
+
+exports.uploadphoto = (req, res)->
+
+  params = 
+    userid: req.body._id
+    photos: req.body.photos
+
+  manager.uploadphoto params, (err, user)-> 
+      
+    if err 
+        res.json
+          status: "error"
+          err:err
+    else
+        res.json
+          user: user
+          status: "OK"
+ 
+
+
+
+
+

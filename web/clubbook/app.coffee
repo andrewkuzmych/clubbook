@@ -121,7 +121,7 @@ app.get '/', controller.index
 # if not registered crete new user. Return user info.
 app.post '/_s/signin/fb', services.fb_signin
 app.post '/_s/signup', services.signup
-
+app.post '/_s/signinmail', services.signinmail
 
 http.createServer(app).listen app.get('port'), ()->
   console.log 'Express server listening on port ' + app.get('port')
