@@ -19,7 +19,7 @@ public class DataStore {
         context = mcontext;
     }
 
-    public static void loginByFb(String name, String email, String fb_id, String fb_access_token, String gender, String dob, final OnResultReady onResultReady) {
+    public static void loginByFb(String name, String email, String fb_id, String fb_access_token, String gender, String dob, String avatar, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("email", email);
         params.put("name", name);
@@ -28,6 +28,7 @@ public class DataStore {
         params.put("fb_token_expires", 123456);
         params.put("gender", gender);
         params.put("dob", dob);
+        params.put("avatar", avatar);
 
         ClubbookRestClient.loginByFb(params, new JsonHttpResponseHandler() {
             private boolean failed = true;

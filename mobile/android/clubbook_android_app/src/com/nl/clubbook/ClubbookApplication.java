@@ -23,7 +23,8 @@ public class ClubbookApplication extends Application {
                 //Permission.USER_ABOUT_ME,
                // Permission.USER_BIRTHDAY,
                 Permission.EMAIL,
-                Permission.BASIC_INFO,
+               // Permission.BASIC_INFO,
+                Permission.USER_FRIENDS
                 //Permission.PUBLISH_ACTION
         };
 
@@ -31,7 +32,7 @@ public class ClubbookApplication extends Application {
                 .setAppId("1504805883074351")         //    369491643181697
                         //.setNamespace("sromkuapp")
                 .setPermissions(permissions)
-                .setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO)
+                .setLoginBehavior(SessionLoginBehavior.SSO_WITH_FALLBACK)
                 .build();
 
         SimpleFacebook.setConfiguration(configuration);

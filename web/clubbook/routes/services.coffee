@@ -60,8 +60,11 @@ exports.fb_signin = (req, res)->
       fb_access_token: req.body.fb_access_token
       fb_token_expires: req.body.fb_token_expires
 
+    if req.body.avatar
+      params.avatar = req.body.avatar
+
     manager.save_or_update_fb_user params, (err, user)->
-      prepare_result req, res, use
+      prepare_result req, res, user
 
 
 exports.signinmail = (req, res)->

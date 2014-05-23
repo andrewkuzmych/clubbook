@@ -14,6 +14,8 @@ public enum Permission {
     // TODO: workaround
 	BASIC_INFO("public_profile", Type.READ),
 
+    USER_FRIENDS("user_friends", Type.READ),
+
 	USER_ABOUT_ME("user_about_me", Type.READ),
 	FRIENDS_ABOUT_ME("friends_about_me", Type.READ),
 
