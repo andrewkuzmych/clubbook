@@ -6,9 +6,6 @@ __ = require("underscore")
 async = require("async")
 moment = require('moment-timezone')
 
-
-
-
 exports.signinmail = (params, callback)->
   
   if __.isEmpty params.email?.trim() 
@@ -23,8 +20,6 @@ exports.signinmail = (params, callback)->
       else
         callback "Wrong User or password " ,user
       
-    
-
 exports.save_user = (params, callback)->
  
   db_model.User.findOne({"email":params.email}).exec (err, user)->
@@ -53,7 +48,6 @@ exports.save_user = (params, callback)->
         console.log err
         callback err, user
 
-
 exports.uploadphoto = (params, callback)->
   if __.isEmpty params.userid?.trim() 
       callback 'no user id', null
@@ -71,10 +65,6 @@ exports.uploadphoto = (params, callback)->
       user.save (err)->
         console.log err
         callback err, user
-
-
-
-
 
 exports.save_or_update_fb_user = (params, callback)->
     if params.dob
@@ -105,6 +95,8 @@ exports.save_or_update_fb_user = (params, callback)->
             fb_id: params.fb_id
             fb_access_token: params.fb_access_token
             fb_token_expires: params.fb_token_expires
+
+          user.photos.push { url: params.avatar, profile:true}
 
 
           if dob then user.dob = dob
@@ -137,6 +129,7 @@ exports.save_or_update_fb_user = (params, callback)->
                 fb_id: params.fb_id
                 fb_access_token: params.fb_access_token
                 fb_token_expires: params.fb_token_expires
+              user.photos.push { url: params.avatar, profile:true}
               
               if dob then user.dob = dob
               

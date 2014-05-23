@@ -300,24 +300,16 @@ public class MainActivity extends BaseActivity {
                 MainActivity.this.runOnUiThread(new Runnable() {
                     public void run() {
                         try {
-                            //ContentResolver resolver = getContentResolver();
-                            //InputStream in = resolver.openInputStream(selectedImage);
-
-                            //Bitmap  mBitmap = MediaStore.Images.Media.getBitmap(MainActivity.this.getContentResolver(), selectedImage);
-
                             Bitmap  mBitmap = readBitmap(selectedImage)  ;
-                            Bitmap scaled = getResizedBitmap(mBitmap, 800);//Bitmap.createScaledBitmap(mBitmap, 500, 500, true);
+                            Bitmap scaled = getResizedBitmap(mBitmap, 800);
 
                             ByteArrayOutputStream stream = new ByteArrayOutputStream();
                             scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                             InputStream is = new ByteArrayInputStream(stream.toByteArray());
-
-
-                            cloudinary.uploader().upload(is, Cloudinary.asMap("public_id", "test6", "width", "1000", "height", "1000", "crop", "limit", "format", "jpg"));
+                            cloudinary.uploader().upload(is, Cloudinary.asMap("public_id", "test6", "format", "jpg"));
                         }catch (Exception ex)
                         {
                             //TODO: handle the exception
-
                         }
                     }
                 });
