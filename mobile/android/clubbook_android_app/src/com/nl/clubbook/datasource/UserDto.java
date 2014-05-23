@@ -1,5 +1,7 @@
 package com.nl.clubbook.datasource;
 
+import java.util.List;
+
 /**
  * Created by Andrew on 5/19/2014.
  */
@@ -10,6 +12,7 @@ public class UserDto {
     private String name;
     private String email;
     private String avatar;
+    private List<String> photos;
     private String password;
     private String gender;
     private String dob;
@@ -20,6 +23,14 @@ public class UserDto {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public List<String> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<String> photos) {
+        this.photos = photos;
     }
 
     public String getFb_id() {

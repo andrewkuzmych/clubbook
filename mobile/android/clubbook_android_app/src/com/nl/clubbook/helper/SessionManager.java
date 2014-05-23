@@ -162,11 +162,11 @@ public class SessionManager {
         // user name
         user.put(KEY_NAME, pref.getString(KEY_NAME, null));
         user.put(KEY_ID, pref.getString(KEY_ID, null));
-        user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, null));
-        user.put(KEY_GENDER, pref.getString(KEY_GENDER, null));
-        user.put(KEY_BIRTHDAY, pref.getString(KEY_BIRTHDAY, null));
-        user.put(KEY_FBACCESSTOKEN, pref.getString(KEY_FBACCESSTOKEN, null));
-        user.put(KEY_FBACCESSEXPITES, pref.getString(KEY_FBACCESSEXPITES, "0"));
+        //user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, null));
+        //user.put(KEY_GENDER, pref.getString(KEY_GENDER, null));
+        //user.put(KEY_BIRTHDAY, pref.getString(KEY_BIRTHDAY, null));
+        //user.put(KEY_FBACCESSTOKEN, pref.getString(KEY_FBACCESSTOKEN, null));
+        //user.put(KEY_FBACCESSEXPITES, pref.getString(KEY_FBACCESSEXPITES, "0"));
 
         // return user
         return user;

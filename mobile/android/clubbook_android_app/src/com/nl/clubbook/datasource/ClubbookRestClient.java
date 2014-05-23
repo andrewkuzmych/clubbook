@@ -10,8 +10,8 @@ import com.loopj.android.http.RequestParams;
 public class ClubbookRestClient {
     private static AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
 
-    //private static final String BC_BASE_URL = "http://clubbook.herokuapp.com/_s/";
-    private static final String BC_BASE_URL = "http://192.168.2.108:3000/_s/";
+    private static final String BC_BASE_URL = "http://clubbook.herokuapp.com/_s/";
+    //private static final String BC_BASE_URL = "http://192.168.2.108:3000/_s/";
     //private static final String BC_BASE_URL = "http://mysterious-bastion-9023.herokuapp.com/_s/";
 
     private static String getBcAbsoluteUrl(String relativeUrl) {
@@ -20,6 +20,10 @@ public class ClubbookRestClient {
 
     public static void loginByFb(RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.post(getBcAbsoluteUrl("signin/fb"), params, responseHandler);
+    }
+
+    public static void retrieveUser(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("user/by_id/" + user_id), params, responseHandler);
     }
 
     public static void file(RequestParams params, AsyncHttpResponseHandler responseHandler) {

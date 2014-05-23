@@ -38,6 +38,7 @@ import com.sromku.simple.fb.listeners.OnLogoutListener;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -92,9 +93,40 @@ public class MainActivity extends BaseActivity {
         }
     };
 
+    @Override
+    protected void loadData() {
+        // get user data from session
+        session = new SessionManager(getApplicationContext());
+        HashMap<String, String> user = session.getUserDetails();
+        showProgress("Loading...");
+        DataStore.retrieveUser(user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
+            @Override
+            public void onReady(Object result, boolean failed) {
+                // show error
+                //  hideProgress(false);
+                if (failed) {
+                    hideProgress(false);
+                } else {
+                    hideProgress(true);
+
+                    final UserDto user = (UserDto) result;
+
+                    String last = user.getAvatar().substring( user.getAvatar().lastIndexOf('/')+1, user.getAvatar().length() );
+
+                    String first = user.getAvatar().substring( 0, user.getAvatar().lastIndexOf('/')+1 );
+
+                    first = user.getAvatar().substring( 0, user.getAvatar().lastIndexOf('/')+1 );
+
+                }
+            }
+        });
+    }
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        loadData();
 
         cloudinary = new Cloudinary(getApplicationContext());
         session = new SessionManager(getApplicationContext());
@@ -113,18 +145,20 @@ public class MainActivity extends BaseActivity {
 
         navDrawerItems = new ArrayList<NavDrawerItem>();
 
+        navDrawerItems.add(new NavDrawerItem("Andriy", navMenuIcons.getResourceId(0, -1), true));
         // adding nav drawer items to array
         // Home
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
+
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(3, -1)));
         // Find People
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(3, -1), true, "5"));
         // Photos
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(3, -1), true, "3"));
         // Communities, Will add a counter here
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1), true, "22"));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
         // Pages
         // What's hot, We  will add a counter here
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1), true, "50+"));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(3, -1)));
 
 
         // Recycle the typed array
