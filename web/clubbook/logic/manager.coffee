@@ -6,6 +6,13 @@ __ = require("underscore")
 async = require("async")
 moment = require('moment-timezone')
 
+exports.get_user_by_id = (user_id, callback)->
+  db_model.User.findById(user_id).exec (err, user)->
+    if err
+      callback err, null
+    else
+      callback null, user
+
 exports.signinmail = (params, callback)->
   
   if __.isEmpty params.email?.trim() 

@@ -64,7 +64,7 @@ exports.fb_signin = (req, res)->
       params.avatar = req.body.avatar
 
     manager.save_or_update_fb_user params, (err, user)->
-      prepare_result req, res, user
+      prepare_result req, res, 
 
 
 exports.signinmail = (req, res)->
@@ -106,6 +106,17 @@ exports.signup = (req, res)->
         name: " Name : " + req.body.name
         status: "OK"
 
+exports.get_user_by_id = (req, res)->
+  manager.get_user_by_id req.params.user_id, (err, user)->
+    if err
+      res.json
+        status: "error"
+        message: "can not find user: #{req.params.user_id}"
+    else
+      res.json
+        status: "ok"
+        result:
+          user: user
 
 exports.uploadphoto = (req, res)->
 
