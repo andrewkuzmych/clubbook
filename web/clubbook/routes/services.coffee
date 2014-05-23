@@ -64,7 +64,7 @@ exports.fb_signin = (req, res)->
       params.avatar = req.body.avatar
 
     manager.save_or_update_fb_user params, (err, user)->
-      prepare_result req, res, 
+      prepare_result req, res, user
 
 
 exports.signinmail = (req, res)->
