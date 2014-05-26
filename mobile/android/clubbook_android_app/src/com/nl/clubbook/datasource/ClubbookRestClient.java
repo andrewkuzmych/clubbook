@@ -10,7 +10,7 @@ import com.loopj.android.http.RequestParams;
 public class ClubbookRestClient {
     private static AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
 
-    private static final String BC_BASE_URL = "http://clubbook.herokuapp.com/_s/";
+    private static final String BC_BASE_URL = "http://clubbookapp.herokuapp.com/_s/";
     //private static final String BC_BASE_URL = "http://192.168.2.108:3000/_s/";
     //private static final String BC_BASE_URL = "http://mysterious-bastion-9023.herokuapp.com/_s/";
 

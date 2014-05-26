@@ -7,16 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.nl.clubbook.R;
 
-public class WhatsHotFragment extends Fragment {
+public class SettingsFragment extends Fragment {
 	
-	public WhatsHotFragment(){}
-	
+	public SettingsFragment(){}
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
  
-        View rootView = inflater.inflate(R.layout.fragment_whats_hot, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
          
         return rootView;
     }

@@ -69,7 +69,7 @@ VenueSchema = new mongoose.Schema
   updated_on: { type: Date, 'default': Date.now }
 
   title: {type: String, trim: true, required: true}
-  avatar: {type: String, trim: true}
+  photos: [{type: String, trim: true}]
   address: {type: String, trim: true, required: true}
   loc:
     lng: Number
@@ -77,6 +77,7 @@ VenueSchema = new mongoose.Schema
   phone: {type: String, trim: true}
   site: {type: String, trim: true}
   description: {type: String, trim: true}
+  work_till: {type: String}
 
 VenueSchema.pre 'save', (next, done) ->
   this.updated_on = new Date().toISOString()

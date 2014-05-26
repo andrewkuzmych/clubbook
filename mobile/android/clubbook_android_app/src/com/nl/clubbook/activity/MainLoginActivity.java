@@ -108,29 +108,10 @@ public class MainLoginActivity extends BaseActivity {
         final String name = profile.getName();
         final String email = profile.getEmail();
         final String gender = profile.getGender();
-        final String birthday = profile.getBirthday();
-        final String hometown = profile.getHometown();
-        String fb_city = null;
-        try {
-            JSONObject hometown_json = new JSONObject(hometown);
-
-        } catch (Throwable t) {
-            Log.e("My App", "Could not parse malformed hometown: \"" + hometown + "\"");
-        }
-
-        String dob = "";
-
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-        SimpleDateFormat formatTo = new SimpleDateFormat("dd.MM.yyyy");
-        try {
-            Date dobDate = format.parse(birthday);
-            dob = formatTo.format(dobDate);
-        } catch (java.text.ParseException e) {
-            e.printStackTrace();
-        }
 
         final String access_token = Session.getActiveSession().getAccessToken();
-        final String finalDob = dob;
+        // TODO request DOB permission from From Facebook
+        final String finalDob = "";
 
         showProgress("Loading...");
         this.runOnUiThread(new Runnable() {
@@ -212,14 +193,12 @@ public class MainLoginActivity extends BaseActivity {
         protected Profile doInBackground(String... params) {
             try {
                 String fb_id = params[0];
-
+                showProgress("Loading...");
                 String fb_photo = "https://graph.facebook.com/" + fb_id + "/picture?width=700&height=700";
                 Cloudinary cloudinary = new Cloudinary(getApplicationContext());
 
-                //http:res.cloudinary.com/ddsoyfjll/image/upload/v1400793878/d1efa9ad-229f-4ef9-96db-82a2472f3304.jpg
                 cloudinary.uploader().upload(fb_photo, Cloudinary.asMap("public_id", fb_id, "format", "jpg"));
                 imageUrl = "http://res.cloudinary.com/" + CLOUD_NAME + "/image/upload/" + fb_id + ".jpg"; //result.getString("url");
-                //http://res.cloudinary.com/ddsoyfjll/image/upload/710986785606290.jpg
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -234,6 +213,7 @@ public class MainLoginActivity extends BaseActivity {
         @Override
         protected void onPostExecute(Profile result) {
             super.onPostExecute(result);
+            hideProgress(false);
             updateUserInfo(this.profile, imageUrl);
             //tv.setText("Completed the task, and the result is : " + myData);
         }

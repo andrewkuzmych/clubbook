@@ -1,6 +1,5 @@
 package com.nl.clubbook.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.*;
 import android.content.pm.ResolveInfo;
@@ -9,7 +8,6 @@ import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,7 +16,6 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -30,10 +27,10 @@ import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.fragment.*;
 import com.nl.clubbook.helper.CropOption;
 import com.nl.clubbook.helper.CropOptionAdapter;
+import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.model.NavDrawerItem;
 import com.sromku.simple.fb.SimpleFacebook;
-import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.sromku.simple.fb.listeners.OnLogoutListener;
 
 import java.io.*;
@@ -111,11 +108,34 @@ public class MainActivity extends BaseActivity {
 
                     final UserDto user = (UserDto) result;
 
-                    String last = user.getAvatar().substring( user.getAvatar().lastIndexOf('/')+1, user.getAvatar().length() );
+                    String image_url =  ImageHelper.GenarateUrl(user.getAvatar(),"w_100,h_100,c_thumb,g_face");
 
-                    String first = user.getAvatar().substring( 0, user.getAvatar().lastIndexOf('/')+1 );
+                    navDrawerItems = new ArrayList<NavDrawerItem>();
+                    navDrawerItems.add(new NavDrawerItem(user.getName(), image_url, true));
+                    navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(3, -1)));
+                    navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(3, -1), true, "5"));
+                    navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1), true, "3"));
+                    navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(3, -1)));
+                    navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(3, -1)));
 
-                    first = user.getAvatar().substring( 0, user.getAvatar().lastIndexOf('/')+1 );
+                    // Recycle the typed array
+                    navMenuIcons.recycle();
+
+                    mDrawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+                    // setting the nav drawer list adapter
+                    adapter = new NavDrawerListAdapter(MainActivity.this,  R.layout.drawer_list_item,
+                            navDrawerItems);
+                    mDrawerList.setAdapter(adapter);
+                    mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+
+                    // enabling action bar app icon and behaving it as toggle button
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                    getSupportActionBar().setHomeButtonEnabled(true);
+
+                    mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+                    displayView(0);
 
                 }
             }
@@ -125,9 +145,6 @@ public class MainActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
-        loadData();
-
         cloudinary = new Cloudinary(getApplicationContext());
         session = new SessionManager(getApplicationContext());
 
@@ -142,40 +159,11 @@ public class MainActivity extends BaseActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+        mDrawerList.requestFocusFromTouch();
 
-        navDrawerItems = new ArrayList<NavDrawerItem>();
+        mDrawerList.setSelector(android.R.color.darker_gray);
 
-        navDrawerItems.add(new NavDrawerItem("Andriy", navMenuIcons.getResourceId(0, -1), true));
-        // adding nav drawer items to array
-        // Home
-
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(3, -1)));
-        // Find People
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(3, -1), true, "5"));
-        // Photos
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(3, -1), true, "3"));
-        // Communities, Will add a counter here
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
-        // Pages
-        // What's hot, We  will add a counter here
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(3, -1)));
-
-
-        // Recycle the typed array
-        navMenuIcons.recycle();
-
-        mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
-
-        // setting the nav drawer list adapter
-        adapter = new NavDrawerListAdapter(getApplicationContext(),
-                navDrawerItems);
-        mDrawerList.setAdapter(adapter);
-
-        // enabling action bar app icon and behaving it as toggle button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+        mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout,
                 R.drawable.ic_drawer, //nav menu toggle icon
                 R.string.app_name, // nav drawer open - description for accessibility
                 R.string.app_name // nav drawer close - description for accessibility
@@ -192,12 +180,14 @@ public class MainActivity extends BaseActivity {
                 invalidateOptionsMenu();
             }
         };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        if (savedInstanceState == null) {
+
+        loadData();
+
+       /* if (savedInstanceState == null) {
             // on first time display view for first nav item
             displayView(0);
-        }
+        }*/
     }
 
     @Override
@@ -268,7 +258,6 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         mSimpleFacebook = SimpleFacebook.getInstance(this);
-        //setUIState();
     }
 
     @Override
@@ -369,21 +358,9 @@ public class MainActivity extends BaseActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
-
-
-                   /* ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    photo.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                    InputStream is = new ByteArrayInputStream(stream.toByteArray());
-                    try {
-                        cloudinary.uploader().upload(is, Cloudinary.asMap("public_id", "test13", "format", "jpg"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }*/
                 }
 
                 File f = new File(mImageCaptureUri.getPath());
-
 
                 if (f.exists())
                     f.delete();
@@ -488,32 +465,33 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
+            view.setSelected(true);
             // display view for selected nav drawer item
             displayView(position);
         }
     }
 
-    private void displayView(int position) {
+    private void displayView(final int position) {
         // update the main content by replacing fragments
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = new HomeFragment();
+                fragment = new ProfileFragment();
                 break;
             case 1:
-                fragment = new FindPeopleFragment();
+                fragment = new ClubsFragment();
                 break;
             case 2:
-                fragment = new PhotosFragment();
+                fragment = new  MessagesFragment();
                 break;
             case 3:
-                fragment = new CommunityFragment();
+                fragment = new NotificationsFragment();
                 break;
             case 4:
-                fragment = new PagesFragment();
+                fragment = new SettingsFragment();
                 break;
             case 5:
-                fragment = new WhatsHotFragment();
+                fragment = new AboutFragment();
                 break;
 
             default:
@@ -530,6 +508,7 @@ public class MainActivity extends BaseActivity {
             mDrawerList.setSelection(position);
             setTitle(navMenuTitles[position]);
             mDrawerLayout.closeDrawer(mDrawerList);
+
         } else {
             // error in creating fragment
             Log.e("MainActivity", "Error in creating fragment");

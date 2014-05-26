@@ -7,15 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.nl.clubbook.R;
 
-public class PhotosFragment extends Fragment {
+public class ProfileFragment extends Fragment {
 	
-	public PhotosFragment(){}
+	public ProfileFragment(){}
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
  
-        View rootView = inflater.inflate(R.layout.fragment_photos, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
          
         return rootView;
     }

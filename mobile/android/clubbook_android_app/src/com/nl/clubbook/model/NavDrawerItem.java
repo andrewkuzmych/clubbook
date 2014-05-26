@@ -6,10 +6,10 @@ public class NavDrawerItem {
 	private int icon;
 	private String count = "0";
 	// boolean to set visiblity of the counter
+    private String profileAvatar;
 	private boolean isCounterVisible = false;
     private boolean isProfile = false;
-	
-	public NavDrawerItem(){}
+
 
 	public NavDrawerItem(String title, int icon){
 		this.title = title;
@@ -23,13 +23,21 @@ public class NavDrawerItem {
 		this.count = count;
 	}
 
-    public NavDrawerItem(String title, int icon, boolean isProfile){
-        this.title = title;
-        this.icon = icon;
+    public NavDrawerItem(String profile_name, String profile_avatar, boolean isProfile){
+        this.title = profile_name;
+        this.profileAvatar = profile_avatar;
         this.isProfile = isProfile;
     }
 
-	public String getTitle(){
+    public String getProfileAvatar() {
+        return profileAvatar;
+    }
+
+    public void setProfileAvatar(String profileAvatar) {
+        this.profileAvatar = profileAvatar;
+    }
+
+    public String getTitle(){
 		return this.title;
 	}
 	

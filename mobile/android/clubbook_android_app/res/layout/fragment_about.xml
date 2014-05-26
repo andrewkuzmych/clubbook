@@ -9,12 +9,12 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textSize="16dp"
-        android:text="Photos View"/>
+        android:text="About"/>
     
     <ImageView android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/txtLabel"
-        android:src="@drawable/ic_photos"
+        android:src="@drawable/ic_whats_hot"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"/>
     

@@ -7,15 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.nl.clubbook.R;
 
-public class PagesFragment extends Fragment {
+public class MessagesFragment extends Fragment {
 	
-	public PagesFragment(){}
+	public MessagesFragment(){}
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
  
-        View rootView = inflater.inflate(R.layout.fragment_pages, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_messages, container, false);
          
         return rootView;
     }

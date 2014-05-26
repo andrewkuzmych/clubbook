@@ -12,7 +12,8 @@ import com.facebook.internal.SessionAuthorizationType;
 public enum Permission {
 
     // TODO: workaround
-	BASIC_INFO("public_profile", Type.READ),
+	//BASIC_INFO("public_profile", Type.READ),
+    BASIC_INFO("basic_info", Type.READ),
 
     USER_FRIENDS("user_friends", Type.READ),
 
