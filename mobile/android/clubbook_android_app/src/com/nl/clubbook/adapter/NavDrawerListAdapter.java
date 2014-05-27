@@ -81,7 +81,8 @@ public class NavDrawerListAdapter extends ArrayAdapter<NavDrawerItem> {
             TextView profile_name =(TextView) convertView.findViewById(R.id.profile_name);
             profile_name.setText(navDrawerItems.get(position).getTitle());
 
-            imageLoader.displayImage(navDrawerItems.get(position).getProfileAvatar(), profile_image, options, animateFirstListener);
+            if (navDrawerItems.get(position).getProfileAvatar() != null)
+                imageLoader.displayImage(navDrawerItems.get(position).getProfileAvatar(), profile_image, options, animateFirstListener);
 
         } else {
             profile.setVisibility(View.GONE);

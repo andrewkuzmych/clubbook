@@ -90,8 +90,8 @@ exports.save_user = (params, callback)->
             email: params.email
             password: params.password
             dob: params.dob
-
-      user.photos.push { url: params.photos, profile:true}    
+             
+    #user.photos.push { url: params.photos, profile:true}    
 
       user.save (err)->
         console.log err

@@ -79,8 +79,9 @@ exports.signinmail = (req, res)->
           err:err
       else
         res.json
-          email: " email : " + req.body.email
-          status: "OK"
+          status: "ok"
+          result:
+            user: user
 
 
 exports.signup = (req, res)->
@@ -93,9 +94,8 @@ exports.signup = (req, res)->
       name: req.body.name
       email: req.body.email
       password: req.body.password
-      photos: req.body.photos
       dob: dob
-  
+    
   manager.save_user params, (err, user)-> 
     if err 
       res.json
@@ -103,8 +103,9 @@ exports.signup = (req, res)->
         err:err
     else
       res.json
-        name: " Name : " + req.body.name
-        status: "OK"
+        status: "ok"
+        result:
+            user: user
 
 exports.get_user_by_id = (req, res)->
   manager.get_user_by_id req.params.user_id, (err, user)->
