@@ -173,6 +173,24 @@ exports.create_club = (req, res)->
           status: "Added OK"
 
 
+exports.find_club = (req, res)->
+ 
+  loc = 
+    lat: req.params.club_lat
+    lon: req.params.club_lon
+  
+  manager.find_club req.params.club_id, (err, club)->
+
+      if err 
+        res.json
+          status: "error"
+          err:err
+      else
+        res.json
+          club: club
+          status: "Found Club OK!"
+
+
 exports.list_club = (req, res)->
 
   manager.list_club (err, clubs)->
