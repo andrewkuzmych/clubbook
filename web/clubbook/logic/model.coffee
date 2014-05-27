@@ -11,7 +11,7 @@ UserSchema = new mongoose.Schema
 
   email: {type: String, trim: true, lowercase: true}
   name: {type: String, trim: true, required: true}
-  
+ 
   gender: {type: String, trim: true, required: true, 'enum':["male", "female"]}
   photos: [{url:{ type: String }, profile:{ type: Boolean, default:false }}]
   dob: { type: Date }
@@ -67,18 +67,19 @@ exports.User.schema.path('name').validate (value, respond)->
 VenueSchema = new mongoose.Schema
   created_on: { type: Date, 'default': Date.now }
   updated_on: { type: Date, 'default': Date.now }
-
-  title: {type: String, trim: true, required: true}
-  photos: [{type: String, trim: true}]
-  address: {type: String, trim: true, required: true}
-  loc:
-    lng: Number
+  club_admin: [{type: String, trim: true}]
+  club_name: {type: String, trim: true}
+  club_email: {type: String, trim: true}
+  club_houres: {type: String}
+  club_photos: [{type: String, trim: true}]
+  club_phone: {type: String, trim: true}
+  club_address: {type: String, trim: true, required: true}
+  club_site: {type: String, trim: true}
+  club_info: {type: String, trim: true, required: true}
+  club_loc:
+    lon: Number
     lat: Number
-  phone: {type: String, trim: true}
-  site: {type: String, trim: true}
-  description: {type: String, trim: true}
-  work_till: {type: String}
-
+  
 VenueSchema.pre 'save', (next, done) ->
   this.updated_on = new Date().toISOString()
   next()

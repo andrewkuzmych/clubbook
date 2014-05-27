@@ -122,7 +122,8 @@ app.get '/', controller.index
 app.post '/_s/signin/fb', services.fb_signin
 app.post '/_s/signup', services.signup
 app.post '/_s/signinmail', services.signinmail
+app.post '/_s/create_club', services.create_club
 app.get '/_s/user/by_id/:user_id', services.get_user_by_id
-
+app.get '/_s/list_club', services.list_club
 http.createServer(app).listen app.get('port'), ()->
   console.log 'Express server listening on port ' + app.get('port')
