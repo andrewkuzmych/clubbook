@@ -136,8 +136,54 @@ exports.uploadphoto = (req, res)->
           user: user
           status: "OK"
  
+exports.create_club = (req, res)->
+
+  adminsarray = req.body.club_admin.split(";")
+  photosarray = req.body.club_photos.split(";")
+ 
+  loc = 
+    lat: req.body.club_lat
+    lon: req.body.club_lon
+
+  console.log loc
 
 
+  params = 
+    club_admin: adminsarray
+    club_name: req.body.club_name      
+    club_email: req.body.club_email
+    club_houres: req.body.club_houres
+    club_photos: photosarray
+    club_phone: req.body.club_phone
+    club_address: req.body.club_address
+    club_site: req.body.club_site
+    club_info: req.body.club_info
+    club_loc: loc
+    
+  
+  manager.create_club params, (err, club)->
+
+      if err 
+        res.json
+          status: "error"
+          err:err
+      else
+        res.json
+          club: club
+          status: "Added OK"
+
+
+exports.list_club = (req, res)->
+
+  manager.list_club (err, clubs)->
+    if err
+      res.json
+        status:'error'
+        error:err
+    else
+      res.json
+        status:'ok'
+        clubs: clubs
 
 
 

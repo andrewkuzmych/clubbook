@@ -26,7 +26,48 @@ exports.signinmail = (params, callback)->
         callback null, user
       else
         callback "Wrong User or password " ,user
-      
+
+exports.list_club = (callback)->
+
+  db_model.Venue.find().exec (err, clubs)->
+    callback err, clubs
+
+
+
+exports.create_club = (params, callback)->
+
+
+  if __.isEmpty params.club_name?.trim() 
+      callback 'club name is empty', null
+  else if __.isEmpty params.club_houres?.trim()
+      callback 'club opening houres is empty', null
+  
+  else if __.isEmpty params.club_phone?.trim()
+      callback 'club phone is empty', null
+  else if __.isEmpty params.club_address?.trim()
+      callback 'club address is empty', null   
+  else if __.isEmpty params.club_site?.trim() 
+      callback 'club site is empty', null   
+ 
+  else 
+
+    club = new db_model.Venue
+      club_admin: params.club_admin
+      club_name: params.club_name      
+      club_email: params.club_email
+      club_houres: params.club_houres
+      club_photos: params.club_photos
+      club_phone: params.club_phone
+      club_address: params.club_address
+      club_site: params.club_site
+      club_info: params.club_info
+      club_loc: params.club_loc
+
+    club.save (err)->
+        console.log err
+        callback err, club
+
+
 exports.save_user = (params, callback)->
  
   db_model.User.findOne({"email":params.email}).exec (err, user)->
