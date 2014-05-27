@@ -5,13 +5,17 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import com.cloudinary.Cloudinary;
 import com.facebook.Session;
 import com.nl.clubbook.R;
@@ -23,6 +27,7 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.sromku.simple.fb.listeners.OnProfileListener;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -149,13 +154,7 @@ public class MainLoginActivity extends BaseActivity {
             finish();
         }
 
-        button_fb_login = (Button)findViewById(R.id.login_fb);
-       // button_fb_login.setTypeface(typefaceIntroText);
-        button_fb_login.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                loginToFacebook();
-            }
-        });
+        setUIHandlers();
     }
 
     @Override
@@ -169,6 +168,24 @@ public class MainLoginActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         mSimpleFacebook.onActivityResult(this, requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            navigateBack();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void navigateBack() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     public void loginToFacebook() {
@@ -218,4 +235,50 @@ public class MainLoginActivity extends BaseActivity {
             //tv.setText("Completed the task, and the result is : " + myData);
         }
     }
+
+    private void setUIHandlers() {
+        Typeface typefaceIntroText = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-REGULAR.TTF");
+        Typeface typefaceIntroTextBold = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
+        TextView intro_text = (TextView) findViewById(R.id.intro_text);
+        intro_text.setTypeface(typefaceIntroTextBold);
+
+        LinearLayout loginLayout = (LinearLayout) findViewById(R.id.loginLayout);
+        TextView has_account_text = (TextView) findViewById(R.id.has_account_text);
+        has_account_text.setTypeface(typefaceIntroText);
+
+
+        button_fb_login = (Button)findViewById(R.id.login_fb);
+        button_fb_login.setTypeface(typefaceIntroText);
+        button_fb_login.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                loginToFacebook();
+            }
+        });
+
+
+        TextView login_by_email = (TextView) findViewById(R.id.login_by_email);
+        login_by_email.setTypeface(typefaceIntroTextBold);
+
+
+        Button reg_by_email = (Button) findViewById(R.id.reg_by_email);
+        reg_by_email.setTypeface(typefaceIntroText);
+        reg_by_email.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent in = new Intent(getApplicationContext(),
+                        RegActivity.class);
+                //in.putExtra("lon", eventDetail.getLon());
+                startActivity(in);
+            }
+        });
+
+        loginLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent in = new Intent(getApplicationContext(),
+                        LoginActivity.class);
+                //in.putExtra("lon", eventDetail.getLon());
+                startActivity(in);
+            }
+        });
+    }
+
 }

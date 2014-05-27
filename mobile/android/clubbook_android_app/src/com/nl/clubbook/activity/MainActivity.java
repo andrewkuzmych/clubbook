@@ -108,7 +108,9 @@ public class MainActivity extends BaseActivity {
 
                     final UserDto user = (UserDto) result;
 
-                    String image_url =  ImageHelper.GenarateUrl(user.getAvatar(),"w_100,h_100,c_thumb,g_face");
+                    String image_url = null;
+                    if (user.getAvatar() != null)
+                     image_url =  ImageHelper.GenarateUrl(user.getAvatar(),"w_100,h_100,c_thumb,g_face");
 
                     navDrawerItems = new ArrayList<NavDrawerItem>();
                     navDrawerItems.add(new NavDrawerItem(user.getName(), image_url, true));
@@ -479,7 +481,7 @@ public class MainActivity extends BaseActivity {
                 fragment = new ProfileFragment();
                 break;
             case 1:
-                fragment = new ClubsFragment();
+                fragment = new HomeFragment();
                 break;
             case 2:
                 fragment = new  MessagesFragment();

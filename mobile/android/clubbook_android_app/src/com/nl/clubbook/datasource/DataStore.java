@@ -22,6 +22,107 @@ public class DataStore {
         context = mcontext;
     }
 
+    public static void regByEmail(String name, String email, String pass, String gender, String dob, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("email", email);
+        params.put("name", name);
+        params.put("gender", gender);
+        params.put("password", pass);
+        params.put("dob", dob);
+
+        ClubbookRestClient.regByEmail(params, new JsonHttpResponseHandler() {
+            private boolean failed = true;
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+                UserDto user = null;
+                try {
+                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
+                        JSONObject user_dto = response_json.getJSONObject("result").getJSONObject("user");
+                        user = new UserDto();
+                        user.setEmail(user_dto.getString("email"));
+                        user.setGender(user_dto.getString("gender"));
+                        user.setName(user_dto.getString("name"));
+                        user.setId(user_dto.getString("_id"));
+                    }
+                    failed = false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                //failed = false;
+                onResultReady.onReady(user, failed);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                //if (failed)
+                //    onResultReady.onReady(null, true);
+            }
+        });
+    }
+
+    public static void loginByEmail(String email, String pass, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("email", email);
+        params.put("password", pass);
+
+        ClubbookRestClient.loginByEmail(params, new JsonHttpResponseHandler() {
+            private boolean failed = true;
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+                UserDto user = null;
+                try {
+                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
+                        JSONObject user_dto = response_json.getJSONObject("result").getJSONObject("user");
+                        user = new UserDto();
+                        user.setEmail(user_dto.getString("email"));
+                        user.setGender(user_dto.getString("gender"));
+                        user.setName(user_dto.getString("name"));
+                        user.setId(user_dto.getString("_id"));
+                    }
+                    failed = false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                //failed = false;
+                onResultReady.onReady(user, failed);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                //if (failed)
+                //    onResultReady.onReady(null, true);
+            }
+        });
+    }
+
+
+
     public static void loginByFb(String name, String email, String fb_id, String fb_access_token, String gender, String dob, String avatar, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("email", email);
