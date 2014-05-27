@@ -76,6 +76,7 @@ VenueSchema = new mongoose.Schema
   club_address: {type: String, trim: true, required: true}
   club_site: {type: String, trim: true}
   club_info: {type: String, trim: true, required: true}
+  club_logo: {type: String, trim: true}
   club_loc:
     lon: Number
     lat: Number

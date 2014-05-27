@@ -62,7 +62,8 @@ exports.create_club = (params, callback)->
       club_site: params.club_site
       club_info: params.club_info
       club_loc: params.club_loc
-
+      club_logo: params.club_logo
+      
     club.save (err)->
         console.log err
         callback err, club

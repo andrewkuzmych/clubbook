@@ -158,7 +158,7 @@ exports.create_club = (req, res)->
     club_site: req.body.club_site
     club_info: req.body.club_info
     club_loc: loc
-    
+    club_logo: req.body.club_logo
   
   manager.create_club params, (err, club)->
 
