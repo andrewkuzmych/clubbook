@@ -28,7 +28,6 @@ exports.signinmail = (params, callback)->
         callback "Wrong User or password " ,user
 
 exports.list_club = (params, callback)->
-
   db_model.Venue.find({ 'club_loc':{ '$near' : [ params.lat,params.lon], '$maxDistance' :  params.distance/111.12 }}).exec (err, clubs)->
     callback err, clubs
 

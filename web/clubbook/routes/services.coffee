@@ -192,14 +192,10 @@ exports.find_club = (req, res)->
 
 
 exports.list_club = (req, res)->
-
   params =
     distance: req.params.distance
     lat: req.params.user_lat
     lon: req.params.user_lon
-
-
-
 
   manager.list_club params, (err, clubs)->
     if err

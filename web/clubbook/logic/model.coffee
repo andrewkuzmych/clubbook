@@ -86,7 +86,7 @@ VenueSchema.pre 'save', (next, done) ->
   next()
 
 VenueSchema.set('toJSON', { getters: true, virtuals: true })
-VenueSchema.index( { loc: "2d" } )
+VenueSchema.index( { club_loc: "2d" } )
 exports.Venue = mongoose.model 'Venue', VenueSchema
 
 #-------------------------------------------------------------------------------------
