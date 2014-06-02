@@ -230,5 +230,14 @@ exports.cu_count = (req, res)->
          status:'ok'
          club_count: club_count
 
+exports.checkin = (req, res)->
+  params = 
+    user_id: req.params.user_id
+    club_id: req.params.club_id
+
+  manager.checkin params, (err, user)->
+    res.json
+      status: 'ok'
+      user: user
 
 

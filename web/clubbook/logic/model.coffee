@@ -25,7 +25,7 @@ UserSchema = new mongoose.Schema
   fb_access_token: {type:String}
   fb_token_expires: Number
   
-  checkin: [{club_id: Number, lon: Number, lat: Number, time: Date}]
+  checkin: [{club: { type: mongoose.Schema.ObjectId, ref: 'Venue' }, lon: Number, lat: Number, time: Date, active: Boolean}]
 
 
 UserSchema.pre 'save', (next, done) ->
