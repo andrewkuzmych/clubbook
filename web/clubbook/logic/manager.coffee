@@ -108,6 +108,9 @@ exports.checkin = (params, callback)->
             console.log err
             callback err, user
 
+exports.club_clubbers = (params, callback)->
+  db_model.User.find({'checkin.club': mongoose.Types.ObjectId(params.club_id), 'checkin.active': true}).exec (err, users)->
+    callback err, users
 
 
 

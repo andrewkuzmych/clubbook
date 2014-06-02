@@ -240,4 +240,16 @@ exports.checkin = (req, res)->
       status: 'ok'
       user: user
 
+exports.club_clubbers = (req, res)->
+  params =
+    club_id: req.params.club_id
+  
+  manager.club_clubbers params, (err, users)->
+    res.json
+      status: 'ok'
+      users: users
+
+
+
+
 
