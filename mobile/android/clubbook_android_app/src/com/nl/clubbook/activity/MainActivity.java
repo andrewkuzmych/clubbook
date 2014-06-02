@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,8 +23,6 @@ import android.widget.*;
 import com.cloudinary.Cloudinary;
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.NavDrawerListAdapter;
-import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.fragment.*;
 import com.nl.clubbook.helper.CropOption;
 import com.nl.clubbook.helper.CropOptionAdapter;
@@ -95,53 +94,40 @@ public class MainActivity extends BaseActivity {
         // get user data from session
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
-        showProgress("Loading...");
-        DataStore.retrieveUser(user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
-            @Override
-            public void onReady(Object result, boolean failed) {
-                // show error
-                //  hideProgress(false);
-                if (failed) {
-                    hideProgress(false);
-                } else {
-                    hideProgress(true);
+        String image_url = null;
+        if (user.get(SessionManager.KEY_AVATAR) != null)
+            image_url =  ImageHelper.GenarateUrl(user.get(SessionManager.KEY_AVATAR),"w_100,h_100,c_thumb,g_face");
 
-                    final UserDto user = (UserDto) result;
+        navDrawerItems = new ArrayList<NavDrawerItem>();
+        navDrawerItems.add(new NavDrawerItem(user.get(SessionManager.KEY_NAME), image_url, true));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(3, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(3, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(3, -1), true, "3"));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(3, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(3, -1)));
 
-                    String image_url = null;
-                    if (user.getAvatar() != null)
-                     image_url =  ImageHelper.GenarateUrl(user.getAvatar(),"w_100,h_100,c_thumb,g_face");
+        // Recycle the typed array
+        navMenuIcons.recycle();
 
-                    navDrawerItems = new ArrayList<NavDrawerItem>();
-                    navDrawerItems.add(new NavDrawerItem(user.getName(), image_url, true));
-                    navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(3, -1)));
-                    navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(3, -1), true, "5"));
-                    navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1), true, "3"));
-                    navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(3, -1)));
-                    navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(3, -1)));
+        mDrawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-                    // Recycle the typed array
-                    navMenuIcons.recycle();
+        // setting the nav drawer list adapter
+        adapter = new NavDrawerListAdapter(MainActivity.this,  R.layout.drawer_list_item,
+                navDrawerItems);
+        mDrawerList.setAdapter(adapter);
+        mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
 
-                    mDrawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        // enabling action bar app icon and behaving it as toggle button
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
-                    // setting the nav drawer list adapter
-                    adapter = new NavDrawerListAdapter(MainActivity.this,  R.layout.drawer_list_item,
-                            navDrawerItems);
-                    mDrawerList.setAdapter(adapter);
-                    mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-                    // enabling action bar app icon and behaving it as toggle button
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                    getSupportActionBar().setHomeButtonEnabled(true);
+        displayView(2);
 
-                    mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-                    displayView(0);
 
-                }
-            }
-        });
     }
 
     public void onCreate(Bundle savedInstanceState) {
@@ -163,8 +149,6 @@ public class MainActivity extends BaseActivity {
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
         mDrawerList.requestFocusFromTouch();
 
-        mDrawerList.setSelector(android.R.color.darker_gray);
-
         mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout,
                 R.drawable.ic_drawer, //nav menu toggle icon
                 R.string.app_name, // nav drawer open - description for accessibility
@@ -177,19 +161,13 @@ public class MainActivity extends BaseActivity {
             }
 
             public void onDrawerOpened(View drawerView) {
-                getSupportActionBar().setTitle(mDrawerTitle);
+                getSupportActionBar().setTitle("");
                 // calling onPrepareOptionsMenu() to hide action bar icons
                 invalidateOptionsMenu();
             }
         };
 
-
         loadData();
-
-       /* if (savedInstanceState == null) {
-            // on first time display view for first nav item
-            displayView(0);
-        }*/
     }
 
     @Override
@@ -481,19 +459,22 @@ public class MainActivity extends BaseActivity {
                 fragment = new ProfileFragment();
                 break;
             case 1:
-                fragment = new HomeFragment();
+                fragment = new CheckinFragment();
                 break;
             case 2:
-                fragment = new  MessagesFragment();
+                fragment = new HomeFragment();
                 break;
             case 3:
-                fragment = new NotificationsFragment();
+                fragment = new  ClubFragment();
                 break;
             case 4:
-                fragment = new SettingsFragment();
+                fragment = new MessagesFragment();
                 break;
             case 5:
-                fragment = new AboutFragment();
+                fragment = new FriendsFragment();
+                break;
+            case 6:
+                fragment = new SettingsFragment();
                 break;
 
             default:

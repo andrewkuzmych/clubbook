@@ -6,6 +6,10 @@
     <color name="list_divider">#c5c4c4</color>
     <color name="counter_text_bg">#626262</color>
     <color name="counter_text_color">#c5c4c4</color>
+    <color name="title_background">#22104A</color>
+    <color name="title">#FFFFFF</color>
+    <color name="blue">#00abea</color>
+    <color name="white">#ffffff</color>
 	
 	
 </resources>

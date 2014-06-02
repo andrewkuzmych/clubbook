@@ -124,6 +124,7 @@ exports.uploadphoto = (params, callback)->
         callback err, user
 
 exports.save_or_update_fb_user = (params, callback)->
+    console.log params
     if params.dob
         dobArray = params.dob.split(".")
         dob = new Date(dobArray[2], parseInt(dobArray[1]) - 1, dobArray[0], 15, 0, 0, 0);
@@ -139,6 +140,9 @@ exports.save_or_update_fb_user = (params, callback)->
         user.fb_access_token = params.fb_access_token
         if params.fb_token_expires then user.fb_token_expires = params.fb_token_expires
         if params.fb_city then user.fb_city = params.fb_city
+
+        if user.photos.length == 0
+          user.photos.push { url: params.avatar, profile:true}
 
         callback err, user
 
@@ -176,6 +180,9 @@ exports.save_or_update_fb_user = (params, callback)->
               if params.fb_token_expires then user.fb_token_expires = params.fb_token_expires
               if params.fb_city then user.fb_city = params.fb_city
 
+              if user.photos.length == 0
+                user.photos.push { url: params.avatar, profile:true}
+                    
               callback err, user
 
             else

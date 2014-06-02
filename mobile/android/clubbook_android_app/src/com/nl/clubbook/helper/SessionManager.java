@@ -32,12 +32,15 @@ public class SessionManager {
     // All Shared Preferences Keys
     private static final String IS_LOGIN = "IsLoggedIn";
 
+    public static final int DEFOULT_DISTANCE = 4;
+
     // User name (make variable public to access from outside)
     public static final String KEY_ID = "id";
     public static final String KEY_NAME = "name";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_GENDER = "gender";
     public static final String KEY_BIRTHDAY = "birthday";
+    public static final String KEY_AVATAR = "avatar";
     public static final String KEY_FBACCESSTOKEN = "access_token";
     public static final String KEY_FBACCESSEXPITES = "access_expires";
     public static final String KEY_PERMISSIONS = "permissions";
@@ -101,7 +104,7 @@ public class SessionManager {
     /**
      * Create login session
      * */
-    public void createLoginSession(String id, String name, String email, String gender, String birthday){
+    public void createLoginSession(String id, String name, String email, String gender, String birthday, String avatar){
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
 
@@ -115,6 +118,8 @@ public class SessionManager {
         editor.putString(KEY_GENDER, gender);
 
         editor.putString(KEY_BIRTHDAY, birthday);
+
+        editor.putString(KEY_AVATAR, avatar);
 
         // commit changes
         editor.commit();
@@ -162,9 +167,10 @@ public class SessionManager {
         // user name
         user.put(KEY_NAME, pref.getString(KEY_NAME, null));
         user.put(KEY_ID, pref.getString(KEY_ID, null));
-        //user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, null));
-        //user.put(KEY_GENDER, pref.getString(KEY_GENDER, null));
-        //user.put(KEY_BIRTHDAY, pref.getString(KEY_BIRTHDAY, null));
+        user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, null));
+        user.put(KEY_GENDER, pref.getString(KEY_GENDER, null));
+        user.put(KEY_BIRTHDAY, pref.getString(KEY_BIRTHDAY, null));
+        user.put(KEY_AVATAR, pref.getString(KEY_AVATAR, null));
         //user.put(KEY_FBACCESSTOKEN, pref.getString(KEY_FBACCESSTOKEN, null));
         //user.put(KEY_FBACCESSEXPITES, pref.getString(KEY_FBACCESSEXPITES, "0"));
 

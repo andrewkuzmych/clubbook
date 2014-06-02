@@ -29,31 +29,30 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 public class BaseActivity extends ActionBarActivity {
     LinearLayout failedView;
     RelativeLayout mainView;
-    ProgressDialog dialog;
+    //ProgressDialog dialog;
     View contentView;
     protected ImageLoader imageLoader;
     protected DisplayImageOptions options;
     protected ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
     private boolean is_retry = false;
     protected AlertDialogManager alert = new AlertDialogManager();
+    private ProgressDialog progressDialog;
 
-    protected void showProgress(final String string) {
+    public void showProgress(final String string) {
         if(is_retry) {
             contentView.setVisibility(View.GONE);
             failedView.setVisibility(View.GONE);
         }
         BaseActivity.this.runOnUiThread(new Runnable() {
             public void run() {
-                dialog.setMessage(string);
-                //contentView.setVisibility(View.GONE);
-                //failedView.setVisibility(View.GONE);
-                dialog.show();
+                progressDialog = ProgressDialog.show(BaseActivity.this,string,
+                        "Loading application View, please wait...", false, true);
             }
         });
 
     }
 
-    protected void hideProgress(boolean showContent) {
+    public void hideProgress(boolean showContent) {
         if(is_retry) {
             if(showContent) {
                 failedView.setVisibility(View.GONE);
@@ -67,7 +66,7 @@ public class BaseActivity extends ActionBarActivity {
 
         BaseActivity.this.runOnUiThread(new Runnable() {
             public void run() {
-                dialog.dismiss();
+                progressDialog.dismiss();
             }
         });
 
@@ -82,7 +81,7 @@ public class BaseActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         // init progress view
-        dialog = new ProgressDialog(this);
+        //dialog = new ProgressDialog(this);
        // dialog = new ProgressDialog(this);
        // this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -123,7 +122,7 @@ public class BaseActivity extends ActionBarActivity {
 
     protected void setRetryLayout() {
         is_retry = true;
-        dialog = new ProgressDialog(this);
+        //dialog = new ProgressDialog(this);
         //mainView =  (RelativeLayout) findViewById(R.id.main_layout);
         failedView = (LinearLayout)getLayoutInflater().inflate(R.layout.retry, null);//new LinearLayout(this);
         //contentView = findViewById(R.id.content_layout);

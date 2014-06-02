@@ -7,16 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.nl.clubbook.R;
 
-public class AboutFragment extends Fragment {
+public class FriendsFragment extends Fragment {
 	
-	public AboutFragment(){}
+	public FriendsFragment(){}
 	
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
  
-        View rootView = inflater.inflate(R.layout.fragment_about, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_friends, container, false);
          
         return rootView;
     }
