@@ -33,14 +33,12 @@ exports.list_club = (params, callback)->
     callback err, clubs
 
 exports.find_club = (club_id, callback)->
-
-  
-  db_model.Venue.findById(club_id).exec (err, club)->
-  
+  db_model.Venue.findById(club_id).exec (err, club)->   
     if err
       callback err, null
     else
-      callback null, club  
+      db_model.User.find({'checkin.club': club_id, 'checkin.active': true}).exec (err, users)->
+        callback null, club, users  
 
 
 exports.create_club = (params, callback)->

@@ -179,7 +179,7 @@ exports.find_club = (req, res)->
     lat: req.params.club_lat
     lon: req.params.club_lon
   
-  manager.find_club req.params.club_id, (err, club)->
+  manager.find_club req.params.club_id, (err, club, users)->
 
       if err 
         res.json
@@ -188,6 +188,7 @@ exports.find_club = (req, res)->
       else
         res.json
           club: club
+          users: users
           status: "Found Club OK!"
 
 
@@ -248,6 +249,9 @@ exports.club_clubbers = (req, res)->
     res.json
       status: 'ok'
       users: users
+
+
+
 
 
 
