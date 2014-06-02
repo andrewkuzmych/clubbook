@@ -77,6 +77,21 @@ exports.create_club = (params, callback)->
         console.log err
         callback err, club
 
+exports.cu_count = (params, callback)->
+  console.log 1
+  query = { 'club_loc':{ '$near' : [ params.lat,params.lon], '$maxDistance' :  params.distance/111.12 }}
+  console.log 2
+  
+  # db_model.User.count(query).exec (err, user_count)->
+  #   console.log 3
+
+
+  db_model.Venue.count(query).exec (err, club_count)->
+    console.log 4
+    callback err, club_count
+
+  
+
 
 exports.save_user = (params, callback)->
  

@@ -126,5 +126,6 @@ app.post '/_s/create_club', services.create_club
 app.get '/_s/user/by_id/:user_id', services.get_user_by_id
 app.get '/_s/list_club/:distance/:user_lat/:user_lon', services.list_club
 app.get '/_s/find_club/:club_id/:club_lat/:club_lon', services.find_club
+app.get '/_s/cu_count/:distance/:user_lat/:user_lon', services.cu_count
 http.createServer(app).listen app.get('port'), ()->
   console.log 'Express server listening on port ' + app.get('port')
