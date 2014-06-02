@@ -179,7 +179,7 @@ exports.find_club = (req, res)->
     lat: req.params.club_lat
     lon: req.params.club_lon
   
-  manager.find_club req.params.club_id, (err, club)->
+  manager.find_club req.params.club_id, (err, club, users)->
 
       if err 
         res.json
@@ -188,6 +188,7 @@ exports.find_club = (req, res)->
       else
         res.json
           club: club
+          users: users
           status: "Found Club OK!"
 
 
@@ -206,6 +207,52 @@ exports.list_club = (req, res)->
       res.json
         status:'ok'
         clubs: clubs
+
+exports.cu_count = (req, res)->
+  console.log 0
+  
+  params =
+    distance: req.params.distance
+    lat: req.params.user_lat
+    lon: req.params.user_lon
+  
+  console.log params
+
+
+ 
+  manager.cu_count params, (err, club_count)->
+     if err
+       res.json
+         status:'error'
+         error:err
+     else
+       res.json
+         status:'ok'
+         club_count: club_count
+
+exports.checkin = (req, res)->
+  params = 
+    user_id: req.params.user_id
+    club_id: req.params.club_id
+
+  manager.checkin params, (err, user)->
+    res.json
+      status: 'ok'
+      user: user
+
+exports.club_clubbers = (req, res)->
+  params =
+    club_id: req.params.club_id
+  
+  manager.club_clubbers params, (err, users)->
+    res.json
+      status: 'ok'
+      users: users
+
+
+
+
+
 
 
 

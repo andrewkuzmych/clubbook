@@ -11,7 +11,7 @@ UserSchema = new mongoose.Schema
 
   email: {type: String, trim: true, lowercase: true}
   name: {type: String, trim: true, required: true}
- 
+  
   gender: {type: String, trim: true, required: true, 'enum':["male", "female"]}
   photos: [{url:{ type: String }, profile:{ type: Boolean, default:false }}]
   dob: { type: Date }
@@ -24,6 +24,9 @@ UserSchema = new mongoose.Schema
   fb_id: {type:String, unique: true, sparse: true}
   fb_access_token: {type:String}
   fb_token_expires: Number
+  
+  checkin: [{club: { type: mongoose.Schema.ObjectId, ref: 'Venue' }, lon: Number, lat: Number, time: Date, active: Boolean}]
+
 
 UserSchema.pre 'save', (next, done) ->
   this.updated_on = new Date().toISOString()

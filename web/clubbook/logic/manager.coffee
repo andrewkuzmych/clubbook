@@ -32,14 +32,12 @@ exports.list_club = (params, callback)->
     callback err, clubs
 
 exports.find_club = (club_id, callback)->
-
-  
-  db_model.Venue.findById(club_id).exec (err, club)->
-  
+  db_model.Venue.findById(club_id).exec (err, club)->   
     if err
       callback err, null
     else
-      callback null, club  
+      db_model.User.find({'checkin.club': club_id, 'checkin.active': true}).exec (err, users)->
+        callback null, club, users  
 
 
 exports.create_club = (params, callback)->
@@ -75,6 +73,42 @@ exports.create_club = (params, callback)->
     club.save (err)->
         console.log err
         callback err, club
+
+exports.cu_count = (params, callback)->
+  console.log 1
+  query = { 'club_loc':{ '$near' : [ params.lat,params.lon], '$maxDistance' :  params.distance/111.12 }}
+  console.log 2
+  
+  # db_model.User.count(query).exec (err, user_count)->
+  #   console.log 3
+
+
+  db_model.Venue.count(query).exec (err, club_count)->
+    console.log 4
+    callback err, club_count
+
+  
+exports.checkin = (params, callback)->
+  db_model.Venue.findById(params.club_id).exec (err, club)->
+    if not club
+      callback 'club does not exist', null
+    else
+      db_model.User.findById(params.user_id).exec (err, user)->
+        if not user
+          callback 'user does not exist', null
+        else
+          for oldcheckin in user.checkin
+            oldcheckin.active = false
+
+          user.checkin.push { club: club, lat:club.club_loc.lat, lon:club.club_loc.lon, time: Date.now(), active:true }
+          user.save (err)->
+            console.log err
+            callback err, user
+
+exports.club_clubbers = (params, callback)->
+  db_model.User.find({'checkin.club': mongoose.Types.ObjectId(params.club_id), 'checkin.active': true}).exec (err, users)->
+    callback err, users
+
 
 
 exports.save_user = (params, callback)->
