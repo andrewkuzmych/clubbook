@@ -174,11 +174,7 @@ exports.create_club = (req, res)->
 
 
 exports.find_club = (req, res)->
- 
-  loc = 
-    lat: req.params.club_lat
-    lon: req.params.club_lon
-  
+
   manager.find_club req.params.club_id, (err, club, users)->
 
       if err 
@@ -237,6 +233,16 @@ exports.checkin = (req, res)->
     club_id: req.params.club_id
 
   manager.checkin params, (err, user)->
+    res.json
+      status: 'ok'
+      user: user
+
+exports.checkout = (req, res)->
+  params = 
+    user_id: req.params.user_id
+    club_id: req.params.club_id
+
+  manager.checkout params, (err, user)->
     res.json
       status: 'ok'
       user: user

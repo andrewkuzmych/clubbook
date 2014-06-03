@@ -110,6 +110,23 @@ exports.club_clubbers = (params, callback)->
   db_model.User.find({'checkin.club': mongoose.Types.ObjectId(params.club_id), 'checkin.active': true}).exec (err, users)->
     callback err, users
 
+exports.checkout = (params, callback)->
+  db_model.Venue.findById(params.club_id).exec (err, club)->
+    if not club
+      callback 'club does not exist', null
+    else
+      db_model.User.findById(params.user_id).exec (err, user)->
+        if not user
+          callback 'user does not exist', null
+        else
+          for oldcheckin in user.checkin
+            oldcheckin.active = false
+#         user.checkin.push { club: club, lat:club.club_loc.lat, lon:club.club_loc.lon, time: Date.now(), active:false }
+          user.save (err)->
+            console.log err
+            callback err, user 
+
+
 
 
 exports.save_user = (params, callback)->
