@@ -189,7 +189,6 @@ exports.find_club = (req, res)->
 
 
 exports.list_club = (req, res)->
-
   params =
     distance: req.params.distance
     lat: req.params.user_lat

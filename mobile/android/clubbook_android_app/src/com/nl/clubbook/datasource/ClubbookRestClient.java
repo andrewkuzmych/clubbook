@@ -11,7 +11,7 @@ public class ClubbookRestClient {
     private static AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
 
     private static final String BC_BASE_URL = "http://clubbookapp.herokuapp.com/_s/";
-    //private static final String BC_BASE_URL = "http://192.168.2.109:3000/_s/";
+    //private static final String BC_BASE_URL = "http://192.168.2.106:3000/_s/";
     //private static final String BC_BASE_URL = "http://mysterious-bastion-9023.herokuapp.com/_s/";
 
     private static String getBcAbsoluteUrl(String relativeUrl) {
@@ -32,6 +32,14 @@ public class ClubbookRestClient {
 
     public static void retrieveUser(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getBcAbsoluteUrl("user/by_id/" + user_id), params, responseHandler);
+    }
+                                          //list_club/:distance/:user_lat/:user_lon
+    public static void retrievePlaces(String distance, String lat, String lon, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("list_club/" + distance + "/" + lat + "/" + lon), params, responseHandler);
+    }
+
+    public static void retrievePlace(String place_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("find_club/" + place_id), params, responseHandler);
     }
 
     public static void file(RequestParams params, AsyncHttpResponseHandler responseHandler) {

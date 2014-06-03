@@ -179,7 +179,7 @@ public class RegActivity extends BaseActivity {
                         } else {
                             UserDto user = (UserDto) result;
                             // save user in session
-                            session.createLoginSession(user.getId(), user.getName(), user.getEmail(), user.getGender(), user.getDob());
+                            session.createLoginSession(user.getId(), user.getName(), user.getEmail(), user.getGender(), user.getDob(), user.getAvatar());
                             // navigate to main page
                             Intent i = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(i);

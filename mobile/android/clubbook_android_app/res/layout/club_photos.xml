@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >  <!--  <item name="android:background">#99000000</item>-->
+
+        <ImageView android:id="@+id/photo"
+                   android:layout_width="fill_parent"
+                   android:layout_height="fill_parent"
+                   android:layout_gravity="center"
+                   android:adjustViewBounds="true"
+                   android:scaleType="centerCrop"
+                    />
+   <!-- <RelativeLayout android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:layout_alignParentTop="true"
+                    android:background="#99000000">
+        <LinearLayout android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_centerVertical="true" android:layout_marginLeft="20dp"
+                      android:orientation="vertical">
+            <TextView android:id="@+id/title"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="club"
+                      android:textColor="#ffffff" android:textSize="22dp" />
+            <TextView android:id="@+id/address"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="address"
+                      android:textColor="#ffffff" android:textSize="14dp" android:textIsSelectable="false"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>-->
+<!--    <RelativeLayout android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="#99000000">
+        <LinearLayout android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_centerVertical="true" android:layout_marginLeft="20dp"
+                      android:orientation="vertical" android:layout_toLeftOf="@+id/linearLayout">
+            <TextView android:id="@+id/title"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="club"
+                      android:textColor="#ffffff" android:textSize="22dp" />
+            <TextView android:id="@+id/address"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="address"
+                      android:textColor="#ffffff" android:textSize="13dp" android:textIsSelectable="false"
+                      android:lines="2"/>
+
+        </LinearLayout>
+        <LinearLayout android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_centerVertical="true"
+                      android:orientation="vertical" android:layout_marginRight="20dp"
+                      android:layout_alignParentRight="true" android:id="@+id/linearLayout">
+            <TextView android:id="@+id/distancekm"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="100 km" android:textSize="23dp" android:textColor="#ffffff"/>
+        </LinearLayout>
+    </RelativeLayout>-->
+<!--
+        <TextView android:id="@+id/distance"
+                  style="@style/image_title"
+                  android:text="Hi guys" />
+-->
+    </RelativeLayout>
