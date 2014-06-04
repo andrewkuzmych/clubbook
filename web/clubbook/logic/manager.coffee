@@ -35,8 +35,8 @@ exports.find_club = (club_id, callback)->
   db_model.Venue.findById(club_id).exec (err, club)->   
     if err
       callback err, null
-    else
-      db_model.User.find({'checkin.club': club_id, 'checkin.active': true}).exec (err, users)->
+    else 
+      db_model.User.find({'checkin': { '$elemMatch': { 'club' : club,'active': true}} }).exec (err, users)->
         callback null, club, users  
 
 
@@ -106,7 +106,7 @@ exports.checkin = (params, callback)->
             callback err, user
 
 exports.club_clubbers = (params, callback)->
-  db_model.User.find({'checkin.club': mongoose.Types.ObjectId(params.club_id), 'checkin.active': true}).exec (err, users)->
+  db_model.User.find({'checkin': { '$elemMatch': { 'club' : mongoose.Types.ObjectId(params.club_id),'active': true}} }).exec (err, users)->
     callback err, users
 
 exports.checkout = (params, callback)->
