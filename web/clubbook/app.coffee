@@ -132,6 +132,6 @@ app.get '/_s/checkout/:club_id/:user_id', services.checkout
 app.get '/_s/club_clubbers/:club_id', services.club_clubbers
 app.post '/_s/chat', services.chat
 app.get '/_s/conversation/:user1/:user2', services.get_conversation
-
+app.get '/_s/cron_checkout', services.cron_checkout
 http.createServer(app).listen app.get('port'), ()->
   console.log 'Express server listening on port ' + app.get('port')

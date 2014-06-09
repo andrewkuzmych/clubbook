@@ -120,10 +120,19 @@ exports.checkout = (params, callback)->
         else
           for oldcheckin in user.checkin
             oldcheckin.active = false
-#         user.checkin.push { club: club, lat:club.club_loc.lat, lon:club.club_loc.lon, time: Date.now(), active:false }
           user.save (err)->
             console.log err
             callback err, user 
+
+exports.cron_checkout = (callback)->
+  db_model.User.find({'checkin': { '$elemMatch': { 'active': true, 'time': {'$lte': new Date().getTime() - 1000*60*30 } }} }).exec (err, users)->
+   
+    for user in users
+      for oldcheckin in user.checkin
+        oldcheckin.active = false
+      user.save (err)->
+        console.log err
+        callback err, users 
 
 
 

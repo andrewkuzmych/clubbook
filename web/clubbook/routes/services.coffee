@@ -298,7 +298,18 @@ exports.get_conversation = (req, res)->
       conversation: conversation
 
 
-
+exports.cron_checkout = (req,res)->
+  
+  manager.cron_checkout (err, users)->
+    if err
+      res.json
+        status: "error"
+        message: "error"
+    else
+      res.json
+        status: "ok"
+        result:
+          users: users
 
 
 
