@@ -93,18 +93,22 @@ VenueSchema.index( { club_loc: "2d" } )
 exports.Venue = mongoose.model 'Venue', VenueSchema
 
 #-------------------------------------------------------------------------------------
-#  Checkin
+#  Chat
 #-------------------------------------------------------------------------------------
-CheckinSchema = new mongoose.Schema
+ChatSchema = new mongoose.Schema
   created_on: { type: Date, 'default': Date.now }
   updated_on: { type: Date, 'default': Date.now }
 
-  venue: {type: mongoose.Schema.ObjectId, ref: 'Venue', required: true}
-  user: {type: mongoose.Schema.ObjectId, ref: 'User', required: true}
+  user1: {type: mongoose.Schema.ObjectId, ref: 'User', required: true}
+  user2: {type: mongoose.Schema.ObjectId, ref: 'User', required: true}
+  conversation: [{msg: { type:String, required: true }, time: { type: Date, 'default': Date.now }, from_who: {type: mongoose.Schema.ObjectId, ref: 'User', required: true}}]
 
-CheckinSchema.pre 'save', (next, done) ->
+ChatSchema.pre 'save', (next, done) ->
   this.updated_on = new Date().toISOString()
   next()
 
-CheckinSchema.set('toJSON', { getters: true, virtuals: true })
-exports.Checkin = mongoose.model 'Checkin', CheckinSchema
+ChatSchema.set('toJSON', { getters: true, virtuals: true })
+exports.Chat = mongoose.model 'Chat', ChatSchema
+
+
+

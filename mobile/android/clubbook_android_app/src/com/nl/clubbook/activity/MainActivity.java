@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.*;
@@ -45,8 +46,9 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class MainActivity extends BaseActivity {
-    private DrawerLayout mDrawerLayout;
+
     private ListView mDrawerList;
+    private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private SimpleFacebook mSimpleFacebook;
     Cloudinary cloudinary;
@@ -55,8 +57,9 @@ public class MainActivity extends BaseActivity {
     private static final int PICK_FROM_CAMERA = 1;
     private static final int CROP_FROM_CAMERA = 2;
     private static final int PICK_FROM_FILE = 3;
+
+    private static final int DEFOLT_VIEW = 2;
     // nav drawer title
-    private CharSequence mDrawerTitle;
     // used to store app title
     private CharSequence mTitle;
     // slide menu items
@@ -66,6 +69,28 @@ public class MainActivity extends BaseActivity {
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
     SessionManager session;
+    private BaseFragment current_fragment;
+
+    public BaseFragment getCurrentFragment() {
+        return current_fragment;
+    }
+
+    public void setCurrentFragment(BaseFragment current_fragment) {
+        this.current_fragment = current_fragment;
+    }
+
+    public DrawerLayout getDrawerLayout() {
+        return mDrawerLayout;
+    }
+
+    public ActionBarDrawerToggle getDrawerToggle() {
+        return mDrawerToggle;
+    }
+
+    public void setDefoltTitle()
+    {
+        setTitle(navMenuTitles[DEFOLT_VIEW]);
+    }
 
     private OnLogoutListener mOnLogoutListener = new OnLogoutListener() {
         @Override
@@ -121,12 +146,9 @@ public class MainActivity extends BaseActivity {
         // enabling action bar app icon and behaving it as toggle button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        displayView(2);
-
-
+        displayView(DEFOLT_VIEW);
 
     }
 
@@ -135,15 +157,13 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.main);
         cloudinary = new Cloudinary(getApplicationContext());
         session = new SessionManager(getApplicationContext());
-
-        mTitle = mDrawerTitle = getTitle();
+        mTitle = getTitle();
 
         // load slide menu items
         navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
 
         // nav drawer icons from resources
-        navMenuIcons = getResources()
-                .obtainTypedArray(R.array.nav_drawer_icons);
+        navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
@@ -199,6 +219,9 @@ public class MainActivity extends BaseActivity {
         }
 
         switch (item.getItemId()) {
+            case android.R.id.home:
+                navigateBack();
+                return true;
             case R.id.action_photo:
                 final AlertDialog dialog = selectPhoto();
                 dialog.show();
@@ -242,12 +265,16 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void navigateBack() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        current_fragment.backButtonWasPressed();
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } else {
+            getSupportFragmentManager().popBackStack();
+        }
     }
-
 
     private AlertDialog selectPhoto() {
         final String [] items			= new String [] {"Take from camera", "Select from gallery"};
@@ -437,6 +464,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+
     /**
      * Slide menu item click listener
      * */
@@ -483,8 +511,12 @@ public class MainActivity extends BaseActivity {
 
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, fragment).commit();
+            FragmentTransaction mFragmentTransaction  = fragmentManager.beginTransaction();
+
+
+            mFragmentTransaction.replace(R.id.frame_container, fragment);
+            mFragmentTransaction.commit();
+
 
             // update selected item and title, then close the drawer
             mDrawerList.setItemChecked(position, true);

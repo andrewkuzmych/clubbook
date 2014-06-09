@@ -255,7 +255,47 @@ exports.club_clubbers = (req, res)->
       status: 'ok'
       users: users
 
+exports.chat = (req, res)->
+  params =
+    user_from: req.body.user_from
+    user_to: req.body.user_to
+    msg: req.body.msg
+  
+  manager.chat params, (err, chat)->
+    console.log 1
+    pubnub = require("pubnub").init({ publish_key: "pub-c-b0a0ffb6-6a0f-4907-8d4f-642e500c707a", subscribe_key: "sub-c-f56b81f4-ed0a-11e3-8a10-02ee2ddab7fe"})
+    
+    console.log pubnub
+    console.log 2
+    message = req.body.msg
+    pubnub.publish
+      channel: req.body.user_from + "_" + req.body.user_to
+      message: message
+      callback: (e) ->
+        console.log 3
+        console.log "SUCCESS!", e
+        return
 
+      error: (e) ->
+        console.log 4
+        console.log "FAILED! RETRY PUBLISH!", e
+        return
+
+
+
+    res.json
+      status: 'ok'
+      chat: chat
+
+exports.get_conversation = (req, res)->
+  params =
+    user1: req.params.user1
+    user2: req.params.user2
+  
+  manager.get_conversation params, (err, conversation)->
+    res.json
+      status: 'ok'
+      conversation: conversation
 
 
 

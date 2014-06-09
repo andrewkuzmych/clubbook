@@ -44,6 +44,9 @@ public class SessionManager {
     public static final String KEY_FBACCESSTOKEN = "access_token";
     public static final String KEY_FBACCESSEXPITES = "access_expires";
     public static final String KEY_PERMISSIONS = "permissions";
+    public static final String KEY_CHECKIN_CLUB_ID = "checkin_club_id";
+    public static final String KEY_CHECKIN_CLUB_LAT = "checkin_club_lan";
+    public static final String KEY_CHECKIN_CLUB_LON = "checkin_club_lat";
 
     // Constructor
     public SessionManager(Context context){
@@ -135,6 +138,16 @@ public class SessionManager {
         editor.commit();
     }
 
+    public void putClubInfo(String club_id, String lat, String lon)
+    {
+        editor.putString(KEY_CHECKIN_CLUB_ID, club_id);
+        editor.putString(KEY_CHECKIN_CLUB_LAT, lat);
+        editor.putString(KEY_CHECKIN_CLUB_LON, lon);
+
+        // commit changes
+        editor.commit();
+    }
+
     /**
      * Check login method wil check user login status
      * If false it will redirect user to login page
@@ -171,11 +184,19 @@ public class SessionManager {
         user.put(KEY_GENDER, pref.getString(KEY_GENDER, null));
         user.put(KEY_BIRTHDAY, pref.getString(KEY_BIRTHDAY, null));
         user.put(KEY_AVATAR, pref.getString(KEY_AVATAR, null));
-        //user.put(KEY_FBACCESSTOKEN, pref.getString(KEY_FBACCESSTOKEN, null));
-        //user.put(KEY_FBACCESSEXPITES, pref.getString(KEY_FBACCESSEXPITES, "0"));
 
         // return user
         return user;
+    }
+
+    public HashMap<String, String> getClubInfo(){
+        HashMap<String, String> club = new HashMap<String, String>();
+
+        club.put(KEY_CHECKIN_CLUB_ID, pref.getString(KEY_CHECKIN_CLUB_ID, null));
+        club.put(KEY_CHECKIN_CLUB_LAT, pref.getString(KEY_CHECKIN_CLUB_LAT, null));
+        club.put(KEY_CHECKIN_CLUB_LON, pref.getString(KEY_CHECKIN_CLUB_LON, null));
+
+        return club;
     }
 
     /**

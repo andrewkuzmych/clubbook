@@ -9,7 +9,13 @@ import android.view.ViewGroup;
 /**
  * Created by Andrew on 5/27/2014.
  */
-public class ProfilesFragmant extends Fragment {
+public class ProfilesFragmant extends BaseFragment {
+
+    public ProfilesFragmant()
+    {
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return null;

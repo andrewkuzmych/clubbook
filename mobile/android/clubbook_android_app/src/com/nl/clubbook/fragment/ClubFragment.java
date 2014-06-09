@@ -7,9 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.nl.clubbook.R;
 
-public class ClubFragment extends Fragment {
-	
-	public ClubFragment(){}
+public class ClubFragment extends BaseFragment {
+
+    public ClubFragment()
+    {
+
+    }
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

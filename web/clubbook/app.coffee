@@ -130,5 +130,8 @@ app.get '/_s/cu_count/:distance/:user_lat/:user_lon', services.cu_count
 app.get '/_s/checkin/:club_id/:user_id', services.checkin
 app.get '/_s/checkout/:club_id/:user_id', services.checkout
 app.get '/_s/club_clubbers/:club_id', services.club_clubbers
+app.post '/_s/chat', services.chat
+app.get '/_s/conversation/:user1/:user2', services.get_conversation
+
 http.createServer(app).listen app.get('port'), ()->
   console.log 'Express server listening on port ' + app.get('port')

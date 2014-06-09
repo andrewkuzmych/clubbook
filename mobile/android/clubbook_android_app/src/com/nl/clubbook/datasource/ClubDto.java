@@ -14,6 +14,7 @@ public class ClubDto {
     private String lon;
     private String avatar;
     private List<String> photos;
+    private List<UserDto> users;
     private float distance;
 
     public String getId() {
@@ -22,6 +23,14 @@ public class ClubDto {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public List<UserDto> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<UserDto> users) {
+        this.users = users;
     }
 
     public String getTitle() {

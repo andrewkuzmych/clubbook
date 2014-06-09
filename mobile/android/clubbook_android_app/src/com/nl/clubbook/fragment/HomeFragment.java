@@ -3,6 +3,7 @@ package com.nl.clubbook.fragment;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,11 @@ import android.widget.SeekBar;
 import android.widget.TabHost;
 import android.widget.TextView;
 import com.nl.clubbook.R;
+import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.helper.SessionManager;
+import com.sromku.simple.fb.SimpleFacebook;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends BaseFragment {
 
     private FragmentTabHost tabHost;
     private SeekBar distance;
@@ -20,7 +23,10 @@ public class HomeFragment extends Fragment {
     private String TAB_PROFILES = "Profiles";
     //private TabHost tabHost;
 
-	public HomeFragment(){}
+    public HomeFragment()
+    {
+
+    }
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -128,9 +134,6 @@ public class HomeFragment extends Fragment {
 
     //View clubView =  tabHost.getTabWidget().getChildTabViewAt(0);
     //((TextView)clubView.findViewById(R.id.text)).setText("Clubs (34) changed");
-
-
-
 
     private int convertToKm(int value)
     {

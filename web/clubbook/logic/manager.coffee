@@ -255,3 +255,26 @@ exports.save_or_update_fb_user = (params, callback)->
 
               callback err, user
 
+exports.chat = (params, callback)->
+  query = { '$or': [{ 'user1': mongoose.Types.ObjectId(params.user_from), 'user2': mongoose.Types.ObjectId(params.user_to) }, { 'user1': mongoose.Types.ObjectId(params.user_to), 'user2': mongoose.Types.ObjectId(params.user_from) }] }
+
+  db_model.Chat.findOne(query).exec (err, chat)->
+    if not chat
+      chat = new db_model.Chat
+        user1: mongoose.Types.ObjectId(params.user_from)
+        user2: mongoose.Types.ObjectId(params.user_to)      
+    
+    chat.conversation.push {msg: params.msg, from_who: mongoose.Types.ObjectId(params.user_from)}
+
+    chat.save (err)->
+        console.log err
+        callback err, chat
+
+exports.get_conversation = (params, callback)->
+  query = { '$or': [{ 'user1': mongoose.Types.ObjectId(params.user1), 'user2': mongoose.Types.ObjectId(params.user2) }, { 'user1': mongoose.Types.ObjectId(params.user2), 'user2': mongoose.Types.ObjectId(params.user1) }] }
+
+  db_model.Chat.findOne(query).exec (err, chat)->
+    if not chat
+      callback err, []
+    else    
+      callback err, chat.conversation    

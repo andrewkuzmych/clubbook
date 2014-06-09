@@ -1,34 +1,30 @@
 package com.nl.clubbook.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
-import com.nl.clubbook.activity.ClubActivity;
 import com.nl.clubbook.adapter.CheckinAdapter;
-import com.nl.clubbook.adapter.ClubsAdapter;
 import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.helper.LocationHelper;
+import com.nl.clubbook.helper.LocationCheckinHelper;
 
-import java.util.Comparator;
 import java.util.List;
 
-public class CheckinFragment extends Fragment {
+public class CheckinFragment extends BaseFragment {
     ListView club_list;
 
-	public CheckinFragment(){}
-	
-	
+    public CheckinFragment()
+    {
+
+    }
+
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -51,7 +47,7 @@ public class CheckinFragment extends Fragment {
 
         final Context contextThis = getActivity();
 
-        Location currentLocation  = LocationHelper.getCurrentLocation(getActivity());
+        Location currentLocation  = LocationCheckinHelper.getBestLocation(getActivity());
 
         ((BaseActivity)getActivity()).showProgress("Loading...");
 

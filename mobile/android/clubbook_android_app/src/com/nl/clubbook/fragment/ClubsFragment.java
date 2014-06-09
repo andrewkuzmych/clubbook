@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.location.Location;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +17,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
-import com.nl.clubbook.activity.ClubActivity;
+import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.adapter.ClubsAdapter;
 import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.helper.LocationHelper;
+import com.nl.clubbook.helper.LocationCheckinHelper;
 
 import java.util.Comparator;
 import java.util.List;
@@ -26,21 +29,37 @@ import java.util.List;
 /**
  * Created by Andrew on 5/27/2014.
  */
-public class ClubsFragment extends Fragment {
+public class ClubsFragment extends BaseFragment {
     ListView club_list;
     private ProgressDialog progressDialog;
+
+    public ClubsFragment()
+    {
+
+    }
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_clubs, container, false);
         club_list = (ListView) v.findViewById(R.id.club_listview);
-
+        String distance =  ((HomeFragment)getParentFragment()).getSelectedDistance();
+        loadData(distance);
         return v;
     }
 
-    public void onStart() {
-        super.onStart();
-        String distance =  ((HomeFragment)getParentFragment()).getSelectedDistance();
-        loadData(distance);
+    @Override
+    public void onDestroyView()
+    {
+        super.onDestroyView();
+    }
+
+    public void onActivityCreated (Bundle savedInstanceState)
+    {
+        super.onActivityCreated(savedInstanceState);
     }
 
     protected void loadData(String distanceKm) {
@@ -48,19 +67,20 @@ public class ClubsFragment extends Fragment {
         DataStore.setContext(getActivity());
 
         final Context contextThis = getActivity();
+        final BaseFragment thisInstance = this;
 
-        Location currentLocation  = LocationHelper.getCurrentLocation(getActivity());
+        Location currentLocation  = LocationCheckinHelper.getBestLocation(getActivity());
 
         ((BaseActivity)getActivity()).showProgress("Loading...");
 
         DataStore.retrievePlaces(distanceKm, String.valueOf(currentLocation.getLatitude()), String.valueOf(currentLocation.getLongitude()), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
-                if (failed)
+               /* if (failed)
                 {
                    // hideProgress(false);
                     return;
-                }
+                }*/
                 //hideProgress(true);
                 ((BaseActivity)getActivity()).hideProgress(true);
 
@@ -87,16 +107,22 @@ public class ClubsFragment extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
-                        //String venue_id = ((TextView) view.findViewById(R.id.venue_id)).getText().toString();
                         String club_id = ((TextView) view.findViewById(R.id.club_id)).getText().toString();
-                        Intent in = new Intent(getActivity().getApplicationContext(), ClubActivity.class);
-                        in.putExtra("club_id", club_id);
-                        startActivity(in);
+                        SelectedClubFragment fragment = new SelectedClubFragment(thisInstance, club_id);
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction mFragmentTransaction  = fragmentManager.beginTransaction();
+
+                        mFragmentTransaction.add(R.id.frame_container, fragment);
+                        mFragmentTransaction.addToBackStack(null);
+                        mFragmentTransaction.hide(getParentFragment());
+                        mFragmentTransaction.commit();
+                        //mFragmentTransaction.replace(R.id.frame_container, fragment).commit();
 
                     }
                 });
             }
         });
     }
+
 
 }

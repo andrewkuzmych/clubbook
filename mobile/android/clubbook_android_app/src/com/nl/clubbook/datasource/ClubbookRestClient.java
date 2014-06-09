@@ -42,8 +42,24 @@ public class ClubbookRestClient {
         client.get(getBcAbsoluteUrl("find_club/" + place_id), params, responseHandler);
     }
 
+    public static void checkin(String place_id, String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("checkin/" + place_id + "/" + user_id), params, responseHandler);
+    }
+
+    public static void checkout(String place_id, String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("checkout/" + place_id + "/" + user_id), params, responseHandler);
+    }
+
     public static void file(RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.post(getBcAbsoluteUrl("file"), params, responseHandler);
+    }
+
+    public static void get_conversation(String user1, String user2, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("conversation/" + user1 + "/" + user2), params, responseHandler);
+    }
+
+    public static void send_msg(RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.post(getBcAbsoluteUrl("chat"), params, responseHandler);
     }
 
 }

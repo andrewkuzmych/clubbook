@@ -7,9 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.nl.clubbook.R;
 
-public class FriendsFragment extends Fragment {
-	
-	public FriendsFragment(){}
+public class FriendsFragment extends BaseFragment {
+
+    public FriendsFragment()
+    {
+
+    }
 	
 	
 	@Override

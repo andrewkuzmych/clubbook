@@ -12,8 +12,7 @@ import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.helper.ImageHelper;
-import com.nl.clubbook.helper.LocationHelper;
-import com.nl.clubbook.helper.SessionManager;
+import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
@@ -76,7 +75,7 @@ public class ClubsAdapter extends ArrayAdapter<ClubDto> {
         }
 
         ClubDto club = data[position];
-        String distance = LocationHelper.calculateDistance(context, club.getDistance());
+        String distance = LocationCheckinHelper.calculateDistance(context, club.getDistance());
         holder.distance.setText(distance);
         holder.club_title.setText(club.getTitle());
         holder.club_id.setText(club.getId());
