@@ -124,15 +124,20 @@ exports.checkout = (params, callback)->
             console.log err
             callback err, user 
 
-exports.cron_checkout = (callback)->
+exports.cron_checkout = ()->
+
   db_model.User.find({'checkin': { '$elemMatch': { 'active': true, 'time': {'$lte': new Date().getTime() - 1000*60*30 } }} }).exec (err, users)->
-   
-    for user in users
-      for oldcheckin in user.checkin
-        oldcheckin.active = false
-      user.save (err)->
-        console.log err
-        callback err, users 
+    
+     async.each users, ((user, callback) ->
+
+         
+          for oldcheckin in user.checkin
+             oldcheckin.active = false
+          user.save (err)->
+            console.log err
+
+        ), (err) ->
+          console.log "iterating done"
 
 
 
