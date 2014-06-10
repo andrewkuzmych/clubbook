@@ -30,7 +30,7 @@ db_model = require("./logic/model")
 # controllers
 controller = require('./routes/controller')
 services = require('./routes/services')
-
+cron = require('./routes/cron')
 #---------------------------------------------------------------------
 
 ###passport.serializeUser (user, done) ->
@@ -133,5 +133,13 @@ app.get '/_s/club_clubbers/:club_id', services.club_clubbers
 app.post '/_s/chat', services.chat
 app.get '/_s/conversation/:user1/:user2', services.get_conversation
 app.get '/_s/cron_checkout', services.cron_checkout
+if config.is_test_server == "false"
+  checkout_job = new cronJob(
+    cronTime: "0 */5 * * * *"
+    onTick: ->
+      cron.cron_checkout()
+    start: false
+  )
+  checkout_job.start()
 http.createServer(app).listen app.get('port'), ()->
   console.log 'Express server listening on port ' + app.get('port')
