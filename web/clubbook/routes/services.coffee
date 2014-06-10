@@ -262,22 +262,42 @@ exports.chat = (req, res)->
     msg: req.body.msg
   
   manager.chat params, (err, chat)->
-    console.log 1
-    pubnub = require("pubnub").init({ publish_key: "pub-c-b0a0ffb6-6a0f-4907-8d4f-642e500c707a", subscribe_key: "sub-c-f56b81f4-ed0a-11e3-8a10-02ee2ddab7fe"})
+    pubnub = require("pubnub").init({ publish_key: config.pub_publish_key, subscribe_key: config.pub_subscribe_key})
     
-    console.log pubnub
-    console.log 2
     message = req.body.msg
+    
+    pubnub.here_now
+      channel: req.body.user_from + "_" + req.body.user_to
+      callback: (m) ->
+        console.log m.occupancy
+        if m.occupancy == 0
+          Parse = require("parse").Parse
+          Parse.initialize config.parse_app_id, config.parse_js_key
+          console.log 'user_'+req.body.user_to
+          Parse.Push.send
+              channels: [ 'user_'+req.body.user_to]
+              data:
+                alert: req.body.msg
+            ,
+              success: ->
+                console.log "push sent"
+              
+              # Push was successful
+              error: (error) ->
+                console.log "push error: " 
+                console.log error
+        return
+
+
+
     pubnub.publish
       channel: req.body.user_from + "_" + req.body.user_to
       message: message
       callback: (e) ->
-        console.log 3
         console.log "SUCCESS!", e
         return
 
       error: (e) ->
-        console.log 4
         console.log "FAILED! RETRY PUBLISH!", e
         return
 

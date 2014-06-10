@@ -11,11 +11,17 @@ default:
     description: ""
     admins: 100000896260238
     app_id: 369491643181697
-  scan_time_limit: "60000" # 1000*60*1
+  pub_publish_key: "pub-c-b0a0ffb6-6a0f-4907-8d4f-642e500c707a"
+  pub_subscribe_key: "sub-c-f56b81f4-ed0a-11e3-8a10-02ee2ddab7fe"
+  parse_app_id: "71OeWikSy4nxlGuefO2O6AFhuENP2Nqz1fjB88x3"
+  parse_js_key: "LPYp2J4erP3V8A9KpmXhfbxAmcHjVfoxU9CLOfqU"
 
 production:
   db:
     connection: "mongodb://root:root@ds035037.mongolab.com:35037/clubbook"
   use_analitics: "true"
   is_test_server: "false"
-  scan_time_limit: "43200000" # 1000*60*60*24
+  pub_publish_key: "pub-c-b0a0ffb6-6a0f-4907-8d4f-642e500c707a"
+  pub_subscribe_key: "sub-c-f56b81f4-ed0a-11e3-8a10-02ee2ddab7fe"
+  parse_app_id: "71OeWikSy4nxlGuefO2O6AFhuENP2Nqz1fjB88x3"
+  parse_js_key: "LPYp2J4erP3V8A9KpmXhfbxAmcHjVfoxU9CLOfqU"
