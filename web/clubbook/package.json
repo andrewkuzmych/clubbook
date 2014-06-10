@@ -31,7 +31,8 @@
 		"google-oauth-jwt": "0.1.2",
 		"time": "0.10.0",
 		"cron": "1.0.3",
-		"pubnub": "3.6.4"
+		"pubnub": "3.6.4",
+		"parse": "1.2.17"
 
     },
     "engines": {
