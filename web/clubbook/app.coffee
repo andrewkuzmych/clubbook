@@ -131,7 +131,9 @@ app.get '/_s/checkin/:club_id/:user_id', services.checkin
 app.get '/_s/checkout/:club_id/:user_id', services.checkout
 app.get '/_s/club_clubbers/:club_id', services.club_clubbers
 app.post '/_s/chat', services.chat
+app.get '/_s/readchat/:chat_id', services.readchat
 app.get '/_s/conversation/:user1/:user2', services.get_conversation
+app.get '/_s/conversations/:user_id', services.get_conversations
 app.get '/_s/cron_checkout', services.cron_checkout
 if config.is_test_server == "false"
   checkout_job = new cronJob(

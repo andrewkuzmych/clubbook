@@ -292,3 +292,23 @@ exports.get_conversation = (params, callback)->
       callback err, []
     else    
       callback err, chat.conversation    
+
+exports.get_conversations = (params, callback)->
+
+  db_model.Chat.find({'$or':[{'user1': mongoose.Types.ObjectId(params.user_id)}, {'user2': mongoose.Types.ObjectId(params.user_id)}]}, { 'conversation': { '$slice': -1 } }).populate("user1",'_id photos name').populate("user2",'_id photos name').exec (err, chats)->
+    if not chats
+      callback err, []
+    else    
+      callback err, chats    
+  
+  
+  
+
+
+
+
+
+
+
+
+

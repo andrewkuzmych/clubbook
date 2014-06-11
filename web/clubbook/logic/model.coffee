@@ -101,7 +101,7 @@ ChatSchema = new mongoose.Schema
 
   user1: {type: mongoose.Schema.ObjectId, ref: 'User', required: true}
   user2: {type: mongoose.Schema.ObjectId, ref: 'User', required: true}
-  conversation: [{msg: { type:String, required: true }, time: { type: Date, 'default': Date.now }, from_who: {type: mongoose.Schema.ObjectId, ref: 'User', required: true}}]
+  conversation: [{msg: { type: String, required: true }, time: { type: Date, 'default': Date.now }, read: {type: Boolean, 'default': false},from_who: {type: mongoose.Schema.ObjectId, ref: 'User', required: true}}]
 
 ChatSchema.pre 'save', (next, done) ->
   this.updated_on = new Date().toISOString()

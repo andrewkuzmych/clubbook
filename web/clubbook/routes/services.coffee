@@ -307,11 +307,21 @@ exports.chat = (req, res)->
       status: 'ok'
       chat: chat
 
+exports.get_conversations = (req, res)->
+
+  params =
+    user_id: req.params.user_id
+    
+  manager.get_conversations params, (err, conversations)->
+    res.json
+      status: 'ok'
+      conversations: conversations
+
 exports.get_conversation = (req, res)->
   params =
     user1: req.params.user1
     user2: req.params.user2
-  
+      
   manager.get_conversation params, (err, conversation)->
     res.json
       status: 'ok'
@@ -324,6 +334,13 @@ exports.cron_checkout = (req,res)->
 
   res.json
     status: "ok"
+exports.readchat = (req, res)->
+  params =
+    chat_id: req.params.chat_id
+ manager.readchat params, (err, readchat)->
+    res.json
+      status: 'ok'
+      
 
 
 
