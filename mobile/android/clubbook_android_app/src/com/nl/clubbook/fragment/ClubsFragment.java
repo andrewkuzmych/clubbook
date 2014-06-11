@@ -76,11 +76,11 @@ public class ClubsFragment extends BaseFragment {
         DataStore.retrievePlaces(distanceKm, String.valueOf(currentLocation.getLatitude()), String.valueOf(currentLocation.getLongitude()), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
-               /* if (failed)
+                if (failed)
                 {
-                   // hideProgress(false);
+                    ((BaseActivity)getActivity()).hideProgress(false);
                     return;
-                }*/
+                }
                 //hideProgress(true);
                 ((BaseActivity)getActivity()).hideProgress(true);
 

@@ -175,7 +175,7 @@ exports.create_club = (req, res)->
 
 exports.find_club = (req, res)->
 
-  manager.find_club req.params.club_id, (err, club, users)->
+  manager.find_club req.params.club_id, req.params.user_id, (err, club, users)->
 
       if err 
         res.json
@@ -232,6 +232,16 @@ exports.checkin = (req, res)->
     club_id: req.params.club_id
 
   manager.checkin params, (err, user)->
+    res.json
+      status: 'ok'
+      user: user
+
+exports.update_checkin = (req, res)->
+  params = 
+    user_id: req.params.user_id
+    club_id: req.params.club_id
+
+  manager.update_checkin params, (err, user)->
     res.json
       status: 'ok'
       user: user

@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import com.nl.clubbook.activity.MainActivity;
+import com.parse.PushService;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -108,6 +110,7 @@ public class SessionManager {
      * Create login session
      * */
     public void createLoginSession(String id, String name, String email, String gender, String birthday, String avatar){
+        PushService.subscribe(_context, "user_" + id, MainActivity.class);
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
 

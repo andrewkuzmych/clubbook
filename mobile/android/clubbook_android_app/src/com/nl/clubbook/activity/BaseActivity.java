@@ -123,9 +123,9 @@ public class BaseActivity extends ActionBarActivity {
     protected void setRetryLayout() {
         is_retry = true;
         //dialog = new ProgressDialog(this);
-        //mainView =  (RelativeLayout) findViewById(R.id.main_layout);
+        mainView =  (RelativeLayout) findViewById(R.id.main_layout);
         failedView = (LinearLayout)getLayoutInflater().inflate(R.layout.retry, null);//new LinearLayout(this);
-        //contentView = findViewById(R.id.content_layout);
+        contentView = findViewById(R.id.content_layout);
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(-1, -1);
         params.addRule(RelativeLayout.CENTER_HORIZONTAL|RelativeLayout.CENTER_VERTICAL);
@@ -143,8 +143,8 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     private void setBaseHandlers() {
-      /*  // back button handler
-        ImageButton back_button = (ImageButton) findViewById(R.id.back_button);
+        // back button handler
+       /* ImageButton back_button = (ImageButton) findViewById(R.id.back_button);
         back_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 navigateBack();

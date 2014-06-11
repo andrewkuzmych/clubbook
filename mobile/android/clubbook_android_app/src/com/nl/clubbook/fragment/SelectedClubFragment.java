@@ -1,10 +1,8 @@
 package com.nl.clubbook.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -14,7 +12,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.*;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
-import com.nl.clubbook.activity.ChatActivity;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.adapter.ProfileAdapter;
 import com.nl.clubbook.control.ExpandableHeightGridView;
@@ -25,7 +22,6 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-
 import java.util.HashMap;
 
 /**
@@ -49,12 +45,6 @@ public class SelectedClubFragment extends BaseFragment {
     protected ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
     private String club_id;
 
-    @SuppressWarnings("deprecation")
-   // private final GestureDetector detector = new GestureDetector(getActivity(), new SwipeGestureDetector());
-
-/*    public SelectedClubFragment() {
-    }*/
-
     public SelectedClubFragment(BaseFragment prvoiusFragment, String club_id) {
         super(prvoiusFragment);
         this.club_id = club_id;
@@ -63,7 +53,6 @@ public class SelectedClubFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
 
         imageLoader = ImageLoader.getInstance();
         options = new DisplayImageOptions.Builder()
@@ -147,13 +136,13 @@ public class SelectedClubFragment extends BaseFragment {
     }
 
     protected void loadData() {
-       /* Intent in = getIntent();
-        String club_id = in.getStringExtra("club_id");*/
         final LayoutInflater inflater = LayoutInflater.from(getActivity());
         final BaseFragment thisInstance = this;
+        final SessionManager session = new SessionManager(getActivity());
+        final HashMap<String, String> user = session.getUserDetails();
 
         ((BaseActivity)getActivity()).showProgress("Loading...");
-        DataStore.retrievePlace(club_id, new DataStore.OnResultReady() {
+        DataStore.retrievePlace(club_id, user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (failed) {
@@ -174,7 +163,6 @@ public class SelectedClubFragment extends BaseFragment {
                 setHandlers();
                 // Load profiles
                 profileGridView.setExpanded(true);
-
                 profileAdapter = new ProfileAdapter(mContext, R.layout.profile_item, club.getUsers());
                 profileGridView.setAdapter(profileAdapter);
 
@@ -191,8 +179,6 @@ public class SelectedClubFragment extends BaseFragment {
                         mFragmentTransaction.addToBackStack(null);
                         mFragmentTransaction.hide(SelectedClubFragment.this);
                         mFragmentTransaction.commit();
-                       // mFragmentTransaction.replace(R.id.frame_container, fragment).commit();
-
                     }
 
                 });
@@ -217,8 +203,8 @@ public class SelectedClubFragment extends BaseFragment {
     private void setHandlers() {
         checkin.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View view) {
-                final SessionManager session = new SessionManager(getActivity().getApplicationContext());
-                final HashMap<String, String> user = session.getUserDetails();
+                //final SessionManager session = new SessionManager(getActivity().getApplicationContext());
+                //final HashMap<String, String> user = session.getUserDetails();
 
                 if(LocationCheckinHelper.isCheckinHere(getActivity(), club))
                 {
@@ -232,7 +218,6 @@ public class SelectedClubFragment extends BaseFragment {
                             }
                         }
                     });
-
                 }
                 else
                 {
@@ -250,14 +235,6 @@ public class SelectedClubFragment extends BaseFragment {
             }
         });
 
-       /* mViewFlipper.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(final View view, final MotionEvent event) {
-                return detector.onTouchEvent(event);
-                //return true;
-            }
-        });*/
-
         //animation listener
         mAnimationListener = new Animation.AnimationListener() {
             public void onAnimationStart(Animation animation) {
@@ -273,13 +250,6 @@ public class SelectedClubFragment extends BaseFragment {
         };
     }
 
-
-  /*  @Override
-    public boolean dispatchTouchEvent(MotionEvent ev){
-        //super.dispatchTouchEvent(ev);
-        return detector.onTouchEvent(ev);
-    }*/
-
     @Override
     public void onStart()
     {
@@ -289,42 +259,6 @@ public class SelectedClubFragment extends BaseFragment {
             ((MainActivity) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
     }
-
-   /* class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onDown(MotionEvent e) {
-            return true;
-        }
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            try {
-
-                // right to left swipe
-                if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.left_in));
-                    mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext, R.anim.left_out));
-                    // controlling animation
-                    mViewFlipper.getInAnimation().setAnimationListener(mAnimationListener);
-                    mViewFlipper.showNext();
-                } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.right_in));
-                    mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext,R.anim.right_out));
-                    // controlling animation
-                    mViewFlipper.getInAnimation().setAnimationListener(mAnimationListener);
-                    mViewFlipper.showPrevious();
-                }
-
-                image_slider.setText(String.valueOf(mViewFlipper.getDisplayedChild() + 1) + "/" + String.valueOf(mViewFlipper.getChildCount()));
-                return true;
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return false;
-        }
-    }    */
 
     @Override
     public void backButtonWasPressed() {
