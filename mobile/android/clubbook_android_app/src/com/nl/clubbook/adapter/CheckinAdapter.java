@@ -158,12 +158,11 @@ public class CheckinAdapter extends ArrayAdapter<ClubDto> {
         holder.club_title.setText(club.getTitle());
         holder.club_id.setText(club.getId());
         holder.club_address.setText(club.getAddress());
-        holder.checkin.setTag(club);
-
         String image_url = ImageHelper.GenarateUrl(club.getAvatar(), "w_300,h_300,c_fit");
         holder.avatar.setTag(image_url);
         imageLoader.displayImage(image_url, holder.avatar, options, animateFirstListener);
 
+        holder.checkin.setTag(club);
         if(LocationCheckinHelper.isCheckinHere(context, club)) {
             UiHelper.changeCheckinState(context, holder.checkin, false);
         } else {

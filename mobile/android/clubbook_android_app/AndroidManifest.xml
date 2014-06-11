@@ -5,11 +5,17 @@
           android:versionName="1.0">
     <uses-sdk android:minSdkVersion="8"/>
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <permission android:name="com.nl.clubbook.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="com.nl.clubbook.permission.C2D_MESSAGE" />
 
-    <application  android:name=".ClubbookApplication" android:label="@string/app_name"  android:theme="@style/AppTheme">
+
+    <application  android:icon="@drawable/icon_play" android:name=".ClubbookApplication" android:label="@string/app_name"  android:theme="@style/AppTheme">
         <activity android:name=".activity.MainLoginActivity"  android:theme="@style/AppTheme"
                   android:screenOrientation="portrait"
                   android:configChanges="keyboardHidden|orientation">
@@ -35,18 +41,36 @@
         <activity android:name=".activity.LoginActivity"
                   android:screenOrientation="portrait"
                   android:configChanges="keyboardHidden|orientation"/>
-        <activity android:name=".activity.ClubActivity"
+<!--        <activity android:name=".activity.ClubActivity"
                   android:screenOrientation="portrait"
                   android:configChanges="keyboardHidden|orientation">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".activity.MainActivity" />
-        </activity>
+        </activity>-->
         <activity android:name=".activity.ChatActivity"
                   android:screenOrientation="portrait"
                   android:configChanges="keyboardHidden|orientation"/>
 
         <meta-data android:name="CLOUDINARY_URL" android:value="cloudinary://635173958253643:kc8bGmuk3HgDJCqQxMjuTbgTwJ0@ddsoyfjll"/>
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/fb_app_id"/>
+
+
+        <service android:name="com.parse.PushService" />
+
+        <receiver android:name="com.parse.ParseBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.parse.GcmBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="com.nl.clubbook" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest> 

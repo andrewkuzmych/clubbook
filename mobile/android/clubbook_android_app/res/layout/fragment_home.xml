@@ -24,10 +24,6 @@
                     android:id="@+id/tabcontent"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent">
-                <TextView
-                        android:text="Hallo1"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent" />
 
             </FrameLayout>
         </LinearLayout>

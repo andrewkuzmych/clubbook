@@ -125,14 +125,16 @@ app.post '/_s/signinmail', services.signinmail
 app.post '/_s/create_club', services.create_club
 app.get '/_s/user/by_id/:user_id', services.get_user_by_id
 app.get '/_s/list_club/:distance/:user_lat/:user_lon', services.list_club
-app.get '/_s/find_club/:club_id', services.find_club
+app.get '/_s/find_club/:club_id/:user_id', services.find_club
 app.get '/_s/cu_count/:distance/:user_lat/:user_lon', services.cu_count
 app.get '/_s/checkin/:club_id/:user_id', services.checkin
+app.get '/_s/checkin/update/:club_id/:user_id', services.update_checkin
 app.get '/_s/checkout/:club_id/:user_id', services.checkout
 app.get '/_s/club_clubbers/:club_id', services.club_clubbers
 app.post '/_s/chat', services.chat
 app.get '/_s/conversation/:user1/:user2', services.get_conversation
 app.get '/_s/cron_checkout', services.cron_checkout
+
 if config.is_test_server == "false"
   checkout_job = new cronJob(
     cronTime: "0 */5 * * * *"
@@ -141,5 +143,6 @@ if config.is_test_server == "false"
     start: false
   )
   checkout_job.start()
+
 http.createServer(app).listen app.get('port'), ()->
   console.log 'Express server listening on port ' + app.get('port')

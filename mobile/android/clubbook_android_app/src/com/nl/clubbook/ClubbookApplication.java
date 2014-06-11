@@ -2,8 +2,11 @@ package com.nl.clubbook;
 
 import android.app.Application;
 import com.facebook.SessionLoginBehavior;
+import com.nl.clubbook.activity.MainActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.parse.Parse;
+import com.parse.PushService;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
@@ -21,6 +24,11 @@ public class ClubbookApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Parse.initialize(this, "71OeWikSy4nxlGuefO2O6AFhuENP2Nqz1fjB88x3", "J5RrDFEhrHH7ns75OOWmNM4Wg52yEjkfxYAxvvDj");
+        PushService.setDefaultPushCallback(this, MainActivity.class);
+
+
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext()).build();
         ImageLoader.getInstance().init(config);

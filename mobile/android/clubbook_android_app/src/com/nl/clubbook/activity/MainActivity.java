@@ -9,6 +9,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,6 +19,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -31,6 +33,7 @@ import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.model.NavDrawerItem;
 import com.sromku.simple.fb.SimpleFacebook;
+import com.sromku.simple.fb.entities.Post;
 import com.sromku.simple.fb.listeners.OnLogoutListener;
 
 import java.io.*;
@@ -58,9 +61,7 @@ public class MainActivity extends BaseActivity {
     private static final int CROP_FROM_CAMERA = 2;
     private static final int PICK_FROM_FILE = 3;
 
-    private static final int DEFOLT_VIEW = 2;
-    // nav drawer title
-    // used to store app title
+    private static final int DEFOLT_VIEW = 1;
     private CharSequence mTitle;
     // slide menu items
     private String[] navMenuTitles;
@@ -127,10 +128,9 @@ public class MainActivity extends BaseActivity {
         navDrawerItems.add(new NavDrawerItem(user.get(SessionManager.KEY_NAME), image_url, true));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(3, -1)));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(3, -1)));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(3, -1), true, "3"));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1), true, "3"));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(3, -1)));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(3, -1)));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(3, -1)));
 
         // Recycle the typed array
         navMenuIcons.recycle();
@@ -159,10 +159,11 @@ public class MainActivity extends BaseActivity {
         session = new SessionManager(getApplicationContext());
         mTitle = getTitle();
 
-        // load slide menu items
-        navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
+        getSupportActionBar().setIcon(
+                new ColorDrawable(getResources().getColor(android.R.color.transparent)));
 
-        // nav drawer icons from resources
+
+        navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
         navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -187,6 +188,7 @@ public class MainActivity extends BaseActivity {
             }
         };
 
+        setRetryLayout();
         loadData();
     }
 
@@ -265,13 +267,13 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void navigateBack() {
-        current_fragment.backButtonWasPressed();
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_HOME);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         } else {
+            current_fragment.backButtonWasPressed();
             getSupportFragmentManager().popBackStack();
         }
     }
@@ -487,21 +489,18 @@ public class MainActivity extends BaseActivity {
                 fragment = new ProfileFragment();
                 break;
             case 1:
-                fragment = new CheckinFragment();
-                break;
-            case 2:
                 fragment = new HomeFragment();
                 break;
-            case 3:
+            case 2:
                 fragment = new  ClubFragment();
                 break;
-            case 4:
+            case 3:
                 fragment = new MessagesFragment();
                 break;
-            case 5:
+            case 4:
                 fragment = new FriendsFragment();
                 break;
-            case 6:
+            case 5:
                 fragment = new SettingsFragment();
                 break;
 

@@ -11,8 +11,7 @@ public class ClubbookRestClient {
     private static AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
 
     private static final String BC_BASE_URL = "http://clubbookapp.herokuapp.com/_s/";
-    //private static final String BC_BASE_URL = "http://192.168.2.106:3000/_s/";
-    //private static final String BC_BASE_URL = "http://mysterious-bastion-9023.herokuapp.com/_s/";
+    //private static final String BC_BASE_URL = "http://192.168.2.112:3000/_s/";
 
     private static String getBcAbsoluteUrl(String relativeUrl) {
         return BC_BASE_URL + relativeUrl;
@@ -38,12 +37,16 @@ public class ClubbookRestClient {
         client.get(getBcAbsoluteUrl("list_club/" + distance + "/" + lat + "/" + lon), params, responseHandler);
     }
 
-    public static void retrievePlace(String place_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("find_club/" + place_id), params, responseHandler);
+    public static void retrievePlace(String place_id, String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("find_club/" + place_id + "/" + user_id), params, responseHandler);
     }
 
     public static void checkin(String place_id, String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getBcAbsoluteUrl("checkin/" + place_id + "/" + user_id), params, responseHandler);
+    }
+
+    public static void updateCheckin(String place_id, String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("checkin/update/" + place_id + "/" + user_id), params, responseHandler);
     }
 
     public static void checkout(String place_id, String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {

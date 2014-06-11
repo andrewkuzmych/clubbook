@@ -20,7 +20,7 @@ exports.signinmail = (params, callback)->
   else if __.isEmpty params.password?.trim()  
       callback 'password is empty', null
   else
-    db_model.User.findOne({"email":params.email,"password":params.password }).exec (err, user)->
+    db_model.User.findOne({"email":params.email,"password":params.password },{ checkin: 0 }).exec (err, user)->
       
       if user
         callback null, user
@@ -31,12 +31,12 @@ exports.list_club = (params, callback)->
   db_model.Venue.find({ 'club_loc':{ '$near' : [ params.lat,params.lon], '$maxDistance' :  params.distance/111.12 }}).exec (err, clubs)->
     callback err, clubs
 
-exports.find_club = (club_id, callback)->
+exports.find_club = (club_id, user_id, callback)->
   db_model.Venue.findById(club_id).exec (err, club)->   
     if err
       callback err, null
     else 
-      db_model.User.find({'checkin': { '$elemMatch': { 'club' : club,'active': true}} }).exec (err, users)->
+      db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}, '_id': {'$ne':  mongoose.Types.ObjectId(user_id)}}, { checkin: 0 }).exec (err, users)->
         callback null, club, users  
 
 
@@ -87,13 +87,17 @@ exports.cu_count = (params, callback)->
     console.log 4
     callback err, club_count
 
+exports.club_clubbers = (params, callback)->
+  db_model.User.find({'checkin': { '$elemMatch': { 'club' : mongoose.Types.ObjectId(params.club_id),'active': true}} }, { checkin: 0 }).exec (err, users)->
+    callback err, users
+
   
 exports.checkin = (params, callback)->
   db_model.Venue.findById(params.club_id).exec (err, club)->
     if not club
       callback 'club does not exist', null
     else
-      db_model.User.findById(params.user_id).exec (err, user)->
+      db_model.User.findById({'_id': mongoose.Types.ObjectId(params.user_id)}).exec (err, user)->
         if not user
           callback 'user does not exist', null
         else
@@ -105,42 +109,51 @@ exports.checkin = (params, callback)->
             console.log err
             callback err, user
 
-exports.club_clubbers = (params, callback)->
-  db_model.User.find({'checkin': { '$elemMatch': { 'club' : mongoose.Types.ObjectId(params.club_id),'active': true}} }).exec (err, users)->
-    callback err, users
+exports.update_checkin = (params, callback)->
+  db_model.Venue.findById(params.club_id).exec (err, club)->
+    if not club
+      callback 'club does not exist', null
+    else
+      db_model.User.findById({'_id': mongoose.Types.ObjectId(params.user_id)}).exec (err, user)->
+        if not user
+          callback 'user does not exist', null
+        else
+          for oldcheckin in user.checkin
+            if oldcheckin.club.toString() == club._id.toString() && oldcheckin.active == true
+              oldcheckin.time = Date.now()
+              break;
+
+          user.save (err)->
+            console.log err
+            callback err, user
+
 
 exports.checkout = (params, callback)->
   db_model.Venue.findById(params.club_id).exec (err, club)->
     if not club
       callback 'club does not exist', null
     else
-      db_model.User.findById(params.user_id).exec (err, user)->
+      db_model.User.findOne({'_id': mongoose.Types.ObjectId(params.user_id)}).exec (err, user)->
         if not user
           callback 'user does not exist', null
         else
           for oldcheckin in user.checkin
-            oldcheckin.active = false
+            if oldcheckin.club.toString() == club._id.toString()
+              oldcheckin.active = false
           user.save (err)->
             console.log err
             callback err, user 
 
 exports.cron_checkout = ()->
-
   db_model.User.find({'checkin': { '$elemMatch': { 'active': true, 'time': {'$lte': new Date().getTime() - 1000*60*30 } }} }).exec (err, users)->
-    
      async.each users, ((user, callback) ->
-
-         
           for oldcheckin in user.checkin
-             oldcheckin.active = false
+            oldcheckin.active = false
           user.save (err)->
             console.log err
 
         ), (err) ->
           console.log "iterating done"
-
-
-
 
 exports.save_user = (params, callback)->
  

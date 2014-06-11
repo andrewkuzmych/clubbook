@@ -5,7 +5,9 @@ import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationManager;
 import android.util.FloatMath;
+import android.widget.Toast;
 import com.nl.clubbook.R;
+import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.DataStore;
 
@@ -20,43 +22,36 @@ import java.util.concurrent.TimeUnit;
 public class LocationCheckinHelper {
 
     public static final int MAX_RADIUS = 200;
-    //private static Location current_location = null;
     private static ScheduledExecutorService scheduleTaskExecutor;
-   // private static String current_club_id;
-
-    public static String getCurrentClubId(Context context)
-    {
-        SessionManager session = new SessionManager(context.getApplicationContext());
-        return session.getClubInfo().get(session.KEY_CHECKIN_CLUB_ID);
-    }
+    private static ClubDto current_club;
+    private static int failed_checkin_count = 0;
+    private static int max_failed_checkin_count = 3;
 
     public static String getCurrentClubLat(Context context)
     {
-        SessionManager session = new SessionManager(context.getApplicationContext());
-        return session.getClubInfo().get(session.KEY_CHECKIN_CLUB_LAT);
+        String result = null;
+        if(current_club !=null)
+            result = current_club.getLat();
+
+        return result;
     }
     public static String getCurrentClubLon(Context context)
     {
-        SessionManager session = new SessionManager(context.getApplicationContext());
-        return session.getClubInfo().get(session.KEY_CHECKIN_CLUB_LON);
-    }
+        String result = null;
+        if(current_club !=null)
+            result = current_club.getLon();
 
-    public static void setCurrentClubInfo(Context context, String club_id, String club_lat, String club_lon)
-    {
-        SessionManager session = new SessionManager(context.getApplicationContext());
-        session.putClubInfo(club_id, club_lat, club_lon);
-        //HashMap<String, String> user = session.getUserDetails();
-       // current_club_id = club_id;
+        return result;
     }
 
     public static boolean isCheckinHere(Context context, ClubDto club)
     {
-        if(getCurrentClubId(context) == null)
+        if(current_club == null)
             return false;
         if(club == null)
             return false;
 
-        if(club.getId().equalsIgnoreCase(getCurrentClubId(context)))
+        if(club.getId().equalsIgnoreCase(current_club.getId()))
             return true;
 
         return false;
@@ -83,13 +78,9 @@ public class LocationCheckinHelper {
                     return;
                 }
 
-                setCurrentClubInfo(context, club.getId(), club.getLat(), club.getLon());
-
+                current_club = club;
                 callback.onCheckInOutFinished(true);
-
-                StartLocationUpdate(context);
-                //session.setKeyCheckinClubId(fragment_club.getId());
-                //view.setBackgroundDrawable(getResources().getDrawable(R.drawable.checkout_button));
+               StartLocationUpdate(context);
             }
         });
     }
@@ -99,7 +90,7 @@ public class LocationCheckinHelper {
         final SessionManager session = new SessionManager(context.getApplicationContext());
         final HashMap<String, String> user = session.getUserDetails();
 
-        DataStore.checkout(getCurrentClubId(context), user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
+        DataStore.checkout(current_club.getId(), user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (failed) {
@@ -111,11 +102,9 @@ public class LocationCheckinHelper {
             }
         });
 
-
-        setCurrentClubInfo(context, null, null, null);
+        current_club = null;
         if(scheduleTaskExecutor != null)
             scheduleTaskExecutor.shutdown();
-
     }
 
     private static double distanceBwPoints(double lat_a, double lng_a, double lat_b, double lng_b) {
@@ -145,30 +134,53 @@ public class LocationCheckinHelper {
 
     private static void StartLocationUpdate(final Context context)
     {
+        final SessionManager session = new SessionManager(context.getApplicationContext());
+        final HashMap<String, String> user = session.getUserDetails();
+
         scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
         scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
             public void run() {
                 final Location current_location = getBestLocation(context);
-                double distance = distanceBwPoints(current_location.getLatitude(), current_location.getLongitude(), Double.parseDouble(getCurrentClubLat(context)), Double.parseDouble(getCurrentClubLat(context)));
+                final double distance = distanceBwPoints(current_location.getLatitude(), current_location.getLongitude(), Double.parseDouble(getCurrentClubLat(context)), Double.parseDouble(getCurrentClubLon(context)));
 
-                if (distance < MAX_RADIUS) {
-                    checkout(context, new CheckInOutCallbackInterface() {
-                        @Override
-                        public void onCheckInOutFinished(boolean result) {
-                            // Do something when finished
-                        }
-                    });
-                }
-
-               /* // If you need update UI, simply do this:
-                runOnUiThread(new Runnable() {
+                ((BaseActivity)context).runOnUiThread(new Runnable() {
                     public void run() {
-                        // update your UI component here.
-                        myTextView.setText("refreshed");
+                        if (distance > MAX_RADIUS) {
+                            checkout(context, new CheckInOutCallbackInterface() {
+                                @Override
+                                public void onCheckInOutFinished(boolean result) {
+                                    // Do something when finished
+                                }
+                            });
+                        }
+                        else
+                        {
+                            // update your UI component here.
+                            DataStore.updateCheckin(current_club.getId(), user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
+                                @Override
+                                public void onReady(Object result, boolean failed) {
+                                    if (failed) {
+                                        failed_checkin_count += 1;
+                                        if (failed_checkin_count >= max_failed_checkin_count)
+                                            checkout(context, new CheckInOutCallbackInterface() {
+                                                @Override
+                                                public void onCheckInOutFinished(boolean result) {
+                                                    // Do something when finished
+                                                }
+                                            });
+                                    }
+                                    else {
+                                        failed_checkin_count = 0;
+                                    }
+
+                                }
+                            });
+
+                        }
                     }
-                });*/
+                });
             }
-        }, 0, 30, TimeUnit.SECONDS);
+        }, 0, 10*60, TimeUnit.SECONDS);
     }
 
     public static Location getBestLocation(Context context) {
