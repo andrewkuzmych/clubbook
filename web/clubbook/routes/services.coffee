@@ -347,7 +347,7 @@ exports.cron_checkout = (req,res)->
 exports.readchat = (req, res)->
   params =
     chat_id: req.params.chat_id
- manager.readchat params, (err, readchat)->
+  manager.readchat params, (err, readchat)->
     res.json
       status: 'ok'
       
