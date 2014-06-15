@@ -22,6 +22,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+
 import java.util.HashMap;
 
 /**
@@ -68,17 +69,17 @@ public class SelectedClubFragment extends BaseFragment {
         Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/TITILLIUMWEB-REGULAR.TTF");
         Typeface typeface_bold = Typeface.createFromAsset(getActivity().getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
 
-        title_text = (TextView)rootView.findViewById(R.id.title);
+        title_text = (TextView) rootView.findViewById(R.id.title);
         title_text.setTypeface(typeface_bold);
-        image_slider = (TextView)rootView.findViewById(R.id.image_slider);
+        image_slider = (TextView) rootView.findViewById(R.id.image_slider);
         image_slider.setTypeface(typeface_bold);
-        address_text = (TextView)rootView.findViewById(R.id.address);
+        address_text = (TextView) rootView.findViewById(R.id.address);
         address_text.setTypeface(typeface);
-        distance_text = (TextView)rootView.findViewById(R.id.distancekm);
+        distance_text = (TextView) rootView.findViewById(R.id.distancekm);
         distance_text.setTypeface(typeface);
         checkin = (Button) rootView.findViewById(R.id.checkin);
-        checkin.setTypeface(typeface_bold );
-        mViewFlipper = (ViewFlipper)rootView.findViewById(R.id.view_flipper);
+        checkin.setTypeface(typeface_bold);
+        mViewFlipper = (ViewFlipper) rootView.findViewById(R.id.view_flipper);
         profileGridView = (ExpandableHeightGridView) rootView.findViewById(R.id.gridView);
         distance_text = (TextView) rootView.findViewById(R.id.distancekm);
         mContext = getActivity();
@@ -105,7 +106,7 @@ public class SelectedClubFragment extends BaseFragment {
                                 mViewFlipper.showNext();
                             } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                                 mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.right_in));
-                                mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext,R.anim.right_out));
+                                mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext, R.anim.right_out));
                                 // controlling animation
                                 mViewFlipper.getInAnimation().setAnimationListener(mAnimationListener);
                                 mViewFlipper.showPrevious();
@@ -121,7 +122,8 @@ public class SelectedClubFragment extends BaseFragment {
 
                         return super.onFling(e1, e2, velocityX, velocityY);
                     }
-                });
+                }
+        );
 
         rootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -141,15 +143,15 @@ public class SelectedClubFragment extends BaseFragment {
         final SessionManager session = new SessionManager(getActivity());
         final HashMap<String, String> user = session.getUserDetails();
 
-        ((BaseActivity)getActivity()).showProgress("Loading...");
+        ((BaseActivity) getActivity()).showProgress("Loading...");
         DataStore.retrievePlace(club_id, user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (failed) {
-                    ((BaseActivity)getActivity()).hideProgress(false);
+                    ((BaseActivity) getActivity()).hideProgress(false);
                     return;
                 }
-                ((BaseActivity)getActivity()).hideProgress(true);
+                ((BaseActivity) getActivity()).hideProgress(true);
 
                 club = (ClubDto) result;
 
@@ -171,14 +173,12 @@ public class SelectedClubFragment extends BaseFragment {
                                             int position, long id) {
                         String user_id = ((TextView) v.findViewById(R.id.user_id)).getText().toString();
                         String user_title = ((TextView) v.findViewById(R.id.text)).getText().toString();
-                        ChatFragment fragment = new ChatFragment(thisInstance, user_id, user_title, club);
+                        ChatFragment fragment = new ChatFragment(thisInstance, user_id, user_title);
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                        FragmentTransaction mFragmentTransaction  = fragmentManager.beginTransaction();
+                        FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
 
-                        mFragmentTransaction.add(R.id.frame_container, fragment);
                         mFragmentTransaction.addToBackStack(null);
-                        mFragmentTransaction.hide(SelectedClubFragment.this);
-                        mFragmentTransaction.commit();
+                        mFragmentTransaction.replace(R.id.frame_container, fragment).commit();
                     }
 
                 });
@@ -206,8 +206,7 @@ public class SelectedClubFragment extends BaseFragment {
                 //final SessionManager session = new SessionManager(getActivity().getApplicationContext());
                 //final HashMap<String, String> user = session.getUserDetails();
 
-                if(LocationCheckinHelper.isCheckinHere(getActivity(), club))
-                {
+                if (LocationCheckinHelper.isCheckinHere(getActivity(), club)) {
                     LocationCheckinHelper.checkout(getActivity(), new CheckInOutCallbackInterface() {
                         @Override
                         public void onCheckInOutFinished(boolean result) {
@@ -218,14 +217,12 @@ public class SelectedClubFragment extends BaseFragment {
                             }
                         }
                     });
-                }
-                else
-                {
+                } else {
                     LocationCheckinHelper.checkin(getActivity(), club, new CheckInOutCallbackInterface() {
                         @Override
                         public void onCheckInOutFinished(boolean result) {
                             // Do something when download finished
-                            if(result) {
+                            if (result) {
                                 UiHelper.changeCheckinState(getActivity(), view, false);
                                 loadData();
                             }
@@ -251,10 +248,9 @@ public class SelectedClubFragment extends BaseFragment {
     }
 
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         super.onStart();
-        if (((MainActivity)getActivity()).getDrawerToggle().isDrawerIndicatorEnabled()) {
+        if (((MainActivity) getActivity()).getDrawerToggle().isDrawerIndicatorEnabled()) {
             ((MainActivity) getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(false);
             ((MainActivity) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
@@ -262,8 +258,8 @@ public class SelectedClubFragment extends BaseFragment {
 
     @Override
     public void backButtonWasPressed() {
-        ((MainActivity)getActivity()).setDefoltTitle();
-        if (!((MainActivity)getActivity()).getDrawerToggle().isDrawerIndicatorEnabled()) {
+        ((MainActivity) getActivity()).setDefoltTitle();
+        if (!((MainActivity) getActivity()).getDrawerToggle().isDrawerIndicatorEnabled()) {
             ((MainActivity) getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(true);
             ((MainActivity) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         }

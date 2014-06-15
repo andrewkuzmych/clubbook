@@ -1,15 +1,9 @@
 package com.nl.clubbook.activity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -27,14 +21,6 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.sromku.simple.fb.listeners.OnProfileListener;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -49,35 +35,31 @@ public class MainLoginActivity extends BaseActivity {
     private Button button_fb_login;
     SessionManager session_manager;
 
+
     //TODO move it to global
     private String CLOUD_NAME = "ddsoyfjll";
     // Login listener
     private OnLoginListener mOnLoginListener = new OnLoginListener() {
 
         @Override
-        public void onFail(String reason)
-        {
+        public void onFail(String reason) {
         }
 
         @Override
-        public void onException(Throwable throwable)
-        {
+        public void onException(Throwable throwable) {
         }
 
         @Override
-        public void onThinking()
-        {
+        public void onThinking() {
         }
 
         @Override
-        public void onLogin()
-        {
+        public void onLogin() {
             GetFacebookProfile();
         }
 
         @Override
-        public void onNotAcceptingPermissions(Permission.Type type)
-        {
+        public void onNotAcceptingPermissions(Permission.Type type) {
             // toast(String.format("You didn't accept %s permissions", type.name()));
         }
     };
@@ -85,8 +67,7 @@ public class MainLoginActivity extends BaseActivity {
     private void GetFacebookProfile() {
         OnProfileListener onProfileListener = new OnProfileListener() {
             @Override
-            public void onComplete(Profile profile)
-            {
+            public void onComplete(Profile profile) {
                 UploadImageTask task = new UploadImageTask(profile);//
                 task.execute(profile.getId());
             }
@@ -115,6 +96,7 @@ public class MainLoginActivity extends BaseActivity {
         final String gender = profile.getGender();
 
         final String access_token = Session.getActiveSession().getAccessToken();
+
         // TODO request DOB permission from From Facebook
         final String finalDob = "";
 
@@ -147,8 +129,7 @@ public class MainLoginActivity extends BaseActivity {
 
         session_manager = new SessionManager(getApplicationContext());
 
-        if (session_manager.isLoggedIn())
-        {
+        if (session_manager.isLoggedIn()) {
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(i);
             finish();
@@ -199,7 +180,8 @@ public class MainLoginActivity extends BaseActivity {
 
         Profile profile;
         String imageUrl;
-        UploadImageTask(Profile profile)    {
+
+        UploadImageTask(Profile profile) {
             this.profile = profile;
             //tv = (TextView)findViewById(R.id.tv);
         }
@@ -216,8 +198,7 @@ public class MainLoginActivity extends BaseActivity {
 
                 cloudinary.uploader().upload(fb_photo, Cloudinary.asMap("public_id", fb_id, "format", "jpg"));
                 imageUrl = "http://res.cloudinary.com/" + CLOUD_NAME + "/image/upload/" + fb_id + ".jpg"; //result.getString("url");
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             //tv.setText("Running task....");
@@ -246,15 +227,13 @@ public class MainLoginActivity extends BaseActivity {
         TextView has_account_text = (TextView) findViewById(R.id.has_account_text);
         has_account_text.setTypeface(typefaceIntroText);
 
-
-        button_fb_login = (Button)findViewById(R.id.login_fb);
+        button_fb_login = (Button) findViewById(R.id.login_fb);
         button_fb_login.setTypeface(typefaceIntroText);
         button_fb_login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 loginToFacebook();
             }
         });
-
 
         TextView login_by_email = (TextView) findViewById(R.id.login_by_email);
         login_by_email.setTypeface(typefaceIntroTextBold);
@@ -275,10 +254,8 @@ public class MainLoginActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent in = new Intent(getApplicationContext(),
                         LoginActivity.class);
-                //in.putExtra("lon", eventDetail.getLon());
                 startActivity(in);
             }
         });
     }
-
 }

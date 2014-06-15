@@ -80,9 +80,6 @@ public class CheckinAdapter extends ArrayAdapter<ClubDto> {
 
                     final ClubDto club = (ClubDto)view.getTag();
 
-                    //final SessionManager session = new SessionManager(context.getApplicationContext());
-                    //HashMap<String, String> user = session.getUserDetails();
-
                     if(LocationCheckinHelper.isCheckinHere(context, club))
                     {
                         LocationCheckinHelper.checkout(context, new CheckInOutCallbackInterface() {
@@ -100,14 +97,7 @@ public class CheckinAdapter extends ArrayAdapter<ClubDto> {
                         LocationCheckinHelper.checkin(context, club, new CheckInOutCallbackInterface() {
                             @Override
                             public void onCheckInOutFinished(boolean result) {
-                                // Do something when download finished
                                 if(result) {
-/*
-                                    Intent in = new Intent(context.getApplicationContext(), ClubActivity.class);
-                                    in.putExtra("club_id", club.getId());
-                                    context.startActivity(in);
-
-*/
                                     SelectedClubFragment fragment = new SelectedClubFragment(null, club.getId());
                                     FragmentManager fragmentManager = ((MainActivity)context).getSupportFragmentManager();
                                     FragmentTransaction mFragmentTransaction  = fragmentManager.beginTransaction();
@@ -120,41 +110,18 @@ public class CheckinAdapter extends ArrayAdapter<ClubDto> {
                                     }
                                     mFragmentTransaction.commit();
 
-                                    //SelectedClubFragment fragment = new SelectedClubFragment(club.getId());
-                                    //FragmentManager fragmentManager = ((MainActivity)context).getSupportFragmentManager();
-                                    //FragmentTransaction mFragmentTransaction  = fragmentManager.beginTransaction();
-                                    //mFragmentTransaction.addToBackStack(null);
-                                    //mFragmentTransaction.replace(R.id.frame_container, fragment).commit();
                                 }
                             }
                         });
                     }
-
-                /*    LocationCheckinHelper.checkin(context, fragment_club, new CheckInOutCallbackInterface() {
-                        @Override
-                        public void onCheckInOutFinished(boolean result) {
-                            // Do something when download finished
-                            if(result) {
-                                Intent in = new Intent(context.getApplicationContext(), ClubActivity.class);
-                                in.putExtra("club_id", fragment_club.getId());
-                                context.startActivity(in);
-                            }
-                        }
-                    });*/
-
-
             }
         });
-            //holder.distance = (TextView) row.findViewById(R.id.distance);
-            //holder.distance.setTypeface(typeface_bold);
             row.setTag(holder);
         } else {
             holder = (ClubItemHolder) row.getTag();
         }
 
         ClubDto club = data[position];
-     //   String distance = LocationHelper.calculateDistance(context, fragment_club.getDistance());
-        //holder.distance.setText(distance);
         holder.club_title.setText(club.getTitle());
         holder.club_id.setText(club.getId());
         holder.club_address.setText(club.getAddress());
@@ -172,24 +139,7 @@ public class CheckinAdapter extends ArrayAdapter<ClubDto> {
         return row;
     }
 
-    public ClubDto getPrizeById(String id)
-    {
-        ClubDto result = null;
-        for(int i=0; i < data.length; i++)
-        {
-            if(data[i].getId().equalsIgnoreCase(id))
-            {
-                result = data[i];
-                break;
-            }
-        }
-
-        return result;
-
-    }
-
     static class ClubItemHolder {
-        // ImageView category;
         ImageView avatar;
         TextView club_title;
         TextView club_id;

@@ -3,17 +3,18 @@ package com.nl.clubbook.helper;
 /**
  * Created by Andrew on 5/19/2014.
  */
-import java.util.*;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
 import com.nl.clubbook.activity.MainActivity;
 import com.parse.PushService;
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class SessionManager {
     // Shared Preferences
@@ -49,9 +50,10 @@ public class SessionManager {
     public static final String KEY_CHECKIN_CLUB_ID = "checkin_club_id";
     public static final String KEY_CHECKIN_CLUB_LAT = "checkin_club_lan";
     public static final String KEY_CHECKIN_CLUB_LON = "checkin_club_lat";
+    public static final String KEY_CURRENT_CONVERSATION = "current_conversation";
 
     // Constructor
-    public SessionManager(Context context){
+    public SessionManager(Context context) {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
@@ -88,28 +90,26 @@ public class SessionManager {
         return urls;
     }
 
-    public void setPermissions(String[] permissions)
-    {
+    public void setPermissions(String[] permissions) {
         //Set<String> permissionsSet = new HashSet<String>(Arrays.asList(permissions));
         ArrayList<String> permissionList = new ArrayList<String>(Arrays.asList(permissions));
-        setStringArrayPref(KEY_PERMISSIONS, permissionList)  ;
+        setStringArrayPref(KEY_PERMISSIONS, permissionList);
         //editor.putStringSet(KEY_PERMISSIONS, permissionsSet);
         // commit changes
         editor.commit();
     }
 
-    public boolean hasPermission(String permission)
-    {
-        ArrayList<String> permissionsList =getStringArrayPref(KEY_PERMISSIONS);
-        if(permissionsList == null)
+    public boolean hasPermission(String permission) {
+        ArrayList<String> permissionsList = getStringArrayPref(KEY_PERMISSIONS);
+        if (permissionsList == null)
             return false;
         return permissionsList.contains(permission);
     }
 
     /**
      * Create login session
-     * */
-    public void createLoginSession(String id, String name, String email, String gender, String birthday, String avatar){
+     */
+    public void createLoginSession(String id, String name, String email, String gender, String birthday, String avatar) {
         PushService.subscribe(_context, "user_" + id, MainActivity.class);
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
@@ -131,8 +131,16 @@ public class SessionManager {
         editor.commit();
     }
 
-    public void putFbData(String access_token, long access_expires)
-    {
+    public void setConversationListner(String currentConversation) {
+        editor.putString(KEY_CURRENT_CONVERSATION, currentConversation);
+        editor.commit();
+    }
+
+    public String getConversationListner() {
+        return pref.getString(KEY_CURRENT_CONVERSATION, null);
+    }
+
+    public void putFbData(String access_token, long access_expires) {
         editor.putString(KEY_FBACCESSEXPITES, String.valueOf(access_expires));
 
         editor.putString(KEY_FBACCESSTOKEN, access_token);
@@ -141,8 +149,7 @@ public class SessionManager {
         editor.commit();
     }
 
-    public void putClubInfo(String club_id, String lat, String lon)
-    {
+    public void putClubInfo(String club_id, String lat, String lon) {
         editor.putString(KEY_CHECKIN_CLUB_ID, club_id);
         editor.putString(KEY_CHECKIN_CLUB_LAT, lat);
         editor.putString(KEY_CHECKIN_CLUB_LON, lon);
@@ -152,33 +159,9 @@ public class SessionManager {
     }
 
     /**
-     * Check login method wil check user login status
-     * If false it will redirect user to login page
-     * Else won't do anything
-     * */
-   /* public void checkLogin(){
-        // Check login status
-        if(!this.isLoggedIn()){
-            // user is not logged in redirect him to Login Activity
-            Intent i = new Intent(_context, LoginActivity.class);
-            // Closing all the Activities
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-            // Add new Flag to start new Activity
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            // Staring Login Activity
-            _context.startActivity(i);
-        }
-
-    }*/
-
-
-
-    /**
      * Get stored session data
-     * */
-    public HashMap<String, String> getUserDetails(){
+     */
+    public HashMap<String, String> getUserDetails() {
         HashMap<String, String> user = new HashMap<String, String>();
         // user name
         user.put(KEY_NAME, pref.getString(KEY_NAME, null));
@@ -192,7 +175,7 @@ public class SessionManager {
         return user;
     }
 
-    public HashMap<String, String> getClubInfo(){
+    public HashMap<String, String> getClubInfo() {
         HashMap<String, String> club = new HashMap<String, String>();
 
         club.put(KEY_CHECKIN_CLUB_ID, pref.getString(KEY_CHECKIN_CLUB_ID, null));
@@ -204,8 +187,8 @@ public class SessionManager {
 
     /**
      * Clear session details
-     * */
-    public void logoutUser(){
+     */
+    public void logoutUser() {
         // Clearing all data from Shared Preferences
         editor.clear();
         editor.commit();
@@ -214,9 +197,10 @@ public class SessionManager {
 
     /**
      * Quick check for login
-     * **/
+     * *
+     */
     // Get Login State
-    public boolean isLoggedIn(){
+    public boolean isLoggedIn() {
         return pref.getBoolean(IS_LOGIN, false);
     }
 }

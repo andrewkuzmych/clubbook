@@ -61,8 +61,19 @@ public class ClubbookRestClient {
         client.get(getBcAbsoluteUrl("conversation/" + user1 + "/" + user2), params, responseHandler);
     }
 
+    public static void get_conversations(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("conversations/" + user_id ), params, responseHandler);
+    }
+
     public static void send_msg(RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.post(getBcAbsoluteUrl("chat"), params, responseHandler);
     }
 
+    public static void unread_messages_count(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("unread/messages/count/" + user_id), params, responseHandler);
+    }
+
+    public static void read_messages(String chat_id, String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("readchat/" + chat_id + "/" + user_id), params, responseHandler);
+    }
 }

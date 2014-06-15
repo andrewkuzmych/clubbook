@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.ProfileItem;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -33,7 +32,7 @@ public class ProfileAdapter extends ArrayAdapter<UserDto> {
 
 
     public ProfileAdapter(Context context, int layoutResourceId,
-                           List<UserDto> data) {
+                          List<UserDto> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;

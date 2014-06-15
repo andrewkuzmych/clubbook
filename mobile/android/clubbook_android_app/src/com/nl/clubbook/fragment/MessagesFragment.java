@@ -1,25 +1,89 @@
 package com.nl.clubbook.fragment;
 
-import android.support.v4.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
 import com.nl.clubbook.R;
+import com.nl.clubbook.activity.BaseActivity;
+import com.nl.clubbook.adapter.MessagesAdapter;
+import com.nl.clubbook.datasource.ConversationShort;
+import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.helper.SessionManager;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class MessagesFragment extends BaseFragment {
+    ListView message_list;
 
-    public MessagesFragment()
-    {
+    public MessagesFragment() {
 
     }
-	
-	@Override
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
- 
+                             Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.fragment_messages, container, false);
-         
+        message_list = (ListView) rootView.findViewById(R.id.message_list);
+        loadData(true);
         return rootView;
+    }
+
+    public void loadData(final boolean loading) {
+        DataStore.setContext(getActivity());
+
+        final Context contextThis = getActivity();
+        final BaseFragment thisInstance = this;
+
+        final SessionManager session = new SessionManager(getActivity());
+        final HashMap<String, String> user = session.getUserDetails();
+
+        if (loading)
+            ((BaseActivity) getActivity()).showProgress("Loading...");
+
+        DataStore.get_conversations(user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
+            @Override
+            public void onReady(Object result, boolean failed) {
+                if (failed) {
+                    if (loading)
+                        ((BaseActivity) getActivity()).hideProgress(false);
+                    return;
+                }
+
+                if (loading)
+                    ((BaseActivity) getActivity()).hideProgress(true);
+
+                List<ConversationShort> conversations = (List<ConversationShort>) result;
+
+                DataStore.setMessagesAdapter(new MessagesAdapter(contextThis, R.layout.message_list_item, conversations.toArray(new ConversationShort[conversations.size()])));
+
+                message_list.setAdapter(DataStore.getMessagesAdapter());
+
+                message_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view,
+                                            int position, long id) {
+
+                        String user_id = view.findViewById(R.id.user_name).getTag().toString();
+                        String user_title = ((TextView) view.findViewById(R.id.user_name)).getText().toString();
+                        ChatFragment fragment = new ChatFragment(thisInstance, user_id, user_title);
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
+
+                        mFragmentTransaction.addToBackStack(null);
+                        mFragmentTransaction.replace(R.id.frame_container, fragment).commit();
+
+                    }
+                });
+            }
+        });
     }
 }

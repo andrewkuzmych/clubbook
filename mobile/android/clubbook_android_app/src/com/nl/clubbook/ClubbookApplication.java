@@ -26,7 +26,7 @@ public class ClubbookApplication extends Application {
         super.onCreate();
 
         Parse.initialize(this, "71OeWikSy4nxlGuefO2O6AFhuENP2Nqz1fjB88x3", "J5RrDFEhrHH7ns75OOWmNM4Wg52yEjkfxYAxvvDj");
-        PushService.setDefaultPushCallback(this, MainActivity.class);
+        //PushService.setDefaultPushCallback(this, MainActivity.class);
 
 
 

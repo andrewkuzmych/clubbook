@@ -5,7 +5,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-   <android.support.v4.app.FragmentTabHost
+    <ListView
+            android:id="@+id/club_listview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:divider="#00000000"
+            android:focusable="false"
+            android:dividerHeight="0dip" android:layout_above="@+id/linearLayout"/>
+
+<!--   <android.support.v4.app.FragmentTabHost
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" android:id="@+id/tabHost"
             android:layout_alignParentTop="true"
@@ -27,7 +35,7 @@
 
             </FrameLayout>
         </LinearLayout>
-    </android.support.v4.app.FragmentTabHost>
+    </android.support.v4.app.FragmentTabHost>-->
 
     <LinearLayout
             android:orientation="horizontal"

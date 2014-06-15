@@ -1,23 +1,20 @@
 package com.nl.clubbook.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import com.nl.clubbook.R;
 import com.nl.clubbook.helper.AlertDialogManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,19 +30,18 @@ public class BaseActivity extends ActionBarActivity {
     View contentView;
     protected ImageLoader imageLoader;
     protected DisplayImageOptions options;
-    protected ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
     private boolean is_retry = false;
     protected AlertDialogManager alert = new AlertDialogManager();
     private ProgressDialog progressDialog;
 
     public void showProgress(final String string) {
-        if(is_retry) {
+        if (is_retry) {
             contentView.setVisibility(View.GONE);
             failedView.setVisibility(View.GONE);
         }
         BaseActivity.this.runOnUiThread(new Runnable() {
             public void run() {
-                progressDialog = ProgressDialog.show(BaseActivity.this,string,
+                progressDialog = ProgressDialog.show(BaseActivity.this, string,
                         "Loading application View, please wait...", false, true);
             }
         });
@@ -53,8 +49,8 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     public void hideProgress(boolean showContent) {
-        if(is_retry) {
-            if(showContent) {
+        if (is_retry) {
+            if (showContent) {
                 failedView.setVisibility(View.GONE);
                 contentView.setVisibility(View.VISIBLE);
             } else {
@@ -62,7 +58,6 @@ public class BaseActivity extends ActionBarActivity {
                 contentView.setVisibility(View.GONE);
             }
         }
-        //dialog.dismiss();
 
         BaseActivity.this.runOnUiThread(new Runnable() {
             public void run() {
@@ -80,11 +75,6 @@ public class BaseActivity extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // init progress view
-        //dialog = new ProgressDialog(this);
-       // dialog = new ProgressDialog(this);
-       // this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         // init image loader
         imageLoader = ImageLoader.getInstance();
         options = new DisplayImageOptions.Builder()
@@ -97,44 +87,23 @@ public class BaseActivity extends ActionBarActivity {
 
     }
 
-    protected void init()
-    {
-        /*// style header title
-        if(findViewById(R.id.header_title) != null) {
-            TextView header_title = (TextView) findViewById(R.id.header_title);
-            Typeface typefaceHeaderTitle = Typeface.createFromAsset(getAssets(), "fonts/azoft-sans.ttf");
-            header_title.setTypeface(typefaceHeaderTitle);
-        }
-
-        View back_view = findViewById(R.id.back_button);
-        if (back_view != null)
-        {
-            ImageButton back_button = (ImageButton) back_view;
-            back_button.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View arg0) {
-                    navigateBack();
-                }
-            });
-        }*/
+    protected void init() {
     }
 
     protected void setRetryLayout() {
         is_retry = true;
         //dialog = new ProgressDialog(this);
-        mainView =  (RelativeLayout) findViewById(R.id.main_layout);
-        failedView = (LinearLayout)getLayoutInflater().inflate(R.layout.retry, null);//new LinearLayout(this);
+        mainView = (RelativeLayout) findViewById(R.id.main_layout);
+        failedView = (LinearLayout) getLayoutInflater().inflate(R.layout.retry, null);//new LinearLayout(this);
         contentView = findViewById(R.id.content_layout);
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(-1, -1);
-        params.addRule(RelativeLayout.CENTER_HORIZONTAL|RelativeLayout.CENTER_VERTICAL);
+        params.addRule(RelativeLayout.CENTER_HORIZONTAL | RelativeLayout.CENTER_VERTICAL);
 
         failedView.setLayoutParams(params);
         failedView.setGravity(Gravity.CENTER);
         failedView.setOrientation(LinearLayout.VERTICAL);
         mainView.addView(failedView);
-
         setBaseHandlers();
     }
 
@@ -143,14 +112,6 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     private void setBaseHandlers() {
-        // back button handler
-       /* ImageButton back_button = (ImageButton) findViewById(R.id.back_button);
-        back_button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                navigateBack();
-            }
-        });*/
-
         // retry button handler
         Button retry_button = (Button) findViewById(R.id.retry_button);
         retry_button.setOnClickListener(new View.OnClickListener() {
@@ -159,31 +120,6 @@ public class BaseActivity extends ActionBarActivity {
             }
         });
 
-        /*// retry button handler
-        ImageButton map_button = (ImageButton) findViewById(R.id.map);
-        map_button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent in = new Intent(getApplicationContext(),
-                        EventMapActivity.class);
-                in.putExtra("lon", eventDetail.getLon());
-                in.putExtra("lat", eventDetail.getLat());
-                in.putExtra("title", eventDetail.getTitle());
-                startActivity(in);
-            }
-        });*/
-
-      /*  // share button handler
-        ImageButton share_button = (ImageButton) findViewById(R.id.share_button);
-        share_button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //create the send intent
-                Intent i = new Intent(Intent.ACTION_SEND);
-                i.setType("text/plain");
-                i.putExtra(Intent.EXTRA_SUBJECT, "Sharing URL");
-                i.putExtra(Intent.EXTRA_TEXT, "http://www.eventinarea.com");
-                startActivity(Intent.createChooser(i, "Share URL"));
-            }
-        });*/
     }
 
     public boolean isOnline() {

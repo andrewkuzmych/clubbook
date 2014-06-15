@@ -1,6 +1,5 @@
 package com.nl.clubbook.activity;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -19,8 +18,6 @@ import com.nl.clubbook.helper.UserEmailFetcher;
 import com.nl.clubbook.helper.Validator;
 
 import java.util.Calendar;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by Andrew on 5/26/2014.
@@ -51,7 +48,7 @@ public class RegActivity extends BaseActivity {
         password_text.setTypeface(typefaceIntroText);
         emeil_text = (EditText) findViewById(R.id.email_text);
         emeil_text.setTypeface(typefaceIntroText);
-        dob_text =  (EditText) findViewById(R.id.dob_text);
+        dob_text = (EditText) findViewById(R.id.dob_text);
         dob_text.setTypeface(typefaceIntroText);
 
         user_label = (TextView) findViewById(R.id.name_label);
@@ -60,27 +57,24 @@ public class RegActivity extends BaseActivity {
         password_label.setTypeface(typefaceIntroTextBold);
         emeil_label = (TextView) findViewById(R.id.email_label);
         emeil_label.setTypeface(typefaceIntroTextBold);
-        dob_label =  (TextView) findViewById(R.id.dob_label);
+        dob_label = (TextView) findViewById(R.id.dob_label);
         dob_label.setTypeface(typefaceIntroTextBold);
-        gender_label =  (TextView) findViewById(R.id.gender_label);
+        gender_label = (TextView) findViewById(R.id.gender_label);
         gender_label.setTypeface(typefaceIntroTextBold);
-
         emeil_text.setText(UserEmailFetcher.getEmail(RegActivity.this));
-        //user_text.setText(UserEmailFetcher.getUsername(RegActivity.this));
-
 
         session = new SessionManager(getApplicationContext());
 
         //init gender
-        gender_spinner = (Spinner)findViewById(R.id.gender);
+        gender_spinner = (Spinner) findViewById(R.id.gender);
         final GenderPair items[] = new GenderPair[2];
-        items[0] = new GenderPair( "Male","male" );
-        items[1] = new GenderPair( "Female","female" );
+        items[0] = new GenderPair("Male", "male");
+        items[1] = new GenderPair("Female", "female");
         ArrayAdapter<GenderPair> adapter =
                 new ArrayAdapter<GenderPair>(
                         this,
                         android.R.layout.simple_spinner_item,
-                        items );
+                        items);
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
 
@@ -98,7 +92,6 @@ public class RegActivity extends BaseActivity {
 
     private void showDatePicker() {
         DatePickerFragment date = new DatePickerFragment();
-        Calendar calender = Calendar.getInstance();
         Bundle args = new Bundle();
         args.putInt("year", 1990);
         args.putInt("month", 6);
@@ -115,15 +108,14 @@ public class RegActivity extends BaseActivity {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear,
                               int dayOfMonth) {
-            dob_text.setText(String.format("%02d", dayOfMonth)  + "." + String.format("%02d", monthOfYear + 1) + "." + String.valueOf(year));
+            dob_text.setText(String.format("%02d", dayOfMonth) + "." + String.format("%02d", monthOfYear + 1) + "." + String.valueOf(year));
         }
     };
 
     private void setHandlers() {
-        //final Typeface typeface_bold = Typeface.createFromAsset(getAssets(), "fonts/azoft-sans-bold.ttf");
         final Typeface typefaceIntroTextBold = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
         reg_button = (Button) findViewById(R.id.reg_btn);
-        reg_button.setTypeface(typefaceIntroTextBold );
+        reg_button.setTypeface(typefaceIntroTextBold);
 
         // Login button click event
         reg_button.setOnClickListener(new View.OnClickListener() {
@@ -132,34 +124,30 @@ public class RegActivity extends BaseActivity {
             public void onClick(View arg0) {
                 // Validation
                 String user_name = user_text.getText().toString().trim();
-                if (user_name.trim().length() < 2 )
-                {
+                if (user_name.trim().length() < 2) {
                     alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.name_incorrect), false);
                     return;
                 }
 
                 String email = emeil_text.getText().toString().trim();
-                if (!Validator.isEmailValid(email))
-                {
+                if (!Validator.isEmailValid(email)) {
                     alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.email_incorrect), false);
                     return;
                 }
 
-                String  password = password_text.getText().toString().trim();
-                if (password.trim().length() < 6 )
-                {
+                String password = password_text.getText().toString().trim();
+                if (password.trim().length() < 6) {
                     alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.pass_incorrect), false);
                     return;
                 }
 
                 String dob = dob_text.getText().toString().trim();
-                if (dob.trim().length() < 6 )
-                {
+                if (dob.trim().length() < 6) {
                     alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.dob_incorrect), false);
                     return;
                 }
 
-                GenderPair data = (GenderPair)gender_spinner.getSelectedItem();
+                GenderPair data = (GenderPair) gender_spinner.getSelectedItem();
                 String gender = data.getValue();
                 showProgress("Loading...");
                 DataStore.regByEmail(user_name, email, password, gender, dob, new DataStore.OnResultReady() {
@@ -209,13 +197,9 @@ public class RegActivity extends BaseActivity {
     }
 
     class GenderPair {
-        public GenderPair( String spinnerText, String value ) {
+        public GenderPair(String spinnerText, String value) {
             this.spinnerText = spinnerText;
             this.value = value;
-        }
-
-        public String getSpinnerText() {
-            return spinnerText;
         }
 
         public String getValue() {

@@ -5,6 +5,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nl.clubbook.adapter.CheckinAdapter;
 import com.nl.clubbook.adapter.ClubsAdapter;
+import com.nl.clubbook.adapter.MessagesAdapter;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import android.util.Log;
 import org.apache.http.Header;
@@ -25,8 +26,18 @@ public class DataStore {
 
     private static CheckinAdapter checkinAdapter;
 
+    private static MessagesAdapter messagesAdapter;
+
     public static void setContext(Context mcontext) {
         context = mcontext;
+    }
+
+    public static MessagesAdapter getMessagesAdapter() {
+        return messagesAdapter;
+    }
+
+    public static void setMessagesAdapter(MessagesAdapter messagesAdapter) {
+        DataStore.messagesAdapter = messagesAdapter;
     }
 
     public static CheckinAdapter getCheckinAdapter() {
@@ -688,10 +699,12 @@ public class DataStore {
             private boolean failed = true;
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
-                List<Conversation> conversation = new ArrayList<Conversation>();
+                Chat chat = new Chat();
                 try {
                     if (response_json.getString("status").equalsIgnoreCase("ok")) {
                         JSONArray conversation_dto = response_json.getJSONArray("conversation");
+
+                        List<Conversation> conversation = new ArrayList<Conversation>();
                         for (int i = 0; i < conversation_dto.length(); i++) {
                             Conversation con = new Conversation();
                             con.setUser_from(conversation_dto.getJSONObject(i).getString("from_who"));
@@ -699,6 +712,9 @@ public class DataStore {
 
                             conversation.add(con);
                         }
+
+                        chat.setChatId(response_json.getString("chat_id"));
+                        chat.setConversation(conversation);
 
                         failed = false;
                     } else
@@ -708,7 +724,7 @@ public class DataStore {
                 }
 
                 //failed = false;
-                onResultReady.onReady(conversation, failed);
+                onResultReady.onReady(chat, failed);
             }
 
             @Override
@@ -728,6 +744,90 @@ public class DataStore {
         });
     }
 
+    public static void get_conversations(final String user_id, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        ClubbookRestClient.get_conversations(user_id, params, new JsonHttpResponseHandler() {
+            private boolean failed = true;
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+                List<ConversationShort> conversations = new ArrayList<ConversationShort>();
+                try {
+                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
+                        JSONArray conversations_dto = response_json.getJSONArray("conversations");
+                        for (int i = 0; i < conversations_dto.length(); i++) {
+                            ConversationShort con = new ConversationShort();
+
+                            con.setId(conversations_dto.getJSONObject(i).getString("id"));
+
+                            JSONObject user_dto;
+                            if (conversations_dto.getJSONObject(i).getJSONObject("user1").getString("_id").equalsIgnoreCase(user_id)) {
+                                user_dto = conversations_dto.getJSONObject(i).getJSONObject("user2");
+                            } else {
+                                user_dto = conversations_dto.getJSONObject(i).getJSONObject("user1");
+                            }
+
+                            con.setUser_id(user_dto.getString("_id"));
+                            con.setUser_name(user_dto.getString("name"));
+
+                            JSONArray photo_list = user_dto.getJSONArray("photos");
+                            String user_from_photo = null;                            for (int j = 0; j < photo_list.length(); j++) {
+                                if (photo_list.getJSONObject(j).getBoolean("profile")) {
+                                    user_from_photo = photo_list.getJSONObject(j).getString("url");
+                                    break;
+                                }
+                            }
+
+                            con.setUser_photo(user_from_photo);
+
+                            if (conversations_dto.getJSONObject(i).has("unread") &&
+                                conversations_dto.getJSONObject(i).getJSONObject("unread").has("user") &&
+                                conversations_dto.getJSONObject(i).getJSONObject("unread").getString("user").equalsIgnoreCase(user_id)) {
+
+                                con.setUnread_messages(conversations_dto.getJSONObject(i).getJSONObject("unread").getInt("count"));
+                            }
+                            else {
+                                con.setUnread_messages(0);
+                            }
+
+                            if (conversations_dto.getJSONObject(i).has("conversation") ) {
+                                JSONArray cons_dto = conversations_dto.getJSONObject(i).getJSONArray("conversation");
+                                if (cons_dto.length() > 0)
+                                    con.setLast_message(cons_dto.getJSONObject(0).getString("msg"));
+                            }
+
+                            conversations.add(con);
+                        }
+
+                        failed = false;
+                    } else
+                        failed = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                //failed = false;
+                onResultReady.onReady(conversations, failed);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+    }
+
+
     public static void chat(String user_from, String user_to , String msg, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("user_from", user_from);
@@ -735,6 +835,42 @@ public class DataStore {
         params.put("msg", msg);
 
         ClubbookRestClient.send_msg(params, new JsonHttpResponseHandler() {
+            private boolean failed = true;
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+                try {
+                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
+                        failed = false;
+                    } else
+                        failed = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //failed = false;
+                onResultReady.onReady("ok", failed);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+    }
+
+
+    public static void read_messages(String chat_id, String user_id, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        ClubbookRestClient.read_messages(chat_id, user_id, params, new JsonHttpResponseHandler() {
             private boolean failed = true;
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
@@ -812,6 +948,44 @@ public class DataStore {
                 super.onFinish();
                 //if (failed)
                 //    onResultReady.onReady(null, true);
+            }
+        });
+    }
+
+    public static void unread_messages_count(String user_id, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+
+        ClubbookRestClient.unread_messages_count(user_id, params, new JsonHttpResponseHandler() {
+            private boolean failed = true;
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+                String count = "0";
+                try {
+                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
+                        failed = false;
+                        count = response_json.getString("count");
+                    } else
+                        failed = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //failed = false;
+                onResultReady.onReady(count, failed);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
             }
         });
     }

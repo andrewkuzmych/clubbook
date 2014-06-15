@@ -1,6 +1,5 @@
 package com.nl.clubbook.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -17,30 +16,24 @@ import com.nl.clubbook.helper.Validator;
 /**
  * Created by Andrew on 5/26/2014.
  */
-public class LoginActivity extends BaseActivity  {
+public class LoginActivity extends BaseActivity {
     EditText txtUsername, txtPassword;
-    /*TextView forgotPass;*/
     TextView email_label;
     TextView pass_label;
-    // login button
     Button btnLogin;
 
     // Session Manager Class
     SessionManager session;
-
-
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         init();
 
-
         final Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-REGULAR.TTF");
         final Typeface typeface_bold = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
         // Session Manager
         session = new SessionManager(getApplicationContext());
-
         // Email, Password input text
         email_label = (TextView) findViewById(R.id.email_label);
         email_label.setTypeface(typeface_bold);
@@ -67,14 +60,12 @@ public class LoginActivity extends BaseActivity  {
                 String email = txtUsername.getText().toString().trim();
                 String password = txtPassword.getText().toString().trim();
 
-                if (!Validator.isEmailValid(email))
-                {
+                if (!Validator.isEmailValid(email)) {
                     alert.showAlertDialog(LoginActivity.this, "Login failed..", getString(R.string.email_incorrect), false);
                     return;
                 }
 
-                if (password.trim().length() < 6 )
-                {
+                if (password.trim().length() < 6) {
                     alert.showAlertDialog(LoginActivity.this, "Login failed..", getString(R.string.pass_incorrect), false);
                     return;
                 }
@@ -84,15 +75,13 @@ public class LoginActivity extends BaseActivity  {
                     @Override
                     public void onReady(Object result, boolean failed) {
                         // show error
-                        if (failed)
-                        {
+                        if (failed) {
                             hideProgress(false);
                             alert.showAlertDialog(LoginActivity.this, "Error", getString(R.string.no_connection), false);
                             return;
                         }
 
                         hideProgress(true);
-
 
                         if (result == null) {
                             alert.showAlertDialog(LoginActivity.this, "Error", "Incorrect credentials", false);

@@ -293,6 +293,13 @@ exports.chat = (params, callback)->
     
     chat.conversation.push {msg: params.msg, from_who: mongoose.Types.ObjectId(params.user_from)}
 
+    if chat.unread.user && chat.unread.user.toString() == params.user_to.toString()
+      chat.unread.count += 1
+    else
+      chat.unread.user = mongoose.Types.ObjectId(params.user_to)
+      chat.unread.count = 1
+
+
     chat.save (err)->
         console.log err
         callback err, chat
@@ -304,7 +311,7 @@ exports.get_conversation = (params, callback)->
     if not chat
       callback err, []
     else    
-      callback err, chat.conversation    
+      callback err, chat    
 
 exports.get_conversations = (params, callback)->
 
@@ -312,10 +319,35 @@ exports.get_conversations = (params, callback)->
     if not chats
       callback err, []
     else    
-      callback err, chats    
+     sorted_chats = __.sortBy(chats, (chat) ->
+                         if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
+                           return chat.unread.count
+                          else
+                            return 0
+                    ).reverse()
+
+      #for chat in chats
+      #  if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
+      #    console.log 123
+      #    chat.count_of_unread_msg = chat.unread.count
+      callback err, sorted_chats    
   
+exports.readchat = (params, callback)->  
+  db_model.Chat.findOne({_id: mongoose.Types.ObjectId(params.chat_id)}).exec (err, chat)->
+    if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
+      chat.unread.count = 0
+
+    chat.save (err)->
+      console.log err
+      callback err, chat
   
-  
+
+exports.unread_messages_count = (user_id, callback)->
+  db_model.Chat.find({'unread.user':  mongoose.Types.ObjectId(user_id)}, {'conversation':0}).exec (err, chats)->
+    count = 0
+    for chat in chats
+      count = count + chat.unread.count
+    callback null, count
 
 
 

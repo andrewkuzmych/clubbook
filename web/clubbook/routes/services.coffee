@@ -270,52 +270,52 @@ exports.chat = (req, res)->
     user_from: req.body.user_from
     user_to: req.body.user_to
     msg: req.body.msg
-  
-  manager.chat params, (err, chat)->
-    pubnub = require("pubnub").init({ publish_key: config.pub_publish_key, subscribe_key: config.pub_subscribe_key})
-    
-    message = req.body.msg
-    
-    pubnub.here_now
-      channel: req.body.user_from + "_" + req.body.user_to
-      callback: (m) ->
-        console.log m.occupancy
-        if m.occupancy == 0
-          Parse = require("parse").Parse
-          Parse.initialize config.parse_app_id, config.parse_js_key
-          console.log 'user_'+req.body.user_to
-          Parse.Push.send
-              channels: [ 'user_'+req.body.user_to]
-              data:
-                alert: req.body.msg
-            ,
-              success: ->
-                console.log "push sent"
-              
-              # Push was successful
-              error: (error) ->
-                console.log "push error: " 
-                console.log error
-        return
+
+  manager.get_user_by_id req.body.user_from, (err, user_from)->
+    manager.chat params, (err, chat)->
+      pubnub = require("pubnub").init({ publish_key: config.pub_publish_key, subscribe_key: config.pub_subscribe_key})
+      message = req.body.msg
+
+      Parse = require("parse").Parse
+      Parse.initialize config.parse_app_id, config.parse_js_key
+      Parse.Push.send
+          channels: [ 'user_'+req.body.user_to]
+          data:
+            action: "com.nl.clubbook.UPDATE_STATUS"
+            msg: message
+            unique_id: req.body.user_from + "_" + req.body.user_to
+            header: user_from.name
+            type: "chat"
+        ,
+          success: ->
+            console.log "push sent"
+          
+          # Push was successful
+          error: (error) ->
+            console.log "push error: " 
+            console.log error
+
+      pubnab_data =
+          msg: message
+          user_from: req.body.user_from
+          user_to: req.body.user_to
+          type: "chat"
 
 
+      pubnub.publish
+        channel: "message_" + req.body.user_to
+        message: pubnab_data
+        callback: (e) ->
+          console.log "SUCCESS yes!", e
+      
+        error: (e) ->
+          console.log "FAILED! RETRY PUBLISH!", e
+            
+      res.json
+        status: 'ok'
+        chat: chat
 
-    pubnub.publish
-      channel: req.body.user_from + "_" + req.body.user_to
-      message: message
-      callback: (e) ->
-        console.log "SUCCESS!", e
-        return
 
-      error: (e) ->
-        console.log "FAILED! RETRY PUBLISH!", e
-        return
-
-
-
-    res.json
-      status: 'ok'
-      chat: chat
 
 exports.get_conversations = (req, res)->
 
@@ -332,10 +332,11 @@ exports.get_conversation = (req, res)->
     user1: req.params.user1
     user2: req.params.user2
       
-  manager.get_conversation params, (err, conversation)->
+  manager.get_conversation params, (err, chat)->
     res.json
       status: 'ok'
-      conversation: conversation
+      chat_id: chat._id
+      conversation: chat.conversation
 
 
 exports.cron_checkout = (req,res)->
@@ -344,12 +345,21 @@ exports.cron_checkout = (req,res)->
 
   res.json
     status: "ok"
+
 exports.readchat = (req, res)->
   params =
     chat_id: req.params.chat_id
- manager.readchat params, (err, readchat)->
+    user_id: req.params.user_id
+  
+  manager.readchat params, (err, readchat)->
     res.json
       status: 'ok'
+
+exports.unread_messages_count = (req, res)->
+  manager.unread_messages_count req.params.user_id, (err, count)->
+    res.json
+      status: 'ok'
+      count: count
       
 
 

@@ -1,65 +1,52 @@
 package com.nl.clubbook.fragment;
 
-import android.support.v4.app.Fragment;
+import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTabHost;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.SeekBar;
-import android.widget.TabHost;
 import android.widget.TextView;
 import com.nl.clubbook.R;
-import com.nl.clubbook.activity.MainActivity;
+import com.nl.clubbook.activity.BaseActivity;
+import com.nl.clubbook.adapter.ClubsAdapter;
+import com.nl.clubbook.datasource.ClubDto;
+import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.helper.SessionManager;
-import com.sromku.simple.fb.SimpleFacebook;
+
+import java.util.Comparator;
+import java.util.List;
 
 public class HomeFragment extends BaseFragment {
 
-    private FragmentTabHost tabHost;
+    //private FragmentTabHost tabHost;
     private SeekBar distance;
-    private String TAB_CLUBS = "Clubs";
-    private String TAB_PROFILES = "Profiles";
+    //private String TAB_CLUBS = "Clubs";
+    //private String TAB_PROFILES = "Profiles";
+    ListView club_list;
     //private TabHost tabHost;
+    private int index = -1;
+    private int top = 0;
 
-    public HomeFragment()
-    {
+    public HomeFragment() {
 
     }
-	
-	@Override
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-        tabHost = (FragmentTabHost)rootView.findViewById(R.id.tabHost);
-
-        //tabHost
-        //tabHost = new FragmentTabHost(getActivity());
-        tabHost.setup(getActivity(), getChildFragmentManager(), R.id.tabcontent);
-        //tabHost.setup();
-        //ClubsFragment cf = (ClubsFragment) getChildFragmentManager().findFragmentByTag("Clubs");
-
-        Bundle arg1 = new Bundle();
-        arg1.putInt("Arg for Frag1", 1);
-        View clubView=inflater.inflate(R.layout.tab_item,null);
-        ((TextView)clubView.findViewById(R.id.text)).setText("Clubs (34)");
-        tabHost.addTab(tabHost.newTabSpec(TAB_CLUBS).setIndicator(clubView), ClubsFragment.class, arg1);
-        //tabHost.addTab(clubs_ts, ClubsFragment.class, arg1);
-
-        Bundle arg2 = new Bundle();
-        arg2.putInt("Arg for Frag2", 2);
-        View profileView=inflater.inflate(R.layout.tab_item,null);
-        ((TextView)profileView.findViewById(R.id.text)).setText("Profiles (456)");
-        tabHost.addTab(tabHost.newTabSpec(TAB_PROFILES).setIndicator(profileView), ProfilesFragmant.class, arg1);
 
         distance = (SeekBar) rootView.findViewById(R.id.distance);
         distance.setMax(9);
         distance.incrementProgressBy(1);
         distance.setProgress(SessionManager.DEFOULT_DISTANCE);
-
-/*        ClubsFragment cf = (ClubsFragment) getChildFragmentManager().findFragmentByTag("Clubs");
-        cf.loadData(String.valueOf(convertToKm(defoult_distance)));*/
 
         final TextView distance_text = (TextView) rootView.findViewById(R.id.distance_text);
         distance_text.setText(convertToKm(SessionManager.DEFOULT_DISTANCE) + " " + getString(R.string.km));
@@ -68,6 +55,7 @@ public class HomeFragment extends BaseFragment {
                 new SeekBar.OnSeekBarChangeListener() {
                     int progress = 0;
                     int km = 0;
+
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
                         km = convertToKm(progresValue);
@@ -84,59 +72,93 @@ public class HomeFragment extends BaseFragment {
 
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {
-                        int tab  = tabHost.getCurrentTab();
-                        if (tab == 0) {
-                            ClubsFragment cf = (ClubsFragment) getChildFragmentManager().findFragmentByTag("Clubs");
-                            cf.loadData(String.valueOf(km));
-                        }
-                        // Display the value in textview
-                        //distance_text.setText(progress + "/" + seekBar.getMax());
-                        //distance_text.setText(String.valueOf(progress));
+                        loadData(String.valueOf(km));
                     }
-                });
+                }
+        );
 
 
-       /* Button test = (Button) rootView.findViewById(R.id.test);
-        test.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-               //View th =  tabHost.getCurrentTabView();
-               View clubView =  tabHost.getTabWidget().getChildTabViewAt(0);
-               ((TextView)clubView.findViewById(R.id.text)).setText("Clubs (34) changed");
-               View profileView =  tabHost.getTabWidget().getChildTabViewAt(1) ;
-               ((TextView)profileView.findViewById(R.id.text)).setText("Profiles (456) changed");
-
-               //tabHost.forceLayout();
-               // clubs_ts.setIndicator("CHANGED!");
-
-               ClubsFragment cf = (ClubsFragment) getChildFragmentManager().findFragmentByTag("Clubs");
-               cf.loadData();
-
-            }
-        });*/
-
-        //return tabHost;
+        club_list = (ListView) rootView.findViewById(R.id.club_listview);
+        String distance = getSelectedDistance();
+        loadData(distance);
         return rootView;
     }
 
-    public String getSelectedDistance()
-    {
+    protected void loadData(String distanceKm) {
+        //showProgress(getString(R.string.loading));
+        DataStore.setContext(getActivity());
+
+        final Context contextThis = getActivity();
+        final BaseFragment thisInstance = this;
+
+        Location currentLocation = LocationCheckinHelper.getBestLocation(getActivity());
+
+        ((BaseActivity) getActivity()).showProgress("Loading...");
+
+        DataStore.retrievePlaces(distanceKm, String.valueOf(currentLocation.getLatitude()), String.valueOf(currentLocation.getLongitude()), new DataStore.OnResultReady() {
+            @Override
+            public void onReady(Object result, boolean failed) {
+                if (failed) {
+                    ((BaseActivity) getActivity()).hideProgress(false);
+                    return;
+                }
+                ((BaseActivity) getActivity()).hideProgress(true);
+
+                List<ClubDto> places = (List<ClubDto>) result;
+
+                DataStore.setPlaceAdapter(new ClubsAdapter(contextThis, R.layout.club_list_item, places.toArray(new ClubDto[places.size()])));
+
+                DataStore.getPlaceAdapter().sort(new Comparator<ClubDto>() {
+                    @Override
+                    public int compare(ClubDto lhs, ClubDto rhs) {
+                        if (lhs.getDistance() > rhs.getDistance()) {
+                            return 0;
+                        } else {
+                            return 1;
+                        }
+                    }
+                });
+
+                club_list.setAdapter(DataStore.getPlaceAdapter());
+
+                club_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view,
+                                            int position, long id) {
+                        String club_id = ((TextView) view.findViewById(R.id.club_id)).getText().toString();
+                        SelectedClubFragment fragment = new SelectedClubFragment(thisInstance, club_id);
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
+                        mFragmentTransaction.addToBackStack(null);
+                        mFragmentTransaction.replace(R.id.frame_container, fragment).commit();
+
+                    }
+                });
+
+                if (index != -1) {
+                    club_list.setSelectionFromTop(index, top);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        try {
+            index = club_list.getFirstVisiblePosition();
+            View v = club_list.getChildAt(0);
+            top = (v == null) ? 0 : v.getTop();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+
+    public String getSelectedDistance() {
         return String.valueOf(convertToKm(distance.getProgress()));
     }
 
-    public void setClubCount(Integer count)
-    {
-        View clubView =  tabHost.getTabWidget().getChildTabViewAt(0);
-        ((TextView)clubView.findViewById(R.id.text)).setText(String.format("Clubs (%s)", count));
-
-    }
-
-    //View clubView =  tabHost.getTabWidget().getChildTabViewAt(0);
-    //((TextView)clubView.findViewById(R.id.text)).setText("Clubs (34) changed");
-
-    private int convertToKm(int value)
-    {
+    private int convertToKm(int value) {
         int result = 0;
         switch (value) {
             case 0:

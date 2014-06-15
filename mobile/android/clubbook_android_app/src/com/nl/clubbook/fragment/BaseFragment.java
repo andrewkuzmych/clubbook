@@ -1,8 +1,6 @@
 package com.nl.clubbook.fragment;
 
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import com.nl.clubbook.activity.MainActivity;
 
@@ -12,38 +10,31 @@ import com.nl.clubbook.activity.MainActivity;
 public class BaseFragment extends Fragment {
     BaseFragment provoiusFregment;
 
-    public BaseFragment()
-    {}
+    public BaseFragment() {
+    }
 
-    public BaseFragment( BaseFragment provoiusFregment)
-    {
+    public BaseFragment(BaseFragment provoiusFregment) {
         this.provoiusFregment = provoiusFregment;
     }
+
     @Override
-    public void onDestroyView () {
+    public void onDestroyView() {
         super.onDestroyView();
 
-        try {
-            //FragmentManager fm =  getActivity().getSupportFragmentManager();
-            //SelectedClubFragment fragment = (SelectedClubFragment) fm.findFragmentById(R.id.frame_container);
-
-            //FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            //ft.remove(this).commit();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void backButtonWasPressed() {
-        ((MainActivity)getActivity()).setCurrentFragment(provoiusFregment);
+        ((MainActivity) getActivity()).setCurrentFragment(provoiusFregment);
     }
 
-
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         super.onStart();
-        ((MainActivity)getActivity()).setCurrentFragment(this);
+        ((MainActivity) getActivity()).setCurrentFragment(this);
+
+        if (!((MainActivity) getActivity()).getDrawerToggle().isDrawerIndicatorEnabled()) {
+            ((MainActivity) getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(true);
+            ((MainActivity) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        }
     }
 }
