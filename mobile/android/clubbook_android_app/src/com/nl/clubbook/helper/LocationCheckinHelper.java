@@ -24,17 +24,7 @@ public class LocationCheckinHelper {
     private static ClubDto current_club;
     private static int failed_checkin_count = 0;
     private static int max_failed_checkin_count = 3;
-    private static final int MILLISECONDS_PER_SECOND = 1000;
-    // Update frequency in seconds
-    public static final int UPDATE_INTERVAL_IN_SECONDS = 5;
-    // Update frequency in milliseconds
-    private static final long UPDATE_INTERVAL =
-            MILLISECONDS_PER_SECOND * UPDATE_INTERVAL_IN_SECONDS;
-    // The fastest update frequency, in seconds
-    private static final int FASTEST_INTERVAL_IN_SECONDS = 1;
-    // A fast frequency ceiling in milliseconds
-    private static final long FASTEST_INTERVAL =
-            MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
+    private static int update_location_interval = 10*60; // every 10min.
 
     public static String getCurrentClubLat(Context context) {
         String result = null;
@@ -168,7 +158,7 @@ public class LocationCheckinHelper {
                     }
                 });
             }
-        }, 0, 10 * 60, TimeUnit.SECONDS);
+        }, 0, update_location_interval, TimeUnit.SECONDS);
     }
 
     public static Location getBestLocation(Context context) {
@@ -220,6 +210,7 @@ public class LocationCheckinHelper {
                 location = locationManager.getLastKnownLocation(provider);
             }
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             //Log.d(TAG, "Cannot acces Provider " + provider);
         }
         return location;

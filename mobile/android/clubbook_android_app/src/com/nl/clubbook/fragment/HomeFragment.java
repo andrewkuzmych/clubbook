@@ -5,6 +5,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,6 +91,8 @@ public class HomeFragment extends BaseFragment {
 
         final Context contextThis = getActivity();
         final BaseFragment thisInstance = this;
+
+        Log.d("Location Updates", "Google Play services is available.");
 
         Location currentLocation = LocationCheckinHelper.getBestLocation(getActivity());
 

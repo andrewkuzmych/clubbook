@@ -5,6 +5,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import com.nl.clubbook.R;
+import com.nl.clubbook.fragment.BaseFragment;
 import com.nl.clubbook.helper.AlertDialogManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -30,15 +33,14 @@ public class BaseActivity extends ActionBarActivity {
     View contentView;
     protected ImageLoader imageLoader;
     protected DisplayImageOptions options;
-    private boolean is_retry = false;
     protected AlertDialogManager alert = new AlertDialogManager();
     private ProgressDialog progressDialog;
+    protected BaseFragment current_fragment;
 
     public void showProgress(final String string) {
-        if (is_retry) {
-            contentView.setVisibility(View.GONE);
-            failedView.setVisibility(View.GONE);
-        }
+        contentView.setVisibility(View.GONE);
+        failedView.setVisibility(View.GONE);
+
         BaseActivity.this.runOnUiThread(new Runnable() {
             public void run() {
                 progressDialog = ProgressDialog.show(BaseActivity.this, string,
@@ -49,14 +51,22 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     public void hideProgress(boolean showContent) {
-        if (is_retry) {
-            if (showContent) {
-                failedView.setVisibility(View.GONE);
-                contentView.setVisibility(View.VISIBLE);
-            } else {
-                failedView.setVisibility(View.VISIBLE);
-                contentView.setVisibility(View.GONE);
+        if (showContent) {
+            failedView.setVisibility(View.GONE);
+            contentView.setVisibility(View.VISIBLE);
+        } else {
+            failedView.setVisibility(View.VISIBLE);
+            contentView.setVisibility(View.GONE);
+
+            // on no internet clear current fragment
+            if(current_fragment != null) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
+
+                mFragmentTransaction.remove(current_fragment);
+                mFragmentTransaction.commit();
             }
+
         }
 
         BaseActivity.this.runOnUiThread(new Runnable() {
@@ -91,7 +101,6 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     protected void setRetryLayout() {
-        is_retry = true;
         //dialog = new ProgressDialog(this);
         mainView = (RelativeLayout) findViewById(R.id.main_layout);
         failedView = (LinearLayout) getLayoutInflater().inflate(R.layout.retry, null);//new LinearLayout(this);

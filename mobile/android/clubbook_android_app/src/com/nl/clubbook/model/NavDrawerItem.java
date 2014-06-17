@@ -33,10 +33,6 @@ public class NavDrawerItem {
         return profileAvatar;
     }
 
-    public void setProfileAvatar(String profileAvatar) {
-        this.profileAvatar = profileAvatar;
-    }
-
     public String getTitle(){
 		return this.title;
 	}

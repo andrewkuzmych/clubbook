@@ -29,16 +29,15 @@ public class ClubbookApplication extends Application {
         //PushService.setDefaultPushCallback(this, MainActivity.class);
 
 
-
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext()).build();
         ImageLoader.getInstance().init(config);
 
-        Permission[] permissions = new Permission[] {
+        Permission[] permissions = new Permission[]{
                 //Permission.USER_ABOUT_ME,
-               // Permission.USER_BIRTHDAY,
+                // Permission.USER_BIRTHDAY,
                 Permission.BASIC_INFO,
                 Permission.EMAIL,
-               // Permission.BASIC_INFO,
+                // Permission.BASIC_INFO,
                 Permission.USER_FRIENDS
                 //Permission.PUBLISH_ACTION
         };

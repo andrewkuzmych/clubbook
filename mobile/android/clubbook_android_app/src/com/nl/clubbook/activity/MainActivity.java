@@ -75,7 +75,6 @@ public class MainActivity extends BaseActivity {
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
     private SessionManager session;
-    private BaseFragment current_fragment;
 
     HashMap<Integer, BaseFragment> fragmentMap = new HashMap<Integer, BaseFragment>();
 
@@ -123,15 +122,53 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void loadData() {
+
+        initNavigationMenu();
+
+        updateMessagesCount();
+
+        displayDefaultView();
+
+    }
+
+    private void initNavigationMenu() {
         // get user data from session
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
-        String image_url = null;
+
+        String user_avatar_url = null;
         if (user.get(SessionManager.KEY_AVATAR) != null)
-            image_url = ImageHelper.GenarateUrl(user.get(SessionManager.KEY_AVATAR), "w_100,h_100,c_thumb,g_face");
+            user_avatar_url = ImageHelper.GenarateUrl(user.get(SessionManager.KEY_AVATAR), "w_100,h_100,c_thumb,g_face");
+
+        // initialize navigation menu
+
+        navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
+        navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+        mDrawerList.requestFocusFromTouch();
+
+        mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout,
+                R.drawable.ic_drawer, //nav menu toggle icon
+                R.string.app_name, // nav drawer open - description for accessibility
+                R.string.app_name // nav drawer close - description for accessibility
+        ) {
+            public void onDrawerClosed(View view) {
+                getSupportActionBar().setTitle(mTitle);
+                // calling onPrepareOptionsMenu() to show action bar icons
+                invalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                getSupportActionBar().setTitle("");
+                // calling onPrepareOptionsMenu() to hide action bar icons
+                invalidateOptionsMenu();
+            }
+        };
 
         navDrawerItems = new ArrayList<NavDrawerItem>();
-        navDrawerItems.add(new NavDrawerItem(user.get(SessionManager.KEY_NAME), image_url, true));
+        navDrawerItems.add(new NavDrawerItem(user.get(SessionManager.KEY_NAME), user_avatar_url, true));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(3, -1)));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(3, -1)));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1), true, "0"));
@@ -152,10 +189,6 @@ public class MainActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        updateMessagesCount();
-
-        displayDefaultView();
-
     }
 
     @Override
@@ -352,32 +385,6 @@ public class MainActivity extends BaseActivity {
 
         getSupportActionBar().setIcon(
                 new ColorDrawable(getResources().getColor(android.R.color.transparent)));
-
-
-        navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
-        navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
-        mDrawerList.requestFocusFromTouch();
-
-        mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout,
-                R.drawable.ic_drawer, //nav menu toggle icon
-                R.string.app_name, // nav drawer open - description for accessibility
-                R.string.app_name // nav drawer close - description for accessibility
-        ) {
-            public void onDrawerClosed(View view) {
-                getSupportActionBar().setTitle(mTitle);
-                // calling onPrepareOptionsMenu() to show action bar icons
-                invalidateOptionsMenu();
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                getSupportActionBar().setTitle("");
-                // calling onPrepareOptionsMenu() to hide action bar icons
-                invalidateOptionsMenu();
-            }
-        };
 
         setRetryLayout();
         loadData();
