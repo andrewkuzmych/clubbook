@@ -109,6 +109,42 @@ exports.checkin = (params, callback)->
             console.log err
             callback err, user
 
+exports.update_name = (params, callback)->
+  db_model.User.findById(params.user_id).exec (err, user)->
+    
+    user.name = params.name
+
+    user.save (err)->
+        console.log err
+        callback err, user
+
+exports.update_dob = (params, callback)->
+  db_model.User.findById(params.user_id).exec (err, user)->
+    
+    user.dob = params.dob
+    
+    user.save (err)->
+        console.log err
+        callback err, user
+
+exports.update_gender = (params, callback)->
+  db_model.User.findById(params.user_id).exec (err, user)->
+    
+    user.gender = params.gender
+    
+    user.save (err)->
+        console.log err
+        callback err, user
+
+exports.update_info = (params, callback)->
+  db_model.User.findById(params.user_id).exec (err, user)->
+    
+    user.info = params.info
+    
+    user.save (err)->
+        console.log err
+        callback err, user
+
 exports.update_checkin = (params, callback)->
   db_model.Venue.findById(params.club_id).exec (err, club)->
     if not club
@@ -319,17 +355,13 @@ exports.get_conversations = (params, callback)->
     if not chats
       callback err, []
     else    
-     sorted_chats = __.sortBy(chats, (chat) ->
-                         if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
+      sorted_chats = __.sortBy(chats, (chat) ->
+        if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
                            return chat.unread.count
                           else
                             return 0
                     ).reverse()
 
-      #for chat in chats
-      #  if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
-      #    console.log 123
-      #    chat.count_of_unread_msg = chat.unread.count
       callback err, sorted_chats    
   
 exports.readchat = (params, callback)->  

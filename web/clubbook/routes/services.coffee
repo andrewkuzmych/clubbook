@@ -361,6 +361,44 @@ exports.unread_messages_count = (req, res)->
       status: 'ok'
       count: count
       
+exports.update_name =(req, res)->
+  params = 
+    user_id: req.params.user_id
+    name: req.body.name
 
+  manager.update_name params, (err, user)->
+     res.json
+        status: 'ok'
+        user: user
+
+exports.update_dob =(req, res)->
+  params = 
+    user_id: req.params.user_id
+    dob: req.body.dob
+
+  manager.update_dob params, (err, user)->
+     res.json
+        status: 'ok'
+        user: user
+
+exports.update_gender =(req, res)->
+  params = 
+    user_id: req.params.user_id
+    gender: req.body.gender
+
+  manager.update_gender params, (err, user)->
+     res.json
+        status: 'ok'
+        user: user
+
+exports.update_info =(req, res)->
+  params = 
+    user_id: req.params.user_id
+    info: req.body.info
+
+  manager.update_info params, (err, user)->
+     res.json
+        status: 'ok'
+        user: user
 
 
