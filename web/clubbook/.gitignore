@@ -11,3 +11,4 @@ node_modules
 !server.js
 
 *.DS_Store
+/npm-debug.log
