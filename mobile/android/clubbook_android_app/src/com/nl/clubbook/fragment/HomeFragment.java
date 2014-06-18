@@ -26,12 +26,8 @@ import java.util.List;
 
 public class HomeFragment extends BaseFragment {
 
-    //private FragmentTabHost tabHost;
     private SeekBar distance;
-    //private String TAB_CLUBS = "Clubs";
-    //private String TAB_PROFILES = "Profiles";
     ListView club_list;
-    //private TabHost tabHost;
     private int index = -1;
     private int top = 0;
 
@@ -86,9 +82,6 @@ public class HomeFragment extends BaseFragment {
     }
 
     protected void loadData(String distanceKm) {
-        //showProgress(getString(R.string.loading));
-        DataStore.setContext(getActivity());
-
         final Context contextThis = getActivity();
         final BaseFragment thisInstance = this;
 

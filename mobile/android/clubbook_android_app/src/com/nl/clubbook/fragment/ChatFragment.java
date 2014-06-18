@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.nl.clubbook.R;
-import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.adapter.ChatAdapter;
 import com.nl.clubbook.datasource.Chat;
@@ -21,8 +20,6 @@ import com.nl.clubbook.datasource.Comment;
 import com.nl.clubbook.datasource.Conversation;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.helper.SessionManager;
-
-import java.util.HashMap;
 
 /**
  * Created by Andrew on 6/8/2014.
@@ -160,6 +157,6 @@ public class ChatFragment extends BaseFragment {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getActivity().getWindow().getCurrentFocus().getWindowToken(), 0);
 
-        ((MainActivity) getActivity()).setCurrentFragment(provoiusFregment);
+        ((MainActivity) getActivity()).setCurrentFragment(previousFragment);
     }
 }

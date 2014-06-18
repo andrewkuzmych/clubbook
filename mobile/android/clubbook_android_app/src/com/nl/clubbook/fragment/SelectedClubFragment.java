@@ -151,6 +151,7 @@ public class SelectedClubFragment extends BaseFragment {
                     ((BaseActivity) getActivity()).hideProgress(false);
                     return;
                 }
+
                 ((BaseActivity) getActivity()).hideProgress(true);
 
                 club = (ClubDto) result;

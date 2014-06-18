@@ -1,24 +1,14 @@
 package com.nl.clubbook.activity;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import com.nl.clubbook.R;
+import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.fragment.BaseFragment;
 import com.nl.clubbook.helper.AlertDialogManager;
-import com.nl.clubbook.helper.InternetHelper;
 import com.nl.clubbook.helper.SessionManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -33,10 +23,6 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 public class BaseActivity extends ActionBarActivity {
-    LinearLayout failedView;
-    RelativeLayout mainView;
-    //ProgressDialog dialog;
-    View contentView;
     protected ImageLoader imageLoader;
     protected DisplayImageOptions options;
     protected AlertDialogManager alert = new AlertDialogManager();
@@ -63,31 +49,29 @@ public class BaseActivity extends ActionBarActivity {
     public Typeface typeface_bold;
 
     public void showProgress(final String string) {
-        //contentView.setVisibility(View.GONE);
-        //failedView.setVisibility(View.GONE);
-
         BaseActivity.this.runOnUiThread(new Runnable() {
             public void run() {
                 progressDialog = ProgressDialog.show(BaseActivity.this, string,
                         "Loading application View, please wait...", false, true);
             }
         });
-
     }
 
     public void hideProgress(boolean showContent) {
+        // hide progress
         BaseActivity.this.runOnUiThread(new Runnable() {
             public void run() {
                 progressDialog.dismiss();
             }
         });
 
-        if(!showContent) {
+        // there is error. Show error view.
+        if (!showContent) {
             showNoInternet();
         }
     }
 
-    public void showNoInternet() {
+    private void showNoInternet() {
         Intent i = new Intent(getApplicationContext(), NoInternetActivity.class);
         startActivity(i);
         finish();
@@ -116,52 +100,15 @@ public class BaseActivity extends ActionBarActivity {
         typeface_regular = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-REGULAR.TTF");
         typeface_bold = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
 
+        // set context to use from DataStore for all app
+        DataStore.setContext(this);
     }
 
     protected void init() {
-       // setRetryLayout();
     }
-
-   /* private void setRetryLayout() {
-        mainView = (RelativeLayout) findViewById(R.id.main_layout);
-        failedView = (LinearLayout) getLayoutInflater().inflate(R.layout.retry, null);
-        contentView = findViewById(R.id.content_layout);
-
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(-1, -1);
-        params.addRule(RelativeLayout.CENTER_HORIZONTAL | RelativeLayout.CENTER_VERTICAL);
-
-        failedView.setLayoutParams(params);
-        failedView.setGravity(Gravity.CENTER);
-        failedView.setOrientation(LinearLayout.VERTICAL);
-        mainView.addView(failedView);
-
-        setBaseHandlers();
-    }*/
 
     protected void loadData() {
-
     }
-
-    private void setBaseHandlers() {
-        // retry button handler
-        Button retry_button = (Button) findViewById(R.id.retry_button);
-        retry_button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                loadData();
-            }
-        });
-
-    }
-
-/*    public boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-            return true;
-        }
-        return false;
-    }*/
 
     @Override
     public void onStart() {

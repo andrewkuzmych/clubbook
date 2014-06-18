@@ -42,9 +42,6 @@ public class CheckinFragment extends BaseFragment {
     }
 
     protected void loadData(String distanceKm) {
-        //showProgress(getString(R.string.loading));
-        DataStore.setContext(getActivity());
-
         final Context contextThis = getActivity();
 
         Location currentLocation  = LocationCheckinHelper.getBestLocation(getActivity());

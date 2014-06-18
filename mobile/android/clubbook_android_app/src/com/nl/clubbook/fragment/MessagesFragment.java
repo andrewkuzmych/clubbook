@@ -38,8 +38,6 @@ public class MessagesFragment extends BaseFragment {
     }
 
     public void loadData(final boolean loading) {
-        DataStore.setContext(getActivity());
-
         final Context contextThis = getActivity();
         final BaseFragment thisInstance = this;
 
