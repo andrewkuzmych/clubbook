@@ -288,12 +288,11 @@ public class DataStore {
                     }
 
                     //Collections.sort(places, new PlaceDistanceComparator());
-
+                    failed = false;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                failed = false;
                 onResultReady.onReady(clubs, failed);
             }
 

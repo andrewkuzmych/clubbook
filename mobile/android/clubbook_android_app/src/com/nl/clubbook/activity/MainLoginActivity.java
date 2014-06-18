@@ -1,7 +1,6 @@
 package com.nl.clubbook.activity;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -39,6 +38,7 @@ public class MainLoginActivity extends BaseActivity {
 
         @Override
         public void onFail(String reason) {
+
         }
 
         @Override
@@ -60,17 +60,144 @@ public class MainLoginActivity extends BaseActivity {
         }
     };
 
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.main_login);
+
+        init();
+
+        if (getSession().isLoggedIn()) {
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(i);
+            finish();
+        }
+
+        setUIHandlers();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSimpleFacebook = SimpleFacebook.getInstance(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mSimpleFacebook.onActivityResult(this, requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            navigateBack();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void navigateBack() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    private void setUIHandlers() {
+        TextView intro_text = (TextView) findViewById(R.id.intro_text);
+        intro_text.setTypeface(typeface_bold);
+
+        LinearLayout loginLayout = (LinearLayout) findViewById(R.id.loginLayout);
+        TextView has_account_text = (TextView) findViewById(R.id.has_account_text);
+        has_account_text.setTypeface(typeface_regular);
+
+        button_fb_login = (Button) findViewById(R.id.login_fb);
+        button_fb_login.setTypeface(typeface_regular);
+        button_fb_login.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                loginToFacebook();
+            }
+        });
+
+        TextView login_by_email = (TextView) findViewById(R.id.login_by_email);
+        login_by_email.setTypeface(typeface_bold);
+
+        Button reg_by_email = (Button) findViewById(R.id.reg_by_email);
+        reg_by_email.setTypeface(typeface_regular);
+        reg_by_email.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent in = new Intent(getApplicationContext(),
+                        RegActivity.class);
+                startActivity(in);
+            }
+        });
+
+        loginLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent in = new Intent(getApplicationContext(),
+                        LoginActivity.class);
+                startActivity(in);
+            }
+        });
+    }
+
+    public void loginToFacebook() {
+        if (mSimpleFacebook.isLogin())
+            // get profile and update data on server
+            GetFacebookProfile();
+        else
+            // get tocken and profile and put in SimpleFacebook session
+            mSimpleFacebook.login(mOnLoginListener);
+    }
+
+    class UpdateProfileInfoTask extends AsyncTask<String, Void, Profile> {
+        Profile profile;
+        String imageUrl;
+
+        UpdateProfileInfoTask(Profile profile) {
+            this.profile = profile;
+        }
+
+        // Executed on a special thread and all your
+        // time taking tasks should be inside this method
+        @Override
+        protected Profile doInBackground(String... params) {
+            try {
+                String fb_id = params[0];
+                showProgress("Loading...");
+                String fb_photo = "https://graph.facebook.com/" + fb_id + "/picture?width=700&height=700";
+                Cloudinary cloudinary = new Cloudinary(getApplicationContext());
+
+                cloudinary.uploader().upload(fb_photo, Cloudinary.asMap("public_id", fb_id, "format", "jpg"));
+                imageUrl = "http://res.cloudinary.com/" + ImageHelper.CLOUD_NAME_CLOUDINARY + "/image/upload/" + fb_id + ".jpg";
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return this.profile;
+        }
+
+        // Executed on the UI thread after the
+        // time taking process is completed
+        @Override
+        protected void onPostExecute(Profile result) {
+            super.onPostExecute(result);
+            hideProgress(true);
+            updateUserInfo(this.profile, imageUrl);
+        }
+    }
+
     private void GetFacebookProfile() {
         OnProfileListener onProfileListener = new OnProfileListener() {
             @Override
             public void onComplete(Profile profile) {
-                UploadImageTask task = new UploadImageTask(profile);//
+                UpdateProfileInfoTask task = new UpdateProfileInfoTask(profile);//
                 task.execute(profile.getId());
             }
-                /*
-                 * You can override other methods here:
-                 * onThinking(), onFail(String reason), onException(Throwable throwable)
-                 */
         };
 
         Profile.Properties properties = new Profile.Properties.Builder()
@@ -117,134 +244,4 @@ public class MainLoginActivity extends BaseActivity {
         });
     }
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.main_login);
-
-        if (getSession().isLoggedIn()) {
-            Intent i = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(i);
-            finish();
-        }
-
-        setUIHandlers();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mSimpleFacebook = SimpleFacebook.getInstance(this);
-        //setUIState();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mSimpleFacebook.onActivityResult(this, requestCode, resultCode, data);
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            navigateBack();
-            return true;
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    protected void navigateBack() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
-
-    public void loginToFacebook() {
-        if (mSimpleFacebook.isLogin())
-            GetFacebookProfile();
-        else
-            mSimpleFacebook.login(mOnLoginListener);
-    }
-
-    class UploadImageTask extends AsyncTask<String, Void, Profile> {
-
-        Profile profile;
-        String imageUrl;
-
-        UploadImageTask(Profile profile) {
-            this.profile = profile;
-            //tv = (TextView)findViewById(R.id.tv);
-        }
-
-        // Executed on a special thread and all your
-        // time taking tasks should be inside this method
-        @Override
-        protected Profile doInBackground(String... params) {
-            try {
-                String fb_id = params[0];
-                showProgress("Loading...");
-                String fb_photo = "https://graph.facebook.com/" + fb_id + "/picture?width=700&height=700";
-                Cloudinary cloudinary = new Cloudinary(getApplicationContext());
-
-                cloudinary.uploader().upload(fb_photo, Cloudinary.asMap("public_id", fb_id, "format", "jpg"));
-                imageUrl = "http://res.cloudinary.com/" + ImageHelper.CLOUD_NAME_CLOUDINARY + "/image/upload/" + fb_id + ".jpg"; //result.getString("url");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            //tv.setText("Running task....");
-            //myData = myParser.getDataFromWeb();
-            return this.profile;
-        }
-
-        // Executed on the UI thread after the
-        // time taking process is completed
-        @Override
-        protected void onPostExecute(Profile result) {
-            super.onPostExecute(result);
-            hideProgress(false);
-            updateUserInfo(this.profile, imageUrl);
-            //tv.setText("Completed the task, and the result is : " + myData);
-        }
-    }
-
-    private void setUIHandlers() {
-        TextView intro_text = (TextView) findViewById(R.id.intro_text);
-        intro_text.setTypeface(typeface_bold);
-
-        LinearLayout loginLayout = (LinearLayout) findViewById(R.id.loginLayout);
-        TextView has_account_text = (TextView) findViewById(R.id.has_account_text);
-        has_account_text.setTypeface(typeface_regular);
-
-        button_fb_login = (Button) findViewById(R.id.login_fb);
-        button_fb_login.setTypeface(typeface_regular);
-        button_fb_login.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                loginToFacebook();
-            }
-        });
-
-        TextView login_by_email = (TextView) findViewById(R.id.login_by_email);
-        login_by_email.setTypeface(typeface_bold);
-
-        Button reg_by_email = (Button) findViewById(R.id.reg_by_email);
-        reg_by_email.setTypeface(typeface_regular);
-        reg_by_email.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent in = new Intent(getApplicationContext(),
-                        RegActivity.class);
-                startActivity(in);
-            }
-        });
-
-        loginLayout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent in = new Intent(getApplicationContext(),
-                        LoginActivity.class);
-                startActivity(in);
-            }
-        });
-    }
 }

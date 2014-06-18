@@ -2,6 +2,7 @@ package com.nl.clubbook.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -17,6 +18,7 @@ import android.widget.RelativeLayout;
 import com.nl.clubbook.R;
 import com.nl.clubbook.fragment.BaseFragment;
 import com.nl.clubbook.helper.AlertDialogManager;
+import com.nl.clubbook.helper.InternetHelper;
 import com.nl.clubbook.helper.SessionManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -61,8 +63,8 @@ public class BaseActivity extends ActionBarActivity {
     public Typeface typeface_bold;
 
     public void showProgress(final String string) {
-        contentView.setVisibility(View.GONE);
-        failedView.setVisibility(View.GONE);
+        //contentView.setVisibility(View.GONE);
+        //failedView.setVisibility(View.GONE);
 
         BaseActivity.this.runOnUiThread(new Runnable() {
             public void run() {
@@ -74,28 +76,21 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     public void hideProgress(boolean showContent) {
-        if (showContent) {
-            failedView.setVisibility(View.GONE);
-            contentView.setVisibility(View.VISIBLE);
-        } else {
-            failedView.setVisibility(View.VISIBLE);
-            contentView.setVisibility(View.GONE);
-
-            // on no internet clear current fragment
-            if(current_fragment != null) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
-
-                mFragmentTransaction.remove(current_fragment);
-                mFragmentTransaction.commit();
-            }
-        }
-
         BaseActivity.this.runOnUiThread(new Runnable() {
             public void run() {
                 progressDialog.dismiss();
             }
         });
+
+        if(!showContent) {
+            showNoInternet();
+        }
+    }
+
+    public void showNoInternet() {
+        Intent i = new Intent(getApplicationContext(), NoInternetActivity.class);
+        startActivity(i);
+        finish();
     }
 
     protected void navigateBack() {
@@ -124,10 +119,10 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     protected void init() {
-        setRetryLayout();
+       // setRetryLayout();
     }
 
-    private void setRetryLayout() {
+   /* private void setRetryLayout() {
         mainView = (RelativeLayout) findViewById(R.id.main_layout);
         failedView = (LinearLayout) getLayoutInflater().inflate(R.layout.retry, null);
         contentView = findViewById(R.id.content_layout);
@@ -141,7 +136,7 @@ public class BaseActivity extends ActionBarActivity {
         mainView.addView(failedView);
 
         setBaseHandlers();
-    }
+    }*/
 
     protected void loadData() {
 
@@ -158,7 +153,7 @@ public class BaseActivity extends ActionBarActivity {
 
     }
 
-    public boolean isOnline() {
+/*    public boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
@@ -166,7 +161,7 @@ public class BaseActivity extends ActionBarActivity {
             return true;
         }
         return false;
-    }
+    }*/
 
     @Override
     public void onStart() {
