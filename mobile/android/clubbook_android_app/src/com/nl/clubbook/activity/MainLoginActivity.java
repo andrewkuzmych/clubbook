@@ -15,7 +15,7 @@ import com.facebook.Session;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
-import com.nl.clubbook.helper.SessionManager;
+import com.nl.clubbook.helper.ImageHelper;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.entities.Profile;
@@ -33,11 +33,7 @@ public class MainLoginActivity extends BaseActivity {
 
     private SimpleFacebook mSimpleFacebook;
     private Button button_fb_login;
-    SessionManager session_manager;
 
-
-    //TODO move it to global
-    private String CLOUD_NAME = "ddsoyfjll";
     // Login listener
     private OnLoginListener mOnLoginListener = new OnLoginListener() {
 
@@ -111,9 +107,8 @@ public class MainLoginActivity extends BaseActivity {
                             alert.showAlertDialog(MainLoginActivity.this, "Error", "Incorrect credentials", false);
                         } else {
                             UserDto user = (UserDto) result;
-                            session_manager.createLoginSession(user.getId(), user.getName(), user.getEmail(), user.getGender(), user.getDob(), user.getAvatar());
-                            Intent in = new Intent(getApplicationContext(),
-                                    MainActivity.class);
+                            getSession().createLoginSession(user.getId(), user.getName(), user.getEmail(), user.getGender(), user.getDob(), user.getAvatar());
+                            Intent in = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(in);
                         }
                     }
@@ -127,9 +122,7 @@ public class MainLoginActivity extends BaseActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main_login);
 
-        session_manager = new SessionManager(getApplicationContext());
-
-        if (session_manager.isLoggedIn()) {
+        if (getSession().isLoggedIn()) {
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(i);
             finish();
@@ -197,7 +190,7 @@ public class MainLoginActivity extends BaseActivity {
                 Cloudinary cloudinary = new Cloudinary(getApplicationContext());
 
                 cloudinary.uploader().upload(fb_photo, Cloudinary.asMap("public_id", fb_id, "format", "jpg"));
-                imageUrl = "http://res.cloudinary.com/" + CLOUD_NAME + "/image/upload/" + fb_id + ".jpg"; //result.getString("url");
+                imageUrl = "http://res.cloudinary.com/" + ImageHelper.CLOUD_NAME_CLOUDINARY + "/image/upload/" + fb_id + ".jpg"; //result.getString("url");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -218,17 +211,15 @@ public class MainLoginActivity extends BaseActivity {
     }
 
     private void setUIHandlers() {
-        Typeface typefaceIntroText = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-REGULAR.TTF");
-        Typeface typefaceIntroTextBold = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
         TextView intro_text = (TextView) findViewById(R.id.intro_text);
-        intro_text.setTypeface(typefaceIntroTextBold);
+        intro_text.setTypeface(typeface_bold);
 
         LinearLayout loginLayout = (LinearLayout) findViewById(R.id.loginLayout);
         TextView has_account_text = (TextView) findViewById(R.id.has_account_text);
-        has_account_text.setTypeface(typefaceIntroText);
+        has_account_text.setTypeface(typeface_regular);
 
         button_fb_login = (Button) findViewById(R.id.login_fb);
-        button_fb_login.setTypeface(typefaceIntroText);
+        button_fb_login.setTypeface(typeface_regular);
         button_fb_login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 loginToFacebook();
@@ -236,16 +227,14 @@ public class MainLoginActivity extends BaseActivity {
         });
 
         TextView login_by_email = (TextView) findViewById(R.id.login_by_email);
-        login_by_email.setTypeface(typefaceIntroTextBold);
-
+        login_by_email.setTypeface(typeface_bold);
 
         Button reg_by_email = (Button) findViewById(R.id.reg_by_email);
-        reg_by_email.setTypeface(typefaceIntroText);
+        reg_by_email.setTypeface(typeface_regular);
         reg_by_email.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent in = new Intent(getApplicationContext(),
                         RegActivity.class);
-                //in.putExtra("lon", eventDetail.getLon());
                 startActivity(in);
             }
         });

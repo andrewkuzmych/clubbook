@@ -1,7 +1,6 @@
 package com.nl.clubbook.activity;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,7 +9,6 @@ import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
-import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.helper.Validator;
 
 /**
@@ -22,33 +20,25 @@ public class LoginActivity extends BaseActivity {
     TextView pass_label;
     Button btnLogin;
 
-    // Session Manager Class
-    SessionManager session;
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         init();
 
-        final Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-REGULAR.TTF");
-        final Typeface typeface_bold = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
-        // Session Manager
-        session = new SessionManager(getApplicationContext());
         // Email, Password input text
         email_label = (TextView) findViewById(R.id.email_label);
         email_label.setTypeface(typeface_bold);
         pass_label = (TextView) findViewById(R.id.pass_label);
         pass_label.setTypeface(typeface_bold);
         txtUsername = (EditText) findViewById(R.id.txtUsername);
-        txtUsername.setTypeface(typeface);
+        txtUsername.setTypeface(typeface_regular);
         txtPassword = (EditText) findViewById(R.id.txtPassword);
-        txtPassword.setTypeface(typeface);
+        txtPassword.setTypeface(typeface_regular);
         setHandlers();
     }
 
     private void setHandlers() {
         // Login button
-        final Typeface typeface_bold = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
         btnLogin = (Button) findViewById(R.id.btnLogin);
         btnLogin.setTypeface(typeface_bold);
         // Login button click event
@@ -87,7 +77,7 @@ public class LoginActivity extends BaseActivity {
                             alert.showAlertDialog(LoginActivity.this, "Error", "Incorrect credentials", false);
                         } else {
                             UserDto user = (UserDto) result;
-                            session.createLoginSession(user.getId(), user.getName(), user.getEmail(), user.getGender(), user.getDob(), user.getAvatar());
+                            getSession().createLoginSession(user.getId(), user.getName(), user.getEmail(), user.getGender(), user.getDob(), user.getAvatar());
                             Intent i = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(i);
                         }

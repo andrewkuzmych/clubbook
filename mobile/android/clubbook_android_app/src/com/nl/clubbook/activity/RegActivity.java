@@ -13,57 +13,48 @@ import com.nl.clubbook.control.DatePickerFragment;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.AlertDialogManager;
-import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.helper.UserEmailFetcher;
 import com.nl.clubbook.helper.Validator;
-
-import java.util.Calendar;
 
 /**
  * Created by Andrew on 5/26/2014.
  */
 public class RegActivity extends BaseActivity {
 
-    EditText user_text, password_text, emeil_text, dob_text;
-    TextView user_label, password_label, emeil_label, dob_label, gender_label;
-    DatePicker date_picker;
+    EditText user_text, password_text, email_text, dob_text;
+    TextView user_label, password_label, email_label, dob_label, gender_label;
     Spinner gender_spinner;
     AlertDialogManager alert = new AlertDialogManager();
-    SessionManager session;
     Button reg_button;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main_reg);
+
         init();
 
-        Typeface typefaceIntroText = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-REGULAR.TTF");
-        Typeface typefaceIntroTextBold = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
-        //final Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/azoft-sans.ttf");
-
+        //set styles
         user_text = (EditText) findViewById(R.id.name_text);
-        user_text.setTypeface(typefaceIntroText);
+        user_text.setTypeface(typeface_regular);
         password_text = (EditText) findViewById(R.id.password_text);
-        password_text.setTypeface(typefaceIntroText);
-        emeil_text = (EditText) findViewById(R.id.email_text);
-        emeil_text.setTypeface(typefaceIntroText);
+        password_text.setTypeface(typeface_regular);
+        email_text = (EditText) findViewById(R.id.email_text);
+        email_text.setTypeface(typeface_regular);
         dob_text = (EditText) findViewById(R.id.dob_text);
-        dob_text.setTypeface(typefaceIntroText);
+        dob_text.setTypeface(typeface_regular);
 
         user_label = (TextView) findViewById(R.id.name_label);
-        user_label.setTypeface(typefaceIntroTextBold);
+        user_label.setTypeface(typeface_bold);
         password_label = (TextView) findViewById(R.id.pass_label);
-        password_label.setTypeface(typefaceIntroTextBold);
-        emeil_label = (TextView) findViewById(R.id.email_label);
-        emeil_label.setTypeface(typefaceIntroTextBold);
+        password_label.setTypeface(typeface_bold);
+        email_label = (TextView) findViewById(R.id.email_label);
+        email_label.setTypeface(typeface_bold);
         dob_label = (TextView) findViewById(R.id.dob_label);
-        dob_label.setTypeface(typefaceIntroTextBold);
+        dob_label.setTypeface(typeface_bold);
         gender_label = (TextView) findViewById(R.id.gender_label);
-        gender_label.setTypeface(typefaceIntroTextBold);
-        emeil_text.setText(UserEmailFetcher.getEmail(RegActivity.this));
-
-        session = new SessionManager(getApplicationContext());
+        gender_label.setTypeface(typeface_bold);
+        email_text.setText(UserEmailFetcher.getEmail(RegActivity.this));
 
         //init gender
         gender_spinner = (Spinner) findViewById(R.id.gender);
@@ -97,20 +88,16 @@ public class RegActivity extends BaseActivity {
         args.putInt("month", 6);
         args.putInt("day", 15);
         date.setArguments(args);
-        /**
-         * Set Call back to capture selected date
-         */
-        date.setCallBack(ondate);
+        // Set Call back to capture selected date
+        date.setCallBack(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                dob_text.setText(String.format("%02d", dayOfMonth) + "." + String.format("%02d", monthOfYear + 1) + "." + String.valueOf(year));
+            }
+        });
         date.show(getSupportFragmentManager(), "Date Picker");
     }
-
-    DatePickerDialog.OnDateSetListener ondate = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear,
-                              int dayOfMonth) {
-            dob_text.setText(String.format("%02d", dayOfMonth) + "." + String.format("%02d", monthOfYear + 1) + "." + String.valueOf(year));
-        }
-    };
 
     private void setHandlers() {
         final Typeface typefaceIntroTextBold = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
@@ -129,7 +116,7 @@ public class RegActivity extends BaseActivity {
                     return;
                 }
 
-                String email = emeil_text.getText().toString().trim();
+                String email = email_text.getText().toString().trim();
                 if (!Validator.isEmailValid(email)) {
                     alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.email_incorrect), false);
                     return;
@@ -167,7 +154,7 @@ public class RegActivity extends BaseActivity {
                         } else {
                             UserDto user = (UserDto) result;
                             // save user in session
-                            session.createLoginSession(user.getId(), user.getName(), user.getEmail(), user.getGender(), user.getDob(), user.getAvatar());
+                            getSession().createLoginSession(user.getId(), user.getName(), user.getEmail(), user.getGender(), user.getDob(), user.getAvatar());
                             // navigate to main page
                             Intent i = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(i);
@@ -197,8 +184,11 @@ public class RegActivity extends BaseActivity {
     }
 
     class GenderPair {
-        public GenderPair(String spinnerText, String value) {
-            this.spinnerText = spinnerText;
+        String text;
+        String value;
+
+        public GenderPair(String text, String value) {
+            this.text = text;
             this.value = value;
         }
 
@@ -207,10 +197,7 @@ public class RegActivity extends BaseActivity {
         }
 
         public String toString() {
-            return spinnerText;
+            return text;
         }
-
-        String spinnerText;
-        String value;
     }
 }

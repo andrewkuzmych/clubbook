@@ -5,6 +5,8 @@ package com.nl.clubbook.helper;
  */
 public class ImageHelper {
 
+    public static String CLOUD_NAME_CLOUDINARY = "ddsoyfjll";
+
     public static String GenarateUrl(String url, String param)
     {
         String last = url.substring(url.lastIndexOf('/')+1, url.length() );

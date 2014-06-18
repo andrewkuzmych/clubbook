@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.nl.clubbook.R;
+import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.adapter.ChatAdapter;
 import com.nl.clubbook.datasource.Chat;
@@ -35,16 +36,12 @@ public class ChatFragment extends BaseFragment {
     private String user_to;
     private String user_name_to;
     private String user_from;
-    //private ClubDto club;
     Chat chat;
-
-    // public Pubnub pubnub = new Pubnub("pub-c-b0a0ffb6-6a0f-4907-8d4f-642e500c707a", "sub-c-f56b81f4-ed0a-11e3-8a10-02ee2ddab7fe", "", false);
 
     public ChatFragment(BaseFragment provoiusFregment, String user_id, String user_name) {
         super(provoiusFregment);
         this.user_to = user_id;
         this.user_name_to = user_name;
-        //this.club = club;
     }
 
     @Override
@@ -62,9 +59,7 @@ public class ChatFragment extends BaseFragment {
             }
         });
 
-        SessionManager session = new SessionManager(getActivity().getApplicationContext());
-        HashMap<String, String> user = session.getUserDetails();
-        user_from = user.get(SessionManager.KEY_ID);
+        user_from = getCurrentUserId();
 
         chat_list = (ListView) rootView.findViewById(R.id.chatList);
         adapter = new ChatAdapter(getActivity().getApplicationContext(), R.layout.chat_item);

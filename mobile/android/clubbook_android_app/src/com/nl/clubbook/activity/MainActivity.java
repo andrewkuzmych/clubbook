@@ -74,7 +74,6 @@ public class MainActivity extends BaseActivity {
 
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
-    private SessionManager session;
 
     HashMap<Integer, BaseFragment> fragmentMap = new HashMap<Integer, BaseFragment>();
 
@@ -133,8 +132,7 @@ public class MainActivity extends BaseActivity {
 
     private void initNavigationMenu() {
         // get user data from session
-        session = new SessionManager(getApplicationContext());
-        HashMap<String, String> user = session.getUserDetails();
+        HashMap<String, String> user = getSession().getUserDetails();
 
         String user_avatar_url = null;
         if (user.get(SessionManager.KEY_AVATAR) != null)
@@ -228,7 +226,7 @@ public class MainActivity extends BaseActivity {
                 dialog.show();
                 return true;
             case R.id.action_logout:
-                session.logoutUser();
+                getSession().logoutUser();
                 mSimpleFacebook.logout(mOnLogoutListener);
                 Intent in = new Intent(getApplicationContext(),
                         MainLoginActivity.class);
@@ -373,8 +371,9 @@ public class MainActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        init();
+
         cloudinary = new Cloudinary(getApplicationContext());
-        session = new SessionManager(getApplicationContext());
         mTitle = getTitle();
         fragmentMap.put(0, new ProfileFragment());
         fragmentMap.put(1, new HomeFragment());
@@ -386,7 +385,6 @@ public class MainActivity extends BaseActivity {
         getSupportActionBar().setIcon(
                 new ColorDrawable(getResources().getColor(android.R.color.transparent)));
 
-        setRetryLayout();
         loadData();
     }
 
@@ -428,19 +426,16 @@ public class MainActivity extends BaseActivity {
     }
 
     public void updateMessagesCount() {
-        SessionManager session = new SessionManager(getApplicationContext());
-        HashMap<String, String> user = session.getUserDetails();
-        String user_id = user.get(SessionManager.KEY_ID);
-
-        if (getCurrentFragment() instanceof MessagesFragment)
+        if (getCurrentFragment() instanceof MessagesFragment) {
             ((MessagesFragment) getCurrentFragment()).loadData(false);
+        }
 
-        DataStore.unread_messages_count(user_id, new DataStore.OnResultReady() {
+        DataStore.unread_messages_count(getCurrentUserId(), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
-                if (!failed)
+                if (!failed) {
                     setMessageCount(Integer.parseInt((String) result));
-
+                }
             }
         });
     }

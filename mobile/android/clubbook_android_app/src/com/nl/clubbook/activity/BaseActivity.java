@@ -2,6 +2,7 @@ package com.nl.clubbook.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -16,8 +17,11 @@ import android.widget.RelativeLayout;
 import com.nl.clubbook.R;
 import com.nl.clubbook.fragment.BaseFragment;
 import com.nl.clubbook.helper.AlertDialogManager;
+import com.nl.clubbook.helper.SessionManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,6 +40,25 @@ public class BaseActivity extends ActionBarActivity {
     protected AlertDialogManager alert = new AlertDialogManager();
     private ProgressDialog progressDialog;
     protected BaseFragment current_fragment;
+
+    private SessionManager session;
+
+    public SessionManager getSession() {
+        return session;
+    }
+
+    protected void setSession(SessionManager session) {
+        this.session = session;
+    }
+
+    public String getCurrentUserId() {
+        HashMap<String, String> user = getSession().getUserDetails();
+        return user.get(SessionManager.KEY_ID);
+    }
+
+    // styles
+    public Typeface typeface_regular;
+    public Typeface typeface_bold;
 
     public void showProgress(final String string) {
         contentView.setVisibility(View.GONE);
@@ -66,7 +89,6 @@ public class BaseActivity extends ActionBarActivity {
                 mFragmentTransaction.remove(current_fragment);
                 mFragmentTransaction.commit();
             }
-
         }
 
         BaseActivity.this.runOnUiThread(new Runnable() {
@@ -74,7 +96,6 @@ public class BaseActivity extends ActionBarActivity {
                 progressDialog.dismiss();
             }
         });
-
     }
 
     protected void navigateBack() {
@@ -84,6 +105,8 @@ public class BaseActivity extends ActionBarActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setSession(new SessionManager(getApplicationContext()));
 
         // init image loader
         imageLoader = ImageLoader.getInstance();
@@ -95,15 +118,18 @@ public class BaseActivity extends ActionBarActivity {
                 .cacheOnDisc()
                 .build();
 
+        typeface_regular = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-REGULAR.TTF");
+        typeface_bold = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
+
     }
 
     protected void init() {
+        setRetryLayout();
     }
 
-    protected void setRetryLayout() {
-        //dialog = new ProgressDialog(this);
+    private void setRetryLayout() {
         mainView = (RelativeLayout) findViewById(R.id.main_layout);
-        failedView = (LinearLayout) getLayoutInflater().inflate(R.layout.retry, null);//new LinearLayout(this);
+        failedView = (LinearLayout) getLayoutInflater().inflate(R.layout.retry, null);
         contentView = findViewById(R.id.content_layout);
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(-1, -1);
@@ -113,6 +139,7 @@ public class BaseActivity extends ActionBarActivity {
         failedView.setGravity(Gravity.CENTER);
         failedView.setOrientation(LinearLayout.VERTICAL);
         mainView.addView(failedView);
+
         setBaseHandlers();
     }
 
