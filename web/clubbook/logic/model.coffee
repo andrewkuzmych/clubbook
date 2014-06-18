@@ -10,13 +10,13 @@ UserSchema = new mongoose.Schema
   updated_on: { type: Date, 'default': Date.now }
 
   email: {type: String, trim: true, lowercase: true}
+  password: {type: String}
   name: {type: String, trim: true, required: true}
   
   gender: {type: String, trim: true, required: true, 'enum':["male", "female"]}
   photos: [{url:{ type: String }, profile:{ type: Boolean, default:false }}]
   dob: { type: Date }
-
-  password: {type: String}
+  city: {type: String, trim: true, lowercase: true}
   
   ios_tokens: [{ type: String }]
   android_tokens: [{ type: String }]
@@ -25,21 +25,12 @@ UserSchema = new mongoose.Schema
   fb_access_token: {type:String}
   fb_token_expires: Number
   
-  checkin: [{club: { type: mongoose.Schema.ObjectId, ref: 'Venue' }, lon: Number, lat: Number, time: Date, active: Boolean}]
+  checkin: [{club: { type: mongoose.Schema.ObjectId, ref: 'Venue' }, time: Date, active: Boolean}]
 
 
 UserSchema.pre 'save', (next, done) ->
   this.updated_on = new Date().toISOString()
   next()
-
-UserSchema.virtual('avatar').get ()->
-  if this.fb_id
-    "https://graph.facebook.com/#{this.fb_id}/picture?width=200&height=200"
-  else
-    if this.gender is "male"
-      "http://socialmediababe.com/wp-content/uploads/2011/07/FB-profile-avatar.jpg"
-    else if this.gender is "female"
-      "http://smartcitiesindex.gsma.com/community/styles/default/xenforo/avatars/avatar_female_m.png"
 
 UserSchema.set('toJSON', { getters: true, virtuals: true })
 exports.User = mongoose.model 'User', UserSchema

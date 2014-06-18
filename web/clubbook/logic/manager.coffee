@@ -14,14 +14,14 @@ exports.get_user_by_id = (user_id, callback)->
       callback null, user
 
 exports.signinmail = (params, callback)->
-  
-  if __.isEmpty params.email?.trim() 
+
+  if __.isEmpty params.email?.trim()
       callback 'email is empty', null
-  else if __.isEmpty params.password?.trim()  
+  else if __.isEmpty params.password?.trim()
       callback 'password is empty', null
   else
     db_model.User.findOne({"email":params.email,"password":params.password },{ checkin: 0 }).exec (err, user)->
-      
+
       if user
         callback null, user
       else
@@ -32,34 +32,34 @@ exports.list_club = (params, callback)->
     callback err, clubs
 
 exports.find_club = (club_id, user_id, callback)->
-  db_model.Venue.findById(club_id).exec (err, club)->   
+  db_model.Venue.findById(club_id).exec (err, club)->
     if err
       callback err, null
-    else 
+    else
       db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}, '_id': {'$ne':  mongoose.Types.ObjectId(user_id)}}, { checkin: 0 }).exec (err, users)->
-        callback null, club, users  
+        callback null, club, users
 
 
 exports.create_club = (params, callback)->
 
 
-  if __.isEmpty params.club_name?.trim() 
+  if __.isEmpty params.club_name?.trim()
       callback 'club name is empty', null
   else if __.isEmpty params.club_houres?.trim()
       callback 'club opening houres is empty', null
-  
+
   else if __.isEmpty params.club_phone?.trim()
       callback 'club phone is empty', null
   else if __.isEmpty params.club_address?.trim()
-      callback 'club address is empty', null   
-  else if __.isEmpty params.club_site?.trim() 
-      callback 'club site is empty', null   
- 
-  else 
+      callback 'club address is empty', null
+  else if __.isEmpty params.club_site?.trim()
+      callback 'club site is empty', null
+
+  else
 
     club = new db_model.Venue
       club_admin: params.club_admin
-      club_name: params.club_name      
+      club_name: params.club_name
       club_email: params.club_email
       club_houres: params.club_houres
       club_photos: params.club_photos
@@ -69,7 +69,7 @@ exports.create_club = (params, callback)->
       club_info: params.club_info
       club_loc: params.club_loc
       club_logo: params.club_logo
-      
+
     club.save (err)->
         console.log err
         callback err, club
@@ -78,7 +78,7 @@ exports.cu_count = (params, callback)->
   console.log 1
   query = { 'club_loc':{ '$near' : [ params.lat,params.lon], '$maxDistance' :  params.distance/111.12 }}
   console.log 2
-  
+
   # db_model.User.count(query).exec (err, user_count)->
   #   console.log 3
 
@@ -91,7 +91,7 @@ exports.club_clubbers = (params, callback)->
   db_model.User.find({'checkin': { '$elemMatch': { 'club' : mongoose.Types.ObjectId(params.club_id),'active': true}} }, { checkin: 0 }).exec (err, users)->
     callback err, users
 
-  
+
 exports.checkin = (params, callback)->
   db_model.Venue.findById(params.club_id).exec (err, club)->
     if not club
@@ -142,7 +142,7 @@ exports.checkout = (params, callback)->
               oldcheckin.active = false
           user.save (err)->
             console.log err
-            callback err, user 
+            callback err, user
 
 exports.cron_checkout = ()->
   db_model.User.find({'checkin': { '$elemMatch': { 'active': true, 'time': {'$lte': new Date().getTime() - 1000*60*30 } }} }).exec (err, users)->
@@ -156,18 +156,18 @@ exports.cron_checkout = ()->
           console.log "iterating done"
 
 exports.save_user = (params, callback)->
- 
+
   db_model.User.findOne({"email":params.email}).exec (err, user)->
-    
-    if user 
+
+    if user
       callback 'user exists', null
-    else if __.isEmpty params.name?.trim()  
+    else if __.isEmpty params.name?.trim()
       callback 'name is empty', null
-    else if __.isEmpty params.email?.trim()  
+    else if __.isEmpty params.email?.trim()
       callback 'email is empty', null
-    else if __.isEmpty params.password?.trim()  
+    else if __.isEmpty params.password?.trim()
       callback 'password is empty', null
-    
+
 
     else
       user = new db_model.User
@@ -176,17 +176,17 @@ exports.save_user = (params, callback)->
             email: params.email
             password: params.password
             dob: params.dob
-             
-    #user.photos.push { url: params.photos, profile:true}    
+
+    #user.photos.push { url: params.photos, profile:true}
 
       user.save (err)->
         console.log err
         callback err, user
 
 exports.uploadphoto = (params, callback)->
-  if __.isEmpty params.userid?.trim() 
+  if __.isEmpty params.userid?.trim()
       callback 'no user id', null
-  else if __.isEmpty params.photos?.trim()  
+  else if __.isEmpty params.photos?.trim()
       callback 'no photo url provided', null
 
   db_model.User.findOne({_id: params.userid}).exec (err, user)->
@@ -195,7 +195,7 @@ exports.uploadphoto = (params, callback)->
     else
       photosArray = params.photos.split(";")
       for photo in photosArray
-        user.photos.push { url: photo, profile:false}    
+        user.photos.push { url: photo, profile:false}
 
       user.save (err)->
         console.log err
@@ -239,11 +239,11 @@ exports.save_or_update_fb_user = (params, callback)->
 
 
           if dob then user.dob = dob
-          
+
           # SEND WELCOME MAIL
           #email_sender.welcome user, (err, info)->
           #  console.log 'welcome mail sent', user._id
-          
+
           callback err, user
 
         else
@@ -260,7 +260,7 @@ exports.save_or_update_fb_user = (params, callback)->
 
               if user.photos.length == 0
                 user.photos.push { url: params.avatar, profile:true}
-                    
+
               callback err, user
 
             else
@@ -272,9 +272,9 @@ exports.save_or_update_fb_user = (params, callback)->
                 fb_access_token: params.fb_access_token
                 fb_token_expires: params.fb_token_expires
               user.photos.push { url: params.avatar, profile:true}
-              
+
               if dob then user.dob = dob
-              
+
               # SEND WELCOME MAIL
               #email_sender.welcome user, (err, info)->
               #  console.log 'welcome mail sent', user._id
@@ -289,8 +289,8 @@ exports.chat = (params, callback)->
     if not chat
       chat = new db_model.Chat
         user1: mongoose.Types.ObjectId(params.user_from)
-        user2: mongoose.Types.ObjectId(params.user_to)      
-    
+        user2: mongoose.Types.ObjectId(params.user_to)
+
     chat.conversation.push {msg: params.msg, from_who: mongoose.Types.ObjectId(params.user_from)}
 
     if chat.unread.user && chat.unread.user.toString() == params.user_to.toString()
@@ -310,29 +310,29 @@ exports.get_conversation = (params, callback)->
   db_model.Chat.findOne(query).exec (err, chat)->
     if not chat
       callback err, []
-    else    
-      callback err, chat    
+    else
+      callback err, chat
 
 exports.get_conversations = (params, callback)->
 
   db_model.Chat.find({'$or':[{'user1': mongoose.Types.ObjectId(params.user_id)}, {'user2': mongoose.Types.ObjectId(params.user_id)}]}, { 'conversation': { '$slice': -1 } }).populate("user1",'_id photos name').populate("user2",'_id photos name').exec (err, chats)->
     if not chats
       callback err, []
-    else    
-     sorted_chats = __.sortBy(chats, (chat) ->
-                         if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
-                           return chat.unread.count
-                          else
-                            return 0
-                    ).reverse()
+    else
+      sorted_chats = __.sortBy(chats, (chat) ->
+        if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
+          return chat.unread.count
+        else
+          return 0
+      ).reverse()
 
       #for chat in chats
       #  if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
       #    console.log 123
       #    chat.count_of_unread_msg = chat.unread.count
-      callback err, sorted_chats    
-  
-exports.readchat = (params, callback)->  
+      callback err, sorted_chats
+
+exports.readchat = (params, callback)->
   db_model.Chat.findOne({_id: mongoose.Types.ObjectId(params.chat_id)}).exec (err, chat)->
     if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
       chat.unread.count = 0
@@ -340,7 +340,7 @@ exports.readchat = (params, callback)->
     chat.save (err)->
       console.log err
       callback err, chat
-  
+
 
 exports.unread_messages_count = (user_id, callback)->
   db_model.Chat.find({'unread.user':  mongoose.Types.ObjectId(user_id)}, {'conversation':0}).exec (err, chats)->

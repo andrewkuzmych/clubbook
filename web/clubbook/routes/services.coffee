@@ -51,7 +51,7 @@ exports.fb_signin = (req, res)->
       status: "error"
       errors: errors
   else
-    params = 
+    params =
       gender: req.body.gender
       name: req.body.name
       email: req.body.email
@@ -68,20 +68,20 @@ exports.fb_signin = (req, res)->
 
 
 exports.signinmail = (req, res)->
-    params = 
-        email: req.body.email
-        password: req.body.password
+  params =
+    email: req.body.email
+    password: req.body.password
 
-    manager.signinmail params, (err, user)-> 
-      if err 
-        res.json
-          status: "error"
-          err:err
-      else
-        res.json
-          status: "ok"
-          result:
-            user: user
+  manager.signinmail params, (err, user)->
+    if err
+      res.json
+        status: "error"
+        err: err
+    else
+      res.json
+        status: "ok"
+        result:
+          user: user
 
 
 exports.signup = (req, res)->
@@ -89,23 +89,23 @@ exports.signup = (req, res)->
     dobArray = req.body.dob.split(".")
     dob = new Date(dobArray[0], parseInt(dobArray[1]) - 1, dobArray[2], 15, 0, 0, 0);
 
-  params = 
-      gender: req.body.gender
-      name: req.body.name
-      email: req.body.email
-      password: req.body.password
-      dob: dob
-    
-  manager.save_user params, (err, user)-> 
-    if err 
+  params =
+    gender: req.body.gender
+    name: req.body.name
+    email: req.body.email
+    password: req.body.password
+    dob: dob
+
+  manager.save_user params, (err, user)->
+    if err
       res.json
         status: "error"
-        err:err
+        err: err
     else
       res.json
         status: "ok"
         result:
-            user: user
+          user: user
 
 exports.get_user_by_id = (req, res)->
   manager.get_user_by_id req.params.user_id, (err, user)->
@@ -120,37 +120,34 @@ exports.get_user_by_id = (req, res)->
           user: user
 
 exports.uploadphoto = (req, res)->
-
-  params = 
+  params =
     userid: req.body._id
     photos: req.body.photos
 
-  manager.uploadphoto params, (err, user)-> 
-      
-    if err 
-        res.json
-          status: "error"
-          err:err
+  manager.uploadphoto params, (err, user)->
+    if err
+      res.json
+        status: "error"
+        err: err
     else
-        res.json
-          user: user
-          status: "OK"
- 
-exports.create_club = (req, res)->
+      res.json
+        user: user
+        status: "OK"
 
+exports.create_club = (req, res)->
   adminsarray = req.body.club_admin.split(";")
   photosarray = req.body.club_photos.split(";")
- 
-  loc = 
+
+  loc =
     lat: req.body.club_lat
     lon: req.body.club_lon
 
   console.log loc
 
 
-  params = 
+  params =
     club_admin: adminsarray
-    club_name: req.body.club_name      
+    club_name: req.body.club_name
     club_email: req.body.club_email
     club_houres: req.body.club_houres
     club_photos: photosarray
@@ -160,32 +157,29 @@ exports.create_club = (req, res)->
     club_info: req.body.club_info
     club_loc: loc
     club_logo: req.body.club_logo
-  
-  manager.create_club params, (err, club)->
 
-      if err 
-        res.json
-          status: "error"
-          err:err
-      else
-        res.json
-          club: club
-          status: "Added OK"
+  manager.create_club params, (err, club)->
+    if err
+      res.json
+        status: "error"
+        err: err
+    else
+      res.json
+        club: club
+        status: "Added OK"
 
 
 exports.find_club = (req, res)->
-
   manager.find_club req.params.club_id, req.params.user_id, (err, club, users)->
-
-      if err 
-        res.json
-          status: "error"
-          err:err
-      else
-        res.json
-          club: club
-          users: users
-          status: "Found Club OK!"
+    if err
+      res.json
+        status: "error"
+        err: err
+    else
+      res.json
+        club: club
+        users: users
+        status: "Found Club OK!"
 
 
 exports.list_club = (req, res)->
@@ -197,37 +191,36 @@ exports.list_club = (req, res)->
   manager.list_club params, (err, clubs)->
     if err
       res.json
-        status:'error'
-        error:err
+        status: 'error'
+        error: err
     else
       res.json
-        status:'ok'
+        status: 'ok'
         clubs: clubs
 
 exports.cu_count = (req, res)->
   console.log 0
-  
+
   params =
     distance: req.params.distance
     lat: req.params.user_lat
     lon: req.params.user_lon
-  
+
   console.log params
 
 
- 
   manager.cu_count params, (err, club_count)->
-     if err
-       res.json
-         status:'error'
-         error:err
-     else
-       res.json
-         status:'ok'
-         club_count: club_count
+    if err
+      res.json
+        status: 'error'
+        error: err
+    else
+      res.json
+        status: 'ok'
+        club_count: club_count
 
 exports.checkin = (req, res)->
-  params = 
+  params =
     user_id: req.params.user_id
     club_id: req.params.club_id
 
@@ -237,7 +230,7 @@ exports.checkin = (req, res)->
       user: user
 
 exports.update_checkin = (req, res)->
-  params = 
+  params =
     user_id: req.params.user_id
     club_id: req.params.club_id
 
@@ -247,7 +240,7 @@ exports.update_checkin = (req, res)->
       user: user
 
 exports.checkout = (req, res)->
-  params = 
+  params =
     user_id: req.params.user_id
     club_id: req.params.club_id
 
@@ -259,7 +252,7 @@ exports.checkout = (req, res)->
 exports.club_clubbers = (req, res)->
   params =
     club_id: req.params.club_id
-  
+
   manager.club_clubbers params, (err, users)->
     res.json
       status: 'ok'
@@ -279,27 +272,27 @@ exports.chat = (req, res)->
       Parse = require("parse").Parse
       Parse.initialize config.parse_app_id, config.parse_js_key
       Parse.Push.send
-          channels: [ 'user_'+req.body.user_to]
-          data:
-            action: "com.nl.clubbook.UPDATE_STATUS"
-            msg: message
-            unique_id: req.body.user_from + "_" + req.body.user_to
-            header: user_from.name
-            type: "chat"
-        ,
-          success: ->
-            console.log "push sent"
-          
-          # Push was successful
-          error: (error) ->
-            console.log "push error: " 
-            console.log error
+        channels: [ 'user_' + req.body.user_to]
+        data:
+          action: "com.nl.clubbook.UPDATE_STATUS"
+          msg: message
+          unique_id: req.body.user_from + "_" + req.body.user_to
+          header: user_from.name
+          type: "chat"
+      ,
+        success: ->
+          console.log "push sent"
+
+      # Push was successful
+        error: (error) ->
+          console.log "push error: "
+          console.log error
 
       pubnab_data =
-          msg: message
-          user_from: req.body.user_from
-          user_to: req.body.user_to
-          type: "chat"
+        msg: message
+        user_from: req.body.user_from
+        user_to: req.body.user_to
+        type: "chat"
 
 
       pubnub.publish
@@ -307,21 +300,19 @@ exports.chat = (req, res)->
         message: pubnab_data
         callback: (e) ->
           console.log "SUCCESS yes!", e
-      
+
         error: (e) ->
           console.log "FAILED! RETRY PUBLISH!", e
-            
+
       res.json
         status: 'ok'
         chat: chat
 
 
-
 exports.get_conversations = (req, res)->
-
   params =
     user_id: req.params.user_id
-    
+
   manager.get_conversations params, (err, conversations)->
     res.json
       status: 'ok'
@@ -331,7 +322,7 @@ exports.get_conversation = (req, res)->
   params =
     user1: req.params.user1
     user2: req.params.user2
-      
+
   manager.get_conversation params, (err, chat)->
     res.json
       status: 'ok'
@@ -339,8 +330,7 @@ exports.get_conversation = (req, res)->
       conversation: chat.conversation
 
 
-exports.cron_checkout = (req,res)->
-  
+exports.cron_checkout = (req, res)->
   manager.cron_checkout()
 
   res.json
@@ -350,7 +340,7 @@ exports.readchat = (req, res)->
   params =
     chat_id: req.params.chat_id
     user_id: req.params.user_id
-  
+
   manager.readchat params, (err, readchat)->
     res.json
       status: 'ok'
