@@ -28,12 +28,22 @@ UserSchema = new mongoose.Schema
   
   checkin: [{club: { type: mongoose.Schema.ObjectId, ref: 'Venue' }, time: Date, active: Boolean}]
 
+UserSchema.virtual('avatar').get ()->
+  photo = null
+  if this.photos and this.photos.length > 0
+    for _photo in this.photos
+      if _photo.profile
+        photo = _photo
+
+  return photo
+
 
 UserSchema.pre 'save', (next, done) ->
   this.updated_on = new Date().toISOString()
   next()
 
 UserSchema.set('toJSON', { getters: true, virtuals: true })
+UserSchema.set('toObject', { getters: true, virtuals: true })
 exports.User = mongoose.model 'User', UserSchema
 
 exports.User.schema.path('email').validate (value, respond)->

@@ -52,6 +52,7 @@ exports.fb_signin = (req, res)->
           status: "error"
           errors: err.errors
       else
+        console.log "return user", user
         res.json
           status: "ok"
           result:

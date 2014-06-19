@@ -295,6 +295,7 @@ exports.save_or_update_fb_user = (params, callback)->
 
             else
               user = new db_model.User
+                email: params.email
                 gender: params.gender
                 name: params.name
                 fb_id: params.fb_id
