@@ -89,11 +89,17 @@
                     android:layout_marginBottom="5dip"
                     android:id="@+id/gender" android:layout_gravity="left|center_vertical" android:focusable="true"/>
 
+            <Button android:id="@+id/avatar_btn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/upload_avatar" android:background="@drawable/main_button"
+                    style="@style/main_button" />
+
             <Button android:id="@+id/reg_btn"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/register" android:background="@drawable/main_button"
-                    style="@style/main_button" />
+                    style="@style/main_button" android:layout_marginTop="10dp"/>
 
         </LinearLayout>
     </ScrollView>

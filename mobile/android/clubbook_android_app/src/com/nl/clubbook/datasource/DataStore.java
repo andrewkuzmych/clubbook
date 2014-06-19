@@ -399,21 +399,6 @@ public class DataStore {
                 onResultReady.onReady(club, failed);
             }
 
-          /*  @Override
-            public void onFailure(java.lang.Throwable e, org.json.JSONArray errorResponse)
-            {
-                onResultReady.onReady(null, true);
-                Log.e("error", errorResponse.toString());
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error)
-            {
-                onResultReady.onReady(null, true);
-                Log.e("error", error.toString());
-            }*/
-
             @Override
             public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse)
             {
@@ -826,7 +811,6 @@ public class DataStore {
         });
     }
 
-
     public static void chat(String user_from, String user_to , String msg, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("user_from", user_from);
@@ -865,7 +849,6 @@ public class DataStore {
             }
         });
     }
-
 
     public static void read_messages(String chat_id, String user_id, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();

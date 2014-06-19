@@ -1,5 +1,6 @@
 package com.nl.clubbook.activity;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -19,13 +20,14 @@ import com.nl.clubbook.helper.Validator;
 /**
  * Created by Andrew on 5/26/2014.
  */
-public class RegActivity extends BaseActivity {
+public class RegActivity extends ImageUploadActivity {
 
     EditText user_text, password_text, email_text, dob_text;
     TextView user_label, password_label, email_label, dob_label, gender_label;
     Spinner gender_spinner;
     AlertDialogManager alert = new AlertDialogManager();
     Button reg_button;
+    Button avatar_button;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +81,15 @@ public class RegActivity extends BaseActivity {
                 showDatePicker();
             }
         });
+
+        avatar_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // init image uploader
+                final AlertDialog dialog = selectPhoto();
+                dialog.show();
+            }
+        });
     }
 
     private void showDatePicker() {
@@ -103,6 +114,9 @@ public class RegActivity extends BaseActivity {
         final Typeface typefaceIntroTextBold = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
         reg_button = (Button) findViewById(R.id.reg_btn);
         reg_button.setTypeface(typefaceIntroTextBold);
+
+        avatar_button = (Button) findViewById(R.id.avatar_btn);
+        avatar_button.setTypeface(typefaceIntroTextBold);
 
         // Login button click event
         reg_button.setOnClickListener(new View.OnClickListener() {

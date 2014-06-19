@@ -22,6 +22,12 @@
         <item name="android:button">@null</item>
     </style>
 
+    <style name="avatar_btn">
+        <item name="android:textColor">#FFFDDD</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="main_button">
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:textSize">16dp</item>

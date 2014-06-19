@@ -13,10 +13,12 @@ UserSchema = new mongoose.Schema
   password: {type: String}
   name: {type: String, trim: true, required: true}
   
+  bloked: [{ type: String }]
   gender: {type: String, trim: true, required: true, 'enum':["male", "female"]}
   photos: [{url:{ type: String }, profile:{ type: Boolean, default:false }}]
   dob: { type: Date }
   city: {type: String, trim: true, lowercase: true}
+  info: {type: String}
   
   ios_tokens: [{ type: String }]
   android_tokens: [{ type: String }]
@@ -62,6 +64,7 @@ VenueSchema = new mongoose.Schema
   created_on: { type: Date, 'default': Date.now }
   updated_on: { type: Date, 'default': Date.now }
   club_admin: [{type: String, trim: true}]
+  club_password: [{type: String, trim: true}]
   club_name: {type: String, trim: true}
   club_email: {type: String, trim: true}
   club_houres: {type: String}

@@ -37,6 +37,7 @@
     <string name="pass_reg">Password (min 6)</string>
     <string name="gender_reg">Gender</string>
     <string name="register">Register</string>
+    <string name="upload_avatar">add a profile photo</string>
     <string name="dob">Birthday</string>
 
     <string name="name_incorrect">Name is incorrect</string>

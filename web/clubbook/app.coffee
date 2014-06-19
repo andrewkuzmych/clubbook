@@ -137,7 +137,10 @@ app.get '/_s/conversation/:user1/:user2', services.get_conversation
 app.get '/_s/conversations/:user_id', services.get_conversations
 app.get '/_s/cron_checkout', services.cron_checkout
 app.get '/_s/unread/messages/count/:user_id', services.unread_messages_count
-
+app.post '/_s/updateusername/:user_id', services.update_name
+app.post '/_s/updatedob/:user_id', services.update_dob
+app.post '/_s/updategender/:user_id', services.update_gender
+app.post '/_s/updateinfo/:user_id', services.update_info
 
 if config.is_test_server == "false"
   checkout_job = new cronJob(
