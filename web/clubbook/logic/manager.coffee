@@ -208,9 +208,10 @@ exports.save_user = (params, callback)->
             name: params.name
             email: params.email
             password: params.password
-            dob: params.dob
             city: params.city
 
+      if params.dob
+        user.dob = params.dob
       if params.avatar
         user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
 
@@ -237,10 +238,7 @@ exports.uploadphoto = (params, callback)->
         callback err, user
 
 exports.save_or_update_fb_user = (params, callback)->
-    console.log params
-    if params.dob
-        dobArray = params.dob.split(".")
-        dob = new Date(dobArray[2], parseInt(dobArray[1]) - 1, dobArray[0], 15, 0, 0, 0);
+    console.log "save or update user", params
 
     db_model.User.findOne({"fb_id":params.fb_id}).exec (err, user)->
       if user
@@ -248,14 +246,13 @@ exports.save_or_update_fb_user = (params, callback)->
         if params.email then user.email = params.email
         user.gender = params.gender
         user.name = params.name
-        if dob then user.dob = dob
         user.fb_id = params.fb_id
         user.fb_access_token = params.fb_access_token
-        if params.fb_token_expires then user.fb_token_expires = params.fb_token_expires
-        if params.fb_city then user.fb_city = params.fb_city
+        if params.dob then user.dob = params.dob
+        if params.city then user.city = params.city
 
         if user.photos.length == 0
-          user.photos.push { url: params.avatar, profile:true}
+          user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
 
         callback err, user
 
@@ -268,12 +265,10 @@ exports.save_or_update_fb_user = (params, callback)->
             name: params.name
             fb_id: params.fb_id
             fb_access_token: params.fb_access_token
-            fb_token_expires: params.fb_token_expires
+          if params.dob then user.dob = params.dob
+          if params.city then user.city = params.city
 
-          user.photos.push { url: params.avatar, profile:true}
-
-
-          if dob then user.dob = dob
+          user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
 
           # SEND WELCOME MAIL
           #email_sender.welcome user, (err, info)->
@@ -287,33 +282,31 @@ exports.save_or_update_fb_user = (params, callback)->
               # merge data
               user.gender = params.gender
               user.name = params.name
-              if dob then user.dob = dob
               user.fb_id = params.fb_id
               user.fb_access_token = params.fb_access_token
-              if params.fb_token_expires then user.fb_token_expires = params.fb_token_expires
-              if params.fb_city then user.fb_city = params.fb_city
+
+              if params.dob then user.dob = params.dob
+              if params.city then user.city = params.city
 
               if user.photos.length == 0
-                user.photos.push { url: params.avatar, profile:true}
+                user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
 
               callback err, user
 
             else
               user = new db_model.User
-                email: params.email
                 gender: params.gender
                 name: params.name
                 fb_id: params.fb_id
                 fb_access_token: params.fb_access_token
-                fb_token_expires: params.fb_token_expires
-              user.photos.push { url: params.avatar, profile:true}
+              if params.dob then user.dob = params.dob
+              if params.city then user.city = params.city
 
-              if dob then user.dob = dob
+              user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
 
               # SEND WELCOME MAIL
               #email_sender.welcome user, (err, info)->
               #  console.log 'welcome mail sent', user._id
-
 
               callback err, user
 

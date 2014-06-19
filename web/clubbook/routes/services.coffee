@@ -11,23 +11,7 @@ gcm = require('node-gcm')
 
 
 exports.fb_signin = (req, res)->
-  prepare_result = (req, res, user)->
-    user.save (err)->
-      if err
-        console.log "fb error:", err
-        res.json
-          status: "error"
-          errors: err.errors
-      else
-        res.json
-          status: "ok"
-          result:
-            user: user
-
   errors = {}
-  if req.body.dob
-    dobArray = req.body.dob.split(".")
-    dob = new Date(dobArray[2], parseInt(dobArray[1]) - 1, dobArray[0], 15, 0, 0, 0);
   # validate empty fields
   if __.isEmpty req.body.fb_id?.trim()
     errors["fb_id"] =
@@ -50,22 +34,28 @@ exports.fb_signin = (req, res)->
     res.json
       status: "error"
       errors: errors
+
   else
-    params =
-      gender: req.body.gender
-      name: req.body.name
-      email: req.body.email
-      fb_id: req.body.fb_id
-      dob: req.body.dob
-      fb_access_token: req.body.fb_access_token
-      fb_token_expires: req.body.fb_token_expires
+    if req.body.dob
+      dobArray = req.body.dob.split(".")
+      dob = new Date(dobArray[2], parseInt(dobArray[1]) - 1, dobArray[0], 15, 0, 0, 0)
+      req.body.dob = dob
 
     if req.body.avatar
-      params.avatar = req.body.avatar
+      console.log "avatar", req.body.avatar
+      req.body.avatar = JSON.parse req.body.avatar
 
-    manager.save_or_update_fb_user params, (err, user)->
-      prepare_result req, res, user
-
+    manager.save_or_update_fb_user req.body, (err, user)->
+      if err
+        console.log "fb error:", err
+        res.json
+          status: "error"
+          errors: err.errors
+      else
+        res.json
+          status: "ok"
+          result:
+            user: user
 
 exports.signinmail = (req, res)->
   params =
@@ -85,8 +75,9 @@ exports.signinmail = (req, res)->
 
 
 exports.signup = (req, res)->
-  console.log "----------------------------"
+  console.log "----- sign up by email"
   console.log req.body
+
   if req.body.dob
     dobArray = req.body.dob.split(".")
     dob = new Date(dobArray[0], parseInt(dobArray[1]) - 1, dobArray[2], 15, 0, 0, 0);
@@ -391,4 +382,10 @@ exports.update_info =(req, res)->
         status: 'ok'
         user: user
 
-
+exports.remove_user =(req, res)->
+  console.log "remove user", req.params.user_id
+  db_model.User.remove {"_id": req.params.user_id}, (err)->
+    db_model.Chat.remove {"user1": req.params.user_id}, (err)->
+      db_model.Chat.remove {"user2": req.params.user_id}, (err)->
+        res.json
+          status: 'ok'

@@ -25,7 +25,6 @@ UserSchema = new mongoose.Schema
           
   fb_id: {type:String, unique: true, sparse: true}
   fb_access_token: {type:String}
-  fb_token_expires: Number
   
   checkin: [{club: { type: mongoose.Schema.ObjectId, ref: 'Venue' }, time: Date, active: Boolean}]
 
