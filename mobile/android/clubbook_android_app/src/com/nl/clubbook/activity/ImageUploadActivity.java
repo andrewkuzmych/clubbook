@@ -13,12 +13,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 import com.cloudinary.Cloudinary;
 import com.nl.clubbook.R;
 import com.nl.clubbook.helper.CropOption;
 import com.nl.clubbook.helper.CropOptionAdapter;
+import com.nl.clubbook.helper.ImageHelper;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -29,6 +33,7 @@ import java.util.List;
  */
 public class ImageUploadActivity extends BaseActivity {
 
+    // http://cloudinary.com/documentation/java_image_upload
     private Cloudinary cloudinary;
     private Uri mImageCaptureUri;
 
@@ -37,14 +42,10 @@ public class ImageUploadActivity extends BaseActivity {
     private static final int PICK_FROM_FILE = 3;
     private static final int DEFOLT_VIEW = 1;
 
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.main);
-//        init();
-//
-//        final AlertDialog dialog = selectPhoto();
-//        dialog.show();
-//    }
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        cloudinary = new Cloudinary(getApplicationContext());
+    }
 
     protected AlertDialog selectPhoto() {
         final String[] items = new String[]{"Take from camera", "Select from gallery"};
@@ -53,8 +54,9 @@ public class ImageUploadActivity extends BaseActivity {
 
         builder.setTitle("Select Image");
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) { //pick from camera
+            public void onClick(DialogInterface dialog, int item) {
                 if (item == 0) {
+                    //pick from camera
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                     mImageCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
@@ -64,12 +66,12 @@ public class ImageUploadActivity extends BaseActivity {
 
                     try {
                         intent.putExtra("return-data", true);
-
                         startActivityForResult(intent, PICK_FROM_CAMERA);
                     } catch (ActivityNotFoundException e) {
                         e.printStackTrace();
                     }
-                } else { //pick from file
+                } else {
+                    //pick from file
                     Intent intent = new Intent();
 
                     intent.setType("image/*");
@@ -83,6 +85,9 @@ public class ImageUploadActivity extends BaseActivity {
         return builder.create();
     }
 
+    protected void onImageSelected(JSONObject imageObj) throws JSONException {
+        Log.v("ImageUploadActivity", imageObj.getString("public_id"));
+    }
 
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent imageReturnedIntent) {
@@ -94,9 +99,10 @@ public class ImageUploadActivity extends BaseActivity {
             case PICK_FROM_CAMERA:
                 doCrop();
                 break;
+
             case PICK_FROM_FILE:
                 // mImageCaptureUri = imageReturnedIntent.getData();
-                //                doCrop();
+                // doCrop();
                 final Uri selectedImage = imageReturnedIntent.getData();
                 ImageUploadActivity.this.runOnUiThread(new Runnable() {
                     public void run() {
@@ -107,9 +113,11 @@ public class ImageUploadActivity extends BaseActivity {
                             ByteArrayOutputStream stream = new ByteArrayOutputStream();
                             scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                             InputStream is = new ByteArrayInputStream(stream.toByteArray());
-                            cloudinary.uploader().upload(is, Cloudinary.asMap("public_id", "test6", "format", "jpg"));
+                            org.json.JSONObject imageObj = cloudinary.uploader().upload(is, Cloudinary.asMap("format", "jpg"));
+                            onImageSelected(imageObj);
+
                         } catch (Exception ex) {
-                            //TODO: handle the exception
+                            ex.printStackTrace();
                         }
                     }
                 });

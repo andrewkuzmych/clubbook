@@ -136,10 +136,9 @@ public class MainActivity extends BaseActivity {
 
         String user_avatar_url = null;
         if (user.get(SessionManager.KEY_AVATAR) != null)
-            user_avatar_url = ImageHelper.GenarateUrl(user.get(SessionManager.KEY_AVATAR), "w_100,h_100,c_thumb,g_face");
+            user_avatar_url = ImageHelper.getUserAvatar(user.get(SessionManager.KEY_AVATAR));
 
         // initialize navigation menu
-
         navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
         navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
 
@@ -371,6 +370,15 @@ public class MainActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        // if user not logged - navigate to login activity
+        if (!getSession().isLoggedIn())
+        {
+            Intent i = new Intent(getApplicationContext(), MainLoginActivity.class);
+            startActivity(i);
+            return;
+        }
+
         init();
 
         cloudinary = new Cloudinary(getApplicationContext());

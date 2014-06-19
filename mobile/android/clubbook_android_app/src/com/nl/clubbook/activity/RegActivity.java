@@ -3,8 +3,8 @@ package com.nl.clubbook.activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -16,18 +16,22 @@ import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.AlertDialogManager;
 import com.nl.clubbook.helper.UserEmailFetcher;
 import com.nl.clubbook.helper.Validator;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by Andrew on 5/26/2014.
  */
 public class RegActivity extends ImageUploadActivity {
 
-    EditText user_text, password_text, email_text, dob_text;
+    EditText user_text, city_text, password_text, email_text, dob_text;
     TextView user_label, password_label, email_label, dob_label, gender_label;
     Spinner gender_spinner;
     AlertDialogManager alert = new AlertDialogManager();
     Button reg_button;
     Button avatar_button;
+    JSONObject avatar;
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +43,8 @@ public class RegActivity extends ImageUploadActivity {
         //set styles
         user_text = (EditText) findViewById(R.id.name_text);
         user_text.setTypeface(typeface_regular);
+        city_text = (EditText) findViewById(R.id.name_text);
+        city_text.setTypeface(typeface_regular);
         password_text = (EditText) findViewById(R.id.password_text);
         password_text.setTypeface(typeface_regular);
         email_text = (EditText) findViewById(R.id.email_text);
@@ -111,12 +117,11 @@ public class RegActivity extends ImageUploadActivity {
     }
 
     private void setHandlers() {
-        final Typeface typefaceIntroTextBold = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
         reg_button = (Button) findViewById(R.id.reg_btn);
-        reg_button.setTypeface(typefaceIntroTextBold);
+        reg_button.setTypeface(typeface_regular);
 
         avatar_button = (Button) findViewById(R.id.avatar_btn);
-        avatar_button.setTypeface(typefaceIntroTextBold);
+        avatar_button.setTypeface(typeface_regular);
 
         // Login button click event
         reg_button.setOnClickListener(new View.OnClickListener() {
@@ -150,8 +155,18 @@ public class RegActivity extends ImageUploadActivity {
 
                 GenderPair data = (GenderPair) gender_spinner.getSelectedItem();
                 String gender = data.getValue();
+
+                String city = city_text.getText().toString().trim();
+
+                if(avatar == null) {
+                    alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.avatar_incorrect), false);
+                    return;
+                }
+
                 showProgress("Loading...");
-                DataStore.regByEmail(user_name, email, password, gender, dob, new DataStore.OnResultReady() {
+
+                // store data
+                DataStore.regByEmail(user_name, email, password, gender, dob, city, avatar, new DataStore.OnResultReady() {
                     @Override
                     public void onReady(Object result, boolean failed) {
                         // show error
@@ -179,6 +194,12 @@ public class RegActivity extends ImageUploadActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onImageSelected(JSONObject imageObj) throws JSONException {
+        Log.d("ImageUploadActivity", "avatar is selected: " + imageObj.getString("public_id"));
+        this.avatar = imageObj;
     }
 
     @Override

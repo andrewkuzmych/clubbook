@@ -56,13 +56,16 @@ public class DataStore {
         DataStore.clubsAdapter = placeAdapter;
     }
 
-    public static void regByEmail(String name, String email, String pass, String gender, String dob, final OnResultReady onResultReady) {
+    public static void regByEmail(String name, String email, String pass, String gender, String dob, String city, JSONObject avatar,
+                                  final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("email", email);
         params.put("name", name);
         params.put("gender", gender);
         params.put("password", pass);
         params.put("dob", dob);
+        params.put("city", city);
+        params.put("avatar", avatar);
 
         ClubbookRestClient.regByEmail(params, new JsonHttpResponseHandler() {
             private boolean failed = true;

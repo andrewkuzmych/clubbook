@@ -34,6 +34,7 @@
     <string name="password">Password</string>
     <string name="login">Enter</string>
     <string name="name_reg">Name (min 2)</string>
+    <string name="city_reg">your city</string>
     <string name="pass_reg">Password (min 6)</string>
     <string name="gender_reg">Gender</string>
     <string name="register">Register</string>
@@ -43,6 +44,7 @@
     <string name="name_incorrect">Name is incorrect</string>
     <string name="email_incorrect">Email is incorrect </string>
     <string name="pass_incorrect">Password is incorrect</string>
+    <string name="avatar_incorrect">Avatar is missing</string>
     <string name="dob_incorrect">Birthday is incorrect</string>
 
     <string name="no_connection">No internet connection</string>
