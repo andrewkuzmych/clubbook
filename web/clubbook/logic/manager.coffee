@@ -192,10 +192,9 @@ exports.cron_checkout = ()->
           console.log "iterating done"
 
 exports.save_user = (params, callback)->
-
   db_model.User.findOne({"email":params.email}).exec (err, user)->
-
     if user
+      console.log 'user exists', params.email
       callback 'user exists', null
     else if __.isEmpty params.name?.trim()
       callback 'name is empty', null
@@ -203,8 +202,6 @@ exports.save_user = (params, callback)->
       callback 'email is empty', null
     else if __.isEmpty params.password?.trim()
       callback 'password is empty', null
-
-
     else
       user = new db_model.User
             gender: params.gender
@@ -212,11 +209,13 @@ exports.save_user = (params, callback)->
             email: params.email
             password: params.password
             dob: params.dob
+            city: params.city
 
-    #user.photos.push { url: params.photos, profile:true}
+      if params.avatar
+        user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
 
       user.save (err)->
-        console.log err
+        console.log "save user", err, user
         callback err, user
 
 exports.uploadphoto = (params, callback)->

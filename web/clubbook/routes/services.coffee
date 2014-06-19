@@ -85,18 +85,18 @@ exports.signinmail = (req, res)->
 
 
 exports.signup = (req, res)->
+  console.log "----------------------------"
+  console.log req.body
   if req.body.dob
     dobArray = req.body.dob.split(".")
     dob = new Date(dobArray[0], parseInt(dobArray[1]) - 1, dobArray[2], 15, 0, 0, 0);
+    req.body.dob = dob
 
-  params =
-    gender: req.body.gender
-    name: req.body.name
-    email: req.body.email
-    password: req.body.password
-    dob: dob
+  if req.body.avatar
+    console.log "avatar", req.body.avatar
+    req.body.avatar = JSON.parse req.body.avatar
 
-  manager.save_user params, (err, user)->
+  manager.save_user req.body, (err, user)->
     if err
       res.json
         status: "error"

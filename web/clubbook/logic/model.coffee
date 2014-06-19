@@ -15,7 +15,7 @@ UserSchema = new mongoose.Schema
   
   bloked: [{ type: String }]
   gender: {type: String, trim: true, required: true, 'enum':["male", "female"]}
-  photos: [{url:{ type: String }, profile:{ type: Boolean, default:false }}]
+  photos: [{url:{ type: String }, public_id:{ type: String }, profile:{ type: Boolean, default:false }}]
   dob: { type: Date }
   city: {type: String, trim: true, lowercase: true}
   info: {type: String}
