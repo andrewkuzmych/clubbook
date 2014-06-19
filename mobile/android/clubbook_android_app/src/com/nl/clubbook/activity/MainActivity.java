@@ -1,21 +1,10 @@
 package com.nl.clubbook.activity;
 
-import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
-import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
-import android.content.res.AssetFileDescriptor;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,15 +13,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
-import com.cloudinary.Cloudinary;
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.NavDrawerListAdapter;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.fragment.*;
-import com.nl.clubbook.helper.*;
+import com.nl.clubbook.helper.ImageHelper;
+import com.nl.clubbook.helper.NotificationHelper;
+import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.model.NavDrawerItem;
 import com.pubnub.api.Callback;
 import com.pubnub.api.PubnubError;
@@ -42,10 +30,8 @@ import com.sromku.simple.fb.listeners.OnLogoutListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -60,13 +46,7 @@ public class MainActivity extends BaseActivity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private SimpleFacebook mSimpleFacebook;
-    private Cloudinary cloudinary;
-    private Uri mImageCaptureUri;
-
-    private static final int PICK_FROM_CAMERA = 1;
-    private static final int CROP_FROM_CAMERA = 2;
-    private static final int PICK_FROM_FILE = 3;
-    private static final int DEFOLT_VIEW = 1;
+    private static final int DEFAULT_VIEW = 1;
 
     private CharSequence mTitle;
     private String[] navMenuTitles;
@@ -177,8 +157,7 @@ public class MainActivity extends BaseActivity {
         mDrawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         // setting the nav drawer list adapter
-        adapter = new NavDrawerListAdapter(MainActivity.this, R.layout.drawer_list_item,
-                navDrawerItems);
+        adapter = new NavDrawerListAdapter(MainActivity.this, R.layout.drawer_list_item, navDrawerItems);
         mDrawerList.setAdapter(adapter);
         mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
 
@@ -220,10 +199,6 @@ public class MainActivity extends BaseActivity {
             case android.R.id.home:
                 navigateBack();
                 return true;
-            case R.id.action_photo:
-                final AlertDialog dialog = selectPhoto();
-                dialog.show();
-                return true;
             case R.id.action_logout:
                 getSession().logoutUser();
                 mSimpleFacebook.logout(mOnLogoutListener);
@@ -234,7 +209,6 @@ public class MainActivity extends BaseActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-        // Handle your other action bar items...
     }
 
     @Override
@@ -331,7 +305,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void setDefoltTitle() {
-        setTitle(navMenuTitles[DEFOLT_VIEW]);
+        setTitle(navMenuTitles[DEFAULT_VIEW]);
     }
 
     private OnLogoutListener mOnLogoutListener = new OnLogoutListener() {
@@ -358,7 +332,7 @@ public class MainActivity extends BaseActivity {
 
     private void displayDefaultView() {
         Intent in = getIntent();
-        int displayView = DEFOLT_VIEW;
+        int displayView = DEFAULT_VIEW;
         if (in.hasExtra("type")) {
             if (in.getStringExtra("type").equalsIgnoreCase("chat"))
                 displayView = 3;
@@ -372,8 +346,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.main);
 
         // if user not logged - navigate to login activity
-        if (!getSession().isLoggedIn())
-        {
+        if (!getSession().isLoggedIn()) {
             Intent i = new Intent(getApplicationContext(), MainLoginActivity.class);
             startActivity(i);
             return;
@@ -381,7 +354,6 @@ public class MainActivity extends BaseActivity {
 
         init();
 
-        cloudinary = new Cloudinary(getApplicationContext());
         mTitle = getTitle();
         fragmentMap.put(0, new ProfileFragment());
         fragmentMap.put(1, new HomeFragment());
@@ -394,43 +366,6 @@ public class MainActivity extends BaseActivity {
                 new ColorDrawable(getResources().getColor(android.R.color.transparent)));
 
         loadData();
-    }
-
-    private AlertDialog selectPhoto() {
-        final String[] items = new String[]{"Take from camera", "Select from gallery"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, items);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle("Select Image");
-        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) { //pick from camera
-                if (item == 0) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                    mImageCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
-                            "tmp_avatar_" + String.valueOf(System.currentTimeMillis()) + ".jpg"));
-
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
-
-                    try {
-                        intent.putExtra("return-data", true);
-
-                        startActivityForResult(intent, PICK_FROM_CAMERA);
-                    } catch (ActivityNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                } else { //pick from file
-                    Intent intent = new Intent();
-
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-
-                    startActivityForResult(Intent.createChooser(intent, "Complete action using"), PICK_FROM_FILE);
-                }
-            }
-        });
-
-        return builder.create();
     }
 
     public void updateMessagesCount() {
@@ -446,156 +381,6 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent imageReturnedIntent) {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-
-        if (resultCode != RESULT_OK) return;
-
-        switch (requestCode) {
-            case PICK_FROM_CAMERA:
-                doCrop();
-                break;
-            case PICK_FROM_FILE:
-                // mImageCaptureUri = imageReturnedIntent.getData();
-                //                doCrop();
-                final Uri selectedImage = imageReturnedIntent.getData();
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                        try {
-                            Bitmap mBitmap = readBitmap(selectedImage);
-                            Bitmap scaled = getResizedBitmap(mBitmap, 800);
-
-                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                            scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                            InputStream is = new ByteArrayInputStream(stream.toByteArray());
-                            cloudinary.uploader().upload(is, Cloudinary.asMap("public_id", "test6", "format", "jpg"));
-                        } catch (Exception ex) {
-                            //TODO: handle the exception
-                        }
-                    }
-                });
-
-                break;
-
-            case CROP_FROM_CAMERA:
-                Bundle extras = imageReturnedIntent.getExtras();
-
-                if (extras != null) {
-                    Bitmap photo = extras.getParcelable("data");
-                    //mImageView.setImageBitmap(photo);
-
-                    // Bitmap  mBitmap = MediaStore.Images.Media.getBitmap(MainActivity.this.getContentResolver(), selectedImage);
-                    Bitmap scaled = getResizedBitmap(photo, 800);//Bitmap.createScaledBitmap(mBitmap, 500, 500, true);
-
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                    InputStream is = new ByteArrayInputStream(stream.toByteArray());
-
-                    try {
-                        cloudinary.uploader().upload(is, Cloudinary.asMap("public_id", "test6", "width", "1000", "height", "1000", "crop", "limit", "format", "jpg"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                File f = new File(mImageCaptureUri.getPath());
-
-                if (f.exists())
-                    f.delete();
-
-                break;
-
-        }
-    }
-
-    private Bitmap getResizedBitmap(Bitmap image, int maxSize) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        float bitmapRatio = (float) width / (float) height;
-        if (bitmapRatio > 0) {
-            width = maxSize;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxSize;
-            width = (int) (height * bitmapRatio);
-        }
-        return Bitmap.createScaledBitmap(image, width, height, true);
-    }
-
-    private void doCrop() {
-        final ArrayList<CropOption> cropOptions = new ArrayList<CropOption>();
-
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setType("image/*");
-
-        List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, 0);
-
-        int size = list.size();
-
-        if (size == 0) {
-            Toast.makeText(this, "Can not find image crop app", Toast.LENGTH_SHORT).show();
-
-            return;
-        } else {
-            intent.setData(mImageCaptureUri);
-
-            intent.putExtra("outputX", 200);
-            intent.putExtra("outputY", 200);
-            intent.putExtra("aspectX", 0);
-            intent.putExtra("aspectY", 0);
-            intent.putExtra("scale", true);
-            intent.putExtra("return-data", true);
-
-            if (size == 1) {
-                Intent i = new Intent(intent);
-                ResolveInfo res = list.get(0);
-
-                i.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-
-                startActivityForResult(i, CROP_FROM_CAMERA);
-            } else {
-                for (ResolveInfo res : list) {
-                    final CropOption co = new CropOption();
-
-                    co.title = getPackageManager().getApplicationLabel(res.activityInfo.applicationInfo);
-                    co.icon = getPackageManager().getApplicationIcon(res.activityInfo.applicationInfo);
-                    co.appIntent = new Intent(intent);
-
-                    co.appIntent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-
-                    cropOptions.add(co);
-                }
-
-                CropOptionAdapter adapter = new CropOptionAdapter(getApplicationContext(), cropOptions);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Choose Crop App");
-                builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        startActivityForResult(cropOptions.get(item).appIntent, CROP_FROM_CAMERA);
-                    }
-                });
-
-                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-
-                        if (mImageCaptureUri != null) {
-                            getContentResolver().delete(mImageCaptureUri, null, null);
-                            mImageCaptureUri = null;
-                        }
-                    }
-                });
-
-                AlertDialog alert = builder.create();
-
-                alert.show();
-            }
-        }
     }
 
     private void displayView(final int position) {
@@ -622,25 +407,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private Bitmap readBitmap(Uri selectedImage) {
-        Bitmap bm = null;
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 5;
-        AssetFileDescriptor fileDescriptor = null;
-        try {
-            fileDescriptor = this.getContentResolver().openAssetFileDescriptor(selectedImage, "r");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                bm = BitmapFactory.decodeFileDescriptor(fileDescriptor.getFileDescriptor(), null, options);
-                fileDescriptor.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return bm;
-    }
 
     private void subscribeToChannel(String channel_name) {
         try {

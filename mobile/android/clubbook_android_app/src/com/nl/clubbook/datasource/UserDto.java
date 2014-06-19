@@ -1,5 +1,10 @@
 package com.nl.clubbook.datasource;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,11 +16,40 @@ public class UserDto {
     private String fb_id;
     private String name;
     private String email;
-    private String avatar;
-    private List<String> photos;
     private String password;
     private String gender;
     private String dob;
+    private String avatar;
+    private List<String> photos;
+
+    UserDto(){
+
+    }
+
+    UserDto(JSONObject userJson) throws JSONException {
+        this.setId(userJson.getString("_id"));
+        if(userJson.has("fb_id"))
+            this.setFb_id(userJson.getString("fb_id"));
+        this.setName(userJson.getString("name"));
+        if(userJson.has("email"))
+            this.setEmail(userJson.getString("email"));
+        this.setGender(userJson.getString("gender"));
+        if(userJson.has("dob"))
+            this.setDob(userJson.getString("dob"));
+
+        JSONArray photos_json =  userJson.getJSONArray("photos");
+        List<String> photos = new ArrayList<String>();
+        for (int i = 0; i < photos_json.length(); i++) {
+            String photo_url = photos_json.getJSONObject(i).getString("url");
+            boolean is_profile =  photos_json.getJSONObject(i).getBoolean("profile");
+            if (is_profile)
+                this.setAvatar(photo_url);
+            else
+                photos.add(photo_url);
+
+            this.setPhotos(photos);
+        }
+    }
 
     public String getId() {
         return id;

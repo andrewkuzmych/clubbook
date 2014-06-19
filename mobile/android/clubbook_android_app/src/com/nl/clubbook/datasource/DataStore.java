@@ -75,32 +75,14 @@ public class DataStore {
                 UserDto user = null;
                 try {
                     if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        JSONObject user_dto = response_json.getJSONObject("result").getJSONObject("user");
-                        user = new UserDto();
-                        user.setEmail(user_dto.getString("email"));
-                        user.setGender(user_dto.getString("gender"));
-                        user.setName(user_dto.getString("name"));
-                        user.setId(user_dto.getString("_id"));
-                        JSONArray photos_json =  user_dto.getJSONArray("photos");
-                        List<String> photos = new ArrayList<String>();
-                        for (int i = 0; i < photos_json.length(); i++) {
-                            String photo_url = photos_json.getJSONObject(i).getString("url");
-                            boolean is_profile =  photos_json.getJSONObject(i).getBoolean("profile");
-                            if (is_profile)
-                                user.setAvatar(photo_url);
-                            else
-                                photos.add(photo_url);
-
-                            user.setPhotos(photos);
-                        }
-
-                    }
-                    failed = false;
+                        user = new UserDto(response_json.getJSONObject("result").getJSONObject("user"));
+                        failed = false;
+                    } else
+                        failed = true;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                //failed = false;
                 onResultReady.onReady(user, failed);
             }
 
@@ -117,8 +99,6 @@ public class DataStore {
             @Override
             public void onFinish() {
                 super.onFinish();
-                //if (failed)
-                //    onResultReady.onReady(null, true);
             }
         });
     }
@@ -136,32 +116,14 @@ public class DataStore {
                 UserDto user = null;
                 try {
                     if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        JSONObject user_dto = response_json.getJSONObject("result").getJSONObject("user");
-                        user = new UserDto();
-                        user.setEmail(user_dto.getString("email"));
-                        user.setGender(user_dto.getString("gender"));
-                        user.setName(user_dto.getString("name"));
-                        user.setId(user_dto.getString("_id"));
-
-                        JSONArray photos_json =  user_dto.getJSONArray("photos");
-                        List<String> photos = new ArrayList<String>();
-                        for (int i = 0; i < photos_json.length(); i++) {
-                            String photo_url = photos_json.getJSONObject(i).getString("url");
-                            boolean is_profile =  photos_json.getJSONObject(i).getBoolean("profile");
-                            if (is_profile)
-                                user.setAvatar(photo_url);
-                            else
-                                photos.add(photo_url);
-
-                            user.setPhotos(photos);
-                        }
-                    }
-                    failed = false;
+                        user = new UserDto(response_json.getJSONObject("result").getJSONObject("user"));
+                        failed = false;
+                    } else
+                        failed = true;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                //failed = false;
                 onResultReady.onReady(user, failed);
             }
 
@@ -178,19 +140,17 @@ public class DataStore {
             @Override
             public void onFinish() {
                 super.onFinish();
-                //if (failed)
-                //    onResultReady.onReady(null, true);
             }
         });
     }
 
-    public static void loginByFb(String name, String email, String fb_id, String fb_access_token, String gender, String dob, String avatar, final OnResultReady onResultReady) {
+    public static void loginByFb(String name, String email, String fb_id, String fb_access_token, String gender, String dob, JSONObject avatar,
+                                 final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("email", email);
         params.put("name", name);
         params.put("fb_id", fb_id);
         params.put("fb_access_token", fb_access_token);
-        params.put("fb_token_expires", 123456);
         params.put("gender", gender);
         params.put("dob", dob);
         params.put("avatar", avatar);
@@ -200,27 +160,10 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
-                UserDto user = new UserDto();
+                UserDto user = null;
                 try {
                     if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        JSONObject user_dto = response_json.getJSONObject("result").getJSONObject("user");
-                        user.setEmail(user_dto.getString("email"));
-                        user.setGender(user_dto.getString("gender"));
-                        user.setName(user_dto.getString("name"));
-                        user.setId(user_dto.getString("_id"));
-
-                        JSONArray photos_json =  user_dto.getJSONArray("photos");
-                        List<String> photos = new ArrayList<String>();
-                        for (int i = 0; i < photos_json.length(); i++) {
-                            String photo_url = photos_json.getJSONObject(i).getString("url");
-                            boolean is_profile =  photos_json.getJSONObject(i).getBoolean("profile");
-                            if (is_profile)
-                                user.setAvatar(photo_url);
-                            else
-                                photos.add(photo_url);
-
-                            user.setPhotos(photos);
-                        }
+                        user = new UserDto(response_json.getJSONObject("result").getJSONObject("user"));
                         failed = false;
                     } else
                         failed = true;
@@ -228,23 +171,8 @@ public class DataStore {
                     e.printStackTrace();
                 }
 
-                //failed = false;
                 onResultReady.onReady(user, failed);
             }
-
-           /* @Override
-            public void onFailure(java.lang.Throwable e, org.json.JSONArray errorResponse)
-            {
-                onResultReady.onReady(null, true);
-                Log.e("error", errorResponse.toString());
-            }*/
-
-        /*    @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error)
-            {
-                onResultReady.onReady(null, true);
-                Log.e("error", error.toString());
-            }*/
 
             @Override
             public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
@@ -259,8 +187,6 @@ public class DataStore {
             @Override
             public void onFinish() {
                 super.onFinish();
-                //if (failed)
-                //    onResultReady.onReady(null, true);
             }
         });
     }

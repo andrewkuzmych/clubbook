@@ -30,20 +30,20 @@
                       android:textSize="16dp" android:textColor="#000000"/>
 
             <!-- City Label -->
-            <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/city_reg"
-                    android:singleLine="true"
-                    android:layout_marginBottom="5dip" android:textColor="#22104A" android:id="@+id/city_label"
-                    android:textSize="17dp"/>
+            <!--<TextView-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/city_reg"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:layout_marginBottom="5dip" android:textColor="#22104A" android:id="@+id/city_label"-->
+                    <!--android:textSize="17dp"/>-->
 
             <!-- City input text -->
-            <EditText android:id="@+id/city_text"
-                      android:layout_width="fill_parent"
-                      android:layout_height="wrap_content" android:text="Amsterdam"
-                      android:layout_marginBottom="5dip" android:inputType="text"
-                      android:textSize="16dp" android:textColor="#000000"/>
+            <!--<EditText android:id="@+id/city_text"-->
+                      <!--android:layout_width="fill_parent"-->
+                      <!--android:layout_height="wrap_content" android:text="Amsterdam"-->
+                      <!--android:layout_marginBottom="5dip" android:inputType="text"-->
+                      <!--android:textSize="16dp" android:textColor="#000000"/>-->
 
             <!-- Email Label -->
             <TextView

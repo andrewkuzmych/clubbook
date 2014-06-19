@@ -32,7 +32,6 @@ public class RegActivity extends ImageUploadActivity {
     Button avatar_button;
     JSONObject avatar;
 
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -43,8 +42,8 @@ public class RegActivity extends ImageUploadActivity {
         //set styles
         user_text = (EditText) findViewById(R.id.name_text);
         user_text.setTypeface(typeface_regular);
-        city_text = (EditText) findViewById(R.id.name_text);
-        city_text.setTypeface(typeface_regular);
+//        city_text = (EditText) findViewById(R.id.name_text);
+//        city_text.setTypeface(typeface_regular);
         password_text = (EditText) findViewById(R.id.password_text);
         password_text.setTypeface(typeface_regular);
         email_text = (EditText) findViewById(R.id.email_text);
@@ -156,7 +155,8 @@ public class RegActivity extends ImageUploadActivity {
                 GenderPair data = (GenderPair) gender_spinner.getSelectedItem();
                 String gender = data.getValue();
 
-                String city = city_text.getText().toString().trim();
+                // String city = city_text.getText().toString().trim();
+                String city = "Amsterdam";
 
                 if(avatar == null) {
                     alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.avatar_incorrect), false);

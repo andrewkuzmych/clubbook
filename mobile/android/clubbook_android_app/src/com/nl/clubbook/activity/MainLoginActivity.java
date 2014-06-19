@@ -20,6 +20,7 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.sromku.simple.fb.listeners.OnProfileListener;
+import org.json.JSONObject;
 
 /**
  * Created with IntelliJ IDEA.
@@ -156,7 +157,7 @@ public class MainLoginActivity extends BaseActivity {
 
     class UpdateProfileInfoTask extends AsyncTask<String, Void, Profile> {
         Profile profile;
-        String imageUrl;
+        JSONObject avatar;
 
         UpdateProfileInfoTask(Profile profile) {
             this.profile = profile;
@@ -171,9 +172,7 @@ public class MainLoginActivity extends BaseActivity {
                 showProgress("Loading...");
                 String fb_photo = "https://graph.facebook.com/" + fb_id + "/picture?width=700&height=700";
                 Cloudinary cloudinary = new Cloudinary(getApplicationContext());
-
-                cloudinary.uploader().upload(fb_photo, Cloudinary.asMap("public_id", fb_id, "format", "jpg"));
-                imageUrl = "http://res.cloudinary.com/" + ImageHelper.CLOUD_NAME_CLOUDINARY + "/image/upload/" + fb_id + ".jpg";
+                avatar = cloudinary.uploader().upload(fb_photo, Cloudinary.asMap("format", "jpg"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -187,7 +186,7 @@ public class MainLoginActivity extends BaseActivity {
         protected void onPostExecute(Profile result) {
             super.onPostExecute(result);
             hideProgress(true);
-            updateUserInfo(this.profile, imageUrl);
+            updateUserInfo(this.profile, avatar);
         }
     }
 
@@ -212,7 +211,7 @@ public class MainLoginActivity extends BaseActivity {
         mSimpleFacebook.getProfile(properties, onProfileListener);
     }
 
-    private void updateUserInfo(Profile profile, final String avatar) {
+    private void updateUserInfo(Profile profile, final JSONObject avatar) {
         final String fb_id = profile.getId();
         final String name = profile.getName();
         final String email = profile.getEmail();
