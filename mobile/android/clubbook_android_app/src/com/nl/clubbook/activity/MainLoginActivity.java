@@ -213,7 +213,7 @@ public class MainLoginActivity extends BaseActivity {
 
     private void updateUserInfo(Profile profile, final JSONObject avatar) {
         final String fb_id = profile.getId();
-        final String name = profile.getName();
+        final String name = profile.getName().split(" ")[0];
         final String email = profile.getEmail();
         final String gender = profile.getGender();
 
