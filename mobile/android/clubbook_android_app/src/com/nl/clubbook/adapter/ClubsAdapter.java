@@ -89,10 +89,17 @@ public class ClubsAdapter extends ArrayAdapter<ClubDto> {
         // checkin button
         holder.checkin = (Button) row.findViewById(R.id.checkin);
         holder.checkin.setTag(club);
+        // if we checked in this this club set related style
         if (LocationCheckinHelper.isCheckinHere(club)) {
             UiHelper.changeCheckinState(context, holder.checkin, false);
         } else {
             UiHelper.changeCheckinState(context, holder.checkin, true);
+        }
+        // can we check in this club
+        if (LocationCheckinHelper.canCheckinHere(club)) {
+            holder.checkin.setEnabled(true);
+        } else {
+            holder.checkin.setEnabled(false);
         }
 
         holder.checkin.setOnClickListener(new View.OnClickListener() {

@@ -10,8 +10,8 @@ public class ClubDto {
     private String title;
     private String phone;
     private String address;
-    private String lat;
-    private String lon;
+    private Double lat;
+    private Double lon;
     private String avatar;
     private List<String> photos;
     private List<UserDto> users;
@@ -65,19 +65,19 @@ public class ClubDto {
         this.address = address;
     }
 
-    public String getLat() {
+    public Double getLat() {
         return lat;
     }
 
-    public void setLat(String lat) {
+    public void setLat(Double lat) {
         this.lat = lat;
     }
 
-    public String getLon() {
+    public Double getLon() {
         return lon;
     }
 
-    public void setLon(String lon) {
+    public void setLon(Double lon) {
         this.lon = lon;
     }
 

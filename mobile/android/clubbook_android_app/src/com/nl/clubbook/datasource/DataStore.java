@@ -210,9 +210,9 @@ public class DataStore {
                         club.setPhone(clubs_dto.getJSONObject(i).getString("club_phone"));
                         club.setAddress(clubs_dto.getJSONObject(i).getString("club_address"));
                         club.setAvatar(clubs_dto.getJSONObject(i).getString("club_logo"));
-                        club.setLon(clubs_dto.getJSONObject(i).getJSONObject("club_loc").getString("lon"));
-                        club.setLat(clubs_dto.getJSONObject(i).getJSONObject("club_loc").getString("lat"));
-                        club.setDistance(LocationCheckinHelper.calculateDistance(context, Double.parseDouble(club.getLat()), Double.parseDouble(club.getLon())));
+                        club.setLon(clubs_dto.getJSONObject(i).getJSONObject("club_loc").getDouble("lon"));
+                        club.setLat(clubs_dto.getJSONObject(i).getJSONObject("club_loc").getDouble("lat"));
+                        club.setDistance(LocationCheckinHelper.calculateDistance(context, club.getLat(), club.getLon()));
                         clubs.add(club);
                     }
 
@@ -281,9 +281,9 @@ public class DataStore {
                     club.setPhone(club_dto.getString("club_phone"));
                     club.setAddress(club_dto.getString("club_address"));
                     club.setAvatar(club_dto.getString("club_logo"));
-                    club.setLon(club_dto.getJSONObject("club_loc").getString("lon"));
-                    club.setLat(club_dto.getJSONObject("club_loc").getString("lat"));
-                    club.setDistance(LocationCheckinHelper.calculateDistance(context, Double.parseDouble(club.getLat()), Double.parseDouble(club.getLon())));
+                    club.setLon(club_dto.getJSONObject("club_loc").getDouble("lon"));
+                    club.setLat(club_dto.getJSONObject("club_loc").getDouble("lat"));
+                    club.setDistance(LocationCheckinHelper.calculateDistance(context, club.getLat(), club.getLon()));
 
                     List<String> photos = new ArrayList<String>();
                     JSONArray photo_list =  club_dto.getJSONArray("club_photos");

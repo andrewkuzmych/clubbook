@@ -78,6 +78,21 @@ public class LocationCheckinHelper {
     }
 
     /**
+     * Check location and distance to club to allow checkin
+     *
+     * @param club
+     * @return
+     */
+    public static boolean canCheckinHere(ClubDto club) {
+        if (club == null)
+            return false;
+
+        Double distance = distanceBwPoints(getCurrentLocation().getLatitude(), getCurrentLocation().getLongitude(), club.getLat(), club.getLon());
+
+        return distance < MAX_RADIUS;
+    }
+
+    /**
      * Set current club
      *
      * @param context
@@ -88,7 +103,7 @@ public class LocationCheckinHelper {
         final SessionManager session = new SessionManager(context.getApplicationContext());
         final HashMap<String, String> user = session.getUserDetails();
         final Location current_location = getBestLocation(context);
-        double distance = distanceBwPoints(current_location.getLatitude(), current_location.getLongitude(), Double.parseDouble(club.getLat()), Double.parseDouble(club.getLon()));
+        double distance = distanceBwPoints(current_location.getLatitude(), current_location.getLongitude(), club.getLat(), club.getLon());
 
         if (distance > MAX_RADIUS) {
             callback.onCheckInOutFinished(false);
@@ -174,7 +189,7 @@ public class LocationCheckinHelper {
             public void run() {
                 final Location current_location = getBestLocation(context);
                 final double distance = distanceBwPoints(current_location.getLatitude(), current_location.getLongitude(),
-                        Double.parseDouble(getCurrentClub().getLat()), Double.parseDouble(getCurrentClub().getLon()));
+                        getCurrentClub().getLat(), getCurrentClub().getLon());
 
                 ((BaseActivity) context).runOnUiThread(new Runnable() {
                     public void run() {
