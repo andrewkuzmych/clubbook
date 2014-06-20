@@ -357,7 +357,7 @@ public class MainActivity extends BaseActivity {
         mTitle = getTitle();
         fragmentMap.put(0, new ProfileFragment());
         fragmentMap.put(1, new HomeFragment());
-        fragmentMap.put(2, new ClubFragment());
+        fragmentMap.put(2, new ClubFeaturesFragment());
         fragmentMap.put(3, new MessagesFragment());
         fragmentMap.put(4, new FriendsFragment());
         fragmentMap.put(5, new SettingsFragment());

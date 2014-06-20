@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.nl.clubbook.R;
 
-public class ClubFragment extends BaseFragment {
+public class ClubFeaturesFragment extends BaseFragment {
 
-    public ClubFragment() {
+    public ClubFeaturesFragment() {
 
     }
 
@@ -16,7 +16,7 @@ public class ClubFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_club, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_club_features, container, false);
 
         return rootView;
     }

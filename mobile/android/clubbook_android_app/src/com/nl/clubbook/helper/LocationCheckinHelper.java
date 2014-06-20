@@ -144,8 +144,7 @@ public class LocationCheckinHelper {
         });
 
         setCurrentClub(null);
-
-
+        // stop checkin task
         scheduleTaskExecutor.shutdown();
     }
 
