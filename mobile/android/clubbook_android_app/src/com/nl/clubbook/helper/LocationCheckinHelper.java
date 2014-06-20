@@ -16,6 +16,7 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.activity.MainLoginActivity;
 import com.nl.clubbook.activity.NoInternetActivity;
+import com.nl.clubbook.activity.NoLocationActivity;
 import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.DataStore;
 
@@ -371,13 +372,13 @@ public class LocationCheckinHelper {
             };
 
             // Register the listener with the Location Manager to receive location updates
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 200, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 200, locationListener);
         }
     }
 
     private static void showLocationErrorView(final Context application) {
-        Intent i = new Intent(application, NoInternetActivity.class);
+        Intent i = new Intent(application, NoLocationActivity.class);
         application.startActivity(i);
         ((BaseActivity) application).finish();
     }
