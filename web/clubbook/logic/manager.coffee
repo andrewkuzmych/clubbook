@@ -254,7 +254,8 @@ exports.save_or_update_fb_user = (params, callback)->
         if user.photos.length == 0
           user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
 
-        callback err, user
+        user.save (err)->
+          callback err, user
 
       else
         # new user
@@ -274,7 +275,8 @@ exports.save_or_update_fb_user = (params, callback)->
           #email_sender.welcome user, (err, info)->
           #  console.log 'welcome mail sent', user._id
 
-          callback err, user
+          user.save (err)->
+            callback err, user
 
         else
           db_model.User.findOne({"email":params.email?.toLowerCase()}).exec (err, user)->
@@ -291,7 +293,8 @@ exports.save_or_update_fb_user = (params, callback)->
               if user.photos.length == 0
                 user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
 
-              callback err, user
+              user.save (err)->
+                callback err, user
 
             else
               user = new db_model.User
@@ -309,7 +312,8 @@ exports.save_or_update_fb_user = (params, callback)->
               #email_sender.welcome user, (err, info)->
               #  console.log 'welcome mail sent', user._id
 
-              callback err, user
+              user.save (err)->
+                callback err, user
 
 exports.chat = (params, callback)->
   query = { '$or': [{ 'user1': mongoose.Types.ObjectId(params.user_from), 'user2': mongoose.Types.ObjectId(params.user_to) }, { 'user1': mongoose.Types.ObjectId(params.user_to), 'user2': mongoose.Types.ObjectId(params.user_from) }] }
