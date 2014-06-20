@@ -15,6 +15,7 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.ImageHelper;
+import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.entities.Profile;
@@ -63,6 +64,11 @@ public class MainLoginActivity extends BaseActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // start to track user location
+        LocationCheckinHelper.startSmartLocationTracker(this);
+        if(!LocationCheckinHelper.isLocationEnabled(this))
+            return;
 
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main_login);

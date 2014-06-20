@@ -1,7 +1,10 @@
 package com.nl.clubbook.helper;
 
+import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
@@ -11,6 +14,8 @@ import android.util.Log;
 import android.widget.Toast;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
+import com.nl.clubbook.activity.MainLoginActivity;
+import com.nl.clubbook.activity.NoInternetActivity;
 import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.DataStore;
 
@@ -28,11 +33,12 @@ public class LocationCheckinHelper {
     private static ScheduledExecutorService scheduleTaskExecutor;
     private static int failed_checkin_count = 0;
     private static int max_failed_checkin_count = 3;
-    private static int update_location_interval = 10*60; // every 10min.
+    private static int update_location_interval = 10 * 60; // every 10min.
     // current active club when user did checkin
     private static ClubDto currentClub;
 
     private static Location currentLocation;
+    private static Boolean isLocationTrackerStarted = false;
 
     public static ClubDto getCurrentClub() {
         return LocationCheckinHelper.currentClub;
@@ -43,7 +49,7 @@ public class LocationCheckinHelper {
     }
 
     public static Location getCurrentLocation() {
-        if(currentLocation == null)
+        if (currentLocation == null)
             throw new RuntimeException("Current location is empty");
         return currentLocation;
     }
@@ -321,79 +327,65 @@ public class LocationCheckinHelper {
      *
      * @param application
      */
-    public static void startSmartLocationTracker(final Application application) {
-        // http://developer.android.com/guide/topics/location/strategies.html
-        // Acquire a reference to the system Location Manager
-        final LocationManager locationManager = (LocationManager) application.getSystemService(Context.LOCATION_SERVICE);
-        currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if(currentLocation == null)
-            currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+    public static void startSmartLocationTracker(final Context application) {
+        // launch only once
+        if(!isLocationTrackerStarted) {
+            isLocationTrackerStarted = true;
 
-        //if there is no providers redirect go to location error view
-        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            if(currentLocation == null){
-                showLocationErrorView(application);
-            }
+            // http://developer.android.com/guide/topics/location/strategies.html
+            // Acquire a reference to the system Location Manager
+            final LocationManager locationManager = (LocationManager) application.getSystemService(Context.LOCATION_SERVICE);
+
+            currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (currentLocation == null)
+                currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+            // Define a listener that responds to location updates
+            LocationListener locationListener = new LocationListener() {
+                public void onLocationChanged(Location location) {
+                    // Called when a new location is found by the network location provider.
+                    if (currentLocation == null) {
+                        currentLocation = location;
+                    }
+
+                    if (isBetterLocation(currentLocation, location)) {
+                        currentLocation = location;
+                    }
+
+                    Log.d("LOCATION", String.valueOf(currentLocation.getLatitude()) + ":" + String.valueOf(currentLocation.getLongitude()));
+                }
+
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+                    Log.d("LOCATION", "status changed: " + provider);
+                }
+
+                public void onProviderEnabled(String provider) {
+                    hideLocationErrorView(application);
+                }
+
+                public void onProviderDisabled(String provider) {
+                    if (!isLocationProvidersEnabled(locationManager)) {
+                        showLocationErrorView(application);
+                    }
+                }
+            };
+
+            // Register the listener with the Location Manager to receive location updates
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
-
-        // Define a listener that responds to location updates
-        LocationListener locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                // Called when a new location is found by the network location provider.
-                if (currentLocation == null) {
-                    currentLocation = location;
-                }
-
-                if (isBetterLocation(currentLocation, location)) {
-                    currentLocation = location;
-                }
-
-                Log.d("LOCATION", String.valueOf(currentLocation.getLatitude()) + ":" + String.valueOf(currentLocation.getLongitude()));
-            }
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-                // redirect to location error view
-                Context context = application.getApplicationContext();
-                CharSequence text = "Status changed! - " + provider;
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
-            }
-
-            public void onProviderEnabled(String provider) {
-                hideLocationErrorView(application);
-            }
-
-            public void onProviderDisabled(String provider) {
-                if(locationManager.getProviders(true).size() == 0){
-                    showLocationErrorView(application);
-                }
-            }
-        };
-
-        // Register the listener with the Location Manager to receive location updates
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
 
-    private static void showLocationErrorView(final Application application){
-        Log.e("LOCATION", "no provider is enabled");
-        Context context = application.getApplicationContext();
-        CharSequence text = "Location is Disabled";
-        int duration = Toast.LENGTH_SHORT;
-
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
-
+    private static void showLocationErrorView(final Context application) {
+        Intent i = new Intent(application, NoInternetActivity.class);
+        application.startActivity(i);
+        ((BaseActivity) application).finish();
     }
-    private static void hideLocationErrorView(final Application application){
-        Context context = application.getApplicationContext();
-        CharSequence text = "Location is Enabled";
-        int duration = Toast.LENGTH_SHORT;
 
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
+    private static void hideLocationErrorView(final Context application) {
+        Intent i = new Intent(application, MainLoginActivity.class);
+        application.startActivity(i);
+        ((BaseActivity) application).finish();
     }
 
     private static final int TWO_MINUTES = 1000 * 60 * 2;
@@ -454,5 +446,28 @@ public class LocationCheckinHelper {
             return provider2 == null;
         }
         return provider1.equals(provider2);
+    }
+
+    public static boolean isLocationEnabled(final Context application) {
+        boolean isLocationEnabled = true;
+
+        final LocationManager locationManager = (LocationManager) application.getSystemService(Context.LOCATION_SERVICE);
+        currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (currentLocation == null)
+            currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        //if there is no providers redirect go to location error view
+        if (!isLocationProvidersEnabled(locationManager) && currentLocation == null) {
+            // stop app
+            Log.d("LOCATION", "No location services enabled");
+            // showLocationErrorView(application);
+            isLocationEnabled = false;
+        }
+
+        return isLocationEnabled;
+    }
+
+    protected static boolean isLocationProvidersEnabled(LocationManager locationManager) {
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 }

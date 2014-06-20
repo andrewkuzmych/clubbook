@@ -49,8 +49,5 @@ public class ClubbookApplication extends Application {
                 .build();
 
         SimpleFacebook.setConfiguration(configuration);
-
-        // start to track user location
-        LocationCheckinHelper.startSmartLocationTracker(this);
     }
 }
