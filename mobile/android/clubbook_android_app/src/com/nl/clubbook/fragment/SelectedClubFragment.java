@@ -157,10 +157,18 @@ public class SelectedClubFragment extends BaseFragment {
                 club = (ClubDto) result;
 
                 getActivity().setTitle(club.getTitle());
+
+                // if we checked in this this club set related style
                 if (LocationCheckinHelper.isCheckinHere(club)) {
                     UiHelper.changeCheckinState(getActivity(), checkin, false);
                 } else {
                     UiHelper.changeCheckinState(getActivity(), checkin, true);
+                }
+                // can we check in this club
+                if (LocationCheckinHelper.canCheckinHere(club)) {
+                    checkin.setEnabled(true);
+                } else {
+                    checkin.setEnabled(false);
                 }
 
                 setHandlers();
@@ -204,9 +212,6 @@ public class SelectedClubFragment extends BaseFragment {
     private void setHandlers() {
         checkin.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View view) {
-                //final SessionManager session = new SessionManager(getActivity().getApplicationContext());
-                //final HashMap<String, String> user = session.getUserDetails();
-
                 if (LocationCheckinHelper.isCheckinHere(club)) {
                     LocationCheckinHelper.checkout(getActivity(), new CheckInOutCallbackInterface() {
                         @Override

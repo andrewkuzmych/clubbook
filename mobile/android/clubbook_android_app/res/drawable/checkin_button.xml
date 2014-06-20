@@ -16,6 +16,21 @@
                       android:bottom="13dp" />
         </shape>
     </item>
+    <item android:state_enabled="false" >
+        <shape>
+            <solid android:color="#ff83887f" />
+            <corners
+                    android:radius="4dp" />
+            <margin  android:left="5dp"
+                     android:top="5dp"
+                     android:right="5dp"
+                     android:bottom="5dp" />
+            <padding  android:left="10dp"
+                      android:top="13dp"
+                      android:right="10dp"
+                      android:bottom="13dp" />
+        </shape>
+    </item>
 
     <item>
         <shape>
