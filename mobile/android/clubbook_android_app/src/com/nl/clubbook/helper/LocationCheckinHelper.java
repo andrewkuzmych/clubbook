@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class LocationCheckinHelper {
 
     public static final int MAX_RADIUS = 200;
-    private static ScheduledExecutorService scheduleTaskExecutor;
+    private final static ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
     private static int failed_checkin_count = 0;
     private static int max_failed_checkin_count = 3;
     private static int update_location_interval = 10 * 60; // every 10min.
@@ -95,16 +95,16 @@ public class LocationCheckinHelper {
      * @param callback
      */
     public static void checkin(final Context context, final ClubDto club, final CheckInOutCallbackInterface callback) {
-        final SessionManager session = new SessionManager(context.getApplicationContext());
-        final HashMap<String, String> user = session.getUserDetails();
+        // location validation
         final Location current_location = getCurrentLocation();
         double distance = distanceBwPoints(current_location.getLatitude(), current_location.getLongitude(), club.getLat(), club.getLon());
-
-        // location validation
         if (distance > MAX_RADIUS) {
             callback.onCheckInOutFinished(false);
             return;
         }
+
+        final SessionManager session = new SessionManager(context.getApplicationContext());
+        final HashMap<String, String> user = session.getUserDetails();
 
         DataStore.checkin(club.getId(), user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
             @Override
@@ -115,7 +115,7 @@ public class LocationCheckinHelper {
                 } else {
                     setCurrentClub(club);
                     callback.onCheckInOutFinished(true);
-                    StartLocationUpdate(context);
+                    startLocationUpdate(context);
                 }
             }
         });
@@ -128,6 +128,7 @@ public class LocationCheckinHelper {
      * @param callback
      */
     public static void checkout(final Context context, final CheckInOutCallbackInterface callback) {
+        Log.d("CHECKOUT", "Checkout user");
         final SessionManager session = new SessionManager(context.getApplicationContext());
         final HashMap<String, String> user = session.getUserDetails();
 
@@ -144,8 +145,8 @@ public class LocationCheckinHelper {
 
         setCurrentClub(null);
 
-        if (scheduleTaskExecutor != null)
-            scheduleTaskExecutor.shutdown();
+
+        scheduleTaskExecutor.shutdown();
     }
 
     /**
@@ -174,11 +175,10 @@ public class LocationCheckinHelper {
      *
      * @param context
      */
-    private static void StartLocationUpdate(final Context context) {
+    private static void startLocationUpdate(final Context context) {
         final SessionManager session = new SessionManager(context.getApplicationContext());
         final HashMap<String, String> user = session.getUserDetails();
 
-        scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
         scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
             public void run() {
                 final Location current_location = getCurrentLocation();
@@ -188,6 +188,7 @@ public class LocationCheckinHelper {
                 ((BaseActivity) context).runOnUiThread(new Runnable() {
                     public void run() {
                         if (distance > MAX_RADIUS) {
+                            // checkout user
                             checkout(context, new CheckInOutCallbackInterface() {
                                 @Override
                                 public void onCheckInOutFinished(boolean result) {
