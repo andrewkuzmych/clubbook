@@ -74,10 +74,9 @@ public class HomeFragment extends BaseFragment {
                 }
         );
 
-
         club_list = (ListView) rootView.findViewById(R.id.club_listview);
-        String distance = getSelectedDistance();
-        loadData(distance);
+        // load data based on selected distance to filter on
+        loadData(getSelectedDistance());
         return rootView;
     }
 
@@ -87,10 +86,11 @@ public class HomeFragment extends BaseFragment {
 
         Log.d("Location Updates", "Google Play services is available.");
 
-        Location currentLocation = LocationCheckinHelper.getBestLocation(getActivity());
-
+        // retrieve my current location
+        Location currentLocation = LocationCheckinHelper.getCurrentLocation();
+        // show progress
         ((BaseActivity) getActivity()).showProgress("Loading...");
-
+        // retrieve places from server and set distance
         DataStore.retrievePlaces(distanceKm, String.valueOf(currentLocation.getLatitude()), String.valueOf(currentLocation.getLongitude()), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
@@ -98,12 +98,12 @@ public class HomeFragment extends BaseFragment {
                     ((BaseActivity) getActivity()).hideProgress(false);
                     return;
                 }
+                // hide progress
                 ((BaseActivity) getActivity()).hideProgress(true);
-
+                // prepare adapter
                 List<ClubDto> places = (List<ClubDto>) result;
-
                 DataStore.setPlaceAdapter(new ClubsAdapter(contextThis, R.layout.club_list_item, places.toArray(new ClubDto[places.size()])));
-
+                // sort by distance
                 DataStore.getPlaceAdapter().sort(new Comparator<ClubDto>() {
                     @Override
                     public int compare(ClubDto lhs, ClubDto rhs) {
@@ -114,9 +114,8 @@ public class HomeFragment extends BaseFragment {
                         }
                     }
                 });
-
                 club_list.setAdapter(DataStore.getPlaceAdapter());
-
+                // set event handler to open club details
                 club_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
@@ -127,10 +126,9 @@ public class HomeFragment extends BaseFragment {
                         FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
                         mFragmentTransaction.addToBackStack(null);
                         mFragmentTransaction.replace(R.id.frame_container, fragment).commit();
-
                     }
                 });
-
+                // scroll to clicked club when you return from club details by clicking back button
                 if (index != -1) {
                     club_list.setSelectionFromTop(index, top);
                 }

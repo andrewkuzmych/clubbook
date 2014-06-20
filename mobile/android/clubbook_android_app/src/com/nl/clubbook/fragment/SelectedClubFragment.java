@@ -157,7 +157,7 @@ public class SelectedClubFragment extends BaseFragment {
                 club = (ClubDto) result;
 
                 getActivity().setTitle(club.getTitle());
-                if (LocationCheckinHelper.isCheckinHere(getActivity(), club)) {
+                if (LocationCheckinHelper.isCheckinHere(club)) {
                     UiHelper.changeCheckinState(getActivity(), checkin, false);
                 } else {
                     UiHelper.changeCheckinState(getActivity(), checkin, true);
@@ -207,7 +207,7 @@ public class SelectedClubFragment extends BaseFragment {
                 //final SessionManager session = new SessionManager(getActivity().getApplicationContext());
                 //final HashMap<String, String> user = session.getUserDetails();
 
-                if (LocationCheckinHelper.isCheckinHere(getActivity(), club)) {
+                if (LocationCheckinHelper.isCheckinHere(club)) {
                     LocationCheckinHelper.checkout(getActivity(), new CheckInOutCallbackInterface() {
                         @Override
                         public void onCheckInOutFinished(boolean result) {

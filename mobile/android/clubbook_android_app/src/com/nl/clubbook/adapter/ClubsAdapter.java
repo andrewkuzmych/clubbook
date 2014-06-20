@@ -89,7 +89,7 @@ public class ClubsAdapter extends ArrayAdapter<ClubDto> {
         // checkin button
         holder.checkin = (Button) row.findViewById(R.id.checkin);
         holder.checkin.setTag(club);
-        if (LocationCheckinHelper.isCheckinHere(context, club)) {
+        if (LocationCheckinHelper.isCheckinHere(club)) {
             UiHelper.changeCheckinState(context, holder.checkin, false);
         } else {
             UiHelper.changeCheckinState(context, holder.checkin, true);
@@ -98,7 +98,7 @@ public class ClubsAdapter extends ArrayAdapter<ClubDto> {
         holder.checkin.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View view) {
                 final ClubDto club = (ClubDto) view.getTag();
-                if (LocationCheckinHelper.isCheckinHere(context, club)) {
+                if (LocationCheckinHelper.isCheckinHere(club)) {
                     LocationCheckinHelper.checkout(context, new CheckInOutCallbackInterface() {
                         @Override
                         public void onCheckInOutFinished(boolean result) {
