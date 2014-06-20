@@ -3,11 +3,9 @@ package com.nl.clubbook.datasource;
 import android.content.Context;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.nl.clubbook.adapter.CheckinAdapter;
 import com.nl.clubbook.adapter.ClubsAdapter;
 import com.nl.clubbook.adapter.MessagesAdapter;
 import com.nl.clubbook.helper.LocationCheckinHelper;
-import android.util.Log;
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,8 +22,6 @@ public class DataStore {
 
     private static ClubsAdapter clubsAdapter;
 
-    private static CheckinAdapter checkinAdapter;
-
     private static MessagesAdapter messagesAdapter;
 
     public static void setContext(Context mcontext) {
@@ -38,14 +34,6 @@ public class DataStore {
 
     public static void setMessagesAdapter(MessagesAdapter messagesAdapter) {
         DataStore.messagesAdapter = messagesAdapter;
-    }
-
-    public static CheckinAdapter getCheckinAdapter() {
-        return checkinAdapter;
-    }
-
-    public static void setCheckinAdapter(CheckinAdapter checkinAdapter) {
-        DataStore.checkinAdapter = checkinAdapter;
     }
 
     public static ClubsAdapter getPlaceAdapter() {
@@ -212,7 +200,7 @@ public class DataStore {
                         club.setAvatar(clubs_dto.getJSONObject(i).getString("club_logo"));
                         club.setLon(clubs_dto.getJSONObject(i).getJSONObject("club_loc").getDouble("lon"));
                         club.setLat(clubs_dto.getJSONObject(i).getJSONObject("club_loc").getDouble("lat"));
-                        club.setDistance(LocationCheckinHelper.calculateDistance(context, club.getLat(), club.getLon()));
+                        club.setDistance(LocationCheckinHelper.calculateDistance(club.getLat(), club.getLon()));
                         clubs.add(club);
                     }
 
@@ -241,15 +229,13 @@ public class DataStore {
             }*/
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse)
-            {
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
                 onResultReady.onReady(null, true);
                 //Log.e("error", errorResponse.toString());
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse)
-            {
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
                 onResultReady.onReady(null, true);
                 //Log.e("error", errorResponse.toString());
             }
@@ -283,18 +269,17 @@ public class DataStore {
                     club.setAvatar(club_dto.getString("club_logo"));
                     club.setLon(club_dto.getJSONObject("club_loc").getDouble("lon"));
                     club.setLat(club_dto.getJSONObject("club_loc").getDouble("lat"));
-                    club.setDistance(LocationCheckinHelper.calculateDistance(context, club.getLat(), club.getLon()));
+                    club.setDistance(LocationCheckinHelper.calculateDistance(club.getLat(), club.getLon()));
 
                     List<String> photos = new ArrayList<String>();
-                    JSONArray photo_list =  club_dto.getJSONArray("club_photos");
+                    JSONArray photo_list = club_dto.getJSONArray("club_photos");
                     for (int i = 0; i < photo_list.length(); i++) {
-                       photos.add(photo_list.getString(i));
+                        photos.add(photo_list.getString(i));
                     }
 
                     JSONArray users_dto = response_json.getJSONArray("users");
                     List<UserDto> users = new ArrayList<UserDto>();
-                    for(int i = 0; i < users_dto.length(); i++)
-                    {
+                    for (int i = 0; i < users_dto.length(); i++) {
                         JSONObject user_dto = users_dto.getJSONObject(i);
                         UserDto user = new UserDto();
                         user.setEmail(user_dto.getString("email"));
@@ -302,11 +287,11 @@ public class DataStore {
                         user.setName(user_dto.getString("name"));
                         user.setId(user_dto.getString("_id"));
 
-                        JSONArray photos_json =  user_dto.getJSONArray("photos");
+                        JSONArray photos_json = user_dto.getJSONArray("photos");
                         List<String> user_photos = new ArrayList<String>();
                         for (int j = 0; j < photos_json.length(); j++) {
                             String photo_url = photos_json.getJSONObject(j).getString("url");
-                            boolean is_profile =  photos_json.getJSONObject(j).getBoolean("profile");
+                            boolean is_profile = photos_json.getJSONObject(j).getBoolean("profile");
                             if (is_profile)
                                 user.setAvatar(photo_url);
                             else
@@ -329,14 +314,12 @@ public class DataStore {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse)
-            {
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
                 onResultReady.onReady(null, true);
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse)
-            {
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
                 onResultReady.onReady(null, true);
             }
 
@@ -368,11 +351,11 @@ public class DataStore {
                         user.setName(user_dto.getString("name"));
                         user.setId(user_dto.getString("_id"));
 
-                        JSONArray photos_json =  user_dto.getJSONArray("photos");
+                        JSONArray photos_json = user_dto.getJSONArray("photos");
                         List<String> photos = new ArrayList<String>();
                         for (int i = 0; i < photos_json.length(); i++) {
                             String photo_url = photos_json.getJSONObject(i).getString("url");
-                            boolean is_profile =  photos_json.getJSONObject(i).getBoolean("profile");
+                            boolean is_profile = photos_json.getJSONObject(i).getBoolean("profile");
                             if (is_profile)
                                 user.setAvatar(photo_url);
                             else
@@ -393,17 +376,14 @@ public class DataStore {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers,java.lang.Throwable throwable, final JSONObject errorResponse)
-            {
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
                 onResultReady.onReady(null, true);
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers,java.lang.Throwable throwable, final JSONArray errorResponse)
-            {
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
                 onResultReady.onReady(null, true);
             }
-
 
 
             @Override
@@ -610,6 +590,7 @@ public class DataStore {
         RequestParams params = new RequestParams();
         ClubbookRestClient.get_conversation(user1, user2, params, new JsonHttpResponseHandler() {
             private boolean failed = true;
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
                 Chat chat = new Chat();
@@ -684,7 +665,8 @@ public class DataStore {
                             con.setUser_name(user_dto.getString("name"));
 
                             JSONArray photo_list = user_dto.getJSONArray("photos");
-                            String user_from_photo = null;                            for (int j = 0; j < photo_list.length(); j++) {
+                            String user_from_photo = null;
+                            for (int j = 0; j < photo_list.length(); j++) {
                                 if (photo_list.getJSONObject(j).getBoolean("profile")) {
                                     user_from_photo = photo_list.getJSONObject(j).getString("url");
                                     break;
@@ -694,16 +676,15 @@ public class DataStore {
                             con.setUser_photo(user_from_photo);
 
                             if (conversations_dto.getJSONObject(i).has("unread") &&
-                                conversations_dto.getJSONObject(i).getJSONObject("unread").has("user") &&
-                                conversations_dto.getJSONObject(i).getJSONObject("unread").getString("user").equalsIgnoreCase(user_id)) {
+                                    conversations_dto.getJSONObject(i).getJSONObject("unread").has("user") &&
+                                    conversations_dto.getJSONObject(i).getJSONObject("unread").getString("user").equalsIgnoreCase(user_id)) {
 
                                 con.setUnread_messages(conversations_dto.getJSONObject(i).getJSONObject("unread").getInt("count"));
-                            }
-                            else {
+                            } else {
                                 con.setUnread_messages(0);
                             }
 
-                            if (conversations_dto.getJSONObject(i).has("conversation") ) {
+                            if (conversations_dto.getJSONObject(i).has("conversation")) {
                                 JSONArray cons_dto = conversations_dto.getJSONObject(i).getJSONArray("conversation");
                                 if (cons_dto.length() > 0)
                                     con.setLast_message(cons_dto.getJSONObject(0).getString("msg"));
@@ -740,7 +721,7 @@ public class DataStore {
         });
     }
 
-    public static void chat(String user_from, String user_to , String msg, final OnResultReady onResultReady) {
+    public static void chat(String user_from, String user_to, String msg, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("user_from", user_from);
         params.put("user_to", user_to);
@@ -748,6 +729,7 @@ public class DataStore {
 
         ClubbookRestClient.send_msg(params, new JsonHttpResponseHandler() {
             private boolean failed = true;
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
                 try {
@@ -783,6 +765,7 @@ public class DataStore {
         RequestParams params = new RequestParams();
         ClubbookRestClient.read_messages(chat_id, user_id, params, new JsonHttpResponseHandler() {
             private boolean failed = true;
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
                 try {
@@ -822,7 +805,7 @@ public class DataStore {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers,JSONObject response_json) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
                 /*UserDto user = new UserDto();
                 try {
                     if (response_json.getString("status").equalsIgnoreCase("ok")) {
@@ -843,14 +826,12 @@ public class DataStore {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers,java.lang.Throwable throwable, final JSONObject errorResponse)
-            {
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
                 onResultReady.onReady(null, true);
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers,java.lang.Throwable throwable, final JSONArray errorResponse)
-            {
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
                 onResultReady.onReady(null, true);
             }
 
@@ -868,6 +849,7 @@ public class DataStore {
 
         ClubbookRestClient.unread_messages_count(user_id, params, new JsonHttpResponseHandler() {
             private boolean failed = true;
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
                 String count = "0";

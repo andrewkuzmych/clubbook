@@ -88,7 +88,8 @@ exports.cu_count = (params, callback)->
     callback err, club_count
 
 exports.club_clubbers = (params, callback)->
-  db_model.User.find({'checkin': { '$elemMatch': { 'club' : mongoose.Types.ObjectId(params.club_id),'active': true}} }, { checkin: 0 }).exec (err, users)->
+  # do not return "checkin " field of a user
+  db_model.User.find({'checkin': { '$elemMatch': { 'club' : mongoose.Types.ObjectId(params.club_id), 'active': true}} }, { checkin: 0 }).exec (err, users)->
     callback err, users
 
 

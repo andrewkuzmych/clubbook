@@ -204,7 +204,7 @@ public class SelectedClubFragment extends BaseFragment {
                 image_slider.setText(String.valueOf(mViewFlipper.getDisplayedChild() + 1) + "/" + String.valueOf(mViewFlipper.getChildCount()));
                 title_text.setText(club.getTitle());
                 address_text.setText(club.getAddress());
-                distance_text.setText(LocationCheckinHelper.calculateDistance(getActivity().getApplicationContext(), club.getDistance()));
+                distance_text.setText(LocationCheckinHelper.formatDistance(getActivity().getApplicationContext(), club.getDistance()));
             }
         });
     }
@@ -226,9 +226,9 @@ public class SelectedClubFragment extends BaseFragment {
                 } else {
                     LocationCheckinHelper.checkin(getActivity(), club, new CheckInOutCallbackInterface() {
                         @Override
-                        public void onCheckInOutFinished(boolean result) {
+                        public void onCheckInOutFinished(boolean isUserCheckin) {
                             // Do something when download finished
-                            if (result) {
+                            if (isUserCheckin) {
                                 UiHelper.changeCheckinState(getActivity(), view, false);
                                 loadData();
                             }

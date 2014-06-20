@@ -1,9 +1,6 @@
 package com.nl.clubbook.helper;
 
-import android.app.AlertDialog;
-import android.app.Application;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.location.Location;
@@ -11,11 +8,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.activity.MainLoginActivity;
-import com.nl.clubbook.activity.NoInternetActivity;
 import com.nl.clubbook.activity.NoLocationActivity;
 import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.DataStore;
@@ -37,7 +32,7 @@ public class LocationCheckinHelper {
     private static int update_location_interval = 10 * 60; // every 10min.
     // current active club when user did checkin
     private static ClubDto currentClub;
-
+    // current user location, updated every 10sec
     private static Location currentLocation;
     private static Boolean isLocationTrackerStarted = false;
 
@@ -102,9 +97,10 @@ public class LocationCheckinHelper {
     public static void checkin(final Context context, final ClubDto club, final CheckInOutCallbackInterface callback) {
         final SessionManager session = new SessionManager(context.getApplicationContext());
         final HashMap<String, String> user = session.getUserDetails();
-        final Location current_location = getBestLocation(context);
+        final Location current_location = getCurrentLocation();
         double distance = distanceBwPoints(current_location.getLatitude(), current_location.getLongitude(), club.getLat(), club.getLon());
 
+        // location validation
         if (distance > MAX_RADIUS) {
             callback.onCheckInOutFinished(false);
             return;
@@ -114,14 +110,13 @@ public class LocationCheckinHelper {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (failed) {
-                    //hideProgress(false);
+                    // error occurred
                     callback.onCheckInOutFinished(false);
-                    return;
+                } else {
+                    setCurrentClub(club);
+                    callback.onCheckInOutFinished(true);
+                    StartLocationUpdate(context);
                 }
-
-                setCurrentClub(club);
-                callback.onCheckInOutFinished(true);
-                StartLocationUpdate(context);
             }
         });
     }
@@ -140,11 +135,10 @@ public class LocationCheckinHelper {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (failed) {
-                    //hideProgress(false);
                     callback.onCheckInOutFinished(false);
-                    return;
+                } else {
+                    callback.onCheckInOutFinished(true);
                 }
-                callback.onCheckInOutFinished(true);
             }
         });
 
@@ -187,7 +181,7 @@ public class LocationCheckinHelper {
         scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
         scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
             public void run() {
-                final Location current_location = getBestLocation(context);
+                final Location current_location = getCurrentLocation();
                 final double distance = distanceBwPoints(current_location.getLatitude(), current_location.getLongitude(),
                         getCurrentClub().getLat(), getCurrentClub().getLon());
 
@@ -197,7 +191,7 @@ public class LocationCheckinHelper {
                             checkout(context, new CheckInOutCallbackInterface() {
                                 @Override
                                 public void onCheckInOutFinished(boolean result) {
-                                    // Do something when finished
+                                    // user was checked out
                                 }
                             });
                         } else {
@@ -207,14 +201,15 @@ public class LocationCheckinHelper {
                                 public void onReady(Object result, boolean failed) {
                                     if (failed) {
                                         failed_checkin_count += 1;
-                                        if (failed_checkin_count >= max_failed_checkin_count)
+                                        if (failed_checkin_count >= max_failed_checkin_count) {
                                             // checkout user
                                             checkout(context, new CheckInOutCallbackInterface() {
                                                 @Override
                                                 public void onCheckInOutFinished(boolean result) {
-                                                    // Do something when finished
+                                                    // user was checked out
                                                 }
                                             });
+                                        }
                                     } else {
                                         failed_checkin_count = 0;
                                     }
@@ -229,61 +224,6 @@ public class LocationCheckinHelper {
         }, 0, update_location_interval, TimeUnit.SECONDS);
     }
 
-    public static Location getBestLocation(Context context) {
-        Location gpslocation = getLocationByProvider(context, LocationManager.GPS_PROVIDER);
-        Location networkLocation =
-                getLocationByProvider(context, LocationManager.NETWORK_PROVIDER);
-        // if we have only one location available, the choice is easy
-        if (gpslocation == null) {
-            return networkLocation;
-        }
-        if (networkLocation == null) {
-            return gpslocation;
-        }
-        // a locationupdate is considered 'old' if its older than the configured
-        // update interval. this means, we didn't get a
-        // update from this provider since the last check
-        long old = System.currentTimeMillis() - 1000 * 60 * 10;
-        boolean gpsIsOld = (gpslocation.getTime() < old);
-        boolean networkIsOld = (networkLocation.getTime() < old);
-        // gps is current and available, gps is better than network
-        if (!gpsIsOld) {
-            //Log.d(TAG, "Returning current GPS Location");
-            return gpslocation;
-        }
-        // gps is old, we can't trust it. use network location
-        if (!networkIsOld) {
-            return networkLocation;
-        }
-        // both are old return the newer of those two
-        if (gpslocation.getTime() > networkLocation.getTime()) {
-            //Log.d(TAG, "Both are old, returning gps(newer)");
-            return gpslocation;
-        } else {
-            // Log.d(TAG, "Both are old, returning network(newer)");
-            return networkLocation;
-        }
-    }
-
-    /**
-     * get the last known location from a specific provider (network/gps)
-     */
-    private static Location getLocationByProvider(Context context, String provider) {
-        Location location = null;
-        LocationManager locationManager = (LocationManager) context.getApplicationContext()
-                .getSystemService(Context.LOCATION_SERVICE);
-
-        try {
-            if (locationManager.isProviderEnabled(provider)) {
-                location = locationManager.getLastKnownLocation(provider);
-            }
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            //Log.d(TAG, "Cannot acces Provider " + provider);
-        }
-        return location;
-    }
-
     /**
      * Format distance
      *
@@ -291,7 +231,7 @@ public class LocationCheckinHelper {
      * @param distance
      * @return
      */
-    public static String calculateDistance(Context context, float distance) {
+    public static String formatDistance(Context context, float distance) {
         Resources resources = context.getResources();
         String distanceResult = "?";
 
@@ -311,14 +251,13 @@ public class LocationCheckinHelper {
     /**
      * Calculate distance between my location and club
      *
-     * @param context
      * @param lat
      * @param lon
      * @return
      */
-    public static float calculateDistance(Context context, double lat, double lon) {
+    public static float calculateDistance(double lat, double lon) {
         float distanceBtwPoints = 0;
-        Location current_location = getBestLocation(context);
+        Location current_location = getCurrentLocation();
         if (current_location != null) {
             double mLat = current_location.getLatitude();
             double mLong = current_location.getLongitude();
@@ -345,7 +284,7 @@ public class LocationCheckinHelper {
      */
     public static void startSmartLocationTracker(final Context application) {
         // launch only once
-        if(!isLocationTrackerStarted) {
+        if (!isLocationTrackerStarted) {
             isLocationTrackerStarted = true;
 
             // http://developer.android.com/guide/topics/location/strategies.html

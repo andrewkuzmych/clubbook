@@ -79,7 +79,7 @@ public class ClubsAdapter extends ArrayAdapter<ClubDto> {
         }
 
         ClubDto club = data[position];
-        String distance = LocationCheckinHelper.calculateDistance(context, club.getDistance());
+        String distance = LocationCheckinHelper.formatDistance(context, club.getDistance());
         holder.distance.setText(distance);
         holder.club_title.setText(club.getTitle());
         holder.club_id.setText(club.getId());
@@ -117,19 +117,15 @@ public class ClubsAdapter extends ArrayAdapter<ClubDto> {
                 } else {
                     LocationCheckinHelper.checkin(context, club, new CheckInOutCallbackInterface() {
                         @Override
-                        public void onCheckInOutFinished(boolean result) {
-                            // Do something when download finished
-                            if (result) {
+                        public void onCheckInOutFinished(boolean isUserCheckin) {
+                            // check if checkin was successful
+                            if (isUserCheckin) {
+                                // open club details and pass club_id parameter
                                 SelectedClubFragment fragment = new SelectedClubFragment(null, club.getId());
                                 FragmentManager fragmentManager = ((MainActivity) context).getSupportFragmentManager();
                                 FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
-
-                                if (fragment.isAdded())
-                                    mFragmentTransaction.show(fragment);
-                                else {
-                                    mFragmentTransaction.replace(R.id.frame_container, fragment);
-                                    mFragmentTransaction.addToBackStack(null);
-                                }
+                                mFragmentTransaction.replace(R.id.frame_container, fragment);
+                                mFragmentTransaction.addToBackStack(null);
                                 mFragmentTransaction.commit();
                             }
                         }
