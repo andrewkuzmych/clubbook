@@ -29,11 +29,12 @@ public class LocationCheckinHelper {
     private final static ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
     private static int failed_checkin_count = 0;
     private static int max_failed_checkin_count = 3;
-    private static int update_location_interval = 10 * 60; // every 10min.
+    private static int update_checkin_status_interval = 10 * 60; // every 10min.
     // current active club when user did checkin
     private static ClubDto currentClub;
     // current user location, updated every 10sec
     private static Location currentLocation;
+    private static final int update_location_interval = 0;
     private static Boolean isLocationTrackerStarted = false;
 
     public static ClubDto getCurrentClub() {
@@ -221,7 +222,7 @@ public class LocationCheckinHelper {
                     }
                 });
             }
-        }, 0, update_location_interval, TimeUnit.SECONDS);
+        }, 0, update_checkin_status_interval, TimeUnit.SECONDS);
     }
 
     /**
@@ -326,8 +327,8 @@ public class LocationCheckinHelper {
             };
 
             // Register the listener with the Location Manager to receive location updates
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 200, locationListener);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 200, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, update_location_interval, 200, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, update_location_interval, 200, locationListener);
         }
     }
 
