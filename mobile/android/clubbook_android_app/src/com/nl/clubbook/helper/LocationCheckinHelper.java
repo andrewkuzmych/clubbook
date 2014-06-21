@@ -214,10 +214,8 @@ public class LocationCheckinHelper {
                                     } else {
                                         failed_checkin_count = 0;
                                     }
-
                                 }
                             });
-
                         }
                     }
                 });

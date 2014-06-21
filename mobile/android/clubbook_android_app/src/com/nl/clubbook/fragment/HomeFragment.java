@@ -121,7 +121,7 @@ public class HomeFragment extends BaseFragment {
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
                         String club_id = ((TextView) view.findViewById(R.id.club_id)).getText().toString();
-                        SelectedClubFragment fragment = new SelectedClubFragment(thisInstance, club_id);
+                        ClubFragment fragment = new ClubFragment(thisInstance, club_id);
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
                         mFragmentTransaction.addToBackStack(null);

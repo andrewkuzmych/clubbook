@@ -28,7 +28,7 @@ import java.util.HashMap;
 /**
  * Created by Andrew on 6/8/2014.
  */
-public class SelectedClubFragment extends BaseFragment {
+public class ClubFragment extends BaseFragment {
 
     private static final int SWIPE_MIN_DISTANCE = 20;
     private static final int SWIPE_THRESHOLD_VELOCITY = 100;
@@ -46,7 +46,7 @@ public class SelectedClubFragment extends BaseFragment {
     protected ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
     private String club_id;
 
-    public SelectedClubFragment(BaseFragment prvoiusFragment, String club_id) {
+    public ClubFragment(BaseFragment prvoiusFragment, String club_id) {
         super(prvoiusFragment);
         this.club_id = club_id;
     }
@@ -64,7 +64,7 @@ public class SelectedClubFragment extends BaseFragment {
                 .cacheOnDisc()
                 .build();
 
-        View rootView = inflater.inflate(R.layout.fragment_selected_club, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_club, container, false);
 
         Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/TITILLIUMWEB-REGULAR.TTF");
         Typeface typeface_bold = Typeface.createFromAsset(getActivity().getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
@@ -84,6 +84,7 @@ public class SelectedClubFragment extends BaseFragment {
         distance_text = (TextView) rootView.findViewById(R.id.distancekm);
         mContext = getActivity();
 
+        // club images
         final GestureDetector gesture = new GestureDetector(getActivity(),
                 new GestureDetector.SimpleOnGestureListener() {
 
@@ -96,7 +97,6 @@ public class SelectedClubFragment extends BaseFragment {
                     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
                                            float velocityY) {
                         try {
-
                             // right to left swipe
                             if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                                 mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.left_in));

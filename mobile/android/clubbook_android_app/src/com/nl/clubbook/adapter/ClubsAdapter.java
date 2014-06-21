@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.datasource.ClubDto;
-import com.nl.clubbook.fragment.SelectedClubFragment;
+import com.nl.clubbook.fragment.ClubFragment;
 import com.nl.clubbook.helper.CheckInOutCallbackInterface;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.LocationCheckinHelper;
@@ -121,7 +121,7 @@ public class ClubsAdapter extends ArrayAdapter<ClubDto> {
                             // check if checkin was successful
                             if (isUserCheckin) {
                                 // open club details and pass club_id parameter
-                                SelectedClubFragment fragment = new SelectedClubFragment(null, club.getId());
+                                ClubFragment fragment = new ClubFragment(null, club.getId());
                                 FragmentManager fragmentManager = ((MainActivity) context).getSupportFragmentManager();
                                 FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
                                 mFragmentTransaction.replace(R.id.frame_container, fragment);
