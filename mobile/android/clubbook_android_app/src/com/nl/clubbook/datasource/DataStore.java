@@ -201,6 +201,7 @@ public class DataStore {
                         club.setLon(clubs_dto.getJSONObject(i).getJSONObject("club_loc").getDouble("lon"));
                         club.setLat(clubs_dto.getJSONObject(i).getJSONObject("club_loc").getDouble("lat"));
                         club.setDistance(LocationCheckinHelper.calculateDistance(club.getLat(), club.getLon()));
+                        club.setActiveCheckins(clubs_dto.getJSONObject(i).getInt("active_checkins"));
                         clubs.add(club);
                     }
 

@@ -17,6 +17,8 @@ public class ClubDto {
     private List<UserDto> users;
     private float distance;
 
+    private Integer activeCheckins;
+
     public String getId() {
         return id;
     }
@@ -95,5 +97,13 @@ public class ClubDto {
 
     public void setDistance(float distance) {
         this.distance = distance;
+    }
+
+    public Integer getActiveCheckins() {
+        return activeCheckins;
+    }
+
+    public void setActiveCheckins(Integer activeCheckins) {
+        this.activeCheckins = activeCheckins;
     }
 }

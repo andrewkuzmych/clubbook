@@ -72,6 +72,8 @@ public class ClubsAdapter extends ArrayAdapter<ClubDto> {
             holder.club_id = (TextView) row.findViewById(R.id.club_id);
             holder.distance = (TextView) row.findViewById(R.id.distance_text);
             holder.distance.setTypeface(typeface_bold);
+            holder.people_count = (TextView) row.findViewById(R.id.people_count);
+            holder.people_count.setTypeface(typeface_bold);
 
             row.setTag(holder);
         } else {
@@ -81,6 +83,7 @@ public class ClubsAdapter extends ArrayAdapter<ClubDto> {
         ClubDto club = data[position];
         String distance = LocationCheckinHelper.formatDistance(context, club.getDistance());
         holder.distance.setText(distance);
+        holder.people_count.setText(String.valueOf(club.getActiveCheckins()));
         holder.club_title.setText(club.getTitle());
         holder.club_id.setText(club.getId());
 
@@ -145,6 +148,8 @@ public class ClubsAdapter extends ArrayAdapter<ClubDto> {
         TextView club_title;
         TextView club_id;
         TextView distance;
+        TextView people_count;
+        TextView friends_count;
         Button checkin;
     }
 
