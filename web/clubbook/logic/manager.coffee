@@ -127,21 +127,27 @@ exports.update_info = (params, callback)->
 
 exports.checkin = (params, callback)->
   console.log "Checkin user", params
-  db_model.Venue.findById(params.club_id).exec (err, club)->
-    if not club
-      callback 'club does not exist', null
+  db_model.User.count({'checkin': { '$elemMatch': { 'active': true, 'club': params.club_id }} }).exec (err, count_of_active_checkins)->
+    if count_of_active_checkins > 0
+      console.log "user is already checkedin in this club", params
+      db_model.User.findById({'_id': mongoose.Types.ObjectId(params.user_id)}).exec callback
+
     else
-      club.active_checkins += 1
-      club.save ()->
-        db_model.User.findById({'_id': mongoose.Types.ObjectId(params.user_id)}).exec (err, user)->
-          if not user
-            callback 'user does not exist', null
-          else
-            for oldcheckin in user.checkin
-              oldcheckin.active = false
-            user.checkin.push { club: club, lat: club.club_loc.lat, lon: club.club_loc.lon, time: Date.now(), active: true }
-            user.save (err)->
-              callback err, user
+      db_model.Venue.findById(params.club_id).exec (err, club)->
+        if not club
+          callback 'club does not exist', null
+        else
+          club.active_checkins += 1
+          club.save ()->
+            db_model.User.findById({'_id': mongoose.Types.ObjectId(params.user_id)}).exec (err, user)->
+              if not user
+                callback 'user does not exist', null
+              else
+                for oldcheckin in user.checkin
+                  oldcheckin.active = false
+                user.checkin.push { club: club, lat: club.club_loc.lat, lon: club.club_loc.lon, time: Date.now(), active: true }
+                user.save (err)->
+                  callback err, user
 
 exports.update_checkin = (params, callback)->
   console.log "Upadete checkin state", params
