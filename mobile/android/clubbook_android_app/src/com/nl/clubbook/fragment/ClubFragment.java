@@ -3,8 +3,6 @@ package com.nl.clubbook.fragment;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.view.*;
 import android.view.animation.Animation;
@@ -46,8 +44,8 @@ public class ClubFragment extends BaseFragment {
     protected ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
     private String club_id;
 
-    public ClubFragment(BaseFragment prvoiusFragment, String club_id) {
-        super(prvoiusFragment);
+    public ClubFragment(BaseFragment previousFragment, String club_id) {
+        super(previousFragment);
         this.club_id = club_id;
     }
 
@@ -140,8 +138,7 @@ public class ClubFragment extends BaseFragment {
     protected void loadData() {
         final LayoutInflater inflater = LayoutInflater.from(getActivity());
         final BaseFragment thisInstance = this;
-        final SessionManager session = new SessionManager(getActivity());
-        final HashMap<String, String> user = session.getUserDetails();
+        final HashMap<String, String> user = this.getSession().getUserDetails();
 
         ((BaseActivity) getActivity()).showProgress("Loading...");
         DataStore.retrievePlace(club_id, user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
@@ -180,14 +177,20 @@ public class ClubFragment extends BaseFragment {
                 profileGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     public void onItemClick(AdapterView<?> parent, View v,
                                             int position, long id) {
+
                         String user_id = ((TextView) v.findViewById(R.id.user_id)).getText().toString();
+
+                        // open chat window
+                        /*
                         String user_title = ((TextView) v.findViewById(R.id.text)).getText().toString();
                         ChatFragment fragment = new ChatFragment(thisInstance, user_id, user_title);
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
 
                         mFragmentTransaction.addToBackStack(null);
-                        mFragmentTransaction.replace(R.id.frame_container, fragment).commit();
+                        mFragmentTransaction.replace(R.id.frame_container, fragment).commit();*/
+
+                        openFragment(new ProfileFragment(thisInstance, user_id));
                     }
 
                 });
@@ -197,7 +200,7 @@ public class ClubFragment extends BaseFragment {
                     View clubPhoto = inflater.inflate(R.layout.club_photos, null);
                     ImageView image = (ImageView) clubPhoto.findViewById(R.id.photo);
                     mViewFlipper.addView(clubPhoto);
-                    String image_url = ImageHelper.GenarateUrl(club.getPhotos().get(i), "c_fit,w_700");
+                    String image_url = ImageHelper.generateUrl(club.getPhotos().get(i), "c_fit,w_700");
                     imageLoader.displayImage(image_url, image, options, animateFirstListener);
                 }
 

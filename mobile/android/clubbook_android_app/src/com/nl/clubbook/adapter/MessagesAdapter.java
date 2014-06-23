@@ -85,7 +85,7 @@ public class MessagesAdapter extends ArrayAdapter<ConversationShort> {
         holder.user_message_count.setText(String.valueOf(con.getUnread_messages()));
 
         if(con.getUser_photo() != null) {
-            String image_url = ImageHelper.GenarateUrl(con.getUser_photo(), "w_300,h_300,c_fit");
+            String image_url = ImageHelper.generateUrl(con.getUser_photo(), "w_300,h_300,c_fit");
             holder.user_avatar.setTag(image_url);
             imageLoader.displayImage(image_url, holder.user_avatar, options, animateFirstListener);
         }

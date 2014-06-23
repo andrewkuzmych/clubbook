@@ -87,7 +87,7 @@ public class ClubsAdapter extends ArrayAdapter<ClubDto> {
         holder.club_title.setText(club.getTitle());
         holder.club_id.setText(club.getId());
 
-        String image_url = ImageHelper.GenarateUrl(club.getAvatar(), "w_300,h_300,c_fit");
+        String image_url = ImageHelper.generateUrl(club.getAvatar(), "w_300,h_300,c_fit");
 
         // checkin button
         holder.checkin = (Button) row.findViewById(R.id.checkin);

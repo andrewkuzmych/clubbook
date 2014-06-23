@@ -4,18 +4,26 @@
     android:layout_height="match_parent">
     
     <TextView
-        android:id="@+id/txtLabel"
+        android:id="@+id/user_name"
          android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:textSize="16dp"
-        android:text="Profile"/>
+        android:text="Profile"
+        android:layout_marginLeft="35dp" android:layout_marginTop="30dp"
+        android:layout_alignParentTop="true" android:layout_toRightOf="@+id/imageView"/>
     
     <ImageView android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/txtLabel"
         android:src="@drawable/ic_communities"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"/>    
+        android:id="@+id/imageView"
+        android:layout_alignTop="@+id/txtLabel" android:layout_alignParentLeft="true"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chat"
+            android:id="@+id/chat_button"
+            android:layout_below="@+id/imageView" android:layout_alignParentLeft="true"
+            android:layout_marginTop="40dp" android:layout_alignParentRight="true"/>
+
 
 </RelativeLayout>

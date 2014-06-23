@@ -11,20 +11,19 @@ public class ImageHelper {
 
     // http://res.cloudinary.com/ddsoyfjll/image/upload/v1403179538/qskqyrtbnma2r6chhdaa.jpg
 
-    public static String GenarateUrl(String url, String param)
-    {
-        String last = url.substring(url.lastIndexOf('/')+1, url.length() );
-
-        String first = url.substring( 0, url.lastIndexOf('/')+1 );
-
-        return first + param + "/" +last;
-    }
-
-    public static String getUserAvatar(String url)
-    {
-        String image_part = url.substring(url.lastIndexOf('/')+1, url.length());
-        String avatar_style= "w_100,h_100,c_thumb,g_face";
+    public static String generateUrl(String url, String avatar_style) {
+        String image_part = url.substring(url.lastIndexOf('/') + 1, url.length());
 
         return UPLOAD_URL_CLOUDINARY + "/" + avatar_style + "/" + image_part;
+    }
+
+    public static String getUserAvatar(String url) {
+        String avatar_style = "w_100,h_100,c_thumb,g_face";
+        return generateUrl(url, avatar_style);
+    }
+
+    public static String getUserAvatarProfileUi(String url) {
+        String avatar_style = "w_100,h_100,c_thumb,g_face";
+        return generateUrl(url, avatar_style);
     }
 }

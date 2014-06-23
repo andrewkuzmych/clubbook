@@ -155,6 +155,7 @@ public class ChatFragment extends BaseFragment {
     @Override
     public void backButtonWasPressed() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        // hide keyboard
         imm.hideSoftInputFromWindow(getActivity().getWindow().getCurrentFocus().getWindowToken(), 0);
 
         ((MainActivity) getActivity()).setCurrentFragment(previousFragment);

@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class LocationCheckinHelper {
 
-    public static final int MAX_RADIUS = 200;
+    public static final int MAX_RADIUS = 2200;
     private static ScheduledExecutorService scheduleTaskExecutor;
     private static int failed_checkin_count = 0;
     private static int max_failed_checkin_count = 3;
