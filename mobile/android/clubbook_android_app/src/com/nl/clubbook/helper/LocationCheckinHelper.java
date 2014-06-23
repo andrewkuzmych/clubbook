@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class LocationCheckinHelper {
 
     public static final int MAX_RADIUS = 200;
-    private final static ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
+    private static ScheduledExecutorService scheduleTaskExecutor;
     private static int failed_checkin_count = 0;
     private static int max_failed_checkin_count = 3;
     private static int update_checkin_status_interval = 10 * 60; // every 10min.
@@ -179,6 +179,7 @@ public class LocationCheckinHelper {
         final SessionManager session = new SessionManager(context.getApplicationContext());
         final HashMap<String, String> user = session.getUserDetails();
 
+        scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
         scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
             public void run() {
                 final Location current_location = getCurrentLocation();
