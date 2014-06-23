@@ -186,20 +186,16 @@ exports.list_club = (req, res)->
         status: 'error'
         error: err
     else
+      # get people who checkin in these clubs
       res.json
         status: 'ok'
         clubs: clubs
 
 exports.cu_count = (req, res)->
-  console.log 0
-
   params =
     distance: req.params.distance
     lat: req.params.user_lat
     lon: req.params.user_lon
-
-  console.log params
-
 
   manager.cu_count params, (err, club_count)->
     if err

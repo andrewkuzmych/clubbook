@@ -6,6 +6,8 @@ __ = require("underscore")
 async = require("async")
 moment = require('moment-timezone')
 
+CHECKIN_LIVE_TIME =  1000 * 60 * 30;
+
 exports.get_user_by_id = (user_id, callback)->
   db_model.User.findById(user_id).exec (err, user)->
     if err
@@ -28,8 +30,11 @@ exports.signinmail = (params, callback)->
         callback "Wrong User or password " ,user
 
 exports.list_club = (params, callback)->
-  db_model.Venue.find({ 'club_loc':{ '$near' : [ params.lat,params.lon], '$maxDistance' :  params.distance/111.12 }}).exec (err, clubs)->
+  db_model.Venue.find({ 'club_loc':{ '$near' : [ params.lat,params.lon], '$maxDistance' :  exports.radius_to_km(params.distance) }}).exec (err, clubs)->
     callback err, clubs
+
+exports.get_people_count_in_club = (club, callback)->
+  db_model.User.count({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}}).exec callback
 
 exports.find_club = (club_id, user_id, callback)->
   db_model.Venue.findById(club_id).exec (err, club)->
@@ -41,13 +46,10 @@ exports.find_club = (club_id, user_id, callback)->
 
 
 exports.create_club = (params, callback)->
-
-
   if __.isEmpty params.club_name?.trim()
       callback 'club name is empty', null
   else if __.isEmpty params.club_houres?.trim()
       callback 'club opening houres is empty', null
-
   else if __.isEmpty params.club_phone?.trim()
       callback 'club phone is empty', null
   else if __.isEmpty params.club_address?.trim()
@@ -56,7 +58,6 @@ exports.create_club = (params, callback)->
       callback 'club site is empty', null
 
   else
-
     club = new db_model.Venue
       club_admin: params.club_admin
       club_name: params.club_name
@@ -75,16 +76,8 @@ exports.create_club = (params, callback)->
         callback err, club
 
 exports.cu_count = (params, callback)->
-  console.log 1
-  query = { 'club_loc':{ '$near' : [ params.lat,params.lon], '$maxDistance' :  params.distance/111.12 }}
-  console.log 2
-
-  # db_model.User.count(query).exec (err, user_count)->
-  #   console.log 3
-
-
+  query = { 'club_loc':{ '$near' : [ params.lat,params.lon], '$maxDistance' :  exports.radius_to_km(params.distance) }}
   db_model.Venue.count(query).exec (err, club_count)->
-    console.log 4
     callback err, club_count
 
 exports.club_clubbers = (params, callback)->
@@ -92,27 +85,9 @@ exports.club_clubbers = (params, callback)->
   db_model.User.find({'checkin': { '$elemMatch': { 'club' : mongoose.Types.ObjectId(params.club_id), 'active': true}} }, { checkin: 0 }).exec (err, users)->
     callback err, users
 
-
-exports.checkin = (params, callback)->
-  db_model.Venue.findById(params.club_id).exec (err, club)->
-    if not club
-      callback 'club does not exist', null
-    else
-      db_model.User.findById({'_id': mongoose.Types.ObjectId(params.user_id)}).exec (err, user)->
-        if not user
-          callback 'user does not exist', null
-        else
-          for oldcheckin in user.checkin
-            oldcheckin.active = false
-
-          user.checkin.push { club: club, lat:club.club_loc.lat, lon:club.club_loc.lon, time: Date.now(), active:true }
-          user.save (err)->
-            console.log err
-            callback err, user
-
 exports.update_name = (params, callback)->
   db_model.User.findById(params.user_id).exec (err, user)->
-    
+
     user.name = params.name
 
     user.save (err)->
@@ -121,32 +96,55 @@ exports.update_name = (params, callback)->
 
 exports.update_dob = (params, callback)->
   db_model.User.findById(params.user_id).exec (err, user)->
-    
+
     user.dob = params.dob
-    
+
     user.save (err)->
         console.log err
         callback err, user
 
 exports.update_gender = (params, callback)->
   db_model.User.findById(params.user_id).exec (err, user)->
-    
+
     user.gender = params.gender
-    
+
     user.save (err)->
         console.log err
         callback err, user
 
 exports.update_info = (params, callback)->
   db_model.User.findById(params.user_id).exec (err, user)->
-    
+
     user.info = params.info
-    
+
     user.save (err)->
         console.log err
         callback err, user
 
+##################################################################################################################
+# Checkin, Checkout logic
+##################################################################################################################
+
+exports.checkin = (params, callback)->
+  console.log "Checkin user", params
+  db_model.Venue.findById(params.club_id).exec (err, club)->
+    if not club
+      callback 'club does not exist', null
+    else
+      club.active_checkins += 1
+      club.save ()->
+        db_model.User.findById({'_id': mongoose.Types.ObjectId(params.user_id)}).exec (err, user)->
+          if not user
+            callback 'user does not exist', null
+          else
+            for oldcheckin in user.checkin
+              oldcheckin.active = false
+            user.checkin.push { club: club, lat: club.club_loc.lat, lon: club.club_loc.lon, time: Date.now(), active: true }
+            user.save (err)->
+              callback err, user
+
 exports.update_checkin = (params, callback)->
+  console.log "Upadete checkin state", params
   db_model.Venue.findById(params.club_id).exec (err, club)->
     if not club
       callback 'club does not exist', null
@@ -161,36 +159,49 @@ exports.update_checkin = (params, callback)->
               break;
 
           user.save (err)->
-            console.log err
             callback err, user
+
+exports.checkout_user = (user, callback)->
+  async.each user.checkin, (checkin, next_checkin) ->
+    if checkin.active and checkin.time < new Date().getTime() - CHECKIN_LIVE_TIME
+      exports.checkout {user_id: user._id, club_id: checkin.club}, ()->
+        next_checkin()
+    else
+      next_checkin()
+  , (err) ->
+    console.log "checkout for User is done"
+    callback()
 
 
 exports.checkout = (params, callback)->
+  console.log "checkout user", params
   db_model.Venue.findById(params.club_id).exec (err, club)->
     if not club
       callback 'club does not exist', null
     else
-      db_model.User.findOne({'_id': mongoose.Types.ObjectId(params.user_id)}).exec (err, user)->
-        if not user
-          callback 'user does not exist', null
-        else
-          for oldcheckin in user.checkin
-            if oldcheckin.club.toString() == club._id.toString()
-              oldcheckin.active = false
-          user.save (err)->
-            console.log err
-            callback err, user
+      # decrement count of active chekins
+      if club.active_checkins > 0 then club.active_checkins -= 1
+      club.save ()->
+        db_model.User.findOne({'_id': mongoose.Types.ObjectId(params.user_id)}).exec (err, user)->
+          if not user
+            callback 'user does not exist', null
+          else
+            for oldcheckin in user.checkin
+              if oldcheckin.club.toString() == club._id.toString()
+                oldcheckin.active = false
+            user.save (err)->
+              callback err, user
 
 exports.cron_checkout = ()->
-  db_model.User.find({'checkin': { '$elemMatch': { 'active': true, 'time': {'$lte': new Date().getTime() - 1000*60*30 } }} }).exec (err, users)->
-     async.each users, ((user, callback) ->
-          for oldcheckin in user.checkin
-            oldcheckin.active = false
-          user.save (err)->
-            console.log err
+  db_model.User.find({'checkin': { '$elemMatch': { 'active': true, 'time': {'$lte': new Date().getTime() - CHECKIN_LIVE_TIME } }} }).exec (err, users)->
+    console.log "checkout ", users.length
+    async.eachSeries users, (user, callback) ->
+      exports.checkout_user user, ()->
+        callback()
+    , (err) ->
+      console.log "checkout done"
 
-        ), (err) ->
-          console.log "iterating done"
+#-----------------------------------------------------------------------------------------------------------------------
 
 exports.save_user = (params, callback)->
   db_model.User.findOne({"email":params.email}).exec (err, user)->
@@ -353,15 +364,15 @@ exports.get_conversation = (params, callback)->
   db_model.Chat.findOne(query).exec (err, chat)->
     if not chat
       callback err, []
-    else    
-      callback err, chat    
+    else
+      callback err, chat
 
 exports.get_conversations = (params, callback)->
 
   db_model.Chat.find({'$or':[{'user1': mongoose.Types.ObjectId(params.user_id)}, {'user2': mongoose.Types.ObjectId(params.user_id)}]}, { 'conversation': { '$slice': -1 } }).populate("user1",'_id photos name').populate("user2",'_id photos name').exec (err, chats)->
     if not chats
       callback err, []
-    else    
+    else
       sorted_chats = __.sortBy(chats, (chat) ->
         if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
                            return chat.unread.count
@@ -370,8 +381,8 @@ exports.get_conversations = (params, callback)->
                     ).reverse()
 
       callback err, sorted_chats
-  
-exports.readchat = (params, callback)->  
+
+exports.readchat = (params, callback)->
   db_model.Chat.findOne({_id: mongoose.Types.ObjectId(params.chat_id)}).exec (err, chat)->
     if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
       chat.unread.count = 0
@@ -387,6 +398,12 @@ exports.unread_messages_count = (user_id, callback)->
     for chat in chats
       count = count + chat.unread.count
     callback null, count
+
+# convert the radius value to km
+exports.radius_to_km = (distance)->
+  # http://stackoverflow.com/questions/7837731/units-to-use-for-maxdistance-and-mongodb
+  #one degree is approximately 111.12 kilometers
+  return distance/111.12
 
 
 

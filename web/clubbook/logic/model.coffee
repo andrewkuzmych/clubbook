@@ -86,6 +86,7 @@ VenueSchema = new mongoose.Schema
   club_loc:
     lon: Number
     lat: Number
+  active_checkins: {type: Number, default: 0, min:0}
   
 VenueSchema.pre 'save', (next, done) ->
   this.updated_on = new Date().toISOString()
