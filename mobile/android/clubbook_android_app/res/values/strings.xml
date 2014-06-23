@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">clubbook</string>
-    <string name="login_fb">Login with Facebook</string>
-    <string name="splash_intro">Getting Social in The Club</string>
+    <string name="login_fb">login with Facebook</string>
+    <string name="sign_up_by_email">Sign up with email</string>
+    <string name="splash_intro">getting social in the club</string>
     <string name="fb_app_id">1504805883074351</string>
     <string name="drawer_open">Slider Menu Opened</string>
     <string name="drawer_close">Slider Menu Closed</string>

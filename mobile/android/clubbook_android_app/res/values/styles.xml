@@ -12,13 +12,23 @@
         <item name="android:textSize">18dp</item>
         <item name="android:typeface">sans</item>
     </style>
+
     <style name="social_button">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:focusable">false</item>
         <item name="android:textColor">@color/sort_color</item>
         <item name="android:textSize">12dp</item>
-        <!--        <item name="android:background">@drawable/fb_button</item>-->
-        <!--        <item name="android:drawableTop">@drawable/white_clock_panel</item>-->
+        <item name="android:button">@null</item>
+    </style>
+
+    <style name="main_login_button">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:focusable">false</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">12dp</item>
         <item name="android:button">@null</item>
     </style>
 

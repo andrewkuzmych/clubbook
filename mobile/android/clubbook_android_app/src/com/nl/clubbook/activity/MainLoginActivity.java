@@ -118,10 +118,6 @@ public class MainLoginActivity extends BaseActivity {
         TextView intro_text = (TextView) findViewById(R.id.intro_text);
         intro_text.setTypeface(typeface_bold);
 
-        LinearLayout loginLayout = (LinearLayout) findViewById(R.id.loginLayout);
-        TextView has_account_text = (TextView) findViewById(R.id.has_account_text);
-        has_account_text.setTypeface(typeface_regular);
-
         button_fb_login = (Button) findViewById(R.id.login_fb);
         button_fb_login.setTypeface(typeface_regular);
         button_fb_login.setOnClickListener(new View.OnClickListener() {
@@ -143,10 +139,11 @@ public class MainLoginActivity extends BaseActivity {
             }
         });
 
-        loginLayout.setOnClickListener(new View.OnClickListener() {
+        Button login_email = (Button) findViewById(R.id.login_by_email);
+        login_email.setTypeface(typeface_regular);
+        login_email.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent in = new Intent(getApplicationContext(),
-                        LoginActivity.class);
+                Intent in = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(in);
             }
         });

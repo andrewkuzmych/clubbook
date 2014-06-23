@@ -3,7 +3,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:orientation="vertical"
-                android:background="#0f0025" >
+                android:background="#0f0025">
 
     <RelativeLayout
             android:layout_width="fill_parent"
@@ -13,7 +13,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="CLUBBOOK"
+                android:text="clubbook"
                 android:layout_centerHorizontal="true"
                 android:id="@+id/textView" android:textSize="40dp" android:textStyle="bold"
                 android:textColor="#ffffff" android:textIsSelectable="true"/>
@@ -22,7 +22,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/imageView" android:src="@drawable/logo_white"
                 android:layout_centerHorizontal="true" android:layout_alignParentTop="true" android:visibility="gone"/>
-
     </RelativeLayout>
 
     <TextView
@@ -35,84 +34,34 @@
             android:layout_alignRight="@+id/linearLayout" android:layout_below="@+id/linearLayout"
             android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
             android:layout_alignLeft="@+id/linearLayout" android:layout_marginTop="10dp"/>
+
     <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true" android:layout_alignParentTop="false"
             android:layout_marginTop="0dp" android:layout_marginBottom="40dp">
-        <Button android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/login_fb"
-                style="@style/social_button"
-                android:id="@+id/login_fb"
-                android:layout_gravity="center_horizontal"
-                android:textColor="#ffffff"
-                android:textStyle="bold" android:singleLine="true"
-                android:background="@drawable/fb_button"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:textSize="18dp" android:paddingLeft="45dp"/>
 
-  <!--      android:background="@drawable/reg_button"-->
         <Button
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Sign up with email"
+                android:text="@string/login_fb"
+                style="@style/main_login_button"
+                android:id="@+id/login_fb"
+                android:background="@drawable/fb_button"
+                android:textSize="18dp" android:layout_alignParentTop="true" android:layout_alignParentLeft="true"/>
+
+        <Button
+                android:text="@string/sign_up_by_email"
+                style="@style/main_login_button"
                 android:id="@+id/reg_by_email"
                 android:background="@drawable/reg_button"
-                android:singleLine="true"
-                android:gravity="center"
-                android:textColor="#ffffff"
-                android:layout_below="@+id/login_fb"
-                android:layout_alignRight="@+id/login_fb" android:layout_marginTop="7dp"
-                android:textSize="18dp"
-                android:layout_alignLeft="@+id/login_fb"/>
-        <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:clickable="true"
-                android:layout_centerHorizontal="true" android:layout_below="@+id/reg_by_email"
-                android:id="@+id/loginLayout">
+                android:textSize="18dp" android:layout_below="@+id/login_fb" android:layout_alignParentLeft="true"/>
 
-            <TextView android:id="@+id/has_account_text"
-                      android:text="@string/has_account"
-                      android:layout_width="wrap_content"
-                      android:layout_height="match_parent"
-                      android:layout_gravity="center_vertical|left"
-                      android:duplicateParentState="true"
-                      android:textColor="#ffffff" android:textSize="13dp"
-                      android:layout_marginRight="10dp" android:paddingTop="10dp" android:paddingBottom="10dp"
-                      android:gravity="center_vertical"/>
-            <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:duplicateParentState="true"
-                    android:id="@+id/maleImage" android:src="@drawable/email" android:scaleType="center"/>
-            <TextView android:text="@string/login_by_email"
-                      android:id="@+id/login_by_email"
-                      android:layout_width="wrap_content"
-                      android:layout_height="fill_parent"
-                      android:textStyle="bold"
-                      android:duplicateParentState="true"
-                      android:textColor="#ffffff" android:textSize="13dp"
-                      android:focusable="false"
-                      android:layout_gravity="center_vertical"
-                      android:gravity="center" android:paddingLeft="5dp"/>
-        </LinearLayout>
+        <Button
+                android:text="@string/login_by_email"
+                style="@style/main_login_button"
+                android:id="@+id/login_by_email"
+                android:background="@drawable/login_button"
+                android:textSize="18dp" android:layout_below="@+id/reg_by_email" android:layout_alignParentLeft="true"/>
 
-        <ImageView
-                android:layout_width="45dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/fb_image" android:layout_alignLeft="@+id/login_fb"
-                android:layout_alignBottom="@+id/login_fb"
-                android:layout_alignTop="@+id/login_fb" android:src="@drawable/fb"
-                android:cropToPadding="false" android:scaleType="center" android:background="@drawable/fb_view"/>
     </RelativeLayout>
-
 
 </RelativeLayout>
