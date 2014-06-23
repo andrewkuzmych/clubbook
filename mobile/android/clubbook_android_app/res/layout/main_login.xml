@@ -5,63 +5,57 @@
                 android:orientation="vertical"
                 android:background="#0f0025">
 
-    <RelativeLayout
+    <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_marginTop="60dp" android:layout_centerHorizontal="true"
-            android:orientation="horizontal" android:id="@+id/linearLayout">
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="clubbook"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/textView" android:textSize="40dp" android:textStyle="bold"
-                android:textColor="#ffffff" android:textIsSelectable="true"/>
+            android:orientation="vertical" android:id="@+id/linearLayout">
+
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imageView" android:src="@drawable/logo_white"
-                android:layout_centerHorizontal="true" android:layout_alignParentTop="true" android:visibility="gone"/>
-    </RelativeLayout>
+                android:id="@+id/imageView" android:src="@drawable/logo"
+                android:layout_centerHorizontal="true" android:layout_alignParentTop="true"
+                android:layout_gravity="center_horizontal"/>
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:id="@+id/intro_text"
-            android:gravity="center"
-            android:textSize="17dp" android:text="@string/splash_intro"
-            android:layout_alignRight="@+id/linearLayout" android:layout_below="@+id/linearLayout"
-            android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
-            android:layout_alignLeft="@+id/linearLayout" android:layout_marginTop="10dp"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:id="@+id/intro_text"
+                android:gravity="center"
+                android:textSize="17dp" android:text="@string/splash_intro"
+                android:layout_alignRight="@+id/linearLayout" android:layout_below="@+id/linearLayout"
+                android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
+                android:layout_alignLeft="@+id/linearLayout" android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal"/>
 
-    <RelativeLayout
+    </LinearLayout>
+    <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true" android:layout_alignParentTop="false"
-            android:layout_marginTop="0dp" android:layout_marginBottom="40dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="bottom" android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true">
 
         <Button
                 android:text="@string/login_fb"
                 style="@style/main_login_button"
                 android:id="@+id/login_fb"
-                android:background="@drawable/fb_button"
-                android:textSize="18dp" android:layout_alignParentTop="true" android:layout_alignParentLeft="true"/>
+                android:background="@drawable/fb_button"/>
 
         <Button
                 android:text="@string/sign_up_by_email"
                 style="@style/main_login_button"
                 android:id="@+id/reg_by_email"
-                android:background="@drawable/reg_button"
-                android:textSize="18dp" android:layout_below="@+id/login_fb" android:layout_alignParentLeft="true"/>
+                android:background="@drawable/reg_button"/>
 
         <Button
                 android:text="@string/login_by_email"
                 style="@style/main_login_button"
                 android:id="@+id/login_by_email"
-                android:background="@drawable/login_button"
-                android:textSize="18dp" android:layout_below="@+id/reg_by_email" android:layout_alignParentLeft="true"/>
+                android:background="@drawable/login_button"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>
