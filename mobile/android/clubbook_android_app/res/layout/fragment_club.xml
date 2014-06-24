@@ -3,23 +3,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical" android:background="@color/main_background_color">
 
     <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/scrollView">
 
-        <LinearLayout android:orientation="vertical"
-                      android:layout_width="fill_parent"
-                      android:layout_height="wrap_content">
-
-            <RelativeLayout android:layout_width="fill_parent"
+        <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false">
+            <RelativeLayout android:layout_width="fill_parent" android:id="@+id/club_details_title"
                             android:layout_height="wrap_content"
                             android:layout_alignParentBottom="false"
                             android:background="@color/main_background_menu_color"
-                            android:layout_alignBottom="@+id/view_flipper"
-                            android:layout_alignParentTop="false">
+                            android:layout_alignParentTop="true" android:layout_alignParentLeft="false">
 
                 <LinearLayout android:layout_width="fill_parent"
                               android:layout_height="wrap_content"
@@ -54,13 +53,14 @@
             <ViewFlipper
                     android:id="@+id/view_flipper"
                     android:layout_width="fill_parent"
-                    android:layout_height="230dp">
+                    android:layout_height="230dp" android:layout_below="@+id/club_details_title"
+                    android:layout_alignLeft="@+id/gridView">
             </ViewFlipper>
 
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="wrap_content" android:layout_below="@+id/club_details_title"
                     android:background="#99000000" android:layout_alignParentRight="true"
                     android:padding="3dp" android:layout_marginRight="5dp" android:layout_marginTop="5dp">
                 <ImageView
@@ -74,24 +74,21 @@
                           android:textColor="#ffffff" android:text="7/8y" android:textSize="18dp"></TextView>
             </LinearLayout>
 
-
             <com.nl.clubbook.control.ExpandableHeightGridView
                     android:id="@+id/gridView"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:columnWidth="75dp"
                     android:gravity="center"
                     android:numColumns="auto_fit"
                     android:isScrollContainer="false"
                     android:verticalSpacing="0dp"
                     android:drawSelectorOnTop="true"
-                    android:stretchMode="columnWidth" android:layout_below="@+id/checkin">
+                    android:stretchMode="columnWidth" android:layout_below="@+id/view_flipper"
+                    android:layout_centerHorizontal="true" android:background="@color/main_background_color">
             </com.nl.clubbook.control.ExpandableHeightGridView>
-
-        </LinearLayout>
+        </RelativeLayout>
     </ScrollView>
-
 
     <Button android:id="@+id/checkin"
             android:enabled="false"

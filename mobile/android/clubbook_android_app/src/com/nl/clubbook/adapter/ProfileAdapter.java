@@ -58,7 +58,6 @@ public class ProfileAdapter extends ArrayAdapter<UserDto> {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
             holder = new ViewHolder();
-            holder.imageTitle = (TextView) row.findViewById(R.id.text);
             holder.image = (ImageView) row.findViewById(R.id.image);
             holder.userId = (TextView) row.findViewById(R.id.user_id);
             row.setTag(holder);
@@ -67,10 +66,7 @@ public class ProfileAdapter extends ArrayAdapter<UserDto> {
         }
 
         UserDto item = data.get(position);
-        holder.imageTitle.setText(item.getName());
-
         String image_url = ImageHelper.getUserAvatarProfileUi(item.getAvatar());
-
         holder.image.setTag(image_url);
         holder.userId.setText(item.getId());
         imageLoader.displayImage(image_url, holder.image, options, animateFirstListener);
@@ -79,7 +75,6 @@ public class ProfileAdapter extends ArrayAdapter<UserDto> {
     }
 
     static class ViewHolder {
-        TextView imageTitle;
         TextView userId;
         ImageView image;
     }

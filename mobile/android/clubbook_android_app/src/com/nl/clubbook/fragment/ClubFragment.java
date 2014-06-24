@@ -77,6 +77,7 @@ public class ClubFragment extends BaseFragment {
         distance_text.setTypeface(typeface);
         checkin = (Button) rootView.findViewById(R.id.checkin);
         checkin.setTypeface(typeface_bold);
+        checkin.getBackground().setAlpha(128);
         mViewFlipper = (ViewFlipper) rootView.findViewById(R.id.view_flipper);
         profileGridView = (ExpandableHeightGridView) rootView.findViewById(R.id.gridView);
         distance_text = (TextView) rootView.findViewById(R.id.distancekm);
@@ -153,7 +154,7 @@ public class ClubFragment extends BaseFragment {
 
                 club = (ClubDto) result;
 
-                getActivity().setTitle(club.getTitle());
+                getActivity().setTitle("Club details");
 
                 // if we checked in this this club set related style
                 if (LocationCheckinHelper.isCheckinHere(club)) {
