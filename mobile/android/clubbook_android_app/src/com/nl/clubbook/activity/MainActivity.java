@@ -3,6 +3,7 @@ package com.nl.clubbook.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -143,6 +144,8 @@ public class MainActivity extends BaseActivity {
                 invalidateOptionsMenu();
             }
         };
+
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#391A3C")));
 
         navDrawerItems = new ArrayList<NavDrawerItem>();
         navDrawerItems.add(new NavDrawerItem(user.get(SessionManager.KEY_NAME), user_avatar_url, true));
