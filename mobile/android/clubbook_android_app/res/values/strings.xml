@@ -62,5 +62,6 @@
 
     <string name="checkin">Check in</string>
     <string name="checkout">Check out</string>
+    <string name="club_avatar_content_description">club avatar</string>
 
 </resources>
