@@ -67,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:text="7,3 km"
                     android:focusable="false"
-                    android:id="@+id/distance_text" android:textStyle="bold" android:textColor="#90c047"
+                    android:id="@+id/distance_text" android:textStyle="bold"
                     android:textSize="16dp" android:layout_marginLeft="5dp"/>
 
             <TextView
