@@ -231,7 +231,7 @@ public class MainLoginActivity extends BaseActivity {
                 DataStore.loginByFb(name, email, fb_id, access_token, gender, finalDob, avatar, new DataStore.OnResultReady() {
                     @Override
                     public void onReady(Object result, boolean failed) {
-                        hideProgress(false);
+                        hideProgress(true);
                         if (failed) {
                             alert.showAlertDialog(MainLoginActivity.this, "Error", "Incorrect credentials", false);
                         } else {
@@ -245,5 +245,4 @@ public class MainLoginActivity extends BaseActivity {
             }
         });
     }
-
 }
