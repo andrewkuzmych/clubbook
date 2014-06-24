@@ -1,90 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
 
-    <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        <ViewFlipper
-                android:id="@+id/view_flipper"
-                android:layout_width="fill_parent"
-                android:layout_height="230dp">
-        </ViewFlipper>
-        <RelativeLayout android:layout_width="fill_parent"
-                        android:layout_height="50dp"
-                        android:layout_alignParentBottom="false"
-                        android:background="#99000000" android:layout_alignBottom="@+id/view_flipper"
-                        android:layout_alignParentTop="false">
-            <LinearLayout android:layout_width="fill_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_centerVertical="true" android:layout_marginLeft="20dp"
-                          android:orientation="vertical" android:layout_toLeftOf="@+id/linearLayout">
-                <TextView android:id="@+id/title"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="club"
-                          android:textColor="#ffffff" android:textSize="22dp"/>
-                <TextView android:id="@+id/address"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="address"
-                          android:textColor="#ffffff" android:textSize="13dp" android:textIsSelectable="false"
-                          android:lines="2"/>
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/scrollView">
 
-            </LinearLayout>
-            <LinearLayout android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_centerVertical="true"
-                          android:orientation="vertical" android:layout_marginRight="20dp"
-                          android:layout_alignParentRight="true" android:id="@+id/linearLayout">
-                <TextView android:id="@+id/distancekm"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="100 km" android:textSize="23dp" android:textColor="#ffffff"/>
-            </LinearLayout>
-        </RelativeLayout>
-        <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#99000000" android:layout_alignParentRight="true"
-                android:padding="3dp" android:layout_marginRight="5dp" android:layout_marginTop="5dp">
-            <ImageView
+        <LinearLayout android:orientation="vertical"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content">
+
+            <RelativeLayout android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="false"
+                            android:background="@color/main_background_menu_color"
+                            android:layout_alignBottom="@+id/view_flipper"
+                            android:layout_alignParentTop="false">
+
+                <LinearLayout android:layout_width="fill_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_centerVertical="true"
+                              android:orientation="vertical" android:layout_toLeftOf="@+id/linearLayout"
+                              android:layout_margin="10dp">
+                    <TextView android:id="@+id/title"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="club"
+                              android:textColor="#ffffff" android:textSize="22dp"/>
+                    <TextView android:id="@+id/address"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="address"
+                              android:textColor="#ffffff" android:textSize="13dp" android:textIsSelectable="false"
+                              android:lines="1"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:layout_centerVertical="true"
+                              android:orientation="vertical" android:layout_marginRight="20dp"
+                              android:layout_alignParentRight="true" android:id="@+id/linearLayout">
+                    <TextView android:id="@+id/distancekm"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="100 km" android:textSize="23dp" android:textColor="#ffffff"/>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <ViewFlipper
+                    android:id="@+id/view_flipper"
+                    android:layout_width="fill_parent"
+                    android:layout_height="230dp">
+            </ViewFlipper>
+
+            <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/imageView" android:src="@drawable/ic_action_camera"
-                    android:layout_gravity="center_vertical"/>
-            <TextView android:id="@+id/image_slider"
-                      android:layout_height="wrap_content" android:layout_width="wrap_content"
-                      android:gravity="center_vertical" android:layout_gravity="center_vertical"
-                      android:textColor="#ffffff" android:text="7/8y" android:textSize="18dp"></TextView>
+                    android:background="#99000000" android:layout_alignParentRight="true"
+                    android:padding="3dp" android:layout_marginRight="5dp" android:layout_marginTop="5dp">
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/imageView" android:src="@drawable/ic_action_camera"
+                        android:layout_gravity="center_vertical"/>
+                <TextView android:id="@+id/image_slider"
+                          android:layout_height="wrap_content" android:layout_width="wrap_content"
+                          android:gravity="center_vertical" android:layout_gravity="center_vertical"
+                          android:textColor="#ffffff" android:text="7/8y" android:textSize="18dp"></TextView>
+            </LinearLayout>
+
+
+            <com.nl.clubbook.control.ExpandableHeightGridView
+                    android:id="@+id/gridView"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:columnWidth="75dp"
+                    android:gravity="center"
+                    android:numColumns="auto_fit"
+                    android:isScrollContainer="false"
+                    android:verticalSpacing="0dp"
+                    android:drawSelectorOnTop="true"
+                    android:stretchMode="columnWidth" android:layout_below="@+id/checkin">
+            </com.nl.clubbook.control.ExpandableHeightGridView>
+
         </LinearLayout>
-
-        <Button android:id="@+id/checkin"
-                android:enabled="false"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/view_flipper"
-                android:text="Check in" android:background="@drawable/checkin_button" style="@style/main_button"
-                android:layout_alignParentRight="true" android:layout_marginRight="10dp"
-                android:layout_marginTop="5dp"/>
-
-        <com.nl.clubbook.control.ExpandableHeightGridView
-                android:id="@+id/gridView"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:columnWidth="75dp"
-                android:gravity="center"
-                android:numColumns="auto_fit"
-                android:isScrollContainer="false"
-                android:verticalSpacing="0dp"
-                android:drawSelectorOnTop="true"
-                android:stretchMode="columnWidth" android:layout_below="@+id/checkin">
-        </com.nl.clubbook.control.ExpandableHeightGridView>
+    </ScrollView>
 
 
-    </RelativeLayout>
-</ScrollView>
+    <Button android:id="@+id/checkin"
+            android:enabled="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Check in" android:background="@drawable/checkin_button" style="@style/main_button"
+            android:layout_alignParentBottom="true"
+            />
+
+</RelativeLayout>
+
