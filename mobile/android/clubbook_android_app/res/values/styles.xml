@@ -6,7 +6,6 @@
     <color name="main_font_color">#FFFFFF</color>
 
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="displayOptions">showHome|homeAsUp|showTitle</item>
         <item name="android:icon">@android:color/transparent</item>
         <!--<item name="android:background">@color/main_background_color</item>-->
