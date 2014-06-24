@@ -1,9 +1,7 @@
-
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <ListView
             android:id="@+id/club_listview"
@@ -13,35 +11,12 @@
             android:focusable="false"
             android:dividerHeight="0dip" android:layout_above="@+id/linearLayout"/>
 
-<!--   <android.support.v4.app.FragmentTabHost
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" android:id="@+id/tabHost"
-            android:layout_alignParentTop="true"
-            android:layout_above="@+id/linearLayout" >
-        <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical">
-            <TabWidget
-                    android:id="@+id/tabs"
-                    android:layout_width="fill_parent"
-                    android:layout_height="50dp">
-
-            </TabWidget>
-            <FrameLayout
-                    android:id="@+id/tabcontent"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
-
-            </FrameLayout>
-        </LinearLayout>
-    </android.support.v4.app.FragmentTabHost>-->
-
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="60dp" android:background="#371882"
             android:id="@+id/linearLayout" android:layout_alignParentBottom="true">
+
         <TextView android:id="@+id/distance_text"
                   android:layout_width="80dp"
                   android:layout_height="wrap_content" android:textColor="#FFFFFF"

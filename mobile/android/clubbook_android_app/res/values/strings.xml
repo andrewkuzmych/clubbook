@@ -32,9 +32,9 @@
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>
 
-    <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="login">Enter</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="login">login</string>
     <string name="name_reg">Name (min 2)</string>
     <string name="city_reg">your city</string>
     <string name="pass_reg">Password (min 6)</string>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent" android:orientation="vertical"
               android:layout_height="wrap_content"
-              android:background="@drawable/list_selector"
-              xmlns:app="http://schemas.android.com/apk/res-auto">
+              android:background="@drawable/list_selector">
 
     <RelativeLayout
             android:layout_width="fill_parent"
@@ -32,21 +32,9 @@
                       android:textSize="16dp"
                       android:ellipsize="end"
                       android:maxLines="2"
-                      android:text="Club"
+                      android:text="Club name"
                       android:focusable="false"
-                      android:textStyle="bold"
-                      android:textColor="#22104A"/>
-
-          <!--  <TextView android:id="@+id/club_address"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:textSize="12dp"
-                      android:ellipsize="end"
-                      android:maxLines="3"
-                      android:focusable="false"
-                      android:text="venue_title"
-                      android:textColor="#595959"
-                      android:layout_below="@+id/club_title" android:textIsSelectable="false"/>-->
+                      android:textStyle="bold" />
         </RelativeLayout>
         <RelativeLayout
                 android:layout_width="wrap_content"
@@ -65,7 +53,7 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="7"
+                        android:text="7,3 km"
                         android:focusable="false"
                         android:id="@+id/distance_text" android:textStyle="bold" android:textColor="#90c047"
                         android:layout_gravity="center_horizontal" android:textSize="16dp"/>
@@ -75,9 +63,9 @@
                         android:layout_height="wrap_content"
                         android:text="10"
                         android:focusable="false"
-                        android:id="@+id/people_count" android:textStyle="bold" android:textColor="#90c047"
+                        android:id="@+id/people_count" android:textStyle="bold"
                         android:layout_gravity="center_horizontal" android:textSize="16dp"
-                        android:layout_marginLeft="19dp" />
+                        android:layout_marginLeft="19dp"/>
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -86,6 +74,7 @@
                         android:visibility="gone"/>
             </LinearLayout>
         </RelativeLayout>
+
         <RelativeLayout
                 android:layout_width="95dp"
                 android:layout_height="wrap_content"
@@ -105,7 +94,8 @@
                         android:layout_height="wrap_content"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
-                        android:text="Check in" android:background="@drawable/checkin_button" style="@style/main_button"/>
+                        android:text="Check in" android:background="@drawable/checkin_button"
+                        style="@style/main_button"/>
 
             </LinearLayout>
         </RelativeLayout>
@@ -117,12 +107,5 @@
             android:layout_height="1dp"
             android:focusable="false"
             android:background="#cfcfcf" android:layout_marginLeft="3dp" android:layout_marginRight="3dp"/>
-    <!--<View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:focusable="false"
-            android:background="#cfcfcf" android:layout_marginLeft="3dp" android:layout_marginRight="3dp"/>-->
-
-
 
 </LinearLayout>

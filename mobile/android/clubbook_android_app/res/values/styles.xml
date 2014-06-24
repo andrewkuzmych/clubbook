@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="main_background_color">#240E25</color>
+    <color name="main_background_light_color">#592B5C</color>
+    <color name="main_background_menu_color">#391A3C</color>
+    <color name="main_font_color">#FFFFFF</color>
+
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="actionBarStyle">@style/WindowTitleBackground</item>
+        <item name="displayOptions">showHome|homeAsUp|showTitle</item>
+        <item name="android:icon">@android:color/transparent</item>
+        <!--<item name="android:background">@color/main_background_color</item>-->
+        <!--<item name="android:colorBackground">@color/main_background_color</item>-->
+        <item name="android:windowBackground">@color/main_background_color</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="sign_in_input">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
     <style name="image_title">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">50dp</item>
@@ -42,13 +64,6 @@
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:textSize">16dp</item>
         <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="actionBarStyle">@style/WindowTitleBackground</item>
-        <item name="displayOptions">showHome|homeAsUp|showTitle</item>
-        <item name="android:icon">@android:color/transparent</item>
-
     </style>
 
     <style name="WindowTitleBackground">
