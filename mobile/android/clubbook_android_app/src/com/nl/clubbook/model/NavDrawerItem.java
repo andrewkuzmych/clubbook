@@ -9,11 +9,13 @@ public class NavDrawerItem {
     private String profileAvatar;
 	private boolean isCounterVisible = false;
     private boolean isProfile = false;
+    private String background = "#240E25";
 
 
 	public NavDrawerItem(String title, int icon){
 		this.title = title;
 		this.icon = icon;
+        // this.background = background;
 	}
 	
 	public NavDrawerItem(String title, int icon, boolean isCounterVisible, String count){
@@ -21,6 +23,7 @@ public class NavDrawerItem {
 		this.icon = icon;
 		this.isCounterVisible = isCounterVisible;
 		this.count = count;
+        // this.background = background;
 	}
 
     public NavDrawerItem(String profile_name, String profile_avatar, boolean isProfile){
@@ -68,4 +71,12 @@ public class NavDrawerItem {
 	public void setCounterVisibility(boolean isCounterVisible){
 		this.isCounterVisible = isCounterVisible;
 	}
+
+    public String getBackground() {
+        return background;
+    }
+
+    public void setBackground(String background) {
+        this.background = background;
+    }
 }

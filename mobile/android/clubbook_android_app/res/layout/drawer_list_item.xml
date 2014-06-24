@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/list_selector"
-   >
+    android:layout_height="wrap_content" android:background="@color/main_background_color">
     <!-- android:background="@drawable/list_selector"-->
 
     <RelativeLayout android:id="@+id/profile"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="80dp" android:layout_centerHorizontal="true">
         <ImageView
                 android:id="@+id/profile_image"
                 android:src="@drawable/smile"
                 android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_marginTop="5dp" android:layout_centerVertical="true" android:scaleType="fitCenter"/>
+                android:layout_height="70dp" android:layout_alignParentLeft="true"
+                android:layout_margin="5dp" android:layout_centerVertical="true" android:scaleType="fitCenter"/>
 
         <TextView
                 android:id="@+id/profile_name"
@@ -22,9 +20,8 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/profile_image"
                 android:padding="0dp"
-                android:text="tetete"
+                android:text="John"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="#1d97dd"
                 android:textStyle="bold" android:layout_marginLeft="15dp" android:layout_centerVertical="true"/>
     </RelativeLayout>
 
@@ -48,9 +45,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_toRightOf="@id/icon"
-            android:minHeight="?android:attr/listPreferredItemHeightSmall"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall"
-            android:textColor="@color/list_item_title"
             android:gravity="center_vertical"
             android:paddingRight="40dp"/>
 
