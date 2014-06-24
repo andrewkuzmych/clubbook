@@ -2,8 +2,9 @@
 <resources>
     <string name="app_name">clubbook</string>
     <string name="login_fb">login with Facebook</string>
-    <string name="sign_up_by_email">Sign up with email</string>
+    <string name="sign_up_by_email">sign up with email</string>
     <string name="splash_intro">getting social in the club</string>
+    <string name="terms">by signing into clubbook you agree to the terms of use</string>
     <string name="fb_app_id">1504805883074351</string>
     <string name="drawer_open">Slider Menu Opened</string>
     <string name="drawer_close">Slider Menu Closed</string>
@@ -55,7 +56,7 @@
     <string name="email_exists">This email already exists</string>
 
     <string name="has_account">Already has an account?</string>
-    <string name="login_by_email">Log in</string>
+    <string name="login_by_email">login</string>
     <string name="km">km</string>
     <string name="m">m</string>
 
