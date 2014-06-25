@@ -51,8 +51,10 @@ public class BaseActivity extends ActionBarActivity {
     public void showProgress(final String string) {
         BaseActivity.this.runOnUiThread(new Runnable() {
             public void run() {
-                progressDialog = ProgressDialog.show(BaseActivity.this, string,
-                        "Loading application View, please wait...", false, true);
+                progressDialog = new ProgressDialog(BaseActivity.this, R.style.ThemeDialog);
+                //progressDialog.setTitle("Please wait");
+                progressDialog.setMessage("loading application view, please wait...");
+                progressDialog.show();
             }
         });
     }

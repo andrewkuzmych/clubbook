@@ -95,8 +95,32 @@
     <style name="MyActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="android:background">@color/main_background_menu_color</item>
     </style>
-
     <style name="MyTheme.ActionBar.TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/title</item>
     </style>
+
+    <style name="ThemeDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>
+    </style>
+    <style name="CustomAlertDialogStyle">
+        <item name="android:background">@color/main_background_menu_color</item>
+        <item name="android:windowBackground">@color/main_background_menu_color</item>
+        <item name="android:textColor">@color/main_font_color</item>
+    </style>
+
+    <!--<style name="CustomAlertDialogStyle">-->
+        <!--<item name="android:background">@color/main_background_menu_color</item>-->
+        <!--<item name="android:windowBackground">@color/main_background_menu_color</item>-->
+        <!--<item name="android:textColor">@color/main_font_color</item>-->
+        <!--<item name="android:bottomDark">@color/main_background_menu_color</item>-->
+        <!--<item name="android:bottomMedium">@color/main_background_menu_color</item>-->
+        <!--<item name="android:centerBright">@color/main_background_menu_color</item>-->
+        <!--<item name="android:centerDark">@color/main_background_menu_color</item>-->
+        <!--<item name="android:centerMedium">@color/main_background_menu_color</item>-->
+        <!--<item name="android:fullBright">@color/main_background_menu_color</item>-->
+        <!--<item name="android:fullDark">@color/main_background_menu_color</item>-->
+        <!--<item name="android:topBright">@color/main_background_menu_color</item>-->
+        <!--<item name="android:topDark">@color/main_background_menu_color</item>-->
+    <!--</style>-->
+
 </resources>
