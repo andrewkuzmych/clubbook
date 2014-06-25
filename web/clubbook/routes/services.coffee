@@ -11,6 +11,7 @@ gcm = require('node-gcm')
 
 
 exports.fb_signin = (req, res)->
+  console.log "FB login", req.body
   errors = {}
   # validate empty fields
   if __.isEmpty req.body.fb_id?.trim()
@@ -213,9 +214,15 @@ exports.checkin = (req, res)->
     club_id: req.params.club_id
 
   manager.checkin params, (err, user)->
-    res.json
-      status: 'ok'
-      user: user
+    if err
+      console.log err
+      res.json
+        status: 'error'
+        err: err
+    else
+      res.json
+        status: 'ok'
+        user: user
 
 exports.update_checkin = (req, res)->
   params =

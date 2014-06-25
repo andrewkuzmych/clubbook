@@ -131,14 +131,14 @@ exports.checkin = (params, callback)->
     if count_of_active_checkins > 0
       console.log "user is already checkedin in this club", params
       # return user
-      db_model.User.findById({'_id': mongoose.Types.ObjectId(params.user_id)}).exec callback
+      db_model.User.findById(params.user_id).exec callback
 
     else
       db_model.Venue.findById(params.club_id).exec (err, club)->
         if not club
           callback 'club does not exist', null
         else
-          db_model.User.findById({'_id': mongoose.Types.ObjectId(params.user_id)}).exec (err, user)->
+          db_model.User.findById(params.user_id).exec (err, user)->
             if not user
               callback 'user does not exist', null
             else
@@ -156,7 +156,7 @@ exports.update_checkin = (params, callback)->
     if not club
       callback 'club does not exist', null
     else
-      db_model.User.findById({'_id': mongoose.Types.ObjectId(params.user_id)}).exec (err, user)->
+      db_model.User.findById(params.user_id).exec (err, user)->
         if not user
           callback 'user does not exist', null
         else
@@ -276,6 +276,7 @@ exports.save_or_update_fb_user = (params, callback)->
 
     db_model.User.findOne({"fb_id":params.fb_id}).exec (err, user)->
       if user
+        console.log "fb_login:", "update user"
         # update user
         if params.email then user.email = params.email
         user.gender = params.gender
@@ -294,6 +295,7 @@ exports.save_or_update_fb_user = (params, callback)->
       else
         # new user
         if __.isEmpty params.email?.trim()
+          console.log "fb_login:", "create user"
           # user didn't provide email
           user = new db_model.User
             gender: params.gender
@@ -315,6 +317,7 @@ exports.save_or_update_fb_user = (params, callback)->
         else
           db_model.User.findOne({"email":params.email?.toLowerCase()}).exec (err, user)->
             if user
+              console.log "fb_login:", "update user"
               # merge data
               user.gender = params.gender
               user.name = params.name
@@ -331,6 +334,7 @@ exports.save_or_update_fb_user = (params, callback)->
                 callback err, user
 
             else
+              console.log "fb_login:", "create user"
               user = new db_model.User
                 email: params.email
                 gender: params.gender
