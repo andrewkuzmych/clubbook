@@ -28,7 +28,10 @@
         <item>@drawable/ic_pages</item>
         <item>@drawable/ic_pages</item>
     </array>
-    
+
+    <!-- Action bar titles -->
+    <string name="header_profile">Profile details</string>
+
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>
 

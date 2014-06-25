@@ -18,14 +18,23 @@ import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.*;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 import java.util.HashMap;
 
 public class ProfileFragment extends BaseFragment {
     private TextView userName;
+    private ImageView userAvatar;
     private Button chatButton;
     private String profile_id;
     private UserDto profile;
+
+    protected ImageLoader imageLoader;
+    protected DisplayImageOptions options;
+    protected ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
 
     public ProfileFragment()
     {
@@ -40,11 +49,21 @@ public class ProfileFragment extends BaseFragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        getActivity().setTitle("Jon");
- 
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         chatButton = (Button) rootView.findViewById(R.id.chat_button);
         userName = (TextView) rootView.findViewById(R.id.user_name);
+        userAvatar = (ImageView) rootView.findViewById(R.id.avatar);
+
+        getActivity().setTitle(getString(R.string.header_profile));
+
+        imageLoader = ImageLoader.getInstance();
+        options = new DisplayImageOptions.Builder()
+                .showStubImage(R.drawable.default_list_image)
+                .showImageForEmptyUri(R.drawable.default_list_image)
+                .showImageOnFail(R.drawable.default_list_image)
+                .cacheInMemory()
+                .cacheOnDisc()
+                .build();
 
         loadData();
 
@@ -77,11 +96,14 @@ public class ProfileFragment extends BaseFragment {
 
                 profile = (UserDto) result;
 
-                getActivity().setTitle(profile.getName());
                 setHandlers();
 
                 // update UI components
+                // set name
                 userName.setText(profile.getName());
+                // set avatar
+                String image_url = ImageHelper.generateUrl(profile.getAvatar(), "c_fit,w_700");
+                imageLoader.displayImage(image_url, userAvatar, options, animateFirstListener);
             }
         });
     }
