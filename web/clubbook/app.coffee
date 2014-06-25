@@ -143,6 +143,7 @@ app.post '/_s/updategender/:user_id', services.update_gender
 app.post '/_s/updateinfo/:user_id', services.update_info
 
 app.get '/_f/user/remove/:user_id', services.remove_user
+app.get '/_f/checkin/clean', services.checkin_clean
 
 if config.is_test_server == "false"
   checkout_job = new cronJob(

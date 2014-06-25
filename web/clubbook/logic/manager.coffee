@@ -127,7 +127,7 @@ exports.update_info = (params, callback)->
 
 exports.checkin = (params, callback)->
   console.log "Checkin user", params
-  db_model.User.count({'checkin': { '$elemMatch': { 'active': true, 'club': params.club_id }} }).exec (err, count_of_active_checkins)->
+  db_model.User.count({'_id': params.user_id, checkin: { '$elemMatch': { 'active': true, 'club': params.club_id }} }).exec (err, count_of_active_checkins)->
     if count_of_active_checkins > 0
       console.log "user is already checkedin in this club", params
       # return user

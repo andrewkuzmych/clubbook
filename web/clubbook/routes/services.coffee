@@ -393,3 +393,18 @@ exports.remove_user =(req, res)->
       db_model.Chat.remove {"user2": req.params.user_id}, (err)->
         res.json
           status: 'ok'
+
+exports.checkin_clean =(req, res)->
+  console.log "checkin_clean", req.params.user_id
+  db_model.User.find({}).exec (err, users)->
+    for user in users
+      user.checkin = []
+      user.save()
+
+  db_model.Venue.find({}).exec (err, venues)->
+    for venue in venues
+      venue.active_checkins = 0
+      venue.save()
+
+  res.json
+    status: 'ok'
