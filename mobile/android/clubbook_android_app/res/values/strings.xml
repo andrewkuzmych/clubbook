@@ -54,7 +54,7 @@
 
     <string name="no_connection">No internet connection</string>
     <string name="no_location">Please enable location</string>
-    <string name="retry">Retry</string>
+    <string name="retry_button">Retry</string>
 
     <string name="email_exists">This email already exists</string>
 

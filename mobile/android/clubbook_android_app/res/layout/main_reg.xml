@@ -5,13 +5,13 @@
                 android:layout_height="fill_parent">
     <ScrollView
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
-        <LinearLayout xmlns:tools="http://schemas.android.com/tools"
-                      android:layout_width="match_parent"
-                      android:layout_height="match_parent"
-                      android:orientation="vertical"
-                      android:padding="10dip" android:baselineAligned="false">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dip" android:baselineAligned="false">
 
             <!-- Name Label -->
             <TextView
@@ -19,31 +19,13 @@
                     android:layout_height="wrap_content"
                     android:text="@string/name_reg"
                     android:singleLine="true"
-                    android:layout_marginBottom="5dip" android:textColor="#22104A" android:id="@+id/name_label"
+                    android:layout_marginBottom="5dip" android:id="@+id/name_label"
                     android:textSize="17dp"/>
 
             <!-- Name input text -->
-            <EditText android:id="@+id/name_text"
-                      android:layout_width="fill_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_marginBottom="5dip" android:inputType="text"
-                      android:textSize="16dp" android:textColor="#000000"/>
-
-            <!-- City Label -->
-            <!--<TextView-->
-                    <!--android:layout_width="fill_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="@string/city_reg"-->
-                    <!--android:singleLine="true"-->
-                    <!--android:layout_marginBottom="5dip" android:textColor="#22104A" android:id="@+id/city_label"-->
-                    <!--android:textSize="17dp"/>-->
-
-            <!-- City input text -->
-            <!--<EditText android:id="@+id/city_text"-->
-                      <!--android:layout_width="fill_parent"-->
-                      <!--android:layout_height="wrap_content" android:text="Amsterdam"-->
-                      <!--android:layout_marginBottom="5dip" android:inputType="text"-->
-                      <!--android:textSize="16dp" android:textColor="#000000"/>-->
+            <EditText android:id="@+id/name_text" android:inputType="text"
+                      style="@style/default_text_input"
+                      android:layout_marginBottom="5dip"/>
 
             <!-- Email Label -->
             <TextView
@@ -51,52 +33,46 @@
                     android:layout_height="wrap_content"
                     android:text="@string/email"
                     android:singleLine="true"
-                    android:layout_marginBottom="5dip" android:textColor="#22104A" android:id="@+id/email_label"
+                    android:layout_marginBottom="5dip" android:id="@+id/email_label"
                     android:textSize="17dp"/>
 
             <!-- Email input text -->
-            <EditText android:id="@+id/email_text"
-                      android:layout_width="fill_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_marginBottom="5dip" android:inputType="textEmailAddress"
-                      android:textSize="16dp" android:textColor="#000000"/>
+            <EditText android:id="@+id/email_text" android:inputType="textEmailAddress"
+                      style="@style/default_text_input"
+                      android:layout_marginBottom="5dip"/>
 
             <!-- Password Label -->
             <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/pass_reg"
-                    android:layout_marginBottom="5dip" android:singleLine="false" android:textColor="#22104A"
+                    android:layout_marginBottom="5dip" android:singleLine="false"
                     android:id="@+id/pass_label" android:textSize="17dp"/>
 
             <!-- Password input text -->
-            <EditText android:id="@+id/password_text"
-                      android:layout_width="fill_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_marginBottom="5dip"
-                      android:password="true"
-                      android:singleLine="true" android:textSize="16dp" android:textColor="#000000"/>
+            <EditText android:id="@+id/password_text" android:password="true"
+                      style="@style/default_text_input"
+                      android:layout_marginBottom="5dip"/>
 
+            <!-- Birthday Label -->
             <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/dob"
-                    android:layout_marginBottom="5dip" android:textColor="#22104A" android:id="@+id/dob_label"
+                    android:layout_marginBottom="5dip" android:id="@+id/dob_label"
                     android:textSize="17dp"/>
 
-            <!-- Password input text -->
-            <EditText android:id="@+id/dob_text"
-                      android:layout_width="fill_parent"
-                      android:layout_height="wrap_content"
+            <!-- Birthday input text -->
+            <EditText android:id="@+id/dob_text" android:inputType="date"
+                      style="@style/default_text_input"
                       android:layout_marginBottom="5dip"
-                      android:inputType="date" android:focusable="false" android:editable="true"
-                      android:clickable="true" android:textSize="16dp" android:textColor="#000000"/>
+                      android:focusable="false" android:editable="true" android:clickable="true"/>
 
             <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/gender_reg"
-                    android:layout_marginBottom="5dip" android:textColor="#22104A" android:id="@+id/gender_label"
+                    android:layout_marginBottom="5dip" android:id="@+id/gender_label"
                     android:textSize="17dp"/>
 
             <Spinner
@@ -109,13 +85,13 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/upload_avatar" android:background="@drawable/main_button"
-                    style="@style/main_button" />
+                    style="@style/main_button"/>
 
             <Button android:id="@+id/reg_btn"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/register" android:background="@drawable/main_button"
-                    style="@style/main_button" android:layout_marginTop="10dp"/>
+                    style="@style/default_button" android:layout_marginTop="10dp"/>
 
         </LinearLayout>
     </ScrollView>

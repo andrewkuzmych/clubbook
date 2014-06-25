@@ -9,13 +9,15 @@
               android:layout_centerVertical="true"
               android:layout_marginTop="5dp"
               android:orientation="vertical">
+
     <TextView android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="@string/no_connection"
-              android:id="@+id/textView" android:textColor="#343434" android:textSize="17dp"/>
-    <Button android:layout_width="wrap_content"
+              android:id="@+id/textView" android:textSize="17dp"/>
+
+    <Button android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/retry"
-            android:id="@+id/retry_button" android:layout_gravity="center" android:layout_marginTop="5dp"
-            android:textSize="20dp"/>
+            android:text="@string/retry_button" style="@style/default_button"
+            android:id="@+id/retry_button" android:layout_gravity="center" android:layout_marginTop="5dp" />
+
 </LinearLayout>

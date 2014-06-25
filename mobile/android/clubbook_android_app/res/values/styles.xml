@@ -10,7 +10,7 @@
         <item name="android:icon">@android:color/transparent</item>
         <!--<item name="android:background">@color/main_background_color</item>-->
         <!--<item name="android:colorBackground">@color/main_background_color</item>-->
-        <item name="android:windowBackground">@color/main_font_color</item>
+        <item name="android:windowBackground">@color/main_background_color</item>
         <item name="android:textColor">#FFFFFF</item>
     </style>
 
@@ -45,6 +45,7 @@
         <item name="android:textSize">12dp</item>
     </style>
 
+    <!-- used on main login screen for all 3 buttons -->
     <style name="main_login_button">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -61,6 +62,22 @@
         <item name="android:singleLine">true</item>
         <item name="android:textSize">18dp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="default_button">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="default_text_input">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">16dp</item>
     </style>
 
     <style name="avatar_btn">
