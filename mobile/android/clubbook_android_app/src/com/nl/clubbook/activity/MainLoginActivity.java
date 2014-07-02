@@ -175,7 +175,7 @@ public class MainLoginActivity extends BaseActivity {
                 showProgress("Loading...");
                 String fb_photo = "https://graph.facebook.com/" + fb_id + "/picture?width=700&height=700";
                 Cloudinary cloudinary = new Cloudinary(getApplicationContext());
-                avatar = cloudinary.uploader().upload(fb_photo, Cloudinary.asMap("format", "jpg"));
+                avatar = cloudinary.uploader().upload(fb_photo, Cloudinary.asMap("format", "jpg", "overwrite", "false", "public_id", fb_id));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -197,7 +197,7 @@ public class MainLoginActivity extends BaseActivity {
         OnProfileListener onProfileListener = new OnProfileListener() {
             @Override
             public void onComplete(Profile profile) {
-                UpdateProfileInfoTask task = new UpdateProfileInfoTask(profile);//
+                UpdateProfileInfoTask task = new UpdateProfileInfoTask(profile);
                 task.execute(profile.getId());
             }
         };

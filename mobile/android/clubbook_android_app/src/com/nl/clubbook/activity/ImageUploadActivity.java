@@ -139,7 +139,7 @@ public class ImageUploadActivity extends BaseActivity {
                     InputStream is = new ByteArrayInputStream(stream.toByteArray());
 
                     try {
-                        cloudinary.uploader().upload(is, Cloudinary.asMap("public_id", "test6", "width", "1000", "height", "1000", "crop", "limit", "format", "jpg"));
+                        cloudinary.uploader().upload(is, Cloudinary.asMap("width", "1000", "height", "1000", "crop", "limit", "format", "jpg"));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
