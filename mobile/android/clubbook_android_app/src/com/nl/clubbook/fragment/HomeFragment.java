@@ -38,7 +38,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_clubs_list, container, false);
 
         distance = (SeekBar) rootView.findViewById(R.id.distance);
         distance.setMax(9);
