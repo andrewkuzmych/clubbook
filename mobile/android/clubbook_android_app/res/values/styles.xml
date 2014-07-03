@@ -107,6 +107,10 @@
         <item name="android:windowBackground">@color/main_background_menu_color</item>
         <item name="android:textColor">@color/main_font_color</item>
     </style>
+    <style name="AlertDialogCustom" parent="@android:style/Theme.Dialog">
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">10sp</item>
+    </style>
 
     <!--<style name="CustomAlertDialogStyle">-->
         <!--<item name="android:background">@color/main_background_menu_color</item>-->
