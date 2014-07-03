@@ -4,9 +4,10 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.view.*;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
@@ -28,10 +29,11 @@ import java.util.HashMap;
  */
 public class ClubFragment extends BaseFragment {
 
-    private static final int SWIPE_MIN_DISTANCE = 20;
-    private static final int SWIPE_THRESHOLD_VELOCITY = 100;
-    private ViewFlipper mViewFlipper;
-    private Animation.AnimationListener mAnimationListener;
+    private ImageSwitcher clubCoverSwitcher;
+    private ImageView clubCoverItem;
+    private float initialX;
+    private int position = 0;
+
     private Context mContext;
     TextView image_slider, title_text, address_text, distance_text;
     private ExpandableHeightGridView profileGridView;
@@ -78,58 +80,14 @@ public class ClubFragment extends BaseFragment {
         checkin = (Button) rootView.findViewById(R.id.checkin);
         checkin.setTypeface(typeface_bold);
         checkin.getBackground().setAlpha(128);
-        mViewFlipper = (ViewFlipper) rootView.findViewById(R.id.view_flipper);
+
         profileGridView = (ExpandableHeightGridView) rootView.findViewById(R.id.gridView);
         distance_text = (TextView) rootView.findViewById(R.id.distancekm);
         mContext = getActivity();
 
-        // club images
-        final GestureDetector gesture = new GestureDetector(getActivity(),
-                new GestureDetector.SimpleOnGestureListener() {
-
-                    @Override
-                    public boolean onDown(MotionEvent e) {
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                                           float velocityY) {
-                        try {
-                            // right to left swipe
-                            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                                mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.left_in));
-                                mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext, R.anim.left_out));
-                                // controlling animation
-                                mViewFlipper.getInAnimation().setAnimationListener(mAnimationListener);
-                                mViewFlipper.showNext();
-                            } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                                mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.right_in));
-                                mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext, R.anim.right_out));
-                                // controlling animation
-                                mViewFlipper.getInAnimation().setAnimationListener(mAnimationListener);
-                                mViewFlipper.showPrevious();
-                            }
-
-                            image_slider.setText(String.valueOf(mViewFlipper.getDisplayedChild() + 1) + "/" + String.valueOf(mViewFlipper.getChildCount()));
-
-                            return true;
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        return super.onFling(e1, e2, velocityX, velocityY);
-                    }
-                }
-        );
-
-        rootView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gesture.onTouchEvent(event);
-            }
-        });
+        // init club images
+        clubCoverSwitcher = (ImageSwitcher) rootView.findViewById(R.id.clubCoverSwitcher);
+        clubCoverItem = (ImageView) rootView.findViewById(R.id.clubCoverItem);
 
         loadData();
 
@@ -180,35 +138,65 @@ public class ClubFragment extends BaseFragment {
                                             int position, long id) {
 
                         String user_id = ((TextView) v.findViewById(R.id.user_id)).getText().toString();
-
-                        // open chat window
-                        /*
-                        String user_title = ((TextView) v.findViewById(R.id.text)).getText().toString();
-                        ChatFragment fragment = new ChatFragment(thisInstance, user_id, user_title);
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                        FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
-
-                        mFragmentTransaction.addToBackStack(null);
-                        mFragmentTransaction.replace(R.id.frame_container, fragment).commit();*/
-
                         openFragment(new ProfileFragment(thisInstance, user_id));
                     }
 
                 });
 
-                mViewFlipper.removeAllViews();
-                for (int i = 0; i < club.getPhotos().size(); i++) {
-                    View clubPhoto = inflater.inflate(R.layout.club_photos, null);
-                    ImageView image = (ImageView) clubPhoto.findViewById(R.id.photo);
-                    mViewFlipper.addView(clubPhoto);
-                    String image_url = ImageHelper.generateUrl(club.getPhotos().get(i), "c_fit,w_700");
-                    imageLoader.displayImage(image_url, image, options, animateFirstListener);
-                }
-
-                image_slider.setText(String.valueOf(mViewFlipper.getDisplayedChild() + 1) + "/" + String.valueOf(mViewFlipper.getChildCount()));
                 title_text.setText(club.getTitle());
                 address_text.setText(club.getAddress());
                 distance_text.setText(LocationCheckinHelper.formatDistance(getActivity().getApplicationContext(), club.getDistance()));
+
+                if (club.getPhotos().size() > 0) {
+                    String image_url = ImageHelper.generateUrl(club.getPhotos().get(position), "c_fit,w_700");
+                    imageLoader.displayImage(image_url, clubCoverItem, options, animateFirstListener);
+                    image_slider.setText(String.valueOf(position + 1) + "/" + String.valueOf(club.getPhotos().size()));
+
+                    clubCoverSwitcher.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            switch (event.getAction()) {
+                                case MotionEvent.ACTION_DOWN:
+                                    initialX = event.getX();
+                                    break;
+                                case MotionEvent.ACTION_UP:
+                                case MotionEvent.ACTION_CANCEL:
+                                    float finalX = event.getX();
+                                    if (initialX > finalX) {
+                                        clubCoverSwitcher.setInAnimation(mContext, R.anim.left_in);
+                                        clubCoverSwitcher.setOutAnimation(mContext, R.anim.left_out);
+                                        // next
+                                        position++;
+                                        if (position >= club.getPhotos().size())
+                                            position = 0;
+
+                                        String image_url = ImageHelper.generateUrl(club.getPhotos().get(position), "c_fit,w_700");
+                                        imageLoader.displayImage(image_url, clubCoverItem, options, animateFirstListener);
+                                        image_slider.setText(String.valueOf(position + 1) + "/" + String.valueOf(club.getPhotos().size()));
+
+                                        clubCoverSwitcher.showNext();
+
+                                    } else {
+                                        clubCoverSwitcher.setInAnimation(mContext, R.anim.right_in);
+                                        clubCoverSwitcher.setOutAnimation(mContext, R.anim.right_out);
+                                        // prev
+                                        if (position > 0)
+                                            position = position - 1;
+                                        else
+                                            position = club.getPhotos().size() - 1;
+
+                                        String image_url = ImageHelper.generateUrl(club.getPhotos().get(position), "c_fit,w_700");
+                                        imageLoader.displayImage(image_url, clubCoverItem, options, animateFirstListener);
+                                        image_slider.setText(String.valueOf(position + 1) + "/" + String.valueOf(club.getPhotos().size()));
+
+                                        clubCoverSwitcher.showPrevious();
+                                    }
+                                    break;
+                            }
+                            return true;
+                        }
+                    });
+                }
             }
         });
     }
@@ -241,20 +229,6 @@ public class ClubFragment extends BaseFragment {
                 }
             }
         });
-
-        //animation listener
-        mAnimationListener = new Animation.AnimationListener() {
-            public void onAnimationStart(Animation animation) {
-                //animation started event
-            }
-
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            public void onAnimationEnd(Animation animation) {
-                //TODO animation stopped event
-            }
-        };
     }
 
     @Override

@@ -17,7 +17,7 @@
             <RelativeLayout android:layout_width="fill_parent" android:id="@+id/club_details_title"
                             android:layout_height="wrap_content"
                             android:layout_alignParentBottom="false"
-                            android:background="@color/main_background_menu_color"
+                            android:background="#331436"
                             android:layout_alignParentTop="true" android:layout_alignParentLeft="false">
 
                 <LinearLayout android:layout_width="fill_parent"
@@ -50,11 +50,17 @@
                 </LinearLayout>
             </RelativeLayout>
 
-            <ViewFlipper
-                    android:id="@+id/view_flipper"
-                    android:layout_width="fill_parent"
-                    android:layout_height="230dp" android:layout_below="@+id/club_details_title">
-            </ViewFlipper>
+            <ImageSwitcher android:id="@+id/clubCoverSwitcher"
+                           android:layout_height="230dp"
+                           android:layout_width="fill_parent"
+                           android:layout_below="@+id/club_details_title">
+
+                <ImageView android:id="@+id/clubCoverItem" android:layout_height="match_parent"
+                           android:layout_width="match_parent" android:scaleType="centerCrop"
+                           android:src="@drawable/test_club_cover">
+                </ImageView>
+
+            </ImageSwitcher>
 
             <LinearLayout
                     android:orientation="horizontal"
@@ -70,7 +76,7 @@
                 <TextView android:id="@+id/image_slider"
                           android:layout_height="wrap_content" android:layout_width="wrap_content"
                           android:gravity="center_vertical" android:layout_gravity="center_vertical"
-                          android:textColor="#ffffff" android:text="7/8y" android:textSize="18dp"></TextView>
+                          android:textColor="#ffffff" android:text="7/8" android:textSize="18dp"></TextView>
             </LinearLayout>
 
             <com.nl.clubbook.control.ExpandableHeightGridView
@@ -83,7 +89,7 @@
                     android:isScrollContainer="false"
                     android:verticalSpacing="0dp"
                     android:drawSelectorOnTop="true"
-                    android:stretchMode="columnWidth" android:layout_below="@+id/view_flipper"
+                    android:stretchMode="columnWidth" android:layout_below="@+id/clubCoverSwitcher"
                     android:layout_centerHorizontal="true" android:background="@color/main_background_color">
             </com.nl.clubbook.control.ExpandableHeightGridView>
         </RelativeLayout>
