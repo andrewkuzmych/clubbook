@@ -53,8 +53,7 @@
             <ViewFlipper
                     android:id="@+id/view_flipper"
                     android:layout_width="fill_parent"
-                    android:layout_height="230dp" android:layout_below="@+id/club_details_title"
-                    android:layout_alignLeft="@+id/gridView">
+                    android:layout_height="230dp" android:layout_below="@+id/club_details_title">
             </ViewFlipper>
 
             <LinearLayout
