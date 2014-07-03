@@ -38,9 +38,9 @@
         <TextView
                 android:layout_width="184dp"
                 android:layout_height="wrap_content"
-                android:textColor="#CDC2CE"
+                android:textColor="#CDC2CE" android:textColorLink="#CDC2CE"
                 android:gravity="center"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center_horizontal" android:id="@+id/termsTxt"
                 android:textSize="14dp" android:layout_marginBottom="10dp"
                 android:text="@string/terms"/>
 

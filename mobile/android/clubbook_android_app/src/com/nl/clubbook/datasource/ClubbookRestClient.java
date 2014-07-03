@@ -13,8 +13,8 @@ public class ClubbookRestClient {
         client.setTimeout(20*1000);
     }
 
-    private static final String BC_BASE_URL = "http://192.168.2.109:3000/_s/";
-    //private static final String BC_BASE_URL = "http://clubbookapp.herokuapp.com/_s/";
+    //private static final String BC_BASE_URL = "http://192.168.2.109:3000/_s/";
+    private static final String BC_BASE_URL = "http://clubbookapp.herokuapp.com/_s/";
     //private static final String BC_BASE_URL = "http://192.168.2.112:3000/_s/";
 
     private static String getBcAbsoluteUrl(String relativeUrl) {
@@ -36,7 +36,8 @@ public class ClubbookRestClient {
     public static void retrieveUser(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getBcAbsoluteUrl("user/by_id/" + user_id), params, responseHandler);
     }
-                                          //list_club/:distance/:user_lat/:user_lon
+
+    //list_club/:distance/:user_lat/:user_lon
     public static void retrievePlaces(String distance, String lat, String lon, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getBcAbsoluteUrl("list_club/" + distance + "/" + lat + "/" + lon), params, responseHandler);
     }

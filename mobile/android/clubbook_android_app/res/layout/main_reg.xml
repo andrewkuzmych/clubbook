@@ -13,19 +13,27 @@
                 android:orientation="vertical"
                 android:padding="10dip" android:baselineAligned="false">
 
-            <!-- Name Label -->
-            <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/name_reg"
-                    android:singleLine="true"
-                    android:layout_marginBottom="5dip" android:id="@+id/name_label"
-                    android:textSize="17dp"/>
+            <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent">
+                <ImageButton android:id="@+id/avatar_btn"
+                             android:layout_width="100dp" android:adjustViewBounds="true"
+                             android:layout_height="100dp" android:scaleType="fitCenter"
+                             android:background="@drawable/test_avatar"/>
 
-            <!-- Name input text -->
-            <EditText android:id="@+id/name_text" android:inputType="text"
-                      style="@style/default_text_input"
-                      android:layout_marginBottom="5dip"/>
+                <!-- Name Label -->
+                <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/name_reg"
+                        android:singleLine="true"
+                        android:id="@+id/name_label"
+                        android:textSize="17dp" android:layout_alignParentTop="true"
+                        android:layout_toRightOf="@+id/avatar_btn"/>
+
+                <!-- Name input text -->
+                <EditText android:id="@+id/name_text" android:inputType="text"
+                          style="@style/default_text_input"
+                          android:layout_below="@+id/name_label" android:layout_toRightOf="@+id/avatar_btn"/>
+            </RelativeLayout>
 
             <!-- Email Label -->
             <TextView
@@ -80,12 +88,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dip"
                     android:id="@+id/gender" android:layout_gravity="left|center_vertical" android:focusable="true"/>
-
-            <Button android:id="@+id/avatar_btn"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/upload_avatar" android:background="@drawable/main_button"
-                    style="@style/main_button"/>
 
             <Button android:id="@+id/reg_btn"
                     android:layout_width="fill_parent"

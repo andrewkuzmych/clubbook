@@ -3,6 +3,7 @@ package com.nl.clubbook.activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -19,6 +20,11 @@ import com.nl.clubbook.helper.Validator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * Created by Andrew on 5/26/2014.
  */
@@ -29,7 +35,7 @@ public class RegActivity extends ImageUploadActivity {
     Spinner gender_spinner;
     AlertDialogManager alert = new AlertDialogManager();
     Button reg_button;
-    Button avatar_button;
+    ImageButton avatar_button;
     JSONObject avatar;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -119,8 +125,7 @@ public class RegActivity extends ImageUploadActivity {
         reg_button = (Button) findViewById(R.id.reg_btn);
         reg_button.setTypeface(typeface_regular);
 
-        avatar_button = (Button) findViewById(R.id.avatar_btn);
-        avatar_button.setTypeface(typeface_regular);
+        avatar_button = (ImageButton) findViewById(R.id.avatar_btn);
 
         // Login button click event
         reg_button.setOnClickListener(new View.OnClickListener() {
@@ -199,7 +204,18 @@ public class RegActivity extends ImageUploadActivity {
     @Override
     protected void onImageSelected(JSONObject imageObj) throws JSONException {
         Log.d("ImageUploadActivity", "avatar is selected: " + imageObj.getString("public_id"));
-        this.avatar = imageObj;
+
+        InputStream is = null;
+        try {
+            is = (InputStream) new URL(imageObj.getString("url")).getContent();
+            Drawable buttonBg = Drawable.createFromStream(is, null);
+            this.avatar_button.setBackgroundDrawable(buttonBg);
+            this.avatar = imageObj;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.nl.clubbook.activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -117,6 +118,9 @@ public class MainLoginActivity extends BaseActivity {
     private void setUIHandlers() {
         TextView intro_text = (TextView) findViewById(R.id.intro_text);
         intro_text.setTypeface(typeface_bold);
+
+        TextView termsTxt = (TextView) findViewById(R.id.termsTxt);
+        termsTxt.setMovementMethod(LinkMovementMethod.getInstance());
 
         button_fb_login = (Button) findViewById(R.id.login_fb);
         button_fb_login.setTypeface(typeface_regular);
