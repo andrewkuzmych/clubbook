@@ -28,6 +28,9 @@ UserSchema = new mongoose.Schema
   
   checkin: [{club: { type: mongoose.Schema.ObjectId, ref: 'Venue' }, time: Date, active: Boolean}]
 
+  # http://stackoverflow.com/questions/6183147/storing-friend-relationships-in-mongodb
+  # friends:[_id]
+
 UserSchema.virtual('avatar').get ()->
   photo = null
   if this.photos and this.photos.length > 0
@@ -37,6 +40,11 @@ UserSchema.virtual('avatar').get ()->
 
   return photo
 
+UserSchema.virtual('age').get ()->
+  if this.dob
+    return Math.floor((new Date() - this.dob) / 31536000000)
+  else
+    null
 
 UserSchema.pre 'save', (next, done) ->
   this.updated_on = new Date().toISOString()
