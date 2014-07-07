@@ -208,7 +208,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    protected void logout() {
+    public void logout() {
         getSession().logoutUser();
         mSimpleFacebook.logout(mOnLogoutListener);
         Intent in = new Intent(getApplicationContext(), MainLoginActivity.class);
@@ -404,12 +404,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void displayView(final int position) {
-        // logout
-        if (position == 7) {
-            logout();
-            return;
-        }
-
         // update the main content by replacing fragments
         Fragment fragment = fragmentMap.get(position);
 
