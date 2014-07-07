@@ -148,7 +148,8 @@ public class MainActivity extends BaseActivity {
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#391A3C")));
 
         navDrawerItems = new ArrayList<NavDrawerItem>();
-        navDrawerItems.add(new NavDrawerItem(user.get(SessionManager.KEY_NAME), user_avatar_url, true));
+        navDrawerItems.add(new NavDrawerItem(user.get(SessionManager.KEY_NAME), user_avatar_url,
+                user.get(SessionManager.KEY_GENDER), user.get(SessionManager.KEY_AGE)));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(3, -1)));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(3, -1)));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1), true, "0"));

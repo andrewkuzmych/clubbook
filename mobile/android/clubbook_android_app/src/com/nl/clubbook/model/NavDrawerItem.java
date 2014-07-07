@@ -1,8 +1,12 @@
 package com.nl.clubbook.model;
 
+import com.nl.clubbook.datasource.UserDto;
+
 public class NavDrawerItem {
 	
 	private String title;
+    private String gender;
+	private String age;
 	private int icon;
 	private String count = "0";
 	// boolean to set visiblity of the counter
@@ -30,6 +34,14 @@ public class NavDrawerItem {
         this.title = profile_name;
         this.profileAvatar = profile_avatar;
         this.isProfile = isProfile;
+    }
+
+    public NavDrawerItem(String profile_name, String profile_avatar, String profile_gender, String profile_age){
+        this.title = profile_name;
+        this.profileAvatar = profile_avatar;
+        this.gender = profile_gender;
+        this.age = profile_age;
+        this.isProfile = true;
     }
 
     public String getProfileAvatar() {
@@ -78,5 +90,21 @@ public class NavDrawerItem {
 
     public void setBackground(String background) {
         this.background = background;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,10 @@ public class MessagesFragment extends BaseFragment {
             public void onReady(Object result, boolean failed) {
                 if (failed) {
                     if (loading)
-                        ((BaseActivity) getActivity()).hideProgress(false);
+                        if(getActivity() != null)
+                            ((BaseActivity) getActivity()).hideProgress(false);
+                        else
+                            Log.e("ERROR", "getActivity is null");
                     return;
                 }
 

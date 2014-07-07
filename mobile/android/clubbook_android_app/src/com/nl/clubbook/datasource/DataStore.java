@@ -281,27 +281,7 @@ public class DataStore {
                     JSONArray users_dto = response_json.getJSONArray("users");
                     List<UserDto> users = new ArrayList<UserDto>();
                     for (int i = 0; i < users_dto.length(); i++) {
-                        JSONObject user_dto = users_dto.getJSONObject(i);
-                        UserDto user = new UserDto();
-                        user.setEmail(user_dto.getString("email"));
-                        user.setGender(user_dto.getString("gender"));
-                        user.setName(user_dto.getString("name"));
-                        user.setId(user_dto.getString("_id"));
-
-                        JSONArray photos_json = user_dto.getJSONArray("photos");
-                        List<String> user_photos = new ArrayList<String>();
-                        for (int j = 0; j < photos_json.length(); j++) {
-                            String photo_url = photos_json.getJSONObject(j).getString("url");
-                            boolean is_profile = photos_json.getJSONObject(j).getBoolean("profile");
-                            if (is_profile)
-                                user.setAvatar(photo_url);
-                            else
-                                user_photos.add(photo_url);
-
-                            user.setPhotos(user_photos);
-                        }
-
-                        users.add(user);
+                        users.add(new UserDto(users_dto.getJSONObject(i)));
                     }
 
                     club.setUsers(users);
@@ -340,31 +320,10 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
-                UserDto user = new UserDto();
+                UserDto user = null;
                 try {
                     if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        //Log.i("user", response_json.getJSONObject("result").getJSONObject("user").toString());
-
-                        JSONObject user_dto = response_json.getJSONObject("result").getJSONObject("user");
-                        user.setEmail(user_dto.getString("email"));
-                        //user.setAvatar(user_dto.getString("avatar"));
-                        user.setGender(user_dto.getString("gender"));
-                        user.setName(user_dto.getString("name"));
-                        user.setId(user_dto.getString("_id"));
-
-                        JSONArray photos_json = user_dto.getJSONArray("photos");
-                        List<String> photos = new ArrayList<String>();
-                        for (int i = 0; i < photos_json.length(); i++) {
-                            String photo_url = photos_json.getJSONObject(i).getString("url");
-                            boolean is_profile = photos_json.getJSONObject(i).getBoolean("profile");
-                            if (is_profile)
-                                user.setAvatar(photo_url);
-                            else
-                                photos.add(photo_url);
-
-                            user.setPhotos(photos);
-                        }
-
+                        user = new UserDto(response_json.getJSONObject("result").getJSONObject("user"));
                         failed = false;
                     } else
                         failed = true;
@@ -404,31 +363,10 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
-                UserDto user = new UserDto();
+                UserDto user = null;
                 try {
                     if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        //Log.i("user", response_json.getJSONObject("result").getJSONObject("user").toString());
-
-                        JSONObject user_dto = response_json.getJSONObject("user");
-                        user.setEmail(user_dto.getString("email"));
-                        //user.setAvatar(user_dto.getString("avatar"));
-                        user.setGender(user_dto.getString("gender"));
-                        user.setName(user_dto.getString("name"));
-                        user.setId(user_dto.getString("_id"));
-
-                        JSONArray photos_json = user_dto.getJSONArray("photos");
-                        List<String> photos = new ArrayList<String>();
-                        for (int i = 0; i < photos_json.length(); i++) {
-                            String photo_url = photos_json.getJSONObject(i).getString("url");
-                            boolean is_profile = photos_json.getJSONObject(i).getBoolean("profile");
-                            if (is_profile)
-                                user.setAvatar(photo_url);
-                            else
-                                photos.add(photo_url);
-
-                            user.setPhotos(photos);
-                        }
-
+                        user = new UserDto(response_json.getJSONObject("user"));
                         failed = false;
                     } else
                         failed = true;
@@ -468,31 +406,10 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
-                UserDto user = new UserDto();
+                UserDto user = null;
                 try {
                     if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        //Log.i("user", response_json.getJSONObject("result").getJSONObject("user").toString());
-
-                        JSONObject user_dto = response_json.getJSONObject("user");
-                        user.setEmail(user_dto.getString("email"));
-                        //user.setAvatar(user_dto.getString("avatar"));
-                        user.setGender(user_dto.getString("gender"));
-                        user.setName(user_dto.getString("name"));
-                        user.setId(user_dto.getString("_id"));
-
-                        JSONArray photos_json = user_dto.getJSONArray("photos");
-                        List<String> photos = new ArrayList<String>();
-                        for (int i = 0; i < photos_json.length(); i++) {
-                            String photo_url = photos_json.getJSONObject(i).getString("url");
-                            boolean is_profile = photos_json.getJSONObject(i).getBoolean("profile");
-                            if (is_profile)
-                                user.setAvatar(photo_url);
-                            else
-                                photos.add(photo_url);
-
-                            user.setPhotos(photos);
-                        }
-
+                        user = new UserDto(response_json.getJSONObject("user"));
                         failed = false;
                     } else
                         failed = true;
@@ -532,31 +449,10 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
-                UserDto user = new UserDto();
+                UserDto user = null;
                 try {
                     if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        //Log.i("user", response_json.getJSONObject("result").getJSONObject("user").toString());
-
-                        JSONObject user_dto = response_json.getJSONObject("user");
-                        user.setEmail(user_dto.getString("email"));
-                        //user.setAvatar(user_dto.getString("avatar"));
-                        user.setGender(user_dto.getString("gender"));
-                        user.setName(user_dto.getString("name"));
-                        user.setId(user_dto.getString("_id"));
-
-                        JSONArray photos_json = user_dto.getJSONArray("photos");
-                        List<String> photos = new ArrayList<String>();
-                        for (int i = 0; i < photos_json.length(); i++) {
-                            String photo_url = photos_json.getJSONObject(i).getString("url");
-                            boolean is_profile = photos_json.getJSONObject(i).getBoolean("profile");
-                            if (is_profile)
-                                user.setAvatar(photo_url);
-                            else
-                                photos.add(photo_url);
-
-                            user.setPhotos(photos);
-                        }
-
+                        user = new UserDto(response_json.getJSONObject("user"));
                         failed = false;
                     } else
                         failed = true;

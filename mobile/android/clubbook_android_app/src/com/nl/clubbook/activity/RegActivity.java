@@ -188,7 +188,7 @@ public class RegActivity extends ImageUploadActivity {
                         } else {
                             UserDto user = (UserDto) result;
                             // save user in session
-                            getSession().createLoginSession(user.getId(), user.getName(), user.getEmail(), user.getGender(), user.getDob(), user.getAvatar());
+                            getSession().createLoginSession(user);
                             // navigate to main page
                             Intent i = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(i);

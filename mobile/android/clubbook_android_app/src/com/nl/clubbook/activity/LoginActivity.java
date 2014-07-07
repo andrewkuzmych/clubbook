@@ -77,7 +77,7 @@ public class LoginActivity extends BaseActivity {
                             alert.showAlertDialog(LoginActivity.this, "Error", "Incorrect credentials", false);
                         } else {
                             UserDto user = (UserDto) result;
-                            getSession().createLoginSession(user.getId(), user.getName(), user.getEmail(), user.getGender(), user.getDob(), user.getAvatar());
+                            getSession().createLoginSession(user);
                             Intent i = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(i);
                         }

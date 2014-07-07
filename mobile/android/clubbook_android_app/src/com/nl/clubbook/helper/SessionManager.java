@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import com.nl.clubbook.activity.MainActivity;
+import com.nl.clubbook.datasource.UserDto;
 import com.parse.PushService;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +44,7 @@ public class SessionManager {
     public static final String KEY_EMAIL = "email";
     public static final String KEY_GENDER = "gender";
     public static final String KEY_BIRTHDAY = "birthday";
+    public static final String KEY_AGE = "age";
     public static final String KEY_AVATAR = "avatar";
     public static final String KEY_FBACCESSTOKEN = "access_token";
     public static final String KEY_FBACCESSEXPITES = "access_expires";
@@ -109,23 +111,25 @@ public class SessionManager {
     /**
      * Create login session
      */
-    public void createLoginSession(String id, String name, String email, String gender, String birthday, String avatar) {
-        PushService.subscribe(_context, "user_" + id, MainActivity.class);
+    public void createLoginSession(UserDto user) {
+        PushService.subscribe(_context, "user_" + user.getId(), MainActivity.class);
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
 
-        editor.putString(KEY_ID, id);
+        editor.putString(KEY_ID, user.getId());
         // Storing name in pref
-        editor.putString(KEY_NAME, name);
+        editor.putString(KEY_NAME, user.getName());
 
         // Storing email in pref
-        editor.putString(KEY_EMAIL, email);
+        editor.putString(KEY_EMAIL, user.getEmail());
 
-        editor.putString(KEY_GENDER, gender);
+        editor.putString(KEY_GENDER, user.getGender());
 
-        editor.putString(KEY_BIRTHDAY, birthday);
+        editor.putString(KEY_BIRTHDAY, user.getDob());
 
-        editor.putString(KEY_AVATAR, avatar);
+        editor.putString(KEY_AGE, user.getAge());
+
+        editor.putString(KEY_AVATAR, user.getAvatar());
 
         // commit changes
         editor.commit();
@@ -169,6 +173,7 @@ public class SessionManager {
         user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, null));
         user.put(KEY_GENDER, pref.getString(KEY_GENDER, null));
         user.put(KEY_BIRTHDAY, pref.getString(KEY_BIRTHDAY, null));
+        user.put(KEY_AGE, pref.getString(KEY_AGE, null));
         user.put(KEY_AVATAR, pref.getString(KEY_AVATAR, null));
 
         // return user

@@ -19,29 +19,32 @@ public class UserDto {
     private String password;
     private String gender;
     private String dob;
+    private String age;
     private String avatar;
     private List<String> photos;
 
-    UserDto(){
+    UserDto() {
 
     }
 
     UserDto(JSONObject userJson) throws JSONException {
         this.setId(userJson.getString("_id"));
-        if(userJson.has("fb_id"))
+        if (userJson.has("fb_id"))
             this.setFb_id(userJson.getString("fb_id"));
         this.setName(userJson.getString("name"));
-        if(userJson.has("email"))
+        if (userJson.has("email"))
             this.setEmail(userJson.getString("email"));
         this.setGender(userJson.getString("gender"));
-        if(userJson.has("dob"))
+        if (userJson.has("dob"))
             this.setDob(userJson.getString("dob"));
+        if (userJson.has("age") && userJson.getString("age") != "null")
+            this.setAge(userJson.getString("age"));
 
-        JSONArray photos_json =  userJson.getJSONArray("photos");
+        JSONArray photos_json = userJson.getJSONArray("photos");
         List<String> photos = new ArrayList<String>();
         for (int i = 0; i < photos_json.length(); i++) {
             String photo_url = photos_json.getJSONObject(i).getString("url");
-            boolean is_profile =  photos_json.getJSONObject(i).getBoolean("profile");
+            boolean is_profile = photos_json.getJSONObject(i).getBoolean("profile");
             if (is_profile)
                 this.setAvatar(photo_url);
             else
@@ -121,5 +124,13 @@ public class UserDto {
 
     public void setDob(String dob) {
         this.dob = dob;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
     }
 }

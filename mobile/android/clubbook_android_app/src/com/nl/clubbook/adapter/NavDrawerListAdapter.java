@@ -66,6 +66,12 @@ public class NavDrawerListAdapter extends ArrayAdapter<NavDrawerItem> {
             TextView profile_name = (TextView) convertView.findViewById(R.id.profile_name);
             profile_name.setText(navDrawerItems.get(position).getTitle());
 
+            TextView profile_age_gender = (TextView) convertView.findViewById(R.id.profile_age_gender);
+            String age_gender = navDrawerItems.get(position).getGender();
+            if(navDrawerItems.get(position).getAge() != null)
+                age_gender = navDrawerItems.get(position).getAge() + ", " + age_gender;
+            profile_age_gender.setText(age_gender);
+
             if (navDrawerItems.get(position).getProfileAvatar() != null)
                 imageLoader.displayImage(navDrawerItems.get(position).getProfileAvatar(), profile_image, options, animateFirstListener);
 
