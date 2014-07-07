@@ -139,6 +139,8 @@ public class ChatFragment extends BaseFragment {
                 inputText.requestFocus();
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(inputText, InputMethodManager.SHOW_IMPLICIT);
+
+                // make conversation between 2 people as read
                 DataStore.read_messages(chat.getChatId(), user_from, new DataStore.OnResultReady() {
                     @Override
                     public void onReady(Object result, boolean failed) {

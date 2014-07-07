@@ -10,11 +10,11 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.*;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.*;
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.NavDrawerListAdapter;
 import com.nl.clubbook.datasource.DataStore;
@@ -190,6 +190,7 @@ public class MainActivity extends BaseActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
@@ -202,16 +203,16 @@ public class MainActivity extends BaseActivity {
             case android.R.id.home:
                 navigateBack();
                 return true;
-            case R.id.action_logout:
-                getSession().logoutUser();
-                mSimpleFacebook.logout(mOnLogoutListener);
-                Intent in = new Intent(getApplicationContext(),
-                        MainLoginActivity.class);
-                startActivity(in);
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    protected void logout() {
+        getSession().logoutUser();
+        mSimpleFacebook.logout(mOnLogoutListener);
+        Intent in = new Intent(getApplicationContext(), MainLoginActivity.class);
+        startActivity(in);
     }
 
     @Override
@@ -219,6 +220,21 @@ public class MainActivity extends BaseActivity {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_activity_actions, menu);
+
+        View badgeMessages = MenuItemCompat.getActionView(menu.findItem(R.id.badgeMessages));
+        RelativeLayout messagesActionBar = (RelativeLayout) badgeMessages.findViewById(R.id.messagesActionBar);
+        final ImageButton actionbarChatButton = (ImageButton) messagesActionBar.findViewById(R.id.actionbarChatButton);
+        final TextView actionbarChatCount = (TextView) messagesActionBar.findViewById(R.id.actionbarChatCount);
+
+        actionbarChatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Integer countOfNewMessages = Integer.parseInt(actionbarChatCount.getText().toString());
+                countOfNewMessages += 1;
+                actionbarChatCount.setText(String.valueOf(countOfNewMessages));
+            }
+        });
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -376,6 +392,7 @@ public class MainActivity extends BaseActivity {
             ((MessagesFragment) getCurrentFragment()).loadData(false);
         }
 
+        // retrieve the count of not read messages and update UI
         DataStore.unread_messages_count(getCurrentUserId(), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
@@ -387,6 +404,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void displayView(final int position) {
+        // logout
+        if (position == 7) {
+            logout();
+            return;
+        }
+
         // update the main content by replacing fragments
         Fragment fragment = fragmentMap.get(position);
 

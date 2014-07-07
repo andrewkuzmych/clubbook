@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_gravity="right"
+                android:id="@+id/messagesActionBar" >
+
+
+    <ImageButton
+            android:id="@+id/actionbarChatButton"
+            android:layout_width="50dp"
+            android:layout_height="fill_parent"
+            android:clickable="true"
+            android:src="@drawable/icon_chat" android:background="@null"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"/>
+
+
+    <TextView
+            android:id="@+id/actionbarChatCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14dp" android:textStyle="bold"
+            android:text="9"
+            android:paddingRight="12dp"
+            android:paddingBottom="7dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:textColor="#FFFFFF" android:layout_alignRight="@+id/actionbarChatButton"/>
+
+</RelativeLayout>

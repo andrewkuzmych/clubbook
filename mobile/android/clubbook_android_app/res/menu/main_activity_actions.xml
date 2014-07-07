@@ -2,8 +2,11 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:clubbook="http://schemas.android.com/apk/res-auto" >
-    <item android:id="@+id/action_logout"
-          android:icon="@drawable/ic_action_back"
-          android:title="logout"
-          clubbook:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/badgeMessages"
+          android:icon="@drawable/icon_chat"
+          clubbook:actionLayout="@layout/actionbar_messages_layout"
+          android:title="chat"
+          clubbook:showAsAction="always"/>
+
 </menu>
