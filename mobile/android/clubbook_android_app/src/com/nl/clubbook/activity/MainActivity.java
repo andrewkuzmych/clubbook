@@ -49,6 +49,10 @@ public class MainActivity extends BaseActivity {
     private SimpleFacebook mSimpleFacebook;
     private static final int DEFAULT_VIEW = 1;
 
+    private ImageButton actionbarChatButton;
+    private TextView actionbarChatCount;
+    private Integer chatCountOfNewMessages = 0;
+
     private CharSequence mTitle;
     private String[] navMenuTitles;
     private TypedArray navMenuIcons;
@@ -224,15 +228,14 @@ public class MainActivity extends BaseActivity {
 
         View badgeMessages = MenuItemCompat.getActionView(menu.findItem(R.id.badgeMessages));
         RelativeLayout messagesActionBar = (RelativeLayout) badgeMessages.findViewById(R.id.messagesActionBar);
-        final ImageButton actionbarChatButton = (ImageButton) messagesActionBar.findViewById(R.id.actionbarChatButton);
-        final TextView actionbarChatCount = (TextView) messagesActionBar.findViewById(R.id.actionbarChatCount);
+        actionbarChatButton = (ImageButton) messagesActionBar.findViewById(R.id.actionbarChatButton);
+        actionbarChatCount = (TextView) messagesActionBar.findViewById(R.id.actionbarChatCount);
+        actionbarChatCount.setText(String.valueOf(chatCountOfNewMessages));
 
         actionbarChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Integer countOfNewMessages = Integer.parseInt(actionbarChatCount.getText().toString());
-                countOfNewMessages += 1;
-                actionbarChatCount.setText(String.valueOf(countOfNewMessages));
+
             }
         });
 
@@ -298,7 +301,7 @@ public class MainActivity extends BaseActivity {
                 String userFrom = messageJson.getString("user_from");
                 SessionManager session = new SessionManager(this);
                 if (session.getConversationListner() != null && session.getConversationListner().equalsIgnoreCase(userFrom + "_" + userTo)) {
-                    chatFragment.addComment(messageJson.getString("msg"));
+                    chatFragment.receiveComment(messageJson.getString("msg"));
                 } else {
                     updateMessagesCount();
                 }
@@ -389,6 +392,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void updateMessagesCount() {
+        // if user on List of All messages fragment then reload data
         if (getCurrentFragment() instanceof MessagesFragment) {
             ((MessagesFragment) getCurrentFragment()).loadData(false);
         }
@@ -438,16 +442,21 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setMessageCount(Integer count) {
-        if (count == 0) {
+        chatCountOfNewMessages = count;
+
+        // set count of new messages on left nav bar
+        if (chatCountOfNewMessages == 0) {
             navDrawerItems.get(3).setCounterVisibility(false);
-            return;
         } else {
             navDrawerItems.get(3).setCounterVisibility(true);
-            navDrawerItems.get(3).setCount(String.valueOf(count));
+            navDrawerItems.get(3).setCount(String.valueOf(chatCountOfNewMessages));
             adapter = new NavDrawerListAdapter(this, R.layout.drawer_list_item,
                     navDrawerItems);
             mDrawerList.setAdapter(adapter);
         }
+
+        // TODO update count of new messages on top nav bar
+        actionbarChatCount.setText(String.valueOf(chatCountOfNewMessages));
     }
 
     /**

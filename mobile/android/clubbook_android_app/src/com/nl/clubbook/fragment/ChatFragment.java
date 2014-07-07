@@ -97,8 +97,17 @@ public class ChatFragment extends BaseFragment {
         session.setConversationListner(null);
     }
 
-    public void addComment(String message) {
+    public void receiveComment(String message) {
         adapter.add(new Comment(true, message));
+
+        DataStore.read_messages(chat.getChatId(), user_from, new DataStore.OnResultReady() {
+            @Override
+            public void onReady(Object result, boolean failed) {
+                if (failed) {
+                    return;
+                }
+            }
+        });
     }
 
     private void sendMessage() {
