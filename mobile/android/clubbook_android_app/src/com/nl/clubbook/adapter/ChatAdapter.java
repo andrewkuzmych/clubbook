@@ -3,11 +3,13 @@ package com.nl.clubbook.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.nl.clubbook.R;
@@ -21,13 +23,14 @@ import java.util.List;
  */
 public class ChatAdapter extends ArrayAdapter<ChatMessageDto> {
 
-    private TextView countryName;
-    private List<ChatMessageDto> countries = new ArrayList<ChatMessageDto>();
+    private TextView message;
+    private ImageView chatMessageImage;
+    private List<ChatMessageDto> chatMessageDtos = new ArrayList<ChatMessageDto>();
     private LinearLayout wrapper;
 
     @Override
     public void add(ChatMessageDto object) {
-        countries.add(object);
+        chatMessageDtos.add(object);
         super.add(object);
     }
 
@@ -35,31 +38,41 @@ public class ChatAdapter extends ArrayAdapter<ChatMessageDto> {
         super(context, textViewResourceId);
     }
 
-    public int getCount() {
-        return this.countries.size();
-    }
-
-    public ChatMessageDto getItem(int index) {
-        return this.countries.get(index);
-    }
-
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
+        ChatMessageDto comment = getItem(position);
+
         if (row == null) {
             LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflater.inflate(R.layout.chat_item, parent, false);
+
+            if (comment.getType().equalsIgnoreCase("message")) {
+                row = inflater.inflate(R.layout.chat_item, parent, false);
+            } else {
+                row = inflater.inflate(R.layout.chat_item_image, parent, false);
+            }
         }
 
-        wrapper = (LinearLayout) row.findViewById(R.id.wrapper);
+        if (comment.getType().equalsIgnoreCase("message")) {
+            message = (TextView) row.findViewById(R.id.comment);
+            message.setText(comment.getMsg());
+            message.setBackgroundResource(comment.getIsMyMessage() ? R.drawable.bubble_green : R.drawable.bubble_yellow);
 
-        ChatMessageDto coment = getItem(position);
+            wrapper = (LinearLayout) row.findViewById(R.id.chatMessageWrapper);
+            wrapper.setGravity(comment.getIsMyMessage() ? Gravity.RIGHT : Gravity.LEFT);
 
-        countryName = (TextView) row.findViewById(R.id.comment);
+        } else {
+            message = (TextView) row.findViewById(R.id.comment);
+            chatMessageImage = (ImageView) row.findViewById(R.id.chatMessageImage);
 
-        countryName.setText(coment.getMsg());
+            if (comment.getType().equalsIgnoreCase("smile")) {
+                message.setText("Natali sent you a smile");
+                chatMessageImage.setImageDrawable(getContext().getResources().getDrawable(R.drawable.icon_smile));
+            } else if (comment.getType().equalsIgnoreCase("drink")) {
+                message.setText("Natali invited you to a drink");
+                chatMessageImage.setImageDrawable(getContext().getResources().getDrawable(R.drawable.icon_drink));
+            }
 
-        countryName.setBackgroundResource(coment.getIsMyMessage() ? R.drawable.bubble_green : R.drawable.bubble_yellow);
-        wrapper.setGravity(coment.getIsMyMessage() ? Gravity.RIGHT : Gravity.LEFT);
+        }
 
         return row;
     }
@@ -67,4 +80,20 @@ public class ChatAdapter extends ArrayAdapter<ChatMessageDto> {
     public Bitmap decodeToBitmap(byte[] decodedByte) {
         return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
     }
+
+    @Override
+    public int getCount() {
+        return this.chatMessageDtos.size();
+    }
+
+    @Override
+    public ChatMessageDto getItem(int index) {
+        return this.chatMessageDtos.get(index);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
 }

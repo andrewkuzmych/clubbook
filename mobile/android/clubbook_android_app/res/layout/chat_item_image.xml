@@ -4,21 +4,24 @@
               android:layout_width="fill_parent"
               android:layout_height="wrap_content" >
 
-    <LinearLayout
-            android:id="@+id/chatMessageWrapper"
+    <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
 
+        <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:id="@+id/chatMessageImage" android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"/>
         <TextView
                 android:id="@+id/comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dip"
-                android:background="@drawable/bubble_yellow"
-                android:paddingLeft="10dip"
                 android:text="Hello bubbles!"
-                android:textColor="@android:color/primary_text_light" />
-    </LinearLayout>
+                android:textColor="@color/main_font_color"
+                android:layout_below="@id/chatMessageImage"
+                android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
 
 </LinearLayout>

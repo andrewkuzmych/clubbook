@@ -462,7 +462,6 @@ public class MainActivity extends BaseActivity {
             mDrawerList.setAdapter(adapter);
         }
 
-        // TODO update count of new messages on top nav bar
         actionbarChatCount.setText(String.valueOf(chatCountOfNewMessages));
     }
 
