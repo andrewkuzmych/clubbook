@@ -3,7 +3,6 @@ package com.nl.clubbook.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +22,10 @@ import java.util.List;
  */
 public class ChatAdapter extends ArrayAdapter<ChatMessageDto> {
 
+    private static final int TYPE_MESSAGE = 0;
+    private static final int TYPE_IMAGE = 1;
+    private static final int TYPE_COUNT = 2;
+
     private TextView message;
     private ImageView chatMessageImage;
     private List<ChatMessageDto> chatMessageDtos = new ArrayList<ChatMessageDto>();
@@ -34,25 +37,28 @@ public class ChatAdapter extends ArrayAdapter<ChatMessageDto> {
         super.add(object);
     }
 
-    public ChatAdapter(Context context, int textViewResourceId) {
-        super(context, textViewResourceId);
+    public ChatAdapter(Context context, int textViewResourceId, List<ChatMessageDto> objects) {
+        super(context, textViewResourceId, objects);
+        this.chatMessageDtos = objects;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        ChatMessageDto comment = getItem(position);
+        int type = getItemViewType(position);
 
         if (row == null) {
-            LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            if (comment.getType().equalsIgnoreCase("message")) {
+            if (type == TYPE_MESSAGE) {
                 row = inflater.inflate(R.layout.chat_item, parent, false);
             } else {
                 row = inflater.inflate(R.layout.chat_item_image, parent, false);
             }
         }
 
-        if (comment.getType().equalsIgnoreCase("message")) {
+        ChatMessageDto comment = getItem(position);
+
+        if (type == TYPE_MESSAGE) {
             message = (TextView) row.findViewById(R.id.comment);
             message.setText(comment.getMsg());
             message.setBackgroundResource(comment.getIsMyMessage() ? R.drawable.bubble_green : R.drawable.bubble_yellow);
@@ -61,7 +67,7 @@ public class ChatAdapter extends ArrayAdapter<ChatMessageDto> {
             wrapper.setGravity(comment.getIsMyMessage() ? Gravity.RIGHT : Gravity.LEFT);
 
         } else {
-            message = (TextView) row.findViewById(R.id.comment);
+            message = (TextView) row.findViewById(R.id.chatCommentImage);
             chatMessageImage = (ImageView) row.findViewById(R.id.chatMessageImage);
 
             if (comment.getType().equalsIgnoreCase("smile")) {
@@ -77,10 +83,6 @@ public class ChatAdapter extends ArrayAdapter<ChatMessageDto> {
         return row;
     }
 
-    public Bitmap decodeToBitmap(byte[] decodedByte) {
-        return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
-    }
-
     @Override
     public int getCount() {
         return this.chatMessageDtos.size();
@@ -94,6 +96,21 @@ public class ChatAdapter extends ArrayAdapter<ChatMessageDto> {
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return TYPE_COUNT;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        ChatMessageDto chatMessageDto = chatMessageDtos.get(position);
+        if (chatMessageDto.getType().equalsIgnoreCase("message")) {
+            return TYPE_MESSAGE;
+        } else {
+            return TYPE_IMAGE;
+        }
     }
 
 }

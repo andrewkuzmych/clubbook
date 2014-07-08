@@ -64,10 +64,7 @@ public class ChatFragment extends BaseFragment {
         userName = (TextView) rootView.findViewById(R.id.chatUserName);
         userAvatar = (ImageView) rootView.findViewById(R.id.chatUserAvatar);
 
-        // chat messages
         chat_list = (ListView) rootView.findViewById(R.id.chatList);
-        adapter = new ChatAdapter(getActivity().getApplicationContext(), R.layout.chat_item);
-        chat_list.setAdapter(adapter);
 
         // send message input
         inputText = (EditText) rootView.findViewById(R.id.messageInput);
@@ -146,9 +143,11 @@ public class ChatFragment extends BaseFragment {
                 String image_url = ImageHelper.generateUrl(chatDto.getReceiver().getAvatar(), "c_fit,w_700");
                 imageLoader.displayImage(image_url, userAvatar, options, animateFirstListener);
                 // display chat messages
-                for (int i = 0; i < chatDto.getConversation().size(); i++) {
-                    adapter.add(chatDto.getConversation().get(i));
-                }
+
+                // chat messages
+
+                adapter = new ChatAdapter(getActivity().getApplicationContext(), R.layout.chat_item, chatDto.getConversation());
+                chat_list.setAdapter(adapter);
 
                 chat_list.setSelection(chatDto.getConversation().size());
 

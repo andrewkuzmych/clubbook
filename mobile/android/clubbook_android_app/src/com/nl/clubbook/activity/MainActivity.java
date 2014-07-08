@@ -110,10 +110,7 @@ public class MainActivity extends BaseActivity {
 
         initNavigationMenu();
 
-        updateMessagesCount();
-
         displayDefaultView();
-
     }
 
     private void initNavigationMenu() {
@@ -244,6 +241,9 @@ public class MainActivity extends BaseActivity {
                 mFragmentTransaction.replace(R.id.frame_container, new MessagesFragment()).commit();
             }
         });
+
+        // update count of messages
+        updateMessagesCount();
 
         return super.onCreateOptionsMenu(menu);
     }
