@@ -332,6 +332,10 @@ exports.get_conversation = (req, res)->
       current_user = chat.user2
       receiver = chat.user1
 
+    # helper
+    for conversation in chat.conversation
+      conversation.is_my_message = current_user._id.toString() is conversation.from_who
+
     res.json
       status: 'ok'
       result:
