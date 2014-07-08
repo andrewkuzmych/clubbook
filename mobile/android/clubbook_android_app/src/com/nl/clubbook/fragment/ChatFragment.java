@@ -149,7 +149,7 @@ public class ChatFragment extends BaseFragment {
                 // display chat messages
                 for (int i = 0; i < chatDto.getConversation().size(); i++) {
                     ChatMessageDto conf = chatDto.getConversation().get(i);
-                    if (conf.getUser_from().equalsIgnoreCase(user_from))
+                    if (conf.getUserFrom().equalsIgnoreCase(user_from))
                         adapter.add(new ChatMessageItem(false, conf.getMsg()));
                     else
                         adapter.add(new ChatMessageItem(true, conf.getMsg()));

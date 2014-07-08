@@ -7,25 +7,27 @@ import org.json.JSONObject;
  * Created by Andrew on 6/6/2014.
  */
 public class ChatMessageDto {
-    private String user_from;
+    private String userFrom;
     private String msg;
     private String type;
+    private Boolean isMyMessage;
 
     public ChatMessageDto() {
     }
 
     public ChatMessageDto(JSONObject jsonObject) throws JSONException {
-        setUser_from(jsonObject.getString("from_who"));
+        setUserFrom(jsonObject.getString("from_who"));
         setMsg(jsonObject.getString("msg"));
         setType(jsonObject.getString("type"));
+        setIsMyMessage(jsonObject.getBoolean("is_my_message"));
     }
 
-    public String getUser_from() {
-        return user_from;
+    public String getUserFrom() {
+        return userFrom;
     }
 
-    public void setUser_from(String user_from) {
-        this.user_from = user_from;
+    public void setUserFrom(String userFrom) {
+        this.userFrom = userFrom;
     }
 
     public String getMsg() {
@@ -42,5 +44,13 @@ public class ChatMessageDto {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Boolean getIsMyMessage() {
+        return isMyMessage;
+    }
+
+    public void setIsMyMessage(Boolean isMyMessage) {
+        this.isMyMessage = isMyMessage;
     }
 }
