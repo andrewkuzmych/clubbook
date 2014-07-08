@@ -506,11 +506,7 @@ public class DataStore {
 
                         List<ChatMessageDto> conversation = new ArrayList<ChatMessageDto>();
                         for (int i = 0; i < conversation_dto.length(); i++) {
-                            ChatMessageDto con = new ChatMessageDto();
-                            con.setUser_from(conversation_dto.getJSONObject(i).getString("from_who"));
-                            con.setMsg(conversation_dto.getJSONObject(i).getString("msg"));
-
-                            conversation.add(con);
+                            conversation.add(new ChatMessageDto(conversation_dto.getJSONObject(i)));
                         }
 
                         chat.setCurrentUser(new UserDto(chatJson.getJSONObject("current_user")));
