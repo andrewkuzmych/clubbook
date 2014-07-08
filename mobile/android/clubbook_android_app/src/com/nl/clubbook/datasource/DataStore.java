@@ -513,7 +513,7 @@ public class DataStore {
                             conversation.add(con);
                         }
 
-                        chat.setCurrentUser(new UserDto(chatJson.getJSONObject("currentUser")));
+                        chat.setCurrentUser(new UserDto(chatJson.getJSONObject("current_user")));
                         chat.setReceiver(new UserDto(chatJson.getJSONObject("receiver")));
                         chat.setChatId(chatJson.getString("chat_id"));
                         chat.setConversation(conversation);

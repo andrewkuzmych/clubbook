@@ -321,15 +321,15 @@ exports.get_conversations = (req, res)->
 
 exports.get_conversation = (req, res)->
   params =
-    user1: req.params.user1
-    user2: req.params.user2
+    user1: req.params.current_user
+    user2: req.params.receiver
 
   manager.get_conversation params, (err, chat)->
-    if req.params.user1 is chat.user1._id.toString()
-      currentUser = chat.user1
+    if req.params.current_user is chat.user1._id.toString()
+      current_user = chat.user1
       receiver = chat.user2
     else
-      currentUser = chat.user2
+      current_user = chat.user2
       receiver = chat.user1
 
     res.json
@@ -337,7 +337,7 @@ exports.get_conversation = (req, res)->
       result:
         chat_id: chat._id
         conversation: chat.conversation
-        currentUser: currentUser
+        current_user: current_user
         receiver: receiver
 
 

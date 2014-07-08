@@ -133,7 +133,7 @@ app.get '/_s/checkout/:club_id/:user_id', services.checkout
 app.get '/_s/club_clubbers/:club_id', services.club_clubbers
 app.post '/_s/chat', services.chat
 app.get '/_s/readchat/:chat_id/:user_id', services.readchat
-app.get '/_s/conversation/:user1/:user2', services.get_conversation
+app.get '/_s/conversation/:current_user/:receiver', services.get_conversation
 app.get '/_s/conversations/:user_id', services.get_conversations
 app.get '/_s/cron_checkout', services.cron_checkout
 app.get '/_s/unread/messages/count/:user_id', services.unread_messages_count
