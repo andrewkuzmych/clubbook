@@ -235,7 +235,12 @@ public class MainActivity extends BaseActivity {
         actionbarChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // open chat window
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
 
+                mFragmentTransaction.addToBackStack(null);
+                mFragmentTransaction.replace(R.id.frame_container, new MessagesFragment()).commit();
             }
         });
 

@@ -20,10 +20,10 @@
             android:id="@+id/actionbarChatCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14dp" android:textStyle="bold"
+            android:textSize="16dp" android:textStyle="bold"
             android:text="9"
-            android:paddingRight="12dp"
-            android:paddingBottom="7dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="15dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:textColor="#FFFFFF" android:layout_alignRight="@+id/actionbarChatButton"/>
