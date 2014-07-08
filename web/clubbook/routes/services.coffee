@@ -254,10 +254,15 @@ exports.club_clubbers = (req, res)->
       users: users
 
 exports.chat = (req, res)->
+  # fix empty message type
+  if not req.body.msg_type
+    req.body.msg_type = "message"
+
   params =
     user_from: req.body.user_from
     user_to: req.body.user_to
     msg: req.body.msg
+    msg_type: req.body.msg_type
 
   manager.get_user_by_id req.body.user_from, (err, user_from)->
     manager.chat params, (err, chat)->
@@ -285,10 +290,11 @@ exports.chat = (req, res)->
 
       pubnab_data =
         msg: message
+        msg_type: chat.type
         user_from: req.body.user_from
         user_to: req.body.user_to
+        data: chat
         type: "chat"
-
 
       pubnub.publish
         channel: "message_" + req.body.user_to
@@ -319,10 +325,20 @@ exports.get_conversation = (req, res)->
     user2: req.params.user2
 
   manager.get_conversation params, (err, chat)->
+    if req.params.user1 is chat.user1._id.toString()
+      currentUser = chat.user1
+      receiver = chat.user2
+    else
+      currentUser = chat.user2
+      receiver = chat.user1
+
     res.json
       status: 'ok'
-      chat_id: chat._id
-      conversation: chat.conversation
+      result:
+        chat_id: chat._id
+        conversation: chat.conversation
+        currentUser: currentUser
+        receiver: receiver
 
 
 exports.cron_checkout = (req, res)->

@@ -3,7 +3,7 @@ package com.nl.clubbook.datasource;
 /**
  * Created by Andrew on 6/6/2014.
  */
-public class Conversation {
+public class ChatMessageDto {
     private String user_from;
     private String msg;
 

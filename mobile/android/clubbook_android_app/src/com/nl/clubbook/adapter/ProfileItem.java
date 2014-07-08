@@ -1,4 +1,4 @@
-package com.nl.clubbook.datasource;
+package com.nl.clubbook.adapter;
 
 import android.graphics.Bitmap;
 

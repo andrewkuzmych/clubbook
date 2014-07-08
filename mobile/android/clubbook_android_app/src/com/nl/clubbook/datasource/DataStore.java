@@ -483,6 +483,13 @@ public class DataStore {
         });
     }
 
+    /**
+     * Get conversation between 2 people
+     *
+     * @param user1
+     * @param user2
+     * @param onResultReady
+     */
     public static void get_conversation(String user1, String user2, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         ClubbookRestClient.get_conversation(user1, user2, params, new JsonHttpResponseHandler() {
@@ -490,21 +497,25 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
-                Chat chat = new Chat();
+                ChatDto chat = new ChatDto();
                 try {
                     if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        JSONArray conversation_dto = response_json.getJSONArray("conversation");
+                        JSONObject chatJson = response_json.getJSONObject("result");
 
-                        List<Conversation> conversation = new ArrayList<Conversation>();
+                        JSONArray conversation_dto = chatJson.getJSONArray("conversation");
+
+                        List<ChatMessageDto> conversation = new ArrayList<ChatMessageDto>();
                         for (int i = 0; i < conversation_dto.length(); i++) {
-                            Conversation con = new Conversation();
+                            ChatMessageDto con = new ChatMessageDto();
                             con.setUser_from(conversation_dto.getJSONObject(i).getString("from_who"));
                             con.setMsg(conversation_dto.getJSONObject(i).getString("msg"));
 
                             conversation.add(con);
                         }
 
-                        chat.setChatId(response_json.getString("chat_id"));
+                        chat.setCurrentUser(new UserDto(chatJson.getJSONObject("currentUser")));
+                        chat.setReceiver(new UserDto(chatJson.getJSONObject("receiver")));
+                        chat.setChatId(chatJson.getString("chat_id"));
                         chat.setConversation(conversation);
 
                         failed = false;
@@ -535,6 +546,12 @@ public class DataStore {
         });
     }
 
+    /**
+     * Get all conversation one person had
+     *
+     * @param user_id
+     * @param onResultReady
+     */
     public static void get_conversations(final String user_id, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         ClubbookRestClient.get_conversations(user_id, params, new JsonHttpResponseHandler() {

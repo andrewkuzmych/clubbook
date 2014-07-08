@@ -362,14 +362,13 @@ exports.chat = (params, callback)->
         user1: mongoose.Types.ObjectId(params.user_from)
         user2: mongoose.Types.ObjectId(params.user_to)
 
-    chat.conversation.push {msg: params.msg, from_who: mongoose.Types.ObjectId(params.user_from)}
+    chat.conversation.push {msg: params.msg, from_who: mongoose.Types.ObjectId(params.user_from), type: params.msg_type}
 
     if chat.unread.user && chat.unread.user.toString() == params.user_to.toString()
       chat.unread.count += 1
     else
       chat.unread.user = mongoose.Types.ObjectId(params.user_to)
       chat.unread.count = 1
-
 
     chat.save (err)->
         console.log err
@@ -378,24 +377,14 @@ exports.chat = (params, callback)->
 exports.get_conversation = (params, callback)->
   query = { '$or': [{ 'user1': mongoose.Types.ObjectId(params.user1), 'user2': mongoose.Types.ObjectId(params.user2) }, { 'user1': mongoose.Types.ObjectId(params.user2), 'user2': mongoose.Types.ObjectId(params.user1) }] }
 
-  db_model.Chat.findOne(query).exec (err, chat)->
-    if not chat
-      callback err, []
-    else
-      callback err, chat
-
-exports.get_conversation = (params, callback)->
-  query = { '$or': [{ 'user1': mongoose.Types.ObjectId(params.user1), 'user2': mongoose.Types.ObjectId(params.user2) }, { 'user1': mongoose.Types.ObjectId(params.user2), 'user2': mongoose.Types.ObjectId(params.user1) }] }
-
-  db_model.Chat.findOne(query).exec (err, chat)->
+  db_model.Chat.findOne(query).populate("user1", db_model.USER_PUBLIC_INFO).populate("user2", db_model.USER_PUBLIC_INFO).exec (err, chat)->
     if not chat
       callback err, []
     else
       callback err, chat
 
 exports.get_conversations = (params, callback)->
-
-  db_model.Chat.find({'$or':[{'user1': mongoose.Types.ObjectId(params.user_id)}, {'user2': mongoose.Types.ObjectId(params.user_id)}]}, { 'conversation': { '$slice': -1 } }).populate("user1",'_id photos name').populate("user2",'_id photos name').exec (err, chats)->
+  db_model.Chat.find({'$or':[{'user1': mongoose.Types.ObjectId(params.user_id)}, {'user2': mongoose.Types.ObjectId(params.user_id)}]}, { 'conversation': { '$slice': -1 } }).populate("user1", db_model.USER_PUBLIC_INFO).populate("user2", db_model.USER_PUBLIC_INFO).exec (err, chats)->
     if not chats
       callback err, []
     else

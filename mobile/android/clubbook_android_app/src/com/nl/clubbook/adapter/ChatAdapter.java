@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,14 +18,14 @@ import java.util.List;
 /**
  * Created by Andrew on 6/6/2014.
  */
-public class ChatAdapter extends ArrayAdapter<Comment> {
+public class ChatAdapter extends ArrayAdapter<ChatMessageItem> {
 
     private TextView countryName;
-    private List<Comment> countries = new ArrayList<Comment>();
+    private List<ChatMessageItem> countries = new ArrayList<ChatMessageItem>();
     private LinearLayout wrapper;
 
     @Override
-    public void add(Comment object) {
+    public void add(ChatMessageItem object) {
         countries.add(object);
         super.add(object);
     }
@@ -39,7 +38,7 @@ public class ChatAdapter extends ArrayAdapter<Comment> {
         return this.countries.size();
     }
 
-    public Comment getItem(int index) {
+    public ChatMessageItem getItem(int index) {
         return this.countries.get(index);
     }
 
@@ -52,7 +51,7 @@ public class ChatAdapter extends ArrayAdapter<Comment> {
 
         wrapper = (LinearLayout) row.findViewById(R.id.wrapper);
 
-        Comment coment = getItem(position);
+        ChatMessageItem coment = getItem(position);
 
         countryName = (TextView) row.findViewById(R.id.comment);
 

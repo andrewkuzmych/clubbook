@@ -5,14 +5,36 @@
                 android:layout_height="fill_parent"
         >
 
+    <RelativeLayout
+            android:id="@+id/chatUserDetails"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent" android:background="@color/main_background_light_color_2"
+            android:layout_height="wrap_content">
+        <ImageView
+                android:id="@+id/chatUserAvatar"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/test_avatar"
+                />
+        <TextView
+                android:id="@+id/chatUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Ivan Petrov"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true" android:layout_toRightOf="@+id/chatUserAvatar"/>
+    </RelativeLayout>
+
 
     <ListView android:id="@+id/chatList"
               android:layout_height="wrap_content"
               android:layout_width="fill_parent"
-              android:layout_alignParentTop="true"
               android:layout_above="@+id/listFooter"
               android:transcriptMode="alwaysScroll"
-            />
+              android:layout_below="@+id/chatUserDetails"/>
 
     <LinearLayout android:id="@+id/listFooter"
                   android:layout_width="fill_parent"
@@ -28,7 +50,7 @@
                 android:layout_weight="1"
                 android:lines="1"
                 android:inputType="textShortMessage"
-                android:singleLine="true" />
+                android:singleLine="true"/>
 
         <ImageButton
                 android:id="@+id/sendButton"
