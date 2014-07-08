@@ -289,11 +289,10 @@ exports.chat = (req, res)->
           console.log error
 
       pubnab_data =
-        msg: message
-        msg_type: chat.type
-        user_from: req.body.user_from
-        user_to: req.body.user_to
-        data: chat
+        data:
+          user_from: req.body.user_from
+          user_to: req.body.user_to
+          last_message: chat.conversation[chat.conversation.length - 1]
         type: "chat"
 
       pubnub.publish

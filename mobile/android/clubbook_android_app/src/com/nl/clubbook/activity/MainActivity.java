@@ -17,6 +17,7 @@ import android.view.*;
 import android.widget.*;
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.NavDrawerListAdapter;
+import com.nl.clubbook.datasource.ChatMessageDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.fragment.*;
 import com.nl.clubbook.helper.ImageHelper;
@@ -302,11 +303,12 @@ public class MainActivity extends BaseActivity {
         try {
             if (getCurrentFragment() instanceof ChatFragment && messageJson.getString("type").equalsIgnoreCase("chat")) {
                 ChatFragment chatFragment = (ChatFragment) getCurrentFragment();
-                String userTo = messageJson.getString("user_to");
-                String userFrom = messageJson.getString("user_from");
+                JSONObject data = messageJson.getJSONObject("data");
+                String userTo = data.getString("user_to");
+                String userFrom = data.getString("user_from");
                 SessionManager session = new SessionManager(this);
                 if (session.getConversationListner() != null && session.getConversationListner().equalsIgnoreCase(userFrom + "_" + userTo)) {
-                    chatFragment.receiveComment(messageJson.getString("msg"));
+                    chatFragment.receiveComment(new ChatMessageDto(data.getJSONObject("last_message")));
                 } else {
                     updateMessagesCount();
                 }

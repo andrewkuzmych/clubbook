@@ -18,7 +18,6 @@ import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.adapter.ChatAdapter;
 import com.nl.clubbook.datasource.ChatDto;
 import com.nl.clubbook.datasource.ChatMessageDto;
-import com.nl.clubbook.adapter.ChatMessageItem;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.SessionManager;
@@ -103,8 +102,8 @@ public class ChatFragment extends BaseFragment {
         return rootView;
     }
 
-    public void receiveComment(String message) {
-        adapter.add(new ChatMessageItem(true, message));
+    public void receiveComment(ChatMessageDto message) {
+        adapter.add(message);
 
         DataStore.read_messages(chatDto.getChatId(), user_from, new DataStore.OnResultReady() {
             @Override
@@ -126,7 +125,7 @@ public class ChatFragment extends BaseFragment {
                 }
             });
 
-            adapter.add(new ChatMessageItem(false, inputText.getText().toString()));
+            adapter.add(new ChatMessageDto(inputText.getText().toString()));
             inputText.setText("");
         }
     }
@@ -148,11 +147,7 @@ public class ChatFragment extends BaseFragment {
                 imageLoader.displayImage(image_url, userAvatar, options, animateFirstListener);
                 // display chat messages
                 for (int i = 0; i < chatDto.getConversation().size(); i++) {
-                    ChatMessageDto conf = chatDto.getConversation().get(i);
-                    if (conf.getUserFrom().equalsIgnoreCase(user_from))
-                        adapter.add(new ChatMessageItem(false, conf.getMsg()));
-                    else
-                        adapter.add(new ChatMessageItem(true, conf.getMsg()));
+                    adapter.add(chatDto.getConversation().get(i));
                 }
 
                 chat_list.setSelection(chatDto.getConversation().size());

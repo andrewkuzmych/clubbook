@@ -15,11 +15,20 @@ public class ChatMessageDto {
     public ChatMessageDto() {
     }
 
+    public ChatMessageDto(String msg) {
+        setMsg(msg);
+        setType("message");
+        setIsMyMessage(true);
+    }
+
     public ChatMessageDto(JSONObject jsonObject) throws JSONException {
         setUserFrom(jsonObject.getString("from_who"));
         setMsg(jsonObject.getString("msg"));
         setType(jsonObject.getString("type"));
-        setIsMyMessage(jsonObject.getBoolean("is_my_message"));
+        if(jsonObject.has("is_my_message"))
+            setIsMyMessage(jsonObject.getBoolean("is_my_message"));
+        else
+            setIsMyMessage(false);
     }
 
     public String getUserFrom() {
