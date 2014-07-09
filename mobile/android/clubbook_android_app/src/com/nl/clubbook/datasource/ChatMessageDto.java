@@ -8,6 +8,8 @@ import org.json.JSONObject;
  */
 public class ChatMessageDto {
     private String userFrom;
+    private String userFromName;
+    private String userFromAvatar;
     private String msg;
     private String type;
     private Boolean isMyMessage;
@@ -22,13 +24,18 @@ public class ChatMessageDto {
     }
 
     public ChatMessageDto(JSONObject jsonObject) throws JSONException {
-        setUserFrom(jsonObject.getString("from_who"));
-        setMsg(jsonObject.getString("msg"));
         setType(jsonObject.getString("type"));
+        if(getType().equalsIgnoreCase("message") && jsonObject.has("msg")) {
+            setMsg(jsonObject.getString("msg"));
+        }
         if(jsonObject.has("is_my_message"))
             setIsMyMessage(jsonObject.getBoolean("is_my_message"));
         else
             setIsMyMessage(false);
+
+        setUserFrom(jsonObject.getString("from_who"));
+        setUserFromName(jsonObject.getString("from_who_name"));
+        setUserFromAvatar(jsonObject.getString("from_who_avatar"));
     }
 
     public String getUserFrom() {
@@ -61,5 +68,21 @@ public class ChatMessageDto {
 
     public void setIsMyMessage(Boolean isMyMessage) {
         this.isMyMessage = isMyMessage;
+    }
+
+    public String getUserFromAvatar() {
+        return userFromAvatar;
+    }
+
+    public void setUserFromAvatar(String userFromAvatar) {
+        this.userFromAvatar = userFromAvatar;
+    }
+
+    public String getUserFromName() {
+        return userFromName;
+    }
+
+    public void setUserFromName(String userFromName) {
+        this.userFromName = userFromName;
     }
 }

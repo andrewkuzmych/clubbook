@@ -199,7 +199,6 @@ public class SessionManager {
         // Clearing all data from Shared Preferences
         editor.clear();
         editor.commit();
-
     }
 
     /**

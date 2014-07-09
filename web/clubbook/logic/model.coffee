@@ -135,7 +135,7 @@ ChatSchema = new mongoose.Schema
   unread: {user: {type: mongoose.Schema.ObjectId, ref: 'User'}, count: {type: Number, 'default': 0 }}
   conversation: [
     {
-      msg: { type: String, required: true },
+      msg: { type: String },
       time: { type: Date, 'default': Date.now, required: true},
       type: {type: String, trim: true, required: true, "default": "message", "enum": ["message", "drink", "smile"]},
       from_who: {type: mongoose.Schema.ObjectId, ref: 'User', required: true}

@@ -354,9 +354,10 @@ exports.save_or_update_fb_user = (params, callback)->
                 callback err, user
 
 exports.chat = (params, callback)->
-  query = { '$or': [{ 'user1': mongoose.Types.ObjectId(params.user_from), 'user2': mongoose.Types.ObjectId(params.user_to) }, { 'user1': mongoose.Types.ObjectId(params.user_to), 'user2': mongoose.Types.ObjectId(params.user_from) }] }
+  query = { '$or': [{ 'user1': mongoose.Types.ObjectId(params.user_from), 'user2': mongoose.Types.ObjectId(params.user_to) },
+    { 'user1': mongoose.Types.ObjectId(params.user_to), 'user2': mongoose.Types.ObjectId(params.user_from) }] }
 
-  db_model.Chat.findOne(query).exec (err, chat)->
+  db_model.Chat.findOne(query).populate("user1", db_model.USER_PUBLIC_INFO).populate("user2", db_model.USER_PUBLIC_INFO).exec (err, chat)->
     if not chat
       chat = new db_model.Chat
         user1: mongoose.Types.ObjectId(params.user_from)
@@ -371,8 +372,7 @@ exports.chat = (params, callback)->
       chat.unread.count = 1
 
     chat.save (err)->
-        console.log err
-        callback err, chat
+      callback err, chat
 
 exports.get_conversation = (params, callback)->
   query = { '$or': [{ 'user1': mongoose.Types.ObjectId(params.user1), 'user2': mongoose.Types.ObjectId(params.user2) }, { 'user1': mongoose.Types.ObjectId(params.user2), 'user2': mongoose.Types.ObjectId(params.user1) }] }

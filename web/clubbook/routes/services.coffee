@@ -286,25 +286,48 @@ exports.chat = (req, res)->
           console.log "push error: "
           console.log error
 
+      conversation = prepare_chat_messages(chat, req.body.user_to)[0]
       pubnab_data =
         data:
           user_from: req.body.user_from
           user_to: req.body.user_to
-          last_message: chat.conversation[chat.conversation.length - 1]
+          last_message: conversation[conversation.length - 1]
         type: "chat"
 
       pubnub.publish
         channel: "message_" + req.body.user_to
         message: pubnab_data
         callback: (e) ->
-          console.log "SUCCESS yes!", e
+          console.log "SUCCESS, PubNub message sent!", e
 
         error: (e) ->
-          console.log "FAILED! RETRY PUBLISH!", e
+          console.log "FAILED! PubNub can not send message", e
 
       res.json
         status: 'ok'
         chat: chat
+
+
+prepare_chat_messages = (chat, current_user)->
+  if current_user is chat.user1._id.toString()
+    current_user = chat.user1
+    receiver = chat.user2
+  else
+    current_user = chat.user2
+    receiver = chat.user1
+
+  messages = []
+  for conversation in chat.conversation
+    messages.push
+      msg: conversation.msg
+      time: conversation.time
+      type: conversation.type
+      from_who: conversation.from_who
+      from_who_name: if conversation.from_who.toString() is current_user._id.toString() then current_user.name else receiver.name
+      from_who_avatar: if conversation.from_who.toString() is current_user._id.toString() then current_user.avatar else receiver.avatar
+      is_my_message: current_user._id.toString() is conversation.from_who.toString()
+
+  return [messages, current_user, receiver]
 
 
 exports.get_conversations = (req, res)->
@@ -322,30 +345,15 @@ exports.get_conversation = (req, res)->
     user2: req.params.receiver
 
   manager.get_conversation params, (err, chat)->
-    if req.params.current_user is chat.user1._id.toString()
-      current_user = chat.user1
-      receiver = chat.user2
-    else
-      current_user = chat.user2
-      receiver = chat.user1
-
-    # helper
-    messages = []
-    for conversation in chat.conversation
-      messages.push
-        msg: conversation.msg
-        time: conversation.time
-        type: conversation.type
-        from_who: conversation.from_who
-        is_my_message: current_user._id.toString() is conversation.from_who.toString()
+    chat_dto = prepare_chat_messages chat, req.params.current_user
 
     res.json
       status: 'ok'
       result:
         chat_id: chat._id
-        conversation: messages
-        current_user: current_user
-        receiver: receiver
+        conversation: chat_dto[0]
+        current_user: chat_dto[1]
+        receiver: chat_dto[2]
 
 
 exports.cron_checkout = (req, res)->

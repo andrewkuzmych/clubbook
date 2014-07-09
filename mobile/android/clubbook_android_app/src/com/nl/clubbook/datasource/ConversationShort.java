@@ -10,6 +10,7 @@ public class ConversationShort {
     private String user_id;
     private int unread_messages;
     private String last_message;
+    private String type;
 
     public String getId() {
         return id;
@@ -57,5 +58,13 @@ public class ConversationShort {
 
     public void setLast_message(String last_message) {
         this.last_message = last_message;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

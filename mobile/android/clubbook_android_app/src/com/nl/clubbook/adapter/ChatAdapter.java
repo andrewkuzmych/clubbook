@@ -71,10 +71,20 @@ public class ChatAdapter extends ArrayAdapter<ChatMessageDto> {
             chatMessageImage = (ImageView) row.findViewById(R.id.chatMessageImage);
 
             if (comment.getType().equalsIgnoreCase("smile")) {
-                message.setText("Natali sent you a smile");
+                if(comment.getIsMyMessage()){
+                    message.setText("You sent a smile");
+                } else {
+                    message.setText(comment.getUserFromName() + " sent you smile");
+                }
+
                 chatMessageImage.setImageDrawable(getContext().getResources().getDrawable(R.drawable.icon_smile));
             } else if (comment.getType().equalsIgnoreCase("drink")) {
-                message.setText("Natali invited you to a drink");
+                if(comment.getIsMyMessage()){
+                    message.setText("You sent invite to a drink");
+                } else {
+                    message.setText(comment.getUserFromName() + " sent invite to a drink");
+                }
+
                 chatMessageImage.setImageDrawable(getContext().getResources().getDrawable(R.drawable.icon_drink));
             }
 
