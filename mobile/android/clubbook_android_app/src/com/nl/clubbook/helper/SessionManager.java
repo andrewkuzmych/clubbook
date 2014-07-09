@@ -194,6 +194,8 @@ public class SessionManager {
      * Clear session details
      */
     public void logoutUser() {
+        // unsubscribe from parse
+    	PushService.unsubscribe(_context, "user_" + getUserDetails().get(KEY_ID));
         // Clearing all data from Shared Preferences
         editor.clear();
         editor.commit();
