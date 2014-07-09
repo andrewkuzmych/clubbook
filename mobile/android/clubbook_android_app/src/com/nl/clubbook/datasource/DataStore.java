@@ -543,7 +543,7 @@ public class DataStore {
     }
 
     /**
-     * Get all conversation one person had
+     * Get all conversation one person have with all people
      *
      * @param user_id
      * @param onResultReady
@@ -596,8 +596,13 @@ public class DataStore {
 
                             if (conversations_dto.getJSONObject(i).has("conversation")) {
                                 JSONArray cons_dto = conversations_dto.getJSONObject(i).getJSONArray("conversation");
-                                if (cons_dto.length() > 0)
-                                    con.setLast_message(cons_dto.getJSONObject(0).getString("msg"));
+                                if (cons_dto.length() > 0) {
+                                    if (cons_dto.getJSONObject(0).has("msg")) {
+                                        con.setLast_message(cons_dto.getJSONObject(0).getString("msg"));
+                                    } else {
+                                        con.setLast_message("TO DEVELOP");
+                                    }
+                                }
                             }
 
                             conversations.add(con);
