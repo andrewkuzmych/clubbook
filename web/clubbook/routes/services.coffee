@@ -38,8 +38,7 @@ exports.fb_signin = (req, res)->
 
   else
     if req.body.dob
-      dobArray = req.body.dob.split(".")
-      dob = new Date(dobArray[2], parseInt(dobArray[1]) - 1, dobArray[0], 15, 0, 0, 0)
+      dob = moment(req.body.dob, "DD.MM.YYYY").toDate()
       req.body.dob = dob
 
     if req.body.avatar
@@ -81,8 +80,7 @@ exports.signup = (req, res)->
   console.log req.body
 
   if req.body.dob
-    dobArray = req.body.dob.split(".")
-    dob = new Date(dobArray[0], parseInt(dobArray[1]) - 1, dobArray[2], 15, 0, 0, 0);
+    dob = moment(req.body.dob, "DD.MM.YYYY").toDate()
     req.body.dob = dob
 
   if req.body.avatar
