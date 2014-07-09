@@ -38,7 +38,7 @@ public class ChatAdapter extends ArrayAdapter<ChatMessageDto> {
     }
 
     public ChatAdapter(Context context, int textViewResourceId, List<ChatMessageDto> objects) {
-        super(context, textViewResourceId, objects);
+        super(context, textViewResourceId);
         this.chatMessageDtos = objects;
     }
 
