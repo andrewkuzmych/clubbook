@@ -70,24 +70,13 @@ public class ChatAdapter extends ArrayAdapter<ChatMessageDto> {
             message = (TextView) row.findViewById(R.id.chatCommentImage);
             chatMessageImage = (ImageView) row.findViewById(R.id.chatMessageImage);
 
-            if (comment.getType().equalsIgnoreCase("smile")) {
-                if(comment.getIsMyMessage()){
-                    message.setText("You sent a smile");
-                } else {
-                    message.setText(comment.getUserFromName() + " sent you smile");
-                }
+            message.setText(comment.getFormatMessage());
 
+            if (comment.getType().equalsIgnoreCase("smile")) {
                 chatMessageImage.setImageDrawable(getContext().getResources().getDrawable(R.drawable.icon_smile));
             } else if (comment.getType().equalsIgnoreCase("drink")) {
-                if(comment.getIsMyMessage()){
-                    message.setText("You sent invite to a drink");
-                } else {
-                    message.setText(comment.getUserFromName() + " sent invite to a drink");
-                }
-
                 chatMessageImage.setImageDrawable(getContext().getResources().getDrawable(R.drawable.icon_drink));
             }
-
         }
 
         return row;

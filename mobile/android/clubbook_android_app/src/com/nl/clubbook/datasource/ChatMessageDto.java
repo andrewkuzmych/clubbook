@@ -38,6 +38,28 @@ public class ChatMessageDto {
         setUserFromAvatar(jsonObject.getString("from_who_avatar"));
     }
 
+    public String getFormatMessage(){
+        if(getType().equalsIgnoreCase("message")){
+            return getMsg();
+
+        } else if(getType().equalsIgnoreCase("smile")) {
+            if(getIsMyMessage()){
+                return "You sent a smile";
+            } else {
+                return getUserFromName() + " sent you smile";
+            }
+
+        } else if(getType().equalsIgnoreCase("drink")) {
+            if(getIsMyMessage()){
+                return "You sent invite to a drink";
+            } else {
+                return getUserFromName() + " sent invite to a drink";
+            }
+        } else {
+            return "";
+        }
+    }
+
     public String getUserFrom() {
         return userFrom;
     }

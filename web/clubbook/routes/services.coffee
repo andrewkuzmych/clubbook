@@ -334,10 +334,31 @@ exports.get_conversations = (req, res)->
   params =
     user_id: req.params.user_id
 
-  manager.get_conversations params, (err, conversations)->
+  manager.get_conversations params, (err, chats)->
+    result = []
+    for chat in chats
+      if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
+        unread_messages = chat.unread.count
+      else
+        unread_messages = 0
+
+      chat_dto = prepare_chat_messages(chat, req.params.user_id)
+      result.push
+        chat_id: chat._id
+        updated_on: chat.updated_on
+        unread_messages: unread_messages
+        conversation: chat_dto[0]
+        current_user: chat_dto[1]
+        receiver: chat_dto[2]
+
+    # sort by recived date
+    result = __.sortBy result, (chat)-> chat.updated_on
+    result = result.reverse()
+
     res.json
       status: 'ok'
-      conversations: conversations
+      result:
+        chats: result
 
 exports.get_conversation = (req, res)->
   params =

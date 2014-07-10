@@ -390,10 +390,10 @@ exports.get_conversations = (params, callback)->
     else
       sorted_chats = __.sortBy(chats, (chat) ->
         if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
-                           return chat.unread.count
-                          else
-                            return 0
-                    ).reverse()
+           return chat.unread.count
+          else
+            return 0
+      ).reverse()
 
       callback err, sorted_chats
 

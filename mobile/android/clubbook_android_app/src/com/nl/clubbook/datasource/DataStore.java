@@ -497,23 +497,10 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
-                ChatDto chat = new ChatDto();
+                ChatDto chat = null;
                 try {
                     if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        JSONObject chatJson = response_json.getJSONObject("result");
-
-                        JSONArray conversation_dto = chatJson.getJSONArray("conversation");
-
-                        List<ChatMessageDto> conversation = new ArrayList<ChatMessageDto>();
-                        for (int i = 0; i < conversation_dto.length(); i++) {
-                            conversation.add(new ChatMessageDto(conversation_dto.getJSONObject(i)));
-                        }
-
-                        chat.setCurrentUser(new UserDto(chatJson.getJSONObject("current_user")));
-                        chat.setReceiver(new UserDto(chatJson.getJSONObject("receiver")));
-                        chat.setChatId(chatJson.getString("chat_id"));
-                        chat.setConversation(conversation);
-
+                        chat= new ChatDto(response_json.getJSONObject("result"));
                         failed = false;
                     } else
                         failed = true;
@@ -555,59 +542,13 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
-                List<ConversationShort> conversations = new ArrayList<ConversationShort>();
+                List<ChatDto> chats = new ArrayList<ChatDto>();
                 try {
                     if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        JSONArray conversations_dto = response_json.getJSONArray("conversations");
-                        for (int i = 0; i < conversations_dto.length(); i++) {
-                            ConversationShort con = new ConversationShort();
-
-                            con.setId(conversations_dto.getJSONObject(i).getString("id"));
-
-                            JSONObject user_dto;
-                            if (conversations_dto.getJSONObject(i).getJSONObject("user1").getString("_id").equalsIgnoreCase(user_id)) {
-                                user_dto = conversations_dto.getJSONObject(i).getJSONObject("user2");
-                            } else {
-                                user_dto = conversations_dto.getJSONObject(i).getJSONObject("user1");
-                            }
-
-                            con.setUser_id(user_dto.getString("_id"));
-                            con.setUser_name(user_dto.getString("name"));
-
-                            JSONArray photo_list = user_dto.getJSONArray("photos");
-                            String user_from_photo = null;
-                            for (int j = 0; j < photo_list.length(); j++) {
-                                if (photo_list.getJSONObject(j).getBoolean("profile")) {
-                                    user_from_photo = photo_list.getJSONObject(j).getString("url");
-                                    break;
-                                }
-                            }
-
-                            con.setUser_photo(user_from_photo);
-
-                            if (conversations_dto.getJSONObject(i).has("unread") &&
-                                    conversations_dto.getJSONObject(i).getJSONObject("unread").has("user") &&
-                                    conversations_dto.getJSONObject(i).getJSONObject("unread").getString("user").equalsIgnoreCase(user_id)) {
-
-                                con.setUnread_messages(conversations_dto.getJSONObject(i).getJSONObject("unread").getInt("count"));
-                            } else {
-                                con.setUnread_messages(0);
-                            }
-
-                            if (conversations_dto.getJSONObject(i).has("conversation")) {
-                                JSONArray cons_dto = conversations_dto.getJSONObject(i).getJSONArray("conversation");
-                                if (cons_dto.length() > 0) {
-                                    if (cons_dto.getJSONObject(0).has("msg")) {
-                                        con.setLast_message(cons_dto.getJSONObject(0).getString("msg"));
-                                    } else {
-                                        con.setLast_message("TO DEVELOP");
-                                    }
-                                }
-                            }
-
-                            conversations.add(con);
+                        JSONArray chatsJson = response_json.getJSONObject("result").getJSONArray("chats");
+                        for (int i = 0; i < chatsJson.length(); i++) {
+                            chats.add(new ChatDto(chatsJson.getJSONObject(i)));
                         }
-
                         failed = false;
                     } else
                         failed = true;
@@ -616,7 +557,7 @@ public class DataStore {
                 }
 
                 //failed = false;
-                onResultReady.onReady(conversations, failed);
+                onResultReady.onReady(chats, failed);
             }
 
             @Override

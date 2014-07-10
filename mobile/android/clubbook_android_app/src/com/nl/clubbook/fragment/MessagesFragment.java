@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.adapter.MessagesAdapter;
-import com.nl.clubbook.datasource.ConversationShort;
+import com.nl.clubbook.datasource.ChatDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.helper.SessionManager;
 
@@ -63,9 +63,9 @@ public class MessagesFragment extends BaseFragment {
                 if (loading)
                     ((BaseActivity) getActivity()).hideProgress(true);
 
-                List<ConversationShort> conversations = (List<ConversationShort>) result;
+                List<ChatDto> conversations = (List<ChatDto>) result;
 
-                DataStore.setMessagesAdapter(new MessagesAdapter(contextThis, R.layout.message_list_item, conversations.toArray(new ConversationShort[conversations.size()])));
+                DataStore.setMessagesAdapter(new MessagesAdapter(contextThis, R.layout.message_list_item, conversations));
 
                 message_list.setAdapter(DataStore.getMessagesAdapter());
 
