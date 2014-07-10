@@ -41,7 +41,7 @@
                     android:visibility="gone">
         <ImageView
             android:id="@+id/icon"
-            android:layout_width="25dp"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="12dp"
@@ -66,6 +66,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="8dp"
             android:text=""
+            android:textSize="16dp"
             android:textColor="@color/counter_text_color"/>
 
     </RelativeLayout>

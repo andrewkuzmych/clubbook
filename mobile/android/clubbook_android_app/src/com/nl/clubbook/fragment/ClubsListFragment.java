@@ -24,14 +24,14 @@ import com.nl.clubbook.helper.SessionManager;
 import java.util.Comparator;
 import java.util.List;
 
-public class HomeFragment extends BaseFragment {
+public class ClubsListFragment extends BaseFragment {
 
     private SeekBar distance;
     ListView club_list;
     private int index = -1;
     private int top = 0;
 
-    public HomeFragment() {
+    public ClubsListFragment() {
 
     }
 

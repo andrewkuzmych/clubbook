@@ -23,7 +23,7 @@ import com.nl.clubbook.fragment.*;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.NotificationHelper;
 import com.nl.clubbook.helper.SessionManager;
-import com.nl.clubbook.model.NavDrawerItem;
+import com.nl.clubbook.adapter.NavDrawerItem;
 import com.pubnub.api.Callback;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
@@ -55,13 +55,15 @@ public class MainActivity extends BaseActivity {
     private Integer chatCountOfNewMessages = 0;
 
     private CharSequence mTitle;
+
     private String[] navMenuTitles;
     private TypedArray navMenuIcons;
+    HashMap<Integer, BaseFragment> fragmentMap = new HashMap<Integer, BaseFragment>();
+    protected Integer NAV_MENU_MESSAGES_POSITION = 2;
 
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
 
-    HashMap<Integer, BaseFragment> fragmentMap = new HashMap<Integer, BaseFragment>();
 
     Callback callback = new Callback() {
         @Override
@@ -152,11 +154,10 @@ public class MainActivity extends BaseActivity {
         navDrawerItems = new ArrayList<NavDrawerItem>();
         navDrawerItems.add(new NavDrawerItem(user.get(SessionManager.KEY_NAME), user_avatar_url,
                 user.get(SessionManager.KEY_GENDER), user.get(SessionManager.KEY_AGE)));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(3, -1)));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(3, -1)));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1), true, "0"));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(3, -1)));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(3, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, 0)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, 0)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, 0)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, 0)));
 
         // Recycle the typed array
         navMenuIcons.recycle();
@@ -177,7 +178,6 @@ public class MainActivity extends BaseActivity {
     public void setTitle(CharSequence title) {
         mTitle = title;
         getSupportActionBar().setTitle(mTitle);
-
     }
 
     @Override
@@ -334,7 +334,7 @@ public class MainActivity extends BaseActivity {
         return mDrawerToggle;
     }
 
-    public void setDefoltTitle() {
+    public void setDefaultTitle() {
         setTitle(navMenuTitles[DEFAULT_VIEW]);
     }
 
@@ -365,7 +365,7 @@ public class MainActivity extends BaseActivity {
         int displayView = DEFAULT_VIEW;
         if (in.hasExtra("type")) {
             if (in.getStringExtra("type").equalsIgnoreCase("chat"))
-                displayView = 3;
+                displayView = NAV_MENU_MESSAGES_POSITION;
         }
 
         displayView(displayView);
@@ -386,11 +386,10 @@ public class MainActivity extends BaseActivity {
 
         mTitle = getTitle();
         fragmentMap.put(0, new ProfileFragment());
-        fragmentMap.put(1, new HomeFragment());
-        fragmentMap.put(2, new ClubFeaturesFragment());
-        fragmentMap.put(3, new MessagesFragment());
-        fragmentMap.put(4, new FriendsFragment());
-        fragmentMap.put(5, new SettingsFragment());
+        fragmentMap.put(1, new ClubsListFragment());
+        fragmentMap.put(NAV_MENU_MESSAGES_POSITION, new MessagesFragment());
+        fragmentMap.put(3, new FriendsFragment());
+        fragmentMap.put(4, new SettingsFragment());
 
         getSupportActionBar().setIcon(
                 new ColorDrawable(getResources().getColor(android.R.color.transparent)));
@@ -423,7 +422,6 @@ public class MainActivity extends BaseActivity {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
 
-
             mFragmentTransaction.replace(R.id.frame_container, fragment);
             mFragmentTransaction.commit();
 
@@ -452,16 +450,11 @@ public class MainActivity extends BaseActivity {
         chatCountOfNewMessages = count;
 
         // set count of new messages on left nav bar
-        if (chatCountOfNewMessages == 0) {
-            navDrawerItems.get(3).setCounterVisibility(false);
-        } else {
-            navDrawerItems.get(3).setCounterVisibility(true);
-            navDrawerItems.get(3).setCount(String.valueOf(chatCountOfNewMessages));
-            adapter = new NavDrawerListAdapter(this, R.layout.drawer_list_item,
-                    navDrawerItems);
-            mDrawerList.setAdapter(adapter);
-        }
+        navDrawerItems.get(NAV_MENU_MESSAGES_POSITION).setCount(chatCountOfNewMessages);
+        adapter = new NavDrawerListAdapter(this, R.layout.drawer_list_item, navDrawerItems);
+        mDrawerList.setAdapter(adapter);
 
+        // set count of new messages on top bar
         actionbarChatCount.setText(String.valueOf(chatCountOfNewMessages));
     }
 

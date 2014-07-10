@@ -242,7 +242,7 @@ public class ClubFragment extends BaseFragment {
 
     @Override
     public void backButtonWasPressed() {
-        ((MainActivity) getActivity()).setDefoltTitle();
+        ((MainActivity) getActivity()).setDefaultTitle();
         if (!((MainActivity) getActivity()).getDrawerToggle().isDrawerIndicatorEnabled()) {
             ((MainActivity) getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(true);
             ((MainActivity) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);

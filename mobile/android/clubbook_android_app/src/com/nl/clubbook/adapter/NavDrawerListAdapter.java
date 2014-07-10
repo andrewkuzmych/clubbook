@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.nl.clubbook.R;
-import com.nl.clubbook.model.NavDrawerItem;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
@@ -83,17 +82,18 @@ public class NavDrawerListAdapter extends ArrayAdapter<NavDrawerItem> {
             TextView txtTitle = (TextView) convertView.findViewById(R.id.title);
             TextView txtCount = (TextView) convertView.findViewById(R.id.counter);
 
-            imgIcon.setImageResource(navDrawerItems.get(position).getIcon());
-            txtTitle.setText(navDrawerItems.get(position).getTitle());
+            NavDrawerItem navDrawerItem = navDrawerItems.get(position);
+            imgIcon.setImageResource(navDrawerItem.getIcon());
+            txtTitle.setText(navDrawerItem.getTitle());
 
             // displaying count
             // check whether it set visible or not
-            if (navDrawerItems.get(position).getCounterVisibility()) {
-                txtCount.setText(navDrawerItems.get(position).getCount());
+            if(navDrawerItem.getCount() > 0){
+                txtCount.setText(String.valueOf(navDrawerItem.getCount()));
             } else {
-                // hide the counter view
                 txtCount.setVisibility(View.GONE);
             }
+
         }
         return convertView;
     }

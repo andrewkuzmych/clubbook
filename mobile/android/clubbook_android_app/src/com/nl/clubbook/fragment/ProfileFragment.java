@@ -1,20 +1,15 @@
 package com.nl.clubbook.fragment;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.nl.clubbook.R;
-import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.activity.MainActivity;
-import com.nl.clubbook.adapter.ProfileAdapter;
-import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.*;
@@ -22,8 +17,6 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-
-import java.util.HashMap;
 
 public class ProfileFragment extends BaseFragment {
     private TextView userName;
@@ -119,7 +112,7 @@ public class ProfileFragment extends BaseFragment {
 
     @Override
     public void backButtonWasPressed() {
-        ((MainActivity) getActivity()).setDefoltTitle();
+        ((MainActivity) getActivity()).setDefaultTitle();
         if (!((MainActivity) getActivity()).getDrawerToggle().isDrawerIndicatorEnabled()) {
             ((MainActivity) getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(true);
             ((MainActivity) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
