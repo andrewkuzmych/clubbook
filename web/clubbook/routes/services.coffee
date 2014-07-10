@@ -320,7 +320,7 @@ prepare_chat_messages = (chat, current_user)->
 
   messages = []
   for conversation in chat.conversation
-    conversationTime = moment.utc(conversation.time).format("YYYY-MM-DD, hh:mm:ss")
+    conversationTime = moment.utc(conversation.time).format("YYYY-MM-DD, HH:mm:ss")
     messages.push
       msg: conversation.msg
       time: conversationTime
