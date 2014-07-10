@@ -379,7 +379,15 @@ exports.get_conversation = (params, callback)->
 
   db_model.Chat.findOne(query).populate("user1", db_model.USER_PUBLIC_INFO).populate("user2", db_model.USER_PUBLIC_INFO).exec (err, chat)->
     if not chat
-      callback err, []
+      db_model.User.find({'$or':[{"_id": params.user1}, {"_id": params.user2}]}).select(db_model.USER_PUBLIC_INFO).exec (err, users)->
+        chat_result =
+          _id: "new chat message: " + new Date().getTime()
+          user1: users[0]
+          user2: users[1]
+          unread: {}
+          updated_on: new Date()
+          conversation: []
+        callback err, chat_result
     else
       callback err, chat
 

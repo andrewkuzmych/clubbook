@@ -85,7 +85,7 @@ exports.User.schema.path('name').validate (value, respond)->
 , 'Wrong first_name format'
 
 
-exports.USER_PUBLIC_INFO = '_id photos name gender'
+exports.USER_PUBLIC_INFO = '_id photos name gender dob'
 
 #-------------------------------------------------------------------------------------
 #  Venue
