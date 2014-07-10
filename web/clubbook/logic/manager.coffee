@@ -381,7 +381,6 @@ exports.get_conversation = (params, callback)->
     if not chat
       db_model.User.find({'$or':[{"_id": params.user1}, {"_id": params.user2}]}).select(db_model.USER_PUBLIC_INFO).exec (err, users)->
         chat_result =
-          _id: "new chat message: " + new Date().getTime()
           user1: users[0]
           user2: users[1]
           unread: {}
@@ -406,12 +405,11 @@ exports.get_conversations = (params, callback)->
       callback err, sorted_chats
 
 exports.readchat = (params, callback)->
-  db_model.Chat.findOne({_id: mongoose.Types.ObjectId(params.chat_id)}).exec (err, chat)->
-    if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
+  db_model.Chat.findOne({'$or':[{'user1': mongoose.Types.ObjectId(params.current_user)}, {'user2': mongoose.Types.ObjectId(params.receiver)}]}).exec (err, chat)->
+    if chat.unread.user && chat.unread.user.toString() == params.current_user.toString()
       chat.unread.count = 0
 
     chat.save (err)->
-      console.log err
       callback err, chat
 
 

@@ -78,7 +78,7 @@ public class ClubbookRestClient {
         client.get(getBcAbsoluteUrl("unread/messages/count/" + user_id), params, responseHandler);
     }
 
-    public static void read_messages(String chat_id, String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("readchat/" + chat_id + "/" + user_id), params, responseHandler);
+    public static void read_messages(String current_user, String receiver, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("readchat/" + current_user + "/" + receiver), params, responseHandler);
     }
 }

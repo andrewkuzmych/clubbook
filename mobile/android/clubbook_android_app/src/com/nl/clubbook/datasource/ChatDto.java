@@ -31,7 +31,10 @@ public class ChatDto {
 
         setCurrentUser(new UserDto(chatJson.getJSONObject("current_user")));
         setReceiver(new UserDto(chatJson.getJSONObject("receiver")));
-        setChatId(chatJson.getString("chat_id"));
+        if(chatJson.has("chat_id")) {
+            // new chat between 2 people
+            setChatId(chatJson.getString("chat_id"));
+        }
 
         if(chatJson.has("unread_messages")){
             setUnreadMessages(chatJson.getInt("unread_messages"));

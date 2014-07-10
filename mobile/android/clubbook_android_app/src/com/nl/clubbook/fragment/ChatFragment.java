@@ -102,7 +102,7 @@ public class ChatFragment extends BaseFragment {
     public void receiveComment(ChatMessageDto message) {
         adapter.add(message);
 
-        DataStore.read_messages(chatDto.getChatId(), user_from, new DataStore.OnResultReady() {
+        DataStore.read_messages(chatDto.getCurrentUser().getId(), chatDto.getReceiver().getId(), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (failed) {
@@ -156,7 +156,7 @@ public class ChatFragment extends BaseFragment {
                 imm.showSoftInput(inputText, InputMethodManager.SHOW_IMPLICIT);
 
                 // make conversation between 2 people as read
-                DataStore.read_messages(chatDto.getChatId(), user_from, new DataStore.OnResultReady() {
+                DataStore.read_messages(chatDto.getCurrentUser().getId(), chatDto.getReceiver().getId(), new DataStore.OnResultReady() {
                     @Override
                     public void onReady(Object result, boolean failed) {
                         if (failed) {
