@@ -333,9 +333,10 @@ prepare_chat_messages = (chat, current_user)->
 
   messages = []
   for conversation in chat.conversation
+    conversationTime = moment.utc(conversation.time).format("YYYY-MM-DD, HH:mm:ss")
     messages.push
       msg: conversation.msg
-      time: conversation.time
+      time: conversationTime
       type: conversation.type
       from_who: conversation.from_who
       from_who_name: if conversation.from_who.toString() is current_user._id.toString() then current_user.name else receiver.name
