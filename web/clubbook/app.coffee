@@ -141,6 +141,7 @@ app.post '/_s/updateusername/:user_id', services.update_name
 app.post '/_s/updatedob/:user_id', services.update_dob
 app.post '/_s/updategender/:user_id', services.update_gender
 app.post '/_s/updateinfo/:user_id', services.update_info
+app.get '/_s/user/:user_id/friends', services.get_user_friends
 
 app.get '/_f/user/remove/:user_id', services.remove_user
 app.get '/_f/checkin/clean', services.checkin_clean

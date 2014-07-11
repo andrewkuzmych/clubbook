@@ -355,6 +355,52 @@ public class DataStore {
         });
     }
 
+    public static void retrieveFriends(String user_id, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+
+        ClubbookRestClient.retrieveFriends(user_id, params, new JsonHttpResponseHandler() {
+            private boolean failed = true;
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+                List<UserDto> friends = new ArrayList<UserDto>();;
+                try {
+                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
+                        JSONArray friendsJson = response_json.getJSONObject("result").getJSONArray("friends");
+                        for (int i = 0; i < friendsJson.length(); i++) {
+                            friends.add(new UserDto(friendsJson.getJSONObject(i)));
+                        }
+
+                        failed = false;
+                    } else
+                        failed = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                onResultReady.onReady(friends, failed);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                //if (failed)
+                //    onResultReady.onReady(null, true);
+            }
+        });
+    }
+
     public static void checkin(String place_id, String user_id, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
 

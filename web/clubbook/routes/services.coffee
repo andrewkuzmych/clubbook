@@ -110,6 +110,19 @@ exports.get_user_by_id = (req, res)->
         result:
           user: user
 
+exports.get_user_friends = (req, res)->
+  manager.get_user_friends req.params.user_id, (err, users)->
+    if err
+      console.log err
+      res.json
+        status: "error"
+        message: "can not find user friends: #{req.params.user_id}"
+    else
+      res.json
+        status: "ok"
+        result:
+          friends: users
+
 exports.uploadphoto = (req, res)->
   params =
     userid: req.body._id

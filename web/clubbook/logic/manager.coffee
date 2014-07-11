@@ -15,6 +15,9 @@ exports.get_user_by_id = (user_id, callback)->
     else
       callback null, user
 
+exports.get_user_friends = (user_id, callback)->
+  db_model.User.find({"_id": {"$ne": mongoose.Types.ObjectId(user_id)}}).select(db_model.USER_PUBLIC_INFO).sort("name").exec callback
+
 exports.signinmail = (params, callback)->
 
   if __.isEmpty params.email?.trim()
