@@ -85,6 +85,19 @@ public class ChatFragment extends BaseFragment {
             }
         });
 
+        rootView.findViewById(R.id.sendDrinkButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendMessageTemp("drink");
+            }
+        });
+        rootView.findViewById(R.id.sendSmileButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendMessageTemp("smile");
+            }
+        });
+
         imageLoader = ImageLoader.getInstance();
         options = new DisplayImageOptions.Builder()
                 .showStubImage(R.drawable.default_list_image)
@@ -112,10 +125,19 @@ public class ChatFragment extends BaseFragment {
         });
     }
 
+    private void sendMessageTemp(String type) {
+        DataStore.chat(user_from, user_to, "", type, new DataStore.OnResultReady() {
+            @Override
+            public void onReady(Object result, boolean failed) {
+
+            }
+        });
+    }
+
     private void sendMessage() {
         String input = inputText.getText().toString();
         if (!input.equals("")) {
-            DataStore.chat(user_from, user_to, input, new DataStore.OnResultReady() {
+            DataStore.chat(user_from, user_to, input, "message", new DataStore.OnResultReady() {
                 @Override
                 public void onReady(Object result, boolean failed) {
 

@@ -613,11 +613,12 @@ public class DataStore {
         });
     }
 
-    public static void chat(String user_from, String user_to, String msg, final OnResultReady onResultReady) {
+    public static void chat(String user_from, String user_to, String msg, String type, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("user_from", user_from);
         params.put("user_to", user_to);
         params.put("msg", msg);
+        params.put("msg_type", type);
 
         ClubbookRestClient.send_msg(params, new JsonHttpResponseHandler() {
             private boolean failed = true;
