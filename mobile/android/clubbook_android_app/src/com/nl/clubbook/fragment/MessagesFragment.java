@@ -63,11 +63,7 @@ public class MessagesFragment extends BaseFragment {
                 if (loading)
                     ((BaseActivity) getActivity()).hideProgress(true);
 
-                List<ChatDto> conversations = (List<ChatDto>) result;
-
-                DataStore.setMessagesAdapter(new MessagesAdapter(contextThis, R.layout.message_list_item, conversations));
-
-                message_list.setAdapter(DataStore.getMessagesAdapter());
+                message_list.setAdapter(new MessagesAdapter(contextThis, R.layout.message_list_item, (List<ChatDto>) result));
 
                 message_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override

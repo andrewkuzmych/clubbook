@@ -22,18 +22,8 @@ public class DataStore {
 
     private static ClubsAdapter clubsAdapter;
 
-    private static MessagesAdapter messagesAdapter;
-
     public static void setContext(Context mcontext) {
         context = mcontext;
-    }
-
-    public static MessagesAdapter getMessagesAdapter() {
-        return messagesAdapter;
-    }
-
-    public static void setMessagesAdapter(MessagesAdapter messagesAdapter) {
-        DataStore.messagesAdapter = messagesAdapter;
     }
 
     public static ClubsAdapter getPlaceAdapter() {
