@@ -30,9 +30,9 @@ public class ClubsListFragment extends BaseFragment {
     ListView club_list;
     private int index = -1;
     private int top = 0;
+    private Integer currentDistance = SessionManager.DEFOULT_DISTANCE;
 
     public ClubsListFragment() {
-
     }
 
     @Override
@@ -43,10 +43,10 @@ public class ClubsListFragment extends BaseFragment {
         distance = (SeekBar) rootView.findViewById(R.id.distance);
         distance.setMax(9);
         distance.incrementProgressBy(1);
-        distance.setProgress(SessionManager.DEFOULT_DISTANCE);
+        distance.setProgress(currentDistance);
 
         final TextView distance_text = (TextView) rootView.findViewById(R.id.distance_text);
-        distance_text.setText(convertToKm(SessionManager.DEFOULT_DISTANCE) + " " + getString(R.string.km));
+        distance_text.setText(convertToKm(currentDistance) + " " + getString(R.string.km));
 
         distance.setOnSeekBarChangeListener(
                 new SeekBar.OnSeekBarChangeListener() {
@@ -58,6 +58,7 @@ public class ClubsListFragment extends BaseFragment {
                         km = convertToKm(progresValue);
                         progress = progresValue;
                         distance_text.setText(String.valueOf(km) + " " + getString(R.string.km));
+                        currentDistance = progresValue;
                     }
 
                     @Override
@@ -102,9 +103,9 @@ public class ClubsListFragment extends BaseFragment {
                 ((BaseActivity) getActivity()).hideProgress(true);
                 // prepare adapter
                 List<ClubDto> places = (List<ClubDto>) result;
-                DataStore.setPlaceAdapter(new ClubsAdapter(contextThis, R.layout.club_list_item, places.toArray(new ClubDto[places.size()])));
+                ClubsAdapter clubsAdapter = new ClubsAdapter(contextThis, R.layout.club_list_item, places.toArray(new ClubDto[places.size()]));
                 // sort by distance
-                DataStore.getPlaceAdapter().sort(new Comparator<ClubDto>() {
+                clubsAdapter.sort(new Comparator<ClubDto>() {
                     @Override
                     public int compare(ClubDto lhs, ClubDto rhs) {
                         if (lhs.getDistance() > rhs.getDistance()) {
@@ -114,7 +115,7 @@ public class ClubsListFragment extends BaseFragment {
                         }
                     }
                 });
-                club_list.setAdapter(DataStore.getPlaceAdapter());
+                club_list.setAdapter(clubsAdapter);
                 // set event handler to open club details
                 club_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
