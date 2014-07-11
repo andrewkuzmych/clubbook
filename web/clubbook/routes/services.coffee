@@ -382,7 +382,6 @@ exports.get_conversation = (req, res)->
 
   manager.get_conversation params, (err, chat)->
     chat_dto = prepare_chat_messages chat, req.params.current_user
-    console.log chat
 
     res.json
       status: 'ok'

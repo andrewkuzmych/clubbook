@@ -375,7 +375,9 @@ exports.chat = (params, callback)->
       chat.unread.count = 1
 
     chat.save (err)->
-      callback err, chat
+      # retreive chat with user data
+      db_model.Chat.findById(chat._id).populate("user1", db_model.USER_PUBLIC_INFO).populate("user2", db_model.USER_PUBLIC_INFO).exec callback
+
 
 exports.get_conversation = (params, callback)->
   query = { '$or': [{ 'user1': mongoose.Types.ObjectId(params.user1), 'user2': mongoose.Types.ObjectId(params.user2) }, { 'user1': mongoose.Types.ObjectId(params.user2), 'user2': mongoose.Types.ObjectId(params.user1) }] }
