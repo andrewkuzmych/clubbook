@@ -26,4 +26,9 @@ public class ImageHelper {
         String avatar_style = "w_100,h_100,c_thumb,g_face";
         return generateUrl(url, avatar_style);
     }
+
+    public static String getSquareUserAvatar(String url) {
+        String avatar_style = "w_100,h_100,c_fit";
+        return generateUrl(url, avatar_style);
+    }
 }

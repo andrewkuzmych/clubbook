@@ -9,10 +9,11 @@
             android:layout_height="90dp" android:id="@+id/main_area"
             android:focusable="false">
 
-        <ImageView android:id="@+id/user_avatar"
+        <ImageView android:id="@+id/friend_avatar"
                    android:layout_width="80dp"
                    android:layout_height="80dp"
                    android:focusable="false"
+                   android:contentDescription="user avatar"
                    android:layout_alignParentLeft="true" android:layout_marginLeft="5dp"
                    android:layout_centerVertical="true"/>
 
@@ -27,7 +28,7 @@
                   android:textStyle="bold"
                   android:layout_marginLeft="10dp"
                   android:textColor="#22104A" android:layout_centerVertical="true"
-                  android:layout_toRightOf="@+id/user_avatar"/>
+                  android:layout_toRightOf="@+id/friend_avatar"/>
     </RelativeLayout>
 
 

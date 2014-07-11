@@ -56,7 +56,7 @@ public class FriendsAdapter extends ArrayAdapter<UserDto> {
             row = inflater.inflate(layoutResourceId, parent, false);
 
             holder = new FriendItemHolder();
-            holder.user_avatar = (ImageView) row.findViewById(R.id.user_avatar);
+            holder.user_avatar = (ImageView) row.findViewById(R.id.friend_avatar);
             holder.user_name = (TextView) row.findViewById(R.id.user_name);
 
             row.setTag(holder);
@@ -69,8 +69,8 @@ public class FriendsAdapter extends ArrayAdapter<UserDto> {
         holder.user_name.setTag(userDto.getId());
 
         if (userDto.getAvatar() != null) {
-            String image_url = ImageHelper.generateUrl(userDto.getAvatar(), "w_300,h_300,c_fit");
-            holder.user_avatar.setTag(image_url);
+            String image_url = ImageHelper.getSquareUserAvatar(userDto.getAvatar());
+            // holder.user_avatar.setTag(image_url);
             imageLoader.displayImage(image_url, holder.user_avatar, options, animateFirstListener);
         }
 
