@@ -277,15 +277,20 @@ exports.chat = (req, res)->
 
   manager.get_user_by_id req.body.user_from, (err, user_from)->
     manager.chat params, (err, chat)->
-      pubnub = require("pubnub").init({ publish_key: config.pub_publish_key, subscribe_key: config.pub_subscribe_key})
       message = req.body.msg
-
+      
       Parse = require("parse").Parse
       Parse.initialize config.parse_app_id, config.parse_js_key
+      
+      # send message to Parse (android)
+      queryAndroid = new Parse.Query(Parse.Installation)
+      queryAndroid.equalTo "channels", 'user_' + req.body.user_to
+      queryAndroid.equalTo "deviceType", "android"
       Parse.Push.send
-        channels: [ 'user_' + req.body.user_to]
+        where: queryAndroid 
         data:
           action: "com.nl.clubbook.UPDATE_STATUS"
+          alert: "hello Amsterdam"
           msg: message
           unique_id: req.body.user_from + "_" + req.body.user_to
           header: user_from.name
@@ -299,6 +304,26 @@ exports.chat = (req, res)->
           console.log "push error: "
           console.log error
 
+      # send message to Parse (ios)
+      queryIOS = new Parse.Query(Parse.Installation)
+      queryIOS.equalTo "channels", 'user_' + req.body.user_to
+      queryIOS.equalTo "deviceType", "ios"      
+      Parse.Push.send
+        where: queryIOS 
+        data:
+          badge: "Increment"
+          alert: user_from.name + ': "' + message + '"'
+      ,
+        success: ->
+          console.log "push sent"
+
+      # Push was successful
+        error: (error) ->
+          console.log "push error: "
+          console.log error
+
+      # send message to pubnub
+      pubnub = require("pubnub").init({ publish_key: config.pub_publish_key, subscribe_key: config.pub_subscribe_key})
       conversation = prepare_chat_messages(chat, req.body.user_to)[0]
       pubnab_data =
         data:
