@@ -410,10 +410,12 @@ exports.get_conversations = (params, callback)->
       callback err, sorted_chats
 
 exports.readchat = (params, callback)->
-  db_model.Chat.findOne({'$or':[{'user1': mongoose.Types.ObjectId(params.current_user)}, {'user2': mongoose.Types.ObjectId(params.receiver)}]}).exec (err, chat)->
+  query = { '$or': [{ 'user1': mongoose.Types.ObjectId(params.current_user), 'user2': mongoose.Types.ObjectId(params.receiver) }, { 'user1': mongoose.Types.ObjectId(params.receiver), 'user2': mongoose.Types.ObjectId(params.current_user) }] }
+  
+  db_model.Chat.findOne(query).exec (err, chat)->
     if chat.unread.user && chat.unread.user.toString() == params.current_user.toString()
       chat.unread.count = 0
-
+ 
     chat.save (err)->
       callback err, chat
 
