@@ -14,7 +14,7 @@ public class ImageHelper {
     public static String generateUrl(String url, String avatar_style) {
         String image_part = url.substring(url.lastIndexOf('/') + 1, url.length());
 
-        return UPLOAD_URL_CLOUDINARY + "/" + avatar_style + "/" + image_part;
+        return UPLOAD_URL_CLOUDINARY + avatar_style + "/" + image_part;
     }
 
     public static String getUserAvatar(String url) {

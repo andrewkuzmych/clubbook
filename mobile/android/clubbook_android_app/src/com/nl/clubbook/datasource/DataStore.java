@@ -20,18 +20,8 @@ import java.util.List;
 public class DataStore {
     private static Context context;
 
-    private static ClubsAdapter clubsAdapter;
-
     public static void setContext(Context mcontext) {
         context = mcontext;
-    }
-
-    public static ClubsAdapter getPlaceAdapter() {
-        return clubsAdapter;
-    }
-
-    public static void setPlaceAdapter(ClubsAdapter placeAdapter) {
-        DataStore.clubsAdapter = placeAdapter;
     }
 
     public static void regByEmail(String name, String email, String pass, String gender, String dob, String city, JSONObject avatar,
