@@ -20,68 +20,37 @@
                              android:background="@drawable/test_avatar"/>
 
                 <!-- Name Label -->
-                <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/name_reg"
-                        android:singleLine="true"
-                        android:id="@+id/name_label"
-                        android:textSize="17dp" android:layout_alignParentTop="true"
-                        android:layout_toRightOf="@+id/avatar_btn"/>
 
                 <!-- Name input text -->
                 <EditText android:id="@+id/name_text" android:inputType="text"
                           style="@style/default_text_input"
-                          android:layout_below="@+id/name_label" android:layout_toRightOf="@+id/avatar_btn"/>
+                    android:hint="@string/name_reg"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/avatar_btn" />
             </RelativeLayout>
-
-            <!-- Email Label -->
-            <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/email"
-                    android:singleLine="true"
-                    android:layout_marginBottom="5dip" android:id="@+id/email_label"
-                    android:textSize="17dp"/>
 
             <!-- Email input text -->
             <EditText android:id="@+id/email_text" android:inputType="textEmailAddress"
                       style="@style/default_text_input"
-                      android:layout_marginBottom="5dip"/>
+                      android:layout_marginBottom="5dip"
+                android:hint="@string/email" />
 
             <!-- Password Label -->
-            <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pass_reg"
-                    android:layout_marginBottom="5dip" android:singleLine="false"
-                    android:id="@+id/pass_label" android:textSize="17dp"/>
 
             <!-- Password input text -->
             <EditText android:id="@+id/password_text" android:password="true"
                       style="@style/default_text_input"
-                      android:layout_marginBottom="5dip"/>
+                      android:layout_marginBottom="5dip"
+                android:hint="@string/pass_reg" />
 
             <!-- Birthday Label -->
-            <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dob"
-                    android:layout_marginBottom="5dip" android:id="@+id/dob_label"
-                    android:textSize="17dp"/>
 
             <!-- Birthday input text -->
             <EditText android:id="@+id/dob_text" android:inputType="date"
                       style="@style/default_text_input"
                       android:layout_marginBottom="5dip"
-                      android:focusable="false" android:editable="true" android:clickable="true"/>
-
-            <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/gender_reg"
-                    android:layout_marginBottom="5dip" android:id="@+id/gender_label"
-                    android:textSize="17dp"/>
+                      android:focusable="false" android:editable="true" android:clickable="true"
+                android:hint="@string/dob" />
 
             <Spinner
                     android:layout_width="fill_parent"

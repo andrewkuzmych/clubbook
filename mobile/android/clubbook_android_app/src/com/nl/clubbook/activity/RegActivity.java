@@ -31,7 +31,6 @@ import java.net.URL;
 public class RegActivity extends ImageUploadActivity {
 
     EditText user_text, city_text, password_text, email_text, dob_text;
-    TextView user_label, password_label, email_label, dob_label, gender_label;
     Spinner gender_spinner;
     AlertDialogManager alert = new AlertDialogManager();
     Button reg_button;
@@ -57,16 +56,6 @@ public class RegActivity extends ImageUploadActivity {
         dob_text = (EditText) findViewById(R.id.dob_text);
         dob_text.setTypeface(typeface_regular);
 
-        user_label = (TextView) findViewById(R.id.name_label);
-        user_label.setTypeface(typeface_bold);
-        password_label = (TextView) findViewById(R.id.pass_label);
-        password_label.setTypeface(typeface_bold);
-        email_label = (TextView) findViewById(R.id.email_label);
-        email_label.setTypeface(typeface_bold);
-        dob_label = (TextView) findViewById(R.id.dob_label);
-        dob_label.setTypeface(typeface_bold);
-        gender_label = (TextView) findViewById(R.id.gender_label);
-        gender_label.setTypeface(typeface_bold);
         email_text.setText(UserEmailFetcher.getEmail(RegActivity.this));
 
         //init gender
