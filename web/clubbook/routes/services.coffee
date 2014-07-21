@@ -106,6 +106,58 @@ exports.update_user = (req, res)->
             params: req.body
 
 
+exports.user_image_add = (req, res)->
+  db_model.User.findById(req.params.userId).exec (err, user)->
+    if not user
+      res.json
+        status: "error"
+        result:
+          message: "can not find user by id: " + req.query.userId
+    else
+      req.body.avatar = JSON.parse req.body.avatar
+      user.photos.push {public_id: req.body.avatar.public_id, url: req.body.avatar.url, profile: false}
+      user.save ()->
+        res.json
+          status: "ok"
+          result:
+            user: user
+
+exports.user_image_update = (req, res)->
+  db_model.User.findById(req.params.userId).exec (err, user)->
+    if not user
+      res.json
+        status: "error"
+        result:
+          message: "can not find user by id: " + req.query.userId
+    else
+      if req.body.is_avatar
+        for photo in user.photos
+          photo.profile = photo._id.toString() == req.params.objectId
+      user.save ()->
+        res.json
+          status: "ok"
+          result:
+            user: user
+
+exports.user_image_delete = (req, res)->
+  db_model.User.findById(req.params.userId).exec (err, user)->
+    if not user
+      res.json
+        status: "error"
+        result:
+          message: "can not find user by id: " + req.query.userId
+    else
+      # do not remove the last photo or avatar
+      if user.photos and user.photos.length > 1
+        user.photos = __.filter user.photos, (photo)-> photo._id.toString() != req.params.objectId or photo.profile
+
+      user.save ()->
+        res.json
+          status: "ok"
+          result:
+            user: user
+
+
 exports.signup = (req, res)->
   console.log "----- sign up by email"
   console.log req.body
@@ -142,12 +194,12 @@ exports.get_user_by_id = (req, res)->
           user: user
 
 exports.get_user_friends = (req, res)->
-  manager.get_user_friends req.params.user_id, (err, users)->
+  manager.get_user_friends req.params.objectId, (err, users)->
     if err
       console.log err
       res.json
         status: "error"
-        message: "can not find user friends: #{req.params.user_id}"
+        message: "can not find user friends: #{req.params.objectId}"
     else
       res.json
         status: "ok"
@@ -218,6 +270,8 @@ exports.find_club = (req, res)->
 
 
 exports.list_club = (req, res)->
+  console.log req.params
+
   params =
     distance: req.params.distance
     lat: req.params.user_lat
@@ -469,46 +523,6 @@ exports.unread_messages_count = (req, res)->
     res.json
       status: 'ok'
       count: count
-      
-exports.update_name =(req, res)->
-  params = 
-    user_id: req.params.user_id
-    name: req.body.name
-
-  manager.update_name params, (err, user)->
-     res.json
-        status: 'ok'
-        user: user
-
-exports.update_dob =(req, res)->
-  params = 
-    user_id: req.params.user_id
-    dob: req.body.dob
-
-  manager.update_dob params, (err, user)->
-     res.json
-        status: 'ok'
-        user: user
-
-exports.update_gender =(req, res)->
-  params = 
-    user_id: req.params.user_id
-    gender: req.body.gender
-
-  manager.update_gender params, (err, user)->
-     res.json
-        status: 'ok'
-        user: user
-
-exports.update_info =(req, res)->
-  params = 
-    user_id: req.params.user_id
-    info: req.body.info
-
-  manager.update_info params, (err, user)->
-     res.json
-        status: 'ok'
-        user: user
 
 exports.remove_user =(req, res)->
   console.log "remove user", req.params.user_id
