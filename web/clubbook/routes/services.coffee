@@ -74,6 +74,37 @@ exports.signinmail = (req, res)->
         result:
           user: user
 
+exports.update_user = (req, res)->
+  db_model.User.findById(req.params.objectId).exec (err, user)->
+    if not user
+      res.json
+        status: "error"
+        result:
+          message: "can not find user by id: " + req.query.objectId
+    else
+      if req.body.dob
+        if moment(req.body.dob, "DD.MM.YYYY", true).isValid()
+          req.body.dob = moment(req.body.dob, "DD.MM.YYYY").toDate()
+        else
+          delete req.body.dob
+
+      if req.body.password
+        user.password = req.body.password
+      if req.body.name
+        user.name = req.body.name
+      if req.body.gender
+        user.gender = req.body.gender
+      if req.body.dob
+        user.dob = req.body.dob
+
+      user.save (err)->
+        if err then console.log err
+        res.json
+          status: "ok"
+          result:
+            user: user
+            params: req.body
+
 
 exports.signup = (req, res)->
   console.log "----- sign up by email"
