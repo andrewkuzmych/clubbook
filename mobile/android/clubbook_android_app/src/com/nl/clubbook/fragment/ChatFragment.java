@@ -132,6 +132,15 @@ public class ChatFragment extends BaseFragment {
 
             }
         });
+
+        ChatMessageDto chatMessageDto = new ChatMessageDto();
+        chatMessageDto.setType(type);
+        chatMessageDto.setIsMyMessage(true);
+        chatMessageDto.setUserFrom(chatDto.getCurrentUser().getId());
+        chatMessageDto.setUserFromName(chatDto.getCurrentUser().getName());
+        chatMessageDto.setUserFromAvatar(chatDto.getCurrentUser().getAvatar());
+
+        adapter.add(chatMessageDto);
     }
 
     private void sendMessage() {
