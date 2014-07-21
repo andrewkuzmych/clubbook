@@ -96,6 +96,8 @@ exports.update_user = (req, res)->
         user.gender = req.body.gender
       if req.body.dob
         user.dob = req.body.dob
+      if req.body.country
+        user.country = req.body.country
 
       user.save (err)->
         if err then console.log err
