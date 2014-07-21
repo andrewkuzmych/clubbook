@@ -15,7 +15,7 @@ public class ClubbookRestClient {
 
     //private static final String BC_BASE_URL = "http://10.0.0.104:3000/_s/";
     // private static final String BC_BASE_URL = "http://clubbookapp.herokuapp.com/_s/";
-    private static final String BC_BASE_URL = "http://192.168.2.105:3000/_s/";
+    private static final String BC_BASE_URL = "http://192.168.0.101:3000/_s/";
 
     private static String getBcAbsoluteUrl(String relativeUrl) {
         return BC_BASE_URL + relativeUrl;
@@ -38,7 +38,7 @@ public class ClubbookRestClient {
     }
 
     public static void retrieveFriends(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("user/" + user_id + "/friends"), params, responseHandler);
+        client.get(getBcAbsoluteUrl("obj/user/" + user_id + "/friends"), params, responseHandler);
     }
 
     //list_club/:distance/:user_lat/:user_lon
