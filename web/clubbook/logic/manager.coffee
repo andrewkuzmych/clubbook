@@ -246,6 +246,7 @@ exports.save_user = (params, callback)->
             email: params.email
             password: params.password
             city: params.city
+            country: params.country
 
       if params.dob
         user.dob = params.dob

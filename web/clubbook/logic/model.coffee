@@ -1,6 +1,7 @@
 mongoose = require('mongoose')
 __ = require("underscore")
 check = require('validator').check
+moment = require('moment-timezone')
 
 #-------------------------------------------------------------------------------------
 #  User
@@ -22,6 +23,7 @@ UserSchema = new mongoose.Schema
   ]
   dob: { type: Date }
   city: {type: String, trim: true, lowercase: true}
+  country: {type: String}
   info: {type: String}
 
   ios_tokens: [
@@ -53,6 +55,12 @@ UserSchema.virtual('avatar').get ()->
 UserSchema.virtual('age').get ()->
   if this.dob
     return Math.floor((new Date() - this.dob) / 31536000000)
+  else
+    null
+
+UserSchema.virtual('dob_format').get ()->
+  if this.dob
+    return moment.utc(this.dob).format("YYYY-MM-DD");
   else
     null
 
