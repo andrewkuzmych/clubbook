@@ -114,6 +114,11 @@ public class SessionManager {
     public void createLoginSession(UserDto user) {
         PushService.subscribe(_context, "user_" + user.getId(), MainActivity.class);
         // Storing login value as TRUE
+        updateLoginSession(user);
+    }
+
+    public void updateLoginSession(UserDto user) {
+        // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
 
         editor.putString(KEY_ID, user.getId());

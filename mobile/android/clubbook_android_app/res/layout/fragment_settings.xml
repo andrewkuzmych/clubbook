@@ -5,6 +5,12 @@
 
     <Button
 
+        android:text="Edit profile"
+        style="@style/default_button"
+        android:id="@+id/editProfileButton"/>
+
+    <Button
+
             android:text="Logout"
             style="@style/main_login_button"
             android:id="@+id/logoutButton"

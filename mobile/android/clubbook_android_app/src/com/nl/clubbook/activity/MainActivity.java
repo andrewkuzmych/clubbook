@@ -19,6 +19,7 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.NavDrawerListAdapter;
 import com.nl.clubbook.datasource.ChatMessageDto;
 import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.fragment.*;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.NotificationHelper;
@@ -59,6 +60,7 @@ public class MainActivity extends BaseActivity {
     private String[] navMenuTitles;
     private TypedArray navMenuIcons;
     HashMap<Integer, BaseFragment> fragmentMap = new HashMap<Integer, BaseFragment>();
+    protected Integer NAV_MENU_PROFILE_POSITION = 0;
     protected Integer NAV_MENU_MESSAGES_POSITION = 2;
 
     private ArrayList<NavDrawerItem> navDrawerItems;
@@ -470,6 +472,21 @@ public class MainActivity extends BaseActivity {
             // display view for selected nav drawer item
             displayView(position);
         }
+    }
+
+    /**
+     * Update user information on UI
+     *
+     * @param myInfo
+     */
+    public void updateMyInformation(UserDto myInfo){
+        // update UI profile info
+        NavDrawerItem navDrawerItem = navDrawerItems.get(NAV_MENU_PROFILE_POSITION);
+        navDrawerItem.setTitle(myInfo.getName());
+        adapter = new NavDrawerListAdapter(this, R.layout.drawer_list_item, navDrawerItems);
+        mDrawerList.setAdapter(adapter);
+        // update session user
+        getSession().updateLoginSession(myInfo);
     }
 
 }

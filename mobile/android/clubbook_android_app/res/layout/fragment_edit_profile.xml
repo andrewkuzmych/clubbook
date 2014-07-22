@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/FragmentTheme"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" android:orientation="vertical">
+
+        <EditText android:id="@+id/name_text" android:inputType="text"
+            style="@style/default_text_input"
+            android:layout_marginBottom="5dip"
+            android:hint="@string/name_reg" />
+
+        <Button
+            android:id="@+id/save_profile_button"
+            style="@style/default_button"
+            android:layout_marginTop="40dp"
+            android:text="save" />
+
+    </LinearLayout>
+
+</RelativeLayout>

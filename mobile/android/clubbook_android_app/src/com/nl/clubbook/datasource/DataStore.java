@@ -71,6 +71,48 @@ public class DataStore {
         });
     }
 
+    public static void updateUserProfile(String userId, String name, String gender, String dob, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("name", name);
+        params.put("gender", gender);
+        params.put("dob", dob);
+
+        ClubbookRestClient.updateProfile(userId, params, new JsonHttpResponseHandler() {
+            private boolean failed = true;
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+                UserDto user = null;
+                try {
+                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
+                        user = new UserDto(response_json.getJSONObject("result").getJSONObject("user"));
+                        failed = false;
+                    } else
+                        failed = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                onResultReady.onReady(user, failed);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+    }
+
     public static void loginByEmail(String email, String pass, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("email", email);

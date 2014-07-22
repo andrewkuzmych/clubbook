@@ -29,6 +29,10 @@ public class ClubbookRestClient {
         client.post(getBcAbsoluteUrl("signup"), params, responseHandler);
     }
 
+    public static void updateProfile(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.put(getBcAbsoluteUrl("obj/user/" + user_id), params, responseHandler);
+    }
+
     public static void loginByEmail(RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.post(getBcAbsoluteUrl("signinmail"), params, responseHandler);
     }

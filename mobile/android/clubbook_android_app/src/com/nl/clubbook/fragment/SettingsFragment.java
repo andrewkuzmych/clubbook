@@ -24,6 +24,15 @@ public class SettingsFragment extends BaseFragment {
  
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        final BaseFragment thisInstance = this;
+        Button editProfileButton = (Button) rootView.findViewById(R.id.editProfileButton);
+        editProfileButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(final View view) {
+                openFragment(new EditProfileFragment());
+            }
+        });
+
+
         Button logoutButton = (Button) rootView.findViewById(R.id.logoutButton);
         final MainActivity mainActivity = (MainActivity) getActivity();
         // open chat window
