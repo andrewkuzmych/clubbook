@@ -4,7 +4,6 @@ db_model = require('./model')
 async = require("async")
 __ = require("underscore")
 async = require("async")
-moment = require('moment-timezone')
 
 CHECKIN_LIVE_TIME =  1000 * 60 * 30;
 

@@ -38,7 +38,7 @@ exports.fb_signin = (req, res)->
 
   else
     if req.body.dob
-      dob = moment(req.body.dob, "DD.MM.YYYY").toDate()
+      dob = moment.utc(req.body.dob, "DD.MM.YYYY").toDate()
       req.body.dob = dob
 
     if req.body.avatar
@@ -84,7 +84,7 @@ exports.update_user = (req, res)->
     else
       if req.body.dob
         if moment(req.body.dob, "DD.MM.YYYY", true).isValid()
-          req.body.dob = moment(req.body.dob, "DD.MM.YYYY").toDate()
+          req.body.dob = moment.utc(req.body.dob, "DD.MM.YYYY").toDate()
         else
           delete req.body.dob
 
@@ -165,7 +165,7 @@ exports.signup = (req, res)->
   console.log req.body
 
   if req.body.dob
-    dob = moment(req.body.dob, "DD.MM.YYYY").toDate()
+    dob = moment.utc(req.body.dob, "DD.MM.YYYY").toDate()
     req.body.dob = dob
 
   if req.body.avatar
