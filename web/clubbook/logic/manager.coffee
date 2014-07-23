@@ -247,6 +247,8 @@ exports.save_user = (params, callback)->
             city: params.city
             country: params.country
 
+      if params.bio
+        user.bio = params.bio
       if params.dob
         user.dob = params.dob
       if params.avatar
@@ -306,6 +308,7 @@ exports.save_or_update_fb_user = (params, callback)->
             fb_id: params.fb_id
             fb_access_token: params.fb_access_token
           if params.dob then user.dob = params.dob
+          if params.bio then user.bio = params.bio
           if params.city then user.city = params.city
 
           user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
@@ -345,6 +348,7 @@ exports.save_or_update_fb_user = (params, callback)->
                 fb_id: params.fb_id
                 fb_access_token: params.fb_access_token
               if params.dob then user.dob = params.dob
+              if params.bio then user.bio = params.bio
               if params.city then user.city = params.city
 
               user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
