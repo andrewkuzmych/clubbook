@@ -387,7 +387,7 @@ public class MainActivity extends BaseActivity {
         init();
 
         mTitle = getTitle();
-        fragmentMap.put(0, new ProfileFragment());
+        fragmentMap.put(0, new EditProfileFragment());
         fragmentMap.put(1, new ClubsListFragment());
         fragmentMap.put(NAV_MENU_MESSAGES_POSITION, new MessagesFragment());
         fragmentMap.put(3, new FriendsFragment());
@@ -483,6 +483,8 @@ public class MainActivity extends BaseActivity {
         // update UI profile info
         NavDrawerItem navDrawerItem = navDrawerItems.get(NAV_MENU_PROFILE_POSITION);
         navDrawerItem.setTitle(myInfo.getName());
+        navDrawerItem.setAge(myInfo.getAge());
+        navDrawerItem.setGender(myInfo.getGender());
         adapter = new NavDrawerListAdapter(this, R.layout.drawer_list_item, navDrawerItems);
         mDrawerList.setAdapter(adapter);
         // update session user

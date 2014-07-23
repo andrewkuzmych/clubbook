@@ -1,37 +1,29 @@
 package com.nl.clubbook.fragment;
 
-import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Spinner;
 
-import com.google.gson.Gson;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.activity.MainActivity;
-import com.nl.clubbook.datasource.ClubDto;
+import com.nl.clubbook.control.DatePickerFragment;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.AlertDialogManager;
-import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.SessionManager;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-
-import java.util.HashMap;
+import com.nl.clubbook.helper.UiHelper;
 
 public class EditProfileFragment extends BaseFragment {
 
-    EditText user_text;
+    EditText user_text, dob_text;
+    Spinner gender_spinner;
     private Button saveButton;
     private UserDto profile;
     AlertDialogManager alert = new AlertDialogManager();
@@ -40,11 +32,12 @@ public class EditProfileFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        getActivity().setTitle(getString(R.string.header_profile));
+
         View rootView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         saveButton = (Button) rootView.findViewById(R.id.save_profile_button);
         user_text = (EditText) rootView.findViewById(R.id.name_text);
-
-        getActivity().setTitle(getString(R.string.header_profile));
+        dob_text = (EditText) rootView.findViewById(R.id.dob_text);
 
         loadData();
 
@@ -53,6 +46,13 @@ public class EditProfileFragment extends BaseFragment {
 
     private void setHandlers() {
         final BaseFragment thisInstance = this;
+
+        dob_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePicker(profile.getDob());
+            }
+        });
 
         // save user data
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -66,11 +66,20 @@ public class EditProfileFragment extends BaseFragment {
                     return;
                 }
 
+                String dob = dob_text.getText().toString().trim();
+                if (dob.trim().length() < 6) {
+                    alert.showAlertDialog(getActivity(), errorTitle, getString(R.string.dob_incorrect), false);
+                    return;
+                }
+
+                UiHelper.GenderPair data = (UiHelper.GenderPair) gender_spinner.getSelectedItem();
+                String gender = data.getValue();
+
                 // update on server side
                 ((BaseActivity) getActivity()).showProgress("Loading...");
 
                 DataStore.updateUserProfile(thisInstance.getSession().getUserDetails().get(SessionManager.KEY_ID),
-                        user_name, "", "", new DataStore.OnResultReady() {
+                        user_name, gender, dob, new DataStore.OnResultReady() {
                             @Override
                             public void onReady(Object result, boolean failed) {
                                 if (failed) {
@@ -106,29 +115,38 @@ public class EditProfileFragment extends BaseFragment {
 
                 profile = (UserDto) result;
 
-                setHandlers();
-
+                dob_text.setText(profile.getDob());
+                //init gender
+                gender_spinner = UiHelper.createGenderSpinner((Spinner) getActivity().findViewById(R.id.gender), getActivity(), profile.getGender());
                 // update UI components
                 user_text.setText(profile.getName());
+
+                setHandlers();
             }
         });
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (((MainActivity) getActivity()).getDrawerToggle().isDrawerIndicatorEnabled()) {
-            ((MainActivity) getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(false);
-            ((MainActivity) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }
+    private void showDatePicker(String dob) {
+        String[] dates = dob.split("-");
+        int year = Integer.parseInt(dates[0]);
+        int month = Integer.parseInt(dates[1]) - 1;
+        int day = Integer.parseInt(dates[2]);
+
+        DatePickerFragment date = new DatePickerFragment();
+        Bundle args = new Bundle();
+        args.putInt("year", year);
+        args.putInt("month", month);
+        args.putInt("day", day);
+        date.setArguments(args);
+        // Set Call back to capture selected date
+        date.setCallBack(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                dob_text.setText(String.format("%02d", dayOfMonth) + "." + String.format("%02d", monthOfYear + 1) + "." + String.valueOf(year));
+            }
+        });
+        date.show(getActivity().getSupportFragmentManager(), "Date Picker");
     }
 
-    @Override
-    public void backButtonWasPressed() {
-        ((MainActivity) getActivity()).setDefaultTitle();
-        if (!((MainActivity) getActivity()).getDrawerToggle().isDrawerIndicatorEnabled()) {
-            ((MainActivity) getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(true);
-            ((MainActivity) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        }
-    }
 }

@@ -35,8 +35,8 @@ public class UserDto {
         if (userJson.has("email"))
             this.setEmail(userJson.getString("email"));
         this.setGender(userJson.getString("gender"));
-        if (userJson.has("dob"))
-            this.setDob(userJson.getString("dob"));
+        if (userJson.has("dob_format"))
+            this.setDob(userJson.getString("dob_format"));
         if (userJson.has("age") && userJson.getString("age") != "null")
             this.setAge(userJson.getString("age"));
 
