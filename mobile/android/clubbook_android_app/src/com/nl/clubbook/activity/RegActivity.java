@@ -15,6 +15,7 @@ import com.nl.clubbook.control.DatePickerFragment;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.AlertDialogManager;
+import com.nl.clubbook.helper.UiHelper;
 import com.nl.clubbook.helper.UserEmailFetcher;
 import com.nl.clubbook.helper.Validator;
 import org.json.JSONException;
@@ -59,19 +60,7 @@ public class RegActivity extends ImageUploadActivity {
         email_text.setText(UserEmailFetcher.getEmail(RegActivity.this));
 
         //init gender
-        gender_spinner = (Spinner) findViewById(R.id.gender);
-        final GenderPair items[] = new GenderPair[2];
-        items[0] = new GenderPair("Male", "male");
-        items[1] = new GenderPair("Female", "female");
-        ArrayAdapter<GenderPair> adapter =
-                new ArrayAdapter<GenderPair>(
-                        this,
-                        android.R.layout.simple_spinner_item,
-                        items);
-        adapter.setDropDownViewResource(
-                android.R.layout.simple_spinner_dropdown_item);
-
-        gender_spinner.setAdapter(adapter);
+        gender_spinner = UiHelper.createGenderSpinner((Spinner) findViewById(R.id.gender), this, "male");
 
         setHandlers();
 
@@ -146,7 +135,7 @@ public class RegActivity extends ImageUploadActivity {
                     return;
                 }
 
-                GenderPair data = (GenderPair) gender_spinner.getSelectedItem();
+                UiHelper.GenderPair data = (UiHelper.GenderPair) gender_spinner.getSelectedItem();
                 String gender = data.getValue();
 
                 // String city = city_text.getText().toString().trim();
@@ -221,23 +210,5 @@ public class RegActivity extends ImageUploadActivity {
         Intent intent = new Intent(this, MainLoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);
-    }
-
-    class GenderPair {
-        String text;
-        String value;
-
-        public GenderPair(String text, String value) {
-            this.text = text;
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public String toString() {
-            return text;
-        }
     }
 }
