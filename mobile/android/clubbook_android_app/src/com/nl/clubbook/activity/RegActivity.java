@@ -15,24 +15,26 @@ import com.nl.clubbook.control.DatePickerFragment;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.AlertDialogManager;
+import com.nl.clubbook.helper.ImageUploader;
 import com.nl.clubbook.helper.UiHelper;
 import com.nl.clubbook.helper.UserEmailFetcher;
 import com.nl.clubbook.helper.Validator;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
  * Created by Andrew on 5/26/2014.
  */
-public class RegActivity extends ImageUploadActivity {
+public class RegActivity extends BaseActivity {
 
     EditText user_text, city_text, password_text, email_text, dob_text;
     Spinner gender_spinner;
+    private ImageUploader imageUploader;
     AlertDialogManager alert = new AlertDialogManager();
     Button reg_button;
     ImageButton avatar_button;
@@ -56,29 +58,36 @@ public class RegActivity extends ImageUploadActivity {
         email_text.setTypeface(typeface_regular);
         dob_text = (EditText) findViewById(R.id.dob_text);
         dob_text.setTypeface(typeface_regular);
-
         email_text.setText(UserEmailFetcher.getEmail(RegActivity.this));
+
+        imageUploader = new ImageUploader(this) {
+            @Override
+            public void startActivityForResultHolder(Intent intent, int requestCode) {
+                startActivityForResult(intent, requestCode);
+            }
+
+            @Override
+            public void onImageSelected(JSONObject imageObj) throws JSONException {
+                Log.d("ImageUploadActivity", "avatar is selected: " + imageObj.getString("public_id"));
+
+                InputStream is = null;
+                try {
+                    is = (InputStream) new URL(imageObj.getString("url")).getContent();
+                    Drawable buttonBg = Drawable.createFromStream(is, null);
+                    avatar_button.setBackgroundDrawable(buttonBg);
+                    avatar = imageObj;
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+            }
+        };
 
         //init gender
         gender_spinner = UiHelper.createGenderSpinner((Spinner) findViewById(R.id.gender), this, "male");
 
         setHandlers();
-
-        dob_text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePicker();
-            }
-        });
-
-        avatar_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // init image uploader
-                final AlertDialog dialog = selectPhoto();
-                dialog.show();
-            }
-        });
     }
 
     private void showDatePicker() {
@@ -100,10 +109,26 @@ public class RegActivity extends ImageUploadActivity {
     }
 
     private void setHandlers() {
+        dob_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePicker();
+            }
+        });
+
+        avatar_button = (ImageButton) findViewById(R.id.avatar_btn);
+        avatar_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // init image uploader
+                final AlertDialog dialog = imageUploader.selectPhoto();
+                dialog.show();
+            }
+        });
+
         reg_button = (Button) findViewById(R.id.reg_btn);
         reg_button.setTypeface(typeface_regular);
 
-        avatar_button = (ImageButton) findViewById(R.id.avatar_btn);
 
         // Login button click event
         reg_button.setOnClickListener(new View.OnClickListener() {
@@ -179,22 +204,6 @@ public class RegActivity extends ImageUploadActivity {
         });
     }
 
-    @Override
-    protected void onImageSelected(JSONObject imageObj) throws JSONException {
-        Log.d("ImageUploadActivity", "avatar is selected: " + imageObj.getString("public_id"));
-
-        InputStream is = null;
-        try {
-            is = (InputStream) new URL(imageObj.getString("url")).getContent();
-            Drawable buttonBg = Drawable.createFromStream(is, null);
-            this.avatar_button.setBackgroundDrawable(buttonBg);
-            this.avatar = imageObj;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -210,5 +219,10 @@ public class RegActivity extends ImageUploadActivity {
         Intent intent = new Intent(this, MainLoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        imageUploader.onActivityResult(requestCode, resultCode, data);
     }
 }

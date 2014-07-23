@@ -22,6 +22,11 @@ public class ImageHelper {
         return generateUrl(url, avatar_style);
     }
 
+    public static String getUserPhotoPreview(String url) {
+        String avatar_style = "w_500,h_500";
+        return generateUrl(url, avatar_style);
+    }
+
     public static String getUserAvatarProfileUi(String url) {
         String avatar_style = "w_100,h_100,c_thumb,g_face";
         return generateUrl(url, avatar_style);

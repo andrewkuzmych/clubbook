@@ -13,23 +13,39 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.*;
-import android.widget.*;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import com.nl.clubbook.R;
+import com.nl.clubbook.adapter.NavDrawerItem;
 import com.nl.clubbook.adapter.NavDrawerListAdapter;
 import com.nl.clubbook.datasource.ChatMessageDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
-import com.nl.clubbook.fragment.*;
+import com.nl.clubbook.fragment.BaseFragment;
+import com.nl.clubbook.fragment.ChatFragment;
+import com.nl.clubbook.fragment.ClubsListFragment;
+import com.nl.clubbook.fragment.EditProfileFragment;
+import com.nl.clubbook.fragment.FriendsFragment;
+import com.nl.clubbook.fragment.MessagesFragment;
+import com.nl.clubbook.fragment.SettingsFragment;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.NotificationHelper;
 import com.nl.clubbook.helper.SessionManager;
-import com.nl.clubbook.adapter.NavDrawerItem;
 import com.pubnub.api.Callback;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.listeners.OnLogoutListener;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -479,7 +495,7 @@ public class MainActivity extends BaseActivity {
      *
      * @param myInfo
      */
-    public void updateMyInformation(UserDto myInfo){
+    public void updateMyInformation(UserDto myInfo) {
         // update UI profile info
         NavDrawerItem navDrawerItem = navDrawerItems.get(NAV_MENU_PROFILE_POSITION);
         navDrawerItem.setTitle(myInfo.getName());
@@ -489,6 +505,11 @@ public class MainActivity extends BaseActivity {
         mDrawerList.setAdapter(adapter);
         // update session user
         getSession().updateLoginSession(myInfo);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 }

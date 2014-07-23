@@ -1,13 +1,19 @@
 package com.nl.clubbook.fragment;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.nl.clubbook.R;
@@ -17,27 +23,76 @@ import com.nl.clubbook.control.DatePickerFragment;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.AlertDialogManager;
+import com.nl.clubbook.helper.ImageHelper;
+import com.nl.clubbook.helper.ImageUploader;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.helper.UiHelper;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class EditProfileFragment extends BaseFragment {
 
     EditText user_text, dob_text;
     Spinner gender_spinner;
-    private Button saveButton;
+    private Button saveButton, addNewPhotoButton;
+    private ImageView selectedImage;
+    private ImageUploader imageUploader;
     private UserDto profile;
     AlertDialogManager alert = new AlertDialogManager();
+    private LinearLayout imagesHolder;
+
+    protected ImageLoader imageLoader;
+    protected DisplayImageOptions options;
+    protected ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        imageLoader = ImageLoader.getInstance();
+        options = new DisplayImageOptions.Builder()
+                .showStubImage(R.drawable.default_list_image)
+                .showImageForEmptyUri(R.drawable.default_list_image)
+                .showImageOnFail(R.drawable.default_list_image)
+                .cacheInMemory()
+                .cacheOnDisc()
+                .build();
+
         getActivity().setTitle(getString(R.string.header_profile));
 
         View rootView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+        imagesHolder = (LinearLayout) rootView.findViewById(R.id.imagesHolder);
         saveButton = (Button) rootView.findViewById(R.id.save_profile_button);
+        addNewPhotoButton = (Button) rootView.findViewById(R.id.add_new_photo);
         user_text = (EditText) rootView.findViewById(R.id.name_text);
         dob_text = (EditText) rootView.findViewById(R.id.dob_text);
+        selectedImage = (ImageView) rootView.findViewById(R.id.selectedImage);
+        imageUploader = new ImageUploader(getActivity()) {
+            @Override
+            public void startActivityForResultHolder(Intent intent, int requestCode) {
+                startActivityForResult(intent, requestCode);
+            }
+
+            @Override
+            public void onImageSelected(JSONObject imageObj) throws JSONException {
+                String image_url = ImageHelper.getUserPhotoPreview(imageObj.getString("url"));
+
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
+                ImageView image = new ImageView(getActivity());
+                image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                image.setLayoutParams(layoutParams);
+                imagesHolder.addView(image);
+                imageLoader.displayImage(image_url, image, options, animateFirstListener);
+                image.requestLayout();
+
+                Log.v("ImageUploadActivity", imageObj.getString("public_id"));
+            }
+        };
 
         loadData();
 
@@ -46,6 +101,16 @@ public class EditProfileFragment extends BaseFragment {
 
     private void setHandlers() {
         final BaseFragment thisInstance = this;
+
+        addNewPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog dialog = imageUploader.selectPhoto();
+                dialog.show();
+                Log.i("test", "test");
+            }
+        });
+
 
         dob_text.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,6 +212,11 @@ public class EditProfileFragment extends BaseFragment {
             }
         });
         date.show(getActivity().getSupportFragmentManager(), "Date Picker");
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        imageUploader.onActivityResult(requestCode, resultCode, data);
     }
 
 }
