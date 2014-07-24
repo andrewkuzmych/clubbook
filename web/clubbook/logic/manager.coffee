@@ -290,7 +290,7 @@ exports.save_or_update_fb_user = (params, callback)->
         user.fb_access_token = params.fb_access_token
         if params.dob then user.dob = params.dob
         if params.city then user.city = params.city
-
+        
         if user.photos.length == 0
           user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
 
@@ -310,6 +310,7 @@ exports.save_or_update_fb_user = (params, callback)->
           if params.dob then user.dob = params.dob
           if params.bio then user.bio = params.bio
           if params.city then user.city = params.city
+          if params.country then user.country = params.country
 
           user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
 
@@ -350,6 +351,7 @@ exports.save_or_update_fb_user = (params, callback)->
               if params.dob then user.dob = params.dob
               if params.bio then user.bio = params.bio
               if params.city then user.city = params.city
+              if params.country then user.country = params.country
 
               user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
 
