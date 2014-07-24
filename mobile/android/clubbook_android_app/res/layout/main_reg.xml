@@ -58,6 +58,12 @@
                     android:layout_marginBottom="5dip"
                     android:id="@+id/gender" android:layout_gravity="left|center_vertical" android:focusable="true"/>
 
+            <Spinner
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dip"
+                    android:id="@+id/country" android:layout_gravity="left|center_vertical" android:focusable="true"/>
+
             <Button android:id="@+id/reg_btn"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"

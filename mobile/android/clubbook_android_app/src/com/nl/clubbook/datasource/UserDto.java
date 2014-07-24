@@ -21,6 +21,8 @@ public class UserDto {
     private String dob;
     private String age;
     private String avatar;
+    private String country;
+    private String bio;
     private List<String> photos;
 
     UserDto() {
@@ -39,6 +41,10 @@ public class UserDto {
             this.setDob(userJson.getString("dob_format"));
         if (userJson.has("age") && userJson.getString("age") != "null")
             this.setAge(userJson.getString("age"));
+        if (userJson.has("country"))
+            this.setCountry(userJson.getString("country"));
+        if (userJson.has("bio"))
+            this.setBio(userJson.getString("bio"));
 
         JSONArray photos_json = userJson.getJSONArray("photos");
         List<String> photos = new ArrayList<String>();
@@ -133,4 +139,21 @@ public class UserDto {
     public void setAge(String age) {
         this.age = age;
     }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
 }

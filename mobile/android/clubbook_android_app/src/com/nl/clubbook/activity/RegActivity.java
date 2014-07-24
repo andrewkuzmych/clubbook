@@ -33,7 +33,7 @@ import java.net.URL;
 public class RegActivity extends BaseActivity {
 
     EditText user_text, city_text, password_text, email_text, dob_text;
-    Spinner gender_spinner;
+    Spinner gender_spinner, country_spinner;
     private ImageUploader imageUploader;
     AlertDialogManager alert = new AlertDialogManager();
     Button reg_button;
@@ -86,6 +86,7 @@ public class RegActivity extends BaseActivity {
 
         //init gender
         gender_spinner = UiHelper.createGenderSpinner((Spinner) findViewById(R.id.gender), this, "male");
+        country_spinner = UiHelper.createCountrySpinner((Spinner) findViewById(R.id.country), this, "");
 
         setHandlers();
     }
@@ -160,11 +161,15 @@ public class RegActivity extends BaseActivity {
                     return;
                 }
 
-                UiHelper.GenderPair data = (UiHelper.GenderPair) gender_spinner.getSelectedItem();
+                UiHelper.TextValuePair data = (UiHelper.TextValuePair) gender_spinner.getSelectedItem();
                 String gender = data.getValue();
+
+                UiHelper.TextValuePair dataCountry = (UiHelper.TextValuePair) country_spinner.getSelectedItem();
+                String country = dataCountry.getValue();
 
                 // String city = city_text.getText().toString().trim();
                 String city = "Amsterdam";
+                String bio = "Hi, I'm using Clubbook.";
 
                 if(avatar == null) {
                     alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.avatar_incorrect), false);
@@ -174,7 +179,7 @@ public class RegActivity extends BaseActivity {
                 showProgress("Loading...");
 
                 // store data
-                DataStore.regByEmail(user_name, email, password, gender, dob, city, avatar, new DataStore.OnResultReady() {
+                DataStore.regByEmail(user_name, email, password, gender, dob, country, city, bio, avatar, new DataStore.OnResultReady() {
                     @Override
                     public void onReady(Object result, boolean failed) {
                         // show error

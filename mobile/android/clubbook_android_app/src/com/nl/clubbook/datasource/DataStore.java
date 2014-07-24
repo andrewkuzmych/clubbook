@@ -24,7 +24,7 @@ public class DataStore {
         context = mcontext;
     }
 
-    public static void regByEmail(String name, String email, String pass, String gender, String dob, String city, JSONObject avatar,
+    public static void regByEmail(String name, String email, String pass, String gender, String dob, String country, String city, String bio, JSONObject avatar,
                                   final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("email", email);
@@ -33,6 +33,8 @@ public class DataStore {
         params.put("password", pass);
         params.put("dob", dob);
         params.put("city", city);
+        params.put("country", country);
+        params.put("bio", bio);
         params.put("avatar", avatar);
 
         ClubbookRestClient.regByEmail(params, new JsonHttpResponseHandler() {
@@ -71,11 +73,13 @@ public class DataStore {
         });
     }
 
-    public static void updateUserProfile(String userId, String name, String gender, String dob, final OnResultReady onResultReady) {
+    public static void updateUserProfile(String userId, String name, String gender, String dob, String country, String bio, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("name", name);
         params.put("gender", gender);
         params.put("dob", dob);
+        params.put("country", country);
+        params.put("bio", bio);
 
         ClubbookRestClient.updateProfile(userId, params, new JsonHttpResponseHandler() {
             private boolean failed = true;

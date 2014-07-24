@@ -3,6 +3,7 @@ package com.nl.clubbook.fragment;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -37,8 +37,8 @@ import org.json.JSONObject;
 
 public class EditProfileFragment extends BaseFragment {
 
-    EditText user_text, dob_text;
-    Spinner gender_spinner;
+    EditText user_text, dob_text, bio_text;
+    Spinner gender_spinner, country_spinner;
     private Button saveButton, addNewPhotoButton;
     private ImageView selectedImage;
     private ImageUploader imageUploader;
@@ -71,6 +71,7 @@ public class EditProfileFragment extends BaseFragment {
         addNewPhotoButton = (Button) rootView.findViewById(R.id.add_new_photo);
         user_text = (EditText) rootView.findViewById(R.id.name_text);
         dob_text = (EditText) rootView.findViewById(R.id.dob_text);
+        bio_text = (EditText) rootView.findViewById(R.id.bio_text);
         selectedImage = (ImageView) rootView.findViewById(R.id.selectedImage);
         imageUploader = new ImageUploader(getActivity()) {
             @Override
@@ -137,14 +138,19 @@ public class EditProfileFragment extends BaseFragment {
                     return;
                 }
 
-                UiHelper.GenderPair data = (UiHelper.GenderPair) gender_spinner.getSelectedItem();
-                String gender = data.getValue();
+                String bio = bio_text.getText().toString().trim();
+
+                UiHelper.TextValuePair dataGender = (UiHelper.TextValuePair) gender_spinner.getSelectedItem();
+                String gender = dataGender.getValue();
+
+                UiHelper.TextValuePair dataCountry = (UiHelper.TextValuePair) country_spinner.getSelectedItem();
+                String country = dataCountry.getValue();
 
                 // update on server side
                 ((BaseActivity) getActivity()).showProgress("Loading...");
 
                 DataStore.updateUserProfile(thisInstance.getSession().getUserDetails().get(SessionManager.KEY_ID),
-                        user_name, gender, dob, new DataStore.OnResultReady() {
+                        user_name, gender, dob, country, bio, new DataStore.OnResultReady() {
                             @Override
                             public void onReady(Object result, boolean failed) {
                                 if (failed) {
@@ -180,11 +186,12 @@ public class EditProfileFragment extends BaseFragment {
 
                 profile = (UserDto) result;
 
-                dob_text.setText(profile.getDob());
-                //init gender
-                gender_spinner = UiHelper.createGenderSpinner((Spinner) getActivity().findViewById(R.id.gender), getActivity(), profile.getGender());
                 // update UI components
+                dob_text.setText(profile.getDob());
+                gender_spinner = UiHelper.createGenderSpinner((Spinner) getActivity().findViewById(R.id.gender), getActivity(), profile.getGender());
+                country_spinner = UiHelper.createCountrySpinner((Spinner) getActivity().findViewById(R.id.country), getActivity(), profile.getCountry());
                 user_text.setText(profile.getName());
+                bio_text.setText(profile.getBio());
 
                 setHandlers();
             }

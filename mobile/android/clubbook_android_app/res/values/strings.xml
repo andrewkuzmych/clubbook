@@ -44,6 +44,7 @@
     <string name="register">Register</string>
     <string name="upload_avatar">add a profile photo</string>
     <string name="dob">Birthday</string>
+    <string name="bio">bio</string>
 
     <string name="name_incorrect">Name is incorrect</string>
     <string name="email_incorrect">Email is incorrect </string>
