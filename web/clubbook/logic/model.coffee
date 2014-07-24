@@ -23,9 +23,8 @@ UserSchema = new mongoose.Schema
   ]
   dob: { type: Date }
   city: {type: String, trim: true, lowercase: true}
-  country: {type: String}
+  country: {type: String, trim: true, lowercase: true}
   bio: {type: String}
-  info: {type: String}
 
   ios_tokens: [
     { type: String }
