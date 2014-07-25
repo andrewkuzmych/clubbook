@@ -140,8 +140,19 @@ app.get '/_s/cron_checkout', services.cron_checkout
 app.get '/_s/unread/messages/count/:user_id', services.unread_messages_count
 # crud users
 app.get '/_s/user/by_id/:user_id', services.get_user_by_id
-app.get '/_s/obj/user/:objectId/friends', services.get_user_friends
 app.put '/_s/obj/user/:objectId', services.update_user
+# friendship
+# all friends
+app.get '/_s/obj/user/:objectId/friends', services.friends_my
+# pending frineds
+app.get '/_s/obj/user/:objectId/friends/pending', services.friends_pending
+# send friend request
+app.get '/_s/obj/user/:objectId/friends/:friendId/friend', services.friends_request
+# confirm friend request
+app.get '/_s/obj/user/:objectId/friends/:friendId/confirm', services.friends_confirm
+# remove from friends
+app.get '/_s/obj/user/:objectId/friends/:friendId/unfriend', services.friends_unfriend
+
 # crud user images
 app.post '/_s/obj/user/:userId/image', services.user_image_add
 app.put '/_s/obj/user/:userId/image/:objectId', services.user_image_update

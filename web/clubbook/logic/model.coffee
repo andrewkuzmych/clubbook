@@ -26,6 +26,8 @@ UserSchema = new mongoose.Schema
   country: {type: String, trim: true, lowercase: true}
   bio: {type: String}
 
+  friends: [type: mongoose.Schema.ObjectId, ref: 'User']
+
   ios_tokens: [
     { type: String }
   ]
@@ -66,6 +68,8 @@ UserSchema.virtual('dob_format').get ()->
 
 UserSchema.pre 'save', (next, done) ->
   this.updated_on = new Date().toISOString()
+  if this.friends and this.friends.length > 0
+    this.friends = __.uniq this.friends, false, (friend)-> friend.toString()
   next()
 
 UserSchema.set('toJSON', { getters: true, virtuals: true })

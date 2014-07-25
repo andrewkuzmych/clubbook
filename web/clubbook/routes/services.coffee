@@ -197,18 +197,123 @@ exports.get_user_by_id = (req, res)->
         result:
           user: user
 
-exports.get_user_friends = (req, res)->
-  manager.get_user_friends req.params.objectId, (err, users)->
-    if err
-      console.log err
-      res.json
-        status: "error"
-        message: "can not find user friends: #{req.params.objectId}"
-    else
-      res.json
-        status: "ok"
-        result:
-          friends: users
+##################################################################################################
+# friendship
+exports.friends_my_test = (req, res)->
+  db_model.User.findById(req.params.objectId).exec (err, user)->
+
+    db_model.User.find({"_id": {"$ne": mongoose.Types.ObjectId(req.params.objectId)}}).select(db_model.USER_PUBLIC_INFO).sort("name").exec (err, users)->
+      if err
+        console.log err
+        res.json
+          status: "error"
+          message: "can not find user friends: #{req.params.objectId}"
+      else
+        res.json
+          status: "ok"
+          result:
+            friends: users
+            user: user
+
+exports.friends_my = (req, res)->
+  # my_id, my_friends = user._id, user.friends
+  # db.users.find({'_id':{'$in': my_friends}, 'friends': my_id})
+
+  db_model.User.findById(req.params.objectId).exec (err, user)->
+
+    db_model.User.find({"_id": {'$in': user.friends}, 'friends': user._id}).select(db_model.USER_PUBLIC_INFO).sort("name").exec (err, users)->
+      if err
+        console.log err
+        res.json
+          status: "error"
+          message: "can not find user friends: #{req.params.objectId}"
+      else
+        res.json
+          status: "ok"
+          result:
+            friends: users
+            _temp_user: user
+
+
+exports.friends_pending = (req, res)->
+  # my_id, my_friends = user._id, user.friends
+  # db.users.find({'_id':{'$not_in': my_friends}, 'friends': my_id})
+
+  db_model.User.findById(req.params.objectId).exec (err, user)->
+
+    db_model.User.find({"_id": {'$nin': user.friends}, 'friends': user._id}).select(db_model.USER_PUBLIC_INFO).sort("name").exec (err, users)->
+      if err
+        console.log err
+        res.json
+          status: "error"
+          message: "can not find user friends: #{req.params.objectId}"
+      else
+        res.json
+          status: "ok"
+          result:
+            friends: users
+            _temp_user: user
+
+
+exports.friends_request = (req, res)->
+  # user.friends.push friend_id
+
+  if req.params.objectId is req.params.friendId
+    res.json
+      status: "error"
+      message: "users are the same"
+
+  else
+    db_model.User.findById(req.params.objectId).exec (err, user)->
+      user.friends.push req.params.friendId
+      user.save ()->
+        res.json
+          status: "ok"
+          result:
+            message: "friend request"
+            _temp_user: user
+
+
+exports.friends_confirm = (req, res)->
+  # user.friends.push friend_id
+
+  if req.params.objectId is req.params.friendId
+    res.json
+      status: "error"
+      message: "users are the same"
+
+  else
+    # user.friends.push friend_id
+    db_model.User.findById(req.params.objectId).exec (err, user)->
+      user.friends.push req.params.friendId
+      user.save ()->
+        res.json
+          status: "ok"
+          result:
+            message: "friend request"
+            _temp_user: user
+
+
+exports.friends_unfriend = (req, res)->
+  # user.friends.remove friend_id
+  if req.params.objectId is req.params.friendId
+    res.json
+      status: "error"
+      message: "users are the same"
+
+  else
+    # user.friends.push friend_id
+    db_model.User.findById(req.params.objectId).exec (err, user)->
+      user.friends = __.filter user.friends, (friend)-> friend.toString() isnt req.params.friendId
+      user.save ()->
+        res.json
+          status: "ok"
+          result:
+            message: "friend request"
+            _temp_user: user
+
+
+##################################################################################################
 
 exports.uploadphoto = (req, res)->
   params =
