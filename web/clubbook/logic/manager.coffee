@@ -43,7 +43,7 @@ exports.find_club = (club_id, user_id, callback)->
     if err
       callback err, null
     else
-      db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}, '_id': {'$ne':  mongoose.Types.ObjectId(user_id)}}, { checkin: 0 }).exec (err, users)->
+      db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}}, { checkin: 0 }).exec (err, users)->
         callback null, club, users
 
 
