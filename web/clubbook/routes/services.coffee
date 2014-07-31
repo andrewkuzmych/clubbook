@@ -197,6 +197,18 @@ exports.get_user_by_id = (req, res)->
         result:
           user: user
 
+exports.get_friend = (req, res)->
+  manager.get_friend req.params.friend_id, req.params.current_user_id, (err, user)->
+    if err
+      res.json
+        status: "error"
+        message: "can not find user: #{req.params.user_id}"
+    else
+      res.json
+        status: "ok"
+        result:
+          user: user
+
 ##################################################################################################
 # friendship
 exports.friends_my_test = (req, res)->

@@ -14,11 +14,39 @@ exports.get_user_by_id = (user_id, callback)->
     else
       callback null, user
 
+exports.get_friend = (friend_id, current_user_id, callback)->
+  db_model.User.findById(friend_id).select('-checkin').exec (err, user)->
+    db_model.User.findById(current_user_id).select('-checkin').exec (err, current_user)->
+      is_current_user_friend_to_user = __.find(user.friends, (f) ->
+              f.toString() is current_user._id.toString()
+            )
+
+      is_user_friend_to_current_user = __.find(current_user.friends, (f) ->
+              f.toString() is user._id.toString()
+            )
+
+      friend_status = 'none'
+      if is_current_user_friend_to_user and not is_user_friend_to_current_user
+        friend_status = "receive_request"
+      if is_user_friend_to_current_user and not is_current_user_friend_to_user
+        friend_status = "sent_request"
+      if is_user_friend_to_current_user and is_current_user_friend_to_user
+        friend_status = "friend"
+
+      user_object = user.toObject();
+      user_object.friend_status = friend_status;
+
+
+      if err
+        callback err, null
+      else
+        callback null, user_object
+
 exports.get_user_friends = (user_id, callback)->
   db_model.User.find({"_id": {"$ne": mongoose.Types.ObjectId(user_id)}}).select(db_model.USER_PUBLIC_INFO).sort("name").exec callback
 
 exports.signinmail = (params, callback)->
-
+  
   if __.isEmpty params.email?.trim()
       callback 'email is empty', null
   else if __.isEmpty params.password?.trim()

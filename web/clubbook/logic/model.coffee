@@ -129,6 +129,22 @@ VenueSchema = new mongoose.Schema
     lon: Number
     lat: Number
   active_checkins: {type: Number, default: 0, min: 0}
+  club_working_hours: [
+    {
+      status: {type: String},
+      day: { type: Number },   # 0 - 6
+      start_time: {type: String},
+      end_time: {type: String}
+    }
+  ]
+
+VenueSchema.virtual('club_today_working_hours').get ()->
+  if this.club_working_hours
+    for wh in this.club_working_hours
+      if wh.day == moment.utc().day()
+        return wh
+  return null
+
 
 VenueSchema.pre 'save', (next, done) ->
   this.updated_on = new Date().toISOString()

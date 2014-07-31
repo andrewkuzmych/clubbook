@@ -142,6 +142,8 @@ app.get '/_s/unread/messages/count/:user_id', services.unread_messages_count
 app.get '/_s/user/by_id/:user_id', services.get_user_by_id
 app.put '/_s/obj/user/:objectId', services.update_user
 # friendship
+# get friend
+app.get '/_s/user/by_id/:friend_id/:current_user_id', services.get_friend
 # all friends
 app.get '/_s/obj/user/:objectId/friends', services.friends_my
 # pending frineds
