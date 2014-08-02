@@ -5,83 +5,52 @@
                 android:layout_height="fill_parent">
     <ScrollView
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
-        <LinearLayout xmlns:tools="http://schemas.android.com/tools"
-                      android:layout_width="match_parent"
-                      android:layout_height="match_parent"
-                      android:orientation="vertical"
-                      android:padding="10dip" android:baselineAligned="false">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dip" android:baselineAligned="false">
 
-            <!-- Email Label -->
-            <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/name_reg"
-                    android:singleLine="true"
-                    android:layout_marginBottom="5dip" android:textColor="#22104A" android:id="@+id/name_label"
-                    android:textSize="17dp"/>
+            <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent">
+                <ImageButton android:id="@+id/avatar_btn"
+                             android:layout_width="100dp" android:adjustViewBounds="true"
+                             android:layout_height="100dp" android:scaleType="fitCenter"
+                             android:background="@drawable/test_avatar"/>
 
-            <!-- Email input text -->
-            <EditText android:id="@+id/name_text"
-                      android:layout_width="fill_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_marginBottom="5dip" android:inputType="text"
-                      android:textSize="16dp" android:textColor="#000000"/>
+                <!-- Name Label -->
 
-            <!-- Email Label -->
-            <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/email"
-                    android:singleLine="true"
-                    android:layout_marginBottom="5dip" android:textColor="#22104A" android:id="@+id/email_label"
-                    android:textSize="17dp"/>
+                <!-- Name input text -->
+                <EditText android:id="@+id/name_text" android:inputType="text"
+                          style="@style/default_text_input"
+                    android:hint="@string/name_reg"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/avatar_btn" />
+            </RelativeLayout>
 
             <!-- Email input text -->
-            <EditText android:id="@+id/email_text"
-                      android:layout_width="fill_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_marginBottom="5dip" android:inputType="textEmailAddress"
-                      android:textSize="16dp" android:textColor="#000000"/>
+            <EditText android:id="@+id/email_text" android:inputType="textEmailAddress"
+                      style="@style/default_text_input"
+                      android:layout_marginBottom="5dip"
+                android:hint="@string/email" />
 
             <!-- Password Label -->
-            <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pass_reg"
-                    android:layout_marginBottom="5dip" android:singleLine="false" android:textColor="#22104A"
-                    android:id="@+id/pass_label" android:textSize="17dp"/>
 
             <!-- Password input text -->
-            <EditText android:id="@+id/password_text"
-                      android:layout_width="fill_parent"
-                      android:layout_height="wrap_content"
+            <EditText android:id="@+id/password_text" android:password="true"
+                      style="@style/default_text_input"
                       android:layout_marginBottom="5dip"
-                      android:password="true"
-                      android:singleLine="true" android:textSize="16dp" android:textColor="#000000"/>
+                android:hint="@string/pass_reg" />
 
-            <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dob"
-                    android:layout_marginBottom="5dip" android:textColor="#22104A" android:id="@+id/dob_label"
-                    android:textSize="17dp"/>
+            <!-- Birthday Label -->
 
-            <!-- Password input text -->
-            <EditText android:id="@+id/dob_text"
-                      android:layout_width="fill_parent"
-                      android:layout_height="wrap_content"
+            <!-- Birthday input text -->
+            <EditText android:id="@+id/dob_text" android:inputType="date"
+                      style="@style/default_text_input"
                       android:layout_marginBottom="5dip"
-                      android:inputType="date" android:focusable="false" android:editable="true"
-                      android:clickable="true" android:textSize="16dp" android:textColor="#000000"/>
-
-            <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/gender_reg"
-                    android:layout_marginBottom="5dip" android:textColor="#22104A" android:id="@+id/gender_label"
-                    android:textSize="17dp"/>
+                      android:focusable="false" android:editable="true" android:clickable="true"
+                android:hint="@string/dob" />
 
             <Spinner
                     android:layout_width="fill_parent"
@@ -89,11 +58,17 @@
                     android:layout_marginBottom="5dip"
                     android:id="@+id/gender" android:layout_gravity="left|center_vertical" android:focusable="true"/>
 
+            <Spinner
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dip"
+                    android:id="@+id/country" android:layout_gravity="left|center_vertical" android:focusable="true"/>
+
             <Button android:id="@+id/reg_btn"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/register" android:background="@drawable/main_button"
-                    style="@style/main_button" />
+                    style="@style/default_button" android:layout_marginTop="10dp"/>
 
         </LinearLayout>
     </ScrollView>

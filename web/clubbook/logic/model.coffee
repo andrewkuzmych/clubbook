@@ -1,6 +1,7 @@
 mongoose = require('mongoose')
 __ = require("underscore")
 check = require('validator').check
+moment = require('moment-timezone')
 
 #-------------------------------------------------------------------------------------
 #  User
@@ -10,59 +11,93 @@ UserSchema = new mongoose.Schema
   updated_on: { type: Date, 'default': Date.now }
 
   email: {type: String, trim: true, lowercase: true}
-  name: {type: String, trim: true, required: true}
-  
-  gender: {type: String, trim: true, required: true, 'enum':["male", "female"]}
-  photos: [{url:{ type: String }, profile:{ type: Boolean, default:false }}]
-  dob: { type: Date }
-
   password: {type: String}
-  
-  ios_tokens: [{ type: String }]
-  android_tokens: [{ type: String }]
-          
-  fb_id: {type:String, unique: true, sparse: true}
-  fb_access_token: {type:String}
-  fb_token_expires: Number
-  
-  checkin: [{club: { type: mongoose.Schema.ObjectId, ref: 'Venue' }, lon: Number, lat: Number, time: Date, active: Boolean}]
+  name: {type: String, trim: true, required: true}
 
+  bloked: [
+    { type: String }
+  ]
+  gender: {type: String, trim: true, required: true, 'enum': ["male", "female"]}
+  photos: [
+    {url: { type: String }, public_id: { type: String }, profile: { type: Boolean, default: false }}
+  ]
+  dob: { type: Date }
+  city: {type: String, trim: true, lowercase: true}
+  country: {type: String, trim: true, lowercase: true}
+  bio: {type: String}
+
+  friends: [type: mongoose.Schema.ObjectId, ref: 'User']
+
+  ios_tokens: [
+    { type: String }
+  ]
+  android_tokens: [
+    { type: String }
+  ]
+
+  fb_id: {type: String, unique: true, sparse: true}
+  fb_access_token: {type: String}
+
+  checkin: [
+    {club: { type: mongoose.Schema.ObjectId, ref: 'Venue' }, time: Date, active: Boolean}
+  ]
+
+# http://stackoverflow.com/questions/6183147/storing-friend-relationships-in-mongodb
+# friends:[_id]
+
+UserSchema.virtual('avatar').get ()->
+  photo = null
+  if this.photos and this.photos.length > 0
+    for _photo in this.photos
+      if _photo.profile
+        photo = _photo
+
+  return photo
+
+UserSchema.virtual('age').get ()->
+  if this.dob
+    return Math.floor((new Date() - this.dob) / 31536000000)
+  else
+    null
+
+UserSchema.virtual('dob_format').get ()->
+  if this.dob
+    return moment.utc(this.dob).format("YYYY-MM-DD");
+  else
+    null
 
 UserSchema.pre 'save', (next, done) ->
   this.updated_on = new Date().toISOString()
+  if this.friends and this.friends.length > 0
+    this.friends = __.uniq this.friends, false, (friend)-> friend.toString()
   next()
 
-UserSchema.virtual('avatar').get ()->
-  if this.fb_id
-    "https://graph.facebook.com/#{this.fb_id}/picture?width=200&height=200"
-  else
-    if this.gender is "male"
-      "http://socialmediababe.com/wp-content/uploads/2011/07/FB-profile-avatar.jpg"
-    else if this.gender is "female"
-      "http://smartcitiesindex.gsma.com/community/styles/default/xenforo/avatars/avatar_female_m.png"
-
 UserSchema.set('toJSON', { getters: true, virtuals: true })
+UserSchema.set('toObject', { getters: true, virtuals: true })
 exports.User = mongoose.model 'User', UserSchema
 
 exports.User.schema.path('email').validate (value, respond)->
-    if value
-      try
-        check(value).len(6, 64).isEmail()
-        respond true
-      catch e
-        respond false
-    else
-      respond true
-  , 'Wrong email format'
-
-
-exports.User.schema.path('name').validate (value, respond)->
+  if value
     try
-      check(value).len(1, 50)
+      check(value).len(6, 64).isEmail()
       respond true
     catch e
       respond false
-  , 'Wrong first_name format'
+  else
+    respond true
+, 'Wrong email format'
+
+
+exports.User.schema.path('name').validate (value, respond)->
+  try
+    check(value).len(1, 50)
+    respond true
+  catch e
+    respond false
+, 'Wrong first_name format'
+
+
+exports.USER_PUBLIC_INFO = '_id photos name gender dob'
 
 #-------------------------------------------------------------------------------------
 #  Venue
@@ -70,26 +105,53 @@ exports.User.schema.path('name').validate (value, respond)->
 VenueSchema = new mongoose.Schema
   created_on: { type: Date, 'default': Date.now }
   updated_on: { type: Date, 'default': Date.now }
-  club_admin: [{type: String, trim: true}]
+  club_admin: [
+    {type: String, trim: true}
+  ]
+  club_password: [
+    {type: String, trim: true}
+  ]
   club_name: {type: String, trim: true}
   club_email: {type: String, trim: true}
   club_houres: {type: String}
-  club_photos: [{type: String, trim: true}]
+  club_photos: [
+    {type: String, trim: true}
+  ]
   club_phone: {type: String, trim: true}
   club_address: {type: String, trim: true, required: true}
   club_site: {type: String, trim: true}
   club_info: {type: String, trim: true, required: true}
   club_logo: {type: String, trim: true}
+  club_dress_code: {type: String, trim: true}
+  club_age_restriction: {type: String, trim: true}
+  club_capacity: {type: Number}
   club_loc:
     lon: Number
     lat: Number
-  
+  active_checkins: {type: Number, default: 0, min: 0}
+  club_working_hours: [
+    {
+      status: {type: String},
+      day: { type: Number },   # 0 - 6
+      start_time: {type: String},
+      end_time: {type: String}
+    }
+  ]
+
+VenueSchema.virtual('club_today_working_hours').get ()->
+  if this.club_working_hours
+    for wh in this.club_working_hours
+      if wh.day == moment.utc().day()
+        return wh
+  return null
+
+
 VenueSchema.pre 'save', (next, done) ->
   this.updated_on = new Date().toISOString()
   next()
 
 VenueSchema.set('toJSON', { getters: true, virtuals: true })
-VenueSchema.index( { club_loc: "2d" } )
+VenueSchema.index({ club_loc: "2d" })
 exports.Venue = mongoose.model 'Venue', VenueSchema
 
 #-------------------------------------------------------------------------------------
@@ -102,7 +164,14 @@ ChatSchema = new mongoose.Schema
   user1: {type: mongoose.Schema.ObjectId, ref: 'User', required: true}
   user2: {type: mongoose.Schema.ObjectId, ref: 'User', required: true}
   unread: {user: {type: mongoose.Schema.ObjectId, ref: 'User'}, count: {type: Number, 'default': 0 }}
-  conversation: [{msg: { type: String, required: true }, time: { type: Date, 'default': Date.now },from_who: {type: mongoose.Schema.ObjectId, ref: 'User', required: true}}]
+  conversation: [
+    {
+      msg: { type: String },
+      time: { type: Date, 'default': Date.now, required: true},
+      type: {type: String, trim: true, required: true, "default": "message", "enum": ["message", "drink", "smile"]},
+      from_who: {type: mongoose.Schema.ObjectId, ref: 'User', required: true}
+    }
+  ]
 
 ChatSchema.pre 'save', (next, done) ->
   this.updated_on = new Date().toISOString()

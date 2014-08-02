@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,7 @@ import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.adapter.MessagesAdapter;
-import com.nl.clubbook.datasource.ConversationShort;
+import com.nl.clubbook.datasource.ChatDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.helper.SessionManager;
 
@@ -38,8 +39,6 @@ public class MessagesFragment extends BaseFragment {
     }
 
     public void loadData(final boolean loading) {
-        DataStore.setContext(getActivity());
-
         final Context contextThis = getActivity();
         final BaseFragment thisInstance = this;
 
@@ -54,18 +53,17 @@ public class MessagesFragment extends BaseFragment {
             public void onReady(Object result, boolean failed) {
                 if (failed) {
                     if (loading)
-                        ((BaseActivity) getActivity()).hideProgress(false);
+                        if(getActivity() != null)
+                            ((BaseActivity) getActivity()).hideProgress(false);
+                        else
+                            Log.e("ERROR", "getActivity is null");
                     return;
                 }
 
                 if (loading)
                     ((BaseActivity) getActivity()).hideProgress(true);
 
-                List<ConversationShort> conversations = (List<ConversationShort>) result;
-
-                DataStore.setMessagesAdapter(new MessagesAdapter(contextThis, R.layout.message_list_item, conversations.toArray(new ConversationShort[conversations.size()])));
-
-                message_list.setAdapter(DataStore.getMessagesAdapter());
+                message_list.setAdapter(new MessagesAdapter(contextThis, R.layout.message_list_item, (List<ChatDto>) result));
 
                 message_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override

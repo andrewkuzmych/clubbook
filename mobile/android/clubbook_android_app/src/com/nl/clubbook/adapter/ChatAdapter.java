@@ -8,10 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.Comment;
+import com.nl.clubbook.datasource.ChatMessageDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,52 +20,96 @@ import java.util.List;
 /**
  * Created by Andrew on 6/6/2014.
  */
-public class ChatAdapter extends ArrayAdapter<Comment> {
+public class ChatAdapter extends ArrayAdapter<ChatMessageDto> {
 
-    private TextView countryName;
-    private List<Comment> countries = new ArrayList<Comment>();
+    private static final int TYPE_MESSAGE = 0;
+    private static final int TYPE_IMAGE = 1;
+    private static final int TYPE_COUNT = 2;
+
+    private TextView message;
+    private ImageView chatMessageImage;
+    private List<ChatMessageDto> chatMessageDtos = new ArrayList<ChatMessageDto>();
     private LinearLayout wrapper;
 
     @Override
-    public void add(Comment object) {
-        countries.add(object);
+    public void add(ChatMessageDto object) {
+        chatMessageDtos.add(object);
         super.add(object);
     }
 
-    public ChatAdapter(Context context, int textViewResourceId) {
+    public ChatAdapter(Context context, int textViewResourceId, List<ChatMessageDto> objects) {
         super(context, textViewResourceId);
-    }
-
-    public int getCount() {
-        return this.countries.size();
-    }
-
-    public Comment getItem(int index) {
-        return this.countries.get(index);
+        this.chatMessageDtos = objects;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
+        int type = getItemViewType(position);
+
         if (row == null) {
-            LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflater.inflate(R.layout.chat_item, parent, false);
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            if (type == TYPE_MESSAGE) {
+                row = inflater.inflate(R.layout.chat_item, parent, false);
+            } else {
+                row = inflater.inflate(R.layout.chat_item_image, parent, false);
+            }
         }
 
-        wrapper = (LinearLayout) row.findViewById(R.id.wrapper);
+        ChatMessageDto comment = getItem(position);
 
-        Comment coment = getItem(position);
+        if (type == TYPE_MESSAGE) {
+            message = (TextView) row.findViewById(R.id.comment);
+            message.setText(comment.getMsg());
+            message.setBackgroundResource(comment.getIsMyMessage() ? R.drawable.bubble_green : R.drawable.bubble_yellow);
 
-        countryName = (TextView) row.findViewById(R.id.comment);
+            wrapper = (LinearLayout) row.findViewById(R.id.chatMessageWrapper);
+            wrapper.setGravity(comment.getIsMyMessage() ? Gravity.RIGHT : Gravity.LEFT);
 
-        countryName.setText(coment.comment);
+        } else {
+            message = (TextView) row.findViewById(R.id.chatCommentImage);
+            chatMessageImage = (ImageView) row.findViewById(R.id.chatMessageImage);
 
-        countryName.setBackgroundResource(coment.left ? R.drawable.bubble_yellow : R.drawable.bubble_green);
-        wrapper.setGravity(coment.left ? Gravity.LEFT : Gravity.RIGHT);
+            message.setText(comment.getFormatMessage());
+
+            if (comment.getType().equalsIgnoreCase("smile")) {
+                chatMessageImage.setImageDrawable(getContext().getResources().getDrawable(R.drawable.icon_smile));
+            } else if (comment.getType().equalsIgnoreCase("drink")) {
+                chatMessageImage.setImageDrawable(getContext().getResources().getDrawable(R.drawable.icon_drink));
+            }
+        }
 
         return row;
     }
 
-    public Bitmap decodeToBitmap(byte[] decodedByte) {
-        return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+    @Override
+    public int getCount() {
+        return this.chatMessageDtos.size();
     }
+
+    @Override
+    public ChatMessageDto getItem(int index) {
+        return this.chatMessageDtos.get(index);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return TYPE_COUNT;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        ChatMessageDto chatMessageDto = chatMessageDtos.get(position);
+        if (chatMessageDto.getType().equalsIgnoreCase("message")) {
+            return TYPE_MESSAGE;
+        } else {
+            return TYPE_IMAGE;
+        }
+    }
+
 }

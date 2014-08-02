@@ -5,7 +5,7 @@
         <shape>
             <solid android:color="#A93321" />
             <corners
-                    android:radius="4dp" />
+                    android:radius="0dp" />
             <margin  android:left="5dp"
                      android:top="5dp"
                      android:right="5dp"
@@ -19,7 +19,7 @@
     <item>
         <shape>
             <solid android:color="#d13b26" />
-            <corners android:radius="4dp" />
+            <corners android:radius="0dp" />
             <margin android:left="5dp"
                     android:top="5dp"
                     android:right="5dp"

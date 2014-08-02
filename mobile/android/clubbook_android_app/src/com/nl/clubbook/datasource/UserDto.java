@@ -1,5 +1,10 @@
 package com.nl.clubbook.datasource;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,11 +16,49 @@ public class UserDto {
     private String fb_id;
     private String name;
     private String email;
-    private String avatar;
-    private List<String> photos;
     private String password;
     private String gender;
     private String dob;
+    private String age;
+    private String avatar;
+    private String country;
+    private String bio;
+    private List<String> photos;
+
+    UserDto() {
+
+    }
+
+    UserDto(JSONObject userJson) throws JSONException {
+        this.setId(userJson.getString("_id"));
+        if (userJson.has("fb_id"))
+            this.setFb_id(userJson.getString("fb_id"));
+        this.setName(userJson.getString("name"));
+        if (userJson.has("email"))
+            this.setEmail(userJson.getString("email"));
+        this.setGender(userJson.getString("gender"));
+        if (userJson.has("dob_format"))
+            this.setDob(userJson.getString("dob_format"));
+        if (userJson.has("age") && userJson.getString("age") != "null")
+            this.setAge(userJson.getString("age"));
+        if (userJson.has("country"))
+            this.setCountry(userJson.getString("country"));
+        if (userJson.has("bio"))
+            this.setBio(userJson.getString("bio"));
+
+        JSONArray photos_json = userJson.getJSONArray("photos");
+        List<String> photos = new ArrayList<String>();
+        for (int i = 0; i < photos_json.length(); i++) {
+            String photo_url = photos_json.getJSONObject(i).getString("url");
+            boolean is_profile = photos_json.getJSONObject(i).getBoolean("profile");
+            if (is_profile)
+                this.setAvatar(photo_url);
+            else
+                photos.add(photo_url);
+
+            this.setPhotos(photos);
+        }
+    }
 
     public String getId() {
         return id;
@@ -88,4 +131,29 @@ public class UserDto {
     public void setDob(String dob) {
         this.dob = dob;
     }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
 }

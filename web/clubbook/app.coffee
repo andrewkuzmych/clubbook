@@ -122,22 +122,48 @@ app.get '/', controller.index
 app.post '/_s/signin/fb', services.fb_signin
 app.post '/_s/signup', services.signup
 app.post '/_s/signinmail', services.signinmail
-app.post '/_s/create_club', services.create_club
-app.get '/_s/user/by_id/:user_id', services.get_user_by_id
+# retrieve clubs
 app.get '/_s/list_club/:distance/:user_lat/:user_lon', services.list_club
 app.get '/_s/find_club/:club_id/:user_id', services.find_club
 app.get '/_s/cu_count/:distance/:user_lat/:user_lon', services.cu_count
+app.get '/_s/club_clubbers/:club_id', services.club_clubbers
+# checkin / chekout
 app.get '/_s/checkin/:club_id/:user_id', services.checkin
 app.get '/_s/checkin/update/:club_id/:user_id', services.update_checkin
 app.get '/_s/checkout/:club_id/:user_id', services.checkout
-app.get '/_s/club_clubbers/:club_id', services.club_clubbers
+# chat
 app.post '/_s/chat', services.chat
-app.get '/_s/readchat/:chat_id/:user_id', services.readchat
-app.get '/_s/conversation/:user1/:user2', services.get_conversation
+app.get '/_s/readchat/:current_user/:receiver', services.readchat
+app.get '/_s/conversation/:current_user/:receiver', services.get_conversation
 app.get '/_s/conversations/:user_id', services.get_conversations
 app.get '/_s/cron_checkout', services.cron_checkout
 app.get '/_s/unread/messages/count/:user_id', services.unread_messages_count
+# crud users
+app.get '/_s/user/by_id/:user_id', services.get_user_by_id
+app.put '/_s/obj/user/:objectId', services.update_user
+# friendship
+# get friend
+app.get '/_s/user/by_id/:friend_id/:current_user_id', services.get_friend
+# all friends
+app.get '/_s/obj/user/:objectId/friends', services.friends_my
+# pending frineds
+app.get '/_s/obj/user/:objectId/friends/pending', services.friends_pending
+# send friend request
+app.get '/_s/obj/user/:objectId/friends/:friendId/friend', services.friends_request
+# confirm friend request
+app.get '/_s/obj/user/:objectId/friends/:friendId/confirm', services.friends_confirm
+# remove from friends
+app.get '/_s/obj/user/:objectId/friends/:friendId/unfriend', services.friends_unfriend
 
+# crud user images
+app.post '/_s/obj/user/:userId/image', services.user_image_add
+app.put '/_s/obj/user/:userId/image/:objectId', services.user_image_update
+app.delete '/_s/obj/user/:userId/image/:objectId', services.user_image_delete
+
+# helper functions
+app.post '/_s/create_club', services.create_club
+app.get '/_f/user/remove/:user_id', services.remove_user
+app.get '/_f/checkin/clean', services.checkin_clean
 
 if config.is_test_server == "false"
   checkout_job = new cronJob(

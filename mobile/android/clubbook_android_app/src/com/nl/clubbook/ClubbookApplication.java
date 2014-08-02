@@ -2,11 +2,10 @@ package com.nl.clubbook;
 
 import android.app.Application;
 import com.facebook.SessionLoginBehavior;
-import com.nl.clubbook.activity.MainActivity;
+import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.parse.Parse;
-import com.parse.PushService;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
@@ -29,16 +28,15 @@ public class ClubbookApplication extends Application {
         //PushService.setDefaultPushCallback(this, MainActivity.class);
 
 
-
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext()).build();
         ImageLoader.getInstance().init(config);
 
-        Permission[] permissions = new Permission[] {
+        Permission[] permissions = new Permission[]{
                 //Permission.USER_ABOUT_ME,
-               // Permission.USER_BIRTHDAY,
+                // Permission.USER_BIRTHDAY,
                 Permission.BASIC_INFO,
                 Permission.EMAIL,
-               // Permission.BASIC_INFO,
+                // Permission.BASIC_INFO,
                 Permission.USER_FRIENDS
                 //Permission.PUBLISH_ACTION
         };

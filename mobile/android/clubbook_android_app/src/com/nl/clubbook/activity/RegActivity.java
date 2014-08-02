@@ -1,9 +1,11 @@
 package com.nl.clubbook.activity;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -13,81 +15,80 @@ import com.nl.clubbook.control.DatePickerFragment;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.AlertDialogManager;
-import com.nl.clubbook.helper.SessionManager;
+import com.nl.clubbook.helper.ImageUploader;
+import com.nl.clubbook.helper.UiHelper;
 import com.nl.clubbook.helper.UserEmailFetcher;
 import com.nl.clubbook.helper.Validator;
 
-import java.util.Calendar;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 /**
  * Created by Andrew on 5/26/2014.
  */
 public class RegActivity extends BaseActivity {
 
-    EditText user_text, password_text, emeil_text, dob_text;
-    TextView user_label, password_label, emeil_label, dob_label, gender_label;
-    DatePicker date_picker;
-    Spinner gender_spinner;
+    EditText user_text, city_text, password_text, email_text, dob_text;
+    Spinner gender_spinner, country_spinner;
+    private ImageUploader imageUploader;
     AlertDialogManager alert = new AlertDialogManager();
-    SessionManager session;
     Button reg_button;
+    ImageButton avatar_button;
+    JSONObject avatar;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main_reg);
+
         init();
 
-        Typeface typefaceIntroText = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-REGULAR.TTF");
-        Typeface typefaceIntroTextBold = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
-        //final Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/azoft-sans.ttf");
-
+        //set styles
         user_text = (EditText) findViewById(R.id.name_text);
-        user_text.setTypeface(typefaceIntroText);
+        user_text.setTypeface(typeface_regular);
+//        city_text = (EditText) findViewById(R.id.name_text);
+//        city_text.setTypeface(typeface_regular);
         password_text = (EditText) findViewById(R.id.password_text);
-        password_text.setTypeface(typefaceIntroText);
-        emeil_text = (EditText) findViewById(R.id.email_text);
-        emeil_text.setTypeface(typefaceIntroText);
+        password_text.setTypeface(typeface_regular);
+        email_text = (EditText) findViewById(R.id.email_text);
+        email_text.setTypeface(typeface_regular);
         dob_text = (EditText) findViewById(R.id.dob_text);
-        dob_text.setTypeface(typefaceIntroText);
+        dob_text.setTypeface(typeface_regular);
+        email_text.setText(UserEmailFetcher.getEmail(RegActivity.this));
 
-        user_label = (TextView) findViewById(R.id.name_label);
-        user_label.setTypeface(typefaceIntroTextBold);
-        password_label = (TextView) findViewById(R.id.pass_label);
-        password_label.setTypeface(typefaceIntroTextBold);
-        emeil_label = (TextView) findViewById(R.id.email_label);
-        emeil_label.setTypeface(typefaceIntroTextBold);
-        dob_label = (TextView) findViewById(R.id.dob_label);
-        dob_label.setTypeface(typefaceIntroTextBold);
-        gender_label = (TextView) findViewById(R.id.gender_label);
-        gender_label.setTypeface(typefaceIntroTextBold);
-        emeil_text.setText(UserEmailFetcher.getEmail(RegActivity.this));
+        imageUploader = new ImageUploader(this) {
+            @Override
+            public void startActivityForResultHolder(Intent intent, int requestCode) {
+                startActivityForResult(intent, requestCode);
+            }
 
-        session = new SessionManager(getApplicationContext());
+            @Override
+            public void onImageSelected(JSONObject imageObj) throws JSONException {
+                Log.d("ImageUploadActivity", "avatar is selected: " + imageObj.getString("public_id"));
+
+                InputStream is = null;
+                try {
+                    is = (InputStream) new URL(imageObj.getString("url")).getContent();
+                    Drawable buttonBg = Drawable.createFromStream(is, null);
+                    avatar_button.setBackgroundDrawable(buttonBg);
+                    avatar = imageObj;
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+            }
+        };
 
         //init gender
-        gender_spinner = (Spinner) findViewById(R.id.gender);
-        final GenderPair items[] = new GenderPair[2];
-        items[0] = new GenderPair("Male", "male");
-        items[1] = new GenderPair("Female", "female");
-        ArrayAdapter<GenderPair> adapter =
-                new ArrayAdapter<GenderPair>(
-                        this,
-                        android.R.layout.simple_spinner_item,
-                        items);
-        adapter.setDropDownViewResource(
-                android.R.layout.simple_spinner_dropdown_item);
-
-        gender_spinner.setAdapter(adapter);
+        gender_spinner = UiHelper.createGenderSpinner((Spinner) findViewById(R.id.gender), this, "male");
+        country_spinner = UiHelper.createCountrySpinner((Spinner) findViewById(R.id.country), this, "");
 
         setHandlers();
-
-        dob_text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePicker();
-            }
-        });
     }
 
     private void showDatePicker() {
@@ -97,25 +98,38 @@ public class RegActivity extends BaseActivity {
         args.putInt("month", 6);
         args.putInt("day", 15);
         date.setArguments(args);
-        /**
-         * Set Call back to capture selected date
-         */
-        date.setCallBack(ondate);
+        // Set Call back to capture selected date
+        date.setCallBack(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                dob_text.setText(String.format("%02d", dayOfMonth) + "." + String.format("%02d", monthOfYear + 1) + "." + String.valueOf(year));
+            }
+        });
         date.show(getSupportFragmentManager(), "Date Picker");
     }
 
-    DatePickerDialog.OnDateSetListener ondate = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear,
-                              int dayOfMonth) {
-            dob_text.setText(String.format("%02d", dayOfMonth) + "." + String.format("%02d", monthOfYear + 1) + "." + String.valueOf(year));
-        }
-    };
-
     private void setHandlers() {
-        final Typeface typefaceIntroTextBold = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
+        dob_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePicker();
+            }
+        });
+
+        avatar_button = (ImageButton) findViewById(R.id.avatar_btn);
+        avatar_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // init image uploader
+                final AlertDialog dialog = imageUploader.selectPhoto();
+                dialog.show();
+            }
+        });
+
         reg_button = (Button) findViewById(R.id.reg_btn);
-        reg_button.setTypeface(typefaceIntroTextBold);
+        reg_button.setTypeface(typeface_regular);
+
 
         // Login button click event
         reg_button.setOnClickListener(new View.OnClickListener() {
@@ -129,7 +143,7 @@ public class RegActivity extends BaseActivity {
                     return;
                 }
 
-                String email = emeil_text.getText().toString().trim();
+                String email = email_text.getText().toString().trim();
                 if (!Validator.isEmailValid(email)) {
                     alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.email_incorrect), false);
                     return;
@@ -147,10 +161,25 @@ public class RegActivity extends BaseActivity {
                     return;
                 }
 
-                GenderPair data = (GenderPair) gender_spinner.getSelectedItem();
+                UiHelper.TextValuePair data = (UiHelper.TextValuePair) gender_spinner.getSelectedItem();
                 String gender = data.getValue();
+
+                UiHelper.TextValuePair dataCountry = (UiHelper.TextValuePair) country_spinner.getSelectedItem();
+                String country = dataCountry.getValue();
+
+                // String city = city_text.getText().toString().trim();
+                String city = "Amsterdam";
+                String bio = "Hi, I'm using Clubbook.";
+
+                if(avatar == null) {
+                    alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.avatar_incorrect), false);
+                    return;
+                }
+
                 showProgress("Loading...");
-                DataStore.regByEmail(user_name, email, password, gender, dob, new DataStore.OnResultReady() {
+
+                // store data
+                DataStore.regByEmail(user_name, email, password, gender, dob, country, city, bio, avatar, new DataStore.OnResultReady() {
                     @Override
                     public void onReady(Object result, boolean failed) {
                         // show error
@@ -167,7 +196,7 @@ public class RegActivity extends BaseActivity {
                         } else {
                             UserDto user = (UserDto) result;
                             // save user in session
-                            session.createLoginSession(user.getId(), user.getName(), user.getEmail(), user.getGender(), user.getDob(), user.getAvatar());
+                            getSession().createLoginSession(user);
                             // navigate to main page
                             Intent i = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(i);
@@ -179,6 +208,7 @@ public class RegActivity extends BaseActivity {
             }
         });
     }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -196,21 +226,8 @@ public class RegActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    class GenderPair {
-        public GenderPair(String spinnerText, String value) {
-            this.spinnerText = spinnerText;
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public String toString() {
-            return spinnerText;
-        }
-
-        String spinnerText;
-        String value;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        imageUploader.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="main_background_color">#240E25</color>
+    <color name="main_background_light_color">#592B5C</color>
+    <color name="main_background_menu_color">#391A3C</color>
+    <color name="main_background_light_color_2">#331635</color>
+    <color name="main_font_color">#FFFFFF</color>
+
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="displayOptions">showHome|homeAsUp|showTitle</item>
+        <item name="android:icon">@android:color/transparent</item>
+        <!--<item name="android:background">@color/main_background_color</item>-->
+        <!--<item name="android:colorBackground">@color/main_background_color</item>-->
+        <item name="android:windowBackground">@color/main_background_color</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <!--used for fragments-->
+    <style name="FragmentTheme">
+        <item name="android:background">@color/main_background_color</item>
+    </style>
+
+    <style name="sign_in_input">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
     <style name="image_title">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">50dp</item>
@@ -12,34 +39,93 @@
         <item name="android:textSize">18dp</item>
         <item name="android:typeface">sans</item>
     </style>
+
     <style name="social_button">
         <item name="android:layout_width">fill_parent</item>
-        <item name="android:focusable">false</item>
         <item name="android:textColor">@color/sort_color</item>
         <item name="android:textSize">12dp</item>
-        <!--        <item name="android:background">@drawable/fb_button</item>-->
-        <!--        <item name="android:drawableTop">@drawable/white_clock_panel</item>-->
-        <item name="android:button">@null</item>
     </style>
 
-    <style name="main_button">
-        <item name="android:textColor">#FFFFFF</item>
+    <!-- used on main login screen for all 3 buttons -->
+    <style name="main_login_button">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">18dp</item>
+    </style>
+
+    <style name="chat_button">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="default_button">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="default_text_input">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="avatar_btn">
+        <item name="android:textColor">#FFFDDD</item>
         <item name="android:textSize">16dp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="actionBarStyle">@style/WindowTitleBackground</item>
-        <item name="displayOptions">showHome|homeAsUp|showTitle</item>
-        <item name="android:icon">@android:color/transparent</item>
-
+    <style name="main_button">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@drawable/checkin_button_color</item>
     </style>
 
-    <style name="WindowTitleBackground">
-        <item name="android:background">@color/title_background</item>
+    <style name="MyActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:background">@color/main_background_menu_color</item>
     </style>
-
     <style name="MyTheme.ActionBar.TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/title</item>
     </style>
+
+    <style name="ThemeDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>
+    </style>
+    <style name="CustomAlertDialogStyle">
+        <item name="android:background">@color/main_background_menu_color</item>
+        <item name="android:windowBackground">@color/main_background_menu_color</item>
+        <item name="android:textColor">@color/main_font_color</item>
+    </style>
+    <style name="AlertDialogCustom" parent="@android:style/Theme.Dialog">
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <!--<style name="CustomAlertDialogStyle">-->
+        <!--<item name="android:background">@color/main_background_menu_color</item>-->
+        <!--<item name="android:windowBackground">@color/main_background_menu_color</item>-->
+        <!--<item name="android:textColor">@color/main_font_color</item>-->
+        <!--<item name="android:bottomDark">@color/main_background_menu_color</item>-->
+        <!--<item name="android:bottomMedium">@color/main_background_menu_color</item>-->
+        <!--<item name="android:centerBright">@color/main_background_menu_color</item>-->
+        <!--<item name="android:centerDark">@color/main_background_menu_color</item>-->
+        <!--<item name="android:centerMedium">@color/main_background_menu_color</item>-->
+        <!--<item name="android:fullBright">@color/main_background_menu_color</item>-->
+        <!--<item name="android:fullDark">@color/main_background_menu_color</item>-->
+        <!--<item name="android:topBright">@color/main_background_menu_color</item>-->
+        <!--<item name="android:topDark">@color/main_background_menu_color</item>-->
+    <!--</style>-->
+
 </resources>

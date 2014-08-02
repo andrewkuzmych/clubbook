@@ -9,9 +9,13 @@ import com.loopj.android.http.RequestParams;
  */
 public class ClubbookRestClient {
     private static AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
+    static {
+        client.setTimeout(20*1000);
+    }
 
-    private static final String BC_BASE_URL = "http://clubbookapp.herokuapp.com/_s/";
-    //private static final String BC_BASE_URL = "http://192.168.2.112:3000/_s/";
+    //private static final String BC_BASE_URL = "http://10.0.0.104:3000/_s/";
+    // private static final String BC_BASE_URL = "http://clubbookapp.herokuapp.com/_s/";
+    private static final String BC_BASE_URL = "http://192.168.2.102:3000/_s/";
 
     private static String getBcAbsoluteUrl(String relativeUrl) {
         return BC_BASE_URL + relativeUrl;
@@ -25,6 +29,10 @@ public class ClubbookRestClient {
         client.post(getBcAbsoluteUrl("signup"), params, responseHandler);
     }
 
+    public static void updateProfile(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.put(getBcAbsoluteUrl("obj/user/" + user_id), params, responseHandler);
+    }
+
     public static void loginByEmail(RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.post(getBcAbsoluteUrl("signinmail"), params, responseHandler);
     }
@@ -32,7 +40,12 @@ public class ClubbookRestClient {
     public static void retrieveUser(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getBcAbsoluteUrl("user/by_id/" + user_id), params, responseHandler);
     }
-                                          //list_club/:distance/:user_lat/:user_lon
+
+    public static void retrieveFriends(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/user/" + user_id + "/friends"), params, responseHandler);
+    }
+
+    //list_club/:distance/:user_lat/:user_lon
     public static void retrievePlaces(String distance, String lat, String lon, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getBcAbsoluteUrl("list_club/" + distance + "/" + lat + "/" + lon), params, responseHandler);
     }
@@ -73,7 +86,7 @@ public class ClubbookRestClient {
         client.get(getBcAbsoluteUrl("unread/messages/count/" + user_id), params, responseHandler);
     }
 
-    public static void read_messages(String chat_id, String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("readchat/" + chat_id + "/" + user_id), params, responseHandler);
+    public static void read_messages(String current_user, String receiver, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("readchat/" + current_user + "/" + receiver), params, responseHandler);
     }
 }

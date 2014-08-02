@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.datasource.ClubDto;
-import com.nl.clubbook.fragment.SelectedClubFragment;
+import com.nl.clubbook.fragment.ClubFragment;
 import com.nl.clubbook.helper.CheckInOutCallbackInterface;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.LocationCheckinHelper;
@@ -72,6 +72,8 @@ public class ClubsAdapter extends ArrayAdapter<ClubDto> {
             holder.club_id = (TextView) row.findViewById(R.id.club_id);
             holder.distance = (TextView) row.findViewById(R.id.distance_text);
             holder.distance.setTypeface(typeface_bold);
+            holder.people_count = (TextView) row.findViewById(R.id.people_count);
+            holder.people_count.setTypeface(typeface_bold);
 
             row.setTag(holder);
         } else {
@@ -79,26 +81,34 @@ public class ClubsAdapter extends ArrayAdapter<ClubDto> {
         }
 
         ClubDto club = data[position];
-        String distance = LocationCheckinHelper.calculateDistance(context, club.getDistance());
+        String distance = LocationCheckinHelper.formatDistance(context, club.getDistance());
         holder.distance.setText(distance);
+        holder.people_count.setText(String.valueOf(club.getActiveCheckins()));
         holder.club_title.setText(club.getTitle());
         holder.club_id.setText(club.getId());
 
-        String image_url = ImageHelper.GenarateUrl(club.getAvatar(), "w_300,h_300,c_fit");
+        String image_url = ImageHelper.generateUrl(club.getAvatar(), "w_300,h_300,c_fit");
 
         // checkin button
         holder.checkin = (Button) row.findViewById(R.id.checkin);
         holder.checkin.setTag(club);
-        if (LocationCheckinHelper.isCheckinHere(context, club)) {
+        // if we checked in this this club set related style
+        if (LocationCheckinHelper.isCheckinHere(club)) {
             UiHelper.changeCheckinState(context, holder.checkin, false);
         } else {
             UiHelper.changeCheckinState(context, holder.checkin, true);
+        }
+        // can we check in this club
+        if (LocationCheckinHelper.canCheckinHere(club)) {
+            holder.checkin.setEnabled(true);
+        } else {
+            holder.checkin.setEnabled(false);
         }
 
         holder.checkin.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View view) {
                 final ClubDto club = (ClubDto) view.getTag();
-                if (LocationCheckinHelper.isCheckinHere(context, club)) {
+                if (LocationCheckinHelper.isCheckinHere(club)) {
                     LocationCheckinHelper.checkout(context, new CheckInOutCallbackInterface() {
                         @Override
                         public void onCheckInOutFinished(boolean result) {
@@ -110,19 +120,15 @@ public class ClubsAdapter extends ArrayAdapter<ClubDto> {
                 } else {
                     LocationCheckinHelper.checkin(context, club, new CheckInOutCallbackInterface() {
                         @Override
-                        public void onCheckInOutFinished(boolean result) {
-                            // Do something when download finished
-                            if (result) {
-                                SelectedClubFragment fragment = new SelectedClubFragment(null, club.getId());
+                        public void onCheckInOutFinished(boolean isUserCheckin) {
+                            // check if checkin was successful
+                            if (isUserCheckin) {
+                                // open club details and pass club_id parameter
+                                ClubFragment fragment = new ClubFragment(null, club.getId());
                                 FragmentManager fragmentManager = ((MainActivity) context).getSupportFragmentManager();
                                 FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
-
-                                if (fragment.isAdded())
-                                    mFragmentTransaction.show(fragment);
-                                else {
-                                    mFragmentTransaction.replace(R.id.frame_container, fragment);
-                                    mFragmentTransaction.addToBackStack(null);
-                                }
+                                mFragmentTransaction.replace(R.id.frame_container, fragment);
+                                mFragmentTransaction.addToBackStack(null);
                                 mFragmentTransaction.commit();
                             }
                         }
@@ -142,6 +148,8 @@ public class ClubsAdapter extends ArrayAdapter<ClubDto> {
         TextView club_title;
         TextView club_id;
         TextView distance;
+        TextView people_count;
+        TextView friends_count;
         Button checkin;
     }
 

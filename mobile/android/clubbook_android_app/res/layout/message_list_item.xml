@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent" android:orientation="vertical"
               android:layout_height="wrap_content"
-              android:background="@drawable/list_selector"
-              xmlns:app="http://schemas.android.com/apk/res-auto">
+              android:background="@drawable/list_selector">
 
     <RelativeLayout
             android:layout_width="fill_parent"
@@ -66,10 +65,9 @@
                       android:maxLines="3"
                       android:focusable="false"
                       android:text="2"
-                      android:textColor="#2bff22"
                       android:layout_below="@+id/club_title" android:textIsSelectable="false"
                       android:layout_alignParentRight="true" android:layout_alignParentTop="true"
-                      android:layout_marginTop="10dp" android:layout_marginRight="10dp"/>
+                      android:layout_marginTop="10dp" android:layout_marginRight="10dp" android:textColor="#F68610"/>
         </RelativeLayout>
 
 

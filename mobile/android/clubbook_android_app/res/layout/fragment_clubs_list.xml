@@ -1,0 +1,33 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" style="@style/FragmentTheme">
+    <ListView
+            android:id="@+id/club_listview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:divider="@color/main_background_color"
+            android:focusable="false" android:padding="5dp"
+            android:dividerHeight="10dp" android:layout_above="@+id/linearLayout"/>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="60dp" android:background="@color/main_background_menu_color"
+            android:id="@+id/linearLayout" android:layout_alignParentBottom="true">
+
+        <TextView android:id="@+id/distance_text"
+                  android:layout_width="80dp"
+                  android:layout_height="wrap_content" android:textColor="#FFFFFF"
+                  android:layout_gravity="center_vertical" android:text="23 km" android:singleLine="true"
+                  android:layout_marginLeft="0dp" android:textSize="22dp" android:textIsSelectable="false"
+                  android:gravity="center_horizontal"></TextView>
+        <!--http://stackoverflow.com/questions/3480456/seek-bar-change-path-color-from-yellow-to-white-->
+        <SeekBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/distance" android:layout_weight="1" android:layout_gravity="center_vertical"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

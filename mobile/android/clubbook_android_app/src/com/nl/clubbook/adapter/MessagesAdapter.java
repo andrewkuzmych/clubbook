@@ -3,39 +3,33 @@ package com.nl.clubbook.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.nl.clubbook.R;
-import com.nl.clubbook.activity.MainActivity;
-import com.nl.clubbook.datasource.ClubDto;
-import com.nl.clubbook.datasource.ConversationShort;
-import com.nl.clubbook.fragment.SelectedClubFragment;
-import com.nl.clubbook.helper.CheckInOutCallbackInterface;
+import com.nl.clubbook.datasource.ChatDto;
 import com.nl.clubbook.helper.ImageHelper;
-import com.nl.clubbook.helper.LocationCheckinHelper;
-import com.nl.clubbook.helper.UiHelper;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
+import java.util.List;
+
 /**
  * Created by Andrew on 6/2/2014.
  */
-public class MessagesAdapter extends ArrayAdapter<ConversationShort> {
+public class MessagesAdapter extends ArrayAdapter<ChatDto> {
     private ImageLoader imageLoader;
     private DisplayImageOptions options;
     private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
 
     Context context;
     int layoutResourceId;
-    ConversationShort data[] = null;
+    List<ChatDto> data = null;
 
-    public MessagesAdapter(Context context, int layoutResourceId, ConversationShort[] data) {
+    public MessagesAdapter(Context context, int layoutResourceId, List<ChatDto> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -78,22 +72,22 @@ public class MessagesAdapter extends ArrayAdapter<ConversationShort> {
             holder = (ConvShortItemHolder) row.getTag();
         }
 
-        ConversationShort con = data[position];
-        holder.user_name.setText(con.getUser_name());
-        holder.user_name.setTag(con.getUser_id());
-        holder.con_id.setText(con.getId());
-        holder.user_message.setText(con.getLast_message());
-        int unread_count = con.getUnread_messages();
+        ChatDto con = data.get(position);
+        holder.user_name.setText(con.getReceiver().getName());
+        holder.user_name.setTag(con.getReceiver().getId());
+        holder.con_id.setText(con.getChatId());
+        holder.user_message.setText(con.getConversation().get(0).getFormatMessage());
+
+        int unread_count = con.getUnreadMessages();
         if(unread_count == 0) {
             holder.user_message_count.setVisibility(View.GONE);
         } else {
             holder.user_message_count.setVisibility(View.VISIBLE);
         }
+        holder.user_message_count.setText(String.valueOf(con.getUnreadMessages()));
 
-        holder.user_message_count.setText(String.valueOf(con.getUnread_messages()));
-
-        if(con.getUser_photo() != null) {
-            String image_url = ImageHelper.GenarateUrl(con.getUser_photo(), "w_300,h_300,c_fit");
+        if(con.getReceiver().getAvatar() != null) {
+            String image_url = ImageHelper.generateUrl(con.getReceiver().getAvatar(), "w_300,h_300,c_fit");
             holder.user_avatar.setTag(image_url);
             imageLoader.displayImage(image_url, holder.user_avatar, options, animateFirstListener);
         }

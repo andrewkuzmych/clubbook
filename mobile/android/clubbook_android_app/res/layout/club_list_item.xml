@@ -1,123 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent" android:orientation="vertical"
               android:layout_height="wrap_content"
-              android:background="@drawable/list_selector"
-              xmlns:app="http://schemas.android.com/apk/res-auto">
+              android:background="@drawable/list_selector">
 
     <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="90dp" android:id="@+id/main_area"
-            android:focusable="false">
+            android:layout_width="match_parent"
+            android:layout_height="70dp" android:id="@+id/main_area"
+            android:focusable="false" android:padding="0dp">
 
         <ImageView android:id="@+id/avatar"
-                   android:layout_width="80dp"
-                   android:layout_height="80dp"
+                   android:layout_width="70dp"
+                   android:layout_height="70dp"
                    android:focusable="false"
-                   android:layout_alignParentLeft="true" android:layout_marginLeft="5dp"
-                   android:layout_centerVertical="true"/>
+                   android:layout_alignParentLeft="true"
+                   android:contentDescription="@string/club_avatar_content_description"
+                   android:layout_alignParentStart="false" android:layout_alignParentBottom="true"/>
 
         <RelativeLayout android:id="@+id/details_holder"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:paddingLeft="5dp"
                         android:focusable="false"
                         android:layout_toRightOf="@+id/avatar" android:layout_centerVertical="true"
-                        android:layout_margin="2dp" android:layout_toLeftOf="@+id/relativeLayout2">
+                        android:layout_toLeftOf="@+id/relativeLayout2">
 
             <TextView android:id="@+id/club_title"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:textSize="16dp"
+                      android:textSize="18dp"
                       android:ellipsize="end"
                       android:maxLines="2"
-                      android:text="Club"
+                      android:text="Club name"
+                      android:textColor="@color/main_background_color"
                       android:focusable="false"
-                      android:textStyle="bold"
-                      android:textColor="#22104A"/>
+                      android:textStyle="bold" android:layout_marginLeft="10dp"/>
+        </RelativeLayout>
 
-          <!--  <TextView android:id="@+id/club_address"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:textSize="12dp"
-                      android:ellipsize="end"
-                      android:maxLines="3"
-                      android:focusable="false"
-                      android:text="venue_title"
-                      android:textColor="#595959"
-                      android:layout_below="@+id/club_title" android:textIsSelectable="false"/>-->
-        </RelativeLayout>
-        <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:id="@+id/relativeLayout"
-                android:padding="2dp"
-                android:layout_toRightOf="@+id/avatar"
-                android:layout_below="@+id/details_holder">
-            <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:layout_centerHorizontal="true" android:layout_centerVertical="true">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="7"
-                        android:focusable="false"
-                        android:id="@+id/distance_text" android:textStyle="bold" android:textColor="#90c047"
-                        android:layout_gravity="center_horizontal" android:textSize="16dp"/>
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/club_id"
-                        android:visibility="gone"/>
-            </LinearLayout>
-        </RelativeLayout>
         <RelativeLayout
                 android:layout_width="95dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="false" android:layout_alignParentRight="true"
+                android:layout_alignParentRight="true"
                 android:focusable="false"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="5dp" android:padding="2dp" android:layout_centerVertical="true"
+                android:layout_centerVertical="true"
                 android:id="@+id/relativeLayout2">
-            <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+            <Button android:id="@+id/checkin"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
                     android:focusable="false"
-                    android:layout_centerHorizontal="true" android:layout_centerVertical="true">
-                <Button android:id="@+id/checkin"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:text="Check in" android:background="@drawable/checkin_button" style="@style/main_button"/>
-
-            </LinearLayout>
+                    android:focusableInTouchMode="false"
+                    android:text="Check in" android:background="@drawable/checkin_button"
+                    style="@style/main_button" android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"/>
         </RelativeLayout>
-
-
     </RelativeLayout>
-
-
-
-
-
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:focusable="false"
-            android:background="#cfcfcf" android:layout_marginLeft="3dp" android:layout_marginRight="3dp"/>
-    <!--<View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:focusable="false"
-            android:background="#cfcfcf" android:layout_marginLeft="3dp" android:layout_marginRight="3dp"/>-->
+            android:id="@+id/relativeLayout"
+            android:layout_below="@+id/details_holder" android:background="@color/main_background_light_color">
 
+        <ImageView android:layout_width="30dp" android:layout_height="30dp" android:id="@+id/distance_icon"
+                   android:layout_alignParentLeft="true"
+                   android:layout_centerInParent="true"
+                   android:src="@drawable/icon_clubdscr_map"/>
+        <TextView
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="7,3 km"
+                android:focusable="false"
+                android:id="@+id/distance_text" android:textStyle="bold"
+                android:textSize="16dp" android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/distance_icon"/>
 
+        <ImageView android:layout_width="30dp" android:layout_height="30dp" android:id="@+id/clubusers_icon"
+                   android:layout_toRightOf="@+id/distance_text"
+                   android:layout_centerInParent="true"
+                   android:src="@drawable/icon_clubdscr_users"/>
+        <TextView
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="10"
+                android:focusable="false"
+                android:id="@+id/people_count" android:textStyle="bold"
+                android:textSize="16dp" android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/clubusers_icon"
+                />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/club_id"
+                android:visibility="gone"/>
+    </RelativeLayout>
 
 </LinearLayout>
