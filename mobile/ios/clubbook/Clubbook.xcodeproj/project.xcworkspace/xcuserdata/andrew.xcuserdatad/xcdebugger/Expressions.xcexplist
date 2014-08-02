@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "__77-[ProfileViewController imagePickerController:didFinishPickingMediaWithInfo:]_block_invoke_3:ProfileViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[SessionHelper StoreUser:]:SessionHelper.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ProfileViewController populateImageCollection]:ProfileViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[BaseTableViewController segmentAction:]:BaseTableViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[ObjectBuilder signupFromJSON:error:]:ObjectBuilder.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[parsedObject valueForKey:@&quot;err&quot;]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__84-[ClubbookCommunicator fbLoginUser:fbAccessToken:fbAccessExpires:gender:name:email:]_block_invoke:ClubbookCommunicator.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ClubbookManager failedWithError:]:ClubbookManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "main:main.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ProfileViewController didAddUserImage:]:ProfileViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[UserViewController tableView:heightForRowAtIndexPath:]:UserViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[self.myLabel expectedHeight] ">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[UIViewController(Extension) showProgress:]:UIViewController+Extension.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__69-[ClubbookCommunicator signupUser:email:gender:city:pass:dob:avatar:]_block_invoke_2:ClubbookCommunicator.m">
+      </ContextState>
+      <ContextState
+         contextName = "__40-[ProfileViewController didReceiveUser:]_block_invoke:ProfileViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[RegViewController textFieldDidBeginEditing:]:RegViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MainLoginViewController uploaderSuccess:context:]:MainLoginViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ProfileViewController pickerView:didSelectRow:inComponent:]:ProfileViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ClubbookManager fbLoginJSON:]:ClubbookManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "__45-[ChatViewController didReceiveConversation:]_block_invoke:ChatViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[OBAlert initInViewController:]:OBAlert.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ClubbookManager receivedConversationJSON:]:ClubbookManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ChatViewController didReceiveConversation:]:ChatViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[ObjectBuilder getUserBase:userJson:]:ObjectBuilder.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ChatViewController collectionView:cellForItemAtIndexPath:]:ChatViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[UIImage imageNamed:@&quot;comments&quot;]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "+[ObjectBuilder conversationsJSON:error:]:ObjectBuilder.m">
+      </ContextState>
+      <ContextState
+         contextName = "__37-[MainLoginViewController onFbLogin:]_block_invoke:MainLoginViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[JSQMessagesViewController collectionView:cellForItemAtIndexPath:]:JSQMessagesViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[ObjectBuilder fbLoginFromJSON:error:]:ObjectBuilder.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MessagesViewController prepareForSegue:sender:]:MessagesViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ClubbookManager readChatJSON:]:ClubbookManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "objectNotation">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[RegViewController viewDidLoad]:RegViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__44-[ChatViewController receiveMessagePressed:]_block_invoke:ChatViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[RegViewController didSignapUser:]:RegViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ChatViewController sendSmile:]:ChatViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[ObjectBuilder chatFromJSON:error:]:ObjectBuilder.m">
+      </ContextState>
+      <ContextState
+         contextName = "__33-[ClubViewController viewDidLoad]_block_invoke:ClubViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.imageScrollView.frame.size">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ChatViewController pubnubClient:didReceiveMessage:]:ChatViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__84-[ClubbookCommunicator fbLoginUser:fbAccessToken:fbAccessExpires:gender:name:email:]_block_invoke_3:ClubbookCommunicator.m">
+      </ContextState>
+      <ContextState
+         contextName = "__33-[ChatViewController viewDidLoad]_block_invoke_2:ChatViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[NSString stringWithFormat:@&quot;%message_%@&quot;, self.sender]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[AppDelegate locationManager:didUpdateLocations:]:AppDelegate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "loc.&#xa0;">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ChatViewController sendDrink:]:ChatViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ChatViewController receiveMessagePressed:]:ChatViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[copyAvatars objectAtIndex:arc4random_uniform((int)[copyAvatars count])];">
+            </PersistentString>
+            <PersistentString
+               value = "copyMessage.sender">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[SidebarViewController tableView:cellForRowAtIndexPath:]:SidebarViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[defaults objectForKey:@&quot;userAge&quot;]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MainViewController locationManager:didUpdateLocations:]:MainViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MainViewController viewWillAppear:]:MainViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[AppDelegate application:didReceiveRemoteNotification:]:AppDelegate.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ProfileViewController aMethod:]:ProfileViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[UserViewController test:]:UserViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.testKLabek.text">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

@@ -1,0 +1,21 @@
+dependencies: \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/RegViewController.m \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/RegViewController.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/BaseTableViewController.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/ClubbookManager.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/ClubbookManagerDelegate.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/DTO/User.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/DTO/BaseDto.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/DTO/Place.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/DTO/Chat.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Manager/ClubbookCommunicatorDelegate.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Manager/ClubbookCommunicator.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Validator.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/cloudinary/include/Cloudinary/Cloudinary.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/cloudinary/include/Cloudinary/CLCloudinary.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/cloudinary/include/Cloudinary/CLTransformation.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/cloudinary/include/Cloudinary/CLEagerTransformation.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/cloudinary/include/Cloudinary/CLUploader.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Constants.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Convertor.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Helpers/SessionHelper.h

@@ -1,0 +1,21 @@
+dependencies: \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Controllers/JSQMessagesViewController.m \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Controllers/JSQMessagesViewController.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Views/JSQMessagesCollectionView.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Layout/JSQMessagesCollectionViewFlowLayout.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Controllers/JSQMessagesKeyboardController.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Layout/JSQMessagesCollectionViewFlowLayoutInvalidationContext.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Model/JSQMessageData.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Model/JSQMessage.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Views/JSQMessagesCollectionViewCellIncoming.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Views/JSQMessagesCollectionViewCell.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Views/JSQMessagesLabel.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Views/JSQMessagesCollectionViewCellOutgoing.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Views/JSQMessagesTypingIndicatorFooterView.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Views/JSQMessagesLoadEarlierHeaderView.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Views/JSQMessagesToolbarContentView.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Views/JSQMessagesInputToolbar.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Views/JSQMessagesComposerTextView.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Factories/JSQMessagesTimestampFormatter.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Categories/NSString+JSQMessages.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Categories/UIColor+JSQMessages.h
