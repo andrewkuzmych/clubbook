@@ -72,7 +72,24 @@ exports.find_club = (club_id, user_id, callback)->
       callback err, null
     else
       db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}}, { checkin: 0 }).exec (err, users)->
-        callback null, club, users
+        #get friends count
+        db_model.User.findById(user_id).exec (err, user)->
+          db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}, "_id": {'$in': user.friends}, 'friends': user._id}).exec (err, friends)->
+            user_objects = []
+            for user in users
+              user_object = user.toObject();
+              is_friend = __.find(friends, (f) ->
+                      f._id.toString() is user._id.toString()
+                    )
+              if is_friend
+                user_object.is_friend = true
+              else
+                user_object.is_friend = false
+
+              user_objects.push user_object
+
+
+            callback null, club, user_objects, friends.length
 
 
 exports.create_club = (params, callback)->
@@ -456,10 +473,13 @@ exports.readchat = (params, callback)->
 
 exports.unread_messages_count = (user_id, callback)->
   db_model.Chat.find({'unread.user':  mongoose.Types.ObjectId(user_id)}, {'conversation':0}).exec (err, chats)->
-    count = 0
+    unread_chat_count = 0
     for chat in chats
-      count = count + chat.unread.count
-    callback null, count
+      unread_chat_count = unread_chat_count + chat.unread.count
+
+    db_model.User.findById(user_id).exec (err, user)->
+      db_model.User.count({"_id": {'$nin': user.friends}, 'friends': user._id}).exec (err, pending_friends_count)->
+        callback null, unread_chat_count, pending_friends_count
 
 # convert the radius value to km
 exports.radius_to_km = (distance)->

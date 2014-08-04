@@ -324,6 +324,21 @@ exports.friends_unfriend = (req, res)->
             message: "friend request"
             _temp_user: user
 
+exports.friends_remove_request = (req, res)->
+  if req.params.objectId is req.params.friendId
+    res.json
+      status: "error"
+      message: "users are the same"
+
+  else
+    db_model.User.findById(req.params.friendId).exec (err, friend)->
+      friend.friends = __.filter friend.friends, (user_friend)-> user_friend.toString() isnt req.params.objectId
+      friend.save ()->
+        res.json
+          status: "ok"
+          result:
+            message: "remove friend request"
+            _temp_user: friend
 
 ##################################################################################################
 
@@ -378,7 +393,7 @@ exports.create_club = (req, res)->
 
 
 exports.find_club = (req, res)->
-  manager.find_club req.params.club_id, req.params.user_id, (err, club, users)->
+  manager.find_club req.params.club_id, req.params.user_id, (err, club, users, friends_count)->
     if err
       res.json
         status: "error"
@@ -387,6 +402,7 @@ exports.find_club = (req, res)->
       res.json
         club: club
         users: users
+        friends_count: friends_count
         status: "Found Club OK!"
 
 
@@ -640,10 +656,11 @@ exports.readchat = (req, res)->
       status: 'ok'
 
 exports.unread_messages_count = (req, res)->
-  manager.unread_messages_count req.params.user_id, (err, count)->
+  manager.unread_messages_count req.params.user_id, (err, unread_chat_count, pending_friends_count)->
     res.json
       status: 'ok'
-      count: count
+      unread_chat_count: unread_chat_count
+      pending_friends_count: pending_friends_count
 
 exports.remove_user =(req, res)->
   console.log "remove user", req.params.user_id

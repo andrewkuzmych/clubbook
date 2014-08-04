@@ -154,6 +154,8 @@ app.get '/_s/obj/user/:objectId/friends/:friendId/friend', services.friends_requ
 app.get '/_s/obj/user/:objectId/friends/:friendId/confirm', services.friends_confirm
 # remove from friends
 app.get '/_s/obj/user/:objectId/friends/:friendId/unfriend', services.friends_unfriend
+# remove friend request
+app.get '/_s/obj/user/:objectId/friends/:friendId/remove', services.friends_remove_request
 
 # crud user images
 app.post '/_s/obj/user/:userId/image', services.user_image_add
