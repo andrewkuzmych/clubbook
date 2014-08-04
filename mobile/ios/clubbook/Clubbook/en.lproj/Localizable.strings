@@ -1,0 +1,69 @@
+/* 
+  Localizable.strings
+  Clubbook
+
+  Created by Andrew on 6/20/14.
+  Copyright (c) 2014 clubbook. All rights reserved.
+*/
+
+"noneFriend" = "none";
+"sentRequest" = "sent_request";
+"receiveRequest" = "receive_request";
+"friend" = "friend";
+
+
+"wrongName" = "Wrong name";
+"wrongeEmail" = "Wrong Email";
+"wrongDob" = "Wrong Birthday";
+"wrongPass" = "Wrong password";
+"wrongGender" = "Wrong gender";
+"wrongCountry" = "Wrong country";
+"wrongAvatar" = "Select at least 1 image for avatar";
+"error" = "Error";
+"kilometers" = "km";
+"meters" = "m";
+"invite_for_drink" = "invite you for a drink";
+"send_smile" = "send you smile";
+"email"= "Email";
+"pass"= "Password (at least 6 chars)";
+"first_name"= "First name (at least 2 chars)";
+"birthday"= "Birthday";
+"male"= "Male";
+"gender"= "Gender";
+"country"= "Country";
+"female"= "Female";
+"no_location_msg" = "In order to see clubs near you, we need to know yor location\rGo to Settings > Privacy > Location Services, and switch Clubbook to ON";
+"no_location_title" = "Where are you?";
+"checking_in" = "checking in...";
+"checking_out" = "checking out...";
+"checkin" = "Checkin";
+"checkout" = "Checkout";
+"loading" = "Loading...";
+"yes" = "Yes";
+"cancel" = "Cancel";
+"youSure" = "Are you sure?";
+
+"title" = "Edit User Profile";
+"clubs" = "Clubs";
+"club_feature" = "Club Feature";
+"club_details" = "Club Details";
+"messages" = "Messages";
+"friends" = "Friends";
+"settings" = "Settings";
+"share" = "Share";
+"defoutBio" = "Hi, I am using Clubbook";
+"bio" = "short bio about you";
+"usersLeftToChecdkin" = "Waiting for %d more people to show Profile Pictures";
+"nonePeople" = "none people";
+"needToCheckinFirst" = "You need to checkin to communicate with other people";
+"unknown" = "unknown";
+"closed" = "Closed";
+"none" = "None";
+"zero_plus" = "0+";
+"processing" = "Processing request...";
+"friends" = "Friends";
+"pending_requests" = "Pending Requests";
+"not_checked_in" = "not checked in";
+"checked_in" = "checked in:";
+
+

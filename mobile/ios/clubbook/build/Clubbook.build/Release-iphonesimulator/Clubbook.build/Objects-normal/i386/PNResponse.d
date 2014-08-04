@@ -1,0 +1,33 @@
+dependencies: \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Data/PNResponse.m \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Data/PNResponse+Protected.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Data/PNResponse.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Misc/PNServiceResponseCallbacks.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Data/Parsers/PNErrorResponseParser+Protected.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Data/PNJSONSerialization.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Misc/PNRequestsImport.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNPushNotificationsEnabledChannelsRequest.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNBaseRequest.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNPushNotificationsStateChangeRequest.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNClientStateRequest+Protected.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNClientStateRequest.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNPushNotificationsRemoveRequest.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNMessagePostRequest+Protected.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNMessagePostRequest.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNClientStateUpdateRequest.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNSubscribeRequest+Protected.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNSubscribeRequest.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNChangeAccessRightsRequest.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Data/PNMessagesHistory+Protected.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Data/PNMessagesHistory.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNAccessRightsAuditRequest.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNHereNowRequest+Protected.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNHereNowRequest.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNLeaveRequest+Protected.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNLeaveRequest.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNMessageHistoryRequest.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNBaseRequest+Protected.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNLatencyMeasureRequest.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNHeartbeatRequest.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNTimeTokenRequest.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/libs/PubNub/Network/Packets/PNWhereNowRequest.h
