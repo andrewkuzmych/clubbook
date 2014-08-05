@@ -22,7 +22,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="230dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/test_club_cover"></ImageView>
+                    android:src="@drawable/test_club_cover">
+                </ImageView>
 
                 <Button
                     android:id="@+id/add_new_photo"

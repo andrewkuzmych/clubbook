@@ -3,7 +3,6 @@ package com.nl.clubbook.fragment;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.control.DatePickerFragment;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
+import com.nl.clubbook.datasource.UserPhotoDto;
 import com.nl.clubbook.helper.AlertDialogManager;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.ImageUploader;
@@ -41,6 +41,7 @@ public class EditProfileFragment extends BaseFragment {
     Spinner gender_spinner, country_spinner;
     private Button saveButton, addNewPhotoButton;
     private ImageView selectedImage;
+    private UserPhotoDto selectedImageDto;
     private ImageUploader imageUploader;
     private UserDto profile;
     AlertDialogManager alert = new AlertDialogManager();
@@ -81,17 +82,7 @@ public class EditProfileFragment extends BaseFragment {
 
             @Override
             public void onImageSelected(JSONObject imageObj) throws JSONException {
-                String image_url = ImageHelper.getUserPhotoPreview(imageObj.getString("url"));
-
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
-                ImageView image = new ImageView(getActivity());
-                image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-                image.setLayoutParams(layoutParams);
-                imagesHolder.addView(image);
-                imageLoader.displayImage(image_url, image, options, animateFirstListener);
-                image.requestLayout();
-
-                Log.v("ImageUploadActivity", imageObj.getString("public_id"));
+                addImage(imageObj);
             }
         };
 
@@ -108,7 +99,6 @@ public class EditProfileFragment extends BaseFragment {
             public void onClick(View v) {
                 final AlertDialog dialog = imageUploader.selectPhoto();
                 dialog.show();
-                Log.i("test", "test");
             }
         });
 
@@ -193,6 +183,12 @@ public class EditProfileFragment extends BaseFragment {
                 user_text.setText(profile.getName());
                 bio_text.setText(profile.getBio());
 
+                for(UserPhotoDto userPhotoDto : profile.getPhotos()) {
+                    displayImageSmallPreview(userPhotoDto);
+                    if(userPhotoDto.getIsAvatar())
+                        displayImageBigPreview(userPhotoDto);
+                }
+
                 setHandlers();
             }
         });
@@ -226,4 +222,74 @@ public class EditProfileFragment extends BaseFragment {
         imageUploader.onActivityResult(requestCode, resultCode, data);
     }
 
+
+    //----------------------------------------------------------------------------------------------
+    // image manager
+
+    public void displayImageSmallPreview(final UserPhotoDto imageDto){
+        // add to small preview
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
+        ImageView image = new ImageView(getActivity());
+        image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        image.setLayoutParams(layoutParams);
+        imagesHolder.addView(image);
+        imageLoader.displayImage(ImageHelper.getUserPhotoPreview(imageDto.getUrl()), image, options, animateFirstListener);
+        image.requestLayout();
+
+        image.setTag(imageDto);
+
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayImageBigPreview(imageDto);
+            }
+        });
+    }
+
+    public void displayImageBigPreview(UserPhotoDto imageDto){
+        this.selectedImageDto = imageDto;
+        // display src
+        String image_url = ImageHelper.generateUrl(imageDto.getUrl(), "c_fit,w_700");
+        imageLoader.displayImage(image_url, selectedImage, options, animateFirstListener);
+
+        // display actions
+        if(this.selectedImageDto.getIsAvatar()){
+            // remove hide
+            // set as avatar hide
+        } else {
+            // remove show
+            // set as avatar show
+        }
+    }
+
+    public void addImage(JSONObject imageJson){
+        DataStore.profileAddImage(this.getSession().getUserDetails().get(SessionManager.KEY_ID), imageJson, new DataStore.OnResultReady() {
+            @Override
+            public void onReady(Object result, boolean failed) {
+                if (failed) {
+                    hideProgress(false);
+                    return;
+                }
+                hideProgress(true);
+
+                UserPhotoDto imageDto = (UserPhotoDto) result;
+
+                // add to small preview
+                displayImageSmallPreview(imageDto);
+            }
+        });
+    }
+
+    public void removeImage(){
+        // remove from small preview
+        // remove from big preview
+
+        // call remove API
+        showProgress();
+    }
+
+    public void setImageAsAvatar(){
+        // call set as avatar API
+        // hide remove and set as avatar buttons
+    }
 }

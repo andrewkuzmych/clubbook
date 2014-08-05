@@ -117,6 +117,46 @@ public class DataStore {
         });
     }
 
+    public static void profileAddImage(String userId, JSONObject avatar, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("avatar", avatar);
+
+        ClubbookRestClient.profileAddImage(userId, params, new JsonHttpResponseHandler() {
+            private boolean failed = true;
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+                UserPhotoDto userPhotoDto = null;
+                try {
+                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
+                        userPhotoDto = new UserPhotoDto(response_json.getJSONObject("result").getJSONObject("image"));
+                        failed = false;
+                    } else
+                        failed = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                onResultReady.onReady(userPhotoDto, failed);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+    }
+
     public static void loginByEmail(String email, String pass, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("email", email);

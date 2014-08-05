@@ -15,7 +15,7 @@ public class ClubbookRestClient {
 
     //private static final String BC_BASE_URL = "http://10.0.0.104:3000/_s/";
     // private static final String BC_BASE_URL = "http://clubbookapp.herokuapp.com/_s/";
-    private static final String BC_BASE_URL = "http://192.168.2.102:3000/_s/";
+    private static final String BC_BASE_URL = "http://192.168.0.100:3000/_s/";
 
     private static String getBcAbsoluteUrl(String relativeUrl) {
         return BC_BASE_URL + relativeUrl;
@@ -31,6 +31,18 @@ public class ClubbookRestClient {
 
     public static void updateProfile(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.put(getBcAbsoluteUrl("obj/user/" + user_id), params, responseHandler);
+    }
+
+    public static void profileAddImage(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.post(getBcAbsoluteUrl("obj/user/" + user_id + "/image"), params, responseHandler);
+    }
+
+    public static void profileUpdateImage(String user_id, String image_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.post(getBcAbsoluteUrl("obj/user/" + user_id + "/image" + image_id), params, responseHandler);
+    }
+
+    public static void profileDeleteImage(String user_id, String image_id, AsyncHttpResponseHandler responseHandler) {
+        client.delete(getBcAbsoluteUrl("obj/user/" + user_id + "/image" + image_id), responseHandler);
     }
 
     public static void loginByEmail(RequestParams params, AsyncHttpResponseHandler responseHandler) {

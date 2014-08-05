@@ -23,7 +23,7 @@ public class UserDto {
     private String avatar;
     private String country;
     private String bio;
-    private List<String> photos;
+    private List<UserPhotoDto> photos;
 
     UserDto() {
 
@@ -47,17 +47,14 @@ public class UserDto {
             this.setBio(userJson.getString("bio"));
 
         JSONArray photos_json = userJson.getJSONArray("photos");
-        List<String> photos = new ArrayList<String>();
+        List<UserPhotoDto> photos = new ArrayList<UserPhotoDto>();
         for (int i = 0; i < photos_json.length(); i++) {
-            String photo_url = photos_json.getJSONObject(i).getString("url");
-            boolean is_profile = photos_json.getJSONObject(i).getBoolean("profile");
-            if (is_profile)
-                this.setAvatar(photo_url);
-            else
-                photos.add(photo_url);
+            if (photos_json.getJSONObject(i).getBoolean("profile"))
+                this.setAvatar(photos_json.getJSONObject(i).getString("url"));
 
-            this.setPhotos(photos);
+            photos.add(new UserPhotoDto(photos_json.getJSONObject(i)));
         }
+        this.setPhotos(photos);
     }
 
     public String getId() {
@@ -68,11 +65,11 @@ public class UserDto {
         this.id = id;
     }
 
-    public List<String> getPhotos() {
+    public List<UserPhotoDto> getPhotos() {
         return photos;
     }
 
-    public void setPhotos(List<String> photos) {
+    public void setPhotos(List<UserPhotoDto> photos) {
         this.photos = photos;
     }
 
