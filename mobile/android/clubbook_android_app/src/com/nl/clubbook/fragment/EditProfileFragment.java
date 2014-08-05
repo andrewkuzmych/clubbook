@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,11 +34,13 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class EditProfileFragment extends BaseFragment {
 
     EditText user_text, dob_text, bio_text;
     Spinner gender_spinner, country_spinner;
-    private Button saveButton, addNewPhotoButton;
+    private Button saveButton, addNewPhotoButton, setAsAvatar, removeImage;
     private ImageView selectedImage;
     private UserPhotoDto selectedImageDto;
     private ImageUploader imageUploader;
@@ -69,6 +70,8 @@ public class EditProfileFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         imagesHolder = (LinearLayout) rootView.findViewById(R.id.imagesHolder);
         saveButton = (Button) rootView.findViewById(R.id.save_profile_button);
+        setAsAvatar = (Button) rootView.findViewById(R.id.setAsAvatar);
+        removeImage = (Button) rootView.findViewById(R.id.removeImage);
         addNewPhotoButton = (Button) rootView.findViewById(R.id.add_new_photo);
         user_text = (EditText) rootView.findViewById(R.id.name_text);
         dob_text = (EditText) rootView.findViewById(R.id.dob_text);
@@ -107,6 +110,18 @@ public class EditProfileFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 showDatePicker(profile.getDob());
+            }
+        });
+
+        setAsAvatar.setOnClickListener(new View.OnClickListener() {
+            public void onClick(final View view) {
+                setImageAsAvatar();
+            }
+        });
+
+        removeImage.setOnClickListener(new View.OnClickListener() {
+            public void onClick(final View view) {
+                removeImage();
             }
         });
 
@@ -183,11 +198,7 @@ public class EditProfileFragment extends BaseFragment {
                 user_text.setText(profile.getName());
                 bio_text.setText(profile.getBio());
 
-                for(UserPhotoDto userPhotoDto : profile.getPhotos()) {
-                    displayImageSmallPreview(userPhotoDto);
-                    if(userPhotoDto.getIsAvatar())
-                        displayImageBigPreview(userPhotoDto);
-                }
+                drawImageManager(profile.getPhotos());
 
                 setHandlers();
             }
@@ -226,13 +237,22 @@ public class EditProfileFragment extends BaseFragment {
     //----------------------------------------------------------------------------------------------
     // image manager
 
-    public void displayImageSmallPreview(final UserPhotoDto imageDto){
+    private void drawImageManager(List<UserPhotoDto> userPhotoDtoList) {
+        imagesHolder.removeAllViews();
+        for (UserPhotoDto userPhotoDto : userPhotoDtoList) {
+            displayImageSmallPreview(userPhotoDto);
+            if (userPhotoDto.getIsAvatar())
+                displayImageBigPreview(userPhotoDto);
+        }
+    }
+
+    private void displayImageSmallPreview(final UserPhotoDto imageDto) {
         // add to small preview
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
         ImageView image = new ImageView(getActivity());
         image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         image.setLayoutParams(layoutParams);
-        imagesHolder.addView(image);
+        imagesHolder.addView(image, 0);
         imageLoader.displayImage(ImageHelper.getUserPhotoPreview(imageDto.getUrl()), image, options, animateFirstListener);
         image.requestLayout();
 
@@ -246,23 +266,23 @@ public class EditProfileFragment extends BaseFragment {
         });
     }
 
-    public void displayImageBigPreview(UserPhotoDto imageDto){
+    private void displayImageBigPreview(UserPhotoDto imageDto) {
         this.selectedImageDto = imageDto;
         // display src
-        String image_url = ImageHelper.generateUrl(imageDto.getUrl(), "c_fit,w_700");
-        imageLoader.displayImage(image_url, selectedImage, options, animateFirstListener);
+        imageLoader.displayImage(imageDto.getUrl(), selectedImage, options, animateFirstListener);
 
         // display actions
-        if(this.selectedImageDto.getIsAvatar()){
-            // remove hide
-            // set as avatar hide
+        if (this.selectedImageDto.getIsAvatar()) {
+            setAsAvatar.setVisibility(View.GONE);
+            removeImage.setVisibility(View.GONE);
         } else {
-            // remove show
-            // set as avatar show
+            setAsAvatar.setVisibility(View.VISIBLE);
+            removeImage.setVisibility(View.VISIBLE);
         }
     }
 
-    public void addImage(JSONObject imageJson){
+    private void addImage(JSONObject imageJson) {
+        showProgress();
         DataStore.profileAddImage(this.getSession().getUserDetails().get(SessionManager.KEY_ID), imageJson, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
@@ -276,20 +296,56 @@ public class EditProfileFragment extends BaseFragment {
 
                 // add to small preview
                 displayImageSmallPreview(imageDto);
+                displayImageBigPreview(imageDto);
             }
         });
     }
 
-    public void removeImage(){
-        // remove from small preview
-        // remove from big preview
-
-        // call remove API
+    private void removeImage() {
         showProgress();
+        DataStore.profileDeleteImage(this.getSession().getUserDetails().get(SessionManager.KEY_ID), selectedImageDto.getId(), new DataStore.OnResultReady() {
+            @Override
+            public void onReady(Object result, boolean failed) {
+                if (failed) {
+                    hideProgress(false);
+                    return;
+                }
+                hideProgress(true);
+
+                // remove from small preview
+                ImageView imageView = (ImageView) imagesHolder.findViewWithTag(selectedImageDto);
+                imageView.setVisibility(View.GONE);
+                // update big preview
+                for (UserPhotoDto userPhotoDto : profile.getPhotos()) {
+                    if (userPhotoDto.getIsAvatar()) {
+                        selectedImageDto = userPhotoDto;
+                        break;
+                    }
+                }
+                // update big preview
+                displayImageBigPreview(selectedImageDto);
+            }
+        });
     }
 
-    public void setImageAsAvatar(){
-        // call set as avatar API
-        // hide remove and set as avatar buttons
+    private void setImageAsAvatar() {
+        showProgress();
+        DataStore.profileUpdateImage(this.getSession().getUserDetails().get(SessionManager.KEY_ID), selectedImageDto.getId(), true, new DataStore.OnResultReady() {
+            @Override
+            public void onReady(Object result, boolean failed) {
+                if (failed) {
+                    hideProgress(false);
+                    return;
+                }
+                hideProgress(true);
+
+                profile = (UserDto) result;
+
+                // update UI
+                drawImageManager(profile.getPhotos());
+
+                ((MainActivity) getActivity()).updateMyInformation(profile);
+            }
+        });
     }
 }

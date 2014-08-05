@@ -38,11 +38,11 @@ public class ClubbookRestClient {
     }
 
     public static void profileUpdateImage(String user_id, String image_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.post(getBcAbsoluteUrl("obj/user/" + user_id + "/image" + image_id), params, responseHandler);
+        client.put(getBcAbsoluteUrl("obj/user/" + user_id + "/image/" + image_id), params, responseHandler);
     }
 
     public static void profileDeleteImage(String user_id, String image_id, AsyncHttpResponseHandler responseHandler) {
-        client.delete(getBcAbsoluteUrl("obj/user/" + user_id + "/image" + image_id), responseHandler);
+        client.delete(getBcAbsoluteUrl("obj/user/" + user_id + "/image/" + image_id), responseHandler);
     }
 
     public static void loginByEmail(RequestParams params, AsyncHttpResponseHandler responseHandler) {

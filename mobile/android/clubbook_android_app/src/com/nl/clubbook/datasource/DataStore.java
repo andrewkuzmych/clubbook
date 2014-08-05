@@ -157,6 +157,82 @@ public class DataStore {
         });
     }
 
+    public static void profileDeleteImage(String userId, String imageId, final OnResultReady onResultReady) {
+
+        ClubbookRestClient.profileDeleteImage(userId, imageId, new JsonHttpResponseHandler() {
+            private boolean failed = true;
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+                try {
+                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
+                        failed = false;
+                    } else
+                        failed = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                onResultReady.onReady(null, failed);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+    }
+
+    public static void profileUpdateImage(String userId, String imageId, Boolean isAvatar, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("is_avatar", isAvatar);
+
+        ClubbookRestClient.profileUpdateImage(userId, imageId, params, new JsonHttpResponseHandler() {
+            private boolean failed = true;
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+                UserDto user = null;
+                try {
+                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
+                        user = new UserDto(response_json.getJSONObject("result").getJSONObject("user"));
+                        failed = false;
+                    } else
+                        failed = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                onResultReady.onReady(user, failed);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+    }
+
     public static void loginByEmail(String email, String pass, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("email", email);

@@ -46,6 +46,8 @@ public class ClubFragment extends BaseFragment {
     protected ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
     private String club_id;
 
+    public ClubFragment(){}
+
     public ClubFragment(BaseFragment previousFragment, String club_id) {
         super(previousFragment);
         this.club_id = club_id;

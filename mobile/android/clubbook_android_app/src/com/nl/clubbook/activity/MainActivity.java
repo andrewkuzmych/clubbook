@@ -501,6 +501,7 @@ public class MainActivity extends BaseActivity {
         navDrawerItem.setTitle(myInfo.getName());
         navDrawerItem.setAge(myInfo.getAge());
         navDrawerItem.setGender(myInfo.getGender());
+        navDrawerItem.setProfileAvatar(myInfo.getAvatar());
         adapter = new NavDrawerListAdapter(this, R.layout.drawer_list_item, navDrawerItems);
         mDrawerList.setAdapter(adapter);
         // update session user

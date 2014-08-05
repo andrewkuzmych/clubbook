@@ -17,19 +17,46 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/selectedImage"
+                <RelativeLayout
+                    android:id="@+id/selectedImageHolder"
                     android:layout_width="fill_parent"
                     android:layout_height="230dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/test_club_cover">
-                </ImageView>
+                    android:background="#000000">
+
+                    <ImageView
+                        android:id="@+id/selectedImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="230dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/default_list_image"></ImageView>
+
+                    <Button
+                        android:id="@+id/setAsAvatar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Set as avatar"
+                        android:visibility="gone"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true" />
+
+                    <Button
+                        android:id="@+id/removeImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Remove"
+                        android:visibility="gone"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"/>
+
+                </RelativeLayout>
 
                 <Button
                     android:id="@+id/add_new_photo"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:layout_below="@+id/selectedImage"
+                    android:layout_below="@+id/selectedImageHolder"
                     android:text="+"
                     android:textColor="#ffffff"
                     android:textSize="18dp"
@@ -38,7 +65,7 @@
                 <HorizontalScrollView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/selectedImage"
+                    android:layout_below="@+id/selectedImageHolder"
                     android:layout_toRightOf="@+id/add_new_photo">
 
                     <LinearLayout
@@ -50,7 +77,6 @@
                     </LinearLayout>
 
                 </HorizontalScrollView>
-
 
             </RelativeLayout>
 
@@ -89,13 +115,13 @@
                 android:id="@+id/bio_text"
                 style="@style/default_text_input"
                 android:layout_marginBottom="5dip"
+                android:gravity="top|left"
+                android:hint="@string/bio"
                 android:inputType="textMultiLine"
                 android:lines="6"
-                android:minLines="6"
-                android:gravity="top|left"
                 android:maxLines="10"
-                android:scrollbars="vertical"
-                android:hint="@string/bio" />
+                android:minLines="6"
+                android:scrollbars="vertical" />
 
             <Button
                 android:id="@+id/save_profile_button"
