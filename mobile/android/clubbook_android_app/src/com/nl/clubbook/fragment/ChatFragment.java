@@ -171,7 +171,7 @@ public class ChatFragment extends BaseFragment {
                 // set user name
                 userName.setText(chatDto.getReceiver().getName());
                 // set avatar
-                String image_url = ImageHelper.generateUrl(chatDto.getReceiver().getAvatar(), "c_fit,w_700");
+                String image_url = ImageHelper.getUserChatAvatar(chatDto.getReceiver().getAvatar());
                 imageLoader.displayImage(image_url, userAvatar, options, animateFirstListener);
                 // display chat messages
 

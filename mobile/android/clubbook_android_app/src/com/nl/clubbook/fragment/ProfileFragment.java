@@ -44,6 +44,9 @@ public class ProfileFragment extends BaseFragment {
             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         chatButton = (Button) rootView.findViewById(R.id.chat_button);
+        if(profile_id.equalsIgnoreCase(this.getSession().getUserDetails().get(SessionManager.KEY_ID))){
+            chatButton.setVisibility(View.GONE);
+        }
         userName = (TextView) rootView.findViewById(R.id.user_name);
         userAvatar = (ImageView) rootView.findViewById(R.id.avatar);
 
@@ -95,7 +98,7 @@ public class ProfileFragment extends BaseFragment {
                 // set name
                 userName.setText(profile.getName());
                 // set avatar
-                String image_url = ImageHelper.generateUrl(profile.getAvatar(), "c_fit,w_700");
+                String image_url = ImageHelper.getProfileImage(profile.getAvatar());
                 imageLoader.displayImage(image_url, userAvatar, options, animateFirstListener);
             }
         });

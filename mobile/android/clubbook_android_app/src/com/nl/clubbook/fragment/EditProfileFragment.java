@@ -253,7 +253,7 @@ public class EditProfileFragment extends BaseFragment {
         image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         image.setLayoutParams(layoutParams);
         imagesHolder.addView(image, 0);
-        imageLoader.displayImage(ImageHelper.getUserPhotoPreview(imageDto.getUrl()), image, options, animateFirstListener);
+        imageLoader.displayImage(ImageHelper.getUserPhotoSmallPreview(imageDto.getUrl()), image, options, animateFirstListener);
         image.requestLayout();
 
         image.setTag(imageDto);
@@ -269,7 +269,7 @@ public class EditProfileFragment extends BaseFragment {
     private void displayImageBigPreview(UserPhotoDto imageDto) {
         this.selectedImageDto = imageDto;
         // display src
-        imageLoader.displayImage(imageDto.getUrl(), selectedImage, options, animateFirstListener);
+        imageLoader.displayImage(ImageHelper.getUserPhotoBigPreview(imageDto.getUrl()), selectedImage, options, animateFirstListener);
 
         // display actions
         if (this.selectedImageDto.getIsAvatar()) {

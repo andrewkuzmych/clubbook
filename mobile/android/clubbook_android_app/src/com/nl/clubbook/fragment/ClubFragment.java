@@ -150,7 +150,7 @@ public class ClubFragment extends BaseFragment {
                 distance_text.setText(LocationCheckinHelper.formatDistance(getActivity().getApplicationContext(), club.getDistance()));
 
                 if (club.getPhotos().size() > 0) {
-                    String image_url = ImageHelper.generateUrl(club.getPhotos().get(position), "c_fit,w_700");
+                    String image_url = ImageHelper.getClubImage(club.getPhotos().get(position));
                     imageLoader.displayImage(image_url, clubCoverItem, options, animateFirstListener);
                     image_slider.setText(String.valueOf(position + 1) + "/" + String.valueOf(club.getPhotos().size()));
 
@@ -172,7 +172,7 @@ public class ClubFragment extends BaseFragment {
                                         if (position >= club.getPhotos().size())
                                             position = 0;
 
-                                        String image_url = ImageHelper.generateUrl(club.getPhotos().get(position), "c_fit,w_700");
+                                        String image_url = ImageHelper.getClubImage(club.getPhotos().get(position));
                                         imageLoader.displayImage(image_url, clubCoverItem, options, animateFirstListener);
                                         image_slider.setText(String.valueOf(position + 1) + "/" + String.valueOf(club.getPhotos().size()));
 
@@ -187,7 +187,7 @@ public class ClubFragment extends BaseFragment {
                                         else
                                             position = club.getPhotos().size() - 1;
 
-                                        String image_url = ImageHelper.generateUrl(club.getPhotos().get(position), "c_fit,w_700");
+                                        String image_url = ImageHelper.getClubImage(club.getPhotos().get(position));
                                         imageLoader.displayImage(image_url, clubCoverItem, options, animateFirstListener);
                                         image_slider.setText(String.valueOf(position + 1) + "/" + String.valueOf(club.getPhotos().size()));
 

@@ -69,7 +69,7 @@ public class FriendsAdapter extends ArrayAdapter<UserDto> {
         holder.user_name.setTag(userDto.getId());
 
         if (userDto.getAvatar() != null) {
-            String image_url = ImageHelper.getSquareUserAvatar(userDto.getAvatar());
+            String image_url = ImageHelper.getUserListAvatar(userDto.getAvatar());
             // holder.user_avatar.setTag(image_url);
             imageLoader.displayImage(image_url, holder.user_avatar, options, animateFirstListener);
         }

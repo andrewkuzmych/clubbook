@@ -87,8 +87,7 @@ public class MessagesAdapter extends ArrayAdapter<ChatDto> {
         holder.user_message_count.setText(String.valueOf(con.getUnreadMessages()));
 
         if(con.getReceiver().getAvatar() != null) {
-            String image_url = ImageHelper.generateUrl(con.getReceiver().getAvatar(), "w_300,h_300,c_fit");
-            holder.user_avatar.setTag(image_url);
+            String image_url = ImageHelper.getUserListAvatar(con.getReceiver().getAvatar());
             imageLoader.displayImage(image_url, holder.user_avatar, options, animateFirstListener);
         }
 

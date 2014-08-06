@@ -66,7 +66,7 @@ public class ProfileAdapter extends ArrayAdapter<UserDto> {
         }
 
         UserDto item = data.get(position);
-        String image_url = ImageHelper.getUserAvatarProfileUi(item.getAvatar());
+        String image_url = ImageHelper.getUserListAvatar(item.getAvatar());
         holder.image.setTag(image_url);
         holder.userId.setText(item.getId());
         imageLoader.displayImage(image_url, holder.image, options, animateFirstListener);
