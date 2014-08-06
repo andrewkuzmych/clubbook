@@ -9,6 +9,7 @@ import android.content.pm.ResolveInfo;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -115,6 +116,9 @@ public abstract class ImageUploader {
                 getActivity().runOnUiThread(new Runnable() {
                     public void run() {
                         try {
+                            // TODO: rotate image
+                            // http://stackoverflow.com/questions/3647993/android-bitmaps-loaded-from-gallery-are-rotated-in-imageview
+
                             Bitmap mBitmap = readBitmap(selectedImage);
                             Bitmap scaled = getResizedBitmap(mBitmap, 800);
 
