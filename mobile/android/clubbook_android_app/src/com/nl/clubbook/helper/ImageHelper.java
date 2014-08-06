@@ -26,11 +26,6 @@ public class ImageHelper {
         return generateUrl(url, avatar_style);
     }
 
-    public static String getUserChatAvatar(String url) {
-        String avatar_style = "c_fit,w_700";
-        return generateUrl(url, avatar_style);
-    }
-
     public static String getClubImage(String url) {
         String avatar_style = "c_fit,w_700";
         return generateUrl(url, avatar_style);

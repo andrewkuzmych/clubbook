@@ -454,8 +454,8 @@ exports.get_conversations = (params, callback)->
       sorted_chats = __.sortBy(chats, (chat) ->
         if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
            return chat.unread.count
-          else
-            return 0
+        else
+          return 0
       ).reverse()
 
       callback err, sorted_chats
@@ -464,11 +464,16 @@ exports.readchat = (params, callback)->
   query = { '$or': [{ 'user1': mongoose.Types.ObjectId(params.current_user), 'user2': mongoose.Types.ObjectId(params.receiver) }, { 'user1': mongoose.Types.ObjectId(params.receiver), 'user2': mongoose.Types.ObjectId(params.current_user) }] }
   
   db_model.Chat.findOne(query).exec (err, chat)->
-    if chat.unread.user && chat.unread.user.toString() == params.current_user.toString()
-      chat.unread.count = 0
- 
-    chat.save (err)->
-      callback err, chat
+    if not chat
+      # new conversion
+      callback err, null
+
+    else
+      if chat.unread.user && chat.unread.user.toString() == params.current_user.toString()
+        chat.unread.count = 0
+
+      chat.save (err)->
+        callback err, chat
 
 
 exports.unread_messages_count = (user_id, callback)->
