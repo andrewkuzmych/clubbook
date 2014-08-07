@@ -14,8 +14,8 @@ public class ClubbookRestClient {
     }
 
     //private static final String BC_BASE_URL = "http://10.0.0.104:3000/_s/";
-    // private static final String BC_BASE_URL = "http://clubbookapp.herokuapp.com/_s/";
-    private static final String BC_BASE_URL = "http://192.168.0.100:3000/_s/";
+    private static final String BC_BASE_URL = "http://clubbookapp.herokuapp.com/_s/";
+    //private static final String BC_BASE_URL = "http://192.168.1.16:3000/_s/";
 
     private static String getBcAbsoluteUrl(String relativeUrl) {
         return BC_BASE_URL + relativeUrl;

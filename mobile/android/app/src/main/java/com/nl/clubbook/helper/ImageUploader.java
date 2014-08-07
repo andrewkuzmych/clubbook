@@ -9,12 +9,11 @@ import android.content.pm.ResolveInfo;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -113,8 +112,12 @@ public abstract class ImageUploader {
                 // mImageCaptureUri = imageReturnedIntent.getData();
                 // doCrop();
                 final Uri selectedImage = imageReturnedIntent.getData();
-                getActivity().runOnUiThread(new Runnable() {
-                    public void run() {
+
+                new AsyncTask<Void, Void, JSONObject>() {
+                    @Override
+                    protected JSONObject doInBackground(Void... params) {
+                        org.json.JSONObject imageObj = null;
+
                         try {
                             // TODO: rotate image
                             // http://stackoverflow.com/questions/3647993/android-bitmaps-loaded-from-gallery-are-rotated-in-imageview
@@ -125,14 +128,29 @@ public abstract class ImageUploader {
                             ByteArrayOutputStream stream = new ByteArrayOutputStream();
                             scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                             InputStream is = new ByteArrayInputStream(stream.toByteArray());
-                            org.json.JSONObject imageObj = cloudinary.uploader().upload(is, Cloudinary.asMap("format", "jpg"));
-                            onImageSelected(imageObj);
+                            imageObj = cloudinary.uploader().upload(is, Cloudinary.asMap("format", "jpg"));
 
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
+
+                        return imageObj;
                     }
-                });
+
+                    @Override
+                    protected void onPostExecute(JSONObject result) {
+                        if (result == null) {
+                            //TODO error
+                            return;
+                        }
+
+                        try {
+                            onImageSelected(result);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }.execute();
 
                 break;
 

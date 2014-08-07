@@ -1,6 +1,8 @@
 package com.nl.clubbook.datasource;
 
 import android.content.Context;
+import android.util.Log;
+
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nl.clubbook.adapter.ClubsAdapter;
@@ -355,21 +357,6 @@ public class DataStore {
 
                 onResultReady.onReady(clubs, failed);
             }
-
-            /*@Override
-            public void onFailure(java.lang.Throwable e, org.json.JSONArray errorResponse)
-            {
-                onResultReady.onReady(null, true);
-                Log.e("error", errorResponse.toString());
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error)
-            {
-                onResultReady.onReady(null, true);
-                Log.e("error", error.toString());
-            }*/
 
             @Override
             public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
@@ -901,13 +888,13 @@ public class DataStore {
                 try {
                     if (response_json.getString("status").equalsIgnoreCase("ok")) {
                         failed = false;
-                        count = response_json.getString("count");
+                        count = response_json.getString("unread_chat_count");
                     } else
                         failed = true;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                //failed = false;
+
                 onResultReady.onReady(count, failed);
             }
 

@@ -7,12 +7,11 @@ node-app/.git/
 *~
 .sass-cache
 
-mobile/android/facebook-android-sdk-3.5/facebook/out/
-mobile/android/facebook-android-sdk-3.5/facebook/bin/
-mobile/android/facebook-android-sdk-3.5/facebook/gen/
 mobile/android/clubbook_android_app/out/
 mobile/android/clubbook_android_app/bin/
 mobile/android/clubbook_android_app/gen/
+mobile/android/facebook/build/
+.gradle
 
 
 *.DS_Store
