@@ -100,6 +100,13 @@ exports.update_user = (req, res)->
         user.bio = req.body.bio
       if req.body.country
         user.country = req.body.country
+      
+      # change is push property
+      if req.body.push_not
+        if req.body.push_not == 'false'
+          user.push = false
+        else
+          user.push = true
 
       user.save (err)->
         if err then console.log err

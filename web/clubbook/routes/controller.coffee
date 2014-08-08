@@ -16,7 +16,19 @@ exports.index = (req, res)->
     #model.active_venues = venues
     res.render "landing", model
 
+exports.terms = (req, res)->
+  create_base_model req, res, (model)->
+    #model.message_sent = req.flash("message_sent").length > 0
+    #db_model.Venue.find({visible:true}).exec (err, venues)->
+    #model.active_venues = venues
+    res.render "terms", model
 
+exports.privacy = (req, res)->
+  create_base_model req, res, (model)->
+    #model.message_sent = req.flash("message_sent").length > 0
+    #db_model.Venue.find({visible:true}).exec (err, venues)->
+    #model.active_venues = venues
+    res.render "privacy", model
 
 # -----------------------------------------------------------------------------------------
 # utils

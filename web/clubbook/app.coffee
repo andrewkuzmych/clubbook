@@ -113,6 +113,8 @@ local_user = (req, res, next)->
 
 # landing page
 app.get '/', controller.index
+app.get '/terms', controller.terms
+app.get '/privacy', controller.privacy
 
 #--------------------------------------------------------------------------------
 # Mobile API
