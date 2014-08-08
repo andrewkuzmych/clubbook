@@ -132,6 +132,7 @@ exports.user_image_add = (req, res)->
           status: "ok"
           result:
             user: user
+            image: user.photos[user.photos.length - 1]
 
 exports.user_image_update = (req, res)->
   db_model.User.findById(req.params.userId).exec (err, user)->
