@@ -158,6 +158,8 @@ app.get '/_s/obj/user/:objectId/friends/:friendId/confirm', services.friends_con
 app.get '/_s/obj/user/:objectId/friends/:friendId/unfriend', services.friends_unfriend
 # remove friend request
 app.get '/_s/obj/user/:objectId/friends/:friendId/remove', services.friends_remove_request
+# configuration
+app.get '/_s/obj/config', services.get_config
 
 # crud user images
 app.post '/_s/obj/user/:userId/image', services.user_image_add
