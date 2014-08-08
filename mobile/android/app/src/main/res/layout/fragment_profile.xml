@@ -8,7 +8,7 @@
                android:src="@drawable/test_avatar"
                android:id="@+id/avatar"
                android:layout_margin="5dp"
-               android:layout_alignTop="@+id/txtLabel" android:layout_alignParentLeft="true"/>
+               android:layout_alignParentLeft="true"/>
 
     <TextView
             android:id="@+id/user_name"
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:textSize="16dp"
             android:text="Profile" android:textStyle="bold"
-            android:layout_alignTop="@+id/avatar" android:layout_toRightOf="@+id/avatar"/>
+            android:layout_alignTop="@+id/avatar" android:layout_toRightOf="@+id/avatar" />
 
     <Button
             android:text="chat"

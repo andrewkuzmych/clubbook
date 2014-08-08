@@ -155,30 +155,43 @@ public abstract class ImageUploader {
                 break;
 
             case CROP_FROM_CAMERA:
-                Bundle extras = imageReturnedIntent.getExtras();
+                final Bundle extras = imageReturnedIntent.getExtras();
 
                 if (extras != null) {
-                    Bitmap photo = extras.getParcelable("data");
-                    //mImageView.setImageBitmap(photo);
 
-                    // Bitmap  mBitmap = MediaStore.Images.Media.getBitmap(MainActivity.this.getContentResolver(), selectedImage);
-                    Bitmap scaled = getResizedBitmap(photo, 800);//Bitmap.createScaledBitmap(mBitmap, 500, 500, true);
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            Bitmap photo = extras.getParcelable("data");
+                            //mImageView.setImageBitmap(photo);
 
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                    InputStream is = new ByteArrayInputStream(stream.toByteArray());
+                            // Bitmap  mBitmap = MediaStore.Images.Media.getBitmap(MainActivity.this.getContentResolver(), selectedImage);
+                            Bitmap scaled = getResizedBitmap(photo, 800);//Bitmap.createScaledBitmap(mBitmap, 500, 500, true);
 
-                    try {
-                        cloudinary.uploader().upload(is, Cloudinary.asMap("width", "1000", "height", "1000", "crop", "limit", "format", "jpg"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                            InputStream is = new ByteArrayInputStream(stream.toByteArray());
+
+                            try {
+                                cloudinary.uploader().upload(is, Cloudinary.asMap("width", "1000", "height", "1000", "crop", "limit", "format", "jpg"));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void result) {
+                            File f = new File(mImageCaptureUri.getPath());
+
+                            if (f.exists()) {
+                                f.delete();
+                            }
+                        }
+                    }.execute();
+
                 }
-
-                File f = new File(mImageCaptureUri.getPath());
-
-                if (f.exists())
-                    f.delete();
 
                 break;
 

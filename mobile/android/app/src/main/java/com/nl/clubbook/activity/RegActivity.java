@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -15,6 +16,7 @@ import com.nl.clubbook.control.DatePickerFragment;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.AlertDialogManager;
+import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.ImageUploader;
 import com.nl.clubbook.helper.UiHelper;
 import com.nl.clubbook.helper.UserEmailFetcher;
@@ -67,20 +69,40 @@ public class RegActivity extends BaseActivity {
             }
 
             @Override
-            public void onImageSelected(JSONObject imageObj) throws JSONException {
+            public void onImageSelected(final JSONObject imageObj) throws JSONException {
                 Log.d("ImageUploadActivity", "avatar is selected: " + imageObj.getString("public_id"));
 
-                InputStream is = null;
-                try {
-                    is = (InputStream) new URL(imageObj.getString("url")).getContent();
-                    Drawable buttonBg = Drawable.createFromStream(is, null);
-                    avatar_button.setBackgroundDrawable(buttonBg);
-                    avatar = imageObj;
+                new AsyncTask<Void, Void, Drawable>() {
+                    @Override
+                    protected Drawable doInBackground(Void... params) {
+                        Drawable buttonBg = null;
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return;
-                }
+                        try {
+                            String url = ImageHelper.getProfileImage(imageObj.getString("url"));
+                            InputStream is = (InputStream) new URL(url).getContent();
+                            buttonBg = Drawable.createFromStream(is, null);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return buttonBg;
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            return buttonBg;
+                        }
+
+                        return buttonBg;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Drawable drawable) {
+                        if(drawable == null) {
+                            //TODO error, show message
+                            return;
+                        }
+
+                        avatar_button.setBackgroundDrawable(drawable);
+                        avatar = imageObj;
+                    }
+                }.execute();
             }
         };
 
