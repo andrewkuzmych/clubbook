@@ -332,8 +332,8 @@ public class LocationCheckinHelper {
     }
 
     private static void showLocationErrorView(final Context application) {
-        Intent i = new Intent(application, NoLocationActivity.class);
-        application.startActivity(i);
+        Intent intent = new Intent(application, NoLocationActivity.class);
+        application.startActivity(intent);
         ((BaseActivity) application).finish();
     }
 

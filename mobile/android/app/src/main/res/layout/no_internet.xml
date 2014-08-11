@@ -1,23 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/failed_layout"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center"
-              android:layout_centerHorizontal="true"
-              android:layout_centerVertical="true"
-              android:layout_marginTop="5dp"
-              android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/failed_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
+    android:layout_centerVertical="true"
+    android:layout_gravity="center"
+    android:background="@color/main_background_color"
+    android:orientation="vertical">
 
-    <TextView android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="@string/no_connection"
-              android:id="@+id/textView" android:textSize="17dp"/>
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_connection"
+        android:textSize="17dp"
+        android:layout_centerInParent="true"
+        android:textColor="@android:color/white"/>
 
-    <Button android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/retry_button" style="@style/default_button"
-            android:id="@+id/retry_button" android:layout_gravity="center" android:layout_marginTop="5dp" />
+    <Button
+        android:id="@+id/retry_button"
+        style="@style/default_button"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:text="@string/retry_button"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"/>
 
-</LinearLayout>
+</RelativeLayout>

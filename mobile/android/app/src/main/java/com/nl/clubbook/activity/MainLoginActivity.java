@@ -8,14 +8,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.cloudinary.Cloudinary;
 import com.facebook.Session;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
-import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
@@ -63,6 +61,7 @@ public class MainLoginActivity extends BaseActivity {
         }
     };
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -71,7 +70,7 @@ public class MainLoginActivity extends BaseActivity {
         if(!LocationCheckinHelper.isLocationEnabled(this))
             return;
 
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main_login);
 
         init();
@@ -170,13 +169,17 @@ public class MainLoginActivity extends BaseActivity {
             this.profile = profile;
         }
 
+        @Override
+        protected void onPreExecute() {
+            showProgress("Loading...");
+        }
+
         // Executed on a special thread and all your
         // time taking tasks should be inside this method
         @Override
         protected Profile doInBackground(String... params) {
             try {
                 String fb_id = params[0];
-                showProgress("Loading...");
                 String fb_photo = "https://graph.facebook.com/" + fb_id + "/picture?width=700&height=700";
                 Cloudinary cloudinary = new Cloudinary(getApplicationContext());
                 avatar = cloudinary.uploader().upload(fb_photo, Cloudinary.asMap("format", "jpg", "overwrite", "false", "public_id", fb_id));

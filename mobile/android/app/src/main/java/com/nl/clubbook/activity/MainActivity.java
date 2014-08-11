@@ -83,47 +83,37 @@ public class MainActivity extends BaseActivity {
     private NavDrawerListAdapter adapter;
 
 
-    Callback callback = new Callback() {
-        @Override
-        public void connectCallback(String channel, Object message) {
-            System.out.println("SUBSCRIBE : CONNECT on channel:" + channel
-                    + " : " + message.getClass() + " : "
-                    + message.toString());
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+
+        // if user not logged - navigate to login activity
+        if (!getSession().isLoggedIn()) {
+            Intent i = new Intent(getApplicationContext(), MainLoginActivity.class);
+            startActivity(i);
+            return;
         }
 
-        @Override
-        public void disconnectCallback(String channel, Object message) {
-            System.out.println("SUBSCRIBE : DISCONNECT on channel:" + channel
-                    + " : " + message.getClass() + " : "
-                    + message.toString());
-        }
+        init();
 
-        public void reconnectCallback(String channel, Object message) {
-            System.out.println("SUBSCRIBE : RECONNECT on channel:" + channel
-                    + " : " + message.getClass() + " : "
-                    + message.toString());
-        }
+        mTitle = getTitle();
+        fragmentMap.put(0, new EditProfileFragment());
+        fragmentMap.put(1, new ClubsListFragment());
+        fragmentMap.put(NAV_MENU_MESSAGES_POSITION, new MessagesFragment());
+        fragmentMap.put(3, new FriendsFragment());
+        fragmentMap.put(4, new SettingsFragment());
 
-        @Override
-        public void successCallback(String channel, final Object message) {
-            System.out.println("SUBSCRIBE : " + channel + " : "
-                    + message.getClass() + " : " + message.toString());
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    JSONObject messageJson = (JSONObject) message;
-                    handleNotification(messageJson);
+        getSupportActionBar().setIcon(
+                new ColorDrawable(getResources().getColor(android.R.color.transparent)));
 
-                }
-            });
-        }
+        loadData();
+    }
 
-        @Override
-        public void errorCallback(String channel, PubnubError error) {
-            System.out.println("SUBSCRIBE : ERROR on channel " + channel
-                    + " : " + error.toString());
-        }
-    };
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     protected void loadData() {
@@ -389,32 +379,6 @@ public class MainActivity extends BaseActivity {
         displayView(displayView);
     }
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-
-        // if user not logged - navigate to login activity
-        if (!getSession().isLoggedIn()) {
-            Intent i = new Intent(getApplicationContext(), MainLoginActivity.class);
-            startActivity(i);
-            return;
-        }
-
-        init();
-
-        mTitle = getTitle();
-        fragmentMap.put(0, new EditProfileFragment());
-        fragmentMap.put(1, new ClubsListFragment());
-        fragmentMap.put(NAV_MENU_MESSAGES_POSITION, new MessagesFragment());
-        fragmentMap.put(3, new FriendsFragment());
-        fragmentMap.put(4, new SettingsFragment());
-
-        getSupportActionBar().setIcon(
-                new ColorDrawable(getResources().getColor(android.R.color.transparent)));
-
-        loadData();
-    }
-
     public void updateMessagesCount() {
         // if user on List of All messages fragment then reload data
         if (getCurrentFragment() instanceof MessagesFragment) {
@@ -508,10 +472,46 @@ public class MainActivity extends BaseActivity {
         getSession().updateLoginSession(myInfo);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+    Callback callback = new Callback() {
+        @Override
+        public void connectCallback(String channel, Object message) {
+            System.out.println("SUBSCRIBE : CONNECT on channel:" + channel
+                    + " : " + message.getClass() + " : "
+                    + message.toString());
+        }
 
+        @Override
+        public void disconnectCallback(String channel, Object message) {
+            System.out.println("SUBSCRIBE : DISCONNECT on channel:" + channel
+                    + " : " + message.getClass() + " : "
+                    + message.toString());
+        }
+
+        public void reconnectCallback(String channel, Object message) {
+            System.out.println("SUBSCRIBE : RECONNECT on channel:" + channel
+                    + " : " + message.getClass() + " : "
+                    + message.toString());
+        }
+
+        @Override
+        public void successCallback(String channel, final Object message) {
+            System.out.println("SUBSCRIBE : " + channel + " : "
+                    + message.getClass() + " : " + message.toString());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject messageJson = (JSONObject) message;
+                    handleNotification(messageJson);
+
+                }
+            });
+        }
+
+        @Override
+        public void errorCallback(String channel, PubnubError error) {
+            System.out.println("SUBSCRIBE : ERROR on channel " + channel
+                    + " : " + error.toString());
+        }
+    };
 }
 

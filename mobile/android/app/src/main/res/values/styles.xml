@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="main_background_color">#240E25</color>
-    <color name="main_background_light_color">#592B5C</color>
-    <color name="main_background_menu_color">#391A3C</color>
-    <color name="main_background_light_color_2">#331635</color>
-    <color name="main_font_color">#FFFFFF</color>
 
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="displayOptions">showHome|homeAsUp|showTitle</item>
-        <item name="android:icon">@android:color/transparent</item>
-        <!--<item name="android:background">@color/main_background_color</item>-->
-        <!--<item name="android:colorBackground">@color/main_background_color</item>-->
-        <item name="android:windowBackground">@color/main_background_color</item>
-        <item name="android:textColor">#FFFFFF</item>
+        <!--<item name="android:actionBarStyle">@style/AppActionBar</item>-->
+        <!--<item name="actionBarStyle">@style/AppActionBar</item>-->
     </style>
+
+    <style name="AppActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:background">@color/main_background_menu_color</item>
+        <item name="android:titleTextStyle">@style/TitleTextStyle</item>
+
+        <item name="titleTextStyle">@style/TitleTextStyle</item>
+    </style>
+
+    <style name="TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/title</item>
+    </style>
+
+
 
     <!--used for fragments-->
-    <style name="FragmentTheme">
-        <item name="android:background">@color/main_background_color</item>
-    </style>
-
     <style name="sign_in_input">
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:layout_width">fill_parent</item>
@@ -93,39 +93,21 @@
         <item name="android:textColor">@drawable/checkin_button_color</item>
     </style>
 
-    <style name="MyActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:background">@color/main_background_menu_color</item>
-    </style>
-    <style name="MyTheme.ActionBar.TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/title</item>
-    </style>
+    <!--<style name="ThemeDialog" parent="@android:style/Theme.Dialog">-->
+        <!--<item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>-->
+    <!--</style>-->
 
-    <style name="ThemeDialog" parent="@android:style/Theme.Dialog">
-        <item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>
-    </style>
-    <style name="CustomAlertDialogStyle">
-        <item name="android:background">@color/main_background_menu_color</item>
-        <item name="android:windowBackground">@color/main_background_menu_color</item>
-        <item name="android:textColor">@color/main_font_color</item>
-    </style>
-    <style name="AlertDialogCustom" parent="@android:style/Theme.Dialog">
-        <item name="android:typeface">monospace</item>
-        <item name="android:textSize">10sp</item>
-    </style>
 
     <!--<style name="CustomAlertDialogStyle">-->
         <!--<item name="android:background">@color/main_background_menu_color</item>-->
         <!--<item name="android:windowBackground">@color/main_background_menu_color</item>-->
         <!--<item name="android:textColor">@color/main_font_color</item>-->
-        <!--<item name="android:bottomDark">@color/main_background_menu_color</item>-->
-        <!--<item name="android:bottomMedium">@color/main_background_menu_color</item>-->
-        <!--<item name="android:centerBright">@color/main_background_menu_color</item>-->
-        <!--<item name="android:centerDark">@color/main_background_menu_color</item>-->
-        <!--<item name="android:centerMedium">@color/main_background_menu_color</item>-->
-        <!--<item name="android:fullBright">@color/main_background_menu_color</item>-->
-        <!--<item name="android:fullDark">@color/main_background_menu_color</item>-->
-        <!--<item name="android:topBright">@color/main_background_menu_color</item>-->
-        <!--<item name="android:topDark">@color/main_background_menu_color</item>-->
     <!--</style>-->
+
+
+    <style name="AlertDialogCustom" parent="@android:style/Theme.Dialog">
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">10sp</item>
+    </style>
 
 </resources>

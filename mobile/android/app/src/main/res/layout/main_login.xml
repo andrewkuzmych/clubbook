@@ -1,66 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/main_background_color"
+    android:orientation="vertical">
 
     <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_marginTop="60dp" android:layout_centerHorizontal="true"
-            android:orientation="vertical" android:id="@+id/linearLayout">
+        android:id="@+id/linearLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:orientation="vertical">
 
         <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageView" android:src="@drawable/logo"
-                android:layout_centerHorizontal="true" android:layout_alignParentTop="true"
-                android:layout_gravity="center_horizontal"/>
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/logo" />
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:id="@+id/intro_text"
-                android:gravity="center" android:layout_gravity="center_horizontal"
-                android:textSize="17dp" android:text="@string/splash_intro"
-                android:layout_alignRight="@+id/linearLayout" android:layout_below="@+id/linearLayout"
-                android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
-                android:layout_alignLeft="@+id/linearLayout" android:layout_marginTop="10dp" />
+            android:id="@+id/intro_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/linearLayout"
+            android:layout_alignRight="@+id/linearLayout"
+            android:layout_below="@+id/linearLayout"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/splash_intro"
+            android:textColor="#FFFFFF"
+            android:textSize="17dp" />
 
     </LinearLayout>
+
     <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_centerHorizontal="true" android:layout_alignParentBottom="true">
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
 
         <TextView
-                android:layout_width="184dp"
-                android:layout_height="wrap_content"
-                android:textColor="#CDC2CE" android:textColorLink="#CDC2CE"
-                android:gravity="center"
-                android:layout_gravity="center_horizontal" android:id="@+id/termsTxt"
-                android:textSize="14dp" android:layout_marginBottom="10dp"
-                android:text="@string/terms"/>
+            android:id="@+id/termsTxt"
+            android:layout_width="184dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:text="@string/terms"
+            android:textColor="#CDC2CE"
+            android:textColorLink="#CDC2CE"
+            android:textSize="14dp" />
 
         <Button
-                android:text="@string/login_fb"
-                style="@style/main_login_button"
-                android:id="@+id/login_fb"
-                android:background="@drawable/fb_button"/>
+            android:id="@+id/login_fb"
+            style="@style/main_login_button"
+            android:background="@drawable/fb_button"
+            android:text="@string/login_fb" />
 
         <Button
-                android:text="@string/sign_up_by_email"
-                style="@style/main_login_button"
-                android:id="@+id/reg_by_email"
-                android:background="@drawable/reg_button"/>
+            android:id="@+id/reg_by_email"
+            style="@style/main_login_button"
+            android:background="@drawable/reg_button"
+            android:text="@string/sign_up_by_email" />
 
         <Button
-                android:text="@string/login_by_email"
-                style="@style/main_login_button"
-                android:id="@+id/login_by_email"
-                android:background="@drawable/main_button"/>
+            android:id="@+id/login_by_email"
+            style="@style/main_login_button"
+            android:background="@drawable/main_button"
+            android:text="@string/login_by_email" />
 
     </LinearLayout>
 

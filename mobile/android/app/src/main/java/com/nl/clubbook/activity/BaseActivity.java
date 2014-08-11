@@ -1,13 +1,16 @@
 package com.nl.clubbook.activity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.fragment.BaseFragment;
+import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.AlertDialogManager;
 import com.nl.clubbook.helper.SessionManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -26,7 +29,6 @@ public class BaseActivity extends ActionBarActivity {
     protected ImageLoader imageLoader;
     protected DisplayImageOptions options;
     protected AlertDialogManager alert = new AlertDialogManager();
-    private ProgressDialog progressDialog;
     protected BaseFragment current_fragment;
 
     private SessionManager session;
@@ -48,24 +50,19 @@ public class BaseActivity extends ActionBarActivity {
     public Typeface typeface_regular;
     public Typeface typeface_bold;
 
-    public void showProgress(final String string) {
-        BaseActivity.this.runOnUiThread(new Runnable() {
-            public void run() {
-                progressDialog = new ProgressDialog(BaseActivity.this, R.style.ThemeDialog);
-                //progressDialog.setTitle("Please wait");
-                progressDialog.setMessage("loading application view, please wait...");
-                progressDialog.show();
-            }
-        });
+    public void showProgress(final String message) {
+        Fragment progressDialog = ProgressDialog.newInstance(null, message);
+        FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
+        fTransaction.add(progressDialog, ProgressDialog.TAG);
+        fTransaction.commitAllowingStateLoss();
     }
 
     public void hideProgress(boolean showContent) {
         // hide progress
-        BaseActivity.this.runOnUiThread(new Runnable() {
-            public void run() {
-                progressDialog.dismiss();
-            }
-        });
+        DialogFragment progressDialog = (DialogFragment) getSupportFragmentManager().findFragmentByTag(ProgressDialog.TAG);
+        if(progressDialog != null) {
+            progressDialog.dismissAllowingStateLoss();
+        }
 
         // there is error. Show error view.
         if (!showContent) {
