@@ -19,14 +19,11 @@ import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 public class ProfileFragment extends BaseFragment {
-    private TextView userName;
-    private ImageView userAvatar;
-    private Button chatButton;
-    private String profile_id;
+    private String mProfileId;
     private UserDto profile;
 
-    protected ImageLoader imageLoader;
-    protected DisplayImageOptions options;
+    protected ImageLoader mImageLoader;
+    protected DisplayImageOptions mOptions;
     protected ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
 
     public ProfileFragment()
@@ -36,77 +33,29 @@ public class ProfileFragment extends BaseFragment {
 
     public ProfileFragment(BaseFragment previousFragment, String profile_id) {
         super(previousFragment);
-        this.profile_id = profile_id;
+        this.mProfileId = profile_id;
     }
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
-        chatButton = (Button) rootView.findViewById(R.id.chat_button);
-        if(profile_id.equalsIgnoreCase(this.getSession().getUserDetails().get(SessionManager.KEY_ID))){
-            chatButton.setVisibility(View.GONE);
-        }
-        userName = (TextView) rootView.findViewById(R.id.user_name);
-        userAvatar = (ImageView) rootView.findViewById(R.id.avatar);
+        return inflater.inflate(R.layout.fragment_profile, null);
+    }
 
-        getActivity().setTitle(getString(R.string.header_profile));
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.default_list_image)
-                .showImageForEmptyUri(R.drawable.default_list_image)
-                .showImageOnFail(R.drawable.default_list_image)
-                .cacheInMemory()
-                .cacheOnDisc()
-                .build();
-
+        initLoader();
+        initActionBar();
+        initView();
         loadData();
-
-        return rootView;
-    }
-
-    private void setHandlers() {
-        final BaseFragment thisInstance = this;
-
-        // open chat window
-        chatButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(final View view) {
-                openFragment(new ChatFragment(thisInstance, profile_id, "Jon"));
-            }
-        });
-    }
-
-    protected void loadData() {
-        showProgress();
-
-        DataStore.retrieveUser(profile_id, new DataStore.OnResultReady() {
-            @Override
-            public void onReady(Object result, boolean failed) {
-                if (failed) {
-                    hideProgress(false);
-                    return;
-                }
-
-                hideProgress(true);
-
-                profile = (UserDto) result;
-
-                setHandlers();
-
-                // update UI components
-                // set name
-                userName.setText(profile.getName());
-                // set avatar
-                String image_url = ImageHelper.getProfileImage(profile.getAvatar());
-                imageLoader.displayImage(image_url, userAvatar, options, animateFirstListener);
-            }
-        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
         if (((MainActivity) getActivity()).getDrawerToggle().isDrawerIndicatorEnabled()) {
             ((MainActivity) getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(false);
             ((MainActivity) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -120,5 +69,73 @@ public class ProfileFragment extends BaseFragment {
             ((MainActivity) getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(true);
             ((MainActivity) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         }
+    }
+
+    private void initLoader() {
+        mImageLoader = ImageLoader.getInstance();
+        mOptions = new DisplayImageOptions.Builder()
+                .showStubImage(R.drawable.default_list_image)
+                .showImageForEmptyUri(R.drawable.default_list_image)
+                .showImageOnFail(R.drawable.default_list_image)
+                .cacheInMemory()
+                .cacheOnDisc()
+                .build();
+    }
+
+    private void initActionBar() {
+        //TODO fix this code
+        getActivity().setTitle(getString(R.string.header_profile));
+    }
+
+    private void initView() {
+        View view = getView();
+        if(view == null) {
+            return;
+        }
+
+        View btnChat = view.findViewById(R.id.btnChat);
+        if(mProfileId != null && mProfileId.equalsIgnoreCase(this.getSession().getUserDetails().get(SessionManager.KEY_ID))){
+            btnChat.setVisibility(View.GONE);
+        }
+
+        btnChat.setOnClickListener(new View.OnClickListener() {
+            public void onClick(final View view) {
+                openFragment(new ChatFragment(ProfileFragment.this, mProfileId, "Jon"));
+            }
+        });
+    }
+
+    protected void loadData() {
+        showProgress();
+
+        DataStore.retrieveUser(mProfileId, new DataStore.OnResultReady() {
+            @Override
+            public void onReady(Object result, boolean failed) {
+                if (failed) {
+                    hideProgress(false);
+                    return;
+                }
+
+                hideProgress(true);
+
+                profile = (UserDto) result;
+
+                //TODO fill all views
+
+                View view = getView();
+                if(view == null) {
+                    return;
+                }
+
+                // set name
+                TextView txtUserName = (TextView) view.findViewById(R.id.txtUsername);
+                txtUserName.setText(profile.getName());
+
+                // set avatar
+                ImageView imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
+                String image_url = ImageHelper.getProfileImage(profile.getAvatar());
+                mImageLoader.displayImage(image_url, imgAvatar, mOptions, animateFirstListener);
+            }
+        });
     }
 }
