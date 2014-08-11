@@ -350,6 +350,14 @@ exports.friends_remove_request = (req, res)->
 
 ##################################################################################################
 
+exports.get_config = (req, res)->
+  res.json
+    status: "ok"
+    result:
+      chekin_max_distance: 1000
+      max_failed_checkin_count: 3
+      update_checkin_status_interval: 10*60
+
 exports.uploadphoto = (req, res)->
   params =
     userid: req.body._id
