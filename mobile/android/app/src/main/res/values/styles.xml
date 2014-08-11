@@ -88,7 +88,7 @@
     <style name="main_button">
         <item name="android:textSize">16dp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@drawable/checkin_button_color</item>
+        <item name="android:textColor">@color/checkin_button_color</item>
     </style>
 
     <!--<style name="ThemeDialog" parent="@android:style/Theme.Dialog">-->

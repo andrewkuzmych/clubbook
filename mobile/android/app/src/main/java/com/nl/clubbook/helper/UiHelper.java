@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.nl.clubbook.R;
 
@@ -17,12 +17,12 @@ import java.util.List;
  */
 public class UiHelper {
     public static void changeCheckinState(Context context, View view, boolean checkin) {
-        Button button = (Button) view;
+        TextView button = (TextView) view;
         if (checkin) {
-            button.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.checkin_button));
+            view.setBackgroundResource(R.drawable.checkin_button);
             button.setText(context.getResources().getString(R.string.checkin));
         } else {
-            button.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.checkout_button));
+            button.setBackgroundResource(R.drawable.checkout_button);
             button.setText(context.getResources().getString(R.string.checkout));
         }
     }

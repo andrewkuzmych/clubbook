@@ -1,15 +1,12 @@
 package com.nl.clubbook.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.nl.clubbook.R;
@@ -25,23 +22,25 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
+import java.util.List;
+
 /**
  * Created by Andrew on 5/27/2014.
  */
-public class ClubsAdapter extends ArrayAdapter<ClubDto> {
+public class ClubsAdapter extends BaseAdapter {
+
     private ImageLoader imageLoader;
     private DisplayImageOptions options;
     private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
 
-    Context context;
-    int layoutResourceId;
-    ClubDto data[] = null;
+    private LayoutInflater mInflater;
+    private Context mContext;
+    private List<ClubDto> mClubs = null;
 
-    public ClubsAdapter(Context context, int layoutResourceId, ClubDto[] data) {
-        super(context, layoutResourceId, data);
-        this.layoutResourceId = layoutResourceId;
-        this.context = context;
-        this.data = data;
+    public ClubsAdapter(Context context, List<ClubDto> data) {
+        mInflater = LayoutInflater.from(context);
+        this.mContext = context;
+        this.mClubs = data;
 
         imageLoader = ImageLoader.getInstance();
         options = new DisplayImageOptions.Builder()
@@ -54,78 +53,108 @@ public class ClubsAdapter extends ArrayAdapter<ClubDto> {
     }
 
     @Override
+    public int getCount() {
+        return mClubs.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return mClubs.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return Long.getLong(mClubs.get(position).getId(), -1);
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        ClubItemHolder holder = null;
+        ClubItemHolder holder;
 
         if (row == null) {
-            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            row = inflater.inflate(layoutResourceId, parent, false);
-
-            Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/TITILLIUMWEB-REGULAR.TTF");
-            Typeface typeface_bold = Typeface.createFromAsset(context.getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
+            row = mInflater.inflate(R.layout.club_list_item, parent, false);
 
             holder = new ClubItemHolder();
-            holder.avatar = (ImageView) row.findViewById(R.id.avatar);
-            holder.club_title = (TextView) row.findViewById(R.id.club_title);
-            holder.club_title.setTypeface(typeface_bold);
-            holder.club_id = (TextView) row.findViewById(R.id.club_id);
+            holder.avatar = (ImageView) row.findViewById(R.id.imgAvatar);
+            holder.clubTitle = (TextView) row.findViewById(R.id.txtClubTitle);
             holder.distance = (TextView) row.findViewById(R.id.distance_text);
-            holder.distance.setTypeface(typeface_bold);
-            holder.people_count = (TextView) row.findViewById(R.id.people_count);
-            holder.people_count.setTypeface(typeface_bold);
+            holder.peopleCount = (TextView) row.findViewById(R.id.people_count);
+            holder.checkIn = (TextView) row.findViewById(R.id.txtCheckIn);
 
             row.setTag(holder);
         } else {
             holder = (ClubItemHolder) row.getTag();
         }
 
-        ClubDto club = data[position];
-        String distance = LocationCheckinHelper.formatDistance(context, club.getDistance());
+        fillRow(holder, mClubs.get(position));
+
+        return row;
+    }
+
+    public void updateData(List<ClubDto> data) {
+        if(data == null) {
+            return;
+        }
+
+        mClubs = data;
+        notifyDataSetChanged();
+    }
+
+    private void fillRow(ClubItemHolder holder, ClubDto club) {
+        String distance = LocationCheckinHelper.formatDistance(mContext, club.getDistance());
         holder.distance.setText(distance);
-        holder.people_count.setText(String.valueOf(club.getActiveCheckins()));
-        holder.club_title.setText(club.getTitle());
-        holder.club_id.setText(club.getId());
 
-        String image_url = ImageHelper.getClubListAvatar(club.getAvatar());
+        holder.peopleCount.setText(String.valueOf(club.getActiveCheckins()));
+        holder.clubTitle.setText(club.getTitle());
 
-        // checkin button
-        holder.checkin = (Button) row.findViewById(R.id.checkin);
-        holder.checkin.setTag(club);
+        holder.checkIn.setTag(club);
         // if we checked in this this club set related style
         if (LocationCheckinHelper.isCheckinHere(club)) {
-            UiHelper.changeCheckinState(context, holder.checkin, false);
+            UiHelper.changeCheckinState(mContext, holder.checkIn, false);
         } else {
-            UiHelper.changeCheckinState(context, holder.checkin, true);
+            UiHelper.changeCheckinState(mContext, holder.checkIn, true);
         }
         // can we check in this club
         if (LocationCheckinHelper.canCheckinHere(club)) {
-            holder.checkin.setEnabled(true);
+            holder.checkIn.setEnabled(true);
         } else {
-            holder.checkin.setEnabled(false);
+            holder.checkIn.setEnabled(false);
         }
 
-        holder.checkin.setOnClickListener(new View.OnClickListener() {
+        holder.checkIn.setOnClickListener(getBtnCheckInClickListener());
+
+        //load image
+        String image_url = ImageHelper.getClubListAvatar(club.getAvatar());
+        holder.avatar.setTag(image_url);
+        imageLoader.displayImage(image_url, holder.avatar, options, animateFirstListener);
+    }
+
+    private View.OnClickListener getBtnCheckInClickListener() {
+        View.OnClickListener listener = new View.OnClickListener() {
             public void onClick(final View view) {
+
                 final ClubDto club = (ClubDto) view.getTag();
                 if (LocationCheckinHelper.isCheckinHere(club)) {
-                    LocationCheckinHelper.checkout(context, new CheckInOutCallbackInterface() {
+                    LocationCheckinHelper.checkout(mContext, new CheckInOutCallbackInterface() {
                         @Override
                         public void onCheckInOutFinished(boolean result) {
                             // Do something when download finished
-                            if (result)
-                                UiHelper.changeCheckinState(context, view, true);
+                            if (result) {
+                                UiHelper.changeCheckinState(mContext, view, true);
+                            }
                         }
                     });
                 } else {
-                    LocationCheckinHelper.checkin(context, club, new CheckInOutCallbackInterface() {
+                    LocationCheckinHelper.checkin(mContext, club, new CheckInOutCallbackInterface() {
                         @Override
-                        public void onCheckInOutFinished(boolean isUserCheckin) {
+                        public void onCheckInOutFinished(boolean isUserCheckIn) {
                             // check if checkin was successful
-                            if (isUserCheckin) {
+                            if (isUserCheckIn) {
                                 // open club details and pass club_id parameter
+                                //TODO fix this
                                 ClubFragment fragment = new ClubFragment(null, club.getId());
-                                FragmentManager fragmentManager = ((MainActivity) context).getSupportFragmentManager();
+                                FragmentManager fragmentManager = ((MainActivity) mContext).getSupportFragmentManager();
                                 FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
                                 mFragmentTransaction.replace(R.id.frame_container, fragment);
                                 mFragmentTransaction.addToBackStack(null);
@@ -135,22 +164,18 @@ public class ClubsAdapter extends ArrayAdapter<ClubDto> {
                     });
                 }
             }
-        });
+        };
 
-        holder.avatar.setTag(image_url);
-        imageLoader.displayImage(image_url, holder.avatar, options, animateFirstListener);
-
-        return row;
+        return listener;
     }
 
     static class ClubItemHolder {
         ImageView avatar;
-        TextView club_title;
-        TextView club_id;
+        TextView clubTitle;
         TextView distance;
-        TextView people_count;
-        TextView friends_count;
-        Button checkin;
+        TextView peopleCount;
+        TextView friendsCount;
+        TextView checkIn;
     }
 
 }

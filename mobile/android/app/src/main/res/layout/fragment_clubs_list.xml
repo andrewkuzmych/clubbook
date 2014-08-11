@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <ListView
-        android:id="@+id/club_listview"
+        android:id="@+id/listClub"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@+id/linearLayout"
@@ -33,7 +33,7 @@
             android:text="23 km"
             android:textColor="#FFFFFF"
             android:textIsSelectable="false"
-            android:textSize="22dp"></TextView>
+            android:textSize="22dp" />
         <!--http://stackoverflow.com/questions/3480456/seek-bar-change-path-color-from-yellow-to-white-->
         <SeekBar
             android:id="@+id/distance"

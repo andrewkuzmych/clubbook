@@ -1,75 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent" android:orientation="vertical"
-              android:layout_height="wrap_content"
-              android:background="@drawable/list_selector"
-              xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/list_selector"
+    android:orientation="vertical">
 
     <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="90dp" android:id="@+id/main_area"
-            android:focusable="false">
+        android:id="@+id/main_area"
+        android:layout_width="fill_parent"
+        android:layout_height="90dp"
+        android:focusable="false">
 
-        <ImageView android:id="@+id/avatar"
-                   android:layout_width="80dp"
-                   android:layout_height="80dp"
-                   android:focusable="false"
-                   android:layout_alignParentLeft="true" android:layout_marginLeft="5dp"
-                   android:layout_centerVertical="true"/>
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:focusable="false" />
 
-        <RelativeLayout android:id="@+id/details_holder"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingLeft="5dp"
-                        android:focusable="false"
-                        android:layout_toRightOf="@+id/avatar" android:layout_centerVertical="true"
-                        android:layout_margin="2dp" android:layout_toLeftOf="@+id/relativeLayout">
-
-            <TextView android:id="@+id/club_title"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:textSize="16dp"
-                      android:ellipsize="end"
-                      android:maxLines="2"
-                      android:text="Club"
-                      android:focusable="false"
-                      android:textStyle="bold"
-                      android:textColor="#22104A"/>
-
-            <TextView android:id="@+id/club_address"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:textSize="12dp"
-                      android:ellipsize="end"
-                      android:maxLines="3"
-                      android:focusable="false"
-                      android:text="venue_title"
-                      android:textColor="#595959"
-                      android:layout_below="@+id/club_title" android:textIsSelectable="false"/>
-        </RelativeLayout>
         <RelativeLayout
-                android:layout_width="95dp"
+            android:id="@+id/details_holder"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="2dp"
+            android:layout_toLeftOf="@+id/relativeLayout"
+            android:layout_toRightOf="@+id/avatar"
+            android:focusable="false"
+            android:orientation="vertical"
+            android:paddingLeft="5dp">
+
+            <TextView
+                android:id="@+id/club_title"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="false" android:layout_alignParentRight="true"
+                android:ellipsize="end"
                 android:focusable="false"
-                android:id="@+id/relativeLayout" android:layout_marginLeft="4dp"
-                android:layout_marginRight="5dp" android:padding="2dp" android:layout_centerVertical="true">
+                android:maxLines="2"
+                android:text="Club"
+                android:textColor="#22104A"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/club_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/club_title"
+                android:ellipsize="end"
+                android:focusable="false"
+                android:maxLines="3"
+                android:text="venue_title"
+                android:textColor="#595959"
+                android:textIsSelectable="false"
+                android:textSize="12dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="5dp"
+            android:focusable="false"
+            android:padding="2dp">
+
             <LinearLayout
-                    android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:focusable="false"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/checkin"
+                    style="@style/main_button"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/checkin_button"
+                    android:text="Check in" />
+
+                <TextView
+                    android:id="@+id/club_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:layout_centerHorizontal="true" android:layout_centerVertical="true">
-                <Button android:id="@+id/checkin"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Check in" android:background="@drawable/checkin_button" style="@style/main_button"/>
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/club_id"
-                        android:visibility="gone"/>
+                    android:visibility="gone" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -77,18 +98,18 @@
     </RelativeLayout>
 
 
-
     <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:focusable="false"
-            android:background="#cfcfcf" android:layout_marginLeft="3dp" android:layout_marginRight="3dp"/>
-<!--    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:focusable="false"
-            android:background="#cfcfcf" android:layout_marginLeft="3dp" android:layout_marginRight="3dp"/>-->
-
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:background="#cfcfcf"
+        android:focusable="false" />
+    <!--    <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:focusable="false"
+                android:background="#cfcfcf" android:layout_marginLeft="3dp" android:layout_marginRight="3dp"/>-->
 
 
 </LinearLayout>
