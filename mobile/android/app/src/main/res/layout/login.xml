@@ -1,73 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true">
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/main_background_color">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/main_background_color"
+        android:baselineAligned="false"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        <com.nl.clubbook.ui.view.TitilliumRegularEditText
+            android:id="@+id/txtUsername"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:singleLine="true"
+            android:textColor="@android:color/white" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:baselineAligned="false"
-            android:orientation="vertical"
-            android:padding="10dip">
+        <com.nl.clubbook.ui.view.TitilliumRegularEditText
+            android:id="@+id/txtPassword"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:layout_below="@+id/txtUsername"
+            android:layout_marginTop="8dp"
+            android:hint="@string/password"
+            android:password="true"
+            android:singleLine="true"
+            android:textColor="@android:color/white" />
 
-            <!-- Email Label -->
-            <TextView
-                android:id="@+id/email_label"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dip"
-                android:singleLine="true"
-                android:text="@string/email"
-                android:textSize="17dp" />
+        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+            android:id="@+id/btnLogin"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/main_button"
+            android:gravity="center"
+            android:text="@string/log_in"
+            android:textColor="@color/checkin_button_color"
+            android:textSize="@dimen/text_size_medium" />
+    </RelativeLayout>
 
-            <!-- Email input text -->
-            <EditText
-                android:id="@+id/txtUsername"
-                style="@style/sign_in_input"
-                android:layout_marginBottom="10dip"
-                android:autoText="false"
-                android:inputType="textEmailAddress"
-                android:textIsSelectable="true" />
-
-            <!-- Password Label -->
-            <TextView
-                android:id="@+id/pass_label"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dip"
-                android:text="@string/password"
-                android:textSize="17dp" />
-
-            <!-- Password input text -->
-            <EditText
-                android:id="@+id/txtPassword"
-                style="@style/sign_in_input"
-                android:layout_marginBottom="20dip"
-                android:password="true"
-                android:singleLine="true" />
-
-            <!-- Login button -->
-            <Button
-                android:id="@+id/btnLogin"
-                style="@style/main_button"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/main_button"
-                android:text="@string/login" />
-
-            <!--  <TextView   android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="@string/forgot_pass"
-                          android:id="@+id/forgot_pass" android:layout_gravity="center_vertical|right"
-                          android:layout_marginTop="15dp" android:clickable="true" android:textColor="#712f6d"/>-->
-        </LinearLayout>
-
-    </ScrollView>
-
-</RelativeLayout>
+</ScrollView>

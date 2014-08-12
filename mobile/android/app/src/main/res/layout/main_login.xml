@@ -17,18 +17,13 @@
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/logo" />
 
-        <TextView
+        <com.nl.clubbook.ui.view.TitilliumBoldTextView
             android:id="@+id/intro_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/linearLayout"
-            android:layout_alignRight="@+id/linearLayout"
-            android:layout_below="@+id/linearLayout"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
@@ -36,7 +31,7 @@
             android:gravity="center"
             android:text="@string/splash_intro"
             android:textColor="#FFFFFF"
-            android:textSize="17dp" />
+            android:textSize="17sp" />
 
     </LinearLayout>
 
@@ -57,25 +52,25 @@
             android:text="@string/terms"
             android:textColor="#CDC2CE"
             android:textColorLink="#CDC2CE"
-            android:textSize="14dp" />
+            android:textSize="@dimen/text_size_small" />
 
-        <Button
+        <com.nl.clubbook.ui.view.TitilliumRegularButton
             android:id="@+id/login_fb"
             style="@style/main_login_button"
             android:background="@drawable/fb_button"
-            android:text="@string/login_fb" />
+            android:text="@string/sing_in_with_facebook" />
 
-        <Button
+        <com.nl.clubbook.ui.view.TitilliumBoldButton
             android:id="@+id/reg_by_email"
             style="@style/main_login_button"
             android:background="@drawable/reg_button"
             android:text="@string/sign_up_by_email" />
 
-        <Button
+        <com.nl.clubbook.ui.view.TitilliumRegularButton
             android:id="@+id/login_by_email"
             style="@style/main_login_button"
             android:background="@drawable/main_button"
-            android:text="@string/login_by_email" />
+            android:text="@string/log_in" />
 
     </LinearLayout>
 

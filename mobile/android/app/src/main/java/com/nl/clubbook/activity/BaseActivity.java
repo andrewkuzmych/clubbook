@@ -1,11 +1,11 @@
 package com.nl.clubbook.activity;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
@@ -33,6 +33,38 @@ public class BaseActivity extends ActionBarActivity {
 
     private SessionManager session;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setSession(new SessionManager(getApplicationContext()));
+
+        // init image loader
+        imageLoader = ImageLoader.getInstance();
+        options = new DisplayImageOptions.Builder()
+                .showStubImage(R.drawable.default_list_image)
+                .showImageForEmptyUri(R.drawable.default_list_image)
+                .showImageOnFail(R.drawable.default_list_image)
+                .cacheInMemory()
+                .cacheOnDisc()
+                .build();
+
+        // set context to use from DataStore for all app
+        DataStore.setContext(this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //EasyTracker.getInstance(this).activityStart(this);  // Add this method.
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        //EasyTracker.getInstance(this).activityStop(this);  // Add this method.
+    }
+
     public SessionManager getSession() {
         return session;
     }
@@ -45,10 +77,6 @@ public class BaseActivity extends ActionBarActivity {
         HashMap<String, String> user = getSession().getUserDetails();
         return user.get(SessionManager.KEY_ID);
     }
-
-    // styles
-    public Typeface typeface_regular;
-    public Typeface typeface_bold;
 
     public void showProgress(final String message) {
         Fragment progressDialog = ProgressDialog.newInstance(null, message);
@@ -80,44 +108,16 @@ public class BaseActivity extends ActionBarActivity {
 
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setSession(new SessionManager(getApplicationContext()));
-
-        // init image loader
-        imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.default_list_image)
-                .showImageForEmptyUri(R.drawable.default_list_image)
-                .showImageOnFail(R.drawable.default_list_image)
-                .cacheInMemory()
-                .cacheOnDisc()
-                .build();
-
-        typeface_regular = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-REGULAR.TTF");
-        typeface_bold = Typeface.createFromAsset(getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
-
-        // set context to use from DataStore for all app
-        DataStore.setContext(this);
+    protected void initActionBar(int stringResourceId) {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setTitle(stringResourceId);
     }
-
     protected void init() {
     }
 
     protected void loadData() {
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        //EasyTracker.getInstance(this).activityStart(this);  // Add this method.
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        //EasyTracker.getInstance(this).activityStop(this);  // Add this method.
-    }
 }
