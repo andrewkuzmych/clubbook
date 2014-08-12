@@ -99,7 +99,7 @@ public class ClubFragment extends BaseFragment {
             return;
         }
 
-        view.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.btnCheckIn).setOnClickListener(new View.OnClickListener() {
             public void onClick(final View view) {
                 if (LocationCheckinHelper.isCheckinHere(mClub)) {
                     LocationCheckinHelper.checkout(getActivity(), new CheckInOutCallbackInterface() {
@@ -192,6 +192,10 @@ public class ClubFragment extends BaseFragment {
                     clubCoverSwitcher.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
+                            if(mClub.getPhotos() == null || mClub.getPhotos().size() <= 1) {
+                                return false;
+                            }
+
                             switch (event.getAction()) {
                                 case MotionEvent.ACTION_DOWN:
                                     initialX = event.getX();
@@ -202,10 +206,12 @@ public class ClubFragment extends BaseFragment {
                                     if (initialX > finalX) {
                                         clubCoverSwitcher.setInAnimation(getActivity(), R.anim.left_in);
                                         clubCoverSwitcher.setOutAnimation(getActivity(), R.anim.left_out);
+
                                         // next
                                         position++;
-                                        if (position >= mClub.getPhotos().size())
+                                        if (position >= mClub.getPhotos().size()) {
                                             position = 0;
+                                        }
 
                                         String image_url = ImageHelper.getClubImage(mClub.getPhotos().get(position));
                                         imageLoader.displayImage(image_url, imgClubCoverItem, options, animateFirstListener);
@@ -216,11 +222,13 @@ public class ClubFragment extends BaseFragment {
                                     } else {
                                         clubCoverSwitcher.setInAnimation(getActivity(), R.anim.right_in);
                                         clubCoverSwitcher.setOutAnimation(getActivity(), R.anim.right_out);
+
                                         // prev
-                                        if (position > 0)
+                                        if (position > 0) {
                                             position = position - 1;
-                                        else
+                                        } else {
                                             position = mClub.getPhotos().size() - 1;
+                                        }
 
                                         String image_url = ImageHelper.getClubImage(mClub.getPhotos().get(position));
                                         imageLoader.displayImage(image_url, imgClubCoverItem, options, animateFirstListener);

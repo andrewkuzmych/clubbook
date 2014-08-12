@@ -1,32 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_screen_grey_light"
     android:orientation="vertical">
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/listCheckInUsers">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/bg_screen_grey_light">
 
-            <ImageView
-                android:id="@+id/imgAvatar"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_alignParentLeft="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/test_avatar" />
+            <ImageSwitcher
+                android:id="@+id/switcherAvatar"
+                android:layout_width="fill_parent"
+                android:layout_height="230dp">
+
+                <ImageView
+                    android:id="@+id/imgAvatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/test_avatar"/>
+
+            </ImageSwitcher>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/imgAvatar"
+                android:layout_below="@+id/switcherAvatar"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -150,7 +157,7 @@
                 style="@style/chat_button"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
-                android:layout_below="@+id/imgAvatar"
+                android:layout_below="@+id/switcherAvatar"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="-40dp"
                 android:background="@drawable/chat_button"
@@ -160,8 +167,17 @@
     </ScrollView>
 
     <ListView
+        android:id="@+id/listCheckInUsers"
         android:layout_width="fill_parent"
         android:layout_height="75dp"
-        android:background="@android:color/white"/>
+        android:background="@android:color/white"
+        android:layout_alignParentBottom="true"/>
 
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>
