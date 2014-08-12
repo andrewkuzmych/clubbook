@@ -17,6 +17,7 @@ import com.nl.clubbook.helper.CheckInOutCallbackInterface;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.helper.UiHelper;
+import com.nl.clubbook.utils.L;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
@@ -64,7 +65,7 @@ public class ClubsAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return Long.getLong(mClubs.get(position).getId(), -1);
+        return -1;
     }
 
     @Override
@@ -107,6 +108,7 @@ public class ClubsAdapter extends BaseAdapter {
 
         holder.peopleCount.setText(String.valueOf(club.getActiveCheckins()));
         holder.clubTitle.setText(club.getTitle());
+        holder.clubTitle.setTag(club.getId());
 
         holder.checkIn.setTag(club);
         // if we checked in this this club set related style

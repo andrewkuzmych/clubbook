@@ -15,11 +15,10 @@
             android:layout_height="75dp">
     </ImageView>
 
-    <TextView
-            android:id="@+id/user_id"
+    <View
+            android:id="@+id/userId"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone">
-    </TextView>
+            android:visibility="gone"/>
 
 </LinearLayout>
