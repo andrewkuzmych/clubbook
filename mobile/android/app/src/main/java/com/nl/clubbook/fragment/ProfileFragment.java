@@ -8,16 +8,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.activity.MainActivity;
+import com.nl.clubbook.adapter.ProfileAdapter;
 import com.nl.clubbook.adapter.UserAvatarPagerAdapter;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.FriendDto;
+import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.datasource.UserPhotoDto;
 import com.nl.clubbook.helper.*;
+import com.nl.clubbook.ui.view.HorizontalListView;
 import com.nl.clubbook.utils.L;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -29,6 +34,7 @@ import java.util.List;
 
 public class ProfileFragment extends BaseFragment implements View.OnClickListener, AbsListView.OnScrollListener {
     private String mFriendProfileId;
+    private List<UserDto> mCheckInUsers;
 
     private ImageLoader mImageLoader;
     private DisplayImageOptions mOptions;
@@ -39,9 +45,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     }
 
-    public ProfileFragment(BaseFragment previousFragment, String profileId) {
+    public ProfileFragment(BaseFragment previousFragment, String profileId, List<UserDto> checkInedUsers) {
         super(previousFragment);
         this.mFriendProfileId = profileId;
+        this.mCheckInUsers = checkInedUsers;
     }
 	
 	@Override
@@ -57,6 +64,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         initLoader();
         initActionBar();
         initView();
+        initCheckInUserList();
         loadData();
     }
 
@@ -129,6 +137,38 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         view.findViewById(R.id.txtBlockUser).setOnClickListener(this);
         view.findViewById(R.id.txtAddFriend).setOnClickListener(this);
         view.findViewById(R.id.txtRemoveFriend).setOnClickListener(this);
+    }
+
+    private void initCheckInUserList() {
+        View view = getView();
+        if(view == null) {
+            return;
+        }
+
+        if(mCheckInUsers == null || true) {
+            L.e("!visible");
+//            view.findViewById(R.id.listCheckInUsers).setVisibility(View.GONE); //TODO
+            View scrollView = view.findViewById(R.id.scrollView);
+            scrollView.invalidate();
+
+//            scrollView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
+//                    RelativeLayout.LayoutParams.FILL_PARENT));
+            return;
+        }
+
+
+        //TODO test
+        UserDto userDto = mCheckInUsers.get(0);
+        for(int i = 0; i < 100; i++) {
+            mCheckInUsers.add(userDto);
+        }
+        //
+
+        L.e("visible");
+//        HorizontalListView listCheckInUser = (HorizontalListView) view.findViewById(R.id.listCheckInUsers);
+//        ProfileAdapter adapter = new ProfileAdapter(getActivity(), mCheckInUsers);
+//        listCheckInUser.setAdapter(adapter);
+//        listCheckInUser.setVisibility(View.VISIBLE);
     }
 
     protected void loadData() {
@@ -234,11 +274,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private void setRefreshing(View view, boolean isRefreshing) {
         if(isRefreshing) {
             view.findViewById(R.id.scrollView).setVisibility(View.GONE);
-            view.findViewById(R.id.listCheckInUsers).setVisibility(View.GONE);
+//            view.findViewById(R.id.listCheckInUsers).setVisibility(View.GONE); //TODO
             view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
         } else {
             view.findViewById(R.id.scrollView).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.listCheckInUsers).setVisibility(View.VISIBLE);
+//            view.findViewById(R.id.listCheckInUsers).setVisibility(View.VISIBLE); //TODO
             view.findViewById(R.id.progressBar).setVisibility(View.GONE);
         }
     }

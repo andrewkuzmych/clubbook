@@ -37,9 +37,9 @@ public class ClubFragment extends BaseFragment {
 
     private ClubDto mClub;
 
-    protected ImageLoader imageLoader;
-    protected DisplayImageOptions options;
-    protected ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
+    private ImageLoader imageLoader;
+    private DisplayImageOptions options;
+    private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
     private String club_id;
 
     public ClubFragment(){}
@@ -274,7 +274,7 @@ public class ClubFragment extends BaseFragment {
                                     int position, long id) {
                 View userId = view.findViewById(R.id.userId);
 
-                openFragment(new ProfileFragment(ClubFragment.this, (String)userId.getTag()));
+                openFragment(new ProfileFragment(ClubFragment.this, (String)userId.getTag(), mClub.getUsers()));
             }
         });
     }

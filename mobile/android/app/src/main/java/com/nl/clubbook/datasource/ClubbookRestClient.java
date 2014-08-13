@@ -3,7 +3,6 @@ package com.nl.clubbook.datasource;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.nl.clubbook.utils.L;
 
 /**
  * Created by Andrew on 5/19/2014.
@@ -76,7 +75,6 @@ public class ClubbookRestClient {
     }
 
     public static void retrievePlace(String place_id, String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        L.v("retrievePlacesUrl - " + getBcAbsoluteUrl("find_club/" + place_id + "/" + user_id));
         client.get(getBcAbsoluteUrl("find_club/" + place_id + "/" + user_id), params, responseHandler);
     }
 

@@ -76,7 +76,7 @@ public class FriendsFragment extends BaseFragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String user_id = view.findViewById(R.id.user_name).getTag().toString();
-                        openFragment(new ProfileFragment(thisInstance, user_id));
+                        openFragment(new ProfileFragment(thisInstance, user_id, null));
                     }
                 });
             }
