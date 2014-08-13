@@ -282,7 +282,6 @@
     _user = user;
     NSMutableArray *reversedArray = [[user.photos reverseObjectEnumerator] allObjects];
     
-    
     // remove all subviews
     [[self.photosScroll subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     for (int i = 0; i < [reversedArray count]; i++) {
@@ -322,7 +321,8 @@
     
     self.photosScroll.delegate = self;
     
-    self.photosScroll.contentSize = CGSizeMake(self.photosScroll.frame.size.height * ([user.photos count] + [self.uploadedImages count]) + 5  , self.photosScroll.frame.size.height + 5);}
+    self.photosScroll.contentSize = CGSizeMake(self.photosScroll.frame.size.height * ([user.photos count] + [self.uploadedImages count]) + 5  , self.photosScroll.frame.size.height + 5);
+}
 
 -(NSInteger) getCountryIndex:(NSString *) country
 {

@@ -44,6 +44,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (self.hasBack) {
+        self.navigationItem.leftBarButtonItem = nil;
+    }
+
+    
     // Do any additional setup after loading the view.
     minUserCount = 10;
     
@@ -209,6 +214,7 @@
 
     BOOL isCheckinHere = [LocationHelper isCheckinHere:_place];
     if (_place.users.count < minUserCount) {
+        // not enough users to show profiles
         NSString * text = [NSString stringWithFormat:NSLocalizedString(@"usersLeftToChecdkin", nil),(minUserCount - _place.users.count)];
         
         [CSNotificationView showInViewController:self
@@ -216,19 +222,28 @@
                                            image:nil
                                          message:text
                                         duration:kCSNotificationViewDefaultShowDuration];
-    } else if (!isCheckinHere) {
+    } else {
         User *user = _place.users[indexPath.row];
-        if(!user.isFriend)
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *userId = [defaults objectForKey:@"userId"];
+        
+        if (!isCheckinHere && !user.isFriend)
+            // cannot see profile when you are not checked in and not friend
             [CSNotificationView showInViewController:self
                                            tintColor:[UIColor colorWithRed:0.000 green:0.6 blue:1.000 alpha:1]
                                                image:nil
-                                             message:NSLocalizedString(@"needToCheckinFirst", nil)
+                                            message:NSLocalizedString(@"needToCheckinFirst", nil)
+                                            duration:kCSNotificationViewDefaultShowDuration];
+        else if([user.id isEqualToString:userId])
+            // cannot see own profile :)
+            [CSNotificationView showInViewController:self
+                                           tintColor:[UIColor colorWithRed:0.000 green:0.6 blue:1.000 alpha:1]
+                                               image:nil
+                                             message:NSLocalizedString(@"cannotSeeOwnPofile", nil)
                                             duration:kCSNotificationViewDefaultShowDuration];
         else
             [self performSegueWithIdentifier: @"onUser" sender: indexPath];
 
-    } else {
-        [self performSegueWithIdentifier: @"onUser" sender: indexPath];
     }
 }
 
@@ -238,6 +253,7 @@
         UserViewController *userController =  [segue destinationViewController];
         User *user = _place.users[indexPath.row];
         userController.userId = user.id;
+        userController.currentPlace = _place;
     } else if ([[segue identifier] isEqualToString:@"onClubInfo"]) {
         ClubViewController *clubController =  [segue destinationViewController];
         clubController.place = _place;
@@ -273,9 +289,9 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         if (_place.users.count < minUserCount) {
             if (indexPath.row < _place.users.count)
-                [cell.profileAvatar setImage:[UIImage imageNamed:@"emptyUserH.png"]];
+                [cell.profileAvatar setImage:[UIImage imageNamed:@"avatar_invisible.png"]];
             else
-                [cell.profileAvatar setImage:[UIImage imageNamed:@"emptyUser.png"]];
+                [cell.profileAvatar setImage:[UIImage imageNamed:@"avatar_empty.png"]];
             cell.friendIcon.hidden = YES;
         }
         else {

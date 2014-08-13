@@ -16,5 +16,6 @@
 + (void)startLocationUpdate:(Place *) club;
 + (void) stopTimer;
 + (BOOL) isCheckinHere:(Place *) club;
++ (Place *) getCheckinClub;
 
 @end

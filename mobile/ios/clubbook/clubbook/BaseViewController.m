@@ -44,9 +44,7 @@
     self._manager.communicator = [[ClubbookCommunicator alloc] init];
     self._manager.communicator.delegate = self._manager;
     self._manager.delegate = self;
-    
-    
- }
+}
 
 
 - (void)didReceiveMemoryWarning

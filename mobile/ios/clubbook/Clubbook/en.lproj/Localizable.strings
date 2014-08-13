@@ -6,12 +6,22 @@
   Copyright (c) 2014 clubbook. All rights reserved.
 */
 
+"slogan" = "Getting Social in The Club";
+"fbSign" = "Sign In with Facebook";
+"emailSignUp" = "Sign Up with E-mail";
+"emailSignIn" = "Log In";
+"termsText" = "by singing into clubbook you agree with";
+"termsAction" = "terms of use";
+
 "noneFriend" = "none";
 "sentRequest" = "sent_request";
 "receiveRequest" = "receive_request";
 "friend" = "friend";
+"url" = "clubbook.com";
+"termsUrl" = "http://clubbookapp.herokuapp.com/terms";
+"privacyUrl" = "http://clubbookapp.herokuapp.com/privacy";
 
-
+"checkApp" = "Hi, I am using clubbook, check this nice app";
 "wrongName" = "Wrong name";
 "wrongeEmail" = "Wrong Email";
 "wrongDob" = "Wrong Birthday";
@@ -56,6 +66,8 @@
 "usersLeftToChecdkin" = "Waiting for %d more people to show Profile Pictures";
 "nonePeople" = "none people";
 "needToCheckinFirst" = "You need to checkin to communicate with other people";
+"cannotSeeOwnPofile" = "This is You";
+
 "unknown" = "unknown";
 "closed" = "Closed";
 "none" = "None";

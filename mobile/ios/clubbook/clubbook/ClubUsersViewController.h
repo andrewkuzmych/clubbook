@@ -12,6 +12,7 @@
 @interface ClubUsersViewController : BaseViewController <UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *profileCollection;
 @property (strong, nonatomic) NSString *placeId;
+@property (assign, nonatomic) BOOL hasBack;
 - (IBAction)checkinAction:(CbButton *)sender;
 
 @end

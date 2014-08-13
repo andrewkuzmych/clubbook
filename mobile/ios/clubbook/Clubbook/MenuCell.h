@@ -16,4 +16,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *avatarImage;
 @property (weak, nonatomic) IBOutlet UILabel *countLabel;
+@property (weak, nonatomic) IBOutlet UIView *checkoutView;
+@property (weak, nonatomic) IBOutlet UIButton *checkinClubButton;
+
 @end

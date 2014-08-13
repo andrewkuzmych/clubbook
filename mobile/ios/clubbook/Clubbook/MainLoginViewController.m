@@ -37,6 +37,10 @@
     return self;
 }
 
+- (IBAction)unwindToLoginViewController:(UIStoryboardSegue *)unwindSegue
+{
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -50,12 +54,19 @@
     }
     
     self.sloganLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:18];
+    self.sloganLabel.text = NSLocalizedString(@"slogan", nil);
     self.fbButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:17];
+    [self.fbButton setTitle:NSLocalizedString(@"fbSign", nil) forState:UIControlStateNormal];
     self.regButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:17];
+    [self.regButton setTitle:NSLocalizedString(@"emailSignUp", nil) forState:UIControlStateNormal];
     self.loginButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:18];
+    [self.loginButton setTitle:NSLocalizedString(@"emailSignIn", nil) forState:UIControlStateNormal];
     
     self.termOfUseLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12];
+    self.termOfUseLabel.text = NSLocalizedString(@"termsText", nil);
     self.termOfUseButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:12];
+    [self.termOfUseButton setTitle:NSLocalizedString(@"termsAction", nil) forState:UIControlStateNormal];
+  
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -79,20 +90,23 @@
 }
 
 
+- (IBAction)termsAction:(id)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:NSLocalizedString(@"termsUrl", nil)]];
+}
+
 - (IBAction)fbAction:(id)sender {
     
     // FBSample logic
     // Check to see whether we have already opened a session.
-    [self showProgress:NO title:nil];
     
+    [self showProgress:NO title:nil];
 
     if (FBSession.activeSession.isOpen) {
          [self doFbLogin];
         
     } else {
+
         dispatch_async(dispatch_get_main_queue(), ^{
-            //    [self showProgress: NO];
-            //    [FBSession openActiveSessionWithAllowLoginUI:true];
             NSArray *permissions = [[NSArray alloc] initWithObjects: @"public_profile", @"email", @"user_friends",@"user_birthday", @"user_hometown", nil];
             [FBSession openActiveSessionWithReadPermissions:permissions
                                                allowLoginUI:YES
@@ -100,23 +114,22 @@
                                                               FBSessionState status,
                                                               NSError *error)
             {
-                                          //[self hideProgress];
-                                          
-                                          if (error) {
-                                                [self hideProgress];
+                
+                
+                if (error) {
+                    [self hideProgress];                              
+                } else if (FB_ISSESSIONOPENWITHSTATE(status)) {
                                               
-                                          } else if (FB_ISSESSIONOPENWITHSTATE(status)) {
-                                              
-                                              [self doFbLogin];
-                                          }
-                                      }];
+                    [self doFbLogin];
+                }
+            }];
         });
     }
 }
 
 - (void)doFbLogin {
     dispatch_async(dispatch_get_main_queue(), ^{
-        //[self showProgress:NO];
+
         [[FBRequest requestForMe] startWithCompletionHandler:
          ^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
              if (error) {
@@ -160,7 +173,6 @@
     NSString *expirationDate = [[FBSession activeSession] expirationDate];
     NSString *name  = [user objectForKey:@"first_name"];
     NSString *email  = [user objectForKey:@"email"];
-    
     NSString *gender  = [user objectForKey:@"gender"];
     NSString *birthday = [user objectForKey:@"birthday"];
 
@@ -183,7 +195,7 @@
     
     CLUploader* uploader = [[CLUploader alloc] init:cloudinary delegate:self];
   
-    [self showProgress:NO title:nil];
+    //[self showProgress:NO title:nil];
     
     NSString *avatarUrl = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?width=700&height=700", user.id];
     [uploader upload:avatarUrl options:@{@"public_id": userid} withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {

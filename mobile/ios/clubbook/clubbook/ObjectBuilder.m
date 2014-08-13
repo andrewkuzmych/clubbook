@@ -307,7 +307,6 @@
     
     NSMutableArray *conversations = [[NSMutableArray alloc] init];
     NSDictionary *resultJson = [parsedObject objectForKey:@"result"];
-    //NSDictionary *clubJson = [parsedObject objectForKey:@"club"];
     NSArray *conversationsJson = [resultJson objectForKey:@"conversation"];
     
     Chat *chat = [[Chat alloc] init];
@@ -321,7 +320,7 @@
         conf.msg = [conversationJson objectForKey:@"msg"];
         conf.type = [conversationJson objectForKey:@"type"];
         
-        NSString *dateStr = [conversationJson objectForKey:@"time"];// @"Tue, 25 May 2010 12:53:58 +0000";
+        NSString *dateStr = [conversationJson objectForKey:@"time"];
         
         // Convert string to date object
         NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
@@ -445,6 +444,9 @@
     
     NSNumber * isFriend = (NSNumber *)[userJson objectForKey: @"is_friend"];
     user.isFriend = (isFriend && [isFriend boolValue] == YES);
+    
+    NSNumber * isPush = (NSNumber *)[userJson objectForKey: @"push"];
+    user.push = (isPush && [isPush boolValue] == YES);
     
     if ([userJson valueForKey:@"checkin"] != nil && [userJson valueForKey:@"checkin"] != [NSNull null]) {
         NSArray * checkins = [userJson objectForKey:@"checkin"];

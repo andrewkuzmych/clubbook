@@ -12,4 +12,6 @@
 @interface SessionHelper : NSObject
 
 +(void) StoreUser:(User *)user;
++(void) DeleteUser;
+
 @end

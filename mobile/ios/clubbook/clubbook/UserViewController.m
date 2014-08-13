@@ -11,11 +11,16 @@
 #import "Cloudinary.h"
 #import "Constants.h"
 #import "ChatViewController.h"
+#import "UIButton+WebCache.h"
+#import "UIView+StringTagAdditions.h"
+#import "CSNotificationView.h"
 
 @interface UserViewController (){
     User *_user;
     float oldX;
+    float oldUserX;
 }
+
 
 @end
 
@@ -34,17 +39,7 @@
 {
     [super viewDidLoad];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSString *userId = [defaults objectForKey:@"userId"];
-        [self._manager retrieveFriend:self.userId currnetUserId:userId];
-        [self showProgress:YES title:nil];
-    });
-
-   // [self.addFriendButton setMainState:NSLocalizedString(@"Checkin", nil)];
-    
     self.connectButton.layer.borderColor = [UIColor whiteColor].CGColor;
-    
     self.nameLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:16.0];
     self.connectButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:14.0];
     self.ageLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:13.0];
@@ -53,14 +48,37 @@
     self.aboutMeTitleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:15.0];
     self.aboutMeLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12.0];
     
-    
+    [self loadUser];
     // Do any additional setup after loading the view.
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBar.translucent = YES;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBar.translucent = NO;
+    
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)loadUser
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *userId = [defaults objectForKey:@"userId"];
+        [self._manager retrieveFriend:self.userId currnetUserId:userId];
+        [self showProgress:YES title:nil];
+    });
 }
 
 - (void)didReceiveFriend:(User *)user
@@ -112,10 +130,94 @@
         
         self.imagePageView.numberOfPages = self.imageScrollView.subviews.count;
         
-        self.imageScrollView.contentSize = CGSizeMake(self.imageScrollView.frame.size.width * [user.photos count]  , self.imageScrollView.frame.size.height + 5);
+        self.imageScrollView.contentSize = CGSizeMake(self.imageScrollView.frame.size.width * [user.photos count]  , self.imageScrollView.frame.size.height + 2);
             
         _user = user;
+  
+        [self pupulateOtherUserPhotos];
+        
+        
     });
+}
+
+
+- (void)pupulateOtherUserPhotos
+{
+    if (self.currentPlace == nil) {
+        self.userPhotosScroll.hidden = YES;
+        return;
+    }
+    
+    self.userPhotosScroll.hidden = NO;
+    [[self.userPhotosScroll subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    
+    for (int i = 0; i < [self.currentPlace.users count]; i++) {
+        User *currentUser = [self.currentPlace.users  objectAtIndex:i];
+        CGFloat originX = self.userPhotosScroll.frame.size.height*i;
+        
+        UIButton *imageButton = [self setupImageButton:originX];
+        
+        // transform avatar
+        CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
+        CLTransformation *transformation = [CLTransformation transformation];
+        [transformation setParams: @{@"width": @600}];
+        
+        NSString *avatarUrl = [cloudinary url: [currentUser.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
+        
+        [imageButton setImageWithURL:[NSURL URLWithString:avatarUrl] forState:UIControlStateNormal];
+        NSString* photoId = [[self.currentPlace.users objectAtIndex:i] valueForKey:@"_id"];
+        imageButton.tag = i;
+        
+        [self.userPhotosScroll addSubview:imageButton];
+        
+        if (currentUser.isFriend) {
+            UIImageView* friendIconView = [[UIImageView alloc] initWithFrame:CGRectMake(37 + self.userPhotosScroll.frame.size.height*i, 35, 25, 25)];
+            friendIconView.image = [UIImage imageNamed:@"icon_friends.png"];
+            [self.userPhotosScroll addSubview:friendIconView];
+        }
+    }
+    
+    self.userPhotosScroll.delegate = self;
+    
+    CGSize size = CGSizeMake(self.userPhotosScroll.frame.size.height * ([self.currentPlace.users count]) + 5  , self.userPhotosScroll.frame.size.height + 5);
+    self.userPhotosScroll.contentSize = size;
+}
+
+- (void)changeSelectedImage:(UIButton*)button
+{
+    User *user = [self.currentPlace.users objectAtIndex:button.tag];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *userId = [defaults objectForKey:@"userId"];
+    if([user.id isEqualToString:userId]) {
+        // cannot see own profile :)
+        [CSNotificationView showInViewController:self
+                                       tintColor:[UIColor colorWithRed:0.000 green:0.6 blue:1.000 alpha:1]
+                                           image:nil
+                                         message:NSLocalizedString(@"cannotSeeOwnPofile", nil)
+                                        duration:kCSNotificationViewDefaultShowDuration];
+        return;
+    }
+
+    self.userId = user.id;
+    [self loadUser];
+}
+
+- (UIButton *)setupImageButton:(CGFloat)originX
+{
+    CGRect frame;
+    frame.origin.x = originX;
+    frame.origin.y = 0;
+    frame.size.height = self.userPhotosScroll.frame.size.height;
+    frame.size.width = self.userPhotosScroll.frame.size.height;
+    
+    UIButton *imageButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    imageButton.frame = frame;
+    
+    [imageButton addTarget:self action:@selector(changeSelectedImage:)
+          forControlEvents:UIControlEventTouchUpInside];
+    imageButton.imageView.contentMode = UIViewContentModeScaleAspectFill;
+    return imageButton;
 }
 
 - (void)didSendFriend:(User *)user
@@ -140,14 +242,17 @@
 #pragma mark - UIScrollView Delegate
 - (void)scrollViewDidScroll:(UIScrollView *)sender
 {
-    [self.imageScrollView setContentOffset: CGPointMake(self.imageScrollView.contentOffset.x, oldX  )];
+    if (sender == self.imageScrollView) {
+        [self.imageScrollView setContentOffset: CGPointMake(self.imageScrollView.contentOffset.x, oldX  )];
     
-    // Update the page when more than 50% of the previous/next page is visible
-    CGFloat pageWidth = self.imageScrollView.frame.size.width;
-    int page = floor((self.imageScrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-    self.imagePageView.currentPage = page;
+        // Update the page when more than 50% of the previous/next page is visible
+        CGFloat pageWidth = self.imageScrollView.frame.size.width;
+        int page = floor((self.imageScrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+        self.imagePageView.currentPage = page;
+    } else if (sender == self.userPhotosScroll){
+        [self.userPhotosScroll setContentOffset: CGPointMake(self.userPhotosScroll.contentOffset.x, oldUserX  )];
+    }
 }
-
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(NSIndexPath *)indexPath
 {

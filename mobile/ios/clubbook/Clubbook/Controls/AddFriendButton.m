@@ -82,7 +82,7 @@
     if ([state isEqualToString:NSLocalizedString(@"noneFriend", nil)]) {
         [self setTitle:@"Add Friend" forState:UIControlStateNormal];
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        normalColor = [UIColor colorWithRed:63/255.0 green:210/255.0 blue:18/255.0 alpha:1.0];
+        normalColor = [UIColor colorWithRed:65/255.0 green:20/255.0 blue:82/255.0 alpha:1.0];
         self.backgroundColor = normalColor;
         highlightedColor = [UIColor colorWithRed:115/255.0 green:178/255.0 blue:119/255.0 alpha:1.0];
      } else if ([state isEqualToString:NSLocalizedString(@"receiveRequest", nil)]){

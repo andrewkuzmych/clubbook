@@ -49,7 +49,6 @@
  
     [self.passText setDelegate:self];
 
-    
     UIToolbar *baseToolbar = [self generateToolbarForKeyboard];
     
     UIColor *placeholderColor = [UIColor colorWithRed:200/255.0 green:200/255.0 blue:200/255.0 alpha:1];
