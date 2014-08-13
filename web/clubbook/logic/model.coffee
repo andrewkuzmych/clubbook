@@ -131,6 +131,7 @@ VenueSchema = new mongoose.Schema
     lon: Number
     lat: Number
   active_checkins: {type: Number, default: 0, min: 0}
+  active_friends_checkins: {type: Number, default: 3, min: 0}
   club_working_hours: [
     {
       status: {type: String},
