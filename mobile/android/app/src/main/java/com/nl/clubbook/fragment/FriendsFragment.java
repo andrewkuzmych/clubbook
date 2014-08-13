@@ -54,6 +54,10 @@ public class FriendsFragment extends BaseFragment {
         DataStore.retrieveFriends(user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
+                if(getView() == null || isDetached()) {
+                    return;
+                }
+
                 if (failed) {
                     if (loading)
                         if (getActivity() != null)

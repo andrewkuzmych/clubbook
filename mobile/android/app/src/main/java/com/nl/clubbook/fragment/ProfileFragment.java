@@ -1,19 +1,21 @@
 package com.nl.clubbook.fragment;
 
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageSwitcher;
-import android.widget.ImageView;
+import android.widget.AbsListView;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
+import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.activity.MainActivity;
+import com.nl.clubbook.adapter.UserAvatarPagerAdapter;
 import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.datasource.UserDto;
+import com.nl.clubbook.datasource.FriendDto;
 import com.nl.clubbook.datasource.UserPhotoDto;
 import com.nl.clubbook.helper.*;
 import com.nl.clubbook.utils.L;
@@ -22,15 +24,15 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
+import java.util.HashMap;
 import java.util.List;
 
-public class ProfileFragment extends BaseFragment implements View.OnClickListener {
-    private String mProfileId;
+public class ProfileFragment extends BaseFragment implements View.OnClickListener, AbsListView.OnScrollListener {
+    private String mFriendProfileId;
 
     private ImageLoader mImageLoader;
     private DisplayImageOptions mOptions;
     private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
-    private List<UserPhotoDto> mUserPhotos;
 
     public ProfileFragment()
     {
@@ -39,7 +41,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     public ProfileFragment(BaseFragment previousFragment, String profileId) {
         super(previousFragment);
-        this.mProfileId = profileId;
+        this.mFriendProfileId = profileId;
     }
 	
 	@Override
@@ -84,10 +86,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 onAddFriendsClicked();
                 break;
             case R.id.btnChat:
-                openFragment(new ChatFragment(ProfileFragment.this, mProfileId, "Jon"));
+                openFragment(new ChatFragment(ProfileFragment.this, mFriendProfileId, "Jon"));
                 break;
             case R.id.txtBlockUser:
                 onBlockUserClicked();
+                break;
+            case R.id.txtRemoveFriend:
+                onRemoveFriendClicked();
                 break;
         }
     }
@@ -95,12 +100,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private void initLoader() {
         mImageLoader = ImageLoader.getInstance();
         mOptions = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.default_list_image)
                 .showImageForEmptyUri(R.drawable.default_list_image)
                 .showImageOnFail(R.drawable.default_list_image)
                 .cacheInMemory()
                 .cacheOnDisc()
                 .build();
+        //.showStubImage(R.drawable.default_list_image)
     }
 
     private void initActionBar() {
@@ -115,7 +120,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         }
 
         View btnChat = view.findViewById(R.id.btnChat);
-        if(mProfileId != null && mProfileId.equalsIgnoreCase(this.getSession().getUserDetails().get(SessionManager.KEY_ID))){
+        if(mFriendProfileId != null && mFriendProfileId.equalsIgnoreCase(this.getSession().getUserDetails().get(SessionManager.KEY_ID))){
             btnChat.setVisibility(View.GONE);
         } else {
             btnChat.setOnClickListener(this);
@@ -123,88 +128,35 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
         view.findViewById(R.id.txtBlockUser).setOnClickListener(this);
         view.findViewById(R.id.txtAddFriend).setOnClickListener(this);
-
-        final ImageView imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
-        final ImageSwitcher swicherAvatar = (ImageSwitcher) view.findViewById(R.id.switcherAvatar);
-        swicherAvatar.setOnTouchListener(new View.OnTouchListener() {
-            float initialX = 0f;
-            int position = 0;
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(mUserPhotos == null || mUserPhotos.size() <= 1) {
-                    return false;
-                }
-
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        initialX = event.getX();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        float finalX = event.getX();
-                        if (initialX > finalX) {
-                            swicherAvatar.setInAnimation(getActivity(), R.anim.left_in);
-                            swicherAvatar.setOutAnimation(getActivity(), R.anim.left_out);
-
-                            // next
-                            position++;
-                            if (position >= mUserPhotos.size()) {
-                                position = 0;
-                            }
-
-                            String image_url = ImageHelper.getProfileImage(mUserPhotos.get(position).getUrl());
-                            mImageLoader.displayImage(image_url, imgAvatar, mOptions, animateFirstListener);
-//                            txtImageSlider.setText(String.valueOf(position + 1) + "/" + String.valueOf(mClub.getPhotos().size())); //TODO
-
-                            swicherAvatar.showNext();
-
-                        } else {
-                            swicherAvatar.setInAnimation(getActivity(), R.anim.right_in);
-                            swicherAvatar.setOutAnimation(getActivity(), R.anim.right_out);
-
-                            // prev
-                            if (position > 0) {
-                                position = position - 1;
-                            } else {
-                                position = mUserPhotos.size() - 1;
-                            }
-
-                            String image_url = ImageHelper.getProfileImage(mUserPhotos.get(position).getUrl());
-                            mImageLoader.displayImage(image_url, imgAvatar, mOptions, animateFirstListener);
-//                            txtImageSlider.setText(String.valueOf(position + 1) + "/" + String.valueOf(mUserPhotos.size())); //TODO
-
-                            swicherAvatar.showPrevious();
-                        }
-                        break;
-                }
-                return true;
-            }
-        });
+        view.findViewById(R.id.txtRemoveFriend).setOnClickListener(this);
     }
 
     protected void loadData() {
         setRefreshing(getView(), true);
 
-        DataStore.retrieveUser(mProfileId, new DataStore.OnResultReady() {
+        final SessionManager session = new SessionManager(getActivity());
+        final HashMap<String, String> user = session.getUserDetails();
+
+        DataStore.retrieveUserFriend(user.get(SessionManager.KEY_ID), mFriendProfileId, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
-                if(getView() == null || isDetached()) {
+                if (getView() == null || isDetached()) {
+                    L.v("view == null || isDetached");
                     return;
                 }
 
                 setRefreshing(getView(), false);
                 if (failed) {
-                    //TODO
+                    showNoInternetActivity();
                     return;
                 }
 
-                fillProfile((UserDto) result);
+                fillProfile((FriendDto) result);
             }
         });
     }
 
-    private void fillProfile(UserDto profile) {
+    private void fillProfile(FriendDto profile) {
         if(profile == null) {
             L.v("profile = null");
             return;
@@ -216,16 +168,16 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             return;
         }
 
-        mUserPhotos = profile.getPhotos();
+        List<UserPhotoDto> userPhotos = profile.getPhotos();
+        if(userPhotos != null) {
+            initViewPager(view, userPhotos);
+        }
 
         // set name
         TextView txtUserName = (TextView) view.findViewById(R.id.txtUsername);
         txtUserName.setText(profile.getName());
 
-        // set avatar
-        ImageView imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
-        String image_url = ImageHelper.getProfileImage(profile.getAvatar());
-        mImageLoader.displayImage(image_url, imgAvatar, mOptions, animateFirstListener);
+        // set avatar //TODO
 
         //set user info
         TextView txtUserInfo = (TextView) view.findViewById(R.id.txtUserInfo);
@@ -235,14 +187,48 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         txtUserInfo.setText(ageToDisplay + gender);
 
         //set country
-        String country = profile.getCountry();
         TextView txtCountry = (TextView) view.findViewById(R.id.txtCountry);
-        txtCountry.setText(country != null ? country : "");
+        String country = profile.getCountry();
+        if(!TextUtils.isEmpty(country)) {
+            txtCountry.setText(country);
+        } else {
+            txtCountry.setVisibility(View.GONE);
+            view.findViewById(R.id.dividerCoutnry).setVisibility(View.GONE);
+        }
 
         //set about me
         String aboutMe = profile.getBio();
-        TextView txtAboutMe = (TextView) view.findViewById(R.id.txtAboutMe);
-        txtAboutMe.setText(aboutMe != null ? aboutMe : "");
+        if(!TextUtils.isEmpty(aboutMe)) {
+            TextView txtAboutMe = (TextView) view.findViewById(R.id.txtAboutMe);
+            txtAboutMe.setText(aboutMe);
+        } else {
+            view.findViewById(R.id.txtAboutMe).setVisibility(View.GONE);
+            view.findViewById(R.id.txtAboutMeLabel).setVisibility(View.GONE);
+            view.findViewById(R.id.dividerAboutMe).setVisibility(View.GONE);
+        }
+
+        //check is this user your friend
+        String friendStatus = profile.getFriendStatus();
+        L.v("friendStatus - " + friendStatus);
+        if(FriendDto.STATUS_FRIEND.equalsIgnoreCase(friendStatus)) {
+            view.findViewById(R.id.txtAddFriend).setVisibility(View.GONE);
+            view.findViewById(R.id.txtRemoveFriend).setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void initViewPager(View view, List<UserPhotoDto> userPhotoList) {
+        ViewPager pagerImage = (ViewPager) view.findViewById(R.id.pagerAvatars);
+        UserAvatarPagerAdapter adapter = new UserAvatarPagerAdapter(getChildFragmentManager(), userPhotoList, mImageLoader, mOptions, animateFirstListener);
+        pagerImage.setAdapter(adapter);
+
+        for(int i = 0; i < userPhotoList.size(); i++) {
+            UserPhotoDto userPhoto = userPhotoList.get(i);
+            if(userPhoto.getIsAvatar()) {
+                pagerImage.setCurrentItem(i, false);
+            }
+        }
+
+        //TODO implement page change listener
     }
 
     private void setRefreshing(View view, boolean isRefreshing) {
@@ -258,10 +244,68 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void onAddFriendsClicked() {
-        //TODO
+        final SessionManager session = new SessionManager(getActivity());
+        final HashMap<String, String> user = session.getUserDetails();
+
+        ((BaseActivity) getActivity()).showProgress("Loading...");
+
+        DataStore.addFriendRequest(user.get(SessionManager.KEY_ID), mFriendProfileId, new DataStore.OnResultReady() {
+            @Override
+            public void onReady(Object result, boolean failed) {
+                View view = getView();
+                if(view == null || isDetached()) {
+                    return;
+                }
+
+                if (failed) {
+                    ((BaseActivity) getActivity()).hideProgress(false);
+                } else {
+                    ((BaseActivity) getActivity()).hideProgress(true);
+
+                    view.findViewById(R.id.txtAddFriend).setVisibility(View.GONE);
+                    view.findViewById(R.id.txtRemoveFriend).setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     private void onBlockUserClicked() {
         //TODO
+    }
+
+    private void onRemoveFriendClicked() {
+        final SessionManager session = new SessionManager(getActivity());
+        final HashMap<String, String> user = session.getUserDetails();
+
+        ((BaseActivity) getActivity()).showProgress("Loading...");
+
+        DataStore.removeFriendRequest(user.get(SessionManager.KEY_ID), mFriendProfileId, new DataStore.OnResultReady() {
+            @Override
+            public void onReady(Object result, boolean failed) {
+                View view = getView();
+                if(view == null || isDetached()) {
+                    return;
+                }
+
+                if (failed) {
+                    ((BaseActivity) getActivity()).hideProgress(true);
+                } else {
+                    ((BaseActivity) getActivity()).hideProgress(false);
+
+                    view.findViewById(R.id.txtAddFriend).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.txtRemoveFriend).setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
     }
 }

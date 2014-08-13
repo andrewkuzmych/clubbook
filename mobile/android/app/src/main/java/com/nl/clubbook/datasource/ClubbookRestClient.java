@@ -3,6 +3,7 @@ package com.nl.clubbook.datasource;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.nl.clubbook.utils.L;
 
 /**
  * Created by Andrew on 5/19/2014.
@@ -53,8 +54,20 @@ public class ClubbookRestClient {
         client.get(getBcAbsoluteUrl("user/by_id/" + user_id), params, responseHandler);
     }
 
+    public static void retrieveUserFriend(String userId, String friendId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("user/by_id/" + friendId + "/" + userId), params, responseHandler);
+    }
+
     public static void retrieveFriends(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getBcAbsoluteUrl("obj/user/" + user_id + "/friends"), params, responseHandler);
+    }
+
+    public static void addFriend(String userId, String friendId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/user/" + userId + "/friends/" + friendId + "/friend"), params, responseHandler);
+    }
+
+    public static void removeFriend(String userId, String friendId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/user/" + userId + "/friends/" + friendId + "/remove"), params, responseHandler);
     }
 
     //list_club/:distance/:user_lat/:user_lon
@@ -63,6 +76,7 @@ public class ClubbookRestClient {
     }
 
     public static void retrievePlace(String place_id, String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        L.v("retrievePlacesUrl - " + getBcAbsoluteUrl("find_club/" + place_id + "/" + user_id));
         client.get(getBcAbsoluteUrl("find_club/" + place_id + "/" + user_id), params, responseHandler);
     }
 

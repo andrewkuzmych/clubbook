@@ -11,10 +11,10 @@ public class UserPhotoDto {
     private String url;
     private Boolean isAvatar;
 
-    UserPhotoDto(JSONObject rawData) throws JSONException {
-        this.setId(rawData.getString("_id"));
-        this.setUrl(rawData.getString("url"));
-        this.setIsAvatar(rawData.getBoolean("profile"));
+    UserPhotoDto(JSONObject rawData) {
+        this.setId(rawData.optString("_id"));
+        this.setUrl(rawData.optString("url"));
+        this.setIsAvatar(rawData.optBoolean("profile"));
     }
 
     public Boolean getIsAvatar() {

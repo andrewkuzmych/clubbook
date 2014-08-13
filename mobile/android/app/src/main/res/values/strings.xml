@@ -72,6 +72,7 @@
     <string name="about_me">About Me</string>
     <string name="about_me_test">About Me \nAbout Me \nAbout Me  \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me</string>
     <string name="block_user">Block \nUser</string>
+    <string name="remove_friend">Remove \nFriend</string>
     <string name="sing_up">Sign Up</string>
 
 </resources>

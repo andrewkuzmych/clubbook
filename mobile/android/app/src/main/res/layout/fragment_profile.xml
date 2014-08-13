@@ -16,24 +16,15 @@
             android:layout_height="wrap_content"
             android:background="@color/bg_screen_grey_light">
 
-            <ImageSwitcher
-                android:id="@+id/switcherAvatar"
-                android:layout_width="fill_parent"
-                android:layout_height="230dp">
-
-                <ImageView
-                    android:id="@+id/imgAvatar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/test_avatar"/>
-
-            </ImageSwitcher>
+            <com.nl.clubbook.ui.view.CustomViewPager
+                android:id="@+id/pagerAvatars"
+                android:layout_width="match_parent"
+                android:layout_height="230dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/switcherAvatar"
+                android:layout_below="@+id/pagerAvatars"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -103,11 +94,13 @@
                     android:textSize="@dimen/text_size_medium" />
 
                 <View
+                    android:id="@+id/dividerCoutnry"
                     android:layout_width="fill_parent"
                     android:layout_height="1dp"
                     android:background="@color/divider_color" />
 
                 <TextView
+                    android:id="@+id/txtAboutMeLabel"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/white"
@@ -132,23 +125,50 @@
                     android:textSize="@dimen/text_size_small" />
 
                 <View
+                    android:id="@+id/dividerAboutMe"
                     android:layout_width="fill_parent"
                     android:layout_height="1dp"
                     android:background="@color/divider_color" />
 
-                <TextView
-                    android:id="@+id/txtBlockUser"
-                    android:layout_width="fill_parent"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/white"
-                    android:drawableLeft="@drawable/ic_action_bad"
-                    android:drawablePadding="16dp"
-                    android:gravity="center_vertical"
-                    android:minHeight="48dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:text="@string/block_user"
-                    android:textSize="@dimen/text_size_small" />
+                    android:orientation="horizontal"
+                    android:background="@android:color/white" >
+
+                    <TextView
+                        android:id="@+id/txtBlockUser"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_action_bad"
+                        android:drawablePadding="16dp"
+                        android:gravity="center_vertical"
+                        android:minHeight="48dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:text="@string/block_user"
+                        android:textSize="@dimen/text_size_small" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/txtRemoveFriend"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_action_bad"
+                        android:drawablePadding="16dp"
+                        android:gravity="center_vertical|right"
+                        android:minHeight="48dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:text="@string/remove_friend"
+                        android:textSize="@dimen/text_size_small"
+                        android:visibility="visible"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -157,7 +177,7 @@
                 style="@style/chat_button"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
-                android:layout_below="@+id/switcherAvatar"
+                android:layout_below="@+id/pagerAvatars"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="-40dp"
                 android:background="@drawable/chat_button"

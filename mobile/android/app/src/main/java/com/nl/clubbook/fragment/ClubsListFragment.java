@@ -57,7 +57,6 @@ public class ClubsListFragment extends BaseFragment implements AdapterView.OnIte
     public void onPause() {
         super.onPause();
 
-        //TODO need explanation
         try {
             index = mClubList.getFirstVisiblePosition();
             View v = mClubList.getChildAt(0);
@@ -149,7 +148,6 @@ public class ClubsListFragment extends BaseFragment implements AdapterView.OnIte
         Location currentLocation = LocationCheckinHelper.getCurrentLocation();
         if(currentLocation == null) {
             L.v("Location is empty");
-            //TODO finish this
             return;
         }
 
