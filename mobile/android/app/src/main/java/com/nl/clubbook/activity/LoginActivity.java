@@ -2,9 +2,8 @@ package com.nl.clubbook.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
@@ -15,39 +14,35 @@ import com.nl.clubbook.helper.Validator;
  * Created by Andrew on 5/26/2014.
  */
 public class LoginActivity extends BaseActivity {
-    EditText txtUsername, txtPassword;
-    TextView email_label;
-    TextView pass_label;
-    Button btnLogin;
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-        init();
 
-        // Email, Password input text
-        email_label = (TextView) findViewById(R.id.email_label);
-        email_label.setTypeface(typeface_bold);
-        pass_label = (TextView) findViewById(R.id.pass_label);
-        pass_label.setTypeface(typeface_bold);
-        txtUsername = (EditText) findViewById(R.id.txtUsername);
-        txtUsername.setTypeface(typeface_regular);
-        txtPassword = (EditText) findViewById(R.id.txtPassword);
-        txtPassword.setTypeface(typeface_regular);
-        setHandlers();
+        initActionBar(R.string.log_in);
+        initView();
     }
 
-    private void setHandlers() {
-        // Login button
-        btnLogin = (Button) findViewById(R.id.btnLogin);
-        btnLogin.setTypeface(typeface_bold);
-        // Login button click event
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initView() {
+        findViewById(R.id.btnLogin).setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
-                // Get username, password from EditText
-                String email = txtUsername.getText().toString().trim();
+                TextView txtUserName = (TextView) findViewById(R.id.txtUsername);
+                TextView txtPassword = (TextView) findViewById(R.id.txtPassword);
+
+                String email = txtUserName.getText().toString().trim();
                 String password = txtPassword.getText().toString().trim();
 
                 if (!Validator.isEmailValid(email)) {
@@ -60,6 +55,7 @@ public class LoginActivity extends BaseActivity {
                     return;
                 }
 
+                //login request
                 showProgress("Loading...");
                 DataStore.loginByEmail(email, password, new DataStore.OnResultReady() {
                     @Override
@@ -83,8 +79,6 @@ public class LoginActivity extends BaseActivity {
                         }
                     }
                 });
-
-
             }
         });
     }

@@ -29,7 +29,7 @@
         
         CALayer * layer = [self layer];
         [layer setMasksToBounds:YES];
-        [layer setCornerRadius:6]; //when radius is 0, the border is a rectangle
+        [layer setCornerRadius:16]; //when radius is 0, the border is a rectangle
         [layer setBorderWidth:1.0];
         [layer setBorderColor:[[UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1] CGColor]];
 
@@ -40,9 +40,10 @@
 
 - (void) setMainState:(NSString*) text
 {
-    normalColor = [UIColor colorWithRed:63/255.0 green:210/255.0 blue:18/255.0 alpha:1.0];
+    //normalColor = [UIColor colorWithRed:63/255.0 green:210/255.0 blue:18/255.0 alpha:1.0];
+    normalColor = [UIColor colorWithRed:65/255.0 green:20/255.0 blue:82/255.0 alpha:1.0];
     self.backgroundColor = normalColor;
-    highlightedColor = [UIColor colorWithRed:115/255.0 green:178/255.0 blue:119/255.0 alpha:1.0];
+    highlightedColor = [UIColor colorWithRed:41/255.0 green:13/255.0 blue:52/255.0 alpha:1.0];
 
     [self setTitle:text forState:UIControlStateNormal];
     self.isCheckin = NO;

@@ -2,6 +2,7 @@ package com.nl.clubbook;
 
 import android.app.Application;
 import com.facebook.SessionLoginBehavior;
+import com.nl.clubbook.helper.FontHelper;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -45,5 +46,7 @@ public class ClubbookApplication extends Application {
                 .build();
 
         SimpleFacebook.setConfiguration(configuration);
+
+        FontHelper.init(getApplicationContext());
     }
 }

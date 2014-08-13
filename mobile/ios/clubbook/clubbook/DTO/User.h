@@ -24,5 +24,6 @@
 @property (strong, nonatomic) NSString *currentCheckinClubName;
 @property (strong, nonatomic) NSMutableArray *photos;
 @property (assign, nonatomic) BOOL isFriend;
+@property (assign, nonatomic) BOOL push;
 
 @end

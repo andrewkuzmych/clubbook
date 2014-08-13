@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">clubbook</string>
-    <string name="login_fb">login with Facebook</string>
-    <string name="sign_up_by_email">sign up with email</string>
+    <string name="sing_in_with_facebook">Sing In with Facebook</string>
+    <string name="sign_up_by_email">Sign Up with Email</string>
     <string name="splash_intro">getting social in the club</string>
     <string name="terms">by signing into <a href="http://clubbook.com/">clubbook</a> you agree to the <a href="http://clubbook.com/">terms of use</a></string>
     <string name="fb_app_id">1504805883074351</string>
@@ -34,9 +34,8 @@
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>
 
-    <string name="email">email</string>
-    <string name="password">password</string>
-    <string name="login">login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
     <string name="name_reg">Name (min 2)</string>
     <string name="city_reg">your city</string>
     <string name="pass_reg">Password (min 6)</string>
@@ -59,12 +58,20 @@
     <string name="email_exists">This email already exists</string>
 
     <string name="has_account">Already has an account?</string>
-    <string name="login_by_email">login</string>
+    <string name="log_in">Log In</string>
     <string name="km">km</string>
     <string name="m">m</string>
 
     <string name="checkin">Check in</string>
     <string name="checkout">Check out</string>
     <string name="club_avatar_content_description">club avatar</string>
+
+    <!--New-->
+    <string name="add_friend">Add Friend</string>
+    <string name="chat">Chat</string>
+    <string name="about_me">About Me</string>
+    <string name="about_me_test">About Me \nAbout Me \nAbout Me  \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me</string>
+    <string name="block_user">Block \nUser</string>
+    <string name="sing_up">Sign Up</string>
 
 </resources>

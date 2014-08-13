@@ -137,6 +137,7 @@
     }
     
     cell.actionView.hidden = isFriends;
+    cell.nextImage.hidden = !isFriends;
     
     [cell.acceptButton setTag:indexPath.row];
     [cell.deleteButton setTag:indexPath.row];

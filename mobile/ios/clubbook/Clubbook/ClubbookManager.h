@@ -60,6 +60,8 @@
 
 - (void)deleteUserImage:(NSString *) userId objectId:(NSString *) objectId;
 
+- (void)changeUserPush:(NSString *) userId push:(BOOL) push;
+
 - (void)updateUser:(NSString *) userId name:(NSString *) name gender:(NSString *) gender  dob:(NSString *) dob country:(NSString *) country bio:(NSString *) bio;
 
 - (void)sendFriendReguest:(NSString *) userId friendId:(NSString *) friendId;

@@ -1,76 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-    <ScrollView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/main_background_color"
+        android:baselineAligned="false"
+        android:orientation="vertical"
+        android:padding="10dip">
+
+        <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="10dip" android:baselineAligned="false">
+            <ImageView
+                android:id="@+id/imgAvatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/test_avatar"
+                android:scaleType="centerCrop" />
 
-            <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent">
-                <ImageButton android:id="@+id/avatar_btn"
-                             android:layout_width="100dp" android:adjustViewBounds="true"
-                             android:layout_height="100dp" android:scaleType="fitCenter"
-                             android:background="@drawable/test_avatar"/>
+            <com.nl.clubbook.ui.view.TitilliumRegularEditText
+                android:id="@+id/editName"
+                style="@style/default_text_input"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/imgAvatar"
+                android:hint="@string/name_reg"
+                android:inputType="text" />
+        </RelativeLayout>
 
-                <!-- Name Label -->
+        <com.nl.clubbook.ui.view.TitilliumRegularEditText
+            android:id="@+id/editEmail"
+            style="@style/default_text_input"
+            android:layout_marginBottom="5dip"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress" />
 
-                <!-- Name input text -->
-                <EditText android:id="@+id/name_text" android:inputType="text"
-                          style="@style/default_text_input"
-                    android:hint="@string/name_reg"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/avatar_btn" />
-            </RelativeLayout>
+        <com.nl.clubbook.ui.view.TitilliumRegularEditText
+            android:id="@+id/editPassword"
+            style="@style/default_text_input"
+            android:layout_marginBottom="5dip"
+            android:hint="@string/pass_reg"
+            android:password="true" />
 
-            <!-- Email input text -->
-            <EditText android:id="@+id/email_text" android:inputType="textEmailAddress"
-                      style="@style/default_text_input"
-                      android:layout_marginBottom="5dip"
-                android:hint="@string/email" />
+        <com.nl.clubbook.ui.view.TitilliumRegularEditText
+            android:id="@+id/editBirthday"
+            style="@style/default_text_input"
+            android:layout_marginBottom="5dip"
+            android:clickable="true"
+            android:editable="true"
+            android:focusable="false"
+            android:hint="@string/dob"
+            android:inputType="date" />
 
-            <!-- Password Label -->
+        <Spinner
+            android:id="@+id/spinGender"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginBottom="5dip"
+            android:focusable="true"
+            android:minHeight="48dp" />
 
-            <!-- Password input text -->
-            <EditText android:id="@+id/password_text" android:password="true"
-                      style="@style/default_text_input"
-                      android:layout_marginBottom="5dip"
-                android:hint="@string/pass_reg" />
+        <Spinner
+            android:id="@+id/spinCountry"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginBottom="5dip"
+            android:focusable="true"
+            android:minHeight="48dp"/>
 
-            <!-- Birthday Label -->
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
-            <!-- Birthday input text -->
-            <EditText android:id="@+id/dob_text" android:inputType="date"
-                      style="@style/default_text_input"
-                      android:layout_marginBottom="5dip"
-                      android:focusable="false" android:editable="true" android:clickable="true"
-                android:hint="@string/dob" />
-
-            <Spinner
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dip"
-                    android:id="@+id/gender" android:layout_gravity="left|center_vertical" android:focusable="true"/>
-
-            <Spinner
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dip"
-                    android:id="@+id/country" android:layout_gravity="left|center_vertical" android:focusable="true"/>
-
-            <Button android:id="@+id/reg_btn"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/register" android:background="@drawable/main_button"
-                    style="@style/default_button" android:layout_marginTop="10dp"/>
-
-        </LinearLayout>
-    </ScrollView>
-
-</RelativeLayout>
+        <com.nl.clubbook.ui.view.TitilliumRegularTextView
+            android:id="@+id/btnRegister"
+            style="@style/default_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/main_button"
+            android:text="@string/register"
+            android:gravity="center"/>
+    </LinearLayout>
+</ScrollView>

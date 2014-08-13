@@ -1,13 +1,11 @@
 package com.nl.clubbook.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.ImageHelper;
@@ -22,21 +20,17 @@ import java.util.List;
 /**
  * Created by Andrew on 6/2/2014.
  */
-public class ProfileAdapter extends ArrayAdapter<UserDto> {
-    private Context context;
-    private int layoutResourceId;
-    private List<UserDto> data = new ArrayList<UserDto>();
+public class ProfileAdapter extends BaseAdapter {
+    private List<UserDto> mUsers = new ArrayList<UserDto>();
     private ImageLoader imageLoader;
     private DisplayImageOptions options;
     private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
+    private LayoutInflater mInflater;
 
 
-    public ProfileAdapter(Context context, int layoutResourceId,
-                          List<UserDto> data) {
-        super(context, layoutResourceId, data);
-        this.layoutResourceId = layoutResourceId;
-        this.context = context;
-        this.data = data;
+    public ProfileAdapter(Context context, List<UserDto> users) {
+        mInflater = LayoutInflater.from(context);
+        this.mUsers = users;
 
         imageLoader = ImageLoader.getInstance();
         options = new DisplayImageOptions.Builder()
@@ -50,32 +44,49 @@ public class ProfileAdapter extends ArrayAdapter<UserDto> {
     }
 
     @Override
+    public int getCount() {
+        return mUsers.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return mUsers.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return -1;
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         ViewHolder holder = null;
 
         if (row == null) {
-            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            row = inflater.inflate(layoutResourceId, parent, false);
+            row = mInflater.inflate(R.layout.profile_item, parent, false);
             holder = new ViewHolder();
             holder.image = (ImageView) row.findViewById(R.id.image);
-            holder.userId = (TextView) row.findViewById(R.id.user_id);
+            holder.userId = row.findViewById(R.id.userId);
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
         }
 
-        UserDto item = data.get(position);
-        String image_url = ImageHelper.getUserListAvatar(item.getAvatar());
-        holder.image.setTag(image_url);
-        holder.userId.setText(item.getId());
-        imageLoader.displayImage(image_url, holder.image, options, animateFirstListener);
+        fillView(holder, mUsers.get(position));
 
         return row;
     }
 
+    private void fillView(ViewHolder holder, UserDto item) {
+        String image_url = ImageHelper.getUserListAvatar(item.getAvatar());
+        holder.image.setTag(image_url);
+        holder.userId.setTag(item.getId());
+        imageLoader.displayImage(image_url, holder.image, options, animateFirstListener);
+    }
+
     static class ViewHolder {
-        TextView userId;
+        View userId;
         ImageView image;
     }
 }

@@ -16,8 +16,7 @@ public class NoInternetActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.no_internet);
 
-        Button retry_button = (Button) findViewById(R.id.retry_button);
-        retry_button.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.retry_button).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(i);

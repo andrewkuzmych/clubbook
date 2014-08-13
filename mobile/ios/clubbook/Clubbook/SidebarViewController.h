@@ -10,5 +10,8 @@
 #import "BaseTableViewController.h"
 
 @interface SidebarViewController : BaseTableViewController
+- (IBAction)checkinClubAction:(id)sender;
+
+- (IBAction)checkoutClubAction:(id)sender;
 
 @end

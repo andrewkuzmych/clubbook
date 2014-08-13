@@ -60,6 +60,8 @@
 
 - (void)updateUser:(NSString *) userId name:(NSString *) name gender:(NSString *) gender  dob:(NSString *) dob country:(NSString *) country bio:(NSString *) bio;
 
+- (void)changeUserPush:(NSString *) userId push:(BOOL) push;
+
 - (void)sendFriendRequest:(NSString *) userId friendId:(NSString *) friendId;
 
 - (void)confirmFriendRequest:(NSString *) userId friendId:(NSString *) friendId;

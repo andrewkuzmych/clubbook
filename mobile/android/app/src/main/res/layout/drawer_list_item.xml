@@ -1,54 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" style="@style/FragmentTheme">
+    android:layout_height="wrap_content"
+    android:background="@color/main_background_color">
 
-    <RelativeLayout android:id="@+id/profile"
-                    android:layout_width="fill_parent"
-                    android:layout_height="80dp" android:layout_centerHorizontal="true">
+    <RelativeLayout
+        android:id="@+id/profile"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true">
+
         <ImageView
-                android:id="@+id/profile_image"
-                android:src="@drawable/smile"
-                android:layout_width="70dp"
-                android:layout_height="70dp" android:layout_alignParentLeft="true"
-                android:layout_margin="5dp" android:layout_centerVertical="true" android:scaleType="fitCenter"/>
+            android:id="@+id/profile_image"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="5dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/smile" />
 
         <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" android:layout_alignParentTop="true" android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/profile_image" android:gravity="center_vertical">
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/profile_image"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
             <TextView
-                    android:id="@+id/profile_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="John"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" android:layout_centerVertical="true" android:layout_alignLeft="@+id/textView"/>
+                android:id="@+id/profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/textView"
+                android:layout_centerVertical="true"
+                android:text="John"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"/>
+
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="18, male"
-                    android:id="@+id/profile_age_gender" android:layout_below="@+id/profile_name"
-                    android:layout_toRightOf="@+id/profile_image"/>
+                android:id="@+id/profile_age_gender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/profile_name"
+                android:layout_toRightOf="@+id/profile_image"
+                android:text="18, male"
+                android:textColor="@android:color/white"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
     </RelativeLayout>
 
-    <RelativeLayout android:id="@+id/menu_item"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:visibility="gone">
+    <RelativeLayout
+        android:id="@+id/menu_item"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:visibility="gone">
+
         <ImageView
             android:id="@+id/icon"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
             android:contentDescription="@string/desc_list_item_icon"
-            android:src="@drawable/ic_pages"
-            android:layout_centerVertical="true" />
+            android:src="@drawable/ic_pages" />
 
         <TextView
             android:id="@+id/title"
@@ -56,18 +75,20 @@
             android:layout_height="match_parent"
             android:layout_toRightOf="@id/icon"
             android:gravity="center_vertical"
-            android:paddingRight="40dp"/>
+            android:paddingRight="40dp"
+            android:textColor="@android:color/white" />
 
-        <TextView android:id="@+id/counter"
+        <TextView
+            android:id="@+id/counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/counter_bg"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="8dp"
+            android:background="@drawable/counter_bg"
             android:text=""
-            android:textSize="16dp"
-            android:textColor="@color/counter_text_color"/>
+            android:textColor="@color/counter_text_color"
+            android:textSize="16dp" />
 
     </RelativeLayout>
 </RelativeLayout>

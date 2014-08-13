@@ -98,6 +98,11 @@
     [self.communicator addUserImage:userId avatar:avatar];
 }
 
+- (void)changeUserPush:(NSString *) userId push:(BOOL) push
+{
+    [self.communicator changeUserPush:userId push:push];
+}
+
 - (void)updateUserImage:(NSString *) userId objectId:(NSString *) objectId
 {
     [self.communicator updateUserImage:userId objectId:objectId];
@@ -153,6 +158,19 @@
         
     } else {
         [self.delegate didRetrieveFriends:friends];
+    }
+}
+
+- (void)changeUserPushJSON:(NSData *)objectNotation
+{
+    NSError *error = nil;
+    User *user = [ObjectBuilder userFromJSON:objectNotation error:&error];
+    
+    if (error != nil) {
+        [self.delegate  failedWithError:error];
+        
+    } else {
+        [self.delegate didChangePush:user];
     }
 }
 

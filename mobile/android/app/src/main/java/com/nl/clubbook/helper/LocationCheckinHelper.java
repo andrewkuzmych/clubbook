@@ -8,6 +8,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.activity.MainLoginActivity;
@@ -46,8 +47,9 @@ public class LocationCheckinHelper {
     }
 
     public static Location getCurrentLocation() {
-        if (currentLocation == null)
-            throw new RuntimeException("Current location is empty");
+        //TODO
+//        if (currentLocation == null)
+//            throw new RuntimeException("Current location is empty");
         return currentLocation;
     }
 
@@ -80,10 +82,11 @@ public class LocationCheckinHelper {
      * @return
      */
     public static boolean canCheckinHere(ClubDto club) {
-        if (club == null)
+        if (club == null || currentLocation == null) {//TODO
             return false;
+        }
 
-        Double distance = distanceBwPoints(getCurrentLocation().getLatitude(), getCurrentLocation().getLongitude(), club.getLat(), club.getLon());
+        Double distance = distanceBwPoints(currentLocation.getLatitude(), currentLocation.getLongitude(), club.getLat(), club.getLon());
 
         return distance < MAX_RADIUS;
     }
@@ -97,7 +100,7 @@ public class LocationCheckinHelper {
      */
     public static void checkin(final Context context, final ClubDto club, final CheckInOutCallbackInterface callback) {
         // location validation
-        final Location current_location = getCurrentLocation();
+        final Location current_location = getCurrentLocation(); //TODO
         double distance = distanceBwPoints(current_location.getLatitude(), current_location.getLongitude(), club.getLat(), club.getLon());
         if (distance > MAX_RADIUS) {
             callback.onCheckInOutFinished(false);
@@ -182,7 +185,7 @@ public class LocationCheckinHelper {
         scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
         scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
             public void run() {
-                final Location current_location = getCurrentLocation();
+                final Location current_location = getCurrentLocation(); //TODO
                 final double distance = distanceBwPoints(current_location.getLatitude(), current_location.getLongitude(),
                         getCurrentClub().getLat(), getCurrentClub().getLon());
 
@@ -257,7 +260,7 @@ public class LocationCheckinHelper {
      */
     public static float calculateDistance(double lat, double lon) {
         float distanceBtwPoints = 0;
-        Location current_location = getCurrentLocation();
+        Location current_location = getCurrentLocation(); //TODO
         if (current_location != null) {
             double mLat = current_location.getLatitude();
             double mLong = current_location.getLongitude();
@@ -332,8 +335,8 @@ public class LocationCheckinHelper {
     }
 
     private static void showLocationErrorView(final Context application) {
-        Intent i = new Intent(application, NoLocationActivity.class);
-        application.startActivity(i);
+        Intent intent = new Intent(application, NoLocationActivity.class);
+        application.startActivity(intent);
         ((BaseActivity) application).finish();
     }
 

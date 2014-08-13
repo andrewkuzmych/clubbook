@@ -38,6 +38,11 @@ static Place * clubCheckin;
     }
 }
 
++ (Place *) getCheckinClub
+{
+    return clubCheckin;
+}
+
 + (BOOL) isCheckinHere:(Place *) club
 {
     if(clubCheckin == nil || club == nil) {

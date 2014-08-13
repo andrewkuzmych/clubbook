@@ -41,6 +41,7 @@
   - (void)didConfirmFriend:(User *)user;
   - (void)didRemoveFriend:(User *)user;
   - (void)didRemoveFriendRequest:(User *)user;
+  - (void)didChangePush:(User *)user;
 
   - (void)failedWithError:(NSError *)error;
 

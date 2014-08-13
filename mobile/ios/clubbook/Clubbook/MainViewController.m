@@ -236,6 +236,7 @@
         //NSIndexPath *selectedIndexPath = [self.clubTable indexPathForSelectedRow];
         Place *place = (Place*) sender;
         clubController.placeId = place.id;
+        clubController.hasBack = YES;
         self.isLoaded = NO;
     }
 }

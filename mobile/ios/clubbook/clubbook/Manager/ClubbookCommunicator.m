@@ -133,6 +133,34 @@
 
 }
 
+- (void)changeUserPush:(NSString *) userId push:(BOOL) push
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@", baseURL, userId];
+        NSDictionary * data  =
+        [NSDictionary
+         dictionaryWithObjectsAndKeys:
+         (push) ? @"true" : @"false", @"push_not",
+         nil];
+        
+        NSMutableURLRequest *request;
+        request = [self generateRequest:data url:urlAsString method:@"PUT"];
+        
+        [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            
+            if (error) {
+                [self.delegate failedWithError:error];
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.delegate changeUserPushJSON:data];
+                });
+            }
+        }];
+    });
+
+}
+
 - (void)updateUser:(NSString *) userId name:(NSString *) name gender:(NSString *) gender  dob:(NSString *) dob country:(NSString *) country bio:(NSString *) bio;
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

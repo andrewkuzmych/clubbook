@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.nl.clubbook.R;
 
@@ -17,39 +17,39 @@ import java.util.List;
  */
 public class UiHelper {
     public static void changeCheckinState(Context context, View view, boolean checkin) {
-        Button button = (Button) view;
+        TextView button = (TextView) view;
         if (checkin) {
-            button.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.checkin_button));
+            view.setBackgroundResource(R.drawable.checkin_button);
             button.setText(context.getResources().getString(R.string.checkin));
         } else {
-            button.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.checkout_button));
+            button.setBackgroundResource(R.drawable.checkout_button);
             button.setText(context.getResources().getString(R.string.checkout));
         }
     }
 
-    public static Spinner createGenderSpinner(Spinner gender_spinner, Context context, String activeItem) {
+    public static Spinner createGenderSpinner(Spinner spinGender, Context context, String activeItem) {
         final TextValuePair items[] = new TextValuePair[2];
         items[0] = new TextValuePair("Male", "male");
         items[1] = new TextValuePair("Female", "female");
         ArrayAdapter<TextValuePair> adapter = new ArrayAdapter<TextValuePair>(
                         context,
-                        android.R.layout.simple_spinner_item,
+                        R.layout.simple_spinner_item,
                         items);
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.simple_spinner_item);
 
-        gender_spinner.setAdapter(adapter);
+        spinGender.setAdapter(adapter);
 
         if(activeItem.equalsIgnoreCase("male")) {
-            gender_spinner.setSelection(adapter.getPosition(items[0]));
+            spinGender.setSelection(adapter.getPosition(items[0]));
         } else {
-            gender_spinner.setSelection(adapter.getPosition(items[1]));
+            spinGender.setSelection(adapter.getPosition(items[1]));
         }
 
-        return gender_spinner;
+        return spinGender;
     }
 
-    public static Spinner createCountrySpinner(Spinner country_spinner, Context context, String activeItem) {
+    public static Spinner createCountrySpinner(Spinner spinCountry, Context context, String activeItem) {
         Resources res = context.getResources();
         String[] countries = res.getStringArray(R.array.countries_array);
         final List<TextValuePair> items =  new ArrayList<TextValuePair>();
@@ -59,20 +59,20 @@ public class UiHelper {
 
         ArrayAdapter<TextValuePair> adapter = new ArrayAdapter<TextValuePair>(
                         context,
-                        android.R.layout.simple_spinner_item,
+                        R.layout.simple_spinner_item,
                         items);
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.simple_spinner_item);
 
-        country_spinner.setAdapter(adapter);
+        spinCountry.setAdapter(adapter);
 
         for(TextValuePair country : items){
             if(country.getValue().equalsIgnoreCase(activeItem)) {
-                country_spinner.setSelection(adapter.getPosition(country));
+                spinCountry.setSelection(adapter.getPosition(country));
             }
         }
 
-        return country_spinner;
+        return spinCountry;
     }
 
     public static class TextValuePair {
