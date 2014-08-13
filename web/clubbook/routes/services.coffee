@@ -326,11 +326,16 @@ exports.friends_unfriend = (req, res)->
     db_model.User.findById(req.params.objectId).exec (err, user)->
       user.friends = __.filter user.friends, (friend)-> friend.toString() isnt req.params.friendId
       user.save ()->
-        res.json
-          status: "ok"
-          result:
-            message: "friend request"
-            _temp_user: user
+
+        db_model.User.findById(req.params.friendId).exec (err, user_friend)->
+          user_friend.friends = __.filter user_friend.friends, (friend)-> friend.toString() isnt user._id.toString()
+          user_friend.save ()->
+
+            res.json
+              status: "ok"
+              result:
+                message: "friend request"
+                _temp_user: user
 
 exports.friends_remove_request = (req, res)->
   if req.params.objectId is req.params.friendId
