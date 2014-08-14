@@ -20,6 +20,6 @@
 + (NSString*) PubnabSubKay
 { @synchronized(self) { return @"sub-c-f56b81f4-ed0a-11e3-8a10-02ee2ddab7fe";}}
 
-+ (int) MaxCheckinRadius
-{ @synchronized(self) { return 10000; } }
+//+ (int) MaxCheckinRadius
+//{ @synchronized(self) { return 10000; } }
 @end

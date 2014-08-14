@@ -13,6 +13,6 @@
 + (NSString*) PubnabPubKay;
 + (NSString*) PubnabSubKay;
 
-+ (int) MaxCheckinRadius;
+//+ (int) MaxCheckinRadius;
 //+ (void) setValue:(int)val;
 @end

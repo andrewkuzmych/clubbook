@@ -15,6 +15,9 @@ default:
   pub_subscribe_key: "sub-c-f56b81f4-ed0a-11e3-8a10-02ee2ddab7fe"
   parse_app_id: "71OeWikSy4nxlGuefO2O6AFhuENP2Nqz1fjB88x3"
   parse_js_key: "LPYp2J4erP3V8A9KpmXhfbxAmcHjVfoxU9CLOfqU"
+  chekin_max_distance: 5000
+  max_failed_checkin_count: 3
+  update_checkin_status_interval: 600 #10*60
 
 production:
   db:
@@ -25,3 +28,6 @@ production:
   pub_subscribe_key: "sub-c-f56b81f4-ed0a-11e3-8a10-02ee2ddab7fe"
   parse_app_id: "71OeWikSy4nxlGuefO2O6AFhuENP2Nqz1fjB88x3"
   parse_js_key: "LPYp2J4erP3V8A9KpmXhfbxAmcHjVfoxU9CLOfqU"
+  chekin_max_distance: 5000
+  max_failed_checkin_count: 3
+  update_checkin_status_interval: 600 #10*60

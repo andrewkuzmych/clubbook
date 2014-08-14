@@ -359,9 +359,9 @@ exports.get_config = (req, res)->
   res.json
     status: "ok"
     result:
-      chekin_max_distance: 1000
-      max_failed_checkin_count: 3
-      update_checkin_status_interval: 10*60
+      chekin_max_distance: config.chekin_max_distance
+      max_failed_checkin_count: config.max_failed_checkin_count
+      update_checkin_status_interval: config.update_checkin_status_interval
 
 exports.uploadphoto = (req, res)->
   params =

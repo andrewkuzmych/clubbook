@@ -78,5 +78,6 @@
 "not_checked_in" = "not checked in";
 "checked_in" = "checked in:";
 "chat_limit" = "You cannot send more than 2 messages without reply";
+"checkin_distance" = "You need to be within %d meters to checkin";
 
 

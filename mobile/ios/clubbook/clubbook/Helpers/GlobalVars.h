@@ -10,10 +10,14 @@
 #import <CoreLocation/CoreLocation.h>
 
 @interface GlobalVars : NSObject {
-    //CLLocation* location;
+    int MaxCheckinRadius;
+    int MaxFailedCheckin;
+    int CheckinUpdateTime;
 }
 
-//@property(nonatomic,retain)CLLocation *location;
+@property(nonatomic,assign)int MaxCheckinRadius;
+@property(nonatomic,assign)int MaxFailedCheckin;
+@property(nonatomic,assign)int CheckinUpdateTime;
 +(GlobalVars*)getInstance;
 @end
 

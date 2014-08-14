@@ -11,6 +11,7 @@
 #import "Place.h"
 #import "Conversation.h"
 #import "WorkingHour.h"
+#import "Config.h"
 
 @implementation ObjectBuilder
 
@@ -221,7 +222,7 @@
     for (NSDictionary *userJson in usersJson) {
         
         User *user = [self getUserBase:parsedObject userJson:userJson];
-               [users addObject:user];
+        [users addObject:user];
         [users addObject:user];
         [users addObject:user];
         [users addObject:user];
@@ -420,6 +421,26 @@
     }
     
     return chats;
+}
+
++ (Config *)getConfigFromJSON:(NSData *)objectNotation error:(NSError **)error
+{
+    NSError *localError = nil;
+    NSDictionary *parsedObject = [NSJSONSerialization JSONObjectWithData:objectNotation options:0 error:&localError];
+    
+    if (localError != nil) {
+        *error = localError;
+        return nil;
+    }
+    
+    NSDictionary *result = [parsedObject objectForKey:@"result"];
+    
+    Config *config = [[Config alloc] init];
+    config.maxCheckinRadius = [[result objectForKey:@"chekin_max_distance"] intValue];
+    config.maxFailedCheckin = [[result objectForKey:@"max_failed_checkin_count"] intValue];
+    config.checkinUpdateTime = [[result objectForKey:@"update_checkin_status_interval"] intValue];
+    
+    return config;
 }
 
 + (User *)getUserBase:(NSDictionary *)parsedObject userJson:(NSDictionary *)userJson

@@ -11,6 +11,7 @@
 #import "Place.h"
 #import "Chat.h"
 #import "UnreadMessages.h"
+#import "Config.h"
 
 @protocol ClubbookManagerDelegate <NSObject>
 
@@ -42,6 +43,7 @@
   - (void)didRemoveFriend:(User *)user;
   - (void)didRemoveFriendRequest:(User *)user;
   - (void)didChangePush:(User *)user;
+  - (void)didGetConfig:(Config *)config;
 
   - (void)failedWithError:(NSError *)error;
 

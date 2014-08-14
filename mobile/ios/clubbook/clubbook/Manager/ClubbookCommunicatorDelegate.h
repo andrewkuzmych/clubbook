@@ -36,6 +36,7 @@
 - (void)deleteUserImageJSON:(NSData *)objectNotation;
 - (void)updateUserJSON:(NSData *)objectNotation;
 - (void)changeUserPushJSON:(NSData *)objectNotation;
+- (void)getConfigJSON:(NSData *)objectNotation;
 
 - (void)failedWithError:(NSError *)error;
 
