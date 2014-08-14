@@ -74,14 +74,14 @@ public class ClubsAdapter extends BaseAdapter {
         ClubItemHolder holder;
 
         if (row == null) {
-            row = mInflater.inflate(R.layout.club_list_item, parent, false);
+            row = mInflater.inflate(R.layout.item_list_club, parent, false);
 
             holder = new ClubItemHolder();
-            holder.avatar = (ImageView) row.findViewById(R.id.imgAvatar);
-            holder.clubTitle = (TextView) row.findViewById(R.id.txtClubTitle);
-            holder.distance = (TextView) row.findViewById(R.id.distance_text);
-            holder.peopleCount = (TextView) row.findViewById(R.id.people_count);
-            holder.checkIn = (TextView) row.findViewById(R.id.txtCheckIn);
+            holder.imgAvatar = (ImageView) row.findViewById(R.id.imgAvatar);
+            holder.txtClubName = (TextView) row.findViewById(R.id.txtClubName);
+            holder.txtDistance = (TextView) row.findViewById(R.id.txtDistance);
+            holder.txtCheckedInCount = (TextView) row.findViewById(R.id.txtCheckedInCount);
+            holder.txtFriendsCount = (TextView) row.findViewById(R.id.txtFriendsCount);
 
             row.setTag(holder);
         } else {
@@ -104,80 +104,27 @@ public class ClubsAdapter extends BaseAdapter {
 
     private void fillRow(ClubItemHolder holder, ClubDto club) {
         String distance = LocationCheckinHelper.formatDistance(mContext, club.getDistance());
-        holder.distance.setText(distance);
+        L.v("distance - " + club.getDistance());
+        holder.txtDistance.setText(distance);
 
-        holder.peopleCount.setText(String.valueOf(club.getActiveCheckins()));
-        holder.clubTitle.setText(club.getTitle());
-        holder.clubTitle.setTag(club.getId());
+        holder.txtCheckedInCount.setText("" + club.getActiveCheckIns());
+        holder.txtFriendsCount.setText("" + club.getActiveFriendsCheckIns());
 
-        holder.checkIn.setTag(club);
-        // if we checked in this this club set related style
-        if (LocationCheckinHelper.isCheckinHere(club)) {
-            UiHelper.changeCheckinState(mContext, holder.checkIn, false);
-        } else {
-            UiHelper.changeCheckinState(mContext, holder.checkIn, true);
-        }
-        // can we check in this club
-        if (LocationCheckinHelper.canCheckinHere(club)) {
-            holder.checkIn.setEnabled(true);
-        } else {
-            holder.checkIn.setEnabled(false);
-        }
-
-        holder.checkIn.setOnClickListener(getBtnCheckInClickListener());
+        holder.txtClubName.setText(club.getTitle());
+        holder.txtClubName.setTag(club.getId());
 
         //load image
-        String image_url = ImageHelper.getClubListAvatar(club.getAvatar());
-        holder.avatar.setTag(image_url);
-        imageLoader.displayImage(image_url, holder.avatar, options, animateFirstListener);
-    }
-
-    private View.OnClickListener getBtnCheckInClickListener() {
-        View.OnClickListener listener = new View.OnClickListener() {
-            public void onClick(final View view) {
-
-                final ClubDto club = (ClubDto) view.getTag();
-                if (LocationCheckinHelper.isCheckinHere(club)) {
-                    LocationCheckinHelper.checkout(mContext, new CheckInOutCallbackInterface() {
-                        @Override
-                        public void onCheckInOutFinished(boolean result) {
-                            // Do something when download finished
-                            if (result) {
-                                UiHelper.changeCheckinState(mContext, view, true);
-                            }
-                        }
-                    });
-                } else {
-                    LocationCheckinHelper.checkin(mContext, club, new CheckInOutCallbackInterface() {
-                        @Override
-                        public void onCheckInOutFinished(boolean isUserCheckIn) {
-                            // check if checkin was successful
-                            if (isUserCheckIn) {
-                                // open club details and pass club_id parameter
-                                //TODO fix this
-                                ClubFragment fragment = new ClubFragment(null, club.getId());
-                                FragmentManager fragmentManager = ((MainActivity) mContext).getSupportFragmentManager();
-                                FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
-                                mFragmentTransaction.replace(R.id.frame_container, fragment);
-                                mFragmentTransaction.addToBackStack(null);
-                                mFragmentTransaction.commit();
-                            }
-                        }
-                    });
-                }
-            }
-        };
-
-        return listener;
+        String imageUrl = ImageHelper.getClubListAvatar(club.getAvatar());
+        holder.imgAvatar.setTag(imageUrl);
+        imageLoader.displayImage(imageUrl, holder.imgAvatar, options, animateFirstListener);
     }
 
     static class ClubItemHolder {
-        ImageView avatar;
-        TextView clubTitle;
-        TextView distance;
-        TextView peopleCount;
-        TextView friendsCount;
-        TextView checkIn;
+        ImageView imgAvatar;
+        TextView txtClubName;
+        TextView txtDistance;
+        TextView txtCheckedInCount;
+        TextView txtFriendsCount;;
     }
 
 }

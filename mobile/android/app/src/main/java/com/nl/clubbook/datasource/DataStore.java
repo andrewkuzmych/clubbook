@@ -332,31 +332,11 @@ public class DataStore {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
-                List<ClubDto> clubs = new ArrayList<ClubDto>();
-                try {
-                    JSONArray clubs_dto = response_json.getJSONArray("clubs");
-                    for (int i = 0; i < clubs_dto.length(); i++) {
-                        ClubDto club = new ClubDto();
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                JSONArray jsonArrClubs = responseJson.optJSONArray("clubs");
+                List<ClubDto> clubs = JSONConverter.newClubList(jsonArrClubs);
 
-                        club.setId(clubs_dto.getJSONObject(i).getString("id"));
-                        club.setTitle(clubs_dto.getJSONObject(i).getString("club_name"));
-                        club.setPhone(clubs_dto.getJSONObject(i).getString("club_phone"));
-                        club.setAddress(clubs_dto.getJSONObject(i).getString("club_address"));
-                        club.setAvatar(clubs_dto.getJSONObject(i).getString("club_logo"));
-                        club.setLon(clubs_dto.getJSONObject(i).getJSONObject("club_loc").getDouble("lon"));
-                        club.setLat(clubs_dto.getJSONObject(i).getJSONObject("club_loc").getDouble("lat"));
-                        club.setDistance(LocationCheckinHelper.calculateDistance(club.getLat(), club.getLon()));
-                        club.setActiveCheckins(clubs_dto.getJSONObject(i).getInt("active_checkins"));
-                        clubs.add(club);
-                    }
-
-                    //Collections.sort(places, new PlaceDistanceComparator());
-                    failed = false;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+                failed = false;
                 onResultReady.onReady(clubs, failed);
             }
 

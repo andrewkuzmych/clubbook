@@ -1,5 +1,7 @@
 package com.nl.clubbook.datasource;
 
+import com.nl.clubbook.helper.LocationCheckinHelper;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -16,7 +18,7 @@ public class JSONConverter {
 
     public static List<UserDto> newFriendList(JSONArray jsonArrUsers) {
         if(jsonArrUsers == null) {
-            return null;
+            return new ArrayList<UserDto>();
         }
 
         List<UserDto> friends = new ArrayList<UserDto>();
@@ -117,5 +119,49 @@ public class JSONConverter {
         }
 
         return checkIn;
+    }
+
+    public static List<ClubDto> newClubList(JSONArray jsonArrClub) {
+        if(jsonArrClub == null) {
+            return new ArrayList<ClubDto>();
+        }
+
+        List<ClubDto> result = new ArrayList<ClubDto>();
+        for(int i = 0; i < jsonArrClub.length(); i++) {
+            JSONObject jsonClub = jsonArrClub.optJSONObject(i);
+            ClubDto club = newClub(jsonClub);
+
+            if(club != null) {
+                result.add(club);
+            }
+        }
+
+        return result;
+    }
+
+
+    public static ClubDto newClub(JSONObject jsonClub) {
+        if(jsonClub == null) {
+            return null;
+        }
+
+        ClubDto club = new ClubDto();
+
+        club.setId(jsonClub.optString("id"));
+        club.setTitle(jsonClub.optString("club_name"));
+        club.setPhone(jsonClub.optString("club_phone"));
+        club.setAddress(jsonClub.optString("club_address"));
+        club.setAvatar(jsonClub.optString("club_logo"));
+        club.setActiveCheckIns(jsonClub.optInt("active_checkins"));
+        club.setActiveFriendsCheckIns(jsonClub.optInt("active_friends_checkins"));
+
+        JSONObject jsonClubLocation = jsonClub.optJSONObject("club_loc");
+        if(jsonClubLocation != null) {
+            club.setLon(jsonClubLocation.optDouble("lon"));
+            club.setLat(jsonClubLocation.optDouble("lat"));
+            club.setDistance(LocationCheckinHelper.calculateDistance(club.getLat(), club.getLon()));
+        }
+
+        return club;
     }
 }

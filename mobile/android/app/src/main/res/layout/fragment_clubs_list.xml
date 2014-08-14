@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_background_color"
+    android:background="@color/grey_screen_bg"
     android:orientation="vertical">
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -14,40 +14,42 @@
             android:id="@+id/listClub"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:divider="@color/main_background_color"
-            android:dividerHeight="10dp"
-            android:focusable="false"
-            android:padding="5dp" />
+            android:dividerHeight="1dp" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/main_background_menu_color"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@drawable/bg_btn_violet_light"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
 
-        <TextView
+        <com.nl.clubbook.ui.view.TitilliumBoldTextView
             android:id="@+id/distance_text"
             android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="0dp"
-            android:gravity="center_horizontal"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:singleLine="true"
             android:text="23 km"
-            android:textColor="#FFFFFF"
-            android:textIsSelectable="false"
-            android:textSize="22dp" />
-        <!--http://stackoverflow.com/questions/3480456/seek-bar-change-path-color-from-yellow-to-white-->
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_large"
+            android:paddingBottom="5dp"/>
+
         <SeekBar
+            style="@style/SeekBarAppTheme"
             android:id="@+id/seekBarDistance"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"/>
 
     </LinearLayout>
 

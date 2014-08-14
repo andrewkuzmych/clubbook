@@ -67,7 +67,7 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        View txtClubTitle = view.findViewById(R.id.txtClubTitle);
+        View txtClubTitle = view.findViewById(R.id.txtClubName);
         String clubId = (String)txtClubTitle.getTag();
 
         ClubFragment fragment = new ClubFragment(ClubsListFragment.this, clubId);
