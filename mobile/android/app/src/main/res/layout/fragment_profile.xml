@@ -5,201 +5,195 @@
     android:background="@color/bg_screen_grey_light"
     android:orientation="vertical">
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-
-        <!--android:layout_above="@+id/listCheckInUsers"-->
-
-        <ScrollView
-            android:id="@+id/scrollView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/listCheckInUsers">
 
 
-            <RelativeLayout
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_screen_grey_light">
+
+            <com.nl.clubbook.ui.view.CustomViewPager
+                android:id="@+id/pagerAvatars"
+                android:layout_width="match_parent"
+                android:layout_height="230dp" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/bg_screen_grey_light">
-
-                <com.nl.clubbook.ui.view.CustomViewPager
-                    android:id="@+id/pagerAvatars"
-                    android:layout_width="match_parent"
-                    android:layout_height="230dp" />
+                android:layout_below="@+id/pagerAvatars"
+                android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/holderUserName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/pagerAvatars"
-                    android:orientation="vertical">
+                    android:background="@android:color/white"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
 
                     <LinearLayout
-                        android:id="@+id/holderUserName"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/white"
-                        android:orientation="horizontal"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:minHeight="56dp"
-                            android:orientation="vertical"
-                            android:paddingBottom="8dp"
-                            android:paddingTop="8dp">
-
-                            <TextView
-                                android:id="@+id/txtUsername"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Profile"
-                                android:textSize="@dimen/text_size_large"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/txtUserInfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Profile"
-                                android:textSize="@dimen/text_size_small"
-                                android:textStyle="bold" />
-                        </LinearLayout>
+                        android:layout_weight="1"
+                        android:minHeight="56dp"
+                        android:orientation="vertical"
+                        android:paddingBottom="8dp"
+                        android:paddingTop="8dp">
 
                         <TextView
-                            android:id="@+id/txtAddFriend"
+                            android:id="@+id/txtUsername"
                             android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:gravity="center|right"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:text="@string/add_friend"
-                            android:textSize="@dimen/text_size_medium" />
+                            android:layout_height="wrap_content"
+                            android:text="Profile"
+                            android:textSize="@dimen/text_size_large"
+                            android:textStyle="bold" />
 
+                        <TextView
+                            android:id="@+id/txtUserInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Profile"
+                            android:textSize="@dimen/text_size_small"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/divider_color" />
+                    <TextView
+                        android:id="@+id/txtAddFriend"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:gravity="center|right"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:text="@string/add_friend"
+                        android:textSize="@dimen/text_size_medium" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider_color" />
+
+                <TextView
+                    android:id="@+id/txtCountry"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:drawableLeft="@drawable/ic_action_map"
+                    android:drawablePadding="16dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:text="Test"
+                    android:textSize="@dimen/text_size_medium" />
+
+                <View
+                    android:id="@+id/dividerCoutnry"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider_color" />
+
+                <TextView
+                    android:id="@+id/txtAboutMeLabel"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="8dp"
+                    android:text="@string/about_me"
+                    android:textSize="@dimen/text_size_medium" />
+
+                <TextView
+                    android:id="@+id/txtAboutMe"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="28dp"
+                    android:paddingRight="16dp"
+                    android:text="Test about me"
+                    android:textSize="@dimen/text_size_small" />
+
+                <View
+                    android:id="@+id/dividerAboutMe"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider_color" />
+
+                <LinearLayout
+                    android:id="@+id/holderBlockRemoveUser"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/txtCountry"
-                        android:layout_width="fill_parent"
+                        android:id="@+id/txtBlockUser"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/white"
-                        android:drawableLeft="@drawable/ic_action_map"
+                        android:drawableLeft="@drawable/ic_action_bad"
                         android:drawablePadding="16dp"
                         android:gravity="center_vertical"
                         android:minHeight="48dp"
                         android:paddingLeft="16dp"
                         android:paddingRight="16dp"
-                        android:text="Test"
-                        android:textSize="@dimen/text_size_medium" />
-
-                    <View
-                        android:id="@+id/dividerCoutnry"
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/divider_color" />
-
-                    <TextView
-                        android:id="@+id/txtAboutMeLabel"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/white"
-                        android:gravity="center_vertical"
-                        android:paddingBottom="8dp"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp"
-                        android:paddingTop="8dp"
-                        android:text="@string/about_me"
-                        android:textSize="@dimen/text_size_medium" />
-
-                    <TextView
-                        android:id="@+id/txtAboutMe"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/white"
-                        android:gravity="center_vertical"
-                        android:paddingBottom="8dp"
-                        android:paddingLeft="28dp"
-                        android:paddingRight="16dp"
-                        android:text="Test about me"
+                        android:text="@string/block_user"
                         android:textSize="@dimen/text_size_small" />
 
                     <View
-                        android:id="@+id/dividerAboutMe"
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/divider_color" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/white"
-                        android:orientation="horizontal">
+                        android:layout_weight="1" />
 
-                        <TextView
-                            android:id="@+id/txtBlockUser"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/ic_action_bad"
-                            android:drawablePadding="16dp"
-                            android:gravity="center_vertical"
-                            android:minHeight="48dp"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:text="@string/block_user"
-                            android:textSize="@dimen/text_size_small" />
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-
-                        <TextView
-                            android:id="@+id/txtRemoveFriend"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/ic_action_bad"
-                            android:drawablePadding="16dp"
-                            android:gravity="center_vertical|right"
-                            android:minHeight="48dp"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:text="@string/remove_friend"
-                            android:textSize="@dimen/text_size_small"
-                            android:visibility="visible" />
-
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/txtRemoveFriend"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_action_bad"
+                        android:drawablePadding="16dp"
+                        android:gravity="center_vertical|right"
+                        android:minHeight="48dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:text="@string/remove_friend"
+                        android:textSize="@dimen/text_size_small"
+                        android:visibility="visible" />
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/btnChat"
-                    style="@style/chat_button"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:layout_below="@+id/pagerAvatars"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="-40dp"
-                    android:background="@drawable/chat_button"
-                    android:text="@string/chat" />
+            </LinearLayout>
 
-            </RelativeLayout>
-        </ScrollView>
-    </LinearLayout>
+            <Button
+                android:id="@+id/btnChat"
+                style="@style/chat_button"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_below="@+id/pagerAvatars"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="-40dp"
+                android:background="@drawable/chat_button"
+                android:text="@string/chat" />
 
-    <!--<com.nl.clubbook.ui.view.HorizontalListView-->
-        <!--android:id="@+id/listCheckInUsers"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="75dp"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:background="@android:color/black"-->
-        <!--android:visibility="gone"/>-->
+        </RelativeLayout>
+    </ScrollView>
+
+    <com.nl.clubbook.ui.view.HorizontalListView
+        android:id="@+id/listCheckInUsers"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"/>
 
     <ProgressBar
         android:id="@+id/progressBar"

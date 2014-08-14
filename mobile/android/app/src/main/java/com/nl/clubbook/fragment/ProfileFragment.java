@@ -7,9 +7,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
@@ -32,7 +29,7 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import java.util.HashMap;
 import java.util.List;
 
-public class ProfileFragment extends BaseFragment implements View.OnClickListener, AbsListView.OnScrollListener {
+public class ProfileFragment extends BaseFragment implements View.OnClickListener {
     private String mFriendProfileId;
     private List<UserDto> mCheckInUsers;
 
@@ -113,7 +110,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 .cacheInMemory()
                 .cacheOnDisc()
                 .build();
-        //.showStubImage(R.drawable.default_list_image)
     }
 
     private void initActionBar() {
@@ -145,30 +141,23 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             return;
         }
 
-        if(mCheckInUsers == null || true) {
-            L.e("!visible");
-//            view.findViewById(R.id.listCheckInUsers).setVisibility(View.GONE); //TODO
-            View scrollView = view.findViewById(R.id.scrollView);
-            scrollView.invalidate();
-
-//            scrollView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
-//                    RelativeLayout.LayoutParams.FILL_PARENT));
+        if(mCheckInUsers == null) {
+            view.findViewById(R.id.listCheckInUsers).setVisibility(View.GONE);
             return;
         }
 
 
-        //TODO test
-        UserDto userDto = mCheckInUsers.get(0);
-        for(int i = 0; i < 100; i++) {
-            mCheckInUsers.add(userDto);
-        }
+        //
+//        UserDto userDto = mCheckInUsers.get(0);
+//        for(int i = 0; i < 100; i++) {
+//            mCheckInUsers.add(userDto);
+//        }
         //
 
-        L.e("visible");
-//        HorizontalListView listCheckInUser = (HorizontalListView) view.findViewById(R.id.listCheckInUsers);
-//        ProfileAdapter adapter = new ProfileAdapter(getActivity(), mCheckInUsers);
-//        listCheckInUser.setAdapter(adapter);
-//        listCheckInUser.setVisibility(View.VISIBLE);
+        HorizontalListView listCheckInUser = (HorizontalListView) view.findViewById(R.id.listCheckInUsers);
+        ProfileAdapter adapter = new ProfileAdapter(getActivity(), mCheckInUsers);
+        listCheckInUser.setAdapter(adapter);
+        listCheckInUser.setVisibility(View.VISIBLE);
     }
 
     protected void loadData() {
@@ -176,8 +165,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
         final SessionManager session = new SessionManager(getActivity());
         final HashMap<String, String> user = session.getUserDetails();
+        final String currentUserId = user.get(SessionManager.KEY_ID);
 
-        DataStore.retrieveUserFriend(user.get(SessionManager.KEY_ID), mFriendProfileId, new DataStore.OnResultReady() {
+        DataStore.retrieveUserFriend(currentUserId, mFriendProfileId, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (getView() == null || isDetached()) {
@@ -191,12 +181,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     return;
                 }
 
-                fillProfile((FriendDto) result);
+                fillProfile((FriendDto) result, currentUserId);
             }
         });
     }
 
-    private void fillProfile(FriendDto profile) {
+    private void fillProfile(FriendDto profile, String currentUserId) {
         if(profile == null) {
             L.v("profile = null");
             return;
@@ -216,8 +206,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         // set name
         TextView txtUserName = (TextView) view.findViewById(R.id.txtUsername);
         txtUserName.setText(profile.getName());
-
-        // set avatar //TODO
 
         //set user info
         TextView txtUserInfo = (TextView) view.findViewById(R.id.txtUserInfo);
@@ -254,6 +242,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             view.findViewById(R.id.txtAddFriend).setVisibility(View.GONE);
             view.findViewById(R.id.txtRemoveFriend).setVisibility(View.VISIBLE);
         }
+
+        if(profile.getId() != null && profile.getId().equals(currentUserId)) {
+            view.findViewById(R.id.holderBlockRemoveUser).setVisibility(View.GONE);
+            view.findViewById(R.id.txtAddFriend).setVisibility(View.GONE);
+        }
     }
 
     private void initViewPager(View view, List<UserPhotoDto> userPhotoList) {
@@ -274,12 +267,15 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private void setRefreshing(View view, boolean isRefreshing) {
         if(isRefreshing) {
             view.findViewById(R.id.scrollView).setVisibility(View.GONE);
-//            view.findViewById(R.id.listCheckInUsers).setVisibility(View.GONE); //TODO
+            view.findViewById(R.id.listCheckInUsers).setVisibility(View.GONE);
             view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
         } else {
             view.findViewById(R.id.scrollView).setVisibility(View.VISIBLE);
-//            view.findViewById(R.id.listCheckInUsers).setVisibility(View.VISIBLE); //TODO
             view.findViewById(R.id.progressBar).setVisibility(View.GONE);
+
+            if(mCheckInUsers != null && !mCheckInUsers.isEmpty()) {
+                view.findViewById(R.id.listCheckInUsers).setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -337,15 +333,5 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 }
             }
         });
-    }
-
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
     }
 }
