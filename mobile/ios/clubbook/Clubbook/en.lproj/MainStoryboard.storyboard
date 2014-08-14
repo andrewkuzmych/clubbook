@@ -1116,8 +1116,8 @@
                                     <constraint firstAttribute="height" constant="61" id="ngg-J3-Jw2"/>
                                 </constraints>
                             </scrollView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_userprofile_location.png" translatesAutoresizingMaskIntoConstraints="NO" id="bas-EN-XF7">
-                                <rect key="frame" x="10" y="251" width="35" height="35"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_userprofile_location.png" translatesAutoresizingMaskIntoConstraints="NO" id="bas-EN-XF7">
+                                <rect key="frame" x="10" y="251" width="36" height="36"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_userprofile_chat.png" translatesAutoresizingMaskIntoConstraints="NO" id="Lje-v7-jxk">
@@ -2242,7 +2242,7 @@
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IKH-pD-LMe">
                                                     <rect key="frame" x="15" y="7" width="65" height="65"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <state key="normal" backgroundImage="add_photo_65x65.jpg">
+                                                    <state key="normal" backgroundImage="avatar_invisible.png">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
@@ -2506,6 +2506,7 @@
     </scenes>
     <resources>
         <image name="add_photo_65x65.jpg" width="65" height="65"/>
+        <image name="avatar_invisible.png" width="64" height="64"/>
         <image name="fb_color.jpg" width="40" height="40"/>
         <image name="fb_color_selected.jpg" width="40" height="40"/>
         <image name="gold.jpg" width="28" height="20"/>
@@ -2534,7 +2535,7 @@
         <image name="icon_userprofile_chat.png" width="33" height="29"/>
         <image name="icon_userprofile_location.png" width="43" height="43"/>
         <image name="login_color_selected.jpg" width="40" height="40"/>
-        <image name="logo.png" width="280" height="55"/>
+        <image name="logo.png" width="244" height="50"/>
         <image name="menu.png" width="28" height="20"/>
         <image name="reg_color_selected.jpg" width="40" height="40"/>
         <image name="silver.jpg" width="28" height="20"/>
@@ -2545,9 +2546,9 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="srA-Fm-t0q"/>
-        <segue reference="g4R-r7-bxr"/>
         <segue reference="R55-D2-Pfl"/>
+        <segue reference="g4R-r7-bxr"/>
+        <segue reference="V2Y-sj-My7"/>
         <segue reference="Djn-Jf-1oT"/>
         <segue reference="26L-4q-4Bk"/>
     </inferredMetricsTieBreakers>

@@ -32,8 +32,8 @@
 "error" = "Error";
 "kilometers" = "km";
 "meters" = "m";
-"invite_for_drink" = "invite you for a drink";
-"send_smile" = "send you smile";
+"invite_for_drink" = "Invite you for a drink";
+"send_like" = "likes you";
 "email"= "Email";
 "pass"= "Password (at least 6 chars)";
 "first_name"= "First name (at least 2 chars)";
@@ -77,5 +77,6 @@
 "pending_requests" = "Pending Requests";
 "not_checked_in" = "not checked in";
 "checked_in" = "checked in:";
+"chat_limit" = "You cannot send more than 2 messages without reply";
 
 

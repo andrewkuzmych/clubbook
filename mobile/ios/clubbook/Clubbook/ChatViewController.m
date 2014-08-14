@@ -10,8 +10,11 @@
 #import "Conversation.h"
 #import "Cloudinary.h"
 #import "Constants.h"
+#import "CSNotificationView.h"
 
-@interface ChatViewController ()
+@interface ChatViewController (){
+    bool canChat;
+}
 
 @end
 
@@ -51,13 +54,17 @@
     [smileButton addTarget:self
                     action:@selector(sendSmile:)
           forControlEvents:UIControlEventTouchUpInside];
-    [smileButton setBackgroundImage:[UIImage imageNamed:@"icon_smiley"] forState:UIControlStateNormal];
+    [smileButton setTitle:@"Like" forState:UIControlStateNormal];
+    [smileButton setTitleColor: [UIColor whiteColor] forState:UIControlStateNormal];
+    [smileButton setTitleColor: [UIColor greenColor] forState:UIControlStateHighlighted];
+    smileButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:17];
+    //[smileButton setBackgroundImage:[UIImage imageNamed:@"icon_smiley"] forState:UIControlStateNormal];
     
     UIButton *drinkButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [drinkButton addTarget:self
                     action:@selector(sendDrink:)
           forControlEvents:UIControlEventTouchUpInside];
-    [drinkButton setBackgroundImage:[UIImage imageNamed:@"icon_drink"] forState:UIControlStateNormal];
+    [drinkButton setBackgroundImage:[UIImage imageNamed:@"icon_chat_drink"] forState:UIControlStateNormal];
     
     self.inputToolbar.contentView.leftBarButtonItem = smileButton;
     
@@ -73,6 +80,7 @@
     NSString *user_to = [dataJson valueForKey:@"user_to"];
     
     if ([user_to isEqualToString:self.sender]) {
+        canChat = YES;
         [self putMessage:msg type:type sender:user_from];
     }
     
@@ -106,22 +114,18 @@
         self.userFromImage = [JSQMessagesAvatarFactory avatarWithUserInitials:@"ME"
                                                                backgroundColor:[UIColor colorWithWhite:0.85f alpha:1.0f]
                                                                     textColor:[UIColor colorWithWhite:0.60f alpha:1.0f] font:[UIFont systemFontOfSize:14.0f] diameter:outgoingDiameter];
-        
+
         
         for(Conversation * conf in chat.conversations)
         {
-            JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:conf.msg sender:conf.user_from date:conf.time type:conf.type];
             
-            if ([conf.type isEqualToString:@"drink"]) {
-                jsqmessage =  [[JSQMessage alloc] initWithText:[NSString stringWithFormat:@"     %@",NSLocalizedString(@"invite_for_drink", nil)] sender:conf.user_from date:conf.time type:conf.type];
-            } else if ([conf.type isEqualToString:@"smile"]) {
-                jsqmessage =  [[JSQMessage alloc] initWithText:[NSString stringWithFormat:@"     %@",NSLocalizedString(@"send_smile", nil)] sender:conf.user_from date:conf.time type:conf.type];
-            }
-
+            JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:conf.msg sender:conf.user_from date:conf.time type:conf.type];
         
             [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
             [self.messages addObject:jsqmessage];
         }
+        
+        [self setCanChat];
 
         // chat bubbles
         self.outgoingBubbleImageView = [JSQMessagesBubbleImageFactory
@@ -136,6 +140,23 @@
         [self._manager readChat:chat.currentUser.id toUser:chat.receiver.id];
         
     });
+}
+
+- (void)setCanChat
+{
+    if ([self.messages count] < 2) {
+        canChat = true;
+        return;
+    }
+    
+    for (JSQMessage * mess in self.messages ) {
+        if ([mess.sender isEqualToString:self.userTo]) {
+            canChat = true;
+            return;
+        }
+    }
+    
+    canChat = false;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -158,20 +179,20 @@
     self.collectionView.collectionViewLayout.springinessEnabled = YES;
 }
 
-
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-
 #pragma mark - Actions
 
 - (void)sendSmile:(UIButton *)senderElement
 {
-    [self sendMessage:NSLocalizedString(@"send_smile", nil) type:@"smile"];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *userName = [defaults objectForKey:@"userName"];
+    
+    [self sendMessage:[NSString stringWithFormat:@"%@ %@", userName, NSLocalizedString(@"send_like", nil)] type:@"smile"];
 }
 
 - (void)sendDrink:(UIButton *)senderElement
@@ -181,22 +202,35 @@
 
 - (void)sendMessage:(NSString *)message type:(NSString *)type
 {
+    if (!canChat) {
+        [CSNotificationView showInViewController:self
+                                       tintColor:[UIColor colorWithRed:0.000 green:0.6 blue:1.000 alpha:1]
+                                           image:nil
+                                         message:NSLocalizedString(@"chat_limit", nil)
+                                        duration:kCSNotificationViewDefaultShowDuration];
+        return;
+    }
     [self putMessage:message type:type sender:self.sender];
     
+    
+    NSString* trimMessage = [message stringByTrimmingCharactersInSet:
+                              [NSCharacterSet whitespaceCharacterSet]];
     // send to server
-    [self._manager chat:self.sender user_to:self.userTo msg:message msg_type:type];
+    [self._manager chat:self.sender user_to:self.userTo msg:trimMessage msg_type:type];
 }
+
 - (void)putMessage:(NSString *)message type:(NSString *)type sender:(NSString *) sender
 {
     JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
     if ([type isEqualToString:@"drink"]) {
-        jsqmessage =  [[JSQMessage alloc] initWithText:@"     invite you for a drink" sender:sender date:[NSDate date] type:type];
+        jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
     } else if ([type isEqualToString:@"smile"]) {
-        jsqmessage =  [[JSQMessage alloc] initWithText:@"     send you smile" sender:sender date:[NSDate date] type:type];
+        jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
     }
     
     [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
     [self.messages addObject:jsqmessage];
+    [self setCanChat];
     [self finishReceivingMessage];
 }
 

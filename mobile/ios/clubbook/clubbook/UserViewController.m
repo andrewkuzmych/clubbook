@@ -100,8 +100,8 @@
             // transform avatar
             CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
             CLTransformation *transformation = [CLTransformation transformation];
-            [transformation setParams: @{@"width": @450, @"height": @450,}];
-            
+            [transformation setParams: @{@"width": @450, @"height": @450, @"crop": @"fit"}];
+            //c_fit,h_450,w_450/v140483
             NSString *avatarUrl = [cloudinary url: [[user.photos objectAtIndex:i] valueForKey:@"public_id"] options:@{@"transformation": transformation}];
 
             [imageView setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"Default.png"]];
@@ -168,6 +168,7 @@
         [imageButton setImageWithURL:[NSURL URLWithString:avatarUrl] forState:UIControlStateNormal];
         NSString* photoId = [[self.currentPlace.users objectAtIndex:i] valueForKey:@"_id"];
         imageButton.tag = i;
+
         
         [self.userPhotosScroll addSubview:imageButton];
         

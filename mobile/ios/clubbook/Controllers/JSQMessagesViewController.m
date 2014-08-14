@@ -388,16 +388,15 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
     
     cell.textView.text = [messageData text];
     dispatch_async(dispatch_get_main_queue(), ^{
-        if ([[messageData type] isEqualToString:@"smile"]) {
+        if ([[messageData type]  isEqualToString:@"drink"]) {
             cell.textImage.hidden = NO;
-            UIImage *image = [UIImage imageNamed:@"icon_smiley"];
+            UIImage *image = [UIImage imageNamed:@"icon_chat_drink"];
             [cell.textImage setImage:image];
             cell.textView.text = [messageData text];
-        } else if ([[messageData type]  isEqualToString:@"drink"]) {
-            cell.textImage.hidden = NO;
-            UIImage *image = [UIImage imageNamed:@"icon_drink"];
-            [cell.textImage setImage:image];
-            cell.textView.text = [messageData text];
+            CGRect rect = cell.textView.frame;
+            rect.origin.x = 40;
+            cell.textView.frame = rect;
+            
         } else{
             cell.textImage.hidden = YES;
             cell.textView.text = [messageData text];

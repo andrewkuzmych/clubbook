@@ -11,7 +11,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LEq-G7-jGt">
-                    <rect key="frame" x="4" y="6" width="34" height="32"/>
+                    <rect key="frame" x="11" y="5" width="34" height="32"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" red="0.34901960780000002" green="0.16862745100000001" blue="0.36078431370000003" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
@@ -19,7 +19,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xt5-NC-BiY">
-                    <rect key="frame" x="38" y="6" width="34" height="32"/>
+                    <rect key="frame" x="53" y="5" width="34" height="32"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" red="0.34901960780000002" green="0.16862745100000001" blue="0.36078431370000003" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
@@ -32,31 +32,29 @@
                     <color key="backgroundColor" red="0.34901960780000002" green="0.16862745100000001" blue="0.36078431370000003" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dm4-NT-mvr" customClass="JSQMessagesComposerTextView">
-                    <rect key="frame" x="79" y="7" width="182" height="30"/>
+                    <rect key="frame" x="93" y="7" width="168" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="182" id="YaE-WM-oAP"/>
-                    </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
             </subviews>
             <color key="backgroundColor" red="0.34901960780000002" green="0.16862745100000001" blue="0.36078431370000003" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="dm4-NT-mvr" secondAttribute="bottom" constant="7" id="0Ll-9E-CXE"/>
-                <constraint firstItem="LEq-G7-jGt" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="4" id="56P-Kw-m7D"/>
+                <constraint firstItem="Myo-1S-Vg1" firstAttribute="leading" secondItem="dm4-NT-mvr" secondAttribute="trailing" constant="4" id="3Rd-dX-cxC"/>
+                <constraint firstItem="LEq-G7-jGt" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="11" id="56P-Kw-m7D"/>
+                <constraint firstItem="dm4-NT-mvr" firstAttribute="top" secondItem="Xt5-NC-BiY" secondAttribute="top" constant="2" id="7lX-j5-TiP"/>
                 <constraint firstItem="Myo-1S-Vg1" firstAttribute="top" secondItem="1" secondAttribute="top" constant="6" id="At4-ax-q7z"/>
+                <constraint firstItem="Myo-1S-Vg1" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="265" id="C9v-a4-faP"/>
                 <constraint firstAttribute="bottom" secondItem="Myo-1S-Vg1" secondAttribute="bottom" constant="6" id="LqR-TF-auG"/>
-                <constraint firstAttribute="bottom" secondItem="Xt5-NC-BiY" secondAttribute="bottom" constant="6" id="Mc5-sg-Pjx"/>
-                <constraint firstItem="LEq-G7-jGt" firstAttribute="top" secondItem="1" secondAttribute="top" constant="6" id="RCd-cn-qlc"/>
-                <constraint firstItem="dm4-NT-mvr" firstAttribute="leading" secondItem="Xt5-NC-BiY" secondAttribute="trailing" constant="7" id="UUv-5S-CT4"/>
-                <constraint firstItem="Xt5-NC-BiY" firstAttribute="top" secondItem="1" secondAttribute="top" constant="6" id="VTT-MD-P6F"/>
+                <constraint firstAttribute="bottom" secondItem="Xt5-NC-BiY" secondAttribute="bottom" constant="7" id="Mc5-sg-Pjx"/>
+                <constraint firstItem="dm4-NT-mvr" firstAttribute="leading" secondItem="Xt5-NC-BiY" secondAttribute="trailing" constant="6" id="NEe-TP-S7Q"/>
+                <constraint firstItem="LEq-G7-jGt" firstAttribute="top" secondItem="1" secondAttribute="top" constant="5" id="RCd-cn-qlc"/>
+                <constraint firstItem="Xt5-NC-BiY" firstAttribute="top" secondItem="1" secondAttribute="top" constant="5" id="VTT-MD-P6F"/>
                 <constraint firstAttribute="trailing" secondItem="Myo-1S-Vg1" secondAttribute="trailing" constant="4" id="YmN-2b-reh"/>
-                <constraint firstItem="Xt5-NC-BiY" firstAttribute="leading" secondItem="LEq-G7-jGt" secondAttribute="trailing" id="Ysr-pX-dao"/>
-                <constraint firstItem="Myo-1S-Vg1" firstAttribute="leading" secondItem="dm4-NT-mvr" secondAttribute="trailing" constant="4" id="ddB-ex-pLD"/>
-                <constraint firstAttribute="bottom" secondItem="LEq-G7-jGt" secondAttribute="bottom" constant="6" id="fug-lQ-4EW"/>
-                <constraint firstItem="dm4-NT-mvr" firstAttribute="top" secondItem="1" secondAttribute="top" constant="7" id="o9j-WW-PM9"/>
+                <constraint firstItem="Xt5-NC-BiY" firstAttribute="leading" secondItem="LEq-G7-jGt" secondAttribute="trailing" constant="8" id="Ysr-pX-dao"/>
+                <constraint firstAttribute="bottom" secondItem="LEq-G7-jGt" secondAttribute="bottom" constant="7" id="fug-lQ-4EW"/>
+                <constraint firstItem="Myo-1S-Vg1" firstAttribute="centerY" secondItem="dm4-NT-mvr" secondAttribute="centerY" id="v03-GM-m2w"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>

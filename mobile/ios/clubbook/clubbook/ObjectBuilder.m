@@ -456,8 +456,11 @@
            NSNumber * isActive = (NSNumber *)[checkinJson objectForKey: @"active"];
             if(isActive && [isActive boolValue] == YES)
             {
-                NSDictionary *clubJson = [checkinJson objectForKey:@"club"];
-               user.currentCheckinClubName = [clubJson objectForKey:@"club_name"];
+                if ([[checkinJson objectForKey:@"club"] isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *clubJson = [checkinJson objectForKey:@"club"];
+                    
+                    user.currentCheckinClubName = [clubJson objectForKey:@"club_name"];
+                }
             }
 
         }
