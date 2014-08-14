@@ -17,15 +17,31 @@
             android:layout_height="wrap_content"
             android:background="@color/bg_screen_grey_light">
 
-            <com.nl.clubbook.ui.view.CustomViewPager
-                android:id="@+id/pagerAvatars"
+            <RelativeLayout
+                android:id="@+id/holderPagerAvatars"
                 android:layout_width="match_parent"
-                android:layout_height="230dp" />
+                android:layout_height="230dp">
+
+                <com.nl.clubbook.ui.view.CustomViewPager
+                    android:id="@+id/pagerAvatars"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <com.nl.clubbook.ui.view.ViewPagerBulletIndicatorView
+                    android:id="@+id/indicatorAvatars"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="8dp"/>
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/pagerAvatars"
+                android:layout_below="@+id/holderPagerAvatars"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -179,7 +195,7 @@
                 style="@style/chat_button"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
-                android:layout_below="@+id/pagerAvatars"
+                android:layout_below="@+id/holderPagerAvatars"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="-40dp"
                 android:background="@drawable/chat_button"

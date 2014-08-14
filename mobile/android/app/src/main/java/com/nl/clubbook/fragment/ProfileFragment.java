@@ -20,6 +20,7 @@ import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.datasource.UserPhotoDto;
 import com.nl.clubbook.helper.*;
 import com.nl.clubbook.ui.view.HorizontalListView;
+import com.nl.clubbook.ui.view.ViewPagerBulletIndicatorView;
 import com.nl.clubbook.utils.L;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -29,13 +30,15 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import java.util.HashMap;
 import java.util.List;
 
-public class ProfileFragment extends BaseFragment implements View.OnClickListener {
+public class ProfileFragment extends BaseFragment implements View.OnClickListener, ViewPager.OnPageChangeListener {
     private String mFriendProfileId;
     private List<UserDto> mCheckInUsers;
 
     private ImageLoader mImageLoader;
     private DisplayImageOptions mOptions;
     private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
+
+    private ViewPagerBulletIndicatorView mBulletIndicator;
 
     public ProfileFragment()
     {
@@ -100,6 +103,20 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 onRemoveFriendClicked();
                 break;
         }
+    }
+
+    @Override
+    public void onPageScrolled(int i, float v, int i2) {
+    }
+
+
+    @Override
+    public void onPageScrollStateChanged(int i) {
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        mBulletIndicator.setSelectedView(position);
     }
 
     private void initLoader() {
@@ -250,6 +267,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void initViewPager(View view, List<UserPhotoDto> userPhotoList) {
+        mBulletIndicator = (ViewPagerBulletIndicatorView)view.findViewById(R.id.indicatorAvatars);
+        mBulletIndicator.setBulletViewCount(userPhotoList.size());
+
         ViewPager pagerImage = (ViewPager) view.findViewById(R.id.pagerAvatars);
         UserAvatarPagerAdapter adapter = new UserAvatarPagerAdapter(getChildFragmentManager(), userPhotoList, mImageLoader, mOptions, animateFirstListener);
         pagerImage.setAdapter(adapter);
@@ -258,10 +278,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             UserPhotoDto userPhoto = userPhotoList.get(i);
             if(userPhoto.getIsAvatar()) {
                 pagerImage.setCurrentItem(i, false);
+                mBulletIndicator.setSelectedView(i);
             }
         }
 
-        //TODO implement page change listener
+        pagerImage.setOnPageChangeListener(this);
     }
 
     private void setRefreshing(View view, boolean isRefreshing) {
@@ -289,7 +310,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void onReady(Object result, boolean failed) {
                 View view = getView();
-                if(view == null || isDetached()) {
+                if (view == null || isDetached()) {
                     return;
                 }
 
