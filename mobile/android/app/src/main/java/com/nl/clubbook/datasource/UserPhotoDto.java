@@ -1,6 +1,5 @@
 package com.nl.clubbook.datasource;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -10,6 +9,9 @@ public class UserPhotoDto {
     private String id;
     private String url;
     private Boolean isAvatar;
+
+    public UserPhotoDto() {
+    }
 
     UserPhotoDto(JSONObject rawData) {
         this.setId(rawData.optString("_id"));

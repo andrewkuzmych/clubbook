@@ -495,18 +495,18 @@ public class DataStore {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
-                List<UserDto> friends = new ArrayList<UserDto>();;
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                List<UserDto> friends = new ArrayList<UserDto>();
+
                 try {
-                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        JSONArray friendsJson = response_json.getJSONObject("result").getJSONArray("friends");
-                        for (int i = 0; i < friendsJson.length(); i++) {
-                            friends.add(new UserDto(friendsJson.getJSONObject(i)));
-                        }
+                    if (responseJson.getString("status").equalsIgnoreCase("ok")) {
+                        JSONArray friendsJson = responseJson.getJSONObject("result").getJSONArray("friends");
+                        friends = JSONConverter.newFriendList(friendsJson);
 
                         failed = false;
-                    } else
+                    } else {
                         failed = true;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

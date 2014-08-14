@@ -22,6 +22,7 @@ public class UserDto {
     protected String avatar;
     protected String country;
     protected String bio;
+    protected CheckInDto lastCheckIn;
     protected List<UserPhotoDto> photos;
 
     protected UserDto() {
@@ -45,13 +46,13 @@ public class UserDto {
         if (userJson.has("bio"))
             this.setBio(userJson.optString("bio"));
 
-        JSONArray photos_json = userJson.optJSONArray("photos");
+        JSONArray photosJson = userJson.optJSONArray("photos");
         List<UserPhotoDto> photos = new ArrayList<UserPhotoDto>();
-        for (int i = 0; i < photos_json.length(); i++) {
-            if (photos_json.optJSONObject(i).optBoolean("profile"))
-                this.setAvatar(photos_json.optJSONObject(i).optString("url"));
+        for (int i = 0; i < photosJson.length(); i++) {
+            if (photosJson.optJSONObject(i).optBoolean("profile"))
+                this.setAvatar(photosJson.optJSONObject(i).optString("url"));
 
-            photos.add(new UserPhotoDto(photos_json.optJSONObject(i)));
+            photos.add(new UserPhotoDto(photosJson.optJSONObject(i)));
         }
         this.setPhotos(photos);
     }
@@ -150,6 +151,14 @@ public class UserDto {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public CheckInDto getLastCheckIn() {
+        return lastCheckIn;
+    }
+
+    public void setLastCheckIn(CheckInDto lastCheckIn) {
+        this.lastCheckIn = lastCheckIn;
     }
 
 }

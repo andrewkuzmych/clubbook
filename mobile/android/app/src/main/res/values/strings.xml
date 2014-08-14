@@ -65,12 +65,13 @@
     <string name="checkin">Check in</string>
     <string name="checkout">Check out</string>
     <string name="club_avatar_content_description">club avatar</string>
+    <string name="checked_in">Checked-in:</string>
+    <string name="not_checked_in">Not Checked-in</string>
 
     <!--New-->
     <string name="add_friend">Add Friend</string>
     <string name="chat">Chat</string>
     <string name="about_me">About Me</string>
-    <string name="about_me_test">About Me \nAbout Me \nAbout Me  \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me \nAbout Me</string>
     <string name="block_user">Block \nUser</string>
     <string name="remove_friend">Remove \nFriend</string>
     <string name="sing_up">Sign Up</string>
