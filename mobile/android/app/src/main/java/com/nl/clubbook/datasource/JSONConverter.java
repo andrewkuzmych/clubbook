@@ -1,8 +1,10 @@
 package com.nl.clubbook.datasource;
 
 import com.nl.clubbook.helper.LocationCheckinHelper;
+import com.nl.clubbook.utils.L;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -139,6 +141,23 @@ public class JSONConverter {
         return result;
     }
 
+    public static ClubDto newClub(String strJsonClub) {
+        if(strJsonClub == null) {
+            return null;
+        }
+
+        ClubDto club = null;
+
+        try {
+            JSONObject jsonClub = new JSONObject(strJsonClub);
+            club = newClub(jsonClub);
+        } catch (JSONException e) {
+            L.v("" + e);
+        }
+
+        return club;
+    }
+
     public static ClubDto newClub(JSONObject jsonClub) {
         if(jsonClub == null) {
             return null;
@@ -168,6 +187,36 @@ public class JSONConverter {
         return club;
     }
 
+    public static JSONObject newClub(ClubDto club) {
+        if(club == null) {
+            return null;
+        }
+
+        JSONObject jsonClub = new JSONObject();
+
+        try {
+            jsonClub.put("id", club.getId());
+            jsonClub.put("club_name", club.getTitle());
+            jsonClub.put("club_phone", club.getPhone());
+            jsonClub.put("club_address", club.getAddress());
+            jsonClub.put("club_logo", club.getAvatar());
+            jsonClub.put("active_checkins", club.getActiveCheckIns());
+            jsonClub.put("active_friends_checkins", club.getActiveFriendsCheckIns());
+
+            JSONObject jsonLocation = new JSONObject();
+            jsonLocation.put("lon", club.getLon());
+            jsonLocation.put("lat", club.getLat());
+            jsonClub.put("club_loc", jsonLocation);
+
+            jsonClub.put("club_today_working_hours", newClubWorkingHours(club.getTodayWorkingHours()));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsonClub;
+    }
+
     public static ClubWorkingHoursDto newClubWorkingHours(JSONObject jsonClubWorkingHours) {
         if(jsonClubWorkingHours == null) {
             return null;
@@ -181,5 +230,21 @@ public class JSONConverter {
         result.setDay(jsonClubWorkingHours.optInt("day", 0));
 
         return result;
+    }
+
+    public static JSONObject newClubWorkingHours(ClubWorkingHoursDto workingHours) throws JSONException {
+        if(workingHours == null) {
+            return null;
+        }
+
+        JSONObject jsonWorkingHours = new JSONObject();
+        jsonWorkingHours.put("id", workingHours.getId());
+        jsonWorkingHours.put("status", workingHours.getStatus());
+        jsonWorkingHours.put("start_time", workingHours.getStartTime());
+        jsonWorkingHours.put("end_time", workingHours.getEndTime());
+        jsonWorkingHours.put("day", workingHours.getDay());
+        jsonWorkingHours.put("id", workingHours.getId());
+
+        return jsonWorkingHours;
     }
 }

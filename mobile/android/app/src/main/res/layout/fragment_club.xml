@@ -13,9 +13,10 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/holderClubInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+            android:background="@drawable/selector_bg_btn_white"
             android:orientation="horizontal"
             android:padding="16dp">
 

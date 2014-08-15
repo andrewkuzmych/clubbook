@@ -51,7 +51,7 @@
     <string name="avatar_incorrect">Avatar is missing</string>
     <string name="dob_incorrect">Birthday is incorrect</string>
 
-    <string name="no_connection">No internet connection</string>
+    <string name="no_connection">No Internet connection</string>
     <string name="no_location">Please enable location</string>
     <string name="retry_button">Retry</string>
 
@@ -78,5 +78,8 @@
     <string name="checked_in">Checked-in:</string>
     <string name="not_checked_in">Not Checked-in</string>
     <string name="friends">Friends</string>
+    <string name="capacity">Capacity</string>
+    <string name="dress_code">Dress Code</string>
+    <string name="age_restrictions">Age Restrictions</string>
 
 </resources>

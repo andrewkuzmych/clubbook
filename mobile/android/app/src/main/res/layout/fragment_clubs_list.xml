@@ -38,13 +38,11 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:singleLine="true"
-            android:text="23 km"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_large"
             android:paddingBottom="5dp"/>
 
         <SeekBar
-            style="@style/SeekBarAppTheme"
             android:id="@+id/seekBarDistance"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

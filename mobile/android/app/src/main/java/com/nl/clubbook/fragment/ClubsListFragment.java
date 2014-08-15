@@ -13,6 +13,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.ClubsAdapter;
 import com.nl.clubbook.datasource.ClubDto;
@@ -20,6 +22,7 @@ import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.L;
+import com.nl.clubbook.utils.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -141,6 +144,11 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
     private void initView() {
         View view = getView();
         if(view == null) {
+            return;
+        }
+
+        if(!NetworkUtils.isOn(getActivity())) {
+            Toast.makeText(getActivity(), R.string.no_connection, Toast.LENGTH_SHORT).show();
             return;
         }
 

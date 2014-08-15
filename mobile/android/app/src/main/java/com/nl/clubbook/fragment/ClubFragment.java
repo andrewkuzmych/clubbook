@@ -1,5 +1,6 @@
 package com.nl.clubbook.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
@@ -11,11 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
+import com.nl.clubbook.activity.ClubInfoActivity;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.adapter.ProfileAdapter;
 import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.ClubWorkingHoursDto;
 import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.JSONConverter;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.*;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -29,7 +32,7 @@ import java.util.List;
 /**
  * Created by Andrew on 6/8/2014.
  */
-public class ClubFragment extends BaseFragment {
+public class ClubFragment extends BaseFragment implements View.OnClickListener {
 
     private ClubDto mClub;
 
@@ -78,12 +81,24 @@ public class ClubFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.txtCheckedIn:
+                onCheckInBtnClicked(view);
+                break;
+            case R.id.holderClubInfo:
+                onHolderClubInfoClicked();
+                break;
+        }
+    }
+
     private void initImageLoader() {
         mImageLoader = ImageLoader.getInstance();
         mOptions = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.default_list_image)
-                .showImageForEmptyUri(R.drawable.default_list_image)
-                .showImageOnFail(R.drawable.default_list_image)
+                .showStubImage(R.drawable.ic_club_avatar_default)
+                .showImageForEmptyUri(R.drawable.ic_club_avatar_default)
+                .showImageOnFail(R.drawable.ic_club_avatar_default)
                 .cacheInMemory()
                 .cacheOnDisc()
                 .build();
@@ -95,33 +110,8 @@ public class ClubFragment extends BaseFragment {
             return;
         }
 
-        view.findViewById(R.id.txtCheckIn).setOnClickListener(new View.OnClickListener() {
-            public void onClick(final View view) {
-                if (LocationCheckinHelper.isCheckinHere(mClub)) {
-                    LocationCheckinHelper.checkout(getActivity(), new CheckInOutCallbackInterface() {
-                        @Override
-                        public void onCheckInOutFinished(boolean result) {
-                            // Do something when download finished
-                            if (result) {
-                                UiHelper.changeCheckinState(getActivity(), view, true);
-                                loadData();
-                            }
-                        }
-                    });
-                } else {
-                    LocationCheckinHelper.checkin(getActivity(), mClub, new CheckInOutCallbackInterface() {
-                        @Override
-                        public void onCheckInOutFinished(boolean isUserCheckIn) {
-                            // Do something when download finished
-                            if (isUserCheckIn) {
-                                UiHelper.changeCheckinState(getActivity(), view, false);
-                                loadData();
-                            }
-                        }
-                    });
-                }
-            }
-        });
+        view.findViewById(R.id.txtCheckIn).setOnClickListener(this);
+        view.findViewById(R.id.holderClubInfo).setOnClickListener(this);
 
         GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
         gridUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -210,6 +200,39 @@ public class ClubFragment extends BaseFragment {
         String avatarUrl = mClub.getAvatar();
         if(avatarUrl != null && avatarUrl.length() > 0) {
             mImageLoader.displayImage(avatarUrl, imgAvatar, mOptions, mAnimateFirstListener);
+        }
+    }
+
+    private void onHolderClubInfoClicked() {
+        Intent intent = new Intent(getActivity(), ClubInfoActivity.class);
+        intent.putExtra(ClubInfoActivity.EXTRA_CLUB, JSONConverter.newClub(mClub).toString());
+        intent.putExtra(ClubInfoActivity.EXTRA_TITLE, mClub.getTitle());
+        startActivity(intent);
+    }
+
+    private void onCheckInBtnClicked(final View view) {
+        if (LocationCheckinHelper.isCheckinHere(mClub)) {
+            LocationCheckinHelper.checkout(getActivity(), new CheckInOutCallbackInterface() {
+                @Override
+                public void onCheckInOutFinished(boolean result) {
+                    // Do something when download finished
+                    if (result) {
+                        UiHelper.changeCheckinState(getActivity(), view, true);
+                        loadData();
+                    }
+                }
+            });
+        } else {
+            LocationCheckinHelper.checkin(getActivity(), mClub, new CheckInOutCallbackInterface() {
+                @Override
+                public void onCheckInOutFinished(boolean isUserCheckIn) {
+                    // Do something when download finished
+                    if (isUserCheckIn) {
+                        UiHelper.changeCheckinState(getActivity(), view, false);
+                        loadData();
+                    }
+                }
+            });
         }
     }
 
