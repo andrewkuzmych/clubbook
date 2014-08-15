@@ -62,11 +62,9 @@
     <string name="km">km</string>
     <string name="m">m</string>
 
-    <string name="checkin">Check in</string>
-    <string name="checkout">Check out</string>
+    <string name="check_in">Check In</string>
+    <string name="check_out">Check Out</string>
     <string name="club_avatar_content_description">club avatar</string>
-    <string name="checked_in">Checked-in:</string>
-    <string name="not_checked_in">Not Checked-in</string>
 
     <!--New-->
     <string name="add_friend">Add Friend</string>
@@ -75,5 +73,10 @@
     <string name="block_user">Block \nUser</string>
     <string name="remove_friend">Remove \nFriend</string>
     <string name="sing_up">Sign Up</string>
+    <string name="open_today">Open Today:</string>
+    <string name="club_info_and_wall">Club Info &amp; Wall</string>
+    <string name="checked_in">Checked-in:</string>
+    <string name="not_checked_in">Not Checked-in</string>
+    <string name="friends">Friends</string>
 
 </resources>

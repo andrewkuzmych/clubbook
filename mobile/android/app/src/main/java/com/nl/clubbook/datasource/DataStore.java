@@ -1,12 +1,9 @@
 package com.nl.clubbook.datasource;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.nl.clubbook.adapter.ClubsAdapter;
-import com.nl.clubbook.adapter.MessagesAdapter;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.utils.L;
 
@@ -368,35 +365,29 @@ public class DataStore {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
-                ClubDto club = new ClubDto();
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                ClubDto club = null;
 
                 try {
-                    JSONObject club_dto = response_json.getJSONObject("club");
+                    JSONObject jsonClub = responseJson.getJSONObject("club");
 
-                    club.setId(club_dto.getString("id"));
-                    club.setTitle(club_dto.getString("club_name"));
-                    club.setPhone(club_dto.getString("club_phone"));
-                    club.setAddress(club_dto.getString("club_address"));
-                    club.setAvatar(club_dto.getString("club_logo"));
-                    club.setLon(club_dto.getJSONObject("club_loc").getDouble("lon"));
-                    club.setLat(club_dto.getJSONObject("club_loc").getDouble("lat"));
-                    club.setDistance(LocationCheckinHelper.calculateDistance(club.getLat(), club.getLon()));
+                    club = JSONConverter.newClub(jsonClub);
+                    if(club != null) {
+                        List<String> photos = new ArrayList<String>();
+                        JSONArray photo_list = jsonClub.getJSONArray("club_photos");
+                        for (int i = 0; i < photo_list.length(); i++) {
+                            photos.add(photo_list.getString(i));
+                        }
 
-                    List<String> photos = new ArrayList<String>();
-                    JSONArray photo_list = club_dto.getJSONArray("club_photos");
-                    for (int i = 0; i < photo_list.length(); i++) {
-                        photos.add(photo_list.getString(i));
+                        JSONArray jsonArrUsers = responseJson.getJSONArray("users");
+                        List<UserDto> users = new ArrayList<UserDto>();
+                        for (int i = 0; i < jsonArrUsers.length(); i++) {
+                            users.add(new UserDto(jsonArrUsers.getJSONObject(i)));
+                        }
+
+                        club.setUsers(users);
+                        club.setPhotos(photos);
                     }
-
-                    JSONArray users_dto = response_json.getJSONArray("users");
-                    List<UserDto> users = new ArrayList<UserDto>();
-                    for (int i = 0; i < users_dto.length(); i++) {
-                        users.add(new UserDto(users_dto.getJSONObject(i)));
-                    }
-
-                    club.setUsers(users);
-                    club.setPhotos(photos);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -431,8 +422,6 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
-                L.v("response_json - " + response_json);
-
                 UserDto user = null;
                 try {
                     if (response_json.getString("status").equalsIgnoreCase("ok")) {

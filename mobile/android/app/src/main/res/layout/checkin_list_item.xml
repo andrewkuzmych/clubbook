@@ -83,7 +83,7 @@
                     style="@style/main_button"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/checkin_button"
+                    android:background="@drawable/bg_btn_green"
                     android:text="Check in" />
 
                 <TextView

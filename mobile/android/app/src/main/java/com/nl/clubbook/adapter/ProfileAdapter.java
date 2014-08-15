@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.ImageHelper;
@@ -61,12 +63,13 @@ public class ProfileAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        ViewHolder holder = null;
+        ViewHolder holder;
 
         if (row == null) {
-            row = mInflater.inflate(R.layout.profile_item, parent, false);
+            row = mInflater.inflate(R.layout.item_grid_profile, parent, false);
             holder = new ViewHolder();
-            holder.image = (ImageView) row.findViewById(R.id.image);
+            holder.imgAvatar = (ImageView) row.findViewById(R.id.imgAvatar);
+            holder.txtFriendIndicator = (TextView) row.findViewById(R.id.txtFriendIndicator);
             holder.userId = row.findViewById(R.id.userId);
             row.setTag(holder);
         } else {
@@ -79,14 +82,18 @@ public class ProfileAdapter extends BaseAdapter {
     }
 
     private void fillView(ViewHolder holder, UserDto item) {
-        String image_url = ImageHelper.getUserListAvatar(item.getAvatar());
-        holder.image.setTag(image_url);
+        String imageUrl = ImageHelper.getUserListAvatar(item.getAvatar());
+        holder.imgAvatar.setTag(imageUrl);
+        imageLoader.displayImage(imageUrl, holder.imgAvatar, options, animateFirstListener);
+
         holder.userId.setTag(item.getId());
-        imageLoader.displayImage(image_url, holder.image, options, animateFirstListener);
+
+        //TODO implement friends indicator
     }
 
     static class ViewHolder {
         View userId;
-        ImageView image;
+        TextView txtFriendIndicator;
+        ImageView imgAvatar;
     }
 }

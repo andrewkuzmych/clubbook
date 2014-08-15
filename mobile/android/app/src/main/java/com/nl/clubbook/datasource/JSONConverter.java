@@ -139,7 +139,6 @@ public class JSONConverter {
         return result;
     }
 
-
     public static ClubDto newClub(JSONObject jsonClub) {
         if(jsonClub == null) {
             return null;
@@ -162,6 +161,25 @@ public class JSONConverter {
             club.setDistance(LocationCheckinHelper.calculateDistance(club.getLat(), club.getLon()));
         }
 
+        JSONObject jsonWorkingHours = jsonClub.optJSONObject("club_today_working_hours");
+        ClubWorkingHoursDto workingHours = newClubWorkingHours(jsonWorkingHours);
+        club.setTodayWorkingHours(workingHours);
+
         return club;
+    }
+
+    public static ClubWorkingHoursDto newClubWorkingHours(JSONObject jsonClubWorkingHours) {
+        if(jsonClubWorkingHours == null) {
+            return null;
+        }
+
+        ClubWorkingHoursDto result = new ClubWorkingHoursDto();
+        result.setId(jsonClubWorkingHours.optString("id", ""));
+        result.setStatus(jsonClubWorkingHours.optString("status", ""));
+        result.setStartTime(jsonClubWorkingHours.optString("start_time", ""));
+        result.setEndTime(jsonClubWorkingHours.optString("end_time", ""));
+        result.setDay(jsonClubWorkingHours.optInt("day", 0));
+
+        return result;
     }
 }

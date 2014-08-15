@@ -3,6 +3,7 @@ package com.nl.clubbook.helper;
 import android.content.Context;
 import android.content.res.Resources;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -16,15 +17,17 @@ import java.util.List;
  * Created by Andrew on 6/4/2014.
  */
 public class UiHelper {
-    public static void changeCheckinState(Context context, View view, boolean checkin) {
+    public static void changeCheckinState(Context context, View view, boolean isCheckIn) {
         TextView button = (TextView) view;
-        if (checkin) {
-            view.setBackgroundResource(R.drawable.checkin_button);
-            button.setText(context.getResources().getString(R.string.checkin));
+        if (isCheckIn) {
+            button.setBackgroundResource(R.drawable.bg_btn_green);
+            button.setText(context.getResources().getString(R.string.check_in));
         } else {
-            button.setBackgroundResource(R.drawable.checkout_button);
-            button.setText(context.getResources().getString(R.string.checkout));
+            button.setBackgroundResource(R.drawable.bg_btn_red);
+            button.setText(context.getResources().getString(R.string.check_out));
         }
+
+        button.invalidate();
     }
 
     public static Spinner createGenderSpinner(Spinner spinGender, Context context, String activeItem) {

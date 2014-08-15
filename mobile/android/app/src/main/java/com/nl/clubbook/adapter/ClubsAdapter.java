@@ -1,8 +1,6 @@
 package com.nl.clubbook.adapter;
 
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.nl.clubbook.R;
-import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.datasource.ClubDto;
-import com.nl.clubbook.fragment.ClubFragment;
-import com.nl.clubbook.helper.CheckInOutCallbackInterface;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.LocationCheckinHelper;
-import com.nl.clubbook.helper.UiHelper;
-import com.nl.clubbook.utils.L;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
@@ -37,6 +30,8 @@ public class ClubsAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private Context mContext;
     private List<ClubDto> mClubs = null;
+    private String mCheckedIn;
+    private String mFriends;
 
     public ClubsAdapter(Context context, List<ClubDto> data) {
         mInflater = LayoutInflater.from(context);
@@ -51,6 +46,9 @@ public class ClubsAdapter extends BaseAdapter {
                 .cacheInMemory()
                 .cacheOnDisc()
                 .build();
+
+        mCheckedIn = context.getString(R.string.checked_in);
+        mFriends = context.getString(R.string.friends);
     }
 
     @Override
@@ -104,11 +102,10 @@ public class ClubsAdapter extends BaseAdapter {
 
     private void fillRow(ClubItemHolder holder, ClubDto club) {
         String distance = LocationCheckinHelper.formatDistance(mContext, club.getDistance());
-        L.v("distance - " + club.getDistance());
         holder.txtDistance.setText(distance);
 
-        holder.txtCheckedInCount.setText("" + club.getActiveCheckIns());
-        holder.txtFriendsCount.setText("" + club.getActiveFriendsCheckIns());
+        holder.txtCheckedInCount.setText(club.getActiveCheckIns() + "\n" + mCheckedIn);
+        holder.txtFriendsCount.setText(club.getActiveFriendsCheckIns() + "\n" + mFriends);
 
         holder.txtClubName.setText(club.getTitle());
         holder.txtClubName.setTag(club.getId());

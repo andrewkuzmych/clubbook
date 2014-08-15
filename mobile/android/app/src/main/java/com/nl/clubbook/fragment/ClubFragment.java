@@ -3,19 +3,18 @@ package com.nl.clubbook.fragment;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageSwitcher;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.adapter.ProfileAdapter;
-import com.nl.clubbook.control.ExpandableHeightGridView;
 import com.nl.clubbook.datasource.ClubDto;
+import com.nl.clubbook.datasource.ClubWorkingHoursDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.*;
@@ -32,21 +31,18 @@ import java.util.List;
  */
 public class ClubFragment extends BaseFragment {
 
-    private float initialX;
-    private int position = 0;
-
     private ClubDto mClub;
 
-    private ImageLoader imageLoader;
-    private DisplayImageOptions options;
-    private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
-    private String club_id;
+    private ImageLoader mImageLoader;
+    private DisplayImageOptions mOptions;
+    private ImageLoadingListener mAnimateFirstListener = new SimpleImageLoadingListener();
+    private String mClubId;
 
     public ClubFragment(){}
 
-    public ClubFragment(BaseFragment previousFragment, String club_id) {
+    public ClubFragment(BaseFragment previousFragment, String clubId) {
         super(previousFragment);
-        this.club_id = club_id;
+        this.mClubId = clubId;
     }
 
     @Override
@@ -83,8 +79,8 @@ public class ClubFragment extends BaseFragment {
     }
 
     private void initImageLoader() {
-        imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder()
+        mImageLoader = ImageLoader.getInstance();
+        mOptions = new DisplayImageOptions.Builder()
                 .showStubImage(R.drawable.default_list_image)
                 .showImageForEmptyUri(R.drawable.default_list_image)
                 .showImageOnFail(R.drawable.default_list_image)
@@ -99,7 +95,7 @@ public class ClubFragment extends BaseFragment {
             return;
         }
 
-        view.findViewById(R.id.btnCheckIn).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.txtCheckIn).setOnClickListener(new View.OnClickListener() {
             public void onClick(final View view) {
                 if (LocationCheckinHelper.isCheckinHere(mClub)) {
                     LocationCheckinHelper.checkout(getActivity(), new CheckInOutCallbackInterface() {
@@ -115,15 +111,25 @@ public class ClubFragment extends BaseFragment {
                 } else {
                     LocationCheckinHelper.checkin(getActivity(), mClub, new CheckInOutCallbackInterface() {
                         @Override
-                        public void onCheckInOutFinished(boolean isUserCheckin) {
+                        public void onCheckInOutFinished(boolean isUserCheckIn) {
                             // Do something when download finished
-                            if (isUserCheckin) {
+                            if (isUserCheckIn) {
                                 UiHelper.changeCheckinState(getActivity(), view, false);
                                 loadData();
                             }
                         }
                     });
                 }
+            }
+        });
+
+        GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
+        gridUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                View userId = view.findViewById(R.id.userId);
+
+                openFragment(new ProfileFragment(ClubFragment.this, (String)userId.getTag(), mClub.getUsers()));
             }
         });
     }
@@ -138,7 +144,7 @@ public class ClubFragment extends BaseFragment {
 
         setLoading(view, true);
 
-        DataStore.retrievePlace(club_id, user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
+        DataStore.retrievePlace(mClubId, user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if(isDetached() || getActivity() == null) {
@@ -148,7 +154,7 @@ public class ClubFragment extends BaseFragment {
                 setLoading(view, false);
 
                 if (failed) {
-                    //TODO
+                    showNoInternetActivity();
                     return;
                 }
 
@@ -156,105 +162,64 @@ public class ClubFragment extends BaseFragment {
 
                 getActivity().setTitle("Club details"); //TODO
 
-                TextView btnCheckIn = (TextView) view.findViewById(R.id.btnCheckIn);
-                final ImageView imgClubCoverItem = (ImageView) view.findViewById(R.id.imgClubCoverItem);
-                final ImageSwitcher clubCoverSwitcher = (ImageSwitcher) view.findViewById(R.id.clubCoverSwitcher);
-                final TextView txtImageSlider = (TextView) view.findViewById(R.id.txtImageSlider);
-                TextView txtTitle = (TextView) view.findViewById(R.id.txtTitle);
-                TextView txtDistance = (TextView) view.findViewById(R.id.txtDistance);
-                TextView txtAddress = (TextView) view.findViewById(R.id.txtAddress);
-
-                // if we checked in this this club set related style
-                if (LocationCheckinHelper.isCheckinHere(mClub)) {
-                    UiHelper.changeCheckinState(getActivity(), btnCheckIn, false);
-                } else {
-                    UiHelper.changeCheckinState(getActivity(), btnCheckIn, true);
-                }
-                // can we check in this club
-                if (LocationCheckinHelper.canCheckinHere(mClub)) {
-                    btnCheckIn.setEnabled(true);
-                } else {
-                    btnCheckIn.setEnabled(false);
-                }
-
-                // Load profiles
-                initGridView(view, mClub.getUsers());
-
-                txtTitle.setText(mClub.getTitle());
-                txtAddress.setText(mClub.getAddress());
-                txtDistance.setText(LocationCheckinHelper.formatDistance(getActivity().getApplicationContext(), mClub.getDistance()));
-
-                if (mClub.getPhotos() != null && mClub.getPhotos().size() > 0) {
-                    String image_url = ImageHelper.getClubImage(mClub.getPhotos().get(position));
-                    imageLoader.displayImage(image_url, imgClubCoverItem, options, animateFirstListener);
-                    txtImageSlider.setText(String.valueOf(position + 1) + "/" + String.valueOf(mClub.getPhotos().size()));
-
-                    clubCoverSwitcher.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            if(mClub.getPhotos() == null || mClub.getPhotos().size() <= 1) {
-                                return false;
-                            }
-
-                            switch (event.getAction()) {
-                                case MotionEvent.ACTION_DOWN:
-                                    initialX = event.getX();
-                                    break;
-                                case MotionEvent.ACTION_UP:
-                                case MotionEvent.ACTION_CANCEL:
-                                    float finalX = event.getX();
-                                    if (initialX > finalX) {
-                                        clubCoverSwitcher.setInAnimation(getActivity(), R.anim.left_in);
-                                        clubCoverSwitcher.setOutAnimation(getActivity(), R.anim.left_out);
-
-                                        // next
-                                        position++;
-                                        if (position >= mClub.getPhotos().size()) {
-                                            position = 0;
-                                        }
-
-                                        String image_url = ImageHelper.getClubImage(mClub.getPhotos().get(position));
-                                        imageLoader.displayImage(image_url, imgClubCoverItem, options, animateFirstListener);
-                                        txtImageSlider.setText(String.valueOf(position + 1) + "/" + String.valueOf(mClub.getPhotos().size()));
-
-                                        clubCoverSwitcher.showNext();
-
-                                    } else {
-                                        clubCoverSwitcher.setInAnimation(getActivity(), R.anim.right_in);
-                                        clubCoverSwitcher.setOutAnimation(getActivity(), R.anim.right_out);
-
-                                        // prev
-                                        if (position > 0) {
-                                            position = position - 1;
-                                        } else {
-                                            position = mClub.getPhotos().size() - 1;
-                                        }
-
-                                        String image_url = ImageHelper.getClubImage(mClub.getPhotos().get(position));
-                                        imageLoader.displayImage(image_url, imgClubCoverItem, options, animateFirstListener);
-                                        txtImageSlider.setText(String.valueOf(position + 1) + "/" + String.valueOf(mClub.getPhotos().size()));
-
-                                        clubCoverSwitcher.showPrevious();
-                                    }
-                                    break;
-                            }
-                            return true;
-                        }
-                    });
-                }
+                fillView(view);
             }
         });
+    }
+
+    private void fillView(View view) {
+        TextView txtCheckIn = (TextView) view.findViewById(R.id.txtCheckIn);
+        TextView txtClubName = (TextView) view.findViewById(R.id.txtClubName);
+        TextView txtOpenToday = (TextView) view.findViewById(R.id.txtOpenToday);
+        TextView txtCheckInCount = (TextView) view.findViewById(R.id.txtCheckInCount);
+        TextView txtDistance = (TextView) view.findViewById(R.id.txtDistance);
+        TextView txtFriendsCount = (TextView) view.findViewById(R.id.txtFriendsCount);
+        ImageView imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
+
+        // if we checked in this this club set related style
+        if (LocationCheckinHelper.isCheckinHere(mClub)) {
+            UiHelper.changeCheckinState(getActivity(), txtCheckIn, false);
+        } else {
+            UiHelper.changeCheckinState(getActivity(), txtCheckIn, true);
+        }
+        // can we check in this club
+        if (LocationCheckinHelper.canCheckinHere(mClub)) {
+            txtCheckIn.setEnabled(true);
+        } else {
+            txtCheckIn.setEnabled(false);
+        }
+
+        // Load profiles
+        initGridView(view, mClub.getUsers());
+
+        txtClubName.setText(mClub.getTitle());
+        txtCheckInCount.setText(mClub.getActiveCheckIns() + "\n" + getString(R.string.checked_in));
+        txtFriendsCount.setText(mClub.getActiveFriendsCheckIns() + "\n" + getString(R.string.friends));
+        txtDistance.setText(LocationCheckinHelper.formatDistance(getActivity().getApplicationContext(), mClub.getDistance()));
+
+        ClubWorkingHoursDto workingHours = mClub.getTodayWorkingHours();
+        if(workingHours != null) {
+            String startTime = workingHours.getStartTime();
+            String endTime = workingHours.getEndTime();
+
+            txtOpenToday.append("  ");
+            txtOpenToday.append(startTime != null ? startTime + " - " : "");
+            txtOpenToday.append(endTime != null ? endTime : "");
+        }
+
+        String avatarUrl = mClub.getAvatar();
+        if(avatarUrl != null && avatarUrl.length() > 0) {
+            mImageLoader.displayImage(avatarUrl, imgAvatar, mOptions, mAnimateFirstListener);
+        }
     }
 
     private void setLoading(View view, boolean isLoading) {
         if(isLoading) {
             view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.btnCheckIn).setVisibility(View.GONE);
-            view.findViewById(R.id.scrollView).setVisibility(View.GONE);
+            view.findViewById(R.id.holderScreen).setVisibility(View.GONE);
         } else {
             view.findViewById(R.id.progressBar).setVisibility(View.GONE);
-            view.findViewById(R.id.btnCheckIn).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.scrollView).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.holderScreen).setVisibility(View.VISIBLE);
         }
     }
 
@@ -263,19 +228,8 @@ public class ClubFragment extends BaseFragment {
             return;
         }
 
-        ExpandableHeightGridView profileGridView = (ExpandableHeightGridView) view.findViewById(R.id.gridView);
-        profileGridView.setExpanded(true);
-
+        GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
         ProfileAdapter profileAdapter = new ProfileAdapter(getActivity(), users);
-        profileGridView.setAdapter(profileAdapter);
-
-        profileGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                View userId = view.findViewById(R.id.userId);
-
-                openFragment(new ProfileFragment(ClubFragment.this, (String)userId.getTag(), mClub.getUsers()));
-            }
-        });
+        gridUsers.setAdapter(profileAdapter);
     }
 }
