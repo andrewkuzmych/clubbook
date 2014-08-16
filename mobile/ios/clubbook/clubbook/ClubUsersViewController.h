@@ -14,5 +14,6 @@
 @property (strong, nonatomic) NSString *placeId;
 @property (assign, nonatomic) BOOL hasBack;
 - (IBAction)checkinAction:(CbButton *)sender;
+- (IBAction)directionAction:(id)sender;
 
 @end

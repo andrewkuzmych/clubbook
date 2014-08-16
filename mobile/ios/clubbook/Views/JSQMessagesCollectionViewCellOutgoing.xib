@@ -39,15 +39,16 @@
                         <rect key="frame" x="40" y="40" width="244" height="94"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vLY-aM-0Dr">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="vLY-aM-0Dr">
                                 <rect key="frame" x="0.0" y="0.0" width="238" height="94"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_chat_drink.png" translatesAutoresizingMaskIntoConstraints="NO" id="4Jw-cT-5kb">
-                                <rect key="frame" x="15" y="5" width="30" height="30"/>
+                                <rect key="frame" x="9" y="3" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="RRR-Sh-mLn"/>
@@ -58,11 +59,11 @@
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="vLY-aM-0Dr" firstAttribute="leading" secondItem="2zh-vR-QJW" secondAttribute="leading" id="7rI-Nc-AK3"/>
-                            <constraint firstItem="4Jw-cT-5kb" firstAttribute="top" secondItem="2zh-vR-QJW" secondAttribute="top" constant="5" id="Bgj-WV-ZK4"/>
+                            <constraint firstItem="4Jw-cT-5kb" firstAttribute="top" secondItem="2zh-vR-QJW" secondAttribute="top" constant="3" id="Bgj-WV-ZK4"/>
                             <constraint firstItem="vLY-aM-0Dr" firstAttribute="top" secondItem="2zh-vR-QJW" secondAttribute="top" id="RiG-21-Bqc"/>
                             <constraint firstAttribute="bottom" secondItem="vLY-aM-0Dr" secondAttribute="bottom" id="UbF-Bl-Q7v"/>
                             <constraint firstAttribute="trailing" secondItem="vLY-aM-0Dr" secondAttribute="trailing" constant="6" id="aVg-yy-8K7"/>
-                            <constraint firstItem="4Jw-cT-5kb" firstAttribute="leading" secondItem="2zh-vR-QJW" secondAttribute="leading" constant="15" id="bUy-3t-KnR"/>
+                            <constraint firstItem="4Jw-cT-5kb" firstAttribute="leading" secondItem="2zh-vR-QJW" secondAttribute="leading" constant="9" id="bUy-3t-KnR"/>
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X89-B1-aAd">

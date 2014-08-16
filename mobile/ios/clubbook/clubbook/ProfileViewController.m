@@ -97,7 +97,7 @@
     
     self.genderText.inputView = self.genderPicker;
     self.genderText.text = NSLocalizedString(@"birthday", nil);
-    self.gender = @"male";
+    //self.gender = @"male";
     self.genderText.delegate = self;
     self.genderText.inputAccessoryView = baseToolbar;
     self.genderText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Gender" attributes:@{ NSFontAttributeName : [UIFont fontWithName:@"TitilliumWeb-Regular" size:16.0], NSForegroundColorAttributeName: placeholderColor}];
@@ -163,9 +163,11 @@
         
         self.genderText.text = NSLocalizedString(user.gender, nil);
         if ([user.gender isEqualToString:@"male"]) {
+            self.gender = @"male";
             [self.genderPicker selectRow:0 inComponent:0 animated:YES];
         } else {
             [self.genderPicker selectRow:1 inComponent:0 animated:YES];
+            self.gender = @"female";
         }
         
         self.countryText.text = [user.country capitalizedString];
@@ -188,22 +190,21 @@
 
 - (void)actionSheet:(UIActionSheet *)popup clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-            switch (buttonIndex) {
-                case 0:
-                {
-                    // click yes
-                    [self showProgress:NO title:nil];
-                    NSString *photoId = self.currentImageButton.stringTag;
-                    [self._manager deleteUserImage:_user.id objectId:photoId];
-                    break;
-                }
-                case 1:
-                    // click cancel
-                    break;
-                default:
-                    break;
-            }
-
+    switch (buttonIndex) {
+        case 0:
+        {
+            // click yes
+            [self showProgress:NO title:nil];
+            NSString *photoId = self.currentImageButton.stringTag;
+            [self._manager deleteUserImage:_user.id objectId:photoId];
+            break;
+        }
+        case 1:
+            // click cancel
+            break;
+        default:
+            break;
+        }
 }
 
 - (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info

@@ -394,7 +394,7 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
             [cell.textImage setImage:image];
             cell.textView.text = [messageData text];
             CGRect rect = cell.textView.frame;
-            rect.origin.x = 40;
+            rect.origin.x = 15;
             cell.textView.frame = rect;
             
         } else{

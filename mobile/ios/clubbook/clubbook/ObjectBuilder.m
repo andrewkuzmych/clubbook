@@ -117,6 +117,7 @@
         place.lat = [[placeDic objectForKey:@"club_loc"] objectForKey:@"lat"];
         place.lon = [[placeDic objectForKey:@"club_loc"] objectForKey:@"lon"];
         place.countOfUsers = [[placeDic objectForKey:@"active_checkins"] intValue];
+        place.friendsCount = [[placeDic objectForKey:@"active_friends_checkins"] intValue];
         
         [places addObject:place];
     }
@@ -181,8 +182,9 @@
     place.lon = [[clubJson objectForKey:@"club_loc"] objectForKey:@"lon"];
     place.lat = [[clubJson objectForKey:@"club_loc"] objectForKey:@"lat"];
     place.countOfUsers = [[clubJson objectForKey:@"active_checkins"] intValue];
+    place.friendsCount = [[clubJson objectForKey:@"active_friends_checkins"] intValue];
 
-    place.friendsCount = [[parsedObject objectForKey:@"friends_count"] intValue];
+    //place.friendsCount = [[parsedObject objectForKey:@"friends_count"] intValue];
 
     NSMutableArray *photos = [[NSMutableArray alloc] init];
     
@@ -403,6 +405,9 @@
             conf.user_from = [conversationJson objectForKey:@"from_who"];
             conf.msg = [conversationJson objectForKey:@"msg"];
             conf.type = [conversationJson objectForKey:@"type"];
+            
+            NSNumber * isRead = (NSNumber *)[conversationJson objectForKey: @"read"];
+            conf.read = (isRead && [isRead boolValue] == YES);
             
             NSString *dateStr = [conversationJson objectForKey:@"time"];
             

@@ -6,12 +6,14 @@
   Copyright (c) 2014 clubbook. All rights reserved.
 */
 
-"slogan" = "Getting Social in The Club";
+"slogan" = "Get Social in The Club";
 "fbSign" = "Sign In with Facebook";
 "emailSignUp" = "Sign Up with E-mail";
-"emailSignIn" = "Log In";
-"termsText" = "by singing into clubbook you agree with";
-"termsAction" = "terms of use";
+"emailSignIn" = "Login";
+"login" = "Log In";
+"termsText" = "By signing into Clubbook, you agree with";
+"termsAction" = "Terms of Service";
+"signUp" = "Sign Up";
 
 "noneFriend" = "none";
 "sentRequest" = "sent_request";
@@ -35,8 +37,8 @@
 "invite_for_drink" = "Invite you for a drink";
 "send_like" = "likes you";
 "email"= "Email";
-"pass"= "Password (at least 6 chars)";
-"first_name"= "First name (at least 2 chars)";
+"pass"= "Password (minimum 6 characters)";
+"first_name"= "First Name";
 "birthday"= "Birthday";
 "male"= "Male";
 "gender"= "Gender";
@@ -46,21 +48,17 @@
 "no_location_title" = "Where are you?";
 "checking_in" = "checking in...";
 "checking_out" = "checking out...";
-"checkin" = "Checkin";
-"checkout" = "Checkout";
+"checkin" = "Check-in";
+"checkout" = "Check-out";
 "loading" = "Loading...";
 "yes" = "Yes";
 "cancel" = "Cancel";
 "youSure" = "Are you sure?";
 
 "title" = "Edit User Profile";
-"clubs" = "Clubs";
 "club_feature" = "Club Feature";
 "club_details" = "Club Details";
-"messages" = "Messages";
-"friends" = "Friends";
-"settings" = "Settings";
-"share" = "Share";
+
 "defoutBio" = "Hi, I am using Clubbook";
 "bio" = "short bio about you";
 "usersLeftToChecdkin" = "Waiting for %d more people to show Profile Pictures";
@@ -80,4 +78,39 @@
 "chat_limit" = "You cannot send more than 2 messages without reply";
 "checkin_distance" = "You need to be within %d meters to checkin";
 
+"clubs" = "Clubs";
+"messages" = "Messages";
+"friends" = "Friends";
+"settings" = "Settings";
+"share" = "Share";
+"checkedIn" = "checked in";
+"friends_lower" = "friends";
+"nearby" = "Nearby";
+"az" = "A-Z";
 
+"ageRestiction" = "AGE RESTRICTION";
+"capacity" = "CAPACITY";
+"dressCode" = "DRESS CODE";
+
+"mon" = "Monday";
+"tue" = "Tuesday";
+"wed" = "Wednesday";
+"tho" = "Thourday";
+"fri" = "Friday";
+"sat" = "Saturday";
+"san" = "Sunday";
+
+"accept" = "Accept";
+"remove" = "Remove";
+"aboutMe" = "About Me";
+
+"youSureUnfriend" = "Are you sure you want to Unfriend?";
+"youSureDelete" = "Are you sure you want to Delete Account?";
+"youSureLogOut" = "Are you sure you want to Log Out?";
+
+"push" = "Push Notification";
+"policy" = "Privacy Policy";
+"terms" = "Terms of Service";
+"account" = "Delete Account";
+"contact" = "Contact";
+"logOut" = "Log Out";

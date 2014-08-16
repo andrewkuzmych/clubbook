@@ -76,17 +76,21 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideProgress];
-        self.headerView.checkinButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:14.0];
+        self.headerView.checkinButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:16.0];
         self.headerView.checkinCountLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14.0];
         self.headerView.friendsCountLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14.0];
-        self.headerView.clubNameText.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:17.0];
-        self.headerView.openTodayLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12.0];
-        self.headerView.workingHoursLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:10.0];
-        self.headerView.clubInfoButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:15.0];
-        self.headerView.clubDistanceText.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:14.0];
-        self.clubFooterView.clubUsersLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14.0];
-        self.clubFooterView.checkinLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:18.0];
-        self.clubFooterView.usersLeftToCheckinLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:15.0];
+        self.headerView.checkinCountTitleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12.0];
+        self.headerView.checkinCountTitleLabel.text = NSLocalizedString(@"checkedIn", nil);
+        self.headerView.friendsCountTitleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12.0];
+        self.headerView.friendsCountTitleLabel.text = NSLocalizedString(@"friends_lower", nil);
+        self.headerView.clubNameText.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:19.0];
+        self.headerView.openTodayLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:13.0];
+        self.headerView.workingHoursLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:11.0];
+        self.headerView.clubInfoButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14.0];
+        self.headerView.clubDistanceText.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:15.0];
+        self.clubFooterView.clubUsersLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:16.0];
+        self.clubFooterView.checkinLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:20.0];
+        self.clubFooterView.usersLeftToCheckinLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:16.0];
         
         // GlobalVars *globalVars=[GlobalVars getInstance];
         CLLocation *loc = [[CLLocation alloc] initWithLatitude:[place.lat doubleValue] longitude:[place.lon doubleValue]];
@@ -95,33 +99,6 @@
         place.disatance = distance;
         
         self.headerView.clubNameText.text = place.title;
-       // self.clubFooterView.clubAddressText.text = place.address;
-        
-        UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc]
-                                       initWithTarget:self action:@selector(handleGesture:)];
-        tgr.numberOfTapsRequired = 1;
-        tgr.numberOfTouchesRequired = 1;
-        [self.headerView.clubMapView addGestureRecognizer:tgr];
-        self.headerView.clubMapView.scrollEnabled = NO;
-        self.headerView.clubMapView.zoomEnabled = NO;
-
-        MKCoordinateRegion newRegion;
-        newRegion.center.latitude = [place.lat doubleValue];
-        newRegion.center.longitude = [place.lon doubleValue];
-        newRegion.span.latitudeDelta =0.00523;
-        newRegion.span.longitudeDelta=0.00523;
-        
-        
-        CLLocationCoordinate2D coordinate;
-        coordinate.latitude = [place.lat doubleValue];
-        coordinate.longitude = [place.lon doubleValue];
-        
-        MKPointAnnotation * annotation = [[MKPointAnnotation alloc] init];
-        [annotation setCoordinate:coordinate];
-        
-        [self.headerView.clubMapView removeAnnotations:self.headerView.clubMapView.annotations];
-        [self.headerView.clubMapView addAnnotation:annotation];
-        [self.headerView.clubMapView setRegion:newRegion];
         
         if (place.todayWorkingHours != nil) {
             
@@ -140,9 +117,9 @@
         
         BOOL isCheckinHere = [LocationHelper isCheckinHere:place];
         if(isCheckinHere){
-            [self.headerView.checkinButton setSecondState:NSLocalizedString(@"Checkout", nil)];
+            [self.headerView.checkinButton setSecondState:NSLocalizedString(@"checkout", nil)];
         } else {
-            [self.headerView.checkinButton setMainState:NSLocalizedString(@"Checkin", nil)];
+            [self.headerView.checkinButton setMainState:NSLocalizedString(@"checkin", nil)];
         }
         
         self.headerView.checkinCountLabel.text = [NSString stringWithFormat:@"%d",place.countOfUsers];
@@ -182,22 +159,6 @@
     }
 }
 
-- (void)handleGesture:(UIGestureRecognizer *)gestureRecognizer
-{
-    if (gestureRecognizer.state != UIGestureRecognizerStateEnded)
-        return;
-    
-    MKPlacemark* place = [[MKPlacemark alloc] initWithCoordinate: CLLocationCoordinate2DMake([_place.lat doubleValue], [_place.lon doubleValue]) addressDictionary: nil];
-    MKMapItem* destination = [[MKMapItem alloc] initWithPlacemark: place];
-    destination.name = _place.title;
-    NSArray* items = [[NSArray alloc] initWithObjects: destination, nil];
-    NSDictionary* options = [[NSDictionary alloc] initWithObjectsAndKeys:
-                             MKLaunchOptionsDirectionsModeWalking,
-                             MKLaunchOptionsDirectionsModeKey, nil];
-    [MKMapItem openMapsWithItems: items launchOptions: options];
-}
-
-
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if(_place == nil)
     {
@@ -219,7 +180,7 @@
         NSString * text = [NSString stringWithFormat:NSLocalizedString(@"usersLeftToChecdkin", nil),(minUserCount - _place.users.count)];
         
         [CSNotificationView showInViewController:self
-                                       tintColor:[UIColor colorWithRed:0.000 green:0.6 blue:1.000 alpha:1]
+                                       tintColor:[UIColor colorWithRed:153/255.0f green:0/255.0f blue:217/255.0f alpha:1]
                                            image:nil
                                          message:text
                                         duration:kCSNotificationViewDefaultShowDuration];
@@ -231,14 +192,14 @@
         if (!isCheckinHere && !user.isFriend)
             // cannot see profile when you are not checked in and not friend
             [CSNotificationView showInViewController:self
-                                           tintColor:[UIColor colorWithRed:0.000 green:0.6 blue:1.000 alpha:1]
+                                           tintColor:[UIColor colorWithRed:153/255.0f green:0/255.0f blue:217/255.0f alpha:1]
                                                image:nil
                                             message:NSLocalizedString(@"needToCheckinFirst", nil)
                                             duration:kCSNotificationViewDefaultShowDuration];
         else if([user.id isEqualToString:userId])
             // cannot see own profile :)
             [CSNotificationView showInViewController:self
-                                           tintColor:[UIColor colorWithRed:0.000 green:0.6 blue:1.000 alpha:1]
+                                           tintColor:[UIColor colorWithRed:153/255.0f green:0/255.0f blue:217/255.0f alpha:1]
                                                image:nil
                                              message:NSLocalizedString(@"cannotSeeOwnPofile", nil)
                                             duration:kCSNotificationViewDefaultShowDuration];
@@ -255,6 +216,7 @@
         User *user = _place.users[indexPath.row];
         userController.userId = user.id;
         userController.currentPlace = _place;
+        userController.clubCheckinName = _place.title;
     } else if ([[segue identifier] isEqualToString:@"onClubInfo"]) {
         ClubViewController *clubController =  [segue destinationViewController];
         clubController.place = _place;
@@ -355,12 +317,23 @@
             
             NSString *message = [NSString stringWithFormat:NSLocalizedString(@"checkin_distance", nil), [GlobalVars getInstance].MaxCheckinRadius];
             [CSNotificationView showInViewController:self
-                                           tintColor:[UIColor colorWithRed:0.000 green:0.6 blue:1.000 alpha:1]
+                                           tintColor:[UIColor colorWithRed:153/255.0f green:0/255.0f blue:217/255.0f alpha:1]
                                                image:nil
                                              message:message
                                             duration:kCSNotificationViewDefaultShowDuration];
         }
     }
+}
+
+- (IBAction)directionAction:(id)sender {
+    MKPlacemark* place = [[MKPlacemark alloc] initWithCoordinate: CLLocationCoordinate2DMake([_place.lat doubleValue], [_place.lon doubleValue]) addressDictionary: nil];
+    MKMapItem* destination = [[MKMapItem alloc] initWithPlacemark: place];
+    destination.name = _place.title;
+    NSArray* items = [[NSArray alloc] initWithObjects: destination, nil];
+    NSDictionary* options = [[NSDictionary alloc] initWithObjectsAndKeys:
+                             MKLaunchOptionsDirectionsModeWalking,
+                             MKLaunchOptionsDirectionsModeKey, nil];
+    [MKMapItem openMapsWithItems: items launchOptions: options];
 }
 
 

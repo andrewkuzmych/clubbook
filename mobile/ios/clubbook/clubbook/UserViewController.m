@@ -46,6 +46,7 @@
     self.addFriendButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14.0];
     self.countryLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14.0];
     self.aboutMeTitleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:15.0];
+    self.aboutMeTitleLabel.text = NSLocalizedString(@"aboutMe", nil);
     self.aboutMeLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12.0];
     
     [self loadUser];
@@ -114,7 +115,20 @@
 
         self.nameLabel.text = user.name;
         self.imageScrollView.delegate = self;
-        self.countryLabel.text = user.country;
+        
+        NSString *firstCapChar = [[user.country substringToIndex:1] capitalizedString];
+        NSString *cappedCountry = [user.country stringByReplacingCharactersInRange:NSMakeRange(0,1) withString:firstCapChar];
+        self.countryLabel.text = cappedCountry;
+        
+        self.checkinLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:13.0];
+        if (self.clubCheckinName != nil) {
+            self.checkinLabel.hidden = NO;
+            [self.checkinLabel setText: [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"checked_in", nil), self.clubCheckinName]];
+        } else {
+            self.checkinLabel.hidden = YES;
+        }
+
+        
         if (user.bio != nil) {
             self.aboutMeLabel.text = user.bio;
         } else {
@@ -174,7 +188,7 @@
         
         if (currentUser.isFriend) {
             UIImageView* friendIconView = [[UIImageView alloc] initWithFrame:CGRectMake(37 + self.userPhotosScroll.frame.size.height*i, 35, 25, 25)];
-            friendIconView.image = [UIImage imageNamed:@"icon_friends.png"];
+            friendIconView.image = [UIImage imageNamed:@"icon_avatar_friend.png"];
             [self.userPhotosScroll addSubview:friendIconView];
         }
     }
@@ -193,7 +207,7 @@
     if([user.id isEqualToString:userId]) {
         // cannot see own profile :)
         [CSNotificationView showInViewController:self
-                                       tintColor:[UIColor colorWithRed:0.000 green:0.6 blue:1.000 alpha:1]
+                                       tintColor:[UIColor colorWithRed:153/255.0f green:0/255.0f blue:217/255.0f alpha:1]
                                            image:nil
                                          message:NSLocalizedString(@"cannotSeeOwnPofile", nil)
                                         duration:kCSNotificationViewDefaultShowDuration];
@@ -279,8 +293,33 @@
         [self showProgress:NO title:NSLocalizedString(@"processing", nil)];
         [self._manager confirmFriendRequest:userId friendId:self.userId];
     } else if ([sender.friendState isEqualToString:NSLocalizedString(@"friend", nil)]){
-        [self showProgress:NO title:NSLocalizedString(@"processing", nil)];
-        [self._manager removeFriend:userId friendId:self.userId];
+        UIActionSheet *popup = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"youSureUnfriend", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:
+                                NSLocalizedString(@"yes", nil),
+                                nil];
+        [popup showInView:[UIApplication sharedApplication].keyWindow];
     }
 }
+
+-(void)actionSheet:(UIActionSheet *)popup clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *userId = [defaults objectForKey:@"userId"];
+    
+    switch (buttonIndex) {
+        case 0:
+        {
+            // click yes
+            [self showProgress:NO title:NSLocalizedString(@"processing", nil)];
+            [self._manager removeFriend:userId friendId:self.userId];
+            break;
+        }
+        case 1:
+            // click cancel
+            break;
+        default:
+            break;
+    }
+    
+}
+
 @end
