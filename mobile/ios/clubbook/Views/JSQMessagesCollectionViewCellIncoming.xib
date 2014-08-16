@@ -39,7 +39,7 @@
                         <rect key="frame" x="36" y="40" width="244" height="94"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KYU-B8-cUW">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="KYU-B8-cUW">
                                 <rect key="frame" x="6" y="0.0" width="238" height="94"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -47,7 +47,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_chat_drink.png" translatesAutoresizingMaskIntoConstraints="NO" id="d5F-wu-ZOE">
-                                <rect key="frame" x="15" y="5" width="30" height="30"/>
+                                <rect key="frame" x="13" y="3" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="aea-p2-Sx0"/>
@@ -59,10 +59,10 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="KYU-B8-cUW" secondAttribute="trailing" id="4qS-03-PFO"/>
                             <constraint firstAttribute="bottom" secondItem="KYU-B8-cUW" secondAttribute="bottom" id="B2v-Gq-Y1L"/>
-                            <constraint firstItem="d5F-wu-ZOE" firstAttribute="top" secondItem="btS-p8-B7Z" secondAttribute="top" constant="5" id="J3O-WQ-236"/>
+                            <constraint firstItem="d5F-wu-ZOE" firstAttribute="top" secondItem="btS-p8-B7Z" secondAttribute="top" constant="3" id="J3O-WQ-236"/>
                             <constraint firstItem="KYU-B8-cUW" firstAttribute="leading" secondItem="btS-p8-B7Z" secondAttribute="leading" constant="6" id="Tg9-9l-vr8"/>
                             <constraint firstItem="KYU-B8-cUW" firstAttribute="top" secondItem="btS-p8-B7Z" secondAttribute="top" id="aEL-yH-N1p"/>
-                            <constraint firstItem="d5F-wu-ZOE" firstAttribute="leading" secondItem="btS-p8-B7Z" secondAttribute="leading" constant="15" id="bqL-GU-nX3"/>
+                            <constraint firstItem="d5F-wu-ZOE" firstAttribute="leading" secondItem="btS-p8-B7Z" secondAttribute="leading" constant="13" id="bqL-GU-nX3"/>
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Da1-09-wR4">

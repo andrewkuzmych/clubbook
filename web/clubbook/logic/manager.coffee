@@ -60,9 +60,13 @@ exports.signinmail = (params, callback)->
         callback "Wrong User or password " ,user
 
 exports.list_club = (params, callback)->
-  db_model.Venue.find({ 'club_loc':{ '$near' : [ params.lat,params.lon], '$maxDistance' :  exports.radius_to_km(params.distance) }}).exec (err, clubs)->
-    callback err, clubs
-
+  query = { 'club_loc':{ '$near' : [ params.lat,params.lon], '$maxDistance' :  exports.radius_to_km(params.distance) }}
+  if params.sort_by is 'dist'
+    db_model.Venue.find(query).exec (err, clubs)->
+      callback err, clubs
+  else
+    db_model.Venue.find(query).sort("club_name").exec (err, clubs)->
+      callback err, clubs
 exports.get_people_count_in_club = (club, callback)->
   db_model.User.count({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}}).exec callback
 
@@ -412,6 +416,11 @@ exports.readchat = (params, callback)->
       callback err, null
 
     else
+      for conv in chat.conversation
+        if conv.from_who.toString() != params.current_user.toString()
+          conv.read = true
+
+
       if chat.unread.user && chat.unread.user.toString() == params.current_user.toString()
         chat.unread.count = 0
 

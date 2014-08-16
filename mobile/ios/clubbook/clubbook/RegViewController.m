@@ -109,7 +109,9 @@
     [self pickerView:self.genderPicker didSelectRow:0 inComponent:0];
 
     
-    self.regButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:16];
+    self.regButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:18];
+    
+    [self.regButton setTitle: NSLocalizedString(@"signUp", nil) forState:UIControlStateNormal];
     
     [self.nameText becomeFirstResponder];
 }

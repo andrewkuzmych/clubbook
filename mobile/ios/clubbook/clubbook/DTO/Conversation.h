@@ -15,5 +15,6 @@
 @property (strong, nonatomic) NSString *type;
 @property (strong, nonatomic) NSString *msg;
 @property (strong, nonatomic) NSDate *time;
+@property (assign, nonatomic) BOOL read;
 
 @end

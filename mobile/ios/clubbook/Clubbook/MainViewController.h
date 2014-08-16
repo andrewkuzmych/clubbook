@@ -17,8 +17,10 @@
 @property (weak, nonatomic) IBOutlet UITableView *clubTable;
 @property (weak, nonatomic) IBOutlet UISlider *sliderControl;
 @property (weak, nonatomic) IBOutlet UILabel *distance;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *segmentControl;
 - (IBAction)SliderChanged:(id)sender;
 - (IBAction)sliderTouchUp:(id)sender;
 - (IBAction)checkinAction:(UIButton *)sender;
+- (IBAction)segmentChanged:(id)sender;
 
 @end

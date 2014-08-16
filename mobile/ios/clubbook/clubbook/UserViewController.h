@@ -11,7 +11,7 @@
 #import "CbLabel.h"
 #import "AddFriendButton.h"
 
-@interface UserViewController : BaseViewController<UIScrollViewDelegate>
+@interface UserViewController : BaseViewController<UIScrollViewDelegate, UIActionSheetDelegate>
 @property (strong, nonatomic) NSString *userId;
 @property (weak, nonatomic) IBOutlet UIScrollView *imageScrollView;
 @property (weak, nonatomic) IBOutlet UIPageControl *imagePageView;
@@ -22,9 +22,11 @@
 @property (weak, nonatomic) IBOutlet UILabel *countryLabel;
 @property (weak, nonatomic) IBOutlet UILabel *aboutMeTitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *aboutMeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *checkinLabel;
 @property (weak, nonatomic) IBOutlet UIScrollView *userPhotosScroll;
 
 @property (weak, nonatomic) Place *currentPlace;
+@property (weak, nonatomic) NSString *clubCheckinName;
 - (IBAction)chatAction:(id)sender;
 - (IBAction)addFriendAction:(AddFriendButton *)sender;
 

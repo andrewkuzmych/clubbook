@@ -48,7 +48,8 @@
                                                                           attributes:@{NSFontAttributeName : [UIFont fontWithName:@"TitilliumWeb-Regular" size:16.0],
                                                                             NSForegroundColorAttributeName: placeholderColor}];
 
-    self.loginButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:16];
+    self.loginButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:18];
+    [self.loginButton setTitle:NSLocalizedString(@"login", nil) forState:UIControlStateNormal];
     
     [self.emailText becomeFirstResponder];
 }

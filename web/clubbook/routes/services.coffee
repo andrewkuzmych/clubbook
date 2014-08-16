@@ -587,6 +587,7 @@ prepare_chat_messages = (chat, current_user)->
       time: conversationTime
       type: conversation.type
       from_who: conversation.from_who
+      read: conversation.read
       from_who_name: if conversation.from_who.toString() is current_user._id.toString() then current_user.name else receiver.name
       from_who_avatar: if conversation.from_who.toString() is current_user._id.toString() then current_user.avatar else receiver.avatar
       is_my_message: current_user._id.toString() is conversation.from_who.toString()

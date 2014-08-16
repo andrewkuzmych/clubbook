@@ -53,18 +53,18 @@
         [self performSegueWithIdentifier: @"onLogin" sender: self];
     }
     
-    self.sloganLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:18];
+    self.sloganLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:20];
     self.sloganLabel.text = NSLocalizedString(@"slogan", nil);
-    self.fbButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:17];
+    self.fbButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:19];
     [self.fbButton setTitle:NSLocalizedString(@"fbSign", nil) forState:UIControlStateNormal];
-    self.regButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:17];
+    self.regButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:19];
     [self.regButton setTitle:NSLocalizedString(@"emailSignUp", nil) forState:UIControlStateNormal];
-    self.loginButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:18];
+    self.loginButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:20];
     [self.loginButton setTitle:NSLocalizedString(@"emailSignIn", nil) forState:UIControlStateNormal];
     
-    self.termOfUseLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12];
+    self.termOfUseLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14];
     self.termOfUseLabel.text = NSLocalizedString(@"termsText", nil);
-    self.termOfUseButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:12];
+    self.termOfUseButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:14];
     [self.termOfUseButton setTitle:NSLocalizedString(@"termsAction", nil) forState:UIControlStateNormal];
   
 }
@@ -80,7 +80,7 @@
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    [self.navigationController setNavigationBarHidden:NO];    // it shows
+    // it shows
 }
 
 - (void)didReceiveMemoryWarning
@@ -154,7 +154,10 @@
                                            NSString *country = @"";
                                            if (data.count > 0) {
                                                FBGraphObject *ht = [[data objectAtIndex:0] objectForKey:@"hometown_location"];
-                                              country = [ht objectForKey:@"country"];
+                                               if (ht != nil && ht != (id)[NSNull null]) {
+                                                   country = [ht objectForKey:@"country"];
+                                               }
+
                                            }
                                            
                                            [self onFbLogin:user country:country];
@@ -175,21 +178,10 @@
     NSString *email  = [user objectForKey:@"email"];
     NSString *gender  = [user objectForKey:@"gender"];
     NSString *birthday = [user objectForKey:@"birthday"];
-
     NSString *userid  = user.id;
     
-    NSDateFormatter* myFormatter = [[NSDateFormatter alloc] init];
-    [myFormatter setDateFormat:@"MM/dd/yyyy"];
-    NSDate* birthdayDate = [myFormatter dateFromString:birthday];
-    
-    
-    NSCalendar* calendar = [NSCalendar currentCalendar];
-    NSDateComponents* components = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:birthdayDate]; // Get necessary date components
-    
-    NSInteger day = [components day];
-    NSInteger month = [components month];
-    NSInteger year = [components year];
-    NSString *dob = [[NSString alloc] initWithFormat:@"%02d.%02d.%04d", day, month, year];
+    NSString *dob;
+    dob = [self formatDate:birthday];
     
     CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
     
@@ -215,6 +207,26 @@
     }];
         
 }
+
+- (NSString *)formatDate:(NSString *)birthday {
+    if (birthday == nil) {
+        return nil;
+    }
+    
+    NSDateFormatter* myFormatter = [[NSDateFormatter alloc] init];
+    [myFormatter setDateFormat:@"MM/dd/yyyy"];
+    NSDate* birthdayDate = [myFormatter dateFromString:birthday];
+    
+    NSCalendar* calendar = [NSCalendar currentCalendar];
+    NSDateComponents* components = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:birthdayDate]; // Get necessary date components
+    
+    NSInteger day = [components day];
+    NSInteger month = [components month];
+    NSInteger year = [components year];
+    NSString *dob = [[NSString alloc] initWithFormat:@"%02d.%02d.%04d", day, month, year];
+    return dob;
+}
+
 
 
 - (void)didFbLoginUser:(User *) user {

@@ -56,6 +56,12 @@
     
     self.clubTable.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
+    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:@"TitilliumWeb-Regular" size:12], UITextAttributeFont, nil];
+    [self.segmentControl setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
+    
+    [self.segmentControl setTitle:[NSString stringWithFormat:NSLocalizedString(@"nearby", nil)] forSegmentAtIndex:0];
+    [self.segmentControl setTitle:[NSString stringWithFormat:NSLocalizedString(@"az", nil)] forSegmentAtIndex:1];
+    
     [self._manager getConfig];
 }
 
@@ -74,6 +80,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [self loadClub];
+    [self.navigationController setNavigationBarHidden:NO];
     
     //Pubnub staff
     PNConfiguration *myConfig = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"  publishKey: Constants.PubnabPubKay subscribeKey:Constants.PubnabSubKay secretKey:nil];
@@ -122,8 +129,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideProgress];
         _places = places;
-        
-       // GlobalVars *globalVars=[GlobalVars getInstance];
+        [self sortPlaces];
         
         for (Place *place in places) {
             CLLocation *loc = [[CLLocation alloc] initWithLatitude:[place.lat doubleValue] longitude:[place.lon doubleValue]];
@@ -131,6 +137,7 @@
             place.disatance = distance;
         }
         
+       
         self.clubTable.hidden = NO;
         self.clubTable.dataSource = self;
         self.clubTable.delegate = self;
@@ -154,10 +161,7 @@
     if (self.isLoaded || [LocationManagerSingleton sharedSingleton].locationManager.location == nil) {
         return;
     }
-    
     self.isLoaded = YES;
-    
-    //GlobalVars *globalVars=[GlobalVars getInstance];
     double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
     double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
         
@@ -180,7 +184,17 @@
     
     cell.distanceLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:12];
     
-    cell.userCountLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:12];
+    cell.userCountLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12];
+    
+    cell.friendsCountLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12];
+    
+    cell.userCountLabelTitle.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12];
+    
+    cell.userCountLabelTitle.text = NSLocalizedString(@"checkedIn", nil);
+    
+    cell.friendsCountLabelTitle.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12];
+    
+    cell.friendsCountLabelTitle.text = NSLocalizedString(@"friends_lower", nil);
     
     cell.closingLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:10];
     
@@ -202,7 +216,9 @@
     
     [cell.userCountLabel setText: [NSString stringWithFormat:@"%d", place.countOfUsers]];
     
-    [cell.clubAvatar setImageWithURL:[NSURL URLWithString:place.avatar] placeholderImage:[UIImage imageNamed:@"Default.png"]];
+    [cell.friendsCountLabel setText: [NSString stringWithFormat:@"%d", place.friendsCount]];
+    
+    [cell.clubAvatar setImageWithURL:[NSURL URLWithString:place.avatar] placeholderImage:[UIImage imageNamed:@"avatar_default.png"]];
     
     BOOL isCheckinHere = [LocationHelper isCheckinHere:place];
     if(isCheckinHere){
@@ -330,6 +346,27 @@
     }
 }
 
+- (IBAction)segmentChanged:(id)sender {
+    [self sortPlaces];
+}
+
+-(void)sortPlaces{
+    NSString *sortProperty;
+    if([self.segmentControl selectedSegmentIndex] == 0){
+        sortProperty = @"disatance";
+    }
+    else if([self.segmentControl selectedSegmentIndex] == 1){
+        sortProperty = @"title";
+    }
+    
+    NSSortDescriptor *sortDescriptor;
+    sortDescriptor = [[NSSortDescriptor alloc] initWithKey:sortProperty
+                                                     ascending:YES];
+    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+    _places = [_places sortedArrayUsingDescriptors:sortDescriptors];
+    [self.clubTable reloadData];
+
+}
 
 - (void)didCheckin:(User *) user userInfo:(NSObject *)userInfo
 {

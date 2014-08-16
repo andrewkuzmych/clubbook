@@ -164,12 +164,16 @@
 
 - (void)styleUi
 {
-    self.nameLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:17.0];
+    self.nameLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:19.0];
     self.clubDescLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12.0];
-    self.ageRestrictionTitleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12.0];
-    self.dressCodeTitleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12.0];
+    self.ageRestrictionTitleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:13.0];
+    self.ageRestrictionTitleLabel.text = NSLocalizedString(@"ageRestiction", nil);
     
-    self.capacityTitleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12.0];
+    self.dressCodeTitleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:13.0];
+    self.dressCodeTitleLabel.text = NSLocalizedString(@"dressCode", nil);
+    
+    self.capacityTitleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:13.0];
+    self.capacityTitleLabel.text = NSLocalizedString(@"capacity", nil);
     
     self.ageRestrictionLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:14.0];
     
@@ -177,15 +181,15 @@
     
     self.capacityLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:15.0];
     
-    self.addressButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12.0];
+    self.addressButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14.0];
     
-    self.siteButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12.0];
+    self.siteButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14.0];
     
-    self.emailButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12.0];
+    self.emailButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14.0];
     
-    self.phoneButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12.0];
+    self.phoneButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14.0];
     
-    UIFont *workingHoursFont = [UIFont fontWithName:@"TitilliumWeb-Regular" size:15.0];
+    UIFont *workingHoursFont = [UIFont fontWithName:@"TitilliumWeb-Regular" size:17.0];
     self.monTitleLabel.font = workingHoursFont;
     self.monHoursLabel.font = workingHoursFont;
     self.tueTitleLabel.font = workingHoursFont;
@@ -200,6 +204,15 @@
     self.satHoursLabel.font = workingHoursFont;
     self.sanTitleLabel.font = workingHoursFont;
     self.sanHoursLabel.font = workingHoursFont;
+
+    self.monTitleLabel.text = NSLocalizedString(@"mon", nil);
+    self.tueTitleLabel.text = NSLocalizedString(@"tue", nil);
+    self.wedTitleLabel.text = NSLocalizedString(@"wed", nil);
+    self.thoTitleLabel.text = NSLocalizedString(@"tho", nil);
+    self.friTitleLabel.text = NSLocalizedString(@"fri", nil);
+    self.satTitleLabel.text = NSLocalizedString(@"sat", nil);
+    self.sanTitleLabel.text = NSLocalizedString(@"san", nil);
+
 }
 
 - (void)didReceiveMemoryWarning

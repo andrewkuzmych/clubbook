@@ -14,6 +14,7 @@
 
 @interface ChatViewController (){
     bool canChat;
+    Chat *_chat;
 }
 
 @end
@@ -34,9 +35,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     [PubNub setDelegate:self];
     // Do any additional setup after loading the view.
-    self.title = @"Chat";
+    //self.title = @"Chat";
     
     dispatch_async(dispatch_get_main_queue(), ^{
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -58,7 +60,6 @@
     [smileButton setTitleColor: [UIColor whiteColor] forState:UIControlStateNormal];
     [smileButton setTitleColor: [UIColor greenColor] forState:UIControlStateHighlighted];
     smileButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:17];
-    //[smileButton setBackgroundImage:[UIImage imageNamed:@"icon_smiley"] forState:UIControlStateNormal];
     
     UIButton *drinkButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [drinkButton addTarget:self
@@ -82,8 +83,8 @@
     if ([user_to isEqualToString:self.sender]) {
         canChat = YES;
         [self putMessage:msg type:type sender:user_from];
+        [self._manager readChat:_chat.currentUser.id toUser:_chat.receiver.id];
     }
-    
 }
 
 - (void)didChat:(NSString *)result
@@ -94,6 +95,7 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideProgress];
+        _chat = chat;
         self.messages = [[NSMutableArray alloc] init];
         
         // get user to avatar
@@ -103,17 +105,22 @@
         [transformation setParams: @{@"width": @256, @"height": @256, @"crop": @"thumb", @"gravity": @"face"}];
         CGFloat incomingDiameter = self.collectionView.collectionViewLayout.incomingAvatarViewSize.width;
         NSString * receiverUserUrl  = [cloudinary url: [chat.receiver.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
-        
         NSURL *receiverUserUrlImageURL = [NSURL URLWithString:receiverUserUrl];
         NSData *receiverUserData = [NSData dataWithContentsOfURL:receiverUserUrlImageURL];
-        
         self.userToImage =  [JSQMessagesAvatarFactory avatarWithImage:[UIImage imageWithData:receiverUserData] diameter:incomingDiameter];
         
         
+        NSString * senderUserUrl  = [cloudinary url: [chat.currentUser.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
+        NSURL *senderUserUrlImageURL = [NSURL URLWithString:senderUserUrl];
+        NSData *senderUserData = [NSData dataWithContentsOfURL:senderUserUrlImageURL];
+        self.userFromImage =  [JSQMessagesAvatarFactory avatarWithImage:[UIImage imageWithData:senderUserData] diameter:incomingDiameter];
+        
+        
          // get user from avatar
-        self.userFromImage = [JSQMessagesAvatarFactory avatarWithUserInitials:@"ME"
+        //self.userFromImage = [JSQMessagesAvatarFactory avatarWithImage:[UIImage imageWithData:receiverUserData] diameter:incomingDiameter];
+        /*[JSQMessagesAvatarFactory avatarWithUserInitials:@"ME"
                                                                backgroundColor:[UIColor colorWithWhite:0.85f alpha:1.0f]
-                                                                    textColor:[UIColor colorWithWhite:0.60f alpha:1.0f] font:[UIFont systemFontOfSize:14.0f] diameter:outgoingDiameter];
+                                                                    textColor:[UIColor colorWithWhite:0.60f alpha:1.0f] font:[UIFont systemFontOfSize:14.0f] diameter:outgoingDiameter];*/
 
         
         for(Conversation * conf in chat.conversations)
@@ -388,12 +395,14 @@
     
     JSQMessage *msg = [self.messages objectAtIndex:indexPath.item];
     
-    if ([msg.sender isEqualToString:self.sender]) {
+    cell.textView.textColor = [UIColor whiteColor];
+   
+    /*if ([msg.sender isEqualToString:self.sender]) {
         cell.textView.textColor = [UIColor blackColor];
     }
     else {
         cell.textView.textColor = [UIColor whiteColor];
-    }
+    }*/
     
     cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,
                                           NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };

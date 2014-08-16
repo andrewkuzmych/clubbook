@@ -40,8 +40,7 @@
     
     NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:@"TitilliumWeb-Regular" size:12], UITextAttributeFont, nil];
     [self.segmentControl setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
-    
-    
+
     [self.segmentControl setTitle:[NSString stringWithFormat:NSLocalizedString(@"friends", nil)] forSegmentAtIndex:0];
     [self.segmentControl setTitle:[NSString stringWithFormat:NSLocalizedString(@"pending_requests", nil)] forSegmentAtIndex:1];
 }
@@ -123,9 +122,11 @@
     
     cell.friendCheckin.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12];
     
-    cell.acceptButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:11];
+    cell.acceptButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12];
+    [cell.acceptButton setTitle:NSLocalizedString(@"accept", nil) forState:UIControlStateNormal];
     
-    cell.deleteButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:11];
+    cell.deleteButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12];
+    [cell.deleteButton setTitle:NSLocalizedString(@"remove", nil) forState:UIControlStateNormal];
     
     //Conversation *conv = [chat.conversations objectAtIndex:0];
     if (user.currentCheckinClubName != nil) {
@@ -142,9 +143,6 @@
     [cell.acceptButton setTag:indexPath.row];
     [cell.deleteButton setTag:indexPath.row];
 
-    //[cell.checkinButton setBackgroundColor:[UIColor colorWithRed:92/255.0 green:142/255.0 blue:95/255.0 alpha:1.0] forState:UIControlStateNormal];
-    
-    //[cell.checkinButton setBackgroundColor:[UIColor colorWithRed:115/255.0 green:178/255.0 blue:119/255.0 alpha:1.0] forState:UIControlStateHighlighted];
     
     // transform avatar
     CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
@@ -170,6 +168,7 @@
     if([[segue identifier] isEqualToString:@"onUser"]){
         UserViewController *userController =  [segue destinationViewController];
         userController.userId = sender.id;
+        userController.clubCheckinName = sender.currentCheckinClubName;
     }
 }
 
@@ -205,7 +204,6 @@
     else if([sender selectedSegmentIndex] == 1){
         [self loadPendingFriends];
     }
-
 }
 
 - (void)actionSheet:(UIActionSheet *)popup clickedButtonAtIndex:(NSInteger)buttonIndex
