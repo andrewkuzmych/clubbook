@@ -122,52 +122,6 @@ exports.create_club = (params, callback)->
         console.log err
         callback err, club
 
-exports.cu_count = (params, callback)->
-  query = { 'club_loc':{ '$near' : [ params.lat,params.lon], '$maxDistance' :  exports.radius_to_km(params.distance) }}
-  db_model.Venue.count(query).exec (err, club_count)->
-    callback err, club_count
-
-exports.club_clubbers = (params, callback)->
-  # do not return "checkin " field of a user
-  db_model.User.find({'checkin': { '$elemMatch': { 'club' : mongoose.Types.ObjectId(params.club_id), 'active': true}} }, { checkin: 0 }).exec (err, users)->
-    callback err, users
-
-exports.update_name = (params, callback)->
-  db_model.User.findById(params.user_id).exec (err, user)->
-
-    user.name = params.name
-
-    user.save (err)->
-        console.log err
-        callback err, user
-
-exports.update_dob = (params, callback)->
-  db_model.User.findById(params.user_id).exec (err, user)->
-
-    user.dob = params.dob
-
-    user.save (err)->
-        console.log err
-        callback err, user
-
-exports.update_gender = (params, callback)->
-  db_model.User.findById(params.user_id).exec (err, user)->
-
-    user.gender = params.gender
-
-    user.save (err)->
-        console.log err
-        callback err, user
-
-exports.update_info = (params, callback)->
-  db_model.User.findById(params.user_id).exec (err, user)->
-
-    user.info = params.info
-
-    user.save (err)->
-        console.log err
-        callback err, user
-
 ##################################################################################################################
 # Checkin, Checkout logic
 ##################################################################################################################
@@ -194,8 +148,8 @@ exports.checkin = (params, callback)->
                 club.active_checkins += 1
                 club.save ()->
                   user.checkin.push { club: club, lat: club.club_loc.lat, lon: club.club_loc.lon, time: Date.now(), active: true }
-                  user.save (err)->
-                    callback err, user
+
+                  db_model.save_or_update_user user, (err)-> callback err, user
 
 exports.update_checkin = (params, callback)->
   console.log "Upadete checkin state", params
@@ -212,8 +166,7 @@ exports.update_checkin = (params, callback)->
               oldcheckin.time = Date.now()
               break;
 
-          user.save (err)->
-            callback err, user
+          db_model.save_or_update_user user, (err)-> callback err, user
 
 exports.checkout_from_all_clubs = (user, callback)->
   async.each user.checkin, (checkin, next_checkin) ->
@@ -257,9 +210,7 @@ exports.checkout = (params, callback)->
             for oldcheckin in user.checkin
               if oldcheckin.club.toString() == club._id.toString()
                 oldcheckin.active = false
-            user.save (err)->
-              console.log "done checkout"
-              callback err, user
+            db_model.save_or_update_user user, (err)-> callback err, user
 
 exports.cron_checkout = ()->
   db_model.User.find({'checkin': { '$elemMatch': { 'active': true, 'time': {'$lte': new Date().getTime() - CHECKIN_LIVE_TIME } }} }).exec (err, users)->
@@ -299,9 +250,7 @@ exports.save_user = (params, callback)->
       if params.avatar
         user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
 
-      user.save (err)->
-        console.log "save user", err, user
-        callback err, user
+      db_model.save_or_update_user user, (err)-> callback err, user
 
 exports.uploadphoto = (params, callback)->
   if __.isEmpty params.userid?.trim()
@@ -317,9 +266,7 @@ exports.uploadphoto = (params, callback)->
       for photo in photosArray
         user.photos.push { url: photo, profile:false}
 
-      user.save (err)->
-        console.log err
-        callback err, user
+      db_model.save_or_update_user user, (err)-> callback err, user
 
 exports.save_or_update_fb_user = (params, callback)->
     console.log "save or update user", params
@@ -339,8 +286,7 @@ exports.save_or_update_fb_user = (params, callback)->
         if user.photos.length == 0
           user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
 
-        user.save (err)->
-          callback err, user
+        db_model.save_or_update_user user, (err)-> callback err, user
 
       else
         # new user
@@ -363,8 +309,7 @@ exports.save_or_update_fb_user = (params, callback)->
           #email_sender.welcome user, (err, info)->
           #  console.log 'welcome mail sent', user._id
 
-          user.save (err)->
-            callback err, user
+          db_model.save_or_update_user user, (err)-> callback err, user
 
         else
           db_model.User.findOne({"email":params.email?.toLowerCase()}).exec (err, user)->
@@ -382,8 +327,7 @@ exports.save_or_update_fb_user = (params, callback)->
               if user.photos.length == 0
                 user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
 
-              user.save (err)->
-                callback err, user
+              db_model.save_or_update_user user, (err)-> callback err, user
 
             else
               console.log "fb_login:", "create user"
@@ -404,8 +348,7 @@ exports.save_or_update_fb_user = (params, callback)->
               #email_sender.welcome user, (err, info)->
               #  console.log 'welcome mail sent', user._id
 
-              user.save (err)->
-                callback err, user
+              db_model.save_or_update_user user, (err)-> callback err, user
 
 exports.chat = (params, callback)->
   query = { '$or': [{ 'user1': mongoose.Types.ObjectId(params.user_from), 'user2': mongoose.Types.ObjectId(params.user_to) },

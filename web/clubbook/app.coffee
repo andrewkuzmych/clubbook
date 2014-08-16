@@ -102,10 +102,29 @@ if ('development' == app.get('env'))
 app.locals.moment = require('moment-timezone')
 app.locals.moment_tz = "Europe/Kiev"
 
-
 local_user = (req, res, next)->
   res.locals.current_user = req.user;
   next()
+
+handle_access_token = (req, res, next)->
+  access_token = req.param("access_token")
+  if not access_token
+    res.json
+      status: 'error'
+      message: 'access_token is missing'
+  else
+    db_model.User.findOne({access_token: access_token}).exec (err, user)->
+      console.log err, user
+      if user
+        console.log "user", user
+        req.params.me = user
+        next()
+      else
+        console.log "can not find user by access_token", access_token
+        res.json
+          status: 'error'
+          message: "can not find user by access_token = " + access_token
+
 
 #--------------------------------------------------------------------------------
 # Web pages
@@ -124,47 +143,50 @@ app.get '/privacy', controller.privacy
 app.post '/_s/signin/fb', services.fb_signin
 app.post '/_s/signup', services.signup
 app.post '/_s/signinmail', services.signinmail
+
 # retrieve clubs
-app.get '/_s/list_club/:distance/:user_lat/:user_lon', services.list_club
-app.get '/_s/find_club/:club_id/:user_id', services.find_club
-app.get '/_s/cu_count/:distance/:user_lat/:user_lon', services.cu_count
-app.get '/_s/club_clubbers/:club_id', services.club_clubbers
+app.get '/_s/obj/club', handle_access_token, services.list_club
+app.get '/_s/obj/club/:objectId', handle_access_token, services.find_club
+
 # checkin / chekout
-app.get '/_s/checkin/:club_id/:user_id', services.checkin
-app.get '/_s/checkin/update/:club_id/:user_id', services.update_checkin
-app.get '/_s/checkout/:club_id/:user_id', services.checkout
+app.get '/_s/obj/club/:objectId/checkin', handle_access_token, services.checkin
+app.get '/_s/obj/club/:objectId/update', handle_access_token, services.update_checkin
+app.get '/_s/obj/club/:objectId/checkout', handle_access_token, services.checkout
+
 # chat
-app.post '/_s/chat', services.chat
-app.get '/_s/readchat/:current_user/:receiver', services.readchat
-app.get '/_s/conversation/:current_user/:receiver', services.get_conversation
-app.get '/_s/conversations/:user_id', services.get_conversations
-app.get '/_s/cron_checkout', services.cron_checkout
-app.get '/_s/unread/messages/count/:user_id', services.unread_messages_count
+app.post '/_s/obj/chat', handle_access_token, services.chat
+app.get '/_s/obj/chat/:current_user/:receiver', handle_access_token, services.get_conversation
+app.get '/_s/obj/chat/:current_user/:receiver/read', handle_access_token, services.readchat
+app.get '/_s/obj/chat/:current_user', handle_access_token, services.get_conversations
+app.get '/_s/obj/chat/:current_user/unread/count', handle_access_token, services.unread_messages_count
+
 # crud users
-app.get '/_s/user/by_id/:user_id', services.get_user_by_id
-app.put '/_s/obj/user/:objectId', services.update_user
-# friendship
-# get friend
-app.get '/_s/user/by_id/:friend_id/:current_user_id', services.get_friend
-# all friends
-app.get '/_s/obj/user/:objectId/friends', services.friends_my
-# pending frineds
-app.get '/_s/obj/user/:objectId/friends/pending', services.friends_pending
-# send friend request
-app.get '/_s/obj/user/:objectId/friends/:friendId/friend', services.friends_request
-# confirm friend request
-app.get '/_s/obj/user/:objectId/friends/:friendId/confirm', services.friends_confirm
-# remove from friends
-app.get '/_s/obj/user/:objectId/friends/:friendId/unfriend', services.friends_unfriend
-# remove friend request
-app.get '/_s/obj/user/:objectId/friends/:friendId/remove', services.friends_remove_request
-# configuration
-app.get '/_s/obj/config', services.get_config
+app.get '/_s/obj/user/me', handle_access_token, services.get_user_me
+app.put '/_s/obj/user/me', handle_access_token, services.update_user
+app.delete '/_s/obj/user/me', handle_access_token, services.delete_user_me
+app.get '/_s/obj/user/:objectId', handle_access_token, services.get_user_by_id
 
 # crud user images
-app.post '/_s/obj/user/:userId/image', services.user_image_add
-app.put '/_s/obj/user/:userId/image/:objectId', services.user_image_update
-app.delete '/_s/obj/user/:userId/image/:objectId', services.user_image_delete
+app.post '/_s/obj/user/:userId/image', handle_access_token, services.user_image_add
+app.put '/_s/obj/user/:userId/image/:objectId', handle_access_token, services.user_image_update
+app.delete '/_s/obj/user/:userId/image/:objectId', handle_access_token, services.user_image_delete
+
+# friendship
+# all friends
+app.get '/_s/obj/user/:objectId/friends', handle_access_token, services.friends_my
+# pending frineds
+app.get '/_s/obj/user/:objectId/friends/pending', handle_access_token, services.friends_pending
+# send friend request
+app.get '/_s/obj/user/:objectId/friends/:friendId/friend', handle_access_token, services.friends_request
+# confirm friend request
+app.get '/_s/obj/user/:objectId/friends/:friendId/confirm', handle_access_token, services.friends_confirm
+# remove from friends
+app.get '/_s/obj/user/:objectId/friends/:friendId/unfriend', handle_access_token, services.friends_unfriend
+# remove friend request
+app.get '/_s/obj/user/:objectId/friends/:friendId/remove', handle_access_token, services.friends_remove_request
+
+# configuration
+app.get '/_s/obj/config', services.get_config
 
 # helper functions
 app.post '/_s/create_club', services.create_club

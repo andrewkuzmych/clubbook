@@ -39,6 +39,7 @@ UserSchema = new mongoose.Schema
 
   fb_id: {type: String, unique: true, sparse: true}
   fb_access_token: {type: String}
+  access_token: {type: String, required: true}
 
   checkin: [
     {club: { type: mongoose.Schema.ObjectId, ref: 'Venue' }, time: Date, active: Boolean}
@@ -182,6 +183,31 @@ ChatSchema.pre 'save', (next, done) ->
 
 ChatSchema.set('toJSON', { getters: true, virtuals: true })
 exports.Chat = mongoose.model 'Chat', ChatSchema
+
+
+#-------------------------------------------------------------------------------------
+#  helper methonds
+#-------------------------------------------------------------------------------------
+
+exports.save_or_update_user = (user, callback)->
+  if not user._id
+    console.log "generate access_token"
+    user.access_token = exports.get_access_token(user)
+  user.save callback
+
+exports.get_access_token = (user)->
+  access_token = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'.replace /[xy]/g, (c)->
+    r = Math.random()*16|0
+    v = if c == 'x' then r else (r&0x3|0x8)
+    return v.toString(16)
+
+  return access_token
+
+exports.verify_access_token = (user, access_token)->
+  if user.access_token and access_token and user.access_token is access_token
+    return true
+  else
+    return false
 
 
 

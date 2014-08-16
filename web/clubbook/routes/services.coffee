@@ -75,12 +75,12 @@ exports.signinmail = (req, res)->
           user: user
 
 exports.update_user = (req, res)->
-  db_model.User.findById(req.params.objectId).exec (err, user)->
+  db_model.User.findById(req.params.me._id.toString()).exec (err, user)->
     if not user
       res.json
         status: "error"
         result:
-          message: "can not find user by id: " + req.query.objectId
+          message: "can not find user by id"
     else
       if req.body.dob
         if moment(req.body.dob, "DD.MM.YYYY", true).isValid()
@@ -108,7 +108,7 @@ exports.update_user = (req, res)->
         else
           user.push = true
 
-      user.save (err)->
+      db_model.save_or_update_user user, (err)->
         if err then console.log err
         res.json
           status: "ok"
@@ -127,7 +127,7 @@ exports.user_image_add = (req, res)->
     else
       req.body.avatar = JSON.parse req.body.avatar
       user.photos.push {public_id: req.body.avatar.public_id, url: req.body.avatar.url, profile: false}
-      user.save ()->
+      db_model.save_or_update_user user, ()->
         res.json
           status: "ok"
           result:
@@ -145,7 +145,7 @@ exports.user_image_update = (req, res)->
       if req.body.is_avatar
         for photo in user.photos
           photo.profile = photo._id.toString() == req.params.objectId
-      user.save ()->
+      db_model.save_or_update_user user, ()->
         res.json
           status: "ok"
           result:
@@ -163,7 +163,7 @@ exports.user_image_delete = (req, res)->
       if user.photos and user.photos.length > 1
         user.photos = __.filter user.photos, (photo)-> photo._id.toString() != req.params.objectId or photo.profile
 
-      user.save ()->
+      db_model.save_or_update_user user, ()->
         res.json
           status: "ok"
           result:
@@ -193,8 +193,8 @@ exports.signup = (req, res)->
         result:
           user: user
 
-exports.get_user_by_id = (req, res)->
-  manager.get_user_by_id req.params.user_id, (err, user)->
+exports.get_user_me = (req, res)->
+  manager.get_user_by_id req.params.me._id.toString(), (err, user)->
     if err
       res.json
         status: "error"
@@ -205,8 +205,12 @@ exports.get_user_by_id = (req, res)->
         result:
           user: user
 
-exports.get_friend = (req, res)->
-  manager.get_friend req.params.friend_id, req.params.current_user_id, (err, user)->
+exports.delete_user_me = (req, res)->
+  res.json
+    status: "ok"
+
+exports.get_user_by_id = (req, res)->
+  manager.get_friend req.params.objectId, req.params.me._id.toString(), (err, user)->
     if err
       res.json
         status: "error"
@@ -286,7 +290,7 @@ exports.friends_request = (req, res)->
   else
     db_model.User.findById(req.params.objectId).exec (err, user)->
       user.friends.push req.params.friendId
-      user.save ()->
+      db_model.save_or_update_user user, ()->
         res.json
           status: "ok"
           result:
@@ -306,7 +310,7 @@ exports.friends_confirm = (req, res)->
     # user.friends.push friend_id
     db_model.User.findById(req.params.objectId).exec (err, user)->
       user.friends.push req.params.friendId
-      user.save ()->
+      db_model.save_or_update_user user, ()->
         res.json
           status: "ok"
           result:
@@ -325,7 +329,7 @@ exports.friends_unfriend = (req, res)->
     # user.friends.push friend_id
     db_model.User.findById(req.params.objectId).exec (err, user)->
       user.friends = __.filter user.friends, (friend)-> friend.toString() isnt req.params.friendId
-      user.save ()->
+      db_model.save_or_update_user user, ()->
 
         db_model.User.findById(req.params.friendId).exec (err, user_friend)->
           user_friend.friends = __.filter user_friend.friends, (friend)-> friend.toString() isnt user._id.toString()
@@ -414,7 +418,7 @@ exports.create_club = (req, res)->
 
 
 exports.find_club = (req, res)->
-  manager.find_club req.params.club_id, req.params.user_id, (err, club, users, friends_count)->
+  manager.find_club req.params.objectId, req.params.me._id.toString(), (err, club, users, friends_count)->
     if err
       res.json
         status: "error"
@@ -431,9 +435,9 @@ exports.list_club = (req, res)->
   console.log req.params
 
   params =
-    distance: req.params.distance
-    lat: req.params.user_lat
-    lon: req.params.user_lon
+    distance: req.query.distance
+    lat: req.query.user_lat
+    lon: req.query.user_lon
 
   manager.list_club params, (err, clubs)->
     if err
@@ -446,26 +450,11 @@ exports.list_club = (req, res)->
         status: 'ok'
         clubs: clubs
 
-exports.cu_count = (req, res)->
-  params =
-    distance: req.params.distance
-    lat: req.params.user_lat
-    lon: req.params.user_lon
-
-  manager.cu_count params, (err, club_count)->
-    if err
-      res.json
-        status: 'error'
-        error: err
-    else
-      res.json
-        status: 'ok'
-        club_count: club_count
 
 exports.checkin = (req, res)->
   params =
-    user_id: req.params.user_id
-    club_id: req.params.club_id
+    user_id: req.params.me._id.toString()
+    club_id: req.params.objectId
 
   manager.checkin params, (err, user)->
     if err
@@ -480,8 +469,8 @@ exports.checkin = (req, res)->
 
 exports.update_checkin = (req, res)->
   params =
-    user_id: req.params.user_id
-    club_id: req.params.club_id
+    user_id: req.params.me._id.toString()
+    club_id: req.params.objectId
 
   manager.update_checkin params, (err, user)->
     res.json
@@ -490,22 +479,13 @@ exports.update_checkin = (req, res)->
 
 exports.checkout = (req, res)->
   params =
-    user_id: req.params.user_id
-    club_id: req.params.club_id
+    user_id: req.params.me._id.toString()
+    club_id: req.params.objectId
 
   manager.checkout params, (err, user)->
     res.json
       status: 'ok'
       user: user
-
-exports.club_clubbers = (req, res)->
-  params =
-    club_id: req.params.club_id
-
-  manager.club_clubbers params, (err, users)->
-    res.json
-      status: 'ok'
-      users: users
 
 exports.chat = (req, res)->
   # fix empty message type
@@ -616,7 +596,7 @@ prepare_chat_messages = (chat, current_user)->
 
 exports.get_conversations = (req, res)->
   params =
-    user_id: req.params.user_id
+    user_id: req.params.current_user
 
   manager.get_conversations params, (err, chats)->
     result = []
@@ -626,7 +606,7 @@ exports.get_conversations = (req, res)->
       else
         unread_messages = 0
 
-      chat_dto = prepare_chat_messages(chat, req.params.user_id)
+      chat_dto = prepare_chat_messages(chat, req.params.current_user)
       result.push
         chat_id: chat._id
         updated_on: chat.updated_on
@@ -660,13 +640,6 @@ exports.get_conversation = (req, res)->
         current_user: chat_dto[1]
         receiver: chat_dto[2]
 
-
-exports.cron_checkout = (req, res)->
-  manager.cron_checkout()
-
-  res.json
-    status: "ok"
-
 exports.readchat = (req, res)->
   params =
     current_user: req.params.current_user
@@ -677,7 +650,7 @@ exports.readchat = (req, res)->
       status: 'ok'
 
 exports.unread_messages_count = (req, res)->
-  manager.unread_messages_count req.params.user_id, (err, unread_chat_count, pending_friends_count)->
+  manager.unread_messages_count req.params.current_user, (err, unread_chat_count, pending_friends_count)->
     res.json
       status: 'ok'
       unread_chat_count: unread_chat_count
@@ -696,7 +669,7 @@ exports.checkin_clean =(req, res)->
   db_model.User.find({}).exec (err, users)->
     for user in users
       user.checkin = []
-      user.save()
+      db_model.save_or_update_user user, (err)-> console.log "done cleeacn checkins"
 
   db_model.Venue.find({}).exec (err, venues)->
     for venue in venues
