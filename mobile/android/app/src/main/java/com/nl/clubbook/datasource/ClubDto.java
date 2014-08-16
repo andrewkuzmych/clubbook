@@ -13,11 +13,13 @@ public class ClubDto {
     private double lat;
     private double lon;
     private String avatar;
+    private float distance;
+    private int activeCheckIns;
+    private int activeFriendsCheckIns;
+    private ClubWorkingHoursDto todayWorkingHours;
     private List<String> photos;
     private List<UserDto> users;
-    private float distance;
 
-    private Integer activeCheckins;
 
     public String getId() {
         return id;
@@ -99,11 +101,27 @@ public class ClubDto {
         this.distance = distance;
     }
 
-    public Integer getActiveCheckins() {
-        return activeCheckins;
+    public Integer getActiveCheckIns() {
+        return activeCheckIns;
     }
 
-    public void setActiveCheckins(Integer activeCheckins) {
-        this.activeCheckins = activeCheckins;
+    public void setActiveCheckIns(Integer activeCheckIns) {
+        this.activeCheckIns = activeCheckIns;
+    }
+
+    public int getActiveFriendsCheckIns() {
+        return activeFriendsCheckIns;
+    }
+
+    public void setActiveFriendsCheckIns(int activeFriendsCheckIns) {
+        this.activeFriendsCheckIns = activeFriendsCheckIns;
+    }
+
+    public ClubWorkingHoursDto getTodayWorkingHours() {
+        return todayWorkingHours;
+    }
+
+    public void setTodayWorkingHours(ClubWorkingHoursDto todayWorkingHours) {
+        this.todayWorkingHours = todayWorkingHours;
     }
 }

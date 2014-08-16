@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/list_selector"
+    android:background="@drawable/selector_list"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -83,7 +83,7 @@
                     style="@style/main_button"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/checkin_button"
+                    android:background="@drawable/bg_btn_green"
                     android:text="Check in" />
 
                 <TextView

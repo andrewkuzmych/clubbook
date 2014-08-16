@@ -9,7 +9,9 @@
 #import "GlobalVars.h"
 
 @implementation GlobalVars
-//@synthesize location;
+@synthesize MaxCheckinRadius;
+@synthesize MaxFailedCheckin;
+@synthesize CheckinUpdateTime;
 
 static GlobalVars *instance = nil;
 

@@ -21,6 +21,7 @@
 #import "OBAlert.h"
 #import "Constants.h"
 #import "LocationManagerSingleton.h"
+#import "GlobalVars.h"
 
 
 @interface MainViewController (){
@@ -54,6 +55,15 @@
     [[LocationManagerSingleton sharedSingleton] startLocating];
     
     self.clubTable.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
+    [self._manager getConfig];
+}
+
+- (void)didGetConfig:(Config *)config
+{
+    [GlobalVars getInstance].MaxCheckinRadius = config.maxCheckinRadius;
+    [GlobalVars getInstance].MaxFailedCheckin = config.maxFailedCheckin;
+    [GlobalVars getInstance].CheckinUpdateTime = config.checkinUpdateTime;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -138,21 +148,6 @@
 {
     [self noLocation];
 }
-
-/*- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
-{
-    GlobalVars *globalVars=[GlobalVars getInstance];
-    globalVars.location= [locations lastObject];
-    
-    //self.location =[locations lastObject];
-    //if (!self.isLoaded && globalVars.location != nil) {
-        [self loadClub];
-    //}
-    
-    [self yesLocation];
-    
-    [locationManager stopUpdatingLocation];
-}*/
 
 - (void)loadClub
 {
@@ -323,7 +318,7 @@
     if (checkinButton.isCheckin) {
          [self._manager checkout:self.checkinPlace.id userId:userId userInfo:sender];
     } else {
-        if(Constants.MaxCheckinRadius > (int)[[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc]) {
+        if([GlobalVars getInstance].MaxCheckinRadius > (int)[[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc]) {
             [self showProgress:NO title: NSLocalizedString(@"checking_in", nil)];
             [self._manager checkin:self.checkinPlace.id userId:userId userInfo:sender];
             

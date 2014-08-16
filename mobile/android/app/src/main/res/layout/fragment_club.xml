@@ -1,155 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_background_color"
+    android:background="@color/bg_screen_grey_light"
     android:orientation="vertical">
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
+    <LinearLayout
+        android:id="@+id/holderScreen"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/holderClubInfo"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="false">
+            android:background="@drawable/selector_bg_btn_white"
+            android:orientation="horizontal"
+            android:padding="16dp">
 
-            <RelativeLayout
-                android:id="@+id/club_details_title"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="false"
-                android:layout_alignParentLeft="false"
-                android:layout_alignParentTop="true"
-                android:background="#331436">
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="10dp"
-                    android:layout_toLeftOf="@+id/linearLayout"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/txtTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="club"
-                        android:textColor="#ffffff"
-                        android:textSize="22dp" />
-
-                    <com.nl.clubbook.ui.view.TitilliumRegularTextView
-                        android:id="@+id/txtAddress"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:lines="1"
-                        android:text="address"
-                        android:textColor="#ffffff"
-                        android:textIsSelectable="false"
-                        android:textSize="13dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp"
-                    android:orientation="vertical">
-
-                    <com.nl.clubbook.ui.view.TitilliumRegularTextView
-                        android:id="@+id/txtDistance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="100 km"
-                        android:textColor="#ffffff"
-                        android:textSize="23dp" />
-                </LinearLayout>
-            </RelativeLayout>
-
-            <ImageSwitcher
-                android:id="@+id/clubCoverSwitcher"
-                android:layout_width="fill_parent"
-                android:layout_height="230dp"
-                android:layout_below="@+id/club_details_title">
-
-                <ImageView
-                    android:id="@+id/imgClubCoverItem"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/test_club_cover"/>
-
-            </ImageSwitcher>
+            <com.nl.clubbook.ui.view.CircleImageView
+                android:id="@+id/imgAvatar"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center_vertical"
+                android:scaleType="centerCrop" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/club_details_title"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="#99000000"
-                android:orientation="horizontal"
-                android:padding="3dp">
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/imageView"
+                <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                    android:id="@+id/txtClubName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_action_camera" />
+                    android:singleLine="true"
+                    android:text="Test"
+                    android:textColor="@color/grey_club_title_text_color"
+                    android:textSize="@dimen/text_size_medium" />
 
-                <TextView
-                    android:id="@+id/txtImageSlider"
+                <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                    android:id="@+id/txtOpenToday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="@string/open_today"
+                    android:textColor="@color/grey_club_title_text_color"
+                    android:textSize="@dimen/text_size_micro" />
+
+                <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="4dp"
+                    android:drawableRight="@drawable/ic_club_arrow_right"
                     android:gravity="center_vertical"
-                    android:text="7/8"
-                    android:textColor="#ffffff"
-                    android:textSize="18dp"/>
+                    android:singleLine="true"
+                    android:text="@string/club_info_and_wall"
+                    android:textColor="@color/grey_club_title_text_color"
+                    android:textSize="@dimen/text_size_micro" />
+
             </LinearLayout>
 
-            <com.nl.clubbook.control.ExpandableHeightGridView
-                android:id="@+id/gridView"
-                android:layout_width="fill_parent"
+            <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                android:id="@+id/txtDistance"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/clubCoverSwitcher"
-                android:layout_centerHorizontal="true"
-                android:background="@color/main_background_color"
-                android:columnWidth="75dp"
-                android:drawSelectorOnTop="true"
-                android:gravity="center"
-                android:isScrollContainer="false"
-                android:numColumns="auto_fit"
-                android:stretchMode="columnWidth"
-                android:verticalSpacing="0dp"/>
-        </RelativeLayout>
-    </ScrollView>
+                android:layout_gravity="center_vertical"
+                android:drawablePadding="4dp"
+                android:drawableTop="@drawable/ic_distance_club_details"
+                android:text="10 m"
+                android:textColor="@color/green"
+                android:textSize="@dimen/text_size_small" />
 
-    <com.nl.clubbook.ui.view.TitilliumBoldTextView
-        android:id="@+id/btnCheckIn"
-        style="@style/main_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/checkin_button"
-        android:enabled="false"
-        android:text="@string/checkin"
-        android:gravity="center"
-        android:textSize="@dimen/text_size_medium"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider_color" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="horizontal"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp">
+
+            <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                android:id="@+id/txtCheckInCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="16dp"
+                android:drawableLeft="@drawable/ic_checked_in_club_details"
+                android:drawablePadding="-4dp"
+                android:gravity="center_vertical"
+                android:lineSpacingExtra="0dp"
+                android:textColor="@color/grey_light"
+                android:textSize="@dimen/text_size_small"
+                android:text="@string/checked_in"/>
+
+            <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                android:id="@+id/txtFriendsCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="16dp"
+                android:drawableLeft="@drawable/ic_friends_club_details"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:lineSpacingExtra="-4dp"
+                android:textColor="@color/grey_light"
+                android:textSize="@dimen/text_size_small"
+                android:text="@string/friends"/>
+
+            <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                android:id="@+id/txtCheckIn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:paddingRight="16dp"
+                android:paddingLeft="16dp"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:text="@string/check_out"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_medium"
+                android:background="@drawable/bg_btn_green"/>
+
+        </LinearLayout>
+
+        <GridView
+            android:id="@+id/gridUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="@integer/grid_users_column_count"
+            android:scrollbars="none"/>
+
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </RelativeLayout>
 

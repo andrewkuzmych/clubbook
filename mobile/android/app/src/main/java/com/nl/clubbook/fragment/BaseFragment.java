@@ -1,12 +1,16 @@
 package com.nl.clubbook.fragment;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.view.View;
+
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.activity.MainActivity;
+import com.nl.clubbook.activity.NoInternetActivity;
 import com.nl.clubbook.helper.SessionManager;
 
 /**
@@ -65,5 +69,11 @@ public class BaseFragment extends Fragment {
 
     protected void hideProgress(boolean showContent) {
         ((BaseActivity) getActivity()).hideProgress(showContent);
+    }
+
+    protected void showNoInternetActivity() {
+        Intent i = new Intent(getActivity(), NoInternetActivity.class);
+        startActivity(i);
+        getActivity().finish();
     }
 }

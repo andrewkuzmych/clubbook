@@ -46,7 +46,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_drink.png" translatesAutoresizingMaskIntoConstraints="NO" id="d5F-wu-ZOE">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_chat_drink.png" translatesAutoresizingMaskIntoConstraints="NO" id="d5F-wu-ZOE">
                                 <rect key="frame" x="15" y="5" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -131,6 +131,6 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="icon_drink.png" width="50" height="50"/>
+        <image name="icon_chat_drink.png" width="32" height="32"/>
     </resources>
 </document>

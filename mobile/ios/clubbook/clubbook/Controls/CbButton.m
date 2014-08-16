@@ -40,8 +40,7 @@
 
 - (void) setMainState:(NSString*) text
 {
-    //normalColor = [UIColor colorWithRed:63/255.0 green:210/255.0 blue:18/255.0 alpha:1.0];
-    normalColor = [UIColor colorWithRed:65/255.0 green:20/255.0 blue:82/255.0 alpha:1.0];
+    normalColor = [UIColor colorWithRed:63/255.0 green:210/255.0 blue:18/255.0 alpha:1.0];
     self.backgroundColor = normalColor;
     highlightedColor = [UIColor colorWithRed:41/255.0 green:13/255.0 blue:52/255.0 alpha:1.0];
 

@@ -7,4 +7,7 @@
     <dimen name="text_size_medium">18sp</dimen>
     <dimen name="text_size_large">22sp</dimen>
 
+    <dimen name="bullet_view_size">10dp</dimen>
+    <dimen name="bullet_ring_inner_radius">4dp</dimen>
+
 </resources>

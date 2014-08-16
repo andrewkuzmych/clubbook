@@ -51,7 +51,7 @@
 
     UIToolbar *baseToolbar = [self generateToolbarForKeyboard];
     
-    UIColor *placeholderColor = [UIColor colorWithRed:200/255.0 green:200/255.0 blue:200/255.0 alpha:1];
+    UIColor *placeholderColor = [UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1];
     
     self.nameText.inputAccessoryView = baseToolbar;
     self.nameText.delegate = self;

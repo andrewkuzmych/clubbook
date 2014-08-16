@@ -53,8 +53,20 @@ public class ClubbookRestClient {
         client.get(getBcAbsoluteUrl("user/by_id/" + user_id), params, responseHandler);
     }
 
+    public static void retrieveUserFriend(String userId, String friendId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("user/by_id/" + friendId + "/" + userId), params, responseHandler);
+    }
+
     public static void retrieveFriends(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getBcAbsoluteUrl("obj/user/" + user_id + "/friends"), params, responseHandler);
+    }
+
+    public static void addFriend(String userId, String friendId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/user/" + userId + "/friends/" + friendId + "/friend"), params, responseHandler);
+    }
+
+    public static void removeFriend(String userId, String friendId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/user/" + userId + "/friends/" + friendId + "/remove"), params, responseHandler);
     }
 
     //list_club/:distance/:user_lat/:user_lon

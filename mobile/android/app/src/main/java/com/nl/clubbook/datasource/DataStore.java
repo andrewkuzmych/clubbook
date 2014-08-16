@@ -1,13 +1,12 @@
 package com.nl.clubbook.datasource;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.nl.clubbook.adapter.ClubsAdapter;
-import com.nl.clubbook.adapter.MessagesAdapter;
 import com.nl.clubbook.helper.LocationCheckinHelper;
+import com.nl.clubbook.utils.L;
+
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -330,31 +329,11 @@ public class DataStore {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
-                List<ClubDto> clubs = new ArrayList<ClubDto>();
-                try {
-                    JSONArray clubs_dto = response_json.getJSONArray("clubs");
-                    for (int i = 0; i < clubs_dto.length(); i++) {
-                        ClubDto club = new ClubDto();
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                JSONArray jsonArrClubs = responseJson.optJSONArray("clubs");
+                List<ClubDto> clubs = JSONConverter.newClubList(jsonArrClubs);
 
-                        club.setId(clubs_dto.getJSONObject(i).getString("id"));
-                        club.setTitle(clubs_dto.getJSONObject(i).getString("club_name"));
-                        club.setPhone(clubs_dto.getJSONObject(i).getString("club_phone"));
-                        club.setAddress(clubs_dto.getJSONObject(i).getString("club_address"));
-                        club.setAvatar(clubs_dto.getJSONObject(i).getString("club_logo"));
-                        club.setLon(clubs_dto.getJSONObject(i).getJSONObject("club_loc").getDouble("lon"));
-                        club.setLat(clubs_dto.getJSONObject(i).getJSONObject("club_loc").getDouble("lat"));
-                        club.setDistance(LocationCheckinHelper.calculateDistance(club.getLat(), club.getLon()));
-                        club.setActiveCheckins(clubs_dto.getJSONObject(i).getInt("active_checkins"));
-                        clubs.add(club);
-                    }
-
-                    //Collections.sort(places, new PlaceDistanceComparator());
-                    failed = false;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+                failed = false;
                 onResultReady.onReady(clubs, failed);
             }
 
@@ -386,35 +365,29 @@ public class DataStore {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
-                ClubDto club = new ClubDto();
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                ClubDto club = null;
 
                 try {
-                    JSONObject club_dto = response_json.getJSONObject("club");
+                    JSONObject jsonClub = responseJson.getJSONObject("club");
 
-                    club.setId(club_dto.getString("id"));
-                    club.setTitle(club_dto.getString("club_name"));
-                    club.setPhone(club_dto.getString("club_phone"));
-                    club.setAddress(club_dto.getString("club_address"));
-                    club.setAvatar(club_dto.getString("club_logo"));
-                    club.setLon(club_dto.getJSONObject("club_loc").getDouble("lon"));
-                    club.setLat(club_dto.getJSONObject("club_loc").getDouble("lat"));
-                    club.setDistance(LocationCheckinHelper.calculateDistance(club.getLat(), club.getLon()));
+                    club = JSONConverter.newClub(jsonClub);
+                    if(club != null) {
+                        List<String> photos = new ArrayList<String>();
+                        JSONArray photo_list = jsonClub.getJSONArray("club_photos");
+                        for (int i = 0; i < photo_list.length(); i++) {
+                            photos.add(photo_list.getString(i));
+                        }
 
-                    List<String> photos = new ArrayList<String>();
-                    JSONArray photo_list = club_dto.getJSONArray("club_photos");
-                    for (int i = 0; i < photo_list.length(); i++) {
-                        photos.add(photo_list.getString(i));
+                        JSONArray jsonArrUsers = responseJson.getJSONArray("users");
+                        List<UserDto> users = new ArrayList<UserDto>();
+                        for (int i = 0; i < jsonArrUsers.length(); i++) {
+                            users.add(new UserDto(jsonArrUsers.getJSONObject(i)));
+                        }
+
+                        club.setUsers(users);
+                        club.setPhotos(photos);
                     }
-
-                    JSONArray users_dto = response_json.getJSONArray("users");
-                    List<UserDto> users = new ArrayList<UserDto>();
-                    for (int i = 0; i < users_dto.length(); i++) {
-                        users.add(new UserDto(users_dto.getJSONObject(i)));
-                    }
-
-                    club.setUsers(users);
-                    club.setPhotos(photos);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -491,18 +464,18 @@ public class DataStore {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
-                List<UserDto> friends = new ArrayList<UserDto>();;
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                List<UserDto> friends = new ArrayList<UserDto>();
+
                 try {
-                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        JSONArray friendsJson = response_json.getJSONObject("result").getJSONArray("friends");
-                        for (int i = 0; i < friendsJson.length(); i++) {
-                            friends.add(new UserDto(friendsJson.getJSONObject(i)));
-                        }
+                    if (responseJson.getString("status").equalsIgnoreCase("ok")) {
+                        JSONArray friendsJson = responseJson.getJSONObject("result").getJSONArray("friends");
+                        friends = JSONConverter.newFriendList(friendsJson);
 
                         failed = false;
-                    } else
+                    } else {
                         failed = true;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -526,6 +499,113 @@ public class DataStore {
                 super.onFinish();
                 //if (failed)
                 //    onResultReady.onReady(null, true);
+            }
+        });
+    }
+
+    public static void addFriendRequest(String userId, String friendId, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+
+        ClubbookRestClient.addFriend(userId, friendId, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                if ("ok".equalsIgnoreCase(responseJson.optString("status", ""))) {
+                    onResultReady.onReady(null, false);
+                } else {
+                    onResultReady.onReady(null, true);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+    }
+
+    public static void removeFriendRequest(String userId, String friendId, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+
+        ClubbookRestClient.removeFriend(userId, friendId, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                if ("ok".equalsIgnoreCase(responseJson.optString("status", ""))) {
+                    onResultReady.onReady(null, false);
+                } else {
+                    onResultReady.onReady(null, true);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+    }
+
+    public static void retrieveUserFriend(String userId, String friendId, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+
+        ClubbookRestClient.retrieveUserFriend(userId, friendId, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                if ("ok".equalsIgnoreCase(responseJson.optString("status", ""))) {
+                    JSONObject jsonResult = responseJson.optJSONObject("result");
+                    if(jsonResult == null) {
+                        L.v("jsonResult = null");
+                        onResultReady.onReady(null, true);
+                        return;
+                    }
+
+                    JSONObject jsonFriend = jsonResult.optJSONObject("user");
+                    if(jsonFriend == null) {
+                        L.v("jsonResult = null");
+                        onResultReady.onReady(null, true);
+                        return;
+                    }
+
+                    onResultReady.onReady(new FriendDto(jsonFriend), false);
+                } else {
+                    onResultReady.onReady(null, true); // failed.. so put true
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
             }
         });
     }
@@ -675,7 +755,7 @@ public class DataStore {
                 ChatDto chat = null;
                 try {
                     if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        chat= new ChatDto(response_json.getJSONObject("result"));
+                        chat = new ChatDto(response_json.getJSONObject("result"));
                         failed = false;
                     } else
                         failed = true;

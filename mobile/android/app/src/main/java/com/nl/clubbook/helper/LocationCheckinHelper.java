@@ -47,9 +47,8 @@ public class LocationCheckinHelper {
     }
 
     public static Location getCurrentLocation() {
-        //TODO
-//        if (currentLocation == null)
-//            throw new RuntimeException("Current location is empty");
+        if (currentLocation == null)
+            throw new RuntimeException("Current location is empty");
         return currentLocation;
     }
 
@@ -82,7 +81,7 @@ public class LocationCheckinHelper {
      * @return
      */
     public static boolean canCheckinHere(ClubDto club) {
-        if (club == null || currentLocation == null) {//TODO
+        if (club == null || currentLocation == null) {
             return false;
         }
 
@@ -100,7 +99,7 @@ public class LocationCheckinHelper {
      */
     public static void checkin(final Context context, final ClubDto club, final CheckInOutCallbackInterface callback) {
         // location validation
-        final Location current_location = getCurrentLocation(); //TODO
+        final Location current_location = getCurrentLocation();
         double distance = distanceBwPoints(current_location.getLatitude(), current_location.getLongitude(), club.getLat(), club.getLon());
         if (distance > MAX_RADIUS) {
             callback.onCheckInOutFinished(false);
@@ -185,7 +184,7 @@ public class LocationCheckinHelper {
         scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
         scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
             public void run() {
-                final Location current_location = getCurrentLocation(); //TODO
+                final Location current_location = getCurrentLocation();
                 final double distance = distanceBwPoints(current_location.getLatitude(), current_location.getLongitude(),
                         getCurrentClub().getLat(), getCurrentClub().getLon());
 
@@ -260,7 +259,7 @@ public class LocationCheckinHelper {
      */
     public static float calculateDistance(double lat, double lon) {
         float distanceBtwPoints = 0;
-        Location current_location = getCurrentLocation(); //TODO
+        Location current_location = getCurrentLocation();
         if (current_location != null) {
             double mLat = current_location.getLatitude();
             double mLong = current_location.getLongitude();
@@ -300,6 +299,8 @@ public class LocationCheckinHelper {
 
             // Define a listener that responds to location updates
             LocationListener locationListener = new LocationListener() {
+                boolean shouldHideLocationErrorView = false;
+
                 public void onLocationChanged(Location location) {
                     // Called when a new location is found by the network location provider.
                     if (currentLocation == null) {
@@ -310,6 +311,11 @@ public class LocationCheckinHelper {
                         currentLocation = location;
                     }
 
+                    if(shouldHideLocationErrorView) {
+                        hideLocationErrorView(application);
+                        shouldHideLocationErrorView = false;
+                    }
+
                     Log.d("LOCATION", String.valueOf(currentLocation.getLatitude()) + ":" + String.valueOf(currentLocation.getLongitude()));
                 }
 
@@ -318,7 +324,9 @@ public class LocationCheckinHelper {
                 }
 
                 public void onProviderEnabled(String provider) {
-                    hideLocationErrorView(application);
+                    shouldHideLocationErrorView = true;
+
+//                    hideLocationErrorView(application);
                 }
 
                 public void onProviderDisabled(String provider) {

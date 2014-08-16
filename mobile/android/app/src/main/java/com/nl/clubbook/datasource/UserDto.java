@@ -1,7 +1,6 @@
 package com.nl.clubbook.datasource;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -12,47 +11,48 @@ import java.util.List;
  */
 public class UserDto {
 
-    private String id;
-    private String fb_id;
-    private String name;
-    private String email;
-    private String password;
-    private String gender;
-    private String dob;
-    private String age;
-    private String avatar;
-    private String country;
-    private String bio;
-    private List<UserPhotoDto> photos;
+    protected String id;
+    protected String fb_id;
+    protected String name;
+    protected String email;
+    protected String password;
+    protected String gender;
+    protected String dob;
+    protected String age;
+    protected String avatar;
+    protected String country;
+    protected String bio;
+    protected CheckInDto lastCheckIn;
+    protected List<UserPhotoDto> photos;
 
-    UserDto() {
+    protected UserDto() {
 
     }
 
-    UserDto(JSONObject userJson) throws JSONException {
-        this.setId(userJson.getString("_id"));
+    protected UserDto(JSONObject userJson) {
+        this.setId(userJson.optString("_id"));
         if (userJson.has("fb_id"))
-            this.setFb_id(userJson.getString("fb_id"));
-        this.setName(userJson.getString("name"));
+            this.setFb_id(userJson.optString("fb_id"));
+        this.setName(userJson.optString("name"));
         if (userJson.has("email"))
-            this.setEmail(userJson.getString("email"));
-        this.setGender(userJson.getString("gender"));
+            this.setEmail(userJson.optString("email"));
+        this.setGender(userJson.optString("gender"));
         if (userJson.has("dob_format"))
-            this.setDob(userJson.getString("dob_format"));
-        if (userJson.has("age") && userJson.getString("age") != "null")
-            this.setAge(userJson.getString("age"));
+            this.setDob(userJson.optString("dob_format"));
+        if (userJson.has("age") && userJson.optString("age") != "null")
+            this.setAge(userJson.optString("age"));
         if (userJson.has("country"))
-            this.setCountry(userJson.getString("country"));
+            this.setCountry(userJson.optString("country"));
         if (userJson.has("bio"))
-            this.setBio(userJson.getString("bio"));
+            this.setBio(userJson.optString("bio"));
 
-        JSONArray photos_json = userJson.getJSONArray("photos");
+        JSONArray photosJson = userJson.optJSONArray("photos");
         List<UserPhotoDto> photos = new ArrayList<UserPhotoDto>();
-        for (int i = 0; i < photos_json.length(); i++) {
-            if (photos_json.getJSONObject(i).getBoolean("profile"))
-                this.setAvatar(photos_json.getJSONObject(i).getString("url"));
+        for (int i = 0; i < photosJson.length(); i++) {
+            if (photosJson.optJSONObject(i).optBoolean("profile"))
+                this.setAvatar(photosJson.optJSONObject(i).optString("url"));
 
-            photos.add(new UserPhotoDto(photos_json.getJSONObject(i)));
+            photos.add(new UserPhotoDto(photosJson.optJSONObject(i)));
         }
         this.setPhotos(photos);
     }
@@ -151,6 +151,14 @@ public class UserDto {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public CheckInDto getLastCheckIn() {
+        return lastCheckIn;
+    }
+
+    public void setLastCheckIn(CheckInDto lastCheckIn) {
+        this.lastCheckIn = lastCheckIn;
     }
 
 }

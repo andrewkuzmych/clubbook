@@ -18,7 +18,7 @@
 static NSTimer* locationUpdateTimer;
 static ClubbookManager* manager;
 static int failedCheckinCount = 0;
-static int maxFailedCheckin = 0;
+//static int maxFailedCheckin = 0;
 static Place * clubCheckin;
 //static CLLocationManager * locationManager;
 
@@ -65,7 +65,7 @@ static Place * clubCheckin;
     [self stopTimer];
     
     clubCheckin = club;
-    NSTimeInterval time = 5;
+    NSTimeInterval time = [GlobalVars getInstance].CheckinUpdateTime;
 	locationUpdateTimer =
     [NSTimer scheduledTimerWithTimeInterval:time
                                      target:[self class]
@@ -79,7 +79,7 @@ static Place * clubCheckin;
     CLLocation *loc = [[CLLocation alloc] initWithLatitude:[clubCheckin.lat doubleValue] longitude:[clubCheckin.lon doubleValue]];
     
     //GlobalVars *globalVars=[GlobalVars getInstance];
-    if(Constants.MaxCheckinRadius <  (int)[[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc])
+    if([GlobalVars getInstance].MaxCheckinRadius <  (int)[[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc])
     {
         [self checkout];
         return;
@@ -119,7 +119,7 @@ static Place * clubCheckin;
 + (void)failedWithError:(NSError *)error
 {
     failedCheckinCount +=1;
-    if (failedCheckinCount >= maxFailedCheckin) {
+    if (failedCheckinCount >= [GlobalVars getInstance].MaxFailedCheckin) {
         [self checkout];
     }
 }

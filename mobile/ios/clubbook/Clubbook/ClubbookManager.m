@@ -13,6 +13,7 @@
 #import "Chat.h"
 #import "ErrorViewController.h"
 #import "UnreadMessages.h"
+#import "Config.h"
 
 
 @implementation ClubbookManager
@@ -146,6 +147,24 @@
 - (void)retrievePendingFriends:(NSString *) userId
 {
    [self.communicator retrievePendingFriends:userId];
+}
+
+- (void)getConfig
+{
+    [self.communicator getConfig];
+}
+
+- (void)getConfigJSON:(NSData *)objectNotation
+{
+    NSError *error = nil;
+    Config *config = [ObjectBuilder getConfigFromJSON:objectNotation error:&error];
+    
+    if (error != nil) {
+        [self.delegate  failedWithError:error];
+        
+    } else {
+        [self.delegate didGetConfig:config];
+    }
 }
 
 - (void)receivedFriendsJSON:(NSData *)objectNotation

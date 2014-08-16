@@ -114,6 +114,14 @@ public class BaseActivity extends ActionBarActivity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle(stringResourceId);
     }
+
+    protected void initActionBar(String title) {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setTitle(title != null ? title : "");
+    }
+
     protected void init() {
     }
 

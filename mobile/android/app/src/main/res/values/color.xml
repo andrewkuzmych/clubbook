@@ -2,7 +2,7 @@
 <resources>
     <color name="list_item_title">#000000</color>
     <color name="list_background">#FFF</color>
-    <color name="list_background_pressed">#992416</color>
+    <color name="list_background_pressed">#55592B5C</color>
     <color name="list_divider">#c5c4c4</color>
     <color name="counter_text_bg">#F58711</color>
     <color name="counter_text_color">#c5c4c4</color>
@@ -13,13 +13,18 @@
 
     <color name="main_background_color">#240E25</color>
     <color name="main_background_light_color">#592B5C</color>
-    <color name="main_background_menu_color">#391A3C</color>
+    <color name="main_background_menu_color">#340345</color>
     <color name="main_background_light_color_2">#331635</color>
     <color name="main_font_color">#FFFFFF</color>
 
-    <color name="grey">#6D6D6D</color>
+    <color name="grey_light">#6D6D6D</color>
+    <color name="grey_club_title_text_color">#959595</color>
+    <color name="grey">#515151</color>
     <color name="bg_screen_grey_light">#E8E8E8</color>
-    <color name="divider_color">#E9E9E9</color>
+    <color name="divider_color">#D5D5D5</color>
+    <color name="green">#41D215</color>
+    <color name="grey_screen_bg">#E8E8E8</color>
+    <color name="selector">#55592B5C</color>
 
     <!--SwipeRefreshLayout colors-->
     <color name="holo_blue_bright">#ff00ddff</color>

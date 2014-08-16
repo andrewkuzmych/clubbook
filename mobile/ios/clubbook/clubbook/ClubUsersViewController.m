@@ -18,6 +18,7 @@
 #import "CSNotificationView.h"
 #import "Cloudinary.h"
 #import "ClubViewController.h"
+#import "GlobalVars.h"
 
 @interface ClubUsersViewController ()
 {
@@ -345,12 +346,19 @@
         [self showProgress:NO title:NSLocalizedString(@"checking_out", nil)];
         [self._manager checkout:_place.id userId:userId userInfo:sender];
     } else {
-        if(Constants.MaxCheckinRadius > (int)[[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc]) {
+        if([GlobalVars getInstance].MaxCheckinRadius  > (int)[[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc]) {
             [self showProgress:NO title:NSLocalizedString(@"checking_in", nil)];
             [self._manager checkin:_place.id userId:userId userInfo:sender];
         }
         else {
             [checkinButton setMainState:NSLocalizedString(@"Checkin", nil)];
+            
+            NSString *message = [NSString stringWithFormat:NSLocalizedString(@"checkin_distance", nil), [GlobalVars getInstance].MaxCheckinRadius];
+            [CSNotificationView showInViewController:self
+                                           tintColor:[UIColor colorWithRed:0.000 green:0.6 blue:1.000 alpha:1]
+                                               image:nil
+                                             message:message
+                                            duration:kCSNotificationViewDefaultShowDuration];
         }
     }
 }

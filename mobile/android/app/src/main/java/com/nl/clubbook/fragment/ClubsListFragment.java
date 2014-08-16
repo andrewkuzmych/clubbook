@@ -13,6 +13,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.ClubsAdapter;
 import com.nl.clubbook.datasource.ClubDto;
@@ -20,16 +22,16 @@ import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.L;
+import com.nl.clubbook.utils.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class ClubsListFragment extends BaseFragment implements AdapterView.OnItemClickListener,
+public class ClubsListFragment extends BaseRefreshFragment implements AdapterView.OnItemClickListener,
         SwipeRefreshLayout.OnRefreshListener {
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private ListView mClubList;
     private ClubsAdapter mClubsAdapter;
 
@@ -57,7 +59,6 @@ public class ClubsListFragment extends BaseFragment implements AdapterView.OnIte
     public void onPause() {
         super.onPause();
 
-        //TODO need explanation
         try {
             index = mClubList.getFirstVisiblePosition();
             View v = mClubList.getChildAt(0);
@@ -69,7 +70,7 @@ public class ClubsListFragment extends BaseFragment implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        View txtClubTitle = view.findViewById(R.id.txtClubTitle);
+        View txtClubTitle = view.findViewById(R.id.txtClubName);
         String clubId = (String)txtClubTitle.getTag();
 
         ClubFragment fragment = new ClubFragment(ClubsListFragment.this, clubId);
@@ -80,76 +81,14 @@ public class ClubsListFragment extends BaseFragment implements AdapterView.OnIte
     }
 
     @Override
-    public void onRefresh() {
-        loadData(String.valueOf(convertToKm(mCurrentDistance)));
-    }
-
-    private void initView() {
-        View view = getView();
-        if(view == null) {
-            return;
-        }
-
-        SeekBar seekBarDistance = (SeekBar) view.findViewById(R.id.seekBarDistance);
-        seekBarDistance.setMax(9);
-        seekBarDistance.incrementProgressBy(1);
-        seekBarDistance.setProgress(mCurrentDistance);
-
-        final TextView txtDistance = (TextView) view.findViewById(R.id.distance_text);
-        txtDistance.setText(convertToKm(mCurrentDistance) + " " + getString(R.string.km));
-
-        seekBarDistance.setOnSeekBarChangeListener(
-                new SeekBar.OnSeekBarChangeListener() {
-                    int progress = 0;
-                    int km = 0;
-
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
-                        km = convertToKm(progressValue);
-                        progress = progressValue;
-                        txtDistance.setText(String.valueOf(km) + " " + getString(R.string.km));
-                        mCurrentDistance = progressValue;
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-                        // Do something here, if you want to do anything at the start of touching the seekbar
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                        loadData(String.valueOf(km));
-                    }
-                }
-        );
-
-        mClubsAdapter = new ClubsAdapter(getActivity(), new ArrayList<ClubDto>());
-        mClubList = (ListView) view.findViewById(R.id.listClub);
-        mClubList.setAdapter(mClubsAdapter);
-        mClubList.setOnItemClickListener(this);
-
-        //init SwipeRefreshLayout
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorScheme(R.color.holo_blue_bright,
-                R.color.holo_green_light,
-                R.color.holo_orange_light,
-                R.color.holo_red_light);
-
-
-
-        // load data based on selected distance to filter on
-        loadData(String.valueOf(convertToKm(seekBarDistance.getProgress())));
-    }
-
-    protected void loadData(String distanceKm) {
+    protected void loadData() {
+        String distanceKm = String.valueOf(mCurrentDistance);
         Log.d("Location Updates", "Google Play services is available.");
 
         // retrieve my current location
         Location currentLocation = LocationCheckinHelper.getCurrentLocation();
         if(currentLocation == null) {
             L.v("Location is empty");
-            //TODO finish this
             return;
         }
 
@@ -200,6 +139,58 @@ public class ClubsListFragment extends BaseFragment implements AdapterView.OnIte
                 }
             }
         });
+    }
+
+    private void initView() {
+        View view = getView();
+        if(view == null) {
+            return;
+        }
+
+        if(!NetworkUtils.isOn(getActivity())) {
+            Toast.makeText(getActivity(), R.string.no_connection, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        SeekBar seekBarDistance = (SeekBar) view.findViewById(R.id.seekBarDistance);
+        seekBarDistance.setMax(9);
+        seekBarDistance.incrementProgressBy(1);
+        seekBarDistance.setProgress(mCurrentDistance);
+
+        final TextView txtDistance = (TextView) view.findViewById(R.id.distance_text);
+        txtDistance.setText(convertToKm(mCurrentDistance) + " " + getString(R.string.km));
+
+        seekBarDistance.setOnSeekBarChangeListener(
+                new SeekBar.OnSeekBarChangeListener() {
+                    int progress = 0;
+
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
+                        mCurrentDistance = convertToKm(progressValue);
+                        progress = progressValue;
+                        txtDistance.setText(String.valueOf(mCurrentDistance) + " " + getString(R.string.km));
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                        // Do something here, if you want to do anything at the start of touching the seekbar
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                        loadData();
+                    }
+                }
+        );
+
+        mClubsAdapter = new ClubsAdapter(getActivity(), new ArrayList<ClubDto>());
+        mClubList = (ListView) view.findViewById(R.id.listClub);
+        mClubList.setAdapter(mClubsAdapter);
+        mClubList.setOnItemClickListener(this);
+
+        // load data based on selected distance to filter on
+        mCurrentDistance = seekBarDistance.getProgress();
+        loadData();
     }
 
     private int convertToKm(int value) {

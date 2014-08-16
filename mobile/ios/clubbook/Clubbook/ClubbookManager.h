@@ -72,4 +72,6 @@
 
 - (void)removeFriendRequest:(NSString *) userId friendId:(NSString *) friendId;
 
+- (void) getConfig;
+
 @end

@@ -2,23 +2,27 @@
 <resources>
 
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <!--<item name="android:actionBarStyle">@style/AppActionBar</item>-->
-        <!--<item name="actionBarStyle">@style/AppActionBar</item>-->
+        <item name="actionBarStyle">@style/AppActionBar</item>
+        <item name="android:seekBarStyle">@style/SeekBarAppTheme</item>
     </style>
 
-    <style name="AppActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:background">@color/main_background_menu_color</item>
-        <item name="android:titleTextStyle">@style/TitleTextStyle</item>
-
-        <item name="titleTextStyle">@style/TitleTextStyle</item>
+    <style name="AppActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="background">@color/main_background_menu_color</item>
     </style>
 
-    <style name="TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/title</item>
+    <style name="SeekBarAppTheme" parent="android:Widget.SeekBar">
+        <item name="android:progressDrawable">@drawable/apptheme_scrubber_progress_horizontal_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/apptheme_scrubber_progress_horizontal_holo_light</item>
+        <item name="android:minHeight">13dip</item>
+        <item name="android:maxHeight">13dip</item>
+        <item name="android:thumb">@drawable/apptheme_scrubber_control_selector_holo_light</item>
+        <item name="android:thumbOffset">16dip</item>
+        <item name="android:paddingLeft">16dip</item>
+        <item name="android:paddingRight">16dip</item>
     </style>
 
 
-
+    <!--DEPRECATED-->
     <!--used for fragments-->
     <style name="sign_in_input">
         <item name="android:textColor">#FFFFFF</item>

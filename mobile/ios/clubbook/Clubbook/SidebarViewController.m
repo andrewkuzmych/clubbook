@@ -14,6 +14,7 @@
 #import "UIImageView+WebCache.h"
 #import "LocationHelper.h"
 #import "ClubUsersViewController.h"
+#import "GlobalVars.h"
 
 @interface SidebarViewController (){
     long unreadMessagesCount;
@@ -65,7 +66,8 @@
     [self._manager unreadMessages:userId];
 }
 
-- (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message {
+- (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message
+{
     PNLog(PNLogGeneralLevel, self, @"PubNub client received message: %@", message);
     
     NSString *msg = [message.message valueForKey:@"msg"];

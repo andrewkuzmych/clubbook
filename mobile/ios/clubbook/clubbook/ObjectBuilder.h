@@ -12,6 +12,7 @@
 #import "Place.h"
 #import "Chat.h"
 #import "UnreadMessages.h"
+#import "Config.h"
 
 
 @interface ObjectBuilder : NSObject
@@ -28,5 +29,6 @@
 + (NSArray *)conversationsJSON:(NSData *)objectNotation error:(NSError **)error;
 + (NSArray *)friendsJSON:(NSData *)objectNotation error:(NSError **)error;
 + (UnreadMessages *)unreadMessagesFromJSON:(NSData *)objectNotation error:(NSError **)error;
++ (Config *)getConfigFromJSON:(NSData *)objectNotation error:(NSError **)error;
 
 @end

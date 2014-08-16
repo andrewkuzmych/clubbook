@@ -652,7 +652,27 @@
             });
         }];
     });
+}
 
+- (void)getConfig
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // switch to a background thread and perform your expensive operation
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/config", baseURL];
+        
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
+        
+        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [self.delegate failedWithError:error];
+                } else {
+                    [self.delegate getConfigJSON:data];
+                }
+            });
+        }];
+    });
 }
 
 - (NSMutableURLRequest *)generateRequest:(NSDictionary *)data url:(NSString *)url method:(NSString *)method
