@@ -158,13 +158,13 @@ app.post '/_s/obj/chat', handle_access_token, services.chat
 app.get '/_s/obj/chat/:current_user/:receiver', handle_access_token, services.get_conversation
 app.get '/_s/obj/chat/:current_user/:receiver/read', handle_access_token, services.readchat
 app.get '/_s/obj/chat/:current_user', handle_access_token, services.get_conversations
-app.get '/_s/obj/chat/:current_user/unread/count', handle_access_token, services.unread_messages_count
 
 # crud users
 app.get '/_s/obj/user/me', handle_access_token, services.get_user_me
 app.put '/_s/obj/user/me', handle_access_token, services.update_user
 app.delete '/_s/obj/user/me', handle_access_token, services.delete_user_me
 app.get '/_s/obj/user/:objectId', handle_access_token, services.get_user_by_id
+app.get '/_s/obj/user/me/notifications', handle_access_token, services.unread_notifications_count
 
 # crud user images
 app.post '/_s/obj/user/:userId/image', handle_access_token, services.user_image_add
