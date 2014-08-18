@@ -191,7 +191,7 @@ exports.Chat = mongoose.model 'Chat', ChatSchema
 #-------------------------------------------------------------------------------------
 
 exports.save_or_update_user = (user, callback)->
-  if not user._id
+  if not user._id or not user.access_token
     console.log "generate access_token"
     user.access_token = exports.get_access_token(user)
   user.save callback
