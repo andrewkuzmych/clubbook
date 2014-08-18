@@ -651,7 +651,7 @@ exports.readchat = (req, res)->
       status: 'ok'
 
 exports.unread_notifications_count = (req, res)->
-  manager.unread_messages_count req.params.current_user, (err, unread_chat_count, pending_friends_count)->
+  manager.unread_messages_count req.params.me._id.toString(), (err, unread_chat_count, pending_friends_count)->
     res.json
       status: 'ok'
       unread_chat_count: unread_chat_count

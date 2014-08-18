@@ -76,8 +76,8 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSString *userId = [defaults objectForKey:@"userId"];
-        [self._manager retrieveFriend:self.userId currnetUserId:userId];
+        NSString *accessToken = [defaults objectForKey:@"accessToken"];
+        [self._manager retrieveFriend:self.userId accessToken:accessToken];
         [self showProgress:YES title:nil];
     });
 }
@@ -285,13 +285,14 @@
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *userId = [defaults objectForKey:@"userId"];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
 
     if ([sender.friendState isEqualToString:NSLocalizedString(@"noneFriend", nil)]) {
         [self showProgress:NO title:NSLocalizedString(@"processing", nil)];
-        [self._manager sendFriendReguest:userId friendId:self.userId];
+        [self._manager sendFriendReguest:userId friendId:self.userId accessToken:accessToken];
     } else if ([sender.friendState isEqualToString:NSLocalizedString(@"receiveRequest", nil)]){
         [self showProgress:NO title:NSLocalizedString(@"processing", nil)];
-        [self._manager confirmFriendRequest:userId friendId:self.userId];
+        [self._manager confirmFriendRequest:userId friendId:self.userId accessToken:accessToken];
     } else if ([sender.friendState isEqualToString:NSLocalizedString(@"friend", nil)]){
         UIActionSheet *popup = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"youSureUnfriend", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:
                                 NSLocalizedString(@"yes", nil),
@@ -304,13 +305,14 @@
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *userId = [defaults objectForKey:@"userId"];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
     
     switch (buttonIndex) {
         case 0:
         {
             // click yes
             [self showProgress:NO title:NSLocalizedString(@"processing", nil)];
-            [self._manager removeFriend:userId friendId:self.userId];
+            [self._manager removeFriend:userId friendId:self.userId accessToken:accessToken];
             break;
         }
         case 1:

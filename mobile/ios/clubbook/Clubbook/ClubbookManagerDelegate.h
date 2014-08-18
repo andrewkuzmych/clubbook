@@ -38,6 +38,7 @@
   - (void)didUpdateUserImage:(User *)user;
   - (void)didDeleteUserImage:(User *)user;
   - (void)didUpdateUser:(User *)user;
+  - (void)didDeleteUser:(NSString *)result;
   - (void)didSendFriend:(User *)user;
   - (void)didConfirmFriend:(User *)user;
   - (void)didRemoveFriend:(User *)user;

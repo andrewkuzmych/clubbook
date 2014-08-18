@@ -86,17 +86,17 @@ static Place * clubCheckin;
     }
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *userId = [defaults objectForKey:@"userId"];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
     
-    [manager updateCheckin:clubCheckin.id userId:userId];
+    [manager updateCheckin:clubCheckin.id accessToken:accessToken];
 }
 
 + (void)checkout {
     //checkout
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *userId = [defaults objectForKey:@"userId"];
-    [manager checkout:clubCheckin.id userId:userId userInfo:nil];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
+    [manager checkout:clubCheckin.id accessToken:accessToken userInfo:nil];
     
     [self stopTimer];
 }

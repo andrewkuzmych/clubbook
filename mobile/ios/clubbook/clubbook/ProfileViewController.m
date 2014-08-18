@@ -53,9 +53,9 @@
     [self renderUi];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *userId = [defaults objectForKey:@"userId"];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
     [self showProgress:YES title:nil];
-    [self._manager retrieveUser:userId];
+    [self._manager retrieveUser:accessToken];
     
 }
 
@@ -193,10 +193,12 @@
     switch (buttonIndex) {
         case 0:
         {
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            NSString *accessToken = [defaults objectForKey:@"accessToken"];
             // click yes
             [self showProgress:NO title:nil];
             NSString *photoId = self.currentImageButton.stringTag;
-            [self._manager deleteUserImage:_user.id objectId:photoId];
+            [self._manager deleteUserImage:_user.id objectId:photoId accessToken:accessToken];
             break;
         }
         case 1:
@@ -224,7 +226,9 @@
         if (successResult) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSString *avatarResult = [Convertor convertDictionaryToJsonString:successResult];
-                [self._manager addUserImage:_user.id avatar:avatarResult];
+                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                NSString *accessToken = [defaults objectForKey:@"accessToken"];
+                [self._manager addUserImage:_user.id avatar:avatarResult accessToken:accessToken];
             });
         } else {
             [self hideProgress];
@@ -366,7 +370,9 @@
 {
     [self showProgress:NO title:nil];
     NSString *photoId = self.currentImageButton.stringTag;
-    [self._manager updateUserImage:_user.id objectId:photoId];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
+    [self._manager updateUserImage:_user.id objectId:photoId accessToken:accessToken];
 }
 
 - (IBAction)deleteAction:(id)sender
@@ -422,8 +428,11 @@
         return;
     }
     
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
     [self showProgress:NO title:nil];
-    [self._manager updateUser:_user.id name:self.nameText.text gender:self.gender dob:_dobString country:self.countryText.text bio:self.bioText.text];
+    [self._manager updateUser:accessToken name:self.nameText.text gender:self.gender dob:_dobString country:self.countryText.text bio:self.bioText.text];
     
 }
 

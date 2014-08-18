@@ -24,51 +24,53 @@
 
 - (void)signinUser:(NSString *) email pass:(NSString *) pass;
 
-- (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type;
+- (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type accessToken:(NSString *) accessToken;
 
-- (void)retrievePlaces:(double) distance lat:(double) lat lon:(double) lon;
+- (void)retrieveConversation:(NSString *) fromUser toUser:(NSString *) toUser accessToken:(NSString *) accessToken;
 
-- (void)retrievePlace:(NSString *) clubId userId:(NSString *) userId;
+- (void)retrieveConversations:(NSString *) userId accessToken:(NSString *) accessToken;
 
-- (void)retrieveUser:(NSString *) userId;
+- (void)unreadMessages:(NSString *) accessToken;
 
-- (void)retrieveFriend:(NSString *) friendId currnetUserId:(NSString *) currnetUserId;
+- (void)readChat:(NSString *) fromUser toUser:(NSString *) toUser accessToken:(NSString *) accessToken;
 
-- (void)retrieveFriends:(NSString *) userId;
+- (void)retrievePlaces:(double) distance lat:(double) lat lon:(double) lon accessToken:(NSString *) accessToken;
 
-- (void)retrievePendingFriends:(NSString *) userId;
+- (void)retrievePlace:(NSString *) clubId accessToken:(NSString *) accessToken;
 
-- (void)retrieveConversation:(NSString *) fromUser toUser:(NSString *) toUser;
+- (void)retrieveUser:(NSString *) accessToken;
 
-- (void)retrieveConversations:(NSString *) userId;
+- (void)retrieveFriend:(NSString *) friendId accessToken:(NSString *) accessToken;
 
-- (void)unreadMessages:(NSString *) userId;
+- (void)retrieveFriends:(NSString *) userId accessToken:(NSString *) accessToken;
 
-- (void)readChat:(NSString *) fromUser toUser:(NSString *) toUser;
+- (void)retrievePendingFriends:(NSString *) userId accessToken:(NSString *) accessToken;
 
-- (void)checkin:(NSString *) clubId userId:(NSString *) userId userInfo:(NSObject *) userInfo;
+- (void)checkin:(NSString *) clubId accessToken:(NSString *) accessToken userInfo:(NSObject *) userInfo;
 
-- (void)checkout:(NSString *) clubId userId:(NSString *) userId userInfo:(NSObject *) userInfo;
+- (void)checkout:(NSString *) clubId accessToken:(NSString *) accessToken userInfo:(NSObject *) userInfo;
 
-- (void)updateCheckin:(NSString *) clubId userId:(NSString *) userId;
+- (void)updateCheckin:(NSString *) clubId accessToken:(NSString *) accessToken;
 
-- (void)addUserImage:(NSString *) userId avatar:(NSString *) avatar;
+- (void)addUserImage:(NSString *) userId avatar:(NSString *) avatar accessToken:(NSString *) accessToken;
 
-- (void)updateUserImage:(NSString *) userId objectId:(NSString *) objectId;
+- (void)updateUserImage:(NSString *) userId objectId:(NSString *) objectId accessToken:(NSString *) accessToken;
 
-- (void)deleteUserImage:(NSString *) userId objectId:(NSString *) objectId;
+- (void)deleteUserImage:(NSString *) userId objectId:(NSString *) objectId accessToken:(NSString *) accessToken;
 
-- (void)updateUser:(NSString *) userId name:(NSString *) name gender:(NSString *) gender  dob:(NSString *) dob country:(NSString *) country bio:(NSString *) bio;
+- (void)updateUser:(NSString *) accessToken name:(NSString *) name gender:(NSString *) gender  dob:(NSString *) dob country:(NSString *) country bio:(NSString *) bio;
+
+- (void)deleteUser:(NSString *) accessToken;
 
 - (void)changeUserPush:(NSString *) userId push:(BOOL) push;
 
-- (void)sendFriendRequest:(NSString *) userId friendId:(NSString *) friendId;
+- (void)sendFriendRequest:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken;
 
-- (void)confirmFriendRequest:(NSString *) userId friendId:(NSString *) friendId;
+- (void)confirmFriendRequest:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken;
 
-- (void)removeFriend:(NSString *) userId friendId:(NSString *) friendId;
+- (void)removeFriend:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken;
 
-- (void)removeFriendRequest:(NSString *) userId friendId:(NSString *) friendId;
+- (void)removeFriendRequest:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken;
 
 - (void)getConfig;
 
