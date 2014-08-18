@@ -46,16 +46,14 @@ exports.get_user_friends = (user_id, callback)->
   db_model.User.find({"_id": {"$ne": mongoose.Types.ObjectId(user_id)}}).select(db_model.USER_PUBLIC_INFO).sort("name").exec callback
 
 exports.signinmail = (params, callback)->
-  
   if __.isEmpty params.email?.trim()
       callback 'email is empty', null
   else if __.isEmpty params.password?.trim()
       callback 'password is empty', null
   else
     db_model.User.findOne({"email":params.email,"password":params.password },{ checkin: 0 }).exec (err, user)->
-
       if user
-        callback null, user
+        db_model.save_or_update_user user, (err)-> callback err, user
       else
         callback "Wrong User or password " ,user
 
