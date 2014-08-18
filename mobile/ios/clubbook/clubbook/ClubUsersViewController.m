@@ -56,9 +56,9 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSString *userId = [defaults objectForKey:@"userId"];
+        NSString *accessToken = [defaults objectForKey:@"accessToken"];
         
-        [self._manager retrievePlace:self.placeId userId:userId];
+        [self._manager retrievePlace:self.placeId accessToken:accessToken];
         [self showProgress:YES title:nil];
     });
     
@@ -276,8 +276,8 @@
 {
     //[self hideProgress];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *userId = [defaults objectForKey:@"userId"];
-    [self._manager retrievePlace:self.placeId userId:userId];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
+    [self._manager retrievePlace:self.placeId accessToken:accessToken];
     
     CbButton* checkinButton = (CbButton *) userInfo;
     [checkinButton setSecondState:NSLocalizedString(@"Checkout", nil)];
@@ -288,8 +288,8 @@
 {
     //[self hideProgress];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *userId = [defaults objectForKey:@"userId"];
-    [self._manager retrievePlace:self.placeId userId:userId];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
+    [self._manager retrievePlace:self.placeId accessToken:accessToken];
     
     CbButton* checkinButton = (CbButton *) userInfo;
     [checkinButton setMainState:NSLocalizedString(@"Checkin", nil)];
@@ -298,7 +298,7 @@
 
 - (IBAction)checkinAction:(CbButton *)sender {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *userId = [defaults objectForKey:@"userId"];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
     
     CbButton* checkinButton = (CbButton *) sender;
     
@@ -306,11 +306,11 @@
     
     if (checkinButton.isCheckin) {
         [self showProgress:NO title:NSLocalizedString(@"checking_out", nil)];
-        [self._manager checkout:_place.id userId:userId userInfo:sender];
+        [self._manager checkout:_place.id accessToken:accessToken userInfo:sender];
     } else {
         if([GlobalVars getInstance].MaxCheckinRadius  > (int)[[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc]) {
             [self showProgress:NO title:NSLocalizedString(@"checking_in", nil)];
-            [self._manager checkin:_place.id userId:userId userInfo:sender];
+            [self._manager checkin:_place.id accessToken:accessToken userInfo:sender];
         }
         else {
             [checkinButton setMainState:NSLocalizedString(@"Checkin", nil)];

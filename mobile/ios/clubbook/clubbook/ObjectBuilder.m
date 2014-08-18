@@ -465,6 +465,7 @@
     user.gender  = [userJson objectForKey:@"gender"];
     user.avatar  = [userJson objectForKey:@"avatar"];
     user.country = [userJson objectForKey:@"country"];
+    user.access_token = [userJson objectForKey:@"access_token"];
     user.friend_status = [userJson objectForKey:@"friend_status"];
     user.bio = [userJson objectForKey:@"bio"];
     

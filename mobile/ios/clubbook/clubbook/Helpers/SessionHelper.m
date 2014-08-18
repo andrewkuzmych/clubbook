@@ -23,6 +23,7 @@
     [defaults setObject:user.email forKey:@"userEmail"];
     [defaults setObject:user.gender forKey:@"userGender"];
     [defaults setObject:user.avatar forKey:@"userAvatar"];
+    [defaults setObject:user.access_token forKey:@"accessToken"];
     [defaults setObject:(user.push) ? @"true" : @"false" forKey:@"userPush"];
 
     if (user.age != nil) {
@@ -46,6 +47,7 @@
     [defaults setObject:@"" forKey:@"userGender"];
     [defaults setObject:@"" forKey:@"userAvatar"];
     [defaults setObject:@"" forKey:@"userAge"];
+    [defaults setObject:@"" forKey:@"accessToken"];
     
     [defaults synchronize];
 }

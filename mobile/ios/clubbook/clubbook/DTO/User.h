@@ -21,6 +21,7 @@
 @property (strong, nonatomic) NSString *age;
 @property (strong, nonatomic) NSString *bio;
 @property (strong, nonatomic) NSString *country;
+@property (strong, nonatomic) NSString *access_token;
 @property (strong, nonatomic) NSString *currentCheckinClubName;
 @property (strong, nonatomic) NSMutableArray *photos;
 @property (assign, nonatomic) BOOL isFriend;

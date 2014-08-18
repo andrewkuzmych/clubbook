@@ -61,7 +61,8 @@
     [self showProgress:NO title:nil];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *userId = [defaults objectForKey:@"userId"];
-    [self._manager retrieveFriends:userId];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
+    [self._manager retrieveFriends:userId accessToken:accessToken];
 }
 
 - (void) loadPendingFriends
@@ -70,7 +71,8 @@
     [self showProgress:NO title:nil];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *userId = [defaults objectForKey:@"userId"];
-    [self._manager retrievePendingFriends:userId];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
+    [self._manager retrievePendingFriends:userId accessToken:accessToken];
 }
 
 - (void)didRetrieveFriends:(NSArray *)friends
@@ -214,9 +216,10 @@
             // click yes - delete user friend request
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             NSString *userId = [defaults objectForKey:@"userId"];
+            NSString *accessToken = [defaults objectForKey:@"accessToken"];
             
             User *user = _friends[popup.tag];
-            [self._manager removeFriendRequest:userId friendId:user.id];
+            [self._manager removeFriendRequest:userId friendId:user.id accessToken:accessToken];
         }
         case 1:
             // click cancel
@@ -230,9 +233,10 @@
 - (IBAction)acceptFriendAction:(UIButton *)sender {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *userId = [defaults objectForKey:@"userId"];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
     
     User *user = _friends[sender.tag];
-    [self._manager confirmFriendRequest:userId friendId:user.id];
+    [self._manager confirmFriendRequest:userId friendId:user.id accessToken:accessToken];
 }
 
 - (IBAction)deleteFriendAction:(UIButton *)sender {

@@ -58,8 +58,8 @@
 - (void)loadData
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *userId = [defaults objectForKey:@"userId"];
-    [self._manager unreadMessages:userId];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
+    [self._manager unreadMessages:accessToken];
 }
 
 - (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message
@@ -241,8 +241,8 @@
     Place * checkinClub = [LocationHelper getCheckinClub];
     [self showProgress:NO title:nil];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *userId = [defaults objectForKey:@"userId"];
-    [self._manager checkout:checkinClub.id userId:userId userInfo:sender];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
+    [self._manager checkout:checkinClub.id accessToken:accessToken userInfo:sender];
 }
 
 - (void)didCheckout:(User *) user userInfo:(NSObject *)userInfo

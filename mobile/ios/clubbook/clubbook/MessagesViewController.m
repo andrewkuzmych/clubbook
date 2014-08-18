@@ -61,7 +61,8 @@
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *userId = [defaults objectForKey:@"userId"];
-    [self._manager retrieveConversations:userId];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
+    [self._manager retrieveConversations:userId accessToken:accessToken];
 }
 
 - (void)didReceiveConversations:(NSArray *)chats

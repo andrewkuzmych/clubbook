@@ -34,69 +34,69 @@
      [self.communicator signinUser:email pass:pass];
 }
 
-- (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type
+- (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type accessToken:(NSString *) accessToken
 {
-    [self.communicator chat:user_from user_to:user_to msg:msg msg_type:msg_type];
+    [self.communicator chat:user_from user_to:user_to msg:msg msg_type:msg_type accessToken:accessToken];
 }
 
-- (void)retrievePlaces:(double) distance lat:(double) lat lon:(double) lon
+- (void)retrievePlaces:(double) distance lat:(double) lat lon:(double) lon accessToken:(NSString *) accessToken
 {
-    [self.communicator retrievePlaces:distance lat:lat lon:lon];
+    [self.communicator retrievePlaces:distance lat:lat lon:lon accessToken:accessToken];
 }
 
-- (void)retrievePlace:(NSString *) clubId userId:(NSString *) userId
+- (void)retrievePlace:(NSString *) clubId accessToken:(NSString *) accessToken
 {
-    [self.communicator retrievePlace:clubId userId:userId];
+    [self.communicator retrievePlace:clubId accessToken:accessToken];
 }
 
-- (void)retrieveUser:(NSString *) userId
+- (void)retrieveUser:(NSString *) accessToken
 {
-    [self.communicator retrieveUser:userId];
+    [self.communicator retrieveUser:accessToken];
 }
 
-- (void)retrieveFriend:(NSString *) friendId currnetUserId:(NSString *) currnetUserId
+- (void)retrieveFriend:(NSString *) friendId accessToken:(NSString *) accessToken
 {
-    [self.communicator retrieveFriend:friendId currnetUserId:currnetUserId];
+    [self.communicator retrieveFriend:friendId accessToken:accessToken];
 }
 
-- (void)retrieveConversation:(NSString *) fromUser toUser:(NSString *) toUser
+- (void)retrieveConversation:(NSString *) fromUser toUser:(NSString *) toUser accessToken:(NSString *) accessToken
 {
-    [self.communicator retrieveConversation:fromUser toUser:toUser];
+    [self.communicator retrieveConversation:fromUser toUser:toUser accessToken:accessToken];
 }
 
-- (void)retrieveConversations:(NSString *) userId
+- (void)retrieveConversations:(NSString *) userId accessToken:(NSString *) accessToken
 {
-    [self.communicator retrieveConversations:userId];
+    [self.communicator retrieveConversations:userId accessToken:accessToken];
 }
 
-- (void)checkin:(NSString *) clubId userId:(NSString *) userId userInfo:(NSObject *) userInfo
+- (void)checkin:(NSString *) clubId accessToken:(NSString *) accessToken userInfo:(NSObject *) userInfo
 {
-    [self.communicator checkin:clubId userId:userId userInfo:userInfo];
+    [self.communicator checkin:clubId accessToken:accessToken userInfo:userInfo];
 }
 
-- (void)checkout:(NSString *) clubId userId:(NSString *) userId userInfo:(NSObject *) userInfo
+- (void)checkout:(NSString *) clubId accessToken:(NSString *) accessToken userInfo:(NSObject *) userInfo
 {
-    [self.communicator checkout:clubId userId:userId userInfo:userInfo];
+    [self.communicator checkout:clubId accessToken:accessToken userInfo:userInfo];
 }
 
-- (void)updateCheckin:(NSString *) clubId userId:(NSString *) userId
+- (void)updateCheckin:(NSString *) clubId accessToken:(NSString *) accessToken
 {
-    [self.communicator updateCheckin:clubId userId:userId];
+    [self.communicator updateCheckin:clubId accessToken:accessToken];
 }
 
-- (void) readChat:(NSString *) fromUser toUser:(NSString *) toUser
+- (void) readChat:(NSString *) fromUser toUser:(NSString *) toUser accessToken:(NSString *) accessToken
 {
-    [self.communicator readChat:fromUser toUser:toUser];
+    [self.communicator readChat:fromUser toUser:toUser accessToken: accessToken];
 }
 
-- (void)unreadMessages:(NSString *) userId
+- (void)unreadMessages:(NSString *) accessToken
 {
-    [self.communicator unreadMessages:userId];
+    [self.communicator unreadMessages:accessToken];
 }
 
-- (void)addUserImage:(NSString *) userId avatar:(NSString *) avatar
+- (void)addUserImage:(NSString *) userId avatar:(NSString *) avatar accessToken:(NSString *) accessToken
 {
-    [self.communicator addUserImage:userId avatar:avatar];
+    [self.communicator addUserImage:userId avatar:avatar accessToken:accessToken];
 }
 
 - (void)changeUserPush:(NSString *) userId push:(BOOL) push
@@ -104,49 +104,54 @@
     [self.communicator changeUserPush:userId push:push];
 }
 
-- (void)updateUserImage:(NSString *) userId objectId:(NSString *) objectId
+- (void)updateUserImage:(NSString *) userId objectId:(NSString *) objectId accessToken:(NSString *) accessToken
 {
-    [self.communicator updateUserImage:userId objectId:objectId];
+    [self.communicator updateUserImage:userId objectId:objectId accessToken:accessToken];
 }
 
-- (void)deleteUserImage:(NSString *) userId objectId:(NSString *) objectId
+- (void)deleteUserImage:(NSString *) userId objectId:(NSString *) objectId accessToken:(NSString *) accessToken
 {
-     [self.communicator deleteUserImage:userId objectId:objectId];
+     [self.communicator deleteUserImage:userId objectId:objectId accessToken:accessToken];
 }
 
-- (void)updateUser:(NSString *) userId name:(NSString *) name gender:(NSString *) gender  dob:(NSString *) dob country:(NSString *) country bio:(NSString *) bio
+- (void)updateUser:(NSString *) accessToken name:(NSString *) name gender:(NSString *) gender  dob:(NSString *) dob country:(NSString *) country bio:(NSString *) bio
 {
-    [self.communicator updateUser:userId name:name gender:gender dob:dob country:country bio:bio];
+    [self.communicator updateUser:accessToken name:name gender:gender dob:dob country:country bio:bio];
 }
 
-- (void)sendFriendReguest:(NSString *) userId friendId:(NSString *) friendId
+- (void)deleteUser:(NSString *) accessToken
 {
-    [self.communicator sendFriendRequest:userId friendId:friendId];
+    [self.communicator deleteUser:accessToken];
 }
 
-- (void)confirmFriendRequest:(NSString *) userId friendId:(NSString *) friendId
+- (void)sendFriendReguest:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken
 {
-    [self.communicator confirmFriendRequest:userId friendId:friendId];
+    [self.communicator sendFriendRequest:userId friendId:friendId accessToken:accessToken];
 }
 
-- (void)removeFriend:(NSString *) userId friendId:(NSString *) friendId
+- (void)confirmFriendRequest:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken
 {
-    [self.communicator removeFriend:userId friendId:friendId];
+    [self.communicator confirmFriendRequest:userId friendId:friendId accessToken:accessToken];
 }
 
-- (void)removeFriendRequest:(NSString *) userId friendId:(NSString *) friendId
+- (void)removeFriend:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken
 {
-    [self.communicator removeFriendRequest:userId friendId:friendId];
+    [self.communicator removeFriend:userId friendId:friendId accessToken:accessToken];
 }
 
-- (void)retrieveFriends:(NSString *) userId
+- (void)removeFriendRequest:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken
 {
-   [self.communicator retrieveFriends:userId];
+    [self.communicator removeFriendRequest:userId friendId:friendId accessToken:accessToken];
 }
 
-- (void)retrievePendingFriends:(NSString *) userId
+- (void)retrieveFriends:(NSString *) userId accessToken:(NSString *) accessToken
 {
-   [self.communicator retrievePendingFriends:userId];
+    [self.communicator retrieveFriends:userId accessToken:accessToken];
+}
+
+- (void)retrievePendingFriends:(NSString *) userId accessToken:(NSString *) accessToken
+{
+    [self.communicator retrievePendingFriends:userId accessToken:accessToken];
 }
 
 - (void)getConfig
@@ -270,6 +275,19 @@
         
     } else {
         [self.delegate didUpdateUser:user];
+    }
+}
+
+- (void)deleteUserJSON:(NSData *)objectNotation
+{
+    NSError *error = nil;
+    //User *user = [ObjectBuilder userFromJSON:objectNotation error:&error];
+    
+    if (error != nil) {
+        [self.delegate  failedWithError:error];
+        
+    } else {
+        [self.delegate didDeleteUser:@"ok"];
     }
 }
 

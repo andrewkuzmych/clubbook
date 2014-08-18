@@ -164,9 +164,12 @@
     self.isLoaded = YES;
     double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
     double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
-        
+    
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
     [self showProgress:NO title:nil];
-    [self._manager retrievePlaces:distanceKm lat:lat lon:lng];
+    [self._manager retrievePlaces:distanceKm lat:lat lon:lng accessToken:accessToken];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -320,10 +323,10 @@
     [self.distance setText:[NSString stringWithFormat:@"%d%@", distanceKm, NSLocalizedString(@"kilometers", nil)]];
 }
 
-- (IBAction)checkinAction:(UIButton *)sender
+/*- (IBAction)checkinAction:(UIButton *)sender
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *userId = [defaults objectForKey:@"userId"];
+    NSString *userId = [defaults objectForKey:@"access"];
     
     self.checkinPlace = _places[sender.tag];
     CbButton* checkinButton = (CbButton *) sender;
@@ -344,7 +347,7 @@
             [checkinButton setMainState:NSLocalizedString(@"Checkin", nil)];
         }
     }
-}
+}*/
 
 - (IBAction)segmentChanged:(id)sender {
     [self sortPlaces];

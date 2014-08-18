@@ -20,7 +20,7 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentControl;
 - (IBAction)SliderChanged:(id)sender;
 - (IBAction)sliderTouchUp:(id)sender;
-- (IBAction)checkinAction:(UIButton *)sender;
+//- (IBAction)checkinAction:(UIButton *)sender;
 - (IBAction)segmentChanged:(id)sender;
 
 @end

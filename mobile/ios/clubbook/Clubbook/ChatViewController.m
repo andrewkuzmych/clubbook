@@ -43,10 +43,12 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSString *userFrom = [defaults objectForKey:@"userId"];
+        NSString *accessToken = [defaults objectForKey:@"accessToken"];
+        
         self.sender = userFrom;
         
         // retreve conversation
-        [self._manager retrieveConversation:userFrom toUser:self.userTo];
+        [self._manager retrieveConversation:userFrom toUser:self.userTo accessToken:accessToken];
         [self showProgress:YES title:nil];
     });
     
@@ -80,10 +82,13 @@
     NSString *user_from = [dataJson valueForKey:@"user_from"];
     NSString *user_to = [dataJson valueForKey:@"user_to"];
     
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
+    
     if ([user_to isEqualToString:self.sender]) {
         canChat = YES;
         [self putMessage:msg type:type sender:user_from];
-        [self._manager readChat:_chat.currentUser.id toUser:_chat.receiver.id];
+        [self._manager readChat:_chat.currentUser.id toUser:_chat.receiver.id accessToken:accessToken];
     }
 }
 
@@ -144,7 +149,10 @@
         [self finishReceivingMessage];
         
         // mark chat as read
-        [self._manager readChat:chat.currentUser.id toUser:chat.receiver.id];
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *accessToken = [defaults objectForKey:@"accessToken"];
+        [self._manager readChat:chat.currentUser.id toUser:chat.receiver.id accessToken:accessToken];
         
     });
 }
@@ -222,8 +230,11 @@
     
     NSString* trimMessage = [message stringByTrimmingCharactersInSet:
                               [NSCharacterSet whitespaceCharacterSet]];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
     // send to server
-    [self._manager chat:self.sender user_to:self.userTo msg:trimMessage msg_type:type];
+    [self._manager chat:self.sender user_to:self.userTo msg:trimMessage msg_type:type accessToken:accessToken];
 }
 
 - (void)putMessage:(NSString *)message type:(NSString *)type sender:(NSString *) sender

@@ -53,11 +53,11 @@
     });
 }
 
-- (void)addUserImage:(NSString *) userId avatar:(NSString *) avatar
+- (void)addUserImage:(NSString *) userId avatar:(NSString *) avatar accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/image", baseURL, userId];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/image?access_token=%@", baseURL, userId, accessToken];
         NSDictionary * data  =
         [NSDictionary
          dictionaryWithObjectsAndKeys:
@@ -80,10 +80,10 @@
     });
 }
 
-- (void)updateUserImage:(NSString *) userId objectId:(NSString *) objectId;{
+- (void)updateUserImage:(NSString *) userId objectId:(NSString *) objectId accessToken:(NSString *) accessToken{
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/image/%@", baseURL, userId, objectId];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/image/%@?access_token=%@", baseURL, userId, objectId, accessToken];
         NSDictionary * data  =
         [NSDictionary
          dictionaryWithObjectsAndKeys:
@@ -106,11 +106,11 @@
     });
 }
 
-- (void)deleteUserImage:(NSString *) userId objectId:(NSString *) objectId;
+- (void)deleteUserImage:(NSString *) userId objectId:(NSString *) objectId accessToken:(NSString *) accessToken;
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/image/%@", baseURL, userId, objectId];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/image/%@?access_token=%@", baseURL, userId, objectId, accessToken];
         NSDictionary * data  =
         [NSDictionary
          dictionaryWithObjectsAndKeys:
@@ -133,11 +133,11 @@
 
 }
 
-- (void)changeUserPush:(NSString *) userId push:(BOOL) push
+- (void)changeUserPush:(NSString *) accessToken push:(BOOL) push
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@", baseURL, userId];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@", baseURL, accessToken];
         NSDictionary * data  =
         [NSDictionary
          dictionaryWithObjectsAndKeys:
@@ -161,11 +161,11 @@
 
 }
 
-- (void)updateUser:(NSString *) userId name:(NSString *) name gender:(NSString *) gender  dob:(NSString *) dob country:(NSString *) country bio:(NSString *) bio;
+- (void)updateUser:(NSString *) accessToken name:(NSString *) name gender:(NSString *) gender  dob:(NSString *) dob country:(NSString *) country bio:(NSString *) bio;
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@", baseURL, userId];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/me?access_token=%@", baseURL, accessToken];
         NSDictionary * data  =
         [NSDictionary
          dictionaryWithObjectsAndKeys:
@@ -186,6 +186,33 @@
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.delegate updateUserJSON:data];
+                });
+            }
+        }];
+    });
+
+}
+
+- (void)deleteUser:(NSString *) accessToken
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/me?access_token=%@", baseURL, accessToken];
+        NSDictionary * data  =
+        [NSDictionary
+         dictionaryWithObjectsAndKeys:
+         nil];
+        
+        NSMutableURLRequest *request;
+        request = [self generateRequest:data url:urlAsString method:@"DELETE"];
+        
+        [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            
+            if (error) {
+                [self.delegate failedWithError:error];
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.delegate deleteUserJSON:data];
                 });
             }
         }];
@@ -258,11 +285,11 @@
     });
 }
 
-- (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type
+- (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        NSString *urlAsString = [NSString stringWithFormat:@"%@chat", baseURL];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/chat?access_token=%@", baseURL, accessToken];
         NSDictionary * data  =
         [NSDictionary
          dictionaryWithObjectsAndKeys:
@@ -286,14 +313,94 @@
             }
         }];
     });
-
 }
 
-- (void)retrievePlaces:(double) distance lat:(double) lat lon:(double) lon;
+- (void)retrieveConversation:(NSString *) fromUser toUser:(NSString *) toUser accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@list_club/%f/%f/%f", baseURL, distance, lat, lon];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/chat/%@/%@?access_token=%@", baseURL, fromUser, toUser,accessToken];
+        
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
+        
+        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [self.delegate failedWithError:error];
+                } else {
+                    [self.delegate receivedConversationJSON:data];
+                }
+            });
+        }];
+    });
+}
+
+- (void) readChat:(NSString *) fromUser toUser:(NSString *) toUser accessToken:(NSString *) accessToken
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // switch to a background thread and perform your expensive operation
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/chat/%@/%@/read?access_token=%@", baseURL, fromUser, toUser, accessToken];
+        
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
+        
+        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [self.delegate failedWithError:error];
+                } else {
+                    [self.delegate readChatJSON:data];
+                }
+            });
+        }];
+    });
+}
+
+- (void) unreadMessages:(NSString *) accessToken
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // switch to a background thread and perform your expensive operation
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/me/notifications?access_token=%@", baseURL, accessToken];
+        
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
+        
+        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [self.delegate failedWithError:error];
+                } else {
+                    [self.delegate unreadMessagesJSON:data];
+                }
+            });
+        }];
+    });
+}
+
+- (void)retrieveConversations:(NSString *) userId accessToken:(NSString *) accessToken
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // switch to a background thread and perform your expensive operation
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/chat/%@?access_token=%@", baseURL, userId, accessToken];
+        
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
+        
+        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [self.delegate failedWithError:error];
+                } else {
+                    [self.delegate receivedConversationsJSON:data];
+                }
+            });
+        }];
+    });
+    
+}
+
+- (void)retrievePlaces:(double) distance lat:(double) lat lon:(double) lon accessToken:(NSString *) accessToken;
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // switch to a background thread and perform your expensive operation
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/club?distance=%f&user_lat=%f&user_lon=%f&access_token=%@", baseURL, distance, lat, lon, accessToken];
 
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
@@ -314,11 +421,11 @@
     });
 }
 
-- (void)retrievePlace:(NSString *) clubId userId:(NSString *) userId
+- (void)retrievePlace:(NSString *) clubId accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@find_club/%@/%@", baseURL, clubId, userId];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/club/%@?access_token=%@", baseURL, clubId, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
@@ -338,11 +445,11 @@
     });
 }
 
-- (void)retrieveUser:(NSString *) userId
+- (void)retrieveUser:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@user/by_id/%@", baseURL, userId];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/me?access_token=%@", baseURL, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
@@ -358,11 +465,11 @@
     });
 }
 
-- (void)retrieveFriend:(NSString *) friendId currnetUserId:(NSString *) currnetUserId
+- (void)retrieveFriend:(NSString *) friendId accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@user/by_id/%@/%@", baseURL, friendId, currnetUserId];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@?access_token=%@", baseURL, friendId, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
@@ -378,93 +485,12 @@
     });
 }
 
-- (void)retrieveConversation:(NSString *) fromUser toUser:(NSString *) toUser
+
+- (void)checkin:(NSString *) clubId accessToken:(NSString *) accessToken userInfo:(NSObject *) userInfo;
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@conversation/%@/%@", baseURL, fromUser, toUser];
-        
-        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
-        
-        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (error) {
-                    [self.delegate failedWithError:error];
-                } else {
-                    [self.delegate receivedConversationJSON:data];
-                }
-            });
-        }];
-    });
-}
-
-- (void) readChat:(NSString *) fromUser toUser:(NSString *) toUser
-{
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@readchat/%@/%@", baseURL, fromUser, toUser];
-        
-        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
-        
-        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (error) {
-                    [self.delegate failedWithError:error];
-                } else {
-                    [self.delegate readChatJSON:data];
-                }
-            });
-        }];
-    });
-}
-
-- (void) unreadMessages:(NSString *) userId
-{
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@unread/messages/count/%@", baseURL, userId];
-        
-        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
-        
-        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (error) {
-                    [self.delegate failedWithError:error];
-                } else {
-                    [self.delegate unreadMessagesJSON:data];
-                }
-            });
-        }];
-    });
-}
-
-- (void)retrieveConversations:(NSString *) userId
-{
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@conversations/%@", baseURL, userId];
-        
-        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
-        
-        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (error) {
-                    [self.delegate failedWithError:error];
-                } else {
-                    [self.delegate receivedConversationsJSON:data];
-                }
-            });
-        }];
-    });
-
-}
-
-
-- (void)checkin:(NSString *) clubId userId:(NSString *) userId userInfo:(NSObject *) userInfo;
-{
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@checkin/%@/%@", baseURL, clubId, userId];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/club/%@/checkin?access_token=%@", baseURL, clubId, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
@@ -482,11 +508,11 @@
     });
 }
 
-- (void)checkout:(NSString *) clubId userId:(NSString *) userId userInfo:(NSObject *) userInfo
+- (void)checkout:(NSString *) clubId accessToken:(NSString *) accessToken userInfo:(NSObject *) userInfo
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@checkout/%@/%@", baseURL, clubId, userId];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/club/%@/checkout?access_token=%@", baseURL, clubId, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
@@ -505,11 +531,11 @@
 
 }
 
-- (void)updateCheckin:(NSString *) clubId userId:(NSString *) userId
+- (void)updateCheckin:(NSString *) clubId accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@checkin/update/%@/%@", baseURL, clubId, userId];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/club/%@/update?access_token=%@", baseURL, clubId, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
@@ -527,11 +553,11 @@
 }
 
 
-- (void)sendFriendRequest:(NSString *) userId friendId:(NSString *) friendId;
+- (void)sendFriendRequest:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken;
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/friends/%@/friend", baseURL, userId, friendId];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/friends/%@/friend?access_token=%@", baseURL, userId, friendId, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
@@ -548,12 +574,11 @@
     });
 }
 
-
-- (void)confirmFriendRequest:(NSString *) userId friendId:(NSString *) friendId
+- (void)confirmFriendRequest:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/friends/%@/confirm", baseURL, userId, friendId];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/friends/%@/confirm?access_token=%@", baseURL, userId, friendId, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
@@ -570,11 +595,11 @@
     });
 }
 
-- (void)removeFriend:(NSString *) userId friendId:(NSString *) friendId
+- (void)removeFriend:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/friends/%@/unfriend", baseURL, userId, friendId];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/friends/%@/unfriend?access_token=%@", baseURL, userId, friendId, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
@@ -591,11 +616,11 @@
     });
 }
 
-- (void)removeFriendRequest:(NSString *) userId friendId:(NSString *) friendId
+- (void)removeFriendRequest:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/friends/%@/remove", baseURL, userId, friendId];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/friends/%@/remove?access_token=%@", baseURL, userId, friendId, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
@@ -612,11 +637,11 @@
     });
 }
 
-- (void)retrieveFriends:(NSString *) userId
+- (void)retrieveFriends:(NSString *) userId accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/friends", baseURL, userId];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/friends?access_token=%@", baseURL, userId, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
@@ -633,11 +658,11 @@
     });
 }
 
-- (void)retrievePendingFriends:(NSString *) userId
+- (void)retrievePendingFriends:(NSString *) userId accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/friends/pending", baseURL, userId];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/friends/pending?access_token=%@", baseURL, userId, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
