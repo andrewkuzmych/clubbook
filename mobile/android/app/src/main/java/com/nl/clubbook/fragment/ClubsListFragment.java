@@ -94,7 +94,7 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
 
         View view = getView();
         if(view == null) {
-            L.v("view == null!!!");
+            L.v("view == null!");
             return;
         }
         final View seekBarDistance = view.findViewById(R.id.seekBarDistance);
@@ -104,8 +104,17 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
             mSwipeRefreshLayout.setRefreshing(true);
         }
 
+        String accessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
+        if(accessToken == null) {
+            mSwipeRefreshLayout.setRefreshing(false);
+            L.i("accessTocken = null");
+            return;
+        }
+
         // retrieve places from server and set distance
-        DataStore.retrievePlaces(distanceKm, String.valueOf(currentLocation.getLatitude()), String.valueOf(currentLocation.getLongitude()), new DataStore.OnResultReady() {
+        DataStore.retrievePlaces(distanceKm, String.valueOf(currentLocation.getLatitude()),
+                String.valueOf(currentLocation.getLongitude()), accessToken, new DataStore.OnResultReady() {
+
             @Override
             public void onReady(Object result, boolean failed) {
                 if (failed) {

@@ -25,26 +25,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginBottom="8dp"
-                android:layout_marginRight="16dp" />
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="8dp" />
         </RelativeLayout>
 
         <com.nl.clubbook.ui.view.TitilliumRegularTextView
-            android:id="@+id/txtDescription"
+            android:id="@+id/txtInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="test"
             android:textColor="@color/grey_light"
             android:textSize="@dimen/text_size_small" />
 
         <View
+            android:id="@+id/dividerInfo"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/divider_color" />
         
         <LinearLayout
+            android:id="@+id/holderRequirements"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -54,6 +54,7 @@
             android:paddingTop="8dp">
 
             <LinearLayout
+                android:id="@+id/holderAgeRestriction"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -65,10 +66,11 @@
                     android:text="@string/age_restrictions"
                     android:textColor="@color/grey_light"
                     android:textSize="@dimen/text_size_small"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"/>
 
                 <com.nl.clubbook.ui.view.TitilliumRegularTextView
-                    android:id="@+id/txtAgeRestrictions"
+                    android:id="@+id/txtAgeRestriction"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_age_restrictions"
@@ -80,6 +82,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/holderDressCode"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -104,6 +107,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/holderCapacity"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -132,11 +136,13 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/holderClubRequirements"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/divider_color" />
 
         <LinearLayout
+            android:id="@+id/holderContacts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -150,53 +156,59 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/grey_light"
-                android:textSize="@dimen/text_size_medium"
+                android:textSize="@dimen/text_size_small"
                 android:drawableLeft="@drawable/ic_location"
                 android:drawablePadding="16dp"
                 android:paddingTop="4dp"
-                android:paddingBottom="4dp"/>
+                android:paddingBottom="4dp"
+                android:autoLink="map"/>
 
             <com.nl.clubbook.ui.view.TitilliumRegularTextView
                 android:id="@+id/txtPhone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/grey_light"
-                android:textSize="@dimen/text_size_medium"
+                android:textSize="@dimen/text_size_small"
                 android:drawableLeft="@drawable/ic_phone"
                 android:drawablePadding="16dp"
                 android:paddingTop="4dp"
-                android:paddingBottom="4dp"/>
+                android:paddingBottom="4dp"
+                android:autoLink="phone"/>
 
             <com.nl.clubbook.ui.view.TitilliumRegularTextView
                 android:id="@+id/txtWebsite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/grey_light"
-                android:textSize="@dimen/text_size_medium"
+                android:textSize="@dimen/text_size_small"
                 android:drawableLeft="@drawable/ic_website"
                 android:drawablePadding="16dp"
                 android:paddingTop="4dp"
-                android:paddingBottom="4dp"/>
+                android:paddingBottom="4dp"
+                android:autoLink="web"/>
 
             <com.nl.clubbook.ui.view.TitilliumRegularTextView
                 android:id="@+id/txtEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/grey_light"
-                android:textSize="@dimen/text_size_medium"
+                android:textSize="@dimen/text_size_small"
                 android:drawableLeft="@drawable/ic_email"
                 android:drawablePadding="16dp"
                 android:paddingTop="4dp"
-                android:paddingBottom="4dp"/>
+                android:paddingBottom="4dp"
+                android:autoLink="email"/>
 
         </LinearLayout>
 
         <View
+            android:id="@+id/dividerContacts"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/divider_color" />
 
         <LinearLayout
+            android:id="@+id/holderWorkingHours"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -204,34 +216,6 @@
             android:paddingBottom="16dp"
             android:paddingLeft="64dp"
             android:paddingRight="16dp">
-
-            <!--<include-->
-                <!--android:id="@+id/holderMonday"-->
-                <!--android:layout="@layout/view_club_work_hours" />-->
-
-            <!--<include-->
-                <!--android:id="@+id/holderTuesday"-->
-                <!--android:layout="@layout/view_club_work_hours" />-->
-
-            <!--<include-->
-                <!--android:id="@+id/holderWednesday"-->
-                <!--android:layout="@layout/view_club_work_hours" />-->
-
-            <!--<include-->
-                <!--android:id="@+id/holderThursday"-->
-                <!--android:layout="@layout/view_club_work_hours" />-->
-
-            <!--<include-->
-                <!--android:id="@+id/holderFriday"-->
-                <!--android:layout="@layout/view_club_work_hours" />-->
-
-            <!--<include-->
-                <!--android:id="@+id/holderSaturday"-->
-                <!--android:layout="@layout/view_club_work_hours" />-->
-
-            <!--<include-->
-                <!--android:id="@+id/holderSunday"-->
-                <!--android:layout="@layout/view_club_work_hours" />-->
 
         </LinearLayout>
 

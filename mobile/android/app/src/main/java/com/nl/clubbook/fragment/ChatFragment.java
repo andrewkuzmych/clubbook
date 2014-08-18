@@ -36,19 +36,20 @@ public class ChatFragment extends BaseFragment {
     private ListView chat_list;
     private ChatAdapter adapter;
     private EditText inputText;
-    private String user_to;
-    private String user_name_to;
-    private String user_from;
+    private String mUserToId;
+    private String mUserNameTo;
+    private String mUserFromId; // current user id
+    private String mAccessToken; // current user id
     private ChatDto chatDto;
 
     protected ImageLoader imageLoader;
     protected DisplayImageOptions options;
     protected ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
 
-    public ChatFragment(BaseFragment provoiusFregment, String user_id, String user_name) {
-        super(provoiusFregment);
-        this.user_to = user_id;
-        this.user_name_to = user_name;
+    public ChatFragment(BaseFragment previousFragment, String userId, String userName) {
+        super(previousFragment);
+        mUserToId = userId;
+        mUserNameTo = userName;
     }
 
     @Override
@@ -59,7 +60,8 @@ public class ChatFragment extends BaseFragment {
 
         getActivity().setTitle("chat");
 
-        user_from = getCurrentUserId();
+        mUserFromId = getCurrentUserId();
+        mAccessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
 
         userName = (TextView) rootView.findViewById(R.id.chatUserName);
         userAvatar = (ImageView) rootView.findViewById(R.id.chatUserAvatar);
@@ -115,18 +117,26 @@ public class ChatFragment extends BaseFragment {
     public void receiveComment(ChatMessageDto message) {
         adapter.add(message);
 
-        DataStore.read_messages(chatDto.getCurrentUser().getId(), chatDto.getReceiver().getId(), new DataStore.OnResultReady() {
-            @Override
-            public void onReady(Object result, boolean failed) {
-                if (failed) {
-                    return;
+        DataStore.readMessages(
+                chatDto.getCurrentUser().getId(),
+                chatDto.getReceiver().getId(),
+                chatDto.getCurrentUser().getAccessToken(),
+                new DataStore.OnResultReady() {
+
+                    @Override
+                    public void onReady(Object result, boolean failed) {
+                        if (failed) {
+                            return;
+                        }
+                    }
                 }
-            }
-        });
+        );
     }
 
     private void sendMessageTemp(String type) {
-        DataStore.chat(user_from, user_to, "", type, new DataStore.OnResultReady() {
+        String accessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
+
+        DataStore.chat(mUserFromId, mUserToId, "", type, accessToken, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
 
@@ -144,9 +154,11 @@ public class ChatFragment extends BaseFragment {
     }
 
     private void sendMessage() {
+        String accessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
         String input = inputText.getText().toString();
+
         if (!input.equals("")) {
-            DataStore.chat(user_from, user_to, input, "message", new DataStore.OnResultReady() {
+            DataStore.chat(mUserFromId, mUserToId, input, "message", accessToken, new DataStore.OnResultReady() {
                 @Override
                 public void onReady(Object result, boolean failed) {
 
@@ -159,7 +171,8 @@ public class ChatFragment extends BaseFragment {
     }
 
     private void fillConversation() {
-        DataStore.get_conversation(user_from, user_to, new DataStore.OnResultReady() {
+
+        DataStore.getConversation(mUserFromId, mUserToId, mAccessToken, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (failed) {
@@ -187,15 +200,19 @@ public class ChatFragment extends BaseFragment {
                 imm.showSoftInput(inputText, InputMethodManager.SHOW_IMPLICIT);
 
                 // make conversation between 2 people as read
-                DataStore.read_messages(chatDto.getCurrentUser().getId(), chatDto.getReceiver().getId(), new DataStore.OnResultReady() {
-                    @Override
-                    public void onReady(Object result, boolean failed) {
-                        if (failed) {
-                            return;
-                        }
-                        ((MainActivity) getActivity()).updateMessagesCount();
-                    }
-                });
+                DataStore.readMessages(
+                        chatDto.getCurrentUser().getId(),
+                        chatDto.getReceiver().getId(),
+                        chatDto.getCurrentUser().getAccessToken(),
+                        new DataStore.OnResultReady() {
+                            @Override
+                            public void onReady(Object result, boolean failed) {
+                                if (failed) {
+                                    return;
+                                }
+                                ((MainActivity) getActivity()).updateMessagesCount();
+                            }
+                        });
             }
         });
     }
@@ -218,7 +235,7 @@ public class ChatFragment extends BaseFragment {
         }
 
         SessionManager session = new SessionManager(getActivity().getApplicationContext());
-        session.setConversationListner(user_to + "_" + user_from);
+        session.setConversationListner(mUserToId + "_" + mUserFromId);
     }
 
     @Override

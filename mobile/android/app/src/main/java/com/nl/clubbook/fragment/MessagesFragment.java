@@ -45,15 +45,18 @@ public class MessagesFragment extends BaseFragment {
         final SessionManager session = new SessionManager(getActivity());
         final HashMap<String, String> user = session.getUserDetails();
 
-        if (loading)
+        if (loading) {
             ((BaseActivity) getActivity()).showProgress("Loading...");
+        }
 
-        DataStore.get_conversations(user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
+        DataStore.getConversations(user.get(SessionManager.KEY_ID), user.get(SessionManager.KEY_ACCESS_TOCKEN),
+                new DataStore.OnResultReady() {
+
             @Override
             public void onReady(Object result, boolean failed) {
                 if (failed) {
                     if (loading)
-                        if(getActivity() != null)
+                        if (getActivity() != null)
                             ((BaseActivity) getActivity()).hideProgress(false);
                         else
                             Log.e("ERROR", "getActivity is null");

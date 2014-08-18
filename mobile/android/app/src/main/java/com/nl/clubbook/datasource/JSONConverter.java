@@ -172,6 +172,12 @@ public class JSONConverter {
         club.setAvatar(jsonClub.optString("club_logo"));
         club.setActiveCheckIns(jsonClub.optInt("active_checkins"));
         club.setActiveFriendsCheckIns(jsonClub.optInt("active_friends_checkins"));
+        club.setInfo(jsonClub.optString("club_info"));
+        club.setAgeRestriction(jsonClub.optString("club_age_restriction"));
+        club.setDressCode(jsonClub.optString("club_dress_code"));
+        club.setCapacity(jsonClub.optString("club_capacity"));
+        club.setWebsite(jsonClub.optString("club_site"));
+        club.setEmail(jsonClub.optString("club_email"));
 
         JSONObject jsonClubLocation = jsonClub.optJSONObject("club_loc");
         if(jsonClubLocation != null) {
@@ -180,9 +186,31 @@ public class JSONConverter {
             club.setDistance(LocationCheckinHelper.calculateDistance(club.getLat(), club.getLon()));
         }
 
+        List<String> photos = new ArrayList<String>();
+        JSONArray jsonArrPhotos = jsonClub.optJSONArray("club_photos");
+        if(jsonArrPhotos != null) {
+            for (int i = 0; i < jsonArrPhotos.length(); i++) {
+                photos.add(jsonArrPhotos.optString(i, ""));
+            }
+        }
+        club.setPhotos(photos);
+
+        List<ClubWorkingHoursDto> workingHours = new ArrayList<ClubWorkingHoursDto>();
+        JSONArray jsonArrHours = jsonClub.optJSONArray("club_working_hours");
+        if(jsonArrHours != null) {
+            for(int i = 0; i < jsonArrHours.length(); i++) {
+                JSONObject jsonWorkHours = jsonArrHours.optJSONObject(i);
+                ClubWorkingHoursDto clubWorkHours = newClubWorkingHours(jsonWorkHours);
+                if(clubWorkHours != null) {
+                    workingHours.add(clubWorkHours);
+                }
+            }
+        }
+        club.setWorkingHours(workingHours);
+
         JSONObject jsonWorkingHours = jsonClub.optJSONObject("club_today_working_hours");
-        ClubWorkingHoursDto workingHours = newClubWorkingHours(jsonWorkingHours);
-        club.setTodayWorkingHours(workingHours);
+        ClubWorkingHoursDto todayWorkingHours = newClubWorkingHours(jsonWorkingHours);
+        club.setTodayWorkingHours(todayWorkingHours);
 
         return club;
     }
@@ -202,6 +230,12 @@ public class JSONConverter {
             jsonClub.put("club_logo", club.getAvatar());
             jsonClub.put("active_checkins", club.getActiveCheckIns());
             jsonClub.put("active_friends_checkins", club.getActiveFriendsCheckIns());
+            jsonClub.put("club_info", club.getInfo());
+            jsonClub.put("club_age_restriction", club.getAgeRestriction());
+            jsonClub.put("club_dress_code", club.getDressCode());
+            jsonClub.put("club_capacity", club.getCapacity());
+            jsonClub.put("club_site", club.getWebsite());
+            jsonClub.put("club_email", club.getEmail());
 
             JSONObject jsonLocation = new JSONObject();
             jsonLocation.put("lon", club.getLon());
@@ -209,6 +243,25 @@ public class JSONConverter {
             jsonClub.put("club_loc", jsonLocation);
 
             jsonClub.put("club_today_working_hours", newClubWorkingHours(club.getTodayWorkingHours()));
+
+            JSONArray jsonArrPhotos = new JSONArray();
+            List<String> photos = club.getPhotos();
+            if(photos != null) {
+                for (int i = 0; i < photos.size(); i++) {
+                    jsonArrPhotos.put(i, photos.get(i));
+                }
+            }
+            jsonClub.put("club_photos", jsonArrPhotos);
+
+            JSONArray jsonArrHours = new JSONArray();
+            List<ClubWorkingHoursDto> workingHours = club.getWorkingHours();
+            if(workingHours != null) {
+                for (int i = 0; i < workingHours.size(); i++) {
+                    ClubWorkingHoursDto workHours = workingHours.get(i);
+                    jsonArrHours.put(i, newClubWorkingHours(workHours));
+                }
+            }
+            jsonClub.put("club_working_hours", jsonArrHours);
 
         } catch (JSONException e) {
             e.printStackTrace();

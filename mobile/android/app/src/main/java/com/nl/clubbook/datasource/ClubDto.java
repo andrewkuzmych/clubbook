@@ -13,10 +13,17 @@ public class ClubDto {
     private double lat;
     private double lon;
     private String avatar;
+    private String info;
+    private String ageRestriction;
+    private String dressCode;
+    private String capacity;
+    private String website;
+    private String email;
     private float distance;
     private int activeCheckIns;
     private int activeFriendsCheckIns;
     private ClubWorkingHoursDto todayWorkingHours;
+    private List<ClubWorkingHoursDto> workingHours;
     private List<String> photos;
     private List<UserDto> users;
 
@@ -123,5 +130,61 @@ public class ClubDto {
 
     public void setTodayWorkingHours(ClubWorkingHoursDto todayWorkingHours) {
         this.todayWorkingHours = todayWorkingHours;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
+    public String getAgeRestriction() {
+        return ageRestriction;
+    }
+
+    public void setAgeRestriction(String ageRestriction) {
+        this.ageRestriction = ageRestriction;
+    }
+
+    public String getDressCode() {
+        return dressCode;
+    }
+
+    public void setDressCode(String dressCode) {
+        this.dressCode = dressCode;
+    }
+
+    public String getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(String capacity) {
+        this.capacity = capacity;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public List<ClubWorkingHoursDto> getWorkingHours() {
+        return workingHours;
+    }
+
+    public void setWorkingHours(List<ClubWorkingHoursDto> workingHours) {
+        this.workingHours = workingHours;
     }
 }

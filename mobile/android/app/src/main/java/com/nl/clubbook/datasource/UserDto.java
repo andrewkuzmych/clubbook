@@ -22,6 +22,7 @@ public class UserDto {
     protected String avatar;
     protected String country;
     protected String bio;
+    protected String accessToken;
     protected CheckInDto lastCheckIn;
     protected List<UserPhotoDto> photos;
 
@@ -45,6 +46,8 @@ public class UserDto {
             this.setCountry(userJson.optString("country"));
         if (userJson.has("bio"))
             this.setBio(userJson.optString("bio"));
+        if (userJson.has("access_token"))
+            this.setAccessToken(userJson.optString("access_token"));
 
         JSONArray photosJson = userJson.optJSONArray("photos");
         List<UserPhotoDto> photos = new ArrayList<UserPhotoDto>();
@@ -159,6 +162,14 @@ public class UserDto {
 
     public void setLastCheckIn(CheckInDto lastCheckIn) {
         this.lastCheckIn = lastCheckIn;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
 }

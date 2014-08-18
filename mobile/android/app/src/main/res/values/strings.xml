@@ -81,5 +81,14 @@
     <string name="capacity">Capacity</string>
     <string name="dress_code">Dress Code</string>
     <string name="age_restrictions">Age Restrictions</string>
+    <string name="opened">opened</string>
+    <string name="closed">closed</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
 
 </resources>

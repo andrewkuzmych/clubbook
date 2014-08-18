@@ -386,7 +386,7 @@ public class MainActivity extends BaseActivity {
         }
 
         // retrieve the count of not read messages and update UI
-        DataStore.unread_messages_count(getCurrentUserId(), new DataStore.OnResultReady() {
+        DataStore.getNotifications(getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (!failed) {

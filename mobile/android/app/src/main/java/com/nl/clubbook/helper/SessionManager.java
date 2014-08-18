@@ -46,9 +46,10 @@ public class SessionManager {
     public static final String KEY_BIRTHDAY = "birthday";
     public static final String KEY_AGE = "age";
     public static final String KEY_AVATAR = "avatar";
-    public static final String KEY_FBACCESSTOKEN = "access_token";
-    public static final String KEY_FBACCESSEXPITES = "access_expires";
-    public static final String KEY_PERMISSIONS = "permissions";
+    public static final String KEY_ACCESS_TOCKEN = "access_token";
+    public static final String KEY_FBACCESSTOKEN = "fb_access_token";
+    public static final String KEY_FBACCESSEXPITES = "fb_access_expires";
+    public static final String KEY_PERMISSIONS = "fb_permissions";
     public static final String KEY_CHECKIN_CLUB_ID = "checkin_club_id";
     public static final String KEY_CHECKIN_CLUB_LAT = "checkin_club_lan";
     public static final String KEY_CHECKIN_CLUB_LON = "checkin_club_lat";
@@ -120,21 +121,14 @@ public class SessionManager {
     public void updateLoginSession(UserDto user) {
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
-
         editor.putString(KEY_ID, user.getId());
-        // Storing name in pref
         editor.putString(KEY_NAME, user.getName());
-
-        // Storing email in pref
         editor.putString(KEY_EMAIL, user.getEmail());
-
         editor.putString(KEY_GENDER, user.getGender());
-
         editor.putString(KEY_BIRTHDAY, user.getDob());
-
         editor.putString(KEY_AGE, user.getAge());
-
         editor.putString(KEY_AVATAR, user.getAvatar());
+        editor.putString(KEY_ACCESS_TOCKEN, user.getAccessToken());
 
         // commit changes
         editor.commit();
@@ -172,7 +166,6 @@ public class SessionManager {
      */
     public HashMap<String, String> getUserDetails() {
         HashMap<String, String> user = new HashMap<String, String>();
-        // user name
         user.put(KEY_NAME, pref.getString(KEY_NAME, null));
         user.put(KEY_ID, pref.getString(KEY_ID, null));
         user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, null));
@@ -180,8 +173,8 @@ public class SessionManager {
         user.put(KEY_BIRTHDAY, pref.getString(KEY_BIRTHDAY, null));
         user.put(KEY_AGE, pref.getString(KEY_AGE, null));
         user.put(KEY_AVATAR, pref.getString(KEY_AVATAR, null));
+        user.put(KEY_ACCESS_TOCKEN, pref.getString(KEY_ACCESS_TOCKEN, null));
 
-        // return user
         return user;
     }
 

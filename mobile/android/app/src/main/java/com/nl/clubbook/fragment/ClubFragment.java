@@ -134,7 +134,7 @@ public class ClubFragment extends BaseFragment implements View.OnClickListener {
 
         setLoading(view, true);
 
-        DataStore.retrievePlace(mClubId, user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
+        DataStore.retrievePlace(mClubId, user.get(SessionManager.KEY_ACCESS_TOCKEN), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if(isDetached() || getActivity() == null) {
