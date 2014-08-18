@@ -392,9 +392,11 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
             cell.textImage.hidden = NO;
             UIImage *image = [UIImage imageNamed:@"icon_chat_drink"];
             [cell.textImage setImage:image];
+            cell.textImage.contentMode = UIViewContentModeScaleAspectFit;
             cell.textView.text = [messageData text];
             CGRect rect = cell.textView.frame;
-            rect.origin.x = 15;
+            rect.origin.x = 18;
+            rect.origin.y = 2;
             cell.textView.frame = rect;
             
         } else{
@@ -438,6 +440,7 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
     
     return cell;
 }
+
 
 - (UICollectionReusableView *)collectionView:(JSQMessagesCollectionView *)collectionView
            viewForSupplementaryElementOfKind:(NSString *)kind

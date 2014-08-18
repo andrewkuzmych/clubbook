@@ -6,14 +6,18 @@
   Copyright (c) 2014 clubbook. All rights reserved.
 */
 
+"fontRegular" = "Helvetica";
+"fontBold" = "Helvetica-Bold";
+
 "slogan" = "Get Social in The Club";
 "fbSign" = "Sign In with Facebook";
 "emailSignUp" = "Sign Up with E-mail";
 "emailSignIn" = "Login";
 "login" = "Log In";
-"termsText" = "By signing into Clubbook, you agree with";
+"termsText" = "By Signing into Clubbook, you agree with the";
 "termsAction" = "Terms of Service";
 "signUp" = "Sign Up";
+
 
 "noneFriend" = "none";
 "sentRequest" = "sent_request";
@@ -23,19 +27,20 @@
 "termsUrl" = "http://clubbookapp.herokuapp.com/terms";
 "privacyUrl" = "http://clubbookapp.herokuapp.com/privacy";
 
-"checkApp" = "Hi, I am using clubbook, check this nice app";
-"wrongName" = "Wrong name";
+
+"checkApp" = "Hey there! I'm using Clubbook. Check it out!";
+"wrongName" = "Wrong Name";
 "wrongeEmail" = "Wrong Email";
 "wrongDob" = "Wrong Birthday";
-"wrongPass" = "Wrong password";
-"wrongGender" = "Wrong gender";
-"wrongCountry" = "Wrong country";
-"wrongAvatar" = "Select at least 1 image for avatar";
+"wrongPass" = "Wrong Password";
+"wrongGender" = "Wrong Gender";
+"wrongCountry" = "Wrong Country";
+"wrongAvatar" = "At least 1 Profile Photo is required";
 "error" = "Error";
 "kilometers" = "km";
 "meters" = "m";
-"invite_for_drink" = "Invite you for a drink";
-"send_like" = "likes you";
+"invite_for_drink" = "Invites you for a Drink";
+"send_like" = "Likes your Profile";
 "email"= "Email";
 "pass"= "Password (minimum 6 characters)";
 "first_name"= "First Name";
@@ -44,10 +49,13 @@
 "gender"= "Gender";
 "country"= "Country";
 "female"= "Female";
-"no_location_msg" = "In order to see clubs near you, we need to know yor location\rGo to Settings > Privacy > Location Services, and switch Clubbook to ON";
+"no_location_msg" = "In order for you to see Clubs and Profiles nearby, we need to know your current location. Go to Settings > Privacy > Location Services > and turn Clubbook ON";
+
 "no_location_title" = "Where are you?";
-"checking_in" = "checking in...";
-"checking_out" = "checking out...";
+
+"checking_in" = "Checking-in...";
+
+"checking_out" = "Checking-out...";
 "checkin" = "Check-in";
 "checkout" = "Check-out";
 "loading" = "Loading...";
@@ -55,62 +63,71 @@
 "cancel" = "Cancel";
 "youSure" = "Are you sure?";
 
+
 "title" = "Edit User Profile";
-"club_feature" = "Club Feature";
+"club_feature" = "Club Features";
 "club_details" = "Club Details";
 
-"defoutBio" = "Hi, I am using Clubbook";
-"bio" = "short bio about you";
-"usersLeftToChecdkin" = "Waiting for %d more people to show Profile Pictures";
+
+"defoutBio" = "Hey there! I’m using Clubbook";
+"bio" = "Short bio about yourself, a mood message or say something cool!.";
+"usersLeftToChecdkin" = "Profile Pictures will be visible when %d users more are Checked-in.";
 "nonePeople" = "none people";
-"needToCheckinFirst" = "You need to checkin to communicate with other people";
+"needToCheckinFirst" = "To interact with this user, you need to Check-in to this Club first.";
 "cannotSeeOwnPofile" = "This is You";
+
 
 "unknown" = "unknown";
 "closed" = "Closed";
 "none" = "None";
 "zero_plus" = "0+";
-"processing" = "Processing request...";
+"processing" = "Processing Request...";
 "friends" = "Friends";
-"pending_requests" = "Pending Requests";
-"not_checked_in" = "not checked in";
-"checked_in" = "checked in:";
-"chat_limit" = "You cannot send more than 2 messages without reply";
-"checkin_distance" = "You need to be within %d meters to checkin";
+"pending_requests" = "Pending";
+"not_checked_in" = "Not Checked-in";
+"checked_in" = "Checked-in:";
+"chat_limit" = "You cannot send more than 3 messages to this user without receiving a reply";
+"checkin_distance" = "You need to be %d meters closer to this Club in order to Check-in";
+
 
 "clubs" = "Clubs";
 "messages" = "Messages";
 "friends" = "Friends";
 "settings" = "Settings";
 "share" = "Share";
-"checkedIn" = "checked in";
-"friends_lower" = "friends";
+"checkedIn" = "Checked-in";
+"friends_lower" = "Friends";
 "nearby" = "Nearby";
 "az" = "A-Z";
 
-"ageRestiction" = "AGE RESTRICTION";
-"capacity" = "CAPACITY";
-"dressCode" = "DRESS CODE";
+
+"ageRestiction" = "Age Restriction";
+"capacity" = "Capacity";
+"dressCode" = "Dress Code";
+
 
 "mon" = "Monday";
 "tue" = "Tuesday";
 "wed" = "Wednesday";
-"tho" = "Thourday";
+"tho" = "Thursday";
 "fri" = "Friday";
 "sat" = "Saturday";
 "san" = "Sunday";
+
 
 "accept" = "Accept";
 "remove" = "Remove";
 "aboutMe" = "About Me";
 
-"youSureUnfriend" = "Are you sure you want to Unfriend?";
-"youSureDelete" = "Are you sure you want to Delete Account?";
+
+"youSureUnfriend" = "Are you sure you want to ‘Unfriend' this user?";
+"youSureDelete" = "Are you sure you want to Delete Your Account?";
 "youSureLogOut" = "Are you sure you want to Log Out?";
 
-"push" = "Push Notification";
+
+"push" = "Push Notifications";
 "policy" = "Privacy Policy";
 "terms" = "Terms of Service";
-"account" = "Delete Account";
+"account" = "Delete Your Account";
 "contact" = "Contact";
 "logOut" = "Log Out";

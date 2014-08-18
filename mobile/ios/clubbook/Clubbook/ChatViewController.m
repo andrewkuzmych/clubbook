@@ -59,13 +59,13 @@
     [smileButton setTitle:@"Like" forState:UIControlStateNormal];
     [smileButton setTitleColor: [UIColor whiteColor] forState:UIControlStateNormal];
     [smileButton setTitleColor: [UIColor greenColor] forState:UIControlStateHighlighted];
-    smileButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:17];
+    smileButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
     
     UIButton *drinkButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [drinkButton addTarget:self
                     action:@selector(sendDrink:)
           forControlEvents:UIControlEventTouchUpInside];
-    [drinkButton setBackgroundImage:[UIImage imageNamed:@"icon_chat_drink"] forState:UIControlStateNormal];
+    [drinkButton setImage:[UIImage imageNamed:@"icon_chat_drink"] forState:UIControlStateNormal];
     
     self.inputToolbar.contentView.leftBarButtonItem = smileButton;
     

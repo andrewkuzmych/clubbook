@@ -44,6 +44,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     // Do any additional setup after loading the view.
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *userId = [defaults objectForKey:@"userId"];
@@ -53,18 +54,18 @@
         [self performSegueWithIdentifier: @"onLogin" sender: self];
     }
     
-    self.sloganLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:20];
+    self.sloganLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:20];
     self.sloganLabel.text = NSLocalizedString(@"slogan", nil);
-    self.fbButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:19];
+    self.fbButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
     [self.fbButton setTitle:NSLocalizedString(@"fbSign", nil) forState:UIControlStateNormal];
-    self.regButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:19];
+    self.regButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
     [self.regButton setTitle:NSLocalizedString(@"emailSignUp", nil) forState:UIControlStateNormal];
-    self.loginButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:20];
+    self.loginButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
     [self.loginButton setTitle:NSLocalizedString(@"emailSignIn", nil) forState:UIControlStateNormal];
     
-    self.termOfUseLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14];
+    self.termOfUseLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12];
     self.termOfUseLabel.text = NSLocalizedString(@"termsText", nil);
-    self.termOfUseButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:14];
+    self.termOfUseButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:12];
     [self.termOfUseButton setTitle:NSLocalizedString(@"termsAction", nil) forState:UIControlStateNormal];
   
 }

@@ -31,6 +31,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.navigationController setNavigationBarHidden:NO];
 
     UIToolbar *baseToolbar = [self generateToolbarForKeyboard];
     
@@ -39,16 +40,16 @@
     self.emailText.inputAccessoryView = baseToolbar;
     self.emailText.delegate = self;
     self.emailText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"email", nil)
-                                                                           attributes:@{NSFontAttributeName : [UIFont fontWithName:@"TitilliumWeb-Regular" size:16.0],
+                                                                           attributes:@{NSFontAttributeName : [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0],
                                                                                NSForegroundColorAttributeName: placeholderColor}];
 
     self.passText.inputAccessoryView = baseToolbar;
     self.passText.delegate = self;
     self.passText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"pass", nil)
-                                                                          attributes:@{NSFontAttributeName : [UIFont fontWithName:@"TitilliumWeb-Regular" size:16.0],
+                                                                          attributes:@{NSFontAttributeName : [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0],
                                                                             NSForegroundColorAttributeName: placeholderColor}];
 
-    self.loginButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:18];
+    self.loginButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:18];
     [self.loginButton setTitle:NSLocalizedString(@"login", nil) forState:UIControlStateNormal];
     
     [self.emailText becomeFirstResponder];

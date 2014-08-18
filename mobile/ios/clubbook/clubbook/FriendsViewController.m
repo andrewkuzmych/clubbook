@@ -38,7 +38,7 @@
     self.friendsTable.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     // Do any additional setup after loading the view.
     
-    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:@"TitilliumWeb-Regular" size:12], UITextAttributeFont, nil];
+    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12], UITextAttributeFont, nil];
     [self.segmentControl setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
 
     [self.segmentControl setTitle:[NSString stringWithFormat:NSLocalizedString(@"friends", nil)] forSegmentAtIndex:0];
@@ -117,15 +117,15 @@
     FriendCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     User *user = _friends[indexPath.row];
     
-    cell.friendName.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:17];
+    cell.friendName.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
     [cell.friendName setText:user.name];
     
-    cell.friendCheckin.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12];
+    cell.friendCheckin.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12];
     
-    cell.acceptButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12];
+    cell.acceptButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12];
     [cell.acceptButton setTitle:NSLocalizedString(@"accept", nil) forState:UIControlStateNormal];
     
-    cell.deleteButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12];
+    cell.deleteButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12];
     [cell.deleteButton setTitle:NSLocalizedString(@"remove", nil) forState:UIControlStateNormal];
     
     //Conversation *conv = [chat.conversations objectAtIndex:0];

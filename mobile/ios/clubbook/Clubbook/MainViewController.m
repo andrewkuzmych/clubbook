@@ -47,7 +47,7 @@
     
     distanceKm = 5;
     
-    self.distance.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14];
+    self.distance.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14];
     [self.distance setText:[NSString stringWithFormat:@"%d%@", distanceKm, NSLocalizedString(@"kilometers", nil)]];
     
     
@@ -56,7 +56,7 @@
     
     self.clubTable.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
-    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:@"TitilliumWeb-Regular" size:12], UITextAttributeFont, nil];
+    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:15], UITextAttributeFont, nil];
     [self.segmentControl setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
     
     [self.segmentControl setTitle:[NSString stringWithFormat:NSLocalizedString(@"nearby", nil)] forSegmentAtIndex:0];
@@ -179,28 +179,28 @@
     ClubCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     Place *place = _places[indexPath.row];
     
-    cell.clubNameText.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:17];
+    cell.clubNameText.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
     [cell.clubNameText setText:place.title];
     
-    cell.distanceLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:12];
+    cell.distanceLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:12];
     
-    cell.userCountLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12];
+    cell.userCountLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12];
     
-    cell.friendsCountLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12];
+    cell.friendsCountLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12];
     
-    cell.userCountLabelTitle.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12];
+    cell.userCountLabelTitle.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:10];
     
     cell.userCountLabelTitle.text = NSLocalizedString(@"checkedIn", nil);
     
-    cell.friendsCountLabelTitle.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12];
+    cell.friendsCountLabelTitle.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:10];
     
     cell.friendsCountLabelTitle.text = NSLocalizedString(@"friends_lower", nil);
     
-    cell.closingLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:10];
+    cell.closingLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:10];
     
-    cell.closingValueLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:10];
+    cell.closingValueLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:10];
     
-    cell.checkinButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:15];
+    cell.checkinButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15];
     
     //[cell.checkinButton setBackgroundColor:[UIColor colorWithRed:92/255.0 green:142/255.0 blue:95/255.0 alpha:1.0] forState:UIControlStateNormal];
     
