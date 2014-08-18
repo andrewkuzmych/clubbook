@@ -1026,11 +1026,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Manager/ClubbookCommunicator.m"
-            timestampString = "430048766.700593"
+            timestampString = "430053357.069861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "406"
-            endingLineNumber = "406"
+            startingLineNumber = "407"
+            endingLineNumber = "407"
             landmarkName = "-retrievePlaces:lat:lon:accessToken:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1090,11 +1090,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Manager/ClubbookCommunicator.m"
-            timestampString = "430048766.700593"
+            timestampString = "430053357.069861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "428"
-            endingLineNumber = "428"
+            startingLineNumber = "429"
+            endingLineNumber = "429"
             landmarkName = "-retrievePlace:accessToken:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1122,11 +1122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Manager/ClubbookCommunicator.m"
-            timestampString = "430048766.700593"
+            timestampString = "430053357.069861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "436"
-            endingLineNumber = "436"
+            startingLineNumber = "437"
+            endingLineNumber = "437"
             landmarkName = "-retrievePlace:accessToken:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1728,11 +1728,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Manager/ClubbookCommunicator.m"
-            timestampString = "430048766.700593"
+            timestampString = "430053357.069861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "452"
-            endingLineNumber = "452"
+            startingLineNumber = "453"
+            endingLineNumber = "453"
             landmarkName = "-retrieveUser:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1760,11 +1760,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Manager/ClubbookCommunicator.m"
-            timestampString = "430048766.700593"
+            timestampString = "430053357.069861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "458"
-            endingLineNumber = "458"
+            startingLineNumber = "459"
+            endingLineNumber = "459"
             landmarkName = "-retrieveUser:"
             landmarkType = "5">
          </BreakpointContent>
@@ -4553,7 +4553,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "342"
             endingLineNumber = "342"
-            landmarkName = "-changeSelectedImage:"
+            landmarkName = "-getCountryIndex:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4592,7 +4592,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/ProfileViewController.m"
@@ -4633,7 +4633,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "469"
             endingLineNumber = "469"
-            landmarkName = "-pickerView:didSelectRow:inComponent:"
+            landmarkName = "-pickerView:titleForRow:forComponent:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4649,7 +4649,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "257"
             endingLineNumber = "257"
-            landmarkName = "-dboChanged:"
+            landmarkName = "-setDob:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4665,7 +4665,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "264"
             endingLineNumber = "264"
-            landmarkName = "-setupImageButton:"
+            landmarkName = "-dboChanged:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4745,7 +4745,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "90"
             endingLineNumber = "90"
-            landmarkName = "-updateUserImage:objectId:"
+            landmarkName = "-updateUserImage:objectId:accessToken:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4793,7 +4793,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "109"
             endingLineNumber = "109"
-            landmarkName = "-updateUserImage:objectId:"
+            landmarkName = "-updateUserImage:objectId:accessToken:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4841,7 +4841,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "98"
             endingLineNumber = "98"
-            landmarkName = "-updateUserImage:objectId:"
+            landmarkName = "-updateUserImage:objectId:accessToken:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4889,7 +4889,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "93"
             endingLineNumber = "93"
-            landmarkName = "-updateUserImage:objectId:"
+            landmarkName = "-updateUserImage:objectId:accessToken:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4953,8 +4953,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "284"
             endingLineNumber = "284"
-            landmarkName = "-populateImageCollection:isProfileDefoult:"
-            landmarkType = "5">
+            landmarkName = "@implementation ProfileViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -5930,11 +5930,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Manager/ClubbookCommunicator.m"
-            timestampString = "430048766.700593"
+            timestampString = "430053357.069861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "454"
-            endingLineNumber = "454"
+            startingLineNumber = "455"
+            endingLineNumber = "455"
             landmarkName = "-retrieveUser:"
             landmarkType = "5">
          </BreakpointContent>
@@ -6276,11 +6276,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Manager/ClubbookCommunicator.m"
-            timestampString = "430048766.700593"
+            timestampString = "430053357.069861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "432"
-            endingLineNumber = "432"
+            startingLineNumber = "433"
+            endingLineNumber = "433"
             landmarkName = "-retrievePlace:accessToken:"
             landmarkType = "5">
             <Locations>
@@ -6498,55 +6498,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/SettingsViewController.m"
-            timestampString = "429807960.256578"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "56"
-            endingLineNumber = "56"
-            landmarkName = "-tableView:didSelectRowAtIndexPath:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Clubbook/SettingsViewController.m"
-            timestampString = "429807960.256578"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "55"
-            endingLineNumber = "55"
-            landmarkName = "-tableView:didSelectRowAtIndexPath:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Clubbook/SettingsViewController.m"
-            timestampString = "429807960.256578"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "54"
-            endingLineNumber = "54"
-            landmarkName = "@implementation SettingsViewController"
-            landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Clubbook/SettingsViewController.m"
-            timestampString = "429807960.256578"
+            timestampString = "430052214.238383"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "60"
@@ -6562,11 +6514,59 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/SettingsViewController.m"
-            timestampString = "429807960.256578"
+            timestampString = "430052214.238383"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
+            landmarkName = "-tableView:didSelectRowAtIndexPath:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Clubbook/SettingsViewController.m"
+            timestampString = "430052214.238383"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "58"
             endingLineNumber = "58"
+            landmarkName = "@implementation SettingsViewController"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Clubbook/SettingsViewController.m"
+            timestampString = "430052214.238383"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "64"
+            endingLineNumber = "64"
+            landmarkName = "-tableView:didSelectRowAtIndexPath:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Clubbook/SettingsViewController.m"
+            timestampString = "430052214.238383"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
             landmarkName = "-tableView:didSelectRowAtIndexPath:"
             landmarkType = "5">
          </BreakpointContent>
@@ -6690,11 +6690,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/SettingsViewController.m"
-            timestampString = "429807960.256578"
+            timestampString = "430052214.238383"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "84"
-            endingLineNumber = "84"
+            startingLineNumber = "92"
+            endingLineNumber = "92"
             landmarkName = "-prepareForSegue:sender:"
             landmarkType = "5">
          </BreakpointContent>
@@ -6706,11 +6706,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/SettingsViewController.m"
-            timestampString = "429807960.256578"
+            timestampString = "430052214.238383"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "138"
-            endingLineNumber = "138"
+            startingLineNumber = "160"
+            endingLineNumber = "160"
             landmarkName = "-didChangePush:"
             landmarkType = "5">
          </BreakpointContent>
@@ -6722,11 +6722,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/SettingsViewController.m"
-            timestampString = "429807960.256578"
+            timestampString = "430052214.238383"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "137"
-            endingLineNumber = "137"
+            startingLineNumber = "159"
+            endingLineNumber = "159"
             landmarkName = "-didChangePush:"
             landmarkType = "5">
          </BreakpointContent>
@@ -6738,11 +6738,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/SettingsViewController.m"
-            timestampString = "429807960.256578"
+            timestampString = "430052214.238383"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "126"
-            endingLineNumber = "126"
+            startingLineNumber = "148"
+            endingLineNumber = "148"
             landmarkName = "-pushSwitchAction:"
             landmarkType = "5">
          </BreakpointContent>
@@ -7138,11 +7138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Manager/ClubbookCommunicator.m"
-            timestampString = "430048766.700593"
+            timestampString = "430053357.069861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "493"
-            endingLineNumber = "493"
+            startingLineNumber = "494"
+            endingLineNumber = "494"
             landmarkName = "-checkin:accessToken:userInfo:"
             landmarkType = "5">
          </BreakpointContent>
@@ -7154,27 +7154,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Manager/ClubbookCommunicator.m"
-            timestampString = "430048766.700593"
+            timestampString = "430053357.069861"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "503"
+            endingLineNumber = "503"
+            landmarkName = "-checkin:accessToken:userInfo:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Clubbook/Manager/ClubbookCommunicator.m"
+            timestampString = "430053357.069861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "502"
             endingLineNumber = "502"
-            landmarkName = "-checkin:accessToken:userInfo:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Clubbook/Manager/ClubbookCommunicator.m"
-            timestampString = "430048766.700593"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "501"
-            endingLineNumber = "501"
             landmarkName = "-checkin:accessToken:userInfo:"
             landmarkType = "5">
          </BreakpointContent>
@@ -7202,11 +7202,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Manager/ClubbookCommunicator.m"
-            timestampString = "430048766.700593"
+            timestampString = "430053357.069861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "495"
-            endingLineNumber = "495"
+            startingLineNumber = "496"
+            endingLineNumber = "496"
             landmarkName = "-checkin:accessToken:userInfo:"
             landmarkType = "5">
          </BreakpointContent>
@@ -7282,11 +7282,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/SettingsViewController.m"
-            timestampString = "429806597.542684"
+            timestampString = "430052214.238383"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "35"
-            endingLineNumber = "35"
+            startingLineNumber = "39"
+            endingLineNumber = "39"
             landmarkName = "-viewDidLoad"
             landmarkType = "5">
          </BreakpointContent>
@@ -7298,11 +7298,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/SettingsViewController.m"
-            timestampString = "429806599.550734"
+            timestampString = "430052214.238383"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "36"
-            endingLineNumber = "36"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
             landmarkName = "-viewDidLoad"
             landmarkType = "5">
          </BreakpointContent>
@@ -7346,11 +7346,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Manager/ClubbookCommunicator.m"
-            timestampString = "430048766.700593"
+            timestampString = "430053357.069861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "403"
-            endingLineNumber = "403"
+            startingLineNumber = "404"
+            endingLineNumber = "404"
             landmarkName = "-retrievePlaces:lat:lon:accessToken:"
             landmarkType = "5">
          </BreakpointContent>
@@ -7362,11 +7362,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Manager/ClubbookCommunicator.m"
-            timestampString = "430048766.700593"
+            timestampString = "430053357.069861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "400"
-            endingLineNumber = "400"
+            startingLineNumber = "401"
+            endingLineNumber = "401"
             landmarkName = "-retrievePlaces:lat:lon:accessToken:"
             landmarkType = "5">
             <Locations>
@@ -7516,7 +7516,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Helpers/SessionHelper.m"
@@ -7532,7 +7532,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Manager/ClubbookCommunicator.m"
@@ -7568,11 +7568,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Manager/ClubbookCommunicator.m"
-            timestampString = "430049742.523779"
+            timestampString = "430053357.069861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "401"
-            endingLineNumber = "401"
+            startingLineNumber = "402"
+            endingLineNumber = "402"
             landmarkName = "-retrievePlaces:lat:lon:accessToken:"
             landmarkType = "5">
             <Locations>
@@ -7614,11 +7614,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Manager/ClubbookCommunicator.m"
-            timestampString = "430049934.03013"
+            timestampString = "430053357.069861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "384"
-            endingLineNumber = "384"
+            startingLineNumber = "385"
+            endingLineNumber = "385"
             landmarkName = "-retrieveConversations:accessToken:"
             landmarkType = "5">
          </BreakpointContent>
@@ -7630,13 +7630,59 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Manager/ClubbookCommunicator.m"
-            timestampString = "430050149.424386"
+            timestampString = "430053357.069861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "647"
-            endingLineNumber = "647"
+            startingLineNumber = "648"
+            endingLineNumber = "648"
             landmarkName = "-retrieveFriends:accessToken:"
             landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Clubbook/Manager/ClubbookCommunicator.m"
+            timestampString = "430053357.069861"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "642"
+            endingLineNumber = "642"
+            landmarkName = "-retrieveFriends:accessToken:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[ClubbookCommunicator retrieveFriends:accessToken:]"
+                  moduleName = "Clubbook"
+                  urlString = "file://localhost/Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Manager/ClubbookCommunicator.m"
+                  timestampString = "430051701.475353"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "642"
+                  endingLineNumber = "642"
+                  offsetFromSymbolStart = "60">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__52-[ClubbookCommunicator retrieveFriends:accessToken:]_block_invoke"
+                  moduleName = "Clubbook"
+                  urlString = "file://localhost/Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Manager/ClubbookCommunicator.m"
+                  timestampString = "430051701.475551"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "642"
+                  endingLineNumber = "642"
+                  offsetFromSymbolStart = "64">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -7646,28 +7692,122 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Manager/ClubbookCommunicator.m"
-            timestampString = "430051043.471272"
+            timestampString = "430053357.069861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "641"
-            endingLineNumber = "641"
-            landmarkName = "-retrieveFriends:accessToken:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Clubbook/Manager/ClubbookCommunicator.m"
-            timestampString = "430051052.967189"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "620"
-            endingLineNumber = "620"
+            startingLineNumber = "621"
+            endingLineNumber = "621"
             landmarkName = "-removeFriendRequest:friendId:accessToken:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[ClubbookCommunicator removeFriendRequest:friendId:accessToken:]"
+                  moduleName = "Clubbook"
+                  urlString = "file://localhost/Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Manager/ClubbookCommunicator.m"
+                  timestampString = "430053357.209856"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "622"
+                  endingLineNumber = "622"
+                  offsetFromSymbolStart = "84">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__65-[ClubbookCommunicator removeFriendRequest:friendId:accessToken:]_block_invoke"
+                  moduleName = "Clubbook"
+                  urlString = "file://localhost/Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Manager/ClubbookCommunicator.m"
+                  timestampString = "430053357.210051"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "622"
+                  endingLineNumber = "622"
+                  offsetFromSymbolStart = "64">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Clubbook/SettingsViewController.m"
+            timestampString = "430052202.471369"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "101"
+            endingLineNumber = "101"
+            landmarkName = "-actionSheet:clickedButtonAtIndex:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Clubbook/SettingsViewController.m"
+            timestampString = "430052204.997124"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "125"
+            endingLineNumber = "125"
+            landmarkName = "-didDeleteUser:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Clubbook/Manager/ClubbookCommunicator.m"
+            timestampString = "430052629.851689"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "365"
+            endingLineNumber = "365"
+            landmarkName = "-unreadMessages:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Clubbook/Manager/ClubbookCommunicator.m"
+            timestampString = "430053312.736123"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "272"
+            endingLineNumber = "272"
+            landmarkName = "-signinUser:pass:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Clubbook/ObjectBuilder.m"
+            timestampString = "430053597.659101"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "463"
+            endingLineNumber = "463"
+            landmarkName = "+getUserBase:userJson:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

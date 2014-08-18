@@ -99,9 +99,9 @@
     [self.communicator addUserImage:userId avatar:avatar accessToken:accessToken];
 }
 
-- (void)changeUserPush:(NSString *) userId push:(BOOL) push
+- (void)changeUserPush:(NSString *) accessToken push:(BOOL) push
 {
-    [self.communicator changeUserPush:userId push:push];
+    [self.communicator changeUserPush:accessToken push:push];
 }
 
 - (void)updateUserImage:(NSString *) userId objectId:(NSString *) objectId accessToken:(NSString *) accessToken

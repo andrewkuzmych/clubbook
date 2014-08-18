@@ -137,7 +137,7 @@
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@", baseURL, accessToken];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/me?access_token=%@", baseURL, accessToken];
         NSDictionary * data  =
         [NSDictionary
          dictionaryWithObjectsAndKeys:
@@ -359,6 +359,7 @@
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
+        
         NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/me/notifications?access_token=%@", baseURL, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];

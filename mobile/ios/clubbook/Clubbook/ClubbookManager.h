@@ -60,7 +60,7 @@
 
 - (void)deleteUserImage:(NSString *) userId objectId:(NSString *) objectId accessToken:(NSString *) accessToken;
 
-- (void)changeUserPush:(NSString *) userId push:(BOOL) push;
+- (void)changeUserPush:(NSString *) accessToken push:(BOOL) push;
 
 - (void)updateUser:(NSString *) accessToken name:(NSString *) name gender:(NSString *) gender  dob:(NSString *) dob country:(NSString *) country bio:(NSString *) bio;
 

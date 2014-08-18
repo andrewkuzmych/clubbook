@@ -62,7 +62,7 @@
 
 - (void)deleteUser:(NSString *) accessToken;
 
-- (void)changeUserPush:(NSString *) userId push:(BOOL) push;
+- (void)changeUserPush:(NSString *) accessToken push:(BOOL) push;
 
 - (void)sendFriendRequest:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken;
 
