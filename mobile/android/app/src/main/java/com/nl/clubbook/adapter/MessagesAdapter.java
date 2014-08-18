@@ -1,14 +1,14 @@
 package com.nl.clubbook.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.ChatDto;
+import com.nl.clubbook.datasource.ChatMessageDto;
+import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -20,20 +20,17 @@ import java.util.List;
 /**
  * Created by Andrew on 6/2/2014.
  */
-public class MessagesAdapter extends ArrayAdapter<ChatDto> {
+public class MessagesAdapter extends BaseAdapter {
+
     private ImageLoader imageLoader;
     private DisplayImageOptions options;
     private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
+    private List<ChatDto> mChats = null;
+    private LayoutInflater mInflater;
 
-    Context context;
-    int layoutResourceId;
-    List<ChatDto> data = null;
-
-    public MessagesAdapter(Context context, int layoutResourceId, List<ChatDto> data) {
-        super(context, layoutResourceId, data);
-        this.layoutResourceId = layoutResourceId;
-        this.context = context;
-        this.data = data;
+    public MessagesAdapter(Context context, List<ChatDto> chats) {
+        mInflater = LayoutInflater.from(context);
+        mChats = chats;
 
         imageLoader = ImageLoader.getInstance();
         options = new DisplayImageOptions.Builder()
@@ -46,60 +43,89 @@ public class MessagesAdapter extends ArrayAdapter<ChatDto> {
     }
 
     @Override
+    public int getCount() {
+        return mChats.size();
+    }
+
+    @Override
+    public ChatDto getItem(int position) {
+        return mChats.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        ConvShortItemHolder holder = null;
+        MessageItemHolder holder;
 
         if (row == null) {
-            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            row = inflater.inflate(layoutResourceId, parent, false);
+            row = mInflater.inflate(R.layout.item_list_message, null);
 
-            Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/TITILLIUMWEB-REGULAR.TTF");
-            Typeface typeface_bold = Typeface.createFromAsset(context.getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF");
-
-            holder = new ConvShortItemHolder();
-            holder.user_avatar = (ImageView) row.findViewById(R.id.user_avatar);
-            holder.user_name = (TextView) row.findViewById(R.id.user_name);
-            holder.user_name.setTypeface(typeface_bold);
-            holder.con_id = (TextView) row.findViewById(R.id.con_id);
-            holder.user_message= (TextView) row.findViewById(R.id.user_message);
-            holder.user_message.setTypeface(typeface);
-            holder.user_message_count = (TextView) row.findViewById(R.id.user_message_count);
-            holder.user_message_count.setTypeface(typeface_bold);
+            holder = new MessageItemHolder();
+            holder.imgAvatar = (ImageView) row.findViewById(R.id.imgAvatar);
+            holder.txtUsername = (TextView) row.findViewById(R.id.txtUsername);
+            holder.txtLastMessage = (TextView) row.findViewById(R.id.txtLastMessage);
+            holder.txtUnreadMessagesCount = (TextView) row.findViewById(R.id.txtUnreadMessagesCount);
 
             row.setTag(holder);
         } else {
-            holder = (ConvShortItemHolder) row.getTag();
+            holder = (MessageItemHolder) row.getTag();
         }
 
-        ChatDto con = data.get(position);
-        holder.user_name.setText(con.getReceiver().getName());
-        holder.user_name.setTag(con.getReceiver().getId());
-        holder.con_id.setText(con.getChatId());
-        holder.user_message.setText(con.getConversation().get(0).getFormatMessage());
-
-        int unread_count = con.getUnreadMessages();
-        if(unread_count == 0) {
-            holder.user_message_count.setVisibility(View.GONE);
-        } else {
-            holder.user_message_count.setVisibility(View.VISIBLE);
-        }
-        holder.user_message_count.setText(String.valueOf(con.getUnreadMessages()));
-
-        if(con.getReceiver().getAvatar() != null) {
-            String image_url = ImageHelper.getUserListAvatar(con.getReceiver().getAvatar());
-            imageLoader.displayImage(image_url, holder.user_avatar, options, animateFirstListener);
-        }
+        ChatDto messageItem = mChats.get(position);
+        fillView(holder, messageItem);
 
         return row;
     }
 
-    static class ConvShortItemHolder {
-        ImageView user_avatar;
-        TextView user_name;
-        TextView con_id;
-        TextView user_message;
-        TextView user_message_count;
+    public void updateData(List<ChatDto> newChats) {
+        if(newChats == null) {
+            return;
+        }
+
+        mChats = newChats;
+        notifyDataSetChanged();
+    }
+
+    private void fillView(MessageItemHolder holder, ChatDto messageItem) {
+        if(messageItem == null) {
+            return;
+        }
+
+        UserDto receiver = messageItem.getReceiver();
+
+        holder.txtUsername.setText(receiver.getName());
+        holder.txtUsername.setTag(receiver.getId());
+
+        List<ChatMessageDto> conversation = messageItem.getConversation();
+        if(conversation != null && !conversation.isEmpty()) {
+            holder.txtLastMessage.setText(conversation.get(0).getFormatMessage());
+        }
+
+        int unreadMessageCount = messageItem.getUnreadMessages();
+        if(unreadMessageCount == 0) {
+            holder.txtUnreadMessagesCount.setVisibility(View.GONE);
+        } else {
+            holder.txtUnreadMessagesCount.setVisibility(View.VISIBLE);
+        }
+        holder.txtUnreadMessagesCount.setText("" + messageItem.getUnreadMessages());
+
+        String avatarUrl = receiver.getAvatar();
+        if(avatarUrl != null && avatarUrl.length() != 0) {
+            String imageUrl = ImageHelper.getUserListAvatar(avatarUrl);
+            imageLoader.displayImage(imageUrl, holder.imgAvatar, options, animateFirstListener);
+        }
+    }
+
+    static class MessageItemHolder {
+        ImageView imgAvatar;
+        TextView txtUsername;
+        TextView txtLastMessage;
+        TextView txtUnreadMessagesCount;
     }
 
 }

@@ -3,7 +3,6 @@ package com.nl.clubbook.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -136,28 +135,24 @@ public class MainActivity extends BaseActivity {
         navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+        mDrawerList = (ListView) findViewById(R.id.listDrawer);
         mDrawerList.requestFocusFromTouch();
 
         mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout,
                 R.drawable.ic_drawer, //nav menu toggle icon
-                R.string.app_name, // nav drawer open - description for accessibility
-                R.string.app_name // nav drawer close - description for accessibility
+                R.string.app_name,
+                R.string.app_name
         ) {
             public void onDrawerClosed(View view) {
                 getSupportActionBar().setTitle(mTitle);
-                // calling onPrepareOptionsMenu() to show action bar icons
                 invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
                 getSupportActionBar().setTitle("");
-                // calling onPrepareOptionsMenu() to hide action bar icons
                 invalidateOptionsMenu();
             }
         };
-
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#391A3C")));
 
         navDrawerItems = new ArrayList<NavDrawerItem>();
         navDrawerItems.add(new NavDrawerItem(user.get(SessionManager.KEY_NAME), user_avatar_url,
@@ -382,7 +377,7 @@ public class MainActivity extends BaseActivity {
     public void updateMessagesCount() {
         // if user on List of All messages fragment then reload data
         if (getCurrentFragment() instanceof MessagesFragment) {
-            ((MessagesFragment) getCurrentFragment()).loadData(false);
+            ((MessagesFragment) getCurrentFragment()).onRefresh();
         }
 
         // retrieve the count of not read messages and update UI

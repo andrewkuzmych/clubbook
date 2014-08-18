@@ -2,7 +2,6 @@ package com.nl.clubbook.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +53,6 @@ public class NavDrawerListAdapter extends ArrayAdapter<NavDrawerItem> {
         RelativeLayout profile = (RelativeLayout) convertView.findViewById(R.id.profile);
         RelativeLayout menu_item = (RelativeLayout) convertView.findViewById(R.id.menu_item);
 
-        convertView.setBackgroundColor(Color.parseColor(navDrawerItems.get(position).getBackground()));
         if (navDrawerItems.get(position).getProfileVisibility()) {
             profile.setVisibility(View.VISIBLE);
             menu_item.setVisibility(View.GONE);

@@ -1,36 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main_layout"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_background_color">
+    android:background="@color/bg_screen_grey_light">
 
-    <RelativeLayout
-        android:id="@+id/content_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+    <FrameLayout
+        android:id="@+id/frame_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-        <android.support.v4.widget.DrawerLayout
-            android:id="@+id/drawer_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <!-- The main content view -->
-            <FrameLayout
-                android:id="@+id/frame_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-            <!-- The navigation drawer -->
-            <ListView
-                android:id="@+id/list_slidermenu"
-                android:layout_width="240dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:background="@color/main_background_color"
-                android:choiceMode="singleChoice"
-                android:divider="@color/list_divider"
-                android:dividerHeight="1dp" />
+    <ListView
+        android:id="@+id/listDrawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/main_background_menu_color"
+        android:divider="@color/nav_drawer_divider_color"
+        android:dividerHeight="1dp"
+        android:choiceMode="singleChoice"/>
 
-        </android.support.v4.widget.DrawerLayout>
-    </RelativeLayout>
-</RelativeLayout>
-
+</android.support.v4.widget.DrawerLayout>
