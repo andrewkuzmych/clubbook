@@ -162,12 +162,12 @@
         [cell.avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"Default.png"]];
         
     } else if ([cellIdentifier isEqualToString:@"messages"]) {
-        cell.countLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:16];
+        cell.countLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:16];
         cell.countLabel.hidden = (unreadMessagesCount == 0);
         cell.countLabel.text = [NSString stringWithFormat:@"%ld", unreadMessagesCount];
         cell.titleLabel.text = NSLocalizedString(@"checkApp", nil);
     } else if ([cellIdentifier isEqualToString:@"friends"]) {
-        cell.countLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:16];
+        cell.countLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:16];
         cell.countLabel.hidden = (pendingFriendsCount == 0);
         cell.countLabel.text = [NSString stringWithFormat:@"%ld", pendingFriendsCount];
     }
@@ -175,10 +175,10 @@
     cell.titleLabel.text = NSLocalizedString(cellIdentifier, nil);
     
    
-    cell.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:17];
-    cell.nameLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:17];
-    cell.ageLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14];
-    cell.ganderLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14];
+    cell.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
+    cell.nameLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
+    cell.ageLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14];
+    cell.ganderLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14];
     
     return cell;
 }

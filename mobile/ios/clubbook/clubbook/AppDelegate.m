@@ -26,7 +26,7 @@
     
     
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:
-     @{UITextAttributeFont:[UIFont fontWithName:@"TitilliumWeb-Bold" size:16]
+     @{UITextAttributeFont:[UIFont fontWithName:NSLocalizedString(@"fontBold", nil)  size:16]
        } forState:UIControlStateNormal];
 
     [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];

@@ -48,6 +48,7 @@
     [super viewDidLoad];
  
     [self.passText setDelegate:self];
+    [self.navigationController setNavigationBarHidden:NO];
 
     UIToolbar *baseToolbar = [self generateToolbarForKeyboard];
     
@@ -55,18 +56,18 @@
     
     self.nameText.inputAccessoryView = baseToolbar;
     self.nameText.delegate = self;
-    self.nameText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"first_name", nil) attributes:@{NSFontAttributeName : [UIFont fontWithName:@"TitilliumWeb-Regular" size:12.0],
+    self.nameText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"first_name", nil) attributes:@{NSFontAttributeName : [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0],
                                                                                        NSForegroundColorAttributeName: placeholderColor}];
 
     
     self.passText.inputAccessoryView = baseToolbar;
     self.passText.delegate = self;
-    self.passText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"pass", nil) attributes:@{NSFontAttributeName : [UIFont fontWithName:@"TitilliumWeb-Regular" size:16.0],
+    self.passText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"pass", nil) attributes:@{NSFontAttributeName : [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0],
                                                                                        NSForegroundColorAttributeName: placeholderColor}];
     
     self.emailText.inputAccessoryView = baseToolbar;
     self.emailText.delegate = self;
-    self.emailText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"email", nil) attributes:@{NSFontAttributeName : [UIFont fontWithName:@"TitilliumWeb-Regular" size:16.0], NSForegroundColorAttributeName: placeholderColor}];
+    self.emailText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"email", nil) attributes:@{NSFontAttributeName : [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0], NSForegroundColorAttributeName: placeholderColor}];
     
     self.datePicker   = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, 210, 320, 216)];
     [self.datePicker setDatePickerMode:UIDatePickerModeDate];
@@ -76,7 +77,7 @@
     self.dobText.inputView  = self.datePicker;
     self.dobText.delegate = self;
     self.dobText.inputAccessoryView = baseToolbar;
-    self.dobText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"birthday", nil) attributes:@{NSFontAttributeName : [UIFont fontWithName:@"TitilliumWeb-Regular" size:16.0], NSForegroundColorAttributeName: placeholderColor}];
+    self.dobText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"birthday", nil) attributes:@{NSFontAttributeName : [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0], NSForegroundColorAttributeName: placeholderColor}];
     
     self.countryPickerArray = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Countries" ofType:@"plist"]];
     self.countryPicker = [[UIPickerView alloc] initWithFrame:CGRectZero];
@@ -88,7 +89,7 @@
     //self.gender = @"male";
     self.countryText.delegate = self;
     self.countryText.inputAccessoryView = baseToolbar;
-    self.countryText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Country" attributes:@{ NSFontAttributeName : [UIFont fontWithName:@"TitilliumWeb-Regular" size:16.0], NSForegroundColorAttributeName: placeholderColor}];
+    self.countryText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Country" attributes:@{ NSFontAttributeName : [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0], NSForegroundColorAttributeName: placeholderColor}];
     
     self.genderPickerArray = [[NSArray alloc] initWithObjects:NSLocalizedString(@"male", nil), NSLocalizedString(@"female", nil), nil];
     self.genderPicker = [[UIPickerView alloc] initWithFrame:CGRectZero];
@@ -101,7 +102,7 @@
     self.gender = @"male";
     self.genderName.delegate = self;
     self.genderName.inputAccessoryView = baseToolbar;
-    self.genderName.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Gender" attributes:@{ NSFontAttributeName : [UIFont fontWithName:@"TitilliumWeb-Regular" size:16.0], NSForegroundColorAttributeName: placeholderColor}];
+    self.genderName.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Gender" attributes:@{ NSFontAttributeName : [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0], NSForegroundColorAttributeName: placeholderColor}];
     
     
     // Selects the row in the specified component
@@ -109,7 +110,7 @@
     [self pickerView:self.genderPicker didSelectRow:0 inComponent:0];
 
     
-    self.regButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:18];
+    self.regButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:18];
     
     [self.regButton setTitle: NSLocalizedString(@"signUp", nil) forState:UIControlStateNormal];
     

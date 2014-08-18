@@ -29,8 +29,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.noInternetLabel.font = [UIFont fontWithName:@"TitilliumWeb-REGULAR" size:20.0];
-    self.retryButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-REGULAR" size:16.0];
+    self.noInternetLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:20.0];
+    self.retryButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:16.0];
 }
 
 - (void)didReceiveMemoryWarning

@@ -99,15 +99,15 @@
     MessageCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     Chat *chat = _chats[indexPath.row];
     
-    cell.userName.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:17];
+    cell.userName.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
     [cell.userName setText:chat.receiver.name];
     
-    cell.messageLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12];
+    cell.messageLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12];
     
     Conversation *conv = [chat.conversations objectAtIndex:0];
     [cell.messageLabel setText:conv.msg];
     
-    cell.unreadMsgCount.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:16];
+    cell.unreadMsgCount.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:16];
     [cell.unreadMsgCount setText: [NSString stringWithFormat:@"%d", chat.unreadMessages]];
     cell.unreadMsgCount.hidden = (chat.unreadMessages == 0);
     

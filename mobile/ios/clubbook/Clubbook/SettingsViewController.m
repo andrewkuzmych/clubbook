@@ -33,12 +33,12 @@
     
     self.settingsItems = @[@"push", @"privacy", @"terms", @"delete", @"contacts", @"logout"];
     // Do any additional setup after loading the view.
-    self.pushLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:16];
-    self.policyLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:16];
-    self.termsLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:16];
-    self.deleteLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:16];
-    self.contactsLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:16];
-    self.logoutLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:16];
+    self.pushLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16];
+    self.policyLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16];
+    self.termsLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16];
+    self.deleteLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16];
+    self.contactsLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16];
+    self.logoutLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *userPush = [defaults objectForKey:@"userPush"];

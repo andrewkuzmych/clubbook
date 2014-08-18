@@ -40,14 +40,14 @@
     [super viewDidLoad];
     
     self.connectButton.layer.borderColor = [UIColor whiteColor].CGColor;
-    self.nameLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:16.0];
-    self.connectButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:14.0];
-    self.ageLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:13.0];
-    self.addFriendButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14.0];
-    self.countryLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14.0];
-    self.aboutMeTitleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:15.0];
+    self.nameLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:16.0];
+    self.connectButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:14.0];
+    self.ageLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
+    self.addFriendButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
+    self.countryLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
+    self.aboutMeTitleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15.0];
     self.aboutMeTitleLabel.text = NSLocalizedString(@"aboutMe", nil);
-    self.aboutMeLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12.0];
+    self.aboutMeLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
     
     [self loadUser];
     // Do any additional setup after loading the view.
@@ -120,7 +120,7 @@
         NSString *cappedCountry = [user.country stringByReplacingCharactersInRange:NSMakeRange(0,1) withString:firstCapChar];
         self.countryLabel.text = cappedCountry;
         
-        self.checkinLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:13.0];
+        self.checkinLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
         if (self.clubCheckinName != nil) {
             self.checkinLabel.hidden = NO;
             [self.checkinLabel setText: [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"checked_in", nil), self.clubCheckinName]];

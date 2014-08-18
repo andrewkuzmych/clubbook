@@ -40,10 +40,12 @@
             [currentController.view addGestureRecognizer:currentController.revealViewController.panGestureRecognizer];
         }
     
+        
+
         [currentController.navigationController.navigationBar setTitleTextAttributes:
          [NSDictionary dictionaryWithObjectsAndKeys:
           [UIColor whiteColor], UITextAttributeTextColor,
-          [UIFont fontWithName:@"TitilliumWeb-Bold" size:17], NSFontAttributeName, nil]];
+          [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17], NSFontAttributeName, nil]];
     }
     return self;
 }
@@ -114,7 +116,7 @@
        // show loading under navigation bar
         permanentNotification =
         [CSNotificationView notificationViewWithParentViewController:currentController.navigationController
-                                                           tintColor:[UIColor colorWithRed:0.000 green:0.6 blue:1.000 alpha:1]
+                                                           tintColor:[UIColor colorWithRed:153/255.0f green:0/255.0f blue:217/255.0f alpha:1]
                                                                image:nil message:title];
         
         [permanentNotification setShowingActivity:YES];

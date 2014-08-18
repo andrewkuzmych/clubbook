@@ -39,6 +39,9 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
+		<string>HelveticaRegular.ttf</string>
+		<string>helvetica-s-regular.ttf</string>
+		<string>HelveticaBold.ttf</string>
 		<string>TITILLIUMWEB-REGULAR.TTF</string>
 		<string>TITILLIUMWEB-BOLD.TTF</string>
 	</array>

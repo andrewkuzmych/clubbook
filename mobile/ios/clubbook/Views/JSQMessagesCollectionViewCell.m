@@ -116,9 +116,11 @@
     self.textView.showsVerticalScrollIndicator = NO;
     self.textView.scrollEnabled = NO;
     self.textView.backgroundColor = [UIColor clearColor];
+    //self.textView.automaticallyAdjustsScrollViewInsets = NO;
     self.textView.contentInset = UIEdgeInsetsZero;
     self.textView.scrollIndicatorInsets = UIEdgeInsetsZero;
-    self.textView.contentOffset = CGPointZero;
+    //self.textView.contentOffset = CGPointZero;
+    self.textView.contentOffset = (CGPoint){.x = 0, .y = -10};
     self.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : [UIColor whiteColor],
                                           NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
     
@@ -130,6 +132,15 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(jsq_handleTapGesture:)];
     [self.avatarContainerView addGestureRecognizer:tap];
     self.tapGestureRecognizer = tap;
+    
+    [self.textView addObserver:self forKeyPath:@"contentSize" options:(NSKeyValueObservingOptionNew) context:NULL];
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    UITextView *tv = object;
+    CGFloat topCorrect = ([tv bounds].size.height - [tv contentSize].height * [tv zoomScale])/2.0;
+    topCorrect = ( topCorrect < 0.0 ? 0.0 : topCorrect );
+    tv.contentOffset = (CGPoint){.x = 0, .y = -2};
 }
 
 - (void)dealloc
@@ -168,7 +179,7 @@
     
     JSQMessagesCollectionViewLayoutAttributes *customAttributes = (JSQMessagesCollectionViewLayoutAttributes *)layoutAttributes;
     
-    customAttributes.messageBubbleFont = [UIFont fontWithName:@"TitilliumWeb-Regular" size:13.0];
+    customAttributes.messageBubbleFont = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
 
    // if (self.textView.font != customAttributes.messageBubbleFont) {
     self.textView.font = customAttributes.messageBubbleFont;//[UIFont fontWithName:@"TitilliumWeb-Bold" size:15.0];

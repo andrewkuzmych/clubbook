@@ -288,6 +288,9 @@
 		49D8D31B198794CA00015052 /* emptyUser@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49D8D317198794CA00015052 /* emptyUser@2x.png */; };
 		49D8D31C198794CA00015052 /* emptyUserH.png in Resources */ = {isa = PBXBuildFile; fileRef = 49D8D318198794CA00015052 /* emptyUserH.png */; };
 		49D8D31D198794CA00015052 /* emptyUserH@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49D8D319198794CA00015052 /* emptyUserH@2x.png */; };
+		49DDE8C319A1D26700B1DEB1 /* HelveticaBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 49DDE8C119A1D26600B1DEB1 /* HelveticaBold.ttf */; };
+		49DDE8C419A1D26700B1DEB1 /* HelveticaRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 49DDE8C219A1D26700B1DEB1 /* HelveticaRegular.ttf */; };
+		49DDE8C619A1D7F700B1DEB1 /* helvetica-s-regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 49DDE8C519A1D7F700B1DEB1 /* helvetica-s-regular.ttf */; };
 		49E831321950CD8E00D4A26C /* MainLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49E831311950CD8E00D4A26C /* MainLoginViewController.m */; };
 		49E831361951A14500D4A26C /* fb_color.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 49E831331951A14500D4A26C /* fb_color.jpg */; };
 		49E831371951A14500D4A26C /* login_color.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 49E831341951A14500D4A26C /* login_color.jpg */; };
@@ -855,6 +858,9 @@
 		49D8D317198794CA00015052 /* emptyUser@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "emptyUser@2x.png"; path = "Images/emptyUser@2x.png"; sourceTree = "<group>"; };
 		49D8D318198794CA00015052 /* emptyUserH.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = emptyUserH.png; path = Images/emptyUserH.png; sourceTree = "<group>"; };
 		49D8D319198794CA00015052 /* emptyUserH@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "emptyUserH@2x.png"; path = "Images/emptyUserH@2x.png"; sourceTree = "<group>"; };
+		49DDE8C119A1D26600B1DEB1 /* HelveticaBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaBold.ttf; sourceTree = "<group>"; };
+		49DDE8C219A1D26700B1DEB1 /* HelveticaRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaRegular.ttf; sourceTree = "<group>"; };
+		49DDE8C519A1D7F700B1DEB1 /* helvetica-s-regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "helvetica-s-regular.ttf"; sourceTree = "<group>"; };
 		49E831301950CD8E00D4A26C /* MainLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainLoginViewController.h; sourceTree = "<group>"; };
 		49E831311950CD8E00D4A26C /* MainLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainLoginViewController.m; sourceTree = "<group>"; };
 		49E831331951A14500D4A26C /* fb_color.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = fb_color.jpg; sourceTree = "<group>"; };
@@ -1857,6 +1863,9 @@
 			children = (
 				F4EECF53177F37CB00778578 /* Images */,
 				499247B71977C7F0008C74D0 /* Countries.plist */,
+				49DDE8C119A1D26600B1DEB1 /* HelveticaBold.ttf */,
+				49DDE8C519A1D7F700B1DEB1 /* helvetica-s-regular.ttf */,
+				49DDE8C219A1D26700B1DEB1 /* HelveticaRegular.ttf */,
 				49390748195071E7003F2FF9 /* TITILLIUMWEB-BOLD.TTF */,
 				49390749195071E7003F2FF9 /* TITILLIUMWEB-REGULAR.TTF */,
 				4939074A195071E7003F2FF9 /* TITILLIUMWEB-SEMIBOLD.TTF */,
@@ -2039,7 +2048,7 @@
 				ORGANIZATIONNAME = clubbook;
 				TargetAttributes = {
 					F4EECF0D177C99F400778578 = {
-						DevelopmentTeam = 4D3PQ2KJ43;
+						DevelopmentTeam = N248H23BGD;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -2193,6 +2202,7 @@
 				49ABA18F1995239E00B060D0 /* slider_inactivedot.png in Resources */,
 				49E831371951A14500D4A26C /* login_color.jpg in Resources */,
 				49ABA1821995239E00B060D0 /* icon_menu_settings.png in Resources */,
+				49DDE8C419A1D26700B1DEB1 /* HelveticaRegular.ttf in Resources */,
 				F4EECF60177F384900778578 /* photo.png in Resources */,
 				49D8D31A198794CA00015052 /* emptyUser.png in Resources */,
 				49E831E61959DA2800D4A26C /* green_color_selected.jpg in Resources */,
@@ -2203,6 +2213,8 @@
 				4939074319503CCA003F2FF9 /* icon_c_list.png in Resources */,
 				498A1B70196ACC5E00824E64 /* bubble_stroked_tailless.png in Resources */,
 				F4EECF6A177F4C0200778578 /* menu.png in Resources */,
+				49DDE8C319A1D26700B1DEB1 /* HelveticaBold.ttf in Resources */,
+				49DDE8C619A1D7F700B1DEB1 /* helvetica-s-regular.ttf in Resources */,
 				49ABA1BB199524BF00B060D0 /* avatar_invisible@2x.png in Resources */,
 				49ABA1CA199524BF00B060D0 /* icon_clubview_guide@2x.png in Resources */,
 				49ABA17A1995239E00B060D0 /* icon_email.png in Resources */,
@@ -2509,8 +2521,8 @@
 		F4EECF32177C99F400778578 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Andrew Kuzmych (NUWD2JVU26)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Andrew Kuzmych (NUWD2JVU26)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bjorn Klaver (7UEP6N23JY)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/FacebookSDK",
@@ -2526,7 +2538,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Clubbook;
-				PROVISIONING_PROFILE = "231ABB34-1032-4C3A-9DA8-45FCF3B47285";
+				PROVISIONING_PROFILE = "9215ae6a-bdab-42ae-90e6-7aca2773f403";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2534,8 +2546,8 @@
 		F4EECF33177C99F400778578 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Andrew Kuzmych (NUWD2JVU26)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Andrew Kuzmych (NUWD2JVU26)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bjorn Klaver (7UEP6N23JY)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/FacebookSDK",
@@ -2551,7 +2563,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Clubbook;
-				PROVISIONING_PROFILE = "231ABB34-1032-4C3A-9DA8-45FCF3B47285";
+				PROVISIONING_PROFILE = "9215ae6a-bdab-42ae-90e6-7aca2773f403";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

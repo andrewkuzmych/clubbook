@@ -72,11 +72,11 @@
     
     self.nameText.inputAccessoryView = baseToolbar;
     self.nameText.delegate = self;
-    self.nameText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"first_name", nil) attributes:@{NSFontAttributeName : [UIFont fontWithName:@"TitilliumWeb-Regular" size:16.0], NSForegroundColorAttributeName: placeholderColor}];
+    self.nameText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"first_name", nil) attributes:@{NSFontAttributeName : [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0], NSForegroundColorAttributeName: placeholderColor}];
     
     self.bioText.inputAccessoryView = baseToolbar;
     self.bioText.delegate = self;
-    self.bioText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"bio", nil) attributes:@{NSFontAttributeName : [UIFont fontWithName:@"TitilliumWeb-Regular" size:16.0], NSForegroundColorAttributeName: placeholderColor}];
+    self.bioText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"bio", nil) attributes:@{NSFontAttributeName : [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0], NSForegroundColorAttributeName: placeholderColor}];
     
     
     self.datePicker   = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, 210, 320, 216)];
@@ -87,7 +87,7 @@
     self.bdayText.inputView  = self.datePicker;
     self.bdayText.delegate = self;
     self.bdayText.inputAccessoryView = baseToolbar;
-    self.bdayText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"birthday", nil) attributes:@{NSFontAttributeName : [UIFont fontWithName:@"TitilliumWeb-Regular" size:16.0], NSForegroundColorAttributeName: placeholderColor}];
+    self.bdayText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"birthday", nil) attributes:@{NSFontAttributeName : [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0], NSForegroundColorAttributeName: placeholderColor}];
     
     self.genderPickerArray = [[NSArray alloc] initWithObjects:NSLocalizedString(@"male", nil), NSLocalizedString(@"female", nil), nil];
     self.genderPicker = [[UIPickerView alloc] initWithFrame:CGRectZero];
@@ -100,7 +100,7 @@
     //self.gender = @"male";
     self.genderText.delegate = self;
     self.genderText.inputAccessoryView = baseToolbar;
-    self.genderText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Gender" attributes:@{ NSFontAttributeName : [UIFont fontWithName:@"TitilliumWeb-Regular" size:16.0], NSForegroundColorAttributeName: placeholderColor}];
+    self.genderText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Gender" attributes:@{ NSFontAttributeName : [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0], NSForegroundColorAttributeName: placeholderColor}];
     
     self.countryPickerArray = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Countries" ofType:@"plist"]];
     self.countryPicker = [[UIPickerView alloc] initWithFrame:CGRectZero];
@@ -113,11 +113,11 @@
     //self.gender = @"male";
     self.countryText.delegate = self;
     self.countryText.inputAccessoryView = baseToolbar;
-    self.countryText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Country" attributes:@{ NSFontAttributeName : [UIFont fontWithName:@"TitilliumWeb-Regular" size:16.0], NSForegroundColorAttributeName: placeholderColor}];
+    self.countryText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Country" attributes:@{ NSFontAttributeName : [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0], NSForegroundColorAttributeName: placeholderColor}];
     
-    self.saveButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:16];
-    self.setDefaultButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:11];
-    self.deleteButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:11];
+    self.saveButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:16];
+    self.setDefaultButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:11];
+    self.deleteButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:11];
     
     
     [self.photosScroll.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];

@@ -76,21 +76,21 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideProgress];
-        self.headerView.checkinButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:16.0];
-        self.headerView.checkinCountLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14.0];
-        self.headerView.friendsCountLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14.0];
-        self.headerView.checkinCountTitleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12.0];
+        self.headerView.checkinButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:16.0];
+        self.headerView.checkinCountLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
+        self.headerView.friendsCountLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
+        self.headerView.checkinCountTitleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
         self.headerView.checkinCountTitleLabel.text = NSLocalizedString(@"checkedIn", nil);
-        self.headerView.friendsCountTitleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:12.0];
+        self.headerView.friendsCountTitleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
         self.headerView.friendsCountTitleLabel.text = NSLocalizedString(@"friends_lower", nil);
-        self.headerView.clubNameText.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:19.0];
-        self.headerView.openTodayLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:13.0];
-        self.headerView.workingHoursLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:11.0];
-        self.headerView.clubInfoButton.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:14.0];
-        self.headerView.clubDistanceText.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:15.0];
-        self.clubFooterView.clubUsersLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:16.0];
-        self.clubFooterView.checkinLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:20.0];
-        self.clubFooterView.usersLeftToCheckinLabel.font = [UIFont fontWithName:@"TitilliumWeb-Regular" size:16.0];
+        self.headerView.clubNameText.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:19.0];
+        self.headerView.openTodayLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
+        self.headerView.workingHoursLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:11.0];
+        self.headerView.clubInfoButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
+        self.headerView.clubDistanceText.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15.0];
+        self.clubFooterView.clubUsersLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0];
+        self.clubFooterView.checkinLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:20.0];
+        self.clubFooterView.usersLeftToCheckinLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0];
         
         // GlobalVars *globalVars=[GlobalVars getInstance];
         CLLocation *loc = [[CLLocation alloc] initWithLatitude:[place.lat doubleValue] longitude:[place.lon doubleValue]];
