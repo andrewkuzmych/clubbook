@@ -42,8 +42,6 @@ import com.nl.clubbook.utils.L;
 import com.pubnub.api.Callback;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
-import com.sromku.simple.fb.SimpleFacebook;
-import com.sromku.simple.fb.listeners.OnLogoutListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,7 +62,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private ListView mDrawerList;
     private View mNavDrawerHeaderView;
     private ActionBarDrawerToggle mDrawerToggle;
-    private SimpleFacebook mSimpleFacebook;
+
 
     private ImageButton actionbarChatButton;
     private TextView actionbarChatCount;
@@ -95,12 +93,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         initNavDrawer();
 
         loadData();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mSimpleFacebook = SimpleFacebook.getInstance(this);
     }
 
     @Override
@@ -271,13 +263,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         return mNavDrawerHeaderView;
     }
 
-    public void logout() {
-        getSession().logoutUser();
-        mSimpleFacebook.logout(mOnLogoutListener);
-        Intent in = new Intent(getApplicationContext(), MainLoginActivity.class);
-        startActivity(in);
-    }
-
     public BaseFragment getCurrentFragment() {
         return currentFragment;
     }
@@ -412,28 +397,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void onNavDrawerHeaderClicked() {
         //TODO
     }
-
-    private OnLogoutListener mOnLogoutListener = new OnLogoutListener() {
-        @Override
-        public void onLogout() {
-
-        }
-
-        @Override
-        public void onThinking() {
-
-        }
-
-        @Override
-        public void onException(Throwable throwable) {
-
-        }
-
-        @Override
-        public void onFail(String reason) {
-
-        }
-    };
 
     Callback callback = new Callback() {
         @Override

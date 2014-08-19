@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_screen_grey_light"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/holderPushNotifications"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/selector_bg_btn_white">
+
+        <com.nl.clubbook.ui.view.TitilliumRegularTextView
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:singleLine="true"
+            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/grey"
+            android:text="@string/push_notifications"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:checked="true"
+            android:layout_marginRight="16dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color" />
+
+    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+        android:id="@+id/txtPrivacyPolicy"
+        android:layout_width="fill_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textSize="@dimen/text_size_medium"
+        android:textColor="@color/grey"
+        android:text="@string/privacy_policy"
+        android:drawableRight="@drawable/ic_arrow_right"
+        android:background="@drawable/selector_bg_btn_white"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color" />
+
+    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+        android:id="@+id/txtTermsOfservice"
+        android:layout_width="fill_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textSize="@dimen/text_size_medium"
+        android:textColor="@color/grey"
+        android:text="@string/terms_of_service"
+        android:drawableRight="@drawable/ic_arrow_right"
+        android:background="@drawable/selector_bg_btn_white"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color" />
+
+    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+        android:id="@+id/txtDeleteAccount"
+        android:layout_width="fill_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textSize="@dimen/text_size_medium"
+        android:textColor="@color/grey"
+        android:text="@string/delete_account"
+        android:drawableRight="@drawable/ic_arrow_right"
+        android:background="@drawable/selector_bg_btn_white"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color" />
+
+    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+        android:id="@+id/txtContact"
+        android:layout_width="fill_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textSize="@dimen/text_size_medium"
+        android:textColor="@color/grey"
+        android:text="@string/contact"
+        android:drawableRight="@drawable/ic_arrow_right"
+        android:background="@drawable/selector_bg_btn_white"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color" />
+
+    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+        android:id="@+id/txtLogOut"
+        android:layout_width="fill_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textSize="@dimen/text_size_medium"
+        android:textColor="@color/grey"
+        android:text="@string/log_out"
+        android:drawableRight="@drawable/ic_arrow_right"
+        android:background="@drawable/selector_bg_btn_white"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color" />
+
+</LinearLayout>
