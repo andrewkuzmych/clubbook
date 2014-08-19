@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.NavDrawerItem;
-import com.nl.clubbook.ui.drawer.NavDrawerData;
+import com.nl.clubbook.ui.drawer.NavDrawerDAta;
 import com.nl.clubbook.ui.drawer.NavDrawerListAdapter;
 import com.nl.clubbook.datasource.ChatMessageDto;
 import com.nl.clubbook.datasource.DataStore;
@@ -232,7 +232,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 //                invalidateOptionsMenu();
             }
         };
-        navDrawerItems = NavDrawerData.getNavDrawerItems(MainActivity.this);
+        navDrawerItems = NavDrawerDAta.getNavDrawerItems(MainActivity.this);
 
         // set adapter
         View navDrawerHeaderView = initNavDrawerHeader();
@@ -318,10 +318,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private void displayDefaultView() {
         Intent in = getIntent();
-        int displayView = NavDrawerData.DEFAULT_FRAGMENT_NUMBER;
+        int displayView = NavDrawerDAta.DEFAULT_FRAGMENT_NUMBER;
         if (in.hasExtra("type")) {
             if (in.getStringExtra("type").equalsIgnoreCase("chat")) {
-                displayView = NavDrawerData.MESSAGES_POSITION;
+                displayView = NavDrawerDAta.MESSAGES_POSITION;
             }
         }
 
@@ -377,7 +377,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void setMessageCount(Integer count) {
         chatCountOfNewMessages = count;
 
-        navDrawerItems.get(NavDrawerData.MESSAGES_POSITION).setCount(chatCountOfNewMessages);
+        navDrawerItems.get(NavDrawerDAta.MESSAGES_POSITION).setCount(chatCountOfNewMessages);
         mAdapter.notifyDataSetChanged();
 
         actionbarChatCount.setText(String.valueOf(chatCountOfNewMessages));
