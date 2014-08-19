@@ -168,7 +168,7 @@ public class EditProfileFragment extends BaseFragment {
                                 profile = (UserDto) result;
 
                                 // update UI
-                                ((MainActivity) getActivity()).updateMyInformation(profile);
+//                                ((MainActivity) getActivity()).updateMyInformation(profile); //TODO
                             }
                         }
                 );
@@ -344,7 +344,7 @@ public class EditProfileFragment extends BaseFragment {
                 // update UI
                 drawImageManager(profile.getPhotos());
 
-                ((MainActivity) getActivity()).updateMyInformation(profile);
+//                ((MainActivity) getActivity()).updateMyInformation(profile); //TODO
             }
         });
     }

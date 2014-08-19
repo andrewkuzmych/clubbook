@@ -10,23 +10,23 @@
     <string name="drawer_close">Slider Menu Closed</string>
     
     <!-- Nav Drawer Menu Items -->
-    <string-array name="nav_drawer_items">
-        <item >Profile</item>
-        <item >Club list</item>
-        <item >Messages</item>
-        <item >Friends</item>
-        <item >Settings</item>
-    </string-array>
+    <!--<string-array name="nav_drawer_items">-->
+        <!--<item >Profile</item>-->
+        <!--<item >Club list</item>-->
+        <!--<item >Messages</item>-->
+        <!--<item >Friends</item>-->
+        <!--<item >Settings</item>-->
+    <!--</string-array>-->
     
     <!-- Nav Drawer List Item Icons -->
     <!-- Keep them in order as the titles are in -->
-    <array name="nav_drawer_icons">
-        <item>@drawable/menu_default</item>
-        <item>@drawable/menu_icon_c_list</item>
-        <item>@drawable/menu_icon_chat</item>
-        <item>@drawable/menu_icon_friends</item>
-        <item>@drawable/menu_icon_settings</item>
-    </array>
+    <!--<array name="nav_drawer_icons">-->
+        <!--<item>@drawable/menu_default</item>-->
+        <!--<item>@drawable/menu_icon_c_list</item>-->
+        <!--<item>@drawable/menu_icon_chat</item>-->
+        <!--<item>@drawable/menu_icon_friends</item>-->
+        <!--<item>@drawable/menu_icon_settings</item>-->
+    <!--</array>-->
 
     <!-- Action bar titles -->
     <string name="header_profile">Profile details</string>
@@ -90,5 +90,8 @@
     <string name="friday">Friday</string>
     <string name="saturday">Saturday</string>
     <string name="sunday">Sunday</string>
+    <string name="club_list">Club List</string>
+    <string name="messages">Messages</string>
+    <string name="settings">Settings</string>
 
 </resources>

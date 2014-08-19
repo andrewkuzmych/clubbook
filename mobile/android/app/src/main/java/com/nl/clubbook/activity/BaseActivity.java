@@ -29,7 +29,7 @@ public class BaseActivity extends ActionBarActivity {
     protected ImageLoader imageLoader;
     protected DisplayImageOptions options;
     protected AlertDialogManager alert = new AlertDialogManager();
-    protected BaseFragment current_fragment;
+    protected BaseFragment currentFragment;
 
     private SessionManager session;
 

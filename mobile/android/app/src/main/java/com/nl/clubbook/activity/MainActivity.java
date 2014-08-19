@@ -2,8 +2,6 @@ package com.nl.clubbook.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -11,34 +9,36 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.NavDrawerItem;
-import com.nl.clubbook.adapter.NavDrawerListAdapter;
+import com.nl.clubbook.ui.drawer.NavDrawerData;
+import com.nl.clubbook.ui.drawer.NavDrawerListAdapter;
 import com.nl.clubbook.datasource.ChatMessageDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.fragment.BaseFragment;
 import com.nl.clubbook.fragment.ChatFragment;
 import com.nl.clubbook.fragment.ClubsListFragment;
-import com.nl.clubbook.fragment.EditProfileFragment;
 import com.nl.clubbook.fragment.FriendsFragment;
 import com.nl.clubbook.fragment.MessagesFragment;
 import com.nl.clubbook.fragment.SettingsFragment;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.NotificationHelper;
 import com.nl.clubbook.helper.SessionManager;
+import com.nl.clubbook.utils.L;
 import com.pubnub.api.Callback;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
@@ -48,8 +48,8 @@ import com.sromku.simple.fb.listeners.OnLogoutListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -58,129 +58,109 @@ import java.util.HashMap;
  * Time: 1:42 AM
  * To change this template use File | Settings | File Templates.
  */
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
-    private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private View mNavDrawerHeaderView;
     private ActionBarDrawerToggle mDrawerToggle;
     private SimpleFacebook mSimpleFacebook;
-    private static final int DEFAULT_VIEW = 1;
 
     private ImageButton actionbarChatButton;
     private TextView actionbarChatCount;
     private Integer chatCountOfNewMessages = 0;
 
-    private CharSequence mTitle;
-
-    private String[] navMenuTitles;
-    private TypedArray navMenuIcons;
-    HashMap<Integer, BaseFragment> fragmentMap = new HashMap<Integer, BaseFragment>();
-    protected Integer NAV_MENU_PROFILE_POSITION = 0;
-    protected Integer NAV_MENU_MESSAGES_POSITION = 2;
-
-    private ArrayList<NavDrawerItem> navDrawerItems;
-    private NavDrawerListAdapter adapter;
+    private HashMap<Integer, BaseFragment> fragmentMap = new HashMap<Integer, BaseFragment>();
+    private List<NavDrawerItem> navDrawerItems;
+    private NavDrawerListAdapter mAdapter;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.ac_main);
 
-        // if user not logged - navigate to login activity
         if (!getSession().isLoggedIn()) {
             Intent i = new Intent(getApplicationContext(), MainLoginActivity.class);
             startActivity(i);
             return;
         }
 
-        init();
+        fragmentMap.put(0, new ClubsListFragment());
+        fragmentMap.put(1, new MessagesFragment());
+        fragmentMap.put(2, new FriendsFragment());
+        fragmentMap.put(3, new SettingsFragment());
 
-        mTitle = getTitle();
-        fragmentMap.put(0, new EditProfileFragment());
-        fragmentMap.put(1, new ClubsListFragment());
-        fragmentMap.put(NAV_MENU_MESSAGES_POSITION, new MessagesFragment());
-        fragmentMap.put(3, new FriendsFragment());
-        fragmentMap.put(4, new SettingsFragment());
-
-        getSupportActionBar().setIcon(
-                new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+        initActionBar("");
+        initNavDrawer();
 
         loadData();
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void onResume() {
+        super.onResume();
+        mSimpleFacebook = SimpleFacebook.getInstance(this);
     }
 
     @Override
-    protected void loadData() {
-
-        initNavigationMenu();
-
-        displayDefaultView();
-    }
-
-    private void initNavigationMenu() {
-        // get user data from session
-        HashMap<String, String> user = getSession().getUserDetails();
-
-        String user_avatar_url = null;
-        if (user.get(SessionManager.KEY_AVATAR) != null)
-            user_avatar_url = ImageHelper.getUserAvatar(user.get(SessionManager.KEY_AVATAR));
-
-        // initialize navigation menu
-        navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
-        navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.listDrawer);
-        mDrawerList.requestFocusFromTouch();
-
-        mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout,
-                R.drawable.ic_drawer, //nav menu toggle icon
-                R.string.app_name,
-                R.string.app_name
-        ) {
-            public void onDrawerClosed(View view) {
-                getSupportActionBar().setTitle(mTitle);
-                invalidateOptionsMenu();
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                getSupportActionBar().setTitle("");
-                invalidateOptionsMenu();
-            }
-        };
-
-        navDrawerItems = new ArrayList<NavDrawerItem>();
-        navDrawerItems.add(new NavDrawerItem(user.get(SessionManager.KEY_NAME), user_avatar_url,
-                user.get(SessionManager.KEY_GENDER), user.get(SessionManager.KEY_AGE)));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, 0)));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, 0)));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, 0)));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, 0)));
-
-        // Recycle the typed array
-        navMenuIcons.recycle();
-        mDrawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-        // setting the nav drawer list adapter
-        adapter = new NavDrawerListAdapter(MainActivity.this, R.layout.drawer_list_item, navDrawerItems);
-        mDrawerList.setAdapter(adapter);
-        mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
-
-        // enabling action bar app icon and behaving it as toggle button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+    public void onStart() {
+        super.onStart();
+        SessionManager session = new SessionManager(getApplicationContext());
+        HashMap<String, String> user = session.getUserDetails();
+        String user_id = user.get(SessionManager.KEY_ID);
+        subscribeToChannel("message_" + user_id);
     }
 
     @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-        getSupportActionBar().setTitle(mTitle);
+    public void onStop() {
+        super.onStop();
+        SessionManager session = new SessionManager(getApplicationContext());
+        HashMap<String, String> user = session.getUserDetails();
+        String user_id = user.get(SessionManager.KEY_ID);
+        NotificationHelper.pubnub.unsubscribe("message_" + user_id);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_actions, menu);
+
+        View badgeMessages = MenuItemCompat.getActionView(menu.findItem(R.id.badgeMessages));
+        RelativeLayout messagesActionBar = (RelativeLayout) badgeMessages.findViewById(R.id.messagesActionBar);
+        actionbarChatButton = (ImageButton) messagesActionBar.findViewById(R.id.actionbarChatButton);
+        actionbarChatCount = (TextView) messagesActionBar.findViewById(R.id.actionbarChatCount);
+        actionbarChatCount.setText(String.valueOf(chatCountOfNewMessages));
+
+        actionbarChatButton.setOnClickListener(MainActivity.this);
+
+        // update count of messages
+        updateMessagesCount();
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            navigateBack();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void navigateBack() {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } else {
+            currentFragment.backButtonWasPressed();
+            getSupportFragmentManager().popBackStack();
+        }
     }
 
     @Override
@@ -214,6 +194,83 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.actionbarChatButton:
+                onChatBtnClicked();
+                break;
+            case R.id.holderNavDrawerHeader:
+                onNavDrawerHeaderClicked();
+                break;
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //list header has positions equals '0'
+        displayView(position - 1);
+    }
+
+    @Override
+    protected void loadData() {
+        displayDefaultView();
+    }
+
+    private void initNavDrawer() {
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.listDrawer);
+        mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout,
+                R.drawable.ic_drawer,  R.string.app_name, R.string.app_name) { //TODO
+            public void onDrawerClosed(View view) {
+//                getSupportActionBar().setTitle(mTitle);
+//                invalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView) {
+//                getSupportActionBar().setTitle("");
+//                invalidateOptionsMenu();
+            }
+        };
+        navDrawerItems = NavDrawerData.getNavDrawerItems(MainActivity.this);
+
+        // set adapter
+        View navDrawerHeaderView = initNavDrawerHeader();
+        mAdapter = new NavDrawerListAdapter(MainActivity.this, navDrawerItems);
+        mDrawerList.addHeaderView(navDrawerHeaderView);
+        mDrawerList.setAdapter(mAdapter);
+        mDrawerList.setOnItemClickListener(MainActivity.this);
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+    private View initNavDrawerHeader() {
+        HashMap<String, String> user = getSession().getUserDetails();
+
+        mNavDrawerHeaderView = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_nav_drawer_header, null);
+        ImageView imgAvatar = (ImageView) mNavDrawerHeaderView.findViewById(R.id.imgAvatar);
+        TextView txtProfileName = (TextView) mNavDrawerHeaderView.findViewById(R.id.txtProfileName);
+        TextView txtProfileInfo = (TextView) mNavDrawerHeaderView.findViewById(R.id.txtProfileInfo);
+
+        String userAvatarUrl = user.get(SessionManager.KEY_AVATAR);
+        if (userAvatarUrl != null) {
+            userAvatarUrl = ImageHelper.getUserAvatar(userAvatarUrl);
+            imageLoader.displayImage(userAvatarUrl, imgAvatar, options);
+        }
+
+        String profileName = user.get(SessionManager.KEY_NAME);
+        String profileAge = user.get(SessionManager.KEY_AGE);
+        String profileGender = user.get(SessionManager.KEY_GENDER);
+
+        txtProfileName.setText(profileName != null ? profileName : "");
+        txtProfileInfo.setText((profileAge != null && profileAge.length() > 0) ? profileAge + ", " : "");
+        txtProfileInfo.append(profileGender != null ? profileGender : "");
+
+        mNavDrawerHeaderView.findViewById(R.id.holderNavDrawerHeader).setOnClickListener(MainActivity.this);
+
+        return mNavDrawerHeaderView;
+    }
+
     public void logout() {
         getSession().logoutUser();
         mSimpleFacebook.logout(mOnLogoutListener);
@@ -221,85 +278,8 @@ public class MainActivity extends BaseActivity {
         startActivity(in);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu items for use in the action bar
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_activity_actions, menu);
-
-        View badgeMessages = MenuItemCompat.getActionView(menu.findItem(R.id.badgeMessages));
-        RelativeLayout messagesActionBar = (RelativeLayout) badgeMessages.findViewById(R.id.messagesActionBar);
-        actionbarChatButton = (ImageButton) messagesActionBar.findViewById(R.id.actionbarChatButton);
-        actionbarChatCount = (TextView) messagesActionBar.findViewById(R.id.actionbarChatCount);
-        actionbarChatCount.setText(String.valueOf(chatCountOfNewMessages));
-
-        actionbarChatButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // open chat window
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
-
-                mFragmentTransaction.addToBackStack(null);
-                mFragmentTransaction.replace(R.id.frame_container, new MessagesFragment()).commit();
-            }
-        });
-
-        // update count of messages
-        updateMessagesCount();
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            navigateBack();
-            return true;
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mSimpleFacebook = SimpleFacebook.getInstance(this);
-    }
-
-    @Override
-    protected void navigateBack() {
-        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        } else {
-            current_fragment.backButtonWasPressed();
-            getSupportFragmentManager().popBackStack();
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        SessionManager session = new SessionManager(getApplicationContext());
-        HashMap<String, String> user = session.getUserDetails();
-        String user_id = user.get(SessionManager.KEY_ID);
-        subscribeToChannel("message_" + user_id);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        SessionManager session = new SessionManager(getApplicationContext());
-        HashMap<String, String> user = session.getUserDetails();
-        String user_id = user.get(SessionManager.KEY_ID);
-        NotificationHelper.pubnub.unsubscribe("message_" + user_id);
-    }
-
     public BaseFragment getCurrentFragment() {
-        return current_fragment;
+        return currentFragment;
     }
 
     private void handleNotification(JSONObject messageJson) {
@@ -324,9 +304,8 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    public void setCurrentFragment(BaseFragment current_fragment) {
-
-        this.current_fragment = current_fragment;
+    public void setCurrentFragment(BaseFragment currentFragment) {
+        this.currentFragment = currentFragment;
     }
 
     public DrawerLayout getDrawerLayout() {
@@ -337,38 +316,13 @@ public class MainActivity extends BaseActivity {
         return mDrawerToggle;
     }
 
-    public void setDefaultTitle() {
-        setTitle(navMenuTitles[DEFAULT_VIEW]);
-    }
-
-    private OnLogoutListener mOnLogoutListener = new OnLogoutListener() {
-        @Override
-        public void onLogout() {
-
-        }
-
-        @Override
-        public void onThinking() {
-
-        }
-
-        @Override
-        public void onException(Throwable throwable) {
-
-        }
-
-        @Override
-        public void onFail(String reason) {
-
-        }
-    };
-
     private void displayDefaultView() {
         Intent in = getIntent();
-        int displayView = DEFAULT_VIEW;
+        int displayView = NavDrawerData.DEFAULT_FRAGMENT_NUMBER;
         if (in.hasExtra("type")) {
-            if (in.getStringExtra("type").equalsIgnoreCase("chat"))
-                displayView = NAV_MENU_MESSAGES_POSITION;
+            if (in.getStringExtra("type").equalsIgnoreCase("chat")) {
+                displayView = NavDrawerData.MESSAGES_POSITION;
+            }
         }
 
         displayView(displayView);
@@ -392,7 +346,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void displayView(final int position) {
-        // update the main content by replacing fragments
         Fragment fragment = fragmentMap.get(position);
 
         if (fragment != null) {
@@ -405,12 +358,10 @@ public class MainActivity extends BaseActivity {
             // update selected item and title, then close the drawer
             mDrawerList.setItemChecked(position, true);
             mDrawerList.setSelection(position);
-            setTitle(navMenuTitles[position]);
             mDrawerLayout.closeDrawer(mDrawerList);
 
         } else {
-            // error in creating fragment
-            Log.e("MainActivity", "Error in creating fragment");
+            L.i("Error in creating fragment");
         }
     }
 
@@ -419,34 +370,17 @@ public class MainActivity extends BaseActivity {
         try {
             NotificationHelper.pubnub.subscribe(channel_name, callback);
         } catch (PubnubException e) {
-            System.out.println(e.toString());
+            L.v("" + e);
         }
     }
 
     private void setMessageCount(Integer count) {
         chatCountOfNewMessages = count;
 
-        // set count of new messages on left nav bar
-        navDrawerItems.get(NAV_MENU_MESSAGES_POSITION).setCount(chatCountOfNewMessages);
-        adapter = new NavDrawerListAdapter(this, R.layout.drawer_list_item, navDrawerItems);
-        mDrawerList.setAdapter(adapter);
+        navDrawerItems.get(NavDrawerData.MESSAGES_POSITION).setCount(chatCountOfNewMessages);
+        mAdapter.notifyDataSetChanged();
 
-        // set count of new messages on top bar
         actionbarChatCount.setText(String.valueOf(chatCountOfNewMessages));
-    }
-
-    /**
-     * Slide menu item click listener
-     */
-    private class SlideMenuClickListener implements
-            ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id) {
-            view.setSelected(true);
-            // display view for selected nav drawer item
-            displayView(position);
-        }
     }
 
     /**
@@ -454,18 +388,52 @@ public class MainActivity extends BaseActivity {
      *
      * @param myInfo
      */
-    public void updateMyInformation(UserDto myInfo) {
+    private void updateMyInformation(UserDto myInfo) { //TODO
         // update UI profile info
-        NavDrawerItem navDrawerItem = navDrawerItems.get(NAV_MENU_PROFILE_POSITION);
-        navDrawerItem.setTitle(myInfo.getName());
-        navDrawerItem.setAge(myInfo.getAge());
-        navDrawerItem.setGender(myInfo.getGender());
-        navDrawerItem.setProfileAvatar(myInfo.getAvatar());
-        adapter = new NavDrawerListAdapter(this, R.layout.drawer_list_item, navDrawerItems);
-        mDrawerList.setAdapter(adapter);
-        // update session user
-        getSession().updateLoginSession(myInfo);
+//        NavDrawerItem navDrawerItem = navDrawerItems.get(NAV_MENU_PROFILE_POSITION);
+//        navDrawerItem.setTitle(myInfo.getName());
+//        navDrawerItem.setAge(myInfo.getAge());
+//        navDrawerItem.setGender(myInfo.getGender());
+//        navDrawerItem.setProfileAvatar(myInfo.getAvatar());
+//        adapter = new NavDrawerListAdapter(this, R.layout.item_list_drawer, navDrawerItems);
+//        mDrawerList.setAdapter(adapter);
+//        // update session user
+//        getSession().updateLoginSession(myInfo);
     }
+
+    private void onChatBtnClicked() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
+
+        mFragmentTransaction.addToBackStack(null);
+        mFragmentTransaction.replace(R.id.frame_container, new MessagesFragment()).commit();
+    }
+
+    private void onNavDrawerHeaderClicked() {
+        //TODO
+    }
+
+    private OnLogoutListener mOnLogoutListener = new OnLogoutListener() {
+        @Override
+        public void onLogout() {
+
+        }
+
+        @Override
+        public void onThinking() {
+
+        }
+
+        @Override
+        public void onException(Throwable throwable) {
+
+        }
+
+        @Override
+        public void onFail(String reason) {
+
+        }
+    };
 
     Callback callback = new Callback() {
         @Override

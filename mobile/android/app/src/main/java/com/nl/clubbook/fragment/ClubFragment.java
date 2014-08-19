@@ -74,7 +74,6 @@ public class ClubFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void backButtonWasPressed() {
-        ((MainActivity) getActivity()).setDefaultTitle();
         if (!((MainActivity) getActivity()).getDrawerToggle().isDrawerIndicatorEnabled()) {
             ((MainActivity) getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(true);
             ((MainActivity) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
