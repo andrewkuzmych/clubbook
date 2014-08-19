@@ -41,7 +41,7 @@ public class RegActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_reg);
+        setContentView(R.layout.ac_reg);
 
         initImageUploader();
         initActionBar(R.string.sing_up);
@@ -103,7 +103,7 @@ public class RegActivity extends BaseActivity implements View.OnClickListener {
         editEmail.setText(UserEmailFetcher.getEmail(RegActivity.this));
 
         UiHelper.createGenderSpinner((Spinner) findViewById(R.id.spinGender), this, "male");
-        UiHelper.createCountrySpinner((Spinner) findViewById(R.id.spinCountry), this, "");
+        UiHelper.createCountrySpinner((Spinner) findViewById(R.id.spinCountry), this, getString(R.string.Netherlands));
     }
 
     private void initImageUploader() {

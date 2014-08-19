@@ -6,6 +6,8 @@
         <item name="android:seekBarStyle">@style/SeekBarAppTheme</item>
         <item name="android:editTextStyle">@style/EditTextAppTheme</item>
         <item name="android:checkboxStyle">@style/CheckBoxAppTheme</item>
+        <item name="android:spinnerStyle">@style/SpinnerAppTheme</item>
+        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemAppTheme</item>
     </style>
 
     <style name="AppActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
@@ -30,6 +32,15 @@
 
     <style name="CheckBoxAppTheme" parent="android:Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/apptheme_btn_check_holo_light</item>
+    </style>
+
+    <style name="SpinnerAppTheme" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/apptheme_spinner_background_holo_light</item>
+        <item name="android:dropDownSelector">@drawable/apptheme_list_selector_holo_light</item>
+    </style>
+
+    <style name="SpinnerDropDownItemAppTheme" parent="android:Widget.DropDownItem.Spinner">
+        <item name="android:checkMark">@drawable/apptheme_btn_radio_holo_light</item>
     </style>
 
 
@@ -87,13 +98,13 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="default_text_input">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">#ffffff</item>
-        <item name="android:textSize">16dp</item>
-        <item name="android:minHeight">48dp</item>
-    </style>
+    <!--<style name="default_text_input">-->
+        <!--<item name="android:layout_width">fill_parent</item>-->
+        <!--<item name="android:layout_height">wrap_content</item>-->
+        <!--<item name="android:textColor">#ffffff</item>-->
+        <!--<item name="android:textSize">16dp</item>-->
+        <!--<item name="android:minHeight">48dp</item>-->
+    <!--</style>-->
 
     <style name="avatar_btn">
         <item name="android:textColor">#FFFDDD</item>

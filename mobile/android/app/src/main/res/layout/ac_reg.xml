@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_screen_grey_light"
+    android:fillViewport="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/holderUserInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:baselineAligned="false"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp">
+
+                <com.nl.clubbook.ui.view.CircleImageView
+                    android:id="@+id/imgAvatar"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/ic_add_photo_register"
+                    android:scaleType="centerCrop" />
+
+                <com.nl.clubbook.ui.view.TitilliumRegularEditText
+                    android:id="@+id/editName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:textColor="@color/grey"
+                    android:hint="@string/first_name"
+                    android:inputType="text"
+                    android:layout_marginLeft="16dp"/>
+            </LinearLayout>
+
+            <com.nl.clubbook.ui.view.TitilliumRegularEditText
+                android:id="@+id/editEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:textColor="@color/grey"
+                android:layout_marginBottom="5dip"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress" />
+
+            <com.nl.clubbook.ui.view.TitilliumRegularEditText
+                android:id="@+id/editPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:textColor="@color/grey"
+                android:layout_marginBottom="5dip"
+                android:hint="@string/password"
+                android:password="true" />
+
+            <com.nl.clubbook.ui.view.TitilliumRegularEditText
+                android:id="@+id/editBirthday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:textColor="@color/grey"
+                android:layout_marginBottom="5dip"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="@string/birth_date"
+                android:inputType="date"/>
+
+            <Spinner
+                android:id="@+id/spinGender"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginBottom="5dip"
+                android:focusable="true"
+                android:minHeight="48dp" />
+
+            <Spinner
+                android:id="@+id/spinCountry"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginBottom="16dp"
+                android:focusable="true"
+                android:minHeight="48dp"/>
+        </LinearLayout>
+
+        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+            android:id="@+id/btnRegister"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="16dp"
+            android:background="@drawable/bg_btn_violet_light"
+            android:gravity="center"
+            android:text="@string/sing_up"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_medium"/>
+    </RelativeLayout>
+</ScrollView>

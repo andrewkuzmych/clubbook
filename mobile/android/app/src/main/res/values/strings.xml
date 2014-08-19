@@ -17,10 +17,10 @@
 
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="name_reg">Name (min 2)</string>
+    <string name="first_name">First Name</string>
     <string name="city_reg">your city</string>
-    <string name="pass_reg">Password (min 6)</string>
-    <string name="gender_reg">Gender</string>
+    <string name="gender">Gender</string>
+    <string name="birth_date">Birth Date</string>
     <string name="register">Register</string>
     <string name="upload_avatar">add a profile photo</string>
     <string name="dob">Birthday</string>
@@ -74,5 +74,8 @@
     <string name="club_list">Club List</string>
     <string name="messages">Messages</string>
     <string name="settings">Settings</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="Netherlands">Netherlands</string>
 
 </resources>

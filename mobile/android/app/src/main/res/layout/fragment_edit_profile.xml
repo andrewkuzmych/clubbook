@@ -82,14 +82,16 @@
 
             <EditText
                 android:id="@+id/name_text"
-                style="@style/default_text_input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="5dip"
-                android:hint="@string/name_reg"
+                android:hint="@string/first_name"
                 android:inputType="text" />
 
             <EditText
                 android:id="@+id/dob_text"
-                style="@style/default_text_input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="5dip"
                 android:clickable="true"
                 android:editable="true"
@@ -113,7 +115,8 @@
 
             <EditText
                 android:id="@+id/bio_text"
-                style="@style/default_text_input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="5dip"
                 android:gravity="top|left"
                 android:hint="@string/bio"

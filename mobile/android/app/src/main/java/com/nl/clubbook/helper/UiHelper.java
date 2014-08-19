@@ -3,7 +3,6 @@ package com.nl.clubbook.helper;
 import android.content.Context;
 import android.content.res.Resources;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,14 +31,14 @@ public class UiHelper {
 
     public static Spinner createGenderSpinner(Spinner spinGender, Context context, String activeItem) {
         final TextValuePair items[] = new TextValuePair[2];
-        items[0] = new TextValuePair("Male", "male");
-        items[1] = new TextValuePair("Female", "female");
+        items[0] = new TextValuePair(context.getString(R.string.male), "male");
+        items[1] = new TextValuePair(context.getString(R.string.female), "female");
         ArrayAdapter<TextValuePair> adapter = new ArrayAdapter<TextValuePair>(
                         context,
-                        R.layout.simple_spinner_item,
+                        R.layout.item_spinner_simple,
                         items);
 
-        adapter.setDropDownViewResource(R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(R.layout.item_spinner_simple);
 
         spinGender.setAdapter(adapter);
 
@@ -62,10 +61,10 @@ public class UiHelper {
 
         ArrayAdapter<TextValuePair> adapter = new ArrayAdapter<TextValuePair>(
                         context,
-                        R.layout.simple_spinner_item,
+                        R.layout.item_spinner_simple,
                         items);
 
-        adapter.setDropDownViewResource(R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(R.layout.item_spinner_simple);
 
         spinCountry.setAdapter(adapter);
 
