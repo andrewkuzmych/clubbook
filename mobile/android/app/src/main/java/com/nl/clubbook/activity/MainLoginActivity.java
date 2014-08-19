@@ -3,12 +3,10 @@ package com.nl.clubbook.activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.TextView;
+
 import com.cloudinary.Cloudinary;
 import com.facebook.Session;
 import com.nl.clubbook.R;
@@ -20,6 +18,7 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.sromku.simple.fb.listeners.OnProfileListener;
+
 import org.json.JSONObject;
 
 /**
@@ -29,51 +28,22 @@ import org.json.JSONObject;
  * Time: 5:27 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MainLoginActivity extends BaseActivity {
+public class MainLoginActivity extends BaseActivity implements View.OnClickListener {
 
     private SimpleFacebook mSimpleFacebook;
-    private Button button_fb_login;
-
-    // Login listener
-    private OnLoginListener mOnLoginListener = new OnLoginListener() {
-
-        @Override
-        public void onFail(String reason) {
-
-        }
-
-        @Override
-        public void onException(Throwable throwable) {
-        }
-
-        @Override
-        public void onThinking() {
-        }
-
-        @Override
-        public void onLogin() {
-            GetFacebookProfile();
-        }
-
-        @Override
-        public void onNotAcceptingPermissions(Permission.Type type) {
-            // toast(String.format("You didn't accept %s permissions", type.name()));
-        }
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.ac_main_login);
 
         // start to track user location
         LocationCheckinHelper.startSmartLocationTracker(this);
-        if(!LocationCheckinHelper.isLocationEnabled(this))
+        if (!LocationCheckinHelper.isLocationEnabled(this)) {
             return;
+        }
 
-        this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.main_login);
-
-        init();
 
         if (getSession().isLoggedIn()) {
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
@@ -81,7 +51,7 @@ public class MainLoginActivity extends BaseActivity {
             finish();
         }
 
-        setUIHandlers();
+        initView();
     }
 
     @Override
@@ -94,6 +64,21 @@ public class MainLoginActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         mSimpleFacebook.onActivityResult(this, requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.txtLoginFacebook:
+                onBtnFacebookLoginClicked();
+                break;
+            case R.id.txtRegWithEmail:
+                onBtnRegClicked();
+                break;
+            case R.id.txtLogin:
+                onBtnLoginClicked();
+                break;
+        }
     }
 
     @Override
@@ -114,84 +99,33 @@ public class MainLoginActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    private void setUIHandlers() {
-        TextView termsTxt = (TextView) findViewById(R.id.termsTxt);
-        termsTxt.setMovementMethod(LinkMovementMethod.getInstance());
-
-        button_fb_login = (Button) findViewById(R.id.login_fb);
-        button_fb_login.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                loginToFacebook();
-            }
-        });
-
-        Button reg_by_email = (Button) findViewById(R.id.reg_by_email);
-        reg_by_email.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent in = new Intent(getApplicationContext(),
-                        RegActivity.class);
-                startActivity(in);
-            }
-        });
-
-        Button login_email = (Button) findViewById(R.id.login_by_email); //TODO
-        login_email.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent in = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(in);
-            }
-        });
+    private void initView() {
+        findViewById(R.id.txtLoginFacebook).setOnClickListener(MainLoginActivity.this);
+        findViewById(R.id.txtRegWithEmail).setOnClickListener(MainLoginActivity.this);
+        findViewById(R.id.txtLogin).setOnClickListener(MainLoginActivity.this);
     }
 
-    public void loginToFacebook() {
-        if (mSimpleFacebook.isLogin())
+    private void onBtnFacebookLoginClicked() {
+        if (mSimpleFacebook.isLogin()) {
             // get profile and update data on server
-            GetFacebookProfile();
-        else
-            // get tocken and profile and put in SimpleFacebook session
+            getFacebookProfile();
+        } else {
+            // get token and profile and put in SimpleFacebook session
             mSimpleFacebook.login(mOnLoginListener);
-    }
-
-    class UpdateProfileInfoTask extends AsyncTask<String, Void, Profile> {
-        Profile profile;
-        JSONObject avatar;
-
-        UpdateProfileInfoTask(Profile profile) {
-            this.profile = profile;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            showProgress("Loading...");
-        }
-
-        // Executed on a special thread and all your
-        // time taking tasks should be inside this method
-        @Override
-        protected Profile doInBackground(String... params) {
-            try {
-                String fb_id = params[0];
-                String fb_photo = "https://graph.facebook.com/" + fb_id + "/picture?width=700&height=700";
-                Cloudinary cloudinary = new Cloudinary(getApplicationContext());
-                avatar = cloudinary.uploader().upload(fb_photo, Cloudinary.asMap("format", "jpg", "overwrite", "false", "public_id", fb_id));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return this.profile;
-        }
-
-        // Executed on the UI thread after the
-        // time taking process is completed
-        @Override
-        protected void onPostExecute(Profile result) {
-            super.onPostExecute(result);
-            hideProgress(true);
-            updateUserInfo(this.profile, avatar);
         }
     }
 
-    private void GetFacebookProfile() {
+    private void onBtnRegClicked() {
+        Intent intent = new Intent(getApplicationContext(), RegActivity.class);
+        startActivity(intent);
+    }
+
+    private void onBtnLoginClicked() {
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivity(intent);
+    }
+
+    private void getFacebookProfile() {
         OnProfileListener onProfileListener = new OnProfileListener() {
             @Override
             public void onComplete(Profile profile) {
@@ -224,23 +158,81 @@ public class MainLoginActivity extends BaseActivity {
         final String finalDob = "";
 
         showProgress("Loading...");
-        this.runOnUiThread(new Runnable() {
-            public void run() {
-                DataStore.loginByFb(name, email, fb_id, access_token, gender, finalDob, avatar, new DataStore.OnResultReady() {
-                    @Override
-                    public void onReady(Object result, boolean failed) {
-                        hideProgress(true);
-                        if (failed) {
-                            alert.showAlertDialog(MainLoginActivity.this, "Error", "Incorrect credentials", false);
-                        } else {
-                            UserDto user = (UserDto) result;
-                            getSession().createLoginSession(user);
-                            Intent in = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(in);
-                        }
-                    }
-                });
+        DataStore.loginByFb(name, email, fb_id, access_token, gender, finalDob, avatar, new DataStore.OnResultReady() {
+            @Override
+            public void onReady(Object result, boolean failed) {
+                hideProgress(true);
+                if (failed) {
+                    alert.showAlertDialog(MainLoginActivity.this, "Error", "Incorrect credentials", false);
+                } else {
+                    UserDto user = (UserDto) result;
+                    getSession().createLoginSession(user);
+                    Intent in = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(in);
+                }
             }
         });
     }
+
+    private class UpdateProfileInfoTask extends AsyncTask<String, Void, Profile> {
+        Profile profile;
+        JSONObject avatar;
+
+        UpdateProfileInfoTask(Profile profile) {
+            this.profile = profile;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            showProgress("Loading...");
+        }
+
+        // Executed on a special thread and all your
+        // time taking tasks should be inside this method
+        @Override
+        protected Profile doInBackground(String... params) {
+            try {
+                String fb_id = params[0];
+                String fb_photo = "https://graph.facebook.com/" + fb_id + "/picture?width=700&height=700";
+                Cloudinary cloudinary = new Cloudinary(getApplicationContext());
+                avatar = cloudinary.uploader().upload(fb_photo, Cloudinary.asMap("format", "jpg", "overwrite", "false", "public_id", fb_id));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return this.profile;
+        }
+
+        @Override
+        protected void onPostExecute(Profile result) {
+            hideProgress(true);
+            updateUserInfo(this.profile, avatar);
+        }
+    }
+
+    private OnLoginListener mOnLoginListener = new OnLoginListener() {
+
+        @Override
+        public void onFail(String reason) {
+
+        }
+
+        @Override
+        public void onException(Throwable throwable) {
+        }
+
+        @Override
+        public void onThinking() {
+        }
+
+        @Override
+        public void onLogin() {
+            getFacebookProfile();
+        }
+
+        @Override
+        public void onNotAcceptingPermissions(Permission.Type type) {
+            // toast(String.format("You didn't accept %s permissions", type.name()));
+        }
+    };
 }

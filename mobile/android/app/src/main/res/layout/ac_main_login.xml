@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/main_background_color"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.nl.clubbook.ui.view.TitilliumRegularTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawableTop="@drawable/ic_logo"
+            android:gravity="center"
+            android:text="@string/splash_intro"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/text_size_medium"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <com.nl.clubbook.ui.view.TitilliumBoldButton
+            android:id="@+id/txtLoginFacebook"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn_blue"
+            android:text="@string/sing_in_with_facebook"
+            android:layout_marginBottom="12dp"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_medium"
+            android:textColor="@android:color/white"/>
+
+        <com.nl.clubbook.ui.view.TitilliumBoldButton
+            android:id="@+id/txtRegWithEmail"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn_violet"
+            android:text="@string/sign_up_by_email"
+            android:layout_marginBottom="12dp"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_medium"
+            android:textColor="@android:color/white" />
+
+        <com.nl.clubbook.ui.view.TitilliumBoldButton
+            android:id="@+id/txtLogin"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn_violet"
+            android:text="@string/log_in"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_medium"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+</LinearLayout>

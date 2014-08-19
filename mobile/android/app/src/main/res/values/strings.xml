@@ -3,31 +3,12 @@
     <string name="app_name">clubbook</string>
     <string name="sing_in_with_facebook">Sing In with Facebook</string>
     <string name="sign_up_by_email">Sign Up with Email</string>
-    <string name="splash_intro">getting social in the club</string>
+    <string name="splash_intro">Getting Social in The Club</string>
     <string name="terms">by signing into <a href="http://clubbook.com/">clubbook</a> you agree to the <a href="http://clubbook.com/">terms of use</a></string>
     <string name="fb_app_id">1504805883074351</string>
     <string name="drawer_open">Slider Menu Opened</string>
     <string name="drawer_close">Slider Menu Closed</string>
     
-    <!-- Nav Drawer Menu Items -->
-    <!--<string-array name="nav_drawer_items">-->
-        <!--<item >Profile</item>-->
-        <!--<item >Club list</item>-->
-        <!--<item >Messages</item>-->
-        <!--<item >Friends</item>-->
-        <!--<item >Settings</item>-->
-    <!--</string-array>-->
-    
-    <!-- Nav Drawer List Item Icons -->
-    <!-- Keep them in order as the titles are in -->
-    <!--<array name="nav_drawer_icons">-->
-        <!--<item>@drawable/menu_default</item>-->
-        <!--<item>@drawable/menu_icon_c_list</item>-->
-        <!--<item>@drawable/menu_icon_chat</item>-->
-        <!--<item>@drawable/menu_icon_friends</item>-->
-        <!--<item>@drawable/menu_icon_settings</item>-->
-    <!--</array>-->
-
     <!-- Action bar titles -->
     <string name="header_profile">Profile details</string>
 

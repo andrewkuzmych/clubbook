@@ -40,11 +40,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/main_button"
             android:gravity="center"
             android:text="@string/log_in"
             android:textColor="@color/checkin_button_color"
-            android:textSize="@dimen/text_size_medium" />
+            android:textSize="@dimen/text_size_medium"
+            android:background="@color/green"/>
     </RelativeLayout>
 
 </ScrollView>

@@ -10,9 +10,8 @@
     <color name="blue">#00abea</color>
     <color name="white">#ffffff</color>
 
-    <color name="main_background_color">#240E25</color>
     <color name="main_background_light_color">#592B5C</color>
-    <color name="main_background_menu_color">#340345</color>
+    <color name="main_background_color">#340345</color>
     <color name="main_background_light_color_2">#331635</color>
     <color name="main_font_color">#FFFFFF</color>
 
