@@ -54,7 +54,9 @@ public class FriendsFragment extends BaseRefreshFragment implements AdapterView.
 
         mSwipeRefreshLayout.setRefreshing(true);
 
-        DataStore.retrieveFriends(user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
+        DataStore.retrieveFriends(user.get(SessionManager.KEY_ID), user.get(SessionManager.KEY_ACCESS_TOCKEN),
+                new DataStore.OnResultReady() {
+
             @Override
             public void onReady(Object result, boolean failed) {
                 View view = getView();

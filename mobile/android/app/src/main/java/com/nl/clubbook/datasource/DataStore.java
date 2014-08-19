@@ -455,10 +455,11 @@ public class DataStore {
         });
     }
 
-    public static void retrieveFriends(String user_id, final OnResultReady onResultReady) {
+    public static void retrieveFriends(String userId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
 
-        ClubbookRestClient.retrieveFriends(user_id, params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.retrieveFriends(userId, params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
@@ -563,10 +564,11 @@ public class DataStore {
         });
     }
 
-    public static void retrieveUserFriend(String userId, String friendId, final OnResultReady onResultReady) {
+    public static void retrieveUserFriend(String accessToken, String friendId, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
 
-        ClubbookRestClient.retrieveUserFriend(userId, friendId, params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.retrieveUserFriend(friendId, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 if ("ok".equalsIgnoreCase(responseJson.optString("status", ""))) {

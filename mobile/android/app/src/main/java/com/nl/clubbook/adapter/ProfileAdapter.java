@@ -23,16 +23,21 @@ import java.util.List;
  * Created by Andrew on 6/2/2014.
  */
 public class ProfileAdapter extends BaseAdapter {
+    public static final int MODE_GRID = 7777;
+    public static final int MODE_LIST = 8888;
+
     private List<UserDto> mUsers = new ArrayList<UserDto>();
     private ImageLoader imageLoader;
     private DisplayImageOptions options;
     private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
     private LayoutInflater mInflater;
+    private int mMode = MODE_GRID;
 
 
-    public ProfileAdapter(Context context, List<UserDto> users) {
+    public ProfileAdapter(Context context, List<UserDto> users, int mode) {
         mInflater = LayoutInflater.from(context);
         this.mUsers = users;
+        mMode = mode;
 
         imageLoader = ImageLoader.getInstance();
         options = new DisplayImageOptions.Builder()
@@ -66,11 +71,17 @@ public class ProfileAdapter extends BaseAdapter {
         ViewHolder holder;
 
         if (row == null) {
-            row = mInflater.inflate(R.layout.item_grid_profile, parent, false);
+            if(mMode == MODE_GRID) {
+                row = mInflater.inflate(R.layout.item_grid_profile, parent, false);
+            } else {
+                row = mInflater.inflate(R.layout.item_list_checked_in_users, parent, false);
+            }
+
             holder = new ViewHolder();
             holder.imgAvatar = (ImageView) row.findViewById(R.id.imgAvatar);
             holder.txtFriendIndicator = (TextView) row.findViewById(R.id.txtFriendIndicator);
             holder.userId = row.findViewById(R.id.userId);
+
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();

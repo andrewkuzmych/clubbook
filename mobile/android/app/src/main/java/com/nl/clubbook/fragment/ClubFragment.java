@@ -251,7 +251,7 @@ public class ClubFragment extends BaseFragment implements View.OnClickListener {
         }
 
         GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
-        ProfileAdapter profileAdapter = new ProfileAdapter(getActivity(), users);
+        ProfileAdapter profileAdapter = new ProfileAdapter(getActivity(), users, ProfileAdapter.MODE_GRID);
         gridUsers.setAdapter(profileAdapter);
     }
 }

@@ -36,9 +36,12 @@
             android:background="@drawable/bg_btn_blue"
             android:text="@string/sing_in_with_facebook"
             android:layout_marginBottom="12dp"
-            android:gravity="center"
             android:textSize="@dimen/text_size_medium"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"
+            android:drawableLeft="@drawable/ic_sign_up_by_facebook"
+            android:gravity="center_vertical"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"/>
 
         <com.nl.clubbook.ui.view.TitilliumBoldButton
             android:id="@+id/txtRegWithEmail"
@@ -47,9 +50,12 @@
             android:background="@drawable/bg_btn_violet"
             android:text="@string/sign_up_by_email"
             android:layout_marginBottom="12dp"
-            android:gravity="center"
             android:textSize="@dimen/text_size_medium"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:drawableLeft="@drawable/ic_sign_up_by_email"
+            android:gravity="center_vertical"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp" />
 
         <com.nl.clubbook.ui.view.TitilliumBoldButton
             android:id="@+id/txtLogin"
@@ -57,9 +63,12 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_btn_violet"
             android:text="@string/log_in"
-            android:gravity="center"
+            android:drawableLeft="@drawable/ic_login"
+            android:gravity="center_vertical"
             android:textSize="@dimen/text_size_medium"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"/>
     </LinearLayout>
 
 </LinearLayout>
