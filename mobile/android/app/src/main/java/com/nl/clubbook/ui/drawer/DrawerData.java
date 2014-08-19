@@ -9,10 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Volodymyr on 19.08.2014.
+ * Created by User on 19.08.2014.
  */
-public class NavDrawerDAta {
-
+public class DrawerData {
     public static final int CLUB_LIST_POSITION = 0;
     public static final int MESSAGES_POSITION = 1;
     public static final int FRIENDS_POSITION = 2;
@@ -20,7 +19,7 @@ public class NavDrawerDAta {
 
     public static final int DEFAULT_FRAGMENT_NUMBER = CLUB_LIST_POSITION;
 
-    private NavDrawerDAta() {
+    private DrawerData() {
     }
 
     public static List<NavDrawerItem> getNavDrawerItems(Context context) {
@@ -52,4 +51,5 @@ public class NavDrawerDAta {
             R.drawable.ic_friends_nav_drawer,
             R.drawable.ic_settings_nav_drawer
     };
+
 }
