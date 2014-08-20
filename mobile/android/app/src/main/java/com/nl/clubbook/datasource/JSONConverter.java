@@ -56,13 +56,14 @@ public class JSONConverter {
         }
 
         if(parseCheckIn) {
-            JSONArray jsonArrCheckIn = jsonUser.optJSONArray("jsonUser");
+            JSONArray jsonArrCheckIn = jsonUser.optJSONArray("checkin");
             if(jsonArrCheckIn != null) {
                 for(int i = 0; i < jsonArrCheckIn.length(); i++) {
                     JSONObject jsonCheckIn = jsonArrCheckIn.optJSONObject(i);
                     CheckInDto checkIn = newCheckIn(jsonCheckIn);
 
                     if(checkIn != null) {
+                        result.setLastCheckIn(checkIn);
                         break;
                     }
                 }

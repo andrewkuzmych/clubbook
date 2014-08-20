@@ -113,7 +113,7 @@ public class FriendsAdapter extends BaseAdapter {
             return;
         }
 
-        if(checkIn.isActive()) {
+        if(!checkIn.isActive()) {
             holder.txtCheckedInPlace.setVisibility(View.GONE);
             holder.txtCheckIn.setText(mNotCheckIn);
         } else {

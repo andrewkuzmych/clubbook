@@ -1,31 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:layout_gravity="right"
-                android:id="@+id/messagesActionBar" >
+    android:id="@+id/messagesActionBar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
 
     <ImageButton
-            android:id="@+id/actionbarChatButton"
-            android:layout_width="50dp"
-            android:layout_height="fill_parent"
-            android:clickable="true"
-            android:src="@drawable/icon_chat" android:background="@null"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"/>
+        android:id="@+id/actionbarChatButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@null"
+        android:clickable="true"
+        android:src="@drawable/icon_chat" />
 
 
-    <TextView
-            android:id="@+id/actionbarChatCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16dp" android:textStyle="bold"
-            android:text="9"
-            android:paddingRight="20dp"
-            android:paddingBottom="15dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:textColor="#FFFFFF" android:layout_alignRight="@+id/actionbarChatButton"/>
+    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+        android:id="@+id/actionbarChatCount"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_size_small"
+        android:gravity="center"
+        android:paddingBottom="6dp"/>
 
 </RelativeLayout>

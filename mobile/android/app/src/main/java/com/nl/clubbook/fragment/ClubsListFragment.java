@@ -2,8 +2,7 @@ package com.nl.clubbook.fragment;
 
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,15 +31,9 @@ import java.util.List;
 public class ClubsListFragment extends BaseRefreshFragment implements AdapterView.OnItemClickListener,
         SwipeRefreshLayout.OnRefreshListener {
 
-    private ListView mClubList;
     private ClubsAdapter mClubsAdapter;
 
-    private int index = -1;
-    private int top = 0;
     private int mCurrentDistance = SessionManager.DEFOULT_DISTANCE;
-
-    public ClubsListFragment() {
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,19 +45,16 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        initActionBarTitle(getString(R.string.club_list));
         initView();
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
 
-        try {
-            index = mClubList.getFirstVisiblePosition();
-            View v = mClubList.getChildAt(0);
-            top = (v == null) ? 0 : v.getTop();
-        } catch (Throwable t) {
-            t.printStackTrace();
+        if(!hidden) {
+            initActionBarTitle(getString(R.string.club_list));
         }
     }
 
@@ -73,11 +63,8 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
         View txtClubTitle = view.findViewById(R.id.txtClubName);
         String clubId = (String)txtClubTitle.getTag();
 
-        ClubFragment fragment = new ClubFragment(ClubsListFragment.this, clubId);
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
-        mFragmentTransaction.addToBackStack(null);
-        mFragmentTransaction.replace(R.id.frame_container, fragment).commit();
+        Fragment fragment = ClubFragment.newInstance(ClubsListFragment.this, clubId);
+        openFragment(fragment, ClubFragment.class);
     }
 
     @Override
@@ -107,7 +94,7 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
         String accessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
         if(accessToken == null) {
             mSwipeRefreshLayout.setRefreshing(false);
-            L.i("accessTocken = null");
+            L.i("accessToken = null");
             return;
         }
 
@@ -140,12 +127,6 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
                 });
 
                 mClubsAdapter.updateData(places);
-
-                //TODO fix this (implement addToBackStack...)
-                // scroll to clicked club when you return from club details by clicking back button
-                if (index != -1) {
-                    mClubList.setSelectionFromTop(index, top);
-                }
             }
         });
     }
@@ -193,9 +174,9 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
         );
 
         mClubsAdapter = new ClubsAdapter(getActivity(), new ArrayList<ClubDto>());
-        mClubList = (ListView) view.findViewById(R.id.listClub);
-        mClubList.setAdapter(mClubsAdapter);
-        mClubList.setOnItemClickListener(this);
+        ListView clubList = (ListView) view.findViewById(R.id.listClub);
+        clubList.setAdapter(mClubsAdapter);
+        clubList.setOnItemClickListener(this);
 
         // load data based on selected distance to filter on
         mCurrentDistance = seekBarDistance.getProgress();

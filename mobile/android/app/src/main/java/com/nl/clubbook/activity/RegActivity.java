@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
@@ -51,22 +50,6 @@ public class RegActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         imageUploader.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            navigateBack();
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    protected void navigateBack() {
-        Intent intent = new Intent(this, MainLoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        startActivity(intent);
     }
 
     @Override

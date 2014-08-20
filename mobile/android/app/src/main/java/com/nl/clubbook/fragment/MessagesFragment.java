@@ -1,8 +1,7 @@
 package com.nl.clubbook.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +32,18 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        initActionBarTitle(getString(R.string.messages));
         initView();
         loadData();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+        if(!hidden) {
+            initActionBarTitle(getString(R.string.messages));
+        }
     }
 
     @Override
@@ -43,12 +52,8 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
         String userId = txtUsername.getTag().toString();
         String userName = txtUsername.getText().toString();
 
-        ChatFragment fragment = new ChatFragment(MessagesFragment.this, userId, userName);
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
-
-        mFragmentTransaction.addToBackStack(null);
-        mFragmentTransaction.replace(R.id.frame_container, fragment).commit();
+        Fragment fragment = ChatFragment.newInstance(MessagesFragment.this, userId, userName);
+        openFragment(fragment, ChatFragment.class);
     }
 
     @Override

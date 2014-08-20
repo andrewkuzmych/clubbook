@@ -2,7 +2,7 @@ package com.nl.clubbook.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +29,10 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 /**
  * Created by Andrew on 6/8/2014.
  */
-public class ChatFragment extends BaseFragment {
+public class ChatFragment extends BaseInnerFragment {
+
+    private static final String ARG_USER_ID = "ARG_USER_ID";
+    private static final String ARG_USER_NAME = "ARG_USER_NAME";
 
     private TextView userName;
     private ImageView userAvatar;
@@ -46,31 +49,77 @@ public class ChatFragment extends BaseFragment {
     protected DisplayImageOptions options;
     protected ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
 
-    public ChatFragment(BaseFragment previousFragment, String userId, String userName) {
-        super(previousFragment);
-        mUserToId = userId;
-        mUserNameTo = userName;
+    public static Fragment newInstance(Fragment targetFragment, String userId, String userName) {
+        Fragment fragment = new ChatFragment();
+        fragment.setTargetFragment(targetFragment, 0);
+
+        Bundle args = new Bundle();
+        args.putString(ARG_USER_ID, userId);
+        args.putString(ARG_USER_NAME, userName);
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_chat, container, false);
+    }
 
-        View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle("chat");
+        handleArgs();
+        initView();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        SessionManager session = new SessionManager(getActivity().getApplicationContext());
+        session.setConversationListner(mUserToId + "_" + mUserFromId);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        SessionManager session = new SessionManager(getActivity().getApplicationContext());
+        session.setConversationListner(null);
+    }
+
+    private void handleArgs() {
+        Bundle args = getArguments();
+        if(args == null) {
+            return;
+        }
+
+        mUserToId = args.getString(ARG_USER_ID);
+        mUserNameTo = args.getString(ARG_USER_NAME);
+
+        initActionBarTitle(mUserNameTo != null ? mUserNameTo : "");
+    }
+
+    private void initView() {
+        View view = getView();
+        if(view == null) {
+            return;
+        }
 
         mUserFromId = getCurrentUserId();
         mAccessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
 
-        userName = (TextView) rootView.findViewById(R.id.chatUserName);
-        userAvatar = (ImageView) rootView.findViewById(R.id.chatUserAvatar);
+        userName = (TextView) view.findViewById(R.id.chatUserName);
+        userAvatar = (ImageView) view.findViewById(R.id.chatUserAvatar);
 
-        chat_list = (ListView) rootView.findViewById(R.id.chatList);
+        chat_list = (ListView) view.findViewById(R.id.chatList);
 
         // send message input
-        inputText = (EditText) rootView.findViewById(R.id.messageInput);
-        rootView.findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
+        inputText = (EditText) view.findViewById(R.id.messageInput);
+        view.findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sendMessage();
@@ -87,13 +136,13 @@ public class ChatFragment extends BaseFragment {
             }
         });
 
-        rootView.findViewById(R.id.sendDrinkButton).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.sendDrinkButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sendMessageTemp("drink");
             }
         });
-        rootView.findViewById(R.id.sendSmileButton).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.sendSmileButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sendMessageTemp("smile");
@@ -110,8 +159,6 @@ public class ChatFragment extends BaseFragment {
                 .build();
 
         fillConversation();
-
-        return rootView;
     }
 
     public void receiveComment(ChatMessageDto message) {
@@ -215,33 +262,5 @@ public class ChatFragment extends BaseFragment {
                         });
             }
         });
-    }
-
-    @Override
-    public void backButtonWasPressed() {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        // hide keyboard
-        imm.hideSoftInputFromWindow(getActivity().getWindow().getCurrentFocus().getWindowToken(), 0);
-
-        ((MainActivity) getActivity()).setCurrentFragment(previousFragment);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (((MainActivity) getActivity()).getDrawerToggle().isDrawerIndicatorEnabled()) {
-            ((MainActivity) getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(false);
-            ((MainActivity) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }
-
-        SessionManager session = new SessionManager(getActivity().getApplicationContext());
-        session.setConversationListner(mUserToId + "_" + mUserFromId);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        SessionManager session = new SessionManager(getActivity().getApplicationContext());
-        session.setConversationListner(null);
     }
 }

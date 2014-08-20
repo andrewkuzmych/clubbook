@@ -104,10 +104,6 @@ public class BaseActivity extends ActionBarActivity {
         finish();
     }
 
-    protected void navigateBack() {
-
-    }
-
     protected void initActionBar(int stringResourceId) {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -120,9 +116,6 @@ public class BaseActivity extends ActionBarActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle(title != null ? title : "");
-    }
-
-    protected void init() {
     }
 
     protected void loadData() {

@@ -1,6 +1,7 @@
 package com.nl.clubbook.fragment;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +24,7 @@ public class FriendsFragment extends BaseRefreshFragment implements AdapterView.
     private FriendsAdapter mAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_friends, container, false);
     }
 
@@ -32,14 +32,25 @@ public class FriendsFragment extends BaseRefreshFragment implements AdapterView.
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        initActionBarTitle(getString(R.string.friend_list));
         initView();
         loadData();
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+        if(!hidden) {
+            initActionBarTitle(getString(R.string.friend_list));
+        }
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String userId = view.findViewById(R.id.txtUsername).getTag().toString();
-        openFragment(new ProfileFragment(FriendsFragment.this, userId, null));
+        Fragment fragment = ProfileFragment.newInstance(FriendsFragment.this, userId, null);
+        openFragment(fragment, ProfileFragment.class);
     }
 
     @Override

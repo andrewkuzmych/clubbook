@@ -81,24 +81,6 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            navigateBack();
-            return true;
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    protected void navigateBack() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
-
     private void initView() {
         findViewById(R.id.txtLoginFacebook).setOnClickListener(MainLoginActivity.this);
         findViewById(R.id.txtRegWithEmail).setOnClickListener(MainLoginActivity.this);

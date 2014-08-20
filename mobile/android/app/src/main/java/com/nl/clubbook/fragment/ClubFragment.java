@@ -2,7 +2,7 @@ package com.nl.clubbook.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.ClubInfoActivity;
-import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.adapter.ProfileAdapter;
 import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.ClubWorkingHoursDto;
@@ -32,7 +31,9 @@ import java.util.List;
 /**
  * Created by Andrew on 6/8/2014.
  */
-public class ClubFragment extends BaseFragment implements View.OnClickListener {
+public class ClubFragment extends BaseInnerFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
+
+    private static final String ARG_CLUB_ID = "ARG_CLUB_ID";
 
     private ClubDto mClub;
 
@@ -41,11 +42,15 @@ public class ClubFragment extends BaseFragment implements View.OnClickListener {
     private ImageLoadingListener mAnimateFirstListener = new SimpleImageLoadingListener();
     private String mClubId;
 
-    public ClubFragment(){}
+    public static Fragment newInstance(Fragment targetFragment, String clubId) {
+        Fragment fragment = new ClubFragment();
+        fragment.setTargetFragment(targetFragment, 0);
 
-    public ClubFragment(BaseFragment previousFragment, String clubId) {
-        super(previousFragment);
-        this.mClubId = clubId;
+        Bundle args = new Bundle();
+        args.putString(ARG_CLUB_ID, clubId);
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     @Override
@@ -58,26 +63,11 @@ public class ClubFragment extends BaseFragment implements View.OnClickListener {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        initActionBarTitle(getString(R.string.club_page));
+        handleArgs();
         initImageLoader();
         initView();
         loadData();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (((MainActivity) getActivity()).getDrawerToggle().isDrawerIndicatorEnabled()) {
-            ((MainActivity) getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(false);
-            ((MainActivity) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }
-    }
-
-    @Override
-    public void backButtonWasPressed() {
-        if (!((MainActivity) getActivity()).getDrawerToggle().isDrawerIndicatorEnabled()) {
-            ((MainActivity) getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(true);
-            ((MainActivity) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        }
     }
 
     @Override
@@ -90,6 +80,22 @@ public class ClubFragment extends BaseFragment implements View.OnClickListener {
                 onHolderClubInfoClicked();
                 break;
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        View userId = view.findViewById(R.id.userId);
+        Fragment fragment = ProfileFragment.newInstance(ClubFragment.this, (String)userId.getTag(), mClub.getUsers());
+        openFragment(fragment, ProfileFragment.class);
+    }
+
+    private void handleArgs() {
+        Bundle args = getArguments();
+        if(args == null) {
+            return;
+        }
+
+        mClubId = args.getString(ARG_CLUB_ID);
     }
 
     private void initImageLoader() {
@@ -113,14 +119,7 @@ public class ClubFragment extends BaseFragment implements View.OnClickListener {
         view.findViewById(R.id.holderClubInfo).setOnClickListener(this);
 
         GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
-        gridUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                View userId = view.findViewById(R.id.userId);
-
-                openFragment(new ProfileFragment(ClubFragment.this, (String)userId.getTag(), mClub.getUsers()));
-            }
-        });
+        gridUsers.setOnItemClickListener(ClubFragment.this);
     }
 
     protected void loadData() {

@@ -502,8 +502,9 @@ public class DataStore {
         });
     }
 
-    public static void addFriendRequest(String userId, String friendId, final OnResultReady onResultReady) {
+    public static void addFriendRequest(String userId, String friendId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
 
         ClubbookRestClient.addFriend(userId, friendId, params, new JsonHttpResponseHandler() {
             @Override

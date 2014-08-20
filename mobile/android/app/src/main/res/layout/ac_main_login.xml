@@ -29,7 +29,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <com.nl.clubbook.ui.view.TitilliumBoldButton
+        <com.nl.clubbook.ui.view.TitilliumBoldTextView
             android:id="@+id/txtLoginFacebook"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
             android:paddingLeft="4dp"
             android:paddingRight="4dp"/>
 
-        <com.nl.clubbook.ui.view.TitilliumBoldButton
+        <com.nl.clubbook.ui.view.TitilliumBoldTextView
             android:id="@+id/txtRegWithEmail"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
             android:paddingLeft="4dp"
             android:paddingRight="4dp" />
 
-        <com.nl.clubbook.ui.view.TitilliumBoldButton
+        <com.nl.clubbook.ui.view.TitilliumBoldTextView
             android:id="@+id/txtLogin"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

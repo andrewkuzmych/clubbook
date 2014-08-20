@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.KeyEvent;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -56,13 +56,13 @@ import java.util.List;
  * Time: 1:42 AM
  * To change this template use File | Settings | File Templates.
  */
-public class MainActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener,
+        BaseFragment.OnInnerFragmentDestroyedListener, BaseFragment.OnInnerFragmentOpenedListener {
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private View mNavDrawerHeaderView;
     private ActionBarDrawerToggle mDrawerToggle;
-
 
     private ImageButton actionbarChatButton;
     private TextView actionbarChatCount;
@@ -71,7 +71,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private HashMap<Integer, BaseFragment> fragmentMap = new HashMap<Integer, BaseFragment>();
     private List<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter mAdapter;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,7 +88,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         fragmentMap.put(2, new FriendsFragment());
         fragmentMap.put(3, new SettingsFragment());
 
-        initActionBar("");
+        initActionBar();
         initNavDrawer();
 
         loadData();
@@ -133,25 +132,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            navigateBack();
-            return true;
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    protected void navigateBack() {
-        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+    public void onBackPressed() {
+        FragmentManager fManager = getSupportFragmentManager();
+        if(fManager.getBackStackEntryCount() > 0) {
+            fManager.popBackStack();
         } else {
-            currentFragment.backButtonWasPressed();
-            getSupportFragmentManager().popBackStack();
+            finish();
         }
     }
 
@@ -179,7 +165,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         switch (item.getItemId()) {
             case android.R.id.home:
-                navigateBack();
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -209,24 +195,40 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         displayDefaultView();
     }
 
+    @Override
+    public void onInnerFragmentDestroyed() {
+        if (!mDrawerToggle.isDrawerIndicatorEnabled()) {
+            mDrawerToggle.setDrawerIndicatorEnabled(true);
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        }
+    }
+
+    @Override
+    public void onInnerFragmentOpened() {
+        if (mDrawerToggle.isDrawerIndicatorEnabled()) {
+            mDrawerToggle.setDrawerIndicatorEnabled(false);
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
+    }
+
     private void initNavDrawer() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.listDrawer);
         mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout,
                 R.drawable.ic_drawer,  R.string.app_name, R.string.app_name) { //TODO
             public void onDrawerClosed(View view) {
-//                getSupportActionBar().setTitle(mTitle);
+//                getSupportActionBar().setTitle("Settings");
 //                invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
-//                getSupportActionBar().setTitle("");
+//                getSupportActionBar().setTitle("Settings1");
 //                invalidateOptionsMenu();
             }
         };
         navDrawerItems = NavDrawerData.getNavDrawerItems(MainActivity.this);
 
-        // set adapter
+//        // set adapter
         View navDrawerHeaderView = initNavDrawerHeader();
         mAdapter = new NavDrawerListAdapter(MainActivity.this, navDrawerItems);
         mDrawerList.addHeaderView(navDrawerHeaderView);
@@ -289,18 +291,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    public void setCurrentFragment(BaseFragment currentFragment) {
-        this.currentFragment = currentFragment;
-    }
-
-    public DrawerLayout getDrawerLayout() {
-        return mDrawerLayout;
-    }
-
-    public ActionBarDrawerToggle getDrawerToggle() {
-        return mDrawerToggle;
-    }
-
     private void displayDefaultView() {
         Intent in = getIntent();
         int displayView = NavDrawerData.DEFAULT_FRAGMENT_NUMBER;
@@ -328,6 +318,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 }
             }
         });
+    }
+
+    private void initActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME
+                | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
+
+        initActionBar("");
     }
 
     private void displayView(final int position) {
@@ -373,7 +371,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
      *
      * @param myInfo
      */
-    private void updateMyInformation(UserDto myInfo) { //TODO
+    private void updateMyInformation(UserDto myInfo) {//TODO
         // update UI profile info
 //        NavDrawerItem navDrawerItem = navDrawerItems.get(NAV_MENU_PROFILE_POSITION);
 //        navDrawerItem.setTitle(myInfo.getName());

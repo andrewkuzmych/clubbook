@@ -83,5 +83,9 @@
     <string name="delete_account">Delete Account</string>
     <string name="contact">Contact</string>
     <string name="log_out">Log Out</string>
+    <string name="question_about_clubbook">Question about Clubbook</string>
+    <string name="club_page">Club Page</string>
+    <string name="friend_list">Friend List</string>
+    <string name="user_profile">User Profile</string>
 
 </resources>
