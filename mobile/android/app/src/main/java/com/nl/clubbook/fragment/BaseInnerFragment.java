@@ -1,6 +1,7 @@
 package com.nl.clubbook.fragment;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 
@@ -13,12 +14,16 @@ public class BaseInnerFragment extends BaseFragment {
     public void onDestroy() {
         ActionBarActivity activity = (ActionBarActivity)getActivity();
         if(activity != null && activity instanceof BaseFragment.OnInnerFragmentDestroyedListener && !activity.isFinishing()) {
-            BaseFragment.OnInnerFragmentDestroyedListener listener = (BaseFragment.OnInnerFragmentDestroyedListener)activity;
-            listener.onInnerFragmentDestroyed();
+
+            FragmentManager fManager = activity.getSupportFragmentManager();
+            if(fManager.getBackStackEntryCount() < 1) {
+                BaseFragment.OnInnerFragmentDestroyedListener listener = (BaseFragment.OnInnerFragmentDestroyedListener) activity;
+                listener.onInnerFragmentDestroyed();
+            }
 
             Fragment targetFragment = getTargetFragment();
-            if(targetFragment != null) {
-                FragmentTransaction fTransaction = activity.getSupportFragmentManager().beginTransaction();
+            if (targetFragment != null) {
+                FragmentTransaction fTransaction = fManager.beginTransaction();
                 fTransaction.show(targetFragment).commitAllowingStateLoss();
             }
         }

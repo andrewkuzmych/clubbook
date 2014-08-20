@@ -69,6 +69,11 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
 
     @Override
     protected void loadData() {
+        if(!NetworkUtils.isOn(getActivity())) {
+            Toast.makeText(getActivity(), R.string.no_connection, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String distanceKm = String.valueOf(mCurrentDistance);
         Log.d("Location Updates", "Google Play services is available.");
 
@@ -134,11 +139,6 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
     private void initView() {
         View view = getView();
         if(view == null) {
-            return;
-        }
-
-        if(!NetworkUtils.isOn(getActivity())) {
-            Toast.makeText(getActivity(), R.string.no_connection, Toast.LENGTH_SHORT).show();
             return;
         }
 

@@ -21,6 +21,7 @@ import com.nl.clubbook.datasource.ChatMessageDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.SessionManager;
+import com.nl.clubbook.utils.KeyboardUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
@@ -89,6 +90,16 @@ public class ChatFragment extends BaseInnerFragment {
 
         SessionManager session = new SessionManager(getActivity().getApplicationContext());
         session.setConversationListner(null);
+    }
+
+    @Override
+    public void onDestroyView() {
+        View view = getView();
+        if(view != null) {
+            KeyboardUtils.closeKeyboard(getActivity(), view.findViewById(R.id.messageInput));
+        }
+
+        super.onDestroyView();
     }
 
     private void handleArgs() {
@@ -218,7 +229,6 @@ public class ChatFragment extends BaseInnerFragment {
     }
 
     private void fillConversation() {
-
         DataStore.getConversation(mUserFromId, mUserToId, mAccessToken, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
