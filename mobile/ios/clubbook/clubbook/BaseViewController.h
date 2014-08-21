@@ -9,13 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "ClubbookManager.h"
 #import "BaseViewControllerHelper.h"
+#import "GAITrackedViewController.h"
 
-@interface BaseViewController : UIViewController
+@interface BaseViewController : GAITrackedViewController
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sidebarButton;
 @property (strong, nonatomic) ClubbookManager *_manager;
 
-- (void)initUI;
 - (void)showProgress: (BOOL) clearContext title:(NSString*) title;
 - (void)hideProgress;
 

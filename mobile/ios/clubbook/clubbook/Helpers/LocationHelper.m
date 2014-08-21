@@ -65,7 +65,7 @@ static Place * clubCheckin;
     [self stopTimer];
     
     clubCheckin = club;
-    NSTimeInterval time = [GlobalVars getInstance].CheckinUpdateTime;
+    NSTimeInterval time = 6;//[GlobalVars getInstance].CheckinUpdateTime;
 	locationUpdateTimer =
     [NSTimer scheduledTimerWithTimeInterval:time
                                      target:[self class]
@@ -77,8 +77,7 @@ static Place * clubCheckin;
 
 + (void)updateLocation:(NSTimer*)theTimer {
     CLLocation *loc = [[CLLocation alloc] initWithLatitude:[clubCheckin.lat doubleValue] longitude:[clubCheckin.lon doubleValue]];
-    
-    //GlobalVars *globalVars=[GlobalVars getInstance];
+
     if([GlobalVars getInstance].MaxCheckinRadius <  (int)[[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc])
     {
         [self checkout];
@@ -92,8 +91,6 @@ static Place * clubCheckin;
 }
 
 + (void)checkout {
-    //checkout
-    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
     [manager checkout:clubCheckin.id accessToken:accessToken userInfo:nil];

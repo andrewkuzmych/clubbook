@@ -42,7 +42,7 @@
 {
     [super viewDidLoad];
     
-    self.title = @"Clubs";
+    //self.title = NSLocalizedString(@"clubs", nil);
     alert = [[OBAlert alloc] initInViewController:self];
     
     distanceKm = 5;
@@ -79,8 +79,14 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    // hide back button
+    [[UIBarButtonItem appearance] setBackButtonTitlePositionAdjustment:UIOffsetMake(0, -60)
+                                                         forBarMetrics:UIBarMetricsDefault];
+    
+    self.screenName = @"Main Screen";
     [self loadClub];
-    [self.navigationController setNavigationBarHidden:NO];
+    //[self.navigationController setNavigationBarHidden:NO];
     
     //Pubnub staff
     PNConfiguration *myConfig = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"  publishKey: Constants.PubnabPubKay subscribeKey:Constants.PubnabSubKay secretKey:nil];
@@ -129,19 +135,23 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideProgress];
         _places = places;
-        [self sortPlaces];
+
         
         for (Place *place in places) {
             CLLocation *loc = [[CLLocation alloc] initWithLatitude:[place.lat doubleValue] longitude:[place.lon doubleValue]];
             CLLocationDistance distance = [[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc];
-            place.disatance = distance;
+            place.distance = distance;
         }
+        
+        self.title = [NSString stringWithFormat:@"%@ (%lu)", NSLocalizedString(@"clubs", nil), (unsigned long)places.count];
         
        
         self.clubTable.hidden = NO;
         self.clubTable.dataSource = self;
         self.clubTable.delegate = self;
-        [self.clubTable reloadData];
+        
+        [self sortPlaces];
+        //[self.clubTable reloadData];
     });
 }
 
@@ -213,7 +223,7 @@
     
     [cell.checkinButton setMainState:NSLocalizedString(@"Checkin", nil)];
     
-    int disatanceInt = (int)place.disatance;
+    int disatanceInt = (int)place.distance;
     
     [cell.distanceLabel setText:[LocationHelper convertDistance:disatanceInt]];
     
@@ -323,31 +333,6 @@
     [self.distance setText:[NSString stringWithFormat:@"%d%@", distanceKm, NSLocalizedString(@"kilometers", nil)]];
 }
 
-/*- (IBAction)checkinAction:(UIButton *)sender
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *userId = [defaults objectForKey:@"access"];
-    
-    self.checkinPlace = _places[sender.tag];
-    CbButton* checkinButton = (CbButton *) sender;
-
-    CLLocation *loc = [[CLLocation alloc] initWithLatitude:[self.checkinPlace.lat doubleValue] longitude:[self.checkinPlace.lon doubleValue]];
-    
-    GlobalVars *globalVars=[GlobalVars getInstance];
-    if (checkinButton.isCheckin) {
-         [self._manager checkout:self.checkinPlace.id userId:userId userInfo:sender];
-    } else {
-        if([GlobalVars getInstance].MaxCheckinRadius > (int)[[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc]) {
-            [self showProgress:NO title: NSLocalizedString(@"checking_in", nil)];
-            [self._manager checkin:self.checkinPlace.id userId:userId userInfo:sender];
-            
-        }
-        else {
-            [self showProgress:NO title:NSLocalizedString(@"checking_out", nil)];
-            [checkinButton setMainState:NSLocalizedString(@"Checkin", nil)];
-        }
-    }
-}*/
 
 - (IBAction)segmentChanged:(id)sender {
     [self sortPlaces];
@@ -356,7 +341,7 @@
 -(void)sortPlaces{
     NSString *sortProperty;
     if([self.segmentControl selectedSegmentIndex] == 0){
-        sortProperty = @"disatance";
+        sortProperty = @"distance";
     }
     else if([self.segmentControl selectedSegmentIndex] == 1){
         sortProperty = @"title";

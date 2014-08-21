@@ -426,7 +426,7 @@ static NSString * kCSNavigationBarBoundsKeyPath = @"bounds";
 
         weakself.showingActivity = NO;
         weakself.image = [CSNotificationView imageForStyle:style];
-        weakself.textLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:13];
+        weakself.textLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:13];
         weakself.textLabel.text = message;
         weakself.tintColor = [CSNotificationView blurTintColorForStyle:style];
         

@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "ClubbookManager.h"
+#import "GAI.h"
+#import "GAIFields.h"
+#import "GAIDictionaryBuilder.h"
 
 @interface BaseTableViewController : UITableViewController<UITextFieldDelegate>
 
@@ -16,7 +19,6 @@
 //@property (strong, nonatomic) UIActivityIndicatorView *spinner;
 @property (strong, nonatomic) UITextField *currentFocus;
 
-- (void)initUI;
 - (UIToolbar *)generateToolbarForKeyboard;
 - (void)showAlert: (NSString *) message title:(NSString *) title;
 - (void)showProgress: (BOOL) clearContext title:(NSString*) title;

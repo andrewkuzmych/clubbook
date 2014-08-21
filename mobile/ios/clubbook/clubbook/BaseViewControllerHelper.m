@@ -18,16 +18,6 @@
     CSNotificationView* permanentNotification;
 }
 
-
-
-/*- (id) initWithController:(UIViewController *)controller{
-    self = [super init];
-    if (self) {
-        currentController = controller;
-    }
-    return self;
-}*/
-
 - (id)initBase:(UIViewController *)controller sidebarButton:(UIBarButtonItem *)sidebarButton
 {
     self = [super init];
@@ -119,7 +109,7 @@
                                                            tintColor:[UIColor colorWithRed:153/255.0f green:0/255.0f blue:217/255.0f alpha:1]
                                                                image:nil message:title];
         
-        [permanentNotification setShowingActivity:YES];
+        //[permanentNotification setShowingActivity:YES];
         
         [permanentNotification setVisible:YES animated:YES completion:^{}];
     }

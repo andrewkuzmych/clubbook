@@ -11,6 +11,7 @@
 #import "Cloudinary.h"
 #import "Constants.h"
 #import "CSNotificationView.h"
+#import "UserViewController.h"
 
 @interface ChatViewController (){
     bool canChat;
@@ -114,19 +115,21 @@
         NSData *receiverUserData = [NSData dataWithContentsOfURL:receiverUserUrlImageURL];
         self.userToImage =  [JSQMessagesAvatarFactory avatarWithImage:[UIImage imageWithData:receiverUserData] diameter:incomingDiameter];
         
-        
         NSString * senderUserUrl  = [cloudinary url: [chat.currentUser.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
         NSURL *senderUserUrlImageURL = [NSURL URLWithString:senderUserUrl];
         NSData *senderUserData = [NSData dataWithContentsOfURL:senderUserUrlImageURL];
         self.userFromImage =  [JSQMessagesAvatarFactory avatarWithImage:[UIImage imageWithData:senderUserData] diameter:incomingDiameter];
         
+        // set user to photo button
+        UIImage *image =  [JSQMessagesAvatarFactory avatarWithImage:[UIImage imageWithData:receiverUserData] diameter:incomingDiameter];
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.bounds = CGRectMake( 0, 0, image.size.width, image.size.height );
+        [button setImage:image forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(onUser:) forControlEvents:UIControlEventTouchUpInside];
+        UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+        self.navigationItem.rightBarButtonItem=barButtonItem;
         
-         // get user from avatar
-        //self.userFromImage = [JSQMessagesAvatarFactory avatarWithImage:[UIImage imageWithData:receiverUserData] diameter:incomingDiameter];
-        /*[JSQMessagesAvatarFactory avatarWithUserInitials:@"ME"
-                                                               backgroundColor:[UIColor colorWithWhite:0.85f alpha:1.0f]
-                                                                    textColor:[UIColor colorWithWhite:0.60f alpha:1.0f] font:[UIFont systemFontOfSize:14.0f] diameter:outgoingDiameter];*/
-
+        self.title = chat.receiver.name;
         
         for(Conversation * conf in chat.conversations)
         {
@@ -157,9 +160,28 @@
     });
 }
 
+-(void)onUser:(UIButton *)sender
+{
+    if (self.isFromUser) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        [self performSegueWithIdentifier: @"onUser" sender: self];
+    }
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(User *)sender
+{
+    if([[segue identifier] isEqualToString:@"onUser"]){
+        UserViewController *userController =  [segue destinationViewController];
+        userController.isFromChat = YES;
+        userController.userId = _chat.receiver.id;
+    }
+}
+
+
 - (void)setCanChat
 {
-    if ([self.messages count] < 2) {
+    if ([self.messages count] < 3) {
         canChat = true;
         return;
     }
@@ -178,9 +200,22 @@
 {
     [super viewWillAppear:animated];
     
+    
+    //Google Analytics
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName
+           value:@"Chat Screen"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+    
+
     if (self.delegateModal) {
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(closePressed:)];
     }
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -191,7 +226,7 @@
      *  Enable/disable springy bubbles, default is YES.
      *  For best results, toggle from `viewDidAppear:`
      */
-    self.collectionView.collectionViewLayout.springinessEnabled = YES;
+    self.collectionView.collectionViewLayout.springinessEnabled = NO;
 }
 
 - (void)didReceiveMemoryWarning

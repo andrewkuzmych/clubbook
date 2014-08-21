@@ -24,7 +24,7 @@
 
 @implementation JSQMessagesToolbarButtonFactory
 
-+ (UIButton *)defaultAccessoryButtonItem
+/*+ (UIButton *)defaultAccessoryButtonItem
 {
     UIImage *cameraImage = [UIImage imageNamed:@"camera"];
     UIImage *cameraNormal = [cameraImage jsq_imageMaskedWithColor:[UIColor lightGrayColor]];
@@ -39,7 +39,7 @@
     cameraButton.tintColor = [UIColor lightGrayColor];
     
     return cameraButton;
-}
+}*/
 
 + (UIButton *)defaultSendButtonItem
 {

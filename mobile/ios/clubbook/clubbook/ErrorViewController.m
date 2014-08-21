@@ -50,6 +50,17 @@
 }
 */
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    //Google Analytics
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName
+           value:@"Error Screen"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+}
+
 - (IBAction)retryAction:(id)sender {
     
     UINavigationController *purchaseContr = (UINavigationController *)[self.storyboard instantiateViewControllerWithIdentifier:@"main"];

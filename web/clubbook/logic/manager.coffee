@@ -440,7 +440,9 @@ exports.unread_messages_count = (user_id, callback)->
 exports.radius_to_km = (distance)->
   # http://stackoverflow.com/questions/7837731/units-to-use-for-maxdistance-and-mongodb
   #one degree is approximately 111.12 kilometers
-  return distance/111.12
+  #degree = Math.PI * 6378.137/180 
+
+  return distance/75
 
 
 

@@ -47,12 +47,26 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.title = self.place.title;
 
     [self styleUi];
     
     [self populateData];
 
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    //Google Analytics
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName
+           value:@"Club Screen"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+}
+
 
 - (void)populateData
 {
@@ -229,7 +243,7 @@
         label.text = NSLocalizedString(@"closed", nil);
     
     if (workingHour.day == self.place.todayWorkingHours.day) {
-        label.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15.0];
+        label.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17.0];
     }
 }
 

@@ -48,22 +48,32 @@
     if (self.hasBack) {
         self.navigationItem.leftBarButtonItem = nil;
     }
-
     
+    self.title = NSLocalizedString(@"clubProfile", nil);
+
     // Do any additional setup after loading the view.
     minUserCount = 10;
     
+    [self showProgress:YES title:nil];
     dispatch_async(dispatch_get_main_queue(), ^{
-        
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSString *accessToken = [defaults objectForKey:@"accessToken"];
-        
         [self._manager retrievePlace:self.placeId accessToken:accessToken];
-        [self showProgress:YES title:nil];
     });
     
     self.profileCollection.dataSource = self;
     self.profileCollection.delegate = self;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    //Google Analytics
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName
+           value:@"Club Users Screen"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -84,19 +94,19 @@
         self.headerView.friendsCountTitleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
         self.headerView.friendsCountTitleLabel.text = NSLocalizedString(@"friends_lower", nil);
         self.headerView.clubNameText.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:19.0];
-        self.headerView.openTodayLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
-        self.headerView.workingHoursLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:11.0];
+        self.headerView.openTodayLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
+        self.headerView.workingHoursLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
         self.headerView.clubInfoButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
         self.headerView.clubDistanceText.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15.0];
         self.clubFooterView.clubUsersLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0];
         self.clubFooterView.checkinLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:20.0];
+        self.clubFooterView.checkinLabel.text = NSLocalizedString(@"checkedIn", nil);
         self.clubFooterView.usersLeftToCheckinLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0];
         
-        // GlobalVars *globalVars=[GlobalVars getInstance];
         CLLocation *loc = [[CLLocation alloc] initWithLatitude:[place.lat doubleValue] longitude:[place.lon doubleValue]];
         
         CLLocationDistance distance = [[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc];
-        place.disatance = distance;
+        place.distance = distance;
         
         self.headerView.clubNameText.text = place.title;
         
@@ -110,7 +120,7 @@
             self.headerView.workingHoursLabel.text = NSLocalizedString(@"unknown", nil);
         }
         
-        int disatanceInt = (int)place.disatance;
+        int disatanceInt = (int)place.distance;
         self.headerView.clubDistanceText.text = [LocationHelper convertDistance:disatanceInt];
         
         [self.headerView.clubAvatarImage setImageWithURL:[NSURL URLWithString:place.avatar] placeholderImage:[UIImage imageNamed:@"Default.png"]];
@@ -266,7 +276,7 @@
             CLTransformation *transformation = [CLTransformation transformation];
             [transformation setParams: @{@"width": @120, @"height": @120}];
             NSString * avatarUrl  = [cloudinary url: [user.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
-            [cell.profileAvatar setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"Default.png"]];
+            [cell.profileAvatar setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
         }
     });
     return cell;
@@ -335,8 +345,6 @@
                              MKLaunchOptionsDirectionsModeKey, nil];
     [MKMapItem openMapsWithItems: items launchOptions: options];
 }
-
-
 
 /*
 #pragma mark - Navigation

@@ -52,8 +52,17 @@
     } else {
         [self.pushSwitch setOn:NO animated:YES];
     }
+}
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     
+    //Google Analytics
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName
+           value:@"Settings Screen"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
