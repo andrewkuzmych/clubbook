@@ -106,8 +106,8 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     private void initLoader() {
         mImageLoader = ImageLoader.getInstance();
         mOptions = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.default_list_image)
-                .showImageOnFail(R.drawable.default_list_image)
+                .showImageForEmptyUri(R.drawable.ic_avatar_missing)
+                .showImageOnFail(R.drawable.ic_avatar_unknown)
                 .cacheInMemory()
                 .cacheOnDisc()
                 .build();

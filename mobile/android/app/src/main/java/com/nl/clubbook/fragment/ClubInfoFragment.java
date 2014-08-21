@@ -98,8 +98,8 @@ public class ClubInfoFragment extends Fragment implements ViewPager.OnPageChange
     private void initLoader() {
         mImageLoader = ImageLoader.getInstance();
         mOptions = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.default_list_image)
-                .showImageOnFail(R.drawable.default_list_image)
+                .showImageForEmptyUri(R.drawable.ic_club_avatar_default)
+                .showImageOnFail(R.drawable.ic_club_avatar_default)
                 .cacheInMemory()
                 .cacheOnDisc()
                 .build();

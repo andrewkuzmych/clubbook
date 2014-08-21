@@ -1,17 +1,14 @@
 package com.nl.clubbook.activity;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import com.nl.clubbook.R;
-import com.nl.clubbook.control.DatePickerFragment;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.AlertDialogManager;
@@ -20,6 +17,7 @@ import com.nl.clubbook.helper.ImageUploader;
 import com.nl.clubbook.helper.UiHelper;
 import com.nl.clubbook.helper.UserEmailFetcher;
 import com.nl.clubbook.helper.Validator;
+import com.nl.clubbook.utils.L;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,11 +25,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Calendar;
 
 /**
  * Created by Andrew on 5/26/2014.
  */
-public class RegActivity extends BaseActivity implements View.OnClickListener {
+public class RegActivity extends BaseDateActivity implements View.OnClickListener {
 
     private ImageUploader imageUploader;
     private AlertDialogManager alert = new AlertDialogManager();
@@ -65,7 +64,7 @@ public class RegActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.editBirthday:
+            case R.id.editBirthDate:
                 showDatePicker();
                 break;
             case R.id.imgAvatar:
@@ -77,8 +76,19 @@ public class RegActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        mCalendar.set(Calendar.YEAR, year);
+        mCalendar.set(Calendar.MONTH, monthOfYear);
+        mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        mBirthDate.setTime(mCalendar.getTimeInMillis());
+
+        EditText editBirthDate = (EditText) findViewById(R.id.editBirthDate);
+        editBirthDate.setText(mDisplayFormat.format(mBirthDate));
+    }
+
     private void initView() {
-        findViewById(R.id.editBirthday).setOnClickListener(this);
+        findViewById(R.id.editBirthDate).setOnClickListener(this);
         findViewById(R.id.imgAvatar).setOnClickListener(this);
         findViewById(R.id.btnRegister).setOnClickListener(this);
 
@@ -98,9 +108,10 @@ public class RegActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public void onImageSelected(final JSONObject imageObj) throws JSONException {
-                Log.d("ImageUploadActivity", "avatar is selected: " + imageObj.getString("public_id"));
+                L.d("avatar is selected: " + imageObj.getString("public_id"));
 
                 new AsyncTask<Void, Void, Drawable>() {
+
                     @Override
                     protected Drawable doInBackground(Void... params) {
                         Drawable buttonBg = null;
@@ -110,11 +121,9 @@ public class RegActivity extends BaseActivity implements View.OnClickListener {
                             InputStream is = (InputStream) new URL(url).getContent();
                             buttonBg = Drawable.createFromStream(is, null);
                         } catch (IOException e) {
-                            e.printStackTrace();
-                            return buttonBg;
+                            L.i("" + e);
                         } catch (JSONException e) {
-                            e.printStackTrace();
-                            return buttonBg;
+                            L.i("" + e);
                         }
 
                         return buttonBg;
@@ -122,8 +131,10 @@ public class RegActivity extends BaseActivity implements View.OnClickListener {
 
                     @Override
                     protected void onPostExecute(Drawable drawable) {
+                        hideProgress(true);
+
                         if(drawable == null) {
-                            //TODO error, show message
+                            showNoInternetActiity();
                             return;
                         }
 
@@ -136,32 +147,12 @@ public class RegActivity extends BaseActivity implements View.OnClickListener {
         };
     }
 
-    private void showDatePicker() {
-        DatePickerFragment date = new DatePickerFragment();
-        Bundle args = new Bundle();
-        args.putInt("year", 1990);
-        args.putInt("month", 6);
-        args.putInt("day", 15);
-        date.setArguments(args);
-        // Set Call back to capture selected date
-        date.setCallBack(new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
-                EditText editBirthday = (EditText) findViewById(R.id.editBirthday);
-                editBirthday.setText(String.format("%02d", dayOfMonth) + "." + String.format("%02d", monthOfYear + 1) + "." + String.valueOf(year));
-            }
-        });
-        date.show(getSupportFragmentManager(), "Date Picker");
-    }
-
     private void onAvatarClicked() {
         final AlertDialog dialog = imageUploader.selectPhoto();
         dialog.show();
     }
 
     private void onBtnRegisterClicked() {
-        //TODO
         if(!isDataValid()) {
             return;
         }
@@ -170,7 +161,6 @@ public class RegActivity extends BaseActivity implements View.OnClickListener {
         EditText editName = (EditText)findViewById(R.id.editName);
         EditText editEmail = (EditText)findViewById(R.id.editEmail);
         EditText editPassword= (EditText)findViewById(R.id.editPassword);
-        EditText editBirthday = (EditText)findViewById(R.id.editBirthday);
 
         Spinner spinGender = (Spinner)findViewById(R.id.spinGender);
         UiHelper.TextValuePair data = (UiHelper.TextValuePair) spinGender.getSelectedItem();
@@ -182,16 +172,15 @@ public class RegActivity extends BaseActivity implements View.OnClickListener {
         String userName = editName.getText().toString().trim();
         String email = editEmail.getText().toString().trim();
         String password = editPassword.getText().toString().trim();
-        String birthday = editBirthday.getText().toString().trim();
         String gender = data.getValue();
         String country = dataCountry.getValue();
         String city = "Amsterdam";
         String bio = "Hi, I'm using Clubbook.";
 
-        showProgress("Loading...");
+        showProgress(getString(R.string.loading));
 
         // store data
-        DataStore.regByEmail(userName, email, password, gender, birthday, country, city, bio, avatar, new DataStore.OnResultReady() {
+        DataStore.regByEmail(userName, email, password, gender, mServerFormat.format(mBirthDate), country, city, bio, avatar, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 // show error
@@ -240,8 +229,8 @@ public class RegActivity extends BaseActivity implements View.OnClickListener {
             return false;
         }
 
-        EditText editBirthday = (EditText) findViewById(R.id.editBirthday);
-        String dob = editBirthday.getText().toString().trim();
+        EditText editBirthDate = (EditText) findViewById(R.id.editBirthDate);
+        String dob = editBirthDate.getText().toString().trim();
         if (dob.trim().length() < 6) {
             alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.dob_incorrect), false);
             return false;

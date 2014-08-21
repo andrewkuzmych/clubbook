@@ -73,15 +73,16 @@ public class DataStore {
         });
     }
 
-    public static void updateUserProfile(String userId, String name, String gender, String dob, String country, String bio, final OnResultReady onResultReady) {
+    public static void updateUserProfile(String accessToken, String name, String gender, String dob, String country, String bio, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("name", name);
         params.put("gender", gender);
         params.put("dob", dob);
         params.put("country", country);
         params.put("bio", bio);
+        params.put("access_token", accessToken);
 
-        ClubbookRestClient.updateProfile(userId, params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.updateProfile(params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
@@ -117,8 +118,9 @@ public class DataStore {
         });
     }
 
-    public static void profileAddImage(String userId, JSONObject avatar, final OnResultReady onResultReady) {
+    public static void profileAddImage(String accessToken, String userId, JSONObject avatar, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
         params.put("avatar", avatar);
 
         ClubbookRestClient.profileAddImage(userId, params, new JsonHttpResponseHandler() {
@@ -157,9 +159,11 @@ public class DataStore {
         });
     }
 
-    public static void profileDeleteImage(String userId, String imageId, final OnResultReady onResultReady) {
+    public static void profileDeleteImage(Context context, String accessToken, String userId, String imageId, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
 
-        ClubbookRestClient.profileDeleteImage(userId, imageId, new JsonHttpResponseHandler() {
+        ClubbookRestClient.profileDeleteImage(context, userId, imageId, params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
@@ -193,8 +197,9 @@ public class DataStore {
         });
     }
 
-    public static void profileUpdateImage(String userId, String imageId, Boolean isAvatar, final OnResultReady onResultReady) {
+    public static void profileUpdateImage(String accessToken, String userId, String imageId, Boolean isAvatar, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
         params.put("is_avatar", isAvatar);
 
         ClubbookRestClient.profileUpdateImage(userId, imageId, params, new JsonHttpResponseHandler() {
@@ -412,10 +417,11 @@ public class DataStore {
         });
     }
 
-    public static void retrieveUser(String user_id, final OnResultReady onResultReady) {
+    public static void retrieveUser(String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
 
-        ClubbookRestClient.retrieveUser(user_id, params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.retrieveUser(params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override

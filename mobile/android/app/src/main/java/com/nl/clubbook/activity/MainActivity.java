@@ -28,7 +28,6 @@ import com.nl.clubbook.ui.drawer.NavDrawerData;
 import com.nl.clubbook.ui.drawer.NavDrawerListAdapter;
 import com.nl.clubbook.datasource.ChatMessageDto;
 import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.fragment.BaseFragment;
 import com.nl.clubbook.fragment.ChatFragment;
 import com.nl.clubbook.fragment.ClubsListFragment;
@@ -39,6 +38,8 @@ import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.NotificationHelper;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.L;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.pubnub.api.Callback;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
@@ -72,14 +73,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private List<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter mAdapter;
 
+    private ImageLoader mImageLoader;
+    private DisplayImageOptions mOptions;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_main);
 
         if (!getSession().isLoggedIn()) {
-            Intent i = new Intent(getApplicationContext(), MainLoginActivity.class);
-            startActivity(i);
+            Intent intent = new Intent(getApplicationContext(), MainLoginActivity.class);
+            startActivity(intent);
             return;
         }
 
@@ -88,6 +92,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         fragmentMap.put(2, new FriendsFragment());
         fragmentMap.put(3, new SettingsFragment());
 
+        initImageLoader();
         initActionBar();
         initNavDrawer();
 
@@ -110,6 +115,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         HashMap<String, String> user = session.getUserDetails();
         String user_id = user.get(SessionManager.KEY_ID);
         NotificationHelper.pubnub.unsubscribe("message_" + user_id);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_OK && requestCode == EditProfileActivity.REQUEST_CODE) {
+            fillNavDrawerHeader();
+        }
     }
 
     @Override
@@ -211,6 +225,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
+    private void initImageLoader() {
+        mImageLoader = ImageLoader.getInstance();
+        mOptions = new DisplayImageOptions.Builder()
+                .showStubImage(R.drawable.ic_avatar_missing)
+                .showImageForEmptyUri(R.drawable.ic_avatar_missing)
+                .showImageOnFail(R.drawable.ic_avatar_unknown)
+                .cacheInMemory()
+                .cacheOnDisc()
+                .build();
+    }
+
     private void initNavDrawer() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.listDrawer);
@@ -239,9 +264,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private View initNavDrawerHeader() {
+        mNavDrawerHeaderView = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_nav_drawer_header, null);
+        mNavDrawerHeaderView.findViewById(R.id.holderNavDrawerHeader).setOnClickListener(MainActivity.this);
+
+        fillNavDrawerHeader();
+
+        return mNavDrawerHeaderView;
+    }
+
+    private void fillNavDrawerHeader() {
         HashMap<String, String> user = getSession().getUserDetails();
 
-        mNavDrawerHeaderView = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_nav_drawer_header, null);
         ImageView imgAvatar = (ImageView) mNavDrawerHeaderView.findViewById(R.id.imgAvatar);
         TextView txtProfileName = (TextView) mNavDrawerHeaderView.findViewById(R.id.txtProfileName);
         TextView txtProfileInfo = (TextView) mNavDrawerHeaderView.findViewById(R.id.txtProfileInfo);
@@ -249,7 +282,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         String userAvatarUrl = user.get(SessionManager.KEY_AVATAR);
         if (userAvatarUrl != null) {
             userAvatarUrl = ImageHelper.getUserAvatar(userAvatarUrl);
-            imageLoader.displayImage(userAvatarUrl, imgAvatar, options);
+            mImageLoader.displayImage(userAvatarUrl, imgAvatar, mOptions);
         }
 
         String profileName = user.get(SessionManager.KEY_NAME);
@@ -261,8 +294,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         txtProfileInfo.append(profileGender != null ? profileGender : "");
 
         mNavDrawerHeaderView.findViewById(R.id.holderNavDrawerHeader).setOnClickListener(MainActivity.this);
-
-        return mNavDrawerHeaderView;
     }
 
     public BaseFragment getCurrentFragment() {
@@ -366,24 +397,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         actionbarChatCount.setText(String.valueOf(chatCountOfNewMessages));
     }
 
-    /**
-     * Update user information on UI
-     *
-     * @param myInfo
-     */
-    private void updateMyInformation(UserDto myInfo) {//TODO
-        // update UI profile info
-//        NavDrawerItem navDrawerItem = navDrawerItems.get(NAV_MENU_PROFILE_POSITION);
-//        navDrawerItem.setTitle(myInfo.getName());
-//        navDrawerItem.setAge(myInfo.getAge());
-//        navDrawerItem.setGender(myInfo.getGender());
-//        navDrawerItem.setProfileAvatar(myInfo.getAvatar());
-//        adapter = new NavDrawerListAdapter(this, R.layout.item_list_drawer, navDrawerItems);
-//        mDrawerList.setAdapter(adapter);
-//        // update session user
-//        getSession().updateLoginSession(myInfo);
-    }
-
     private void onChatBtnClicked() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
@@ -393,10 +406,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void onNavDrawerHeaderClicked() {
-        //TODO
+        Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);//TODO
+        startActivityForResult(intent, EditProfileActivity.REQUEST_CODE);
     }
 
-    Callback callback = new Callback() {
+    private Callback callback = new Callback() {
         @Override
         public void connectCallback(String channel, Object message) {
             System.out.println("SUBSCRIBE : CONNECT on channel:" + channel

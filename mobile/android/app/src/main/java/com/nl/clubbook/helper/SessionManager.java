@@ -1,9 +1,5 @@
 package com.nl.clubbook.helper;
 
-/**
- * Created by Andrew on 5/19/2014.
- */
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -17,33 +13,33 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+/**
+ * Created by Andrew on 5/19/2014.
+ */
 public class SessionManager {
-    // Shared Preferences
-    SharedPreferences pref;
+    private SharedPreferences pref;
 
-    // Editor for Shared preferences
-    Editor editor;
+//    // Editor for Shared preferences
+//    Editor editor;
 
-    // Context
-    Context _context;
+    private Context _context;
 
-    // Shared pref mode
-    int PRIVATE_MODE = 0;
-
-    // Sharedpref file name
+    // SharedPref file name
     private static final String PREF_NAME = "AndroidHivePref";
 
     // All Shared Preferences Keys
     private static final String IS_LOGIN = "IsLoggedIn";
 
-    public static final int DEFOULT_DISTANCE = 4;
+    public static final int DEFAULT_DISTANCE = 4;
 
     // User name (make variable public to access from outside)
     public static final String KEY_ID = "id";
     public static final String KEY_NAME = "name";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_GENDER = "gender";
+    public static final String KEY_COUNTRY = "country";
     public static final String KEY_BIRTHDAY = "birthday";
+    public static final String KEY_ABOUT_ME = "about_me";
     public static final String KEY_AGE = "age";
     public static final String KEY_AVATAR = "avatar";
     public static final String KEY_ACCESS_TOCKEN = "access_token";
@@ -55,24 +51,25 @@ public class SessionManager {
     public static final String KEY_CHECKIN_CLUB_LON = "checkin_club_lat";
     public static final String KEY_CURRENT_CONVERSATION = "current_conversation";
 
-    // Constructor
     public SessionManager(Context context) {
         this._context = context;
-        pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-        editor = pref.edit();
+        pref = _context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
     public void setStringArrayPref(String key, ArrayList<String> values) {
-        //SharedPreferences.Editor editor = prefs.edit();
-        JSONArray a = new JSONArray();
-        for (int i = 0; i < values.size(); i++) {
-            a.put(values.get(i));
+        Editor editor = pref.edit();
+
+        JSONArray jsonArr = new JSONArray();
+        for (String value : values) {
+            jsonArr.put(value);
         }
+
         if (!values.isEmpty()) {
-            editor.putString(key, a.toString());
+            editor.putString(key, jsonArr.toString());
         } else {
             editor.putString(key, null);
         }
+
         editor.commit();
     }
 
@@ -94,18 +91,19 @@ public class SessionManager {
     }
 
     public void setPermissions(String[] permissions) {
-        //Set<String> permissionsSet = new HashSet<String>(Arrays.asList(permissions));
+        Editor editor = pref.edit();
+
         ArrayList<String> permissionList = new ArrayList<String>(Arrays.asList(permissions));
         setStringArrayPref(KEY_PERMISSIONS, permissionList);
-        //editor.putStringSet(KEY_PERMISSIONS, permissionsSet);
-        // commit changes
+
         editor.commit();
     }
 
     public boolean hasPermission(String permission) {
         ArrayList<String> permissionsList = getStringArrayPref(KEY_PERMISSIONS);
-        if (permissionsList == null)
+        if (permissionsList == null) {
             return false;
+        }
         return permissionsList.contains(permission);
     }
 
@@ -118,23 +116,32 @@ public class SessionManager {
         updateLoginSession(user);
     }
 
+    public void updateValue(String key, String value) {
+        Editor editor = pref.edit();
+        editor.putString(key, value);
+        editor.commit();
+    }
+
     public void updateLoginSession(UserDto user) {
-        // Storing login value as TRUE
+        Editor editor = pref.edit();
+
         editor.putBoolean(IS_LOGIN, true);
         editor.putString(KEY_ID, user.getId());
         editor.putString(KEY_NAME, user.getName());
         editor.putString(KEY_EMAIL, user.getEmail());
         editor.putString(KEY_GENDER, user.getGender());
+        editor.putString(KEY_COUNTRY, user.getCountry());
         editor.putString(KEY_BIRTHDAY, user.getDob());
+        editor.putString(KEY_ABOUT_ME, user.getBio());
         editor.putString(KEY_AGE, user.getAge());
         editor.putString(KEY_AVATAR, user.getAvatar());
         editor.putString(KEY_ACCESS_TOCKEN, user.getAccessToken());
 
-        // commit changes
         editor.commit();
     }
 
     public void setConversationListner(String currentConversation) {
+        Editor editor = pref.edit();
         editor.putString(KEY_CURRENT_CONVERSATION, currentConversation);
         editor.commit();
     }
@@ -144,20 +151,21 @@ public class SessionManager {
     }
 
     public void putFbData(String access_token, long access_expires) {
-        editor.putString(KEY_FBACCESSEXPITES, String.valueOf(access_expires));
+        Editor editor = pref.edit();
 
+        editor.putString(KEY_FBACCESSEXPITES, String.valueOf(access_expires));
         editor.putString(KEY_FBACCESSTOKEN, access_token);
 
-        // commit changes
         editor.commit();
     }
 
     public void putClubInfo(String club_id, String lat, String lon) {
+        Editor editor = pref.edit();
+
         editor.putString(KEY_CHECKIN_CLUB_ID, club_id);
         editor.putString(KEY_CHECKIN_CLUB_LAT, lat);
         editor.putString(KEY_CHECKIN_CLUB_LON, lon);
 
-        // commit changes
         editor.commit();
     }
 
@@ -194,7 +202,8 @@ public class SessionManager {
     public void logoutUser() {
         // unsubscribe from parse
     	PushService.unsubscribe(_context, "user_" + getUserDetails().get(KEY_ID));
-        // Clearing all data from Shared Preferences
+
+        Editor editor = pref.edit();
         editor.clear();
         editor.commit();
     }

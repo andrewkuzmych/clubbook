@@ -14,7 +14,7 @@
                 android:id="@+id/chatUserAvatar"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/test_avatar"
+                android:src="@drawable/ic_avatar_missing"
                 />
         <TextView
                 android:id="@+id/chatUserName"

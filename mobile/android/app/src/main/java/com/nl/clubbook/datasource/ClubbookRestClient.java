@@ -1,5 +1,7 @@
 package com.nl.clubbook.datasource;
 
+import android.content.Context;
+
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -29,28 +31,28 @@ public class ClubbookRestClient {
         client.post(getBcAbsoluteUrl("signup"), params, responseHandler);
     }
 
-    public static void updateProfile(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.put(getBcAbsoluteUrl("obj/user/" + user_id), params, responseHandler);
+    public static void updateProfile(RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.put(getBcAbsoluteUrl("obj/user/me"), params, responseHandler);
     }
 
-    public static void profileAddImage(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.post(getBcAbsoluteUrl("obj/user/" + user_id + "/image"), params, responseHandler);
+    public static void profileAddImage(String userId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.post(getBcAbsoluteUrl("obj/user/" + userId + "/image"), params, responseHandler);
     }
 
-    public static void profileUpdateImage(String user_id, String image_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.put(getBcAbsoluteUrl("obj/user/" + user_id + "/image/" + image_id), params, responseHandler);
+    public static void profileUpdateImage(String userId, String imageId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.put(getBcAbsoluteUrl("obj/user/" + userId + "/image/" + imageId), params, responseHandler);
     }
 
-    public static void profileDeleteImage(String user_id, String image_id, AsyncHttpResponseHandler responseHandler) {
-        client.delete(getBcAbsoluteUrl("obj/user/" + user_id + "/image/" + image_id), responseHandler);
+    public static void profileDeleteImage(Context context, String userId, String imageId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.delete(context, getBcAbsoluteUrl("obj/user/" + userId + "/image/" + imageId), null, params, responseHandler);
     }
 
     public static void loginByEmail(RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.post(getBcAbsoluteUrl("signinmail"), params, responseHandler);
     }
 
-    public static void retrieveUser(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("user/by_id/" + user_id), params, responseHandler);
+    public static void retrieveUser(RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/user/me"), params, responseHandler);
     }
 
     public static void retrieveUserFriend(String friendId, RequestParams params, AsyncHttpResponseHandler responseHandler) {

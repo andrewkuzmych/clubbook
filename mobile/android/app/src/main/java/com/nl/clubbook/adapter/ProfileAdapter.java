@@ -41,9 +41,9 @@ public class ProfileAdapter extends BaseAdapter {
 
         imageLoader = ImageLoader.getInstance();
         options = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.default_list_image)
-                .showImageForEmptyUri(R.drawable.default_list_image)
-                .showImageOnFail(R.drawable.default_list_image)
+                .showStubImage(R.drawable.ic_avatar_missing)
+                .showImageForEmptyUri(R.drawable.ic_avatar_missing)
+                .showImageOnFail(R.drawable.ic_avatar_unknown)
                 .cacheInMemory()
                 .cacheOnDisc()
                 .build();

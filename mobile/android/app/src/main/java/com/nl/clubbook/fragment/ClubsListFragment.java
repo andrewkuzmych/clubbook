@@ -33,7 +33,7 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
 
     private ClubsAdapter mClubsAdapter;
 
-    private int mCurrentDistance = SessionManager.DEFOULT_DISTANCE;
+    private int mCurrentDistance = SessionManager.DEFAULT_DISTANCE;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

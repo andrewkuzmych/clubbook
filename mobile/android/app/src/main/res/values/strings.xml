@@ -87,5 +87,17 @@
     <string name="club_page">Club Page</string>
     <string name="friend_list">Friend List</string>
     <string name="user_profile">User Profile</string>
+    <string name="set_as_default">Set as default</string>
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
+    <string name="edit_user_profile">Edit User Profile</string>
+    <string name="loading">Loading&#8230;</string>
+    <string name="upload_new_image">Uploading new image&#8230;</string>
+    <string name="deleting_image">Deleting image&#8230;</string>
+    <string name="take_from_camera">Take from camera</string>
+    <string name="select_from_gallery">Select from gallery</string>
+    <string name="select_image">Select Image</string>
+    <string name="can_not_find_image_crop_app">Can not find image crop app</string>
+    <string name="complete_action_using">"Complete action using"</string>
 
 </resources>

@@ -7,14 +7,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.fragment.BaseFragment;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.AlertDialogManager;
 import com.nl.clubbook.helper.SessionManager;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.HashMap;
 
@@ -26,28 +23,18 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 public class BaseActivity extends ActionBarActivity {
-    protected ImageLoader imageLoader;
-    protected DisplayImageOptions options;
     protected AlertDialogManager alert = new AlertDialogManager();
     protected BaseFragment currentFragment;
 
     private SessionManager session;
+
+    private boolean isProgressShow = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setSession(new SessionManager(getApplicationContext()));
-
-        // init image loader
-        imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.default_list_image)
-                .showImageForEmptyUri(R.drawable.default_list_image)
-                .showImageOnFail(R.drawable.default_list_image)
-                .cacheInMemory()
-                .cacheOnDisc()
-                .build();
 
         // set context to use from DataStore for all app
         DataStore.setContext(this);
@@ -65,6 +52,10 @@ public class BaseActivity extends ActionBarActivity {
         //EasyTracker.getInstance(this).activityStop(this);  // Add this method.
     }
 
+    public boolean isProgressShow() {
+        return isProgressShow;
+    }
+
     public SessionManager getSession() {
         return session;
     }
@@ -78,7 +69,9 @@ public class BaseActivity extends ActionBarActivity {
         return user.get(SessionManager.KEY_ID);
     }
 
-    public void showProgress(final String message) {
+    public void showProgress(String message) {
+        isProgressShow = true;
+
         Fragment progressDialog = ProgressDialog.newInstance(null, message);
         FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
         fTransaction.add(progressDialog, ProgressDialog.TAG);
@@ -86,6 +79,8 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     public void hideProgress(boolean showContent) {
+        isProgressShow = false;
+
         // hide progress
         DialogFragment progressDialog = (DialogFragment) getSupportFragmentManager().findFragmentByTag(ProgressDialog.TAG);
         if(progressDialog != null) {
@@ -94,11 +89,11 @@ public class BaseActivity extends ActionBarActivity {
 
         // there is error. Show error view.
         if (!showContent) {
-            showNoInternet();
+            showNoInternetActiity();
         }
     }
 
-    private void showNoInternet() {
+    protected void showNoInternetActiity() {
         Intent i = new Intent(getApplicationContext(), NoInternetActivity.class);
         startActivity(i);
         finish();
@@ -120,5 +115,4 @@ public class BaseActivity extends ActionBarActivity {
 
     protected void loadData() {
     }
-
 }
