@@ -59,6 +59,7 @@
     <string name="checked_in">Checked-in:</string>
     <string name="not_checked_in">Not Checked-in</string>
     <string name="friends">Friends</string>
+    <string name="share">Share</string>
     <string name="capacity">Capacity</string>
     <string name="dress_code">Dress Code</string>
     <string name="age_restrictions">Age Restrictions</string>
@@ -99,5 +100,9 @@
     <string name="select_image">Select Image</string>
     <string name="can_not_find_image_crop_app">Can not find image crop app</string>
     <string name="complete_action_using">"Complete action using"</string>
+    <string name="share_us_on_facebook">Share Us on Facebook</string>
+    <string name="tweet_about_us">Tweet About Us</string>
+    <string name="like_us_on_facebook">Like Us on Facebook</string>
+    <string name="follow_our_tweets">Follow Our Tweets</string>
 
 </resources>

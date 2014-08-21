@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.NavDrawerItem;
+import com.nl.clubbook.fragment.ShareFragment;
 import com.nl.clubbook.ui.drawer.NavDrawerData;
 import com.nl.clubbook.ui.drawer.NavDrawerListAdapter;
 import com.nl.clubbook.datasource.ChatMessageDto;
@@ -87,10 +88,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             return;
         }
 
-        fragmentMap.put(0, new ClubsListFragment());
-        fragmentMap.put(1, new MessagesFragment());
-        fragmentMap.put(2, new FriendsFragment());
-        fragmentMap.put(3, new SettingsFragment());
+        fragmentMap.put(NavDrawerData.CLUB_LIST_POSITION, new ClubsListFragment());
+        fragmentMap.put(NavDrawerData.MESSAGES_POSITION, new MessagesFragment());
+        fragmentMap.put(NavDrawerData.FRIENDS_POSITION, new FriendsFragment());
+        fragmentMap.put(NavDrawerData.SHARE_POSITION, new ShareFragment());
+        fragmentMap.put(NavDrawerData.SETTINGS_POSITION, new SettingsFragment());
 
         initImageLoader();
         initActionBar();
