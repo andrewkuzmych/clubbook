@@ -23,6 +23,8 @@
 
 @interface ChatViewController : BaseMessagesViewController<PNDelegate>
 
+@property (assign, nonatomic) BOOL isFromUser;
+
 @property (strong, nonatomic) NSString *userTo;
 @property (weak, nonatomic) id<JSQDemoViewControllerDelegate> delegateModal;
 

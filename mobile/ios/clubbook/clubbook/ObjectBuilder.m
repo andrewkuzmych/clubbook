@@ -225,6 +225,7 @@
         
         User *user = [self getUserBase:parsedObject userJson:userJson];
         [users addObject:user];
+        /*[users addObject:user];
         [users addObject:user];
         [users addObject:user];
         [users addObject:user];
@@ -232,21 +233,7 @@
         [users addObject:user];
         [users addObject:user];
         [users addObject:user];
-        [users addObject:user];
-        [users addObject:user];
-        [users addObject:user];
-        [users addObject:user];
-        [users addObject:user];
-        [users addObject:user];
-        [users addObject:user];
-        [users addObject:user];
-        [users addObject:user];
-        [users addObject:user];
-        [users addObject:user];
-        [users addObject:user];
-        [users addObject:user];
-        [users addObject:user];
-        [users addObject:user];
+        [users addObject:user];*/
 
     }
     

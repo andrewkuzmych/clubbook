@@ -8,6 +8,7 @@
 
 #import "SessionHelper.h"
 #import <Parse/Parse.h>
+#import "LocationHelper.h"
 
 @implementation SessionHelper
 
@@ -48,6 +49,8 @@
     [defaults setObject:@"" forKey:@"userAvatar"];
     [defaults setObject:@"" forKey:@"userAge"];
     [defaults setObject:@"" forKey:@"accessToken"];
+    
+    [LocationHelper stopTimer];
     
     [defaults synchronize];
 }

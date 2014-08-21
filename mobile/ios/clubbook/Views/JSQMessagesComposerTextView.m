@@ -61,7 +61,7 @@
     self.scrollsToTop = NO;
     self.userInteractionEnabled = YES;
     
-    self.font = [UIFont fontWithName:@"TitilliumWeb-REGULAR" size:16.0];//[UIFont systemFontOfSize:16.0f];
+    self.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0];//[UIFont systemFontOfSize:16.0f];
     self.textColor = [UIColor blackColor];
     self.textAlignment = NSTextAlignmentLeft;
     
@@ -218,7 +218,7 @@
    // paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
    // paragraphStyle.alignment = self.textAlignment;
     
-    return @{ NSFontAttributeName : [UIFont fontWithName:@"TitilliumWeb-REGULAR" size:15.0],
+    return @{ NSFontAttributeName : [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:15.0],
               NSForegroundColorAttributeName : self.placeHolderTextColor,
               NSParagraphStyleAttributeName : paragraphStyle };
 }

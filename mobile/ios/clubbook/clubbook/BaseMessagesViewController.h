@@ -8,12 +8,14 @@
 
 #import "JSQMessagesViewController.h"
 #import "ClubbookManager.h"
+#import "GAI.h"
+#import "GAIFields.h"
+#import "GAIDictionaryBuilder.h"
 
 @interface BaseMessagesViewController : JSQMessagesViewController
 
 @property (strong, nonatomic) ClubbookManager *_manager;
 
-- (void)initUI;
 - (void)showProgress: (BOOL) clearContext title:(NSString*) title;
 - (void)hideProgress;
 

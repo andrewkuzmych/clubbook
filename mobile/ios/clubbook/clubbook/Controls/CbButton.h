@@ -22,7 +22,7 @@
 
 - (void) setMainState:(NSString*) text;
 - (void) setSecondState:(NSString*) text;
-- (void) setBackgroundColor:(UIColor *) _backgroundColor forState:(UIControlState) _state;
+//- (void) setBackgroundColor:(UIColor *) _backgroundColor forState:(UIControlState) _state;
 - (UIColor*) backgroundColorForState:(UIControlState) _state;
 
 @end

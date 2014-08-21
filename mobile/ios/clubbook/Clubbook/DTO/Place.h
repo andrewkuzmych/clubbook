@@ -30,6 +30,6 @@
 @property (assign, nonatomic) int capacity;
 @property (strong, nonatomic) NSString *ageRestriction;
 @property (strong, nonatomic) NSString *dressCode;
-@property (assign, nonatomic) double disatance;
+@property (assign, nonatomic) double distance;
 
 @end

@@ -39,6 +39,8 @@
 {
     [super viewDidLoad];
     
+    self.title = NSLocalizedString(@"userProfile", nil);
+    
     self.connectButton.layer.borderColor = [UIColor whiteColor].CGColor;
     self.nameLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:16.0];
     self.connectButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:14.0];
@@ -62,9 +64,15 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.translucent = NO;
     
+    //Google Analytics
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName
+           value:@"User Screen"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+    self.navigationController.navigationBar.translucent = NO;
 }
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -105,7 +113,7 @@
             //c_fit,h_450,w_450/v140483
             NSString *avatarUrl = [cloudinary url: [[user.photos objectAtIndex:i] valueForKey:@"public_id"] options:@{@"transformation": transformation}];
 
-            [imageView setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"Default.png"]];
+            [imageView setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
             [imageView setBackgroundColor:[UIColor blackColor]];
             [self.imageScrollView addSubview:imageView];
             
@@ -250,7 +258,7 @@
 - (void)didRemoveFriend:(User *)user
 {
     [self hideProgress];
-    [self.addFriendButton setButtonState:NSLocalizedString(@"receiveRequest", nil)];
+    [self.addFriendButton setButtonState:NSLocalizedString(@"noneFriend", nil)];
 }
 
 
@@ -273,12 +281,17 @@
 {
     if([[segue identifier] isEqualToString:@"onChat"]){
         ChatViewController *chatController =  [segue destinationViewController];
+        chatController.isFromUser = YES;
         chatController.userTo = self.userId;
     }
 }
 
 - (IBAction)chatAction:(id)sender {
-    [self performSegueWithIdentifier: @"onChat" sender: sender];
+    if (self.isFromChat) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        [self performSegueWithIdentifier: @"onChat" sender: sender];
+    }
 }
 
 - (IBAction)addFriendAction:(AddFriendButton *)sender {

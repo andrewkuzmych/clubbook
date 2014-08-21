@@ -117,6 +117,17 @@
     [self.nameText becomeFirstResponder];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    //Google Analytics
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName
+           value:@"Registration Screen"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+}
+
 #pragma mark - Picker delegate stuff
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView

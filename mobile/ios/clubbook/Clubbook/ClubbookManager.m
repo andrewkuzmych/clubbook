@@ -332,23 +332,7 @@
 
 - (void)readChatJSON:(NSData *)objectNotation
 {
-    NSError *localError = nil;
-    NSDictionary *parsedObject = [NSJSONSerialization JSONObjectWithData:objectNotation options:0 error:&localError];
     
-    if (localError != nil)
-    {
-//*error = localError;
-        //return nil;
-    }
-
-    //NSError *error = nil;
-    //User *user = [ObjectBuilder checkinFromJSON:objectNotation error:&error];
-    
-    //if (error != nil) {
-    //    [self.delegate  failedWithError:error];
-        
-    //} else {
-    //[self.delegate didReadChat:@"ok"];
 }
 
 - (void)updateCheckinJSON:(NSData *)objectNotation
