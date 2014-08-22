@@ -22,6 +22,7 @@ import java.util.List;
  */
 public class MessagesAdapter extends BaseAdapter {
 
+    private Context mContext;
     private ImageLoader imageLoader;
     private DisplayImageOptions options;
     private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
@@ -29,6 +30,7 @@ public class MessagesAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
 
     public MessagesAdapter(Context context, List<ChatDto> chats) {
+        mContext = context;
         mInflater = LayoutInflater.from(context);
         mChats = chats;
 
@@ -103,7 +105,7 @@ public class MessagesAdapter extends BaseAdapter {
 
         List<ChatMessageDto> conversation = messageItem.getConversation();
         if(conversation != null && !conversation.isEmpty()) {
-            holder.txtLastMessage.setText(conversation.get(0).getFormatMessage());
+            holder.txtLastMessage.setText(conversation.get(0).getFormatMessage(mContext));
         }
 
         int unreadMessageCount = messageItem.getUnreadMessages();

@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.NavDrawerItem;
+import com.nl.clubbook.datasource.JSONConverter;
 import com.nl.clubbook.fragment.ShareFragment;
 import com.nl.clubbook.ui.drawer.NavDrawerData;
 import com.nl.clubbook.ui.drawer.NavDrawerListAdapter;
@@ -311,7 +312,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 String userFrom = data.getString("user_from");
                 SessionManager session = new SessionManager(this);
                 if (session.getConversationListner() != null && session.getConversationListner().equalsIgnoreCase(userFrom + "_" + userTo)) {
-                    chatFragment.receiveComment(new ChatMessageDto(data.getJSONObject("last_message")));
+                    ChatMessageDto lastMessage = JSONConverter.newChatMessage(data.getJSONObject("last_message"));
+                    chatFragment.receiveComment(lastMessage);
                 } else {
                     updateMessagesCount();
                 }

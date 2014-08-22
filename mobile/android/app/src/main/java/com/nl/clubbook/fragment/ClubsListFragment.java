@@ -38,7 +38,7 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_clubs_list, container, false);
+        return inflater.inflate(R.layout.fr_clubs_list, container, false);
     }
 
     @Override

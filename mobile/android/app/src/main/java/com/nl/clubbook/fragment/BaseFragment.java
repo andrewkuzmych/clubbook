@@ -10,7 +10,6 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.activity.NoInternetActivity;
 import com.nl.clubbook.helper.SessionManager;
-import com.nl.clubbook.utils.L;
 
 /**
  * Created by Andrew on 6/8/2014.
@@ -31,7 +30,6 @@ public class BaseFragment extends Fragment {
         FragmentTransaction fTransaction = activity.getSupportFragmentManager().beginTransaction();
         fTransaction.add(R.id.frame_container, fragment);
         fTransaction.hide(this);
-        L.w("add to back stack - " + fragmentClass.getSimpleName());
         fTransaction.addToBackStack(fragmentClass.getSimpleName());
         fTransaction.commitAllowingStateLoss();
 

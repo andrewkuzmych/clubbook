@@ -25,7 +25,7 @@ public class FriendsFragment extends BaseRefreshFragment implements AdapterView.
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_friends, container, false);
+        return inflater.inflate(R.layout.fr_friends, container, false);
     }
 
     @Override

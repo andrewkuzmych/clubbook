@@ -1,5 +1,9 @@
 package com.nl.clubbook.datasource;
 
+import android.content.Context;
+
+import com.nl.clubbook.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -7,57 +11,39 @@ import org.json.JSONObject;
  * Created by Andrew on 6/6/2014.
  */
 public class ChatMessageDto {
+    public static final String TYPE_MESSAGE = "message";
+    public static final String TYPE_DRINK = "drink";
+    public static final String TYPE_SMILE = "smile";
+
     private String userFrom;
     private String userFromName;
     private String userFromAvatar;
     private String msg;
     private String type;
-    private Boolean isMyMessage;
+    private String time;
+    private boolean isMyMessage;
+    private boolean isRead;
 
     public ChatMessageDto() {
     }
 
-    public ChatMessageDto(String msg) {
-        setMsg(msg);
-        setType("message");
-        setIsMyMessage(true);
-    }
+    public String getFormatMessage(Context context){
+        String result;
 
-    public ChatMessageDto(JSONObject jsonObject) throws JSONException {
-        setType(jsonObject.getString("type"));
-        if(getType().equalsIgnoreCase("message") && jsonObject.has("msg")) {
-            setMsg(jsonObject.getString("msg"));
-        }
-        if(jsonObject.has("is_my_message"))
-            setIsMyMessage(jsonObject.getBoolean("is_my_message"));
-        else
-            setIsMyMessage(false);
+        if(TYPE_MESSAGE.equalsIgnoreCase(type)){
+            result = msg;
 
-        setUserFrom(jsonObject.getString("from_who"));
-        setUserFromName(jsonObject.getString("from_who_name"));
-        setUserFromAvatar(jsonObject.getString("from_who_avatar"));
-    }
+        } else if(TYPE_SMILE.equalsIgnoreCase(type)) {
+            result = userFromName + " " + context.getString(R.string.likes_you);
 
-    public String getFormatMessage(){
-        if(getType().equalsIgnoreCase("message")){
-            return getMsg();
+        } else if(TYPE_DRINK.equalsIgnoreCase(type)) {
+            result = userFromName + " " + context.getString(R.string.invite_you_for_a_drink);
 
-        } else if(getType().equalsIgnoreCase("smile")) {
-            if(getIsMyMessage()){
-                return "You sent a smile";
-            } else {
-                return getUserFromName() + " sent you smile";
-            }
-
-        } else if(getType().equalsIgnoreCase("drink")) {
-            if(getIsMyMessage()){
-                return "You sent invite to a drink";
-            } else {
-                return getUserFromName() + " sent invite to a drink";
-            }
         } else {
-            return "";
+            result = "";
         }
+
+        return result;
     }
 
     public String getUserFrom() {
@@ -84,11 +70,11 @@ public class ChatMessageDto {
         this.type = type;
     }
 
-    public Boolean getIsMyMessage() {
+    public boolean getIsMyMessage() {
         return isMyMessage;
     }
 
-    public void setIsMyMessage(Boolean isMyMessage) {
+    public void setIsMyMessage(boolean isMyMessage) {
         this.isMyMessage = isMyMessage;
     }
 
@@ -106,5 +92,21 @@ public class ChatMessageDto {
 
     public void setUserFromName(String userFromName) {
         this.userFromName = userFromName;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean isRead) {
+        this.isRead = isRead;
     }
 }

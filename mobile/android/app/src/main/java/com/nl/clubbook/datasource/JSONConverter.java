@@ -26,13 +26,13 @@ public class JSONConverter {
         List<UserDto> friends = new ArrayList<UserDto>();
         for (int i = 0; i < jsonArrUsers.length(); i++) {
             JSONObject jsonFriend = jsonArrUsers.optJSONObject(i);
-            friends.add(newFriend(jsonFriend, true));
+            friends.add(newUser(jsonFriend, true));
         }
 
         return friends;
     }
 
-    public static UserDto newFriend(JSONObject jsonUser, boolean parseCheckIn) {
+    public static UserDto newUser(JSONObject jsonUser, boolean parseCheckIn) {
         if(jsonUser == null) {
             return null;
         }
@@ -300,5 +300,61 @@ public class JSONConverter {
         jsonWorkingHours.put("id", workingHours.getId());
 
         return jsonWorkingHours;
+    }
+
+    public static ChatDto newChatDto(JSONObject jsonChatDto) {
+        ChatDto result = new ChatDto();
+
+        result.setChatId(jsonChatDto.optString("chat_id"));
+
+        JSONArray jsonConversation = jsonChatDto.optJSONArray("conversation");
+        List<ChatMessageDto> conversations = newChatMessagesList(jsonConversation);
+        result.setConversation(conversations);
+
+        JSONObject jsonCurrentUser = jsonChatDto.optJSONObject("current_user");
+        UserDto currentUser = newUser(jsonCurrentUser, false);
+        result.setCurrentUser(currentUser);
+
+        JSONObject jsonReceiver = jsonChatDto.optJSONObject("receiver");
+        UserDto receiverUser = newUser(jsonReceiver, false);
+        result.setReceiver(receiverUser);
+
+        result.setUnreadMessages(jsonChatDto.optInt("unread_messages"));
+
+        return result;
+    }
+
+    public static List<ChatMessageDto> newChatMessagesList(JSONArray jsonArray) {
+        if(jsonArray == null) {
+            return null;
+        }
+
+        List<ChatMessageDto> result = new ArrayList<ChatMessageDto>();
+        for(int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonChatMessage = jsonArray.optJSONObject(i);
+            ChatMessageDto chatMessage = newChatMessage(jsonChatMessage);
+            result.add(chatMessage);
+        }
+
+        return result;
+    }
+
+    public static ChatMessageDto newChatMessage(JSONObject jsonChatMessage) {
+        ChatMessageDto result = new ChatMessageDto();
+
+        result.setMsg(jsonChatMessage.optString("msg"));
+        result.setTime(jsonChatMessage.optString("time"));
+        result.setType(jsonChatMessage.optString("type"));
+        result.setUserFrom(jsonChatMessage.optString("from_who"));
+        result.setRead(jsonChatMessage.optBoolean("read"));
+        result.setIsMyMessage(jsonChatMessage.optBoolean("is_my_message"));
+        result.setUserFromName(jsonChatMessage.optString("from_who_name"));
+
+        JSONObject jsonAvatar = jsonChatMessage.optJSONObject("from_who_avatar");
+        if(jsonAvatar != null) {
+            result.setUserFromAvatar(jsonAvatar.optString("url"));
+        }
+
+        return result;
     }
 }

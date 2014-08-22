@@ -19,7 +19,6 @@ import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.ImageUploader;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.helper.UiHelper;
-import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.nl.clubbook.utils.UIUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;

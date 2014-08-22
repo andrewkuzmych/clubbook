@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/bg_screen_grey_light">
+
+    <ListView
+        android:id="@+id/listChat"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/holderNewMessage"
+        android:transcriptMode="alwaysScroll"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:listSelector="@android:color/transparent"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/holderNewMessage"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="@color/main_background_color"
+        android:visibility="gone" >
+
+        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+            android:id="@+id/txtLike"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="@string/like"
+            android:textColor="@color/white_semitransparent"
+            android:textSize="@dimen/text_size_medium"
+            android:gravity="center"
+            android:paddingLeft="16dp"
+            android:paddingRight="4dp"/>
+
+        <ImageView
+            android:id="@+id/imgSendDrink"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_drink"
+            android:layout_marginRight="4dp"
+            android:layout_marginLeft="4dp"/>
+
+        <com.nl.clubbook.ui.view.TitilliumRegularEditText
+            style="@style/EditTextAppThemeWhite"
+            android:id="@+id/messageInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="textShortMessage"
+            android:singleLine="true"
+            android:minHeight="48dp"
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:gravity="center_vertical"/>
+
+        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+            android:id="@+id/txtSend"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="@string/send"
+            android:textColor="@color/white_semitransparent"
+            android:textSize="@dimen/text_size_medium"
+            android:gravity="center"
+            android:paddingRight="16dp"
+            android:paddingLeft="4dp"/>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>
