@@ -2,7 +2,9 @@ package com.nl.clubbook.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import com.nl.clubbook.datasource.ClubWorkingHoursDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.JSONConverter;
 import com.nl.clubbook.datasource.UserDto;
+import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.*;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -31,9 +34,13 @@ import java.util.List;
 /**
  * Created by Andrew on 6/8/2014.
  */
-public class ClubFragment extends BaseInnerFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class ClubFragment extends BaseInnerFragment implements View.OnClickListener, AdapterView.OnItemClickListener,
+        ProgressDialog.OnDialogCanceledListener {
 
     private static final String ARG_CLUB_ID = "ARG_CLUB_ID";
+
+    public static final int LOAD_MODE_INIT = 1111;
+    public static final int LOAD_MODE_CHECK_IN = 9999;
 
     private ClubDto mClub;
 
@@ -41,6 +48,8 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     private DisplayImageOptions mOptions;
     private ImageLoadingListener mAnimateFirstListener = new SimpleImageLoadingListener();
     private String mClubId;
+
+    private boolean mIsLoading = false;
 
     public static Fragment newInstance(Fragment targetFragment, String clubId) {
         Fragment fragment = new ClubFragment();
@@ -54,8 +63,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fr_club, container, false);
     }
 
@@ -67,13 +75,13 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         handleArgs();
         initImageLoader();
         initView();
-        loadData();
+        loadData(LOAD_MODE_INIT);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.txtCheckedIn:
+            case R.id.txtCheckIn:
                 onCheckInBtnClicked(view);
                 break;
             case R.id.holderClubInfo:
@@ -87,6 +95,19 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         View userId = view.findViewById(R.id.userId);
         Fragment fragment = ProfileFragment.newInstance(ClubFragment.this, (String)userId.getTag(), mClub.getUsers());
         openFragment(fragment, ProfileFragment.class);
+    }
+
+    @Override
+    public void onDialogCanceled() {
+        ActionBarActivity activity = (ActionBarActivity) getActivity();
+        if(activity != null && !activity.isFinishing()) {
+            activity.getSupportFragmentManager().beginTransaction().remove(ClubFragment.this).commitAllowingStateLoss();
+
+            Fragment targetFragment = getTargetFragment();
+            if(targetFragment != null) {
+                activity.getSupportFragmentManager().beginTransaction().show(targetFragment).commitAllowingStateLoss();
+            }
+        }
     }
 
     private void handleArgs() {
@@ -122,7 +143,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         gridUsers.setOnItemClickListener(ClubFragment.this);
     }
 
-    protected void loadData() {
+    protected void loadData(final int mode) {
         final View view = getView();
         if(view == null) {
             return;
@@ -130,7 +151,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
         final HashMap<String, String> user = this.getSession().getUserDetails();
 
-        setLoading(view, true);
+        setProgressViewState(mode, !mIsLoading);
 
         DataStore.retrievePlace(mClubId, user.get(SessionManager.KEY_ACCESS_TOCKEN), new DataStore.OnResultReady() {
             @Override
@@ -139,7 +160,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
                     return;
                 }
 
-                setLoading(view, false);
+                setProgressViewState(mode, false);
 
                 if (failed) {
                     showNoInternetActivity();
@@ -147,8 +168,6 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
                 }
 
                 mClub = (ClubDto) result;
-
-                getActivity().setTitle("Club details"); //TODO
 
                 fillView(view);
             }
@@ -208,39 +227,96 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         startActivity(intent);
     }
 
+    private void setProgressViewState(int mode, boolean isLoading) {
+        View view = getView();
+        if(view == null) {
+            return;
+        }
+
+        if(mIsLoading == isLoading) {
+            return;
+        }
+
+        if(!mIsLoading) {
+            if (mode == LOAD_MODE_CHECK_IN) {
+                showProgressDialog(getString(R.string.checking_in));
+            } else {
+                setLoading(view, true);
+            }
+        } else {
+            if (mode == LOAD_MODE_CHECK_IN) {
+                hideProgressDialog();
+            } else {
+                setLoading(view, false);
+            }
+        }
+    }
+
     private void onCheckInBtnClicked(final View view) {
         if (LocationCheckinHelper.isCheckinHere(mClub)) {
+            showProgressDialog(getString(R.string.checking_out));
+
             LocationCheckinHelper.checkout(getActivity(), new CheckInOutCallbackInterface() {
                 @Override
                 public void onCheckInOutFinished(boolean result) {
-                    // Do something when download finished
-                    if (result) {
-                        UiHelper.changeCheckinState(getActivity(), view, true);
-                        loadData();
+                    if(isDetached() || getActivity() == null || getActivity().isFinishing()) {
+                        return;
                     }
+
+//                    if (result) {
+//                        UiHelper.changeCheckinState(getActivity(), view, true);
+//                        loadData(LOAD_MODE_CHECK_IN);
+//                    } else {
+//                        setProgressViewState(LOAD_MODE_CHECK_IN, false);
+//                    }
                 }
             });
         } else {
+            showProgressDialog(getString(R.string.checking_in));
+
             LocationCheckinHelper.checkin(getActivity(), mClub, new CheckInOutCallbackInterface() {
                 @Override
                 public void onCheckInOutFinished(boolean isUserCheckIn) {
-                    // Do something when download finished
-                    if (isUserCheckIn) {
-                        UiHelper.changeCheckinState(getActivity(), view, false);
-                        loadData();
+                    if(isDetached() || getActivity() == null || getActivity().isFinishing()) {
+                        return;
                     }
+
+//                    if (isUserCheckIn) {
+//                        UiHelper.changeCheckinState(getActivity(), view, false);
+//                        loadData(LOAD_MODE_CHECK_IN);
+//                    } else {
+//                        setProgressViewState(LOAD_MODE_CHECK_IN, false);
+//                    }
                 }
             });
         }
     }
 
     private void setLoading(View view, boolean isLoading) {
+        mIsLoading = isLoading;
+
         if(isLoading) {
             view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
             view.findViewById(R.id.holderScreen).setVisibility(View.GONE);
         } else {
             view.findViewById(R.id.progressBar).setVisibility(View.GONE);
             view.findViewById(R.id.holderScreen).setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void showProgressDialog(String message) {
+        mIsLoading = true;
+
+        Fragment dialogFragment = ProgressDialog.newInstance(ClubFragment.this, getString(R.string.app_name), message);
+        getChildFragmentManager().beginTransaction().add(dialogFragment, ProgressDialog.TAG).commitAllowingStateLoss();
+    }
+
+    private void hideProgressDialog() {
+        mIsLoading = false;
+
+        DialogFragment dialogFragment = (DialogFragment)getChildFragmentManager().findFragmentByTag(ProgressDialog.TAG);
+        if(dialogFragment != null) {
+            dialogFragment.dismissAllowingStateLoss();
         }
     }
 

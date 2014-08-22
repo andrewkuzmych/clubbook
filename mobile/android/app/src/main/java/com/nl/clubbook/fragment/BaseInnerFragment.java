@@ -5,6 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 
+import com.nl.clubbook.utils.L;
+
 /**
  * Created by Volodymyr on 20.08.2014.
  */

@@ -135,7 +135,7 @@
                 android:paddingLeft="16dp"
                 android:paddingBottom="4dp"
                 android:paddingTop="4dp"
-                android:text="@string/check_out"
+                android:text="@string/check_in"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/text_size_medium"
                 android:background="@drawable/bg_btn_green"/>
