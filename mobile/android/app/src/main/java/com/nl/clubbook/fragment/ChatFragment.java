@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.adapter.ChatAdapter;
@@ -20,6 +21,7 @@ import com.nl.clubbook.datasource.ChatMessageDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.KeyboardUtils;
+import com.nl.clubbook.utils.L;
 
 /**
  * Created by Andrew on 6/8/2014.
@@ -234,15 +236,16 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(inputText, InputMethodManager.SHOW_IMPLICIT);
 
-                // make conversation between 2 people as read
+                String accessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
                 DataStore.readMessages(
                         chatDto.getCurrentUser().getId(),
                         chatDto.getReceiver().getId(),
-                        chatDto.getCurrentUser().getAccessToken(),
+                        accessToken,
                         new DataStore.OnResultReady() {
                             @Override
                             public void onReady(Object result, boolean failed) {
                                 if (failed) {
+                                    L.i("readMessages failed");
                                     return;
                                 }
                                 ((MainActivity) getActivity()).updateMessagesCount();

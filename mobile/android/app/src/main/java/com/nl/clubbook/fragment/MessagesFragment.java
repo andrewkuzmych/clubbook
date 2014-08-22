@@ -1,7 +1,6 @@
 package com.nl.clubbook.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import com.nl.clubbook.adapter.MessagesAdapter;
 import com.nl.clubbook.datasource.ChatDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.helper.SessionManager;
+import com.nl.clubbook.utils.L;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +21,7 @@ import java.util.List;
 public class MessagesFragment extends BaseRefreshFragment implements AdapterView.OnItemClickListener {
 
     private MessagesAdapter mAdapter;
+    private ChatFragment mChatFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,8 +53,8 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
         String userId = txtUsername.getTag().toString();
         String userName = txtUsername.getText().toString();
 
-        Fragment fragment = ChatFragment.newInstance(MessagesFragment.this, userId, userName);
-        openFragment(fragment, ChatFragment.class);
+        mChatFragment = (ChatFragment)ChatFragment.newInstance(MessagesFragment.this, userId, userName);
+        openFragment(mChatFragment, ChatFragment.class);
     }
 
     @Override
@@ -69,6 +70,7 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
                     @Override
                     public void onReady(Object result, boolean failed) {
                         if(isDetached() || getActivity() == null) {
+                            L.i("fragment_is_detached");
                             return;
                         }
 
@@ -95,5 +97,9 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
         mAdapter = new MessagesAdapter(getActivity(), new ArrayList<ChatDto>());
         listMessages.setAdapter(mAdapter);
         listMessages.setOnItemClickListener(this);
+    }
+
+    public ChatFragment getChatFragment() {
+        return mChatFragment;
     }
 }

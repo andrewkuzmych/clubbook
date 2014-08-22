@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.nl.clubbook.utils.L;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -581,14 +580,12 @@ public class DataStore {
                 if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
                     JSONObject jsonResult = responseJson.optJSONObject("result");
                     if(jsonResult == null) {
-                        L.v("jsonResult = null");
                         onResultReady.onReady(null, true);
                         return;
                     }
 
                     JSONObject jsonFriend = jsonResult.optJSONObject("user");
                     if(jsonFriend == null) {
-                        L.v("jsonResult = null");
                         onResultReady.onReady(null, true);
                         return;
                     }
@@ -900,15 +897,12 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                try {
-                    if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
-                        failed = false;
-                    } else
-                        failed = true;
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
+                    failed = false;
+                } else {
+                    failed = true;
                 }
-                //failed = false;
+
                 onResultReady.onReady("ok", failed);
             }
 

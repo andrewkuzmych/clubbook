@@ -1,7 +1,5 @@
 package com.nl.clubbook.datasource;
 
-import org.json.JSONObject;
-
 /**
  * Created by Volodymyr on 14.08.2014.
  */

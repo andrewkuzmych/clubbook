@@ -24,14 +24,14 @@ import android.widget.TextView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.NavDrawerItem;
+import com.nl.clubbook.datasource.ChatMessageDto;
 import com.nl.clubbook.datasource.JSONConverter;
+import com.nl.clubbook.fragment.ChatFragment;
 import com.nl.clubbook.fragment.ShareFragment;
 import com.nl.clubbook.ui.drawer.NavDrawerData;
 import com.nl.clubbook.ui.drawer.NavDrawerListAdapter;
-import com.nl.clubbook.datasource.ChatMessageDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.fragment.BaseFragment;
-import com.nl.clubbook.fragment.ChatFragment;
 import com.nl.clubbook.fragment.ClubsListFragment;
 import com.nl.clubbook.fragment.FriendsFragment;
 import com.nl.clubbook.fragment.MessagesFragment;
@@ -46,7 +46,6 @@ import com.pubnub.api.Callback;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -62,12 +61,15 @@ import java.util.List;
 public class MainActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener,
         BaseFragment.OnInnerFragmentDestroyedListener, BaseFragment.OnInnerFragmentOpenedListener {
 
+    public static final String EXTRA_TYPE = "EXTRA_TYPE";
+
+    public static final String TYPE_CHAT = "chat";
+
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private View mNavDrawerHeaderView;
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private ImageButton actionbarChatButton;
     private TextView actionbarChatCount;
     private Integer chatCountOfNewMessages = 0;
 
@@ -77,6 +79,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private ImageLoader mImageLoader;
     private DisplayImageOptions mOptions;
+
+    private Fragment mCurrentFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,8 +111,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onStart();
         SessionManager session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
-        String user_id = user.get(SessionManager.KEY_ID);
-        subscribeToChannel("message_" + user_id);
+        String userId = user.get(SessionManager.KEY_ID);
+        subscribeToChannel("message_" + userId);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        L.d("on New intent - display default view");
+
+        displayDefaultView();
     }
 
     @Override
@@ -116,8 +129,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onStop();
         SessionManager session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
-        String user_id = user.get(SessionManager.KEY_ID);
-        NotificationHelper.pubnub.unsubscribe("message_" + user_id);
+        String userId = user.get(SessionManager.KEY_ID);
+        NotificationHelper.pubnub.unsubscribe("message_" + userId);
     }
 
     @Override
@@ -136,7 +149,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         View badgeMessages = MenuItemCompat.getActionView(menu.findItem(R.id.badgeMessages));
         RelativeLayout messagesActionBar = (RelativeLayout) badgeMessages.findViewById(R.id.messagesActionBar);
-        actionbarChatButton = (ImageButton) messagesActionBar.findViewById(R.id.actionbarChatButton);
+        ImageButton actionbarChatButton = (ImageButton) messagesActionBar.findViewById(R.id.actionbarChatButton);
         actionbarChatCount = (TextView) messagesActionBar.findViewById(R.id.actionbarChatCount);
         actionbarChatCount.setText(String.valueOf(chatCountOfNewMessages));
 
@@ -299,38 +312,37 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mNavDrawerHeaderView.findViewById(R.id.holderNavDrawerHeader).setOnClickListener(MainActivity.this);
     }
 
-    public BaseFragment getCurrentFragment() {
-        return currentFragment;
-    }
-
     private void handleNotification(JSONObject messageJson) {
-        try {
-            if (getCurrentFragment() instanceof ChatFragment && messageJson.getString("type").equalsIgnoreCase("chat")) {
-                ChatFragment chatFragment = (ChatFragment) getCurrentFragment();
-                JSONObject data = messageJson.getJSONObject("data");
-                String userTo = data.getString("user_to");
-                String userFrom = data.getString("user_from");
+        if(mCurrentFragment instanceof MessagesFragment) {
+
+            MessagesFragment messagesFragment = (MessagesFragment) mCurrentFragment;
+            ChatFragment chatFragment = messagesFragment.getChatFragment();
+
+            if (chatFragment != null && TYPE_CHAT.equalsIgnoreCase(messageJson.optString("type"))) {
+                JSONObject data = messageJson.optJSONObject("data");
+                String userTo = data.optString("user_to");
+                String userFrom = data.optString("user_from");
                 SessionManager session = new SessionManager(this);
                 if (session.getConversationListner() != null && session.getConversationListner().equalsIgnoreCase(userFrom + "_" + userTo)) {
-                    ChatMessageDto lastMessage = JSONConverter.newChatMessage(data.getJSONObject("last_message"));
+                    ChatMessageDto lastMessage = JSONConverter.newChatMessage(data.optJSONObject("last_message"));
                     chatFragment.receiveComment(lastMessage);
                 } else {
                     updateMessagesCount();
                 }
-
             } else {
                 updateMessagesCount();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } else {
+            updateMessagesCount();
         }
     }
 
     private void displayDefaultView() {
-        Intent in = getIntent();
+        Intent intent = getIntent();
+
         int displayView = NavDrawerData.DEFAULT_FRAGMENT_NUMBER;
-        if (in.hasExtra("type")) {
-            if (in.getStringExtra("type").equalsIgnoreCase("chat")) {
+        if (intent.hasExtra(EXTRA_TYPE)) {
+            if (TYPE_CHAT.equalsIgnoreCase(intent.getStringExtra(EXTRA_TYPE))) {
                 displayView = NavDrawerData.MESSAGES_POSITION;
             }
         }
@@ -340,8 +352,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     public void updateMessagesCount() {
         // if user on List of All messages fragment then reload data
-        if (getCurrentFragment() instanceof MessagesFragment) {
-            ((MessagesFragment) getCurrentFragment()).onRefresh();
+        if (mCurrentFragment instanceof MessagesFragment) {
+            ((MessagesFragment) mCurrentFragment).onRefresh();
         }
 
         // retrieve the count of not read messages and update UI
@@ -364,13 +376,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void displayView(final int position) {
-        Fragment fragment = fragmentMap.get(position);
+        mCurrentFragment = fragmentMap.get(position);
 
-        if (fragment != null) {
+        if (mCurrentFragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
 
-            mFragmentTransaction.replace(R.id.frame_container, fragment);
+            mFragmentTransaction.replace(R.id.frame_container, mCurrentFragment);
             mFragmentTransaction.commit();
 
             // update selected item and title, then close the drawer

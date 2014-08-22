@@ -4,9 +4,6 @@ import android.content.Context;
 
 import com.nl.clubbook.R;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 /**
  * Created by Andrew on 6/6/2014.
  */

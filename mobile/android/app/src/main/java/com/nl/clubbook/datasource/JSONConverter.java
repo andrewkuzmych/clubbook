@@ -3,6 +3,7 @@ package com.nl.clubbook.datasource;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.utils.L;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -302,7 +303,7 @@ public class JSONConverter {
         return jsonWorkingHours;
     }
 
-    public static ChatDto newChatDto(JSONObject jsonChatDto) {
+    public static ChatDto newChatDto(@NotNull JSONObject jsonChatDto) {
         ChatDto result = new ChatDto();
 
         result.setChatId(jsonChatDto.optString("chat_id"));
