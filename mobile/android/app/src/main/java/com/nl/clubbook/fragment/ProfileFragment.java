@@ -1,8 +1,8 @@
 package com.nl.clubbook.fragment;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
-import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.adapter.ProfileAdapter;
 import com.nl.clubbook.adapter.UserAvatarPagerAdapter;
 import com.nl.clubbook.datasource.DataStore;
@@ -30,7 +29,10 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import java.util.HashMap;
 import java.util.List;
 
-public class ProfileFragment extends BaseFragment implements View.OnClickListener, ViewPager.OnPageChangeListener {
+public class ProfileFragment extends BaseInnerFragment implements View.OnClickListener, ViewPager.OnPageChangeListener {
+
+    private static final String ARG_PROFILE_ID = "ARG_PROFILE_ID";
+
     private String mFriendProfileId;
     private List<UserDto> mCheckInUsers;
 
@@ -40,51 +42,33 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private ViewPagerBulletIndicatorView mBulletIndicator;
 
-    public ProfileFragment()
-    {
+    public static Fragment newInstance(Fragment targetFragment, String profileId, List<UserDto> checkedInUsers) {
+        ProfileFragment fragment = new ProfileFragment();
+        fragment.setTargetFragment(targetFragment, 0);
+        fragment.setCheckInUsers(checkedInUsers);
 
+        Bundle args = new Bundle();
+        args.putString(ARG_PROFILE_ID, profileId);
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
-    public ProfileFragment(BaseFragment previousFragment, String profileId, List<UserDto> checkInedUsers) {
-        super(previousFragment);
-        this.mFriendProfileId = profileId;
-        this.mCheckInUsers = checkInedUsers;
-    }
-	
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_profile, null);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fr_profile, null);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        initActionBarTitle(getString(R.string.user_profile));
+        handleExtras();
         initLoader();
-        initActionBar();
         initView();
         initCheckInUserList();
         loadData();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        if (((MainActivity) getActivity()).getDrawerToggle().isDrawerIndicatorEnabled()) {
-            ((MainActivity) getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(false);
-            ((MainActivity) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }
-    }
-
-    @Override
-    public void backButtonWasPressed() {
-        ((MainActivity) getActivity()).setDefaultTitle();
-        if (!((MainActivity) getActivity()).getDrawerToggle().isDrawerIndicatorEnabled()) {
-            ((MainActivity) getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(true);
-            ((MainActivity) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        }
     }
 
     @Override
@@ -94,7 +78,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 onAddFriendsClicked();
                 break;
             case R.id.btnChat:
-                openFragment(new ChatFragment(ProfileFragment.this, mFriendProfileId, "Jon"));
+                onBtnChatClicked();
                 break;
             case R.id.txtBlockUser:
                 onBlockUserClicked();
@@ -122,16 +106,20 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private void initLoader() {
         mImageLoader = ImageLoader.getInstance();
         mOptions = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.default_list_image)
-                .showImageOnFail(R.drawable.default_list_image)
+                .showImageForEmptyUri(R.drawable.ic_avatar_missing)
+                .showImageOnFail(R.drawable.ic_avatar_unknown)
                 .cacheInMemory()
                 .cacheOnDisc()
                 .build();
     }
 
-    private void initActionBar() {
-        //TODO fix this code
-        getActivity().setTitle(getString(R.string.header_profile));
+    private void handleExtras() {
+        Bundle args = getArguments();
+        if(args == null) {
+            return;
+        }
+
+        mFriendProfileId = args.getString(ARG_PROFILE_ID);
     }
 
     private void initView() {
@@ -163,16 +151,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             return;
         }
 
-
-        //
-//        UserDto userDto = mCheckInUsers.get(0);
-//        for(int i = 0; i < 100; i++) {
-//            mCheckInUsers.add(userDto);
-//        }
-        //
-
         HorizontalListView listCheckInUser = (HorizontalListView) view.findViewById(R.id.listCheckInUsers);
-        ProfileAdapter adapter = new ProfileAdapter(getActivity(), mCheckInUsers);
+        ProfileAdapter adapter = new ProfileAdapter(getActivity(), mCheckInUsers, ProfileAdapter.MODE_LIST);
         listCheckInUser.setAdapter(adapter);
         listCheckInUser.setVisibility(View.VISIBLE);
     }
@@ -182,9 +162,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
         final SessionManager session = new SessionManager(getActivity());
         final HashMap<String, String> user = session.getUserDetails();
-        final String currentUserId = user.get(SessionManager.KEY_ID);
+        final String accessToken = user.get(SessionManager.KEY_ACCESS_TOCKEN);
 
-        DataStore.retrieveUserFriend(currentUserId, mFriendProfileId, new DataStore.OnResultReady() {
+        DataStore.retrieveUserFriend(accessToken, mFriendProfileId, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (getView() == null || isDetached()) {
@@ -198,12 +178,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     return;
                 }
 
-                fillProfile((FriendDto) result, currentUserId);
+                fillProfile((FriendDto) result);
             }
         });
     }
 
-    private void fillProfile(FriendDto profile, String currentUserId) {
+    private void fillProfile(FriendDto profile) {
         if(profile == null) {
             L.v("profile = null");
             return;
@@ -260,6 +240,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             view.findViewById(R.id.txtRemoveFriend).setVisibility(View.VISIBLE);
         }
 
+        final HashMap<String, String> user = getSession().getUserDetails();
+        final String currentUserId = user.get(SessionManager.KEY_ID);
+
         if(profile.getId() != null && profile.getId().equals(currentUserId)) {
             view.findViewById(R.id.holderBlockRemoveUser).setVisibility(View.GONE);
             view.findViewById(R.id.txtAddFriend).setVisibility(View.GONE);
@@ -269,6 +252,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private void initViewPager(View view, List<UserPhotoDto> userPhotoList) {
         mBulletIndicator = (ViewPagerBulletIndicatorView)view.findViewById(R.id.indicatorAvatars);
         mBulletIndicator.setBulletViewCount(userPhotoList.size());
+        if(userPhotoList.size() <= 1) {
+            mBulletIndicator.setVisibility(View.INVISIBLE);
+        }
 
         ViewPager pagerImage = (ViewPager) view.findViewById(R.id.pagerAvatars);
         UserAvatarPagerAdapter adapter = new UserAvatarPagerAdapter(getChildFragmentManager(), userPhotoList, mImageLoader, mOptions, animateFirstListener);
@@ -306,7 +292,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
         ((BaseActivity) getActivity()).showProgress("Loading...");
 
-        DataStore.addFriendRequest(user.get(SessionManager.KEY_ID), mFriendProfileId, new DataStore.OnResultReady() {
+        DataStore.addFriendRequest(user.get(SessionManager.KEY_ID), mFriendProfileId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
+                new DataStore.OnResultReady() {
+
             @Override
             public void onReady(Object result, boolean failed) {
                 View view = getView();
@@ -324,6 +312,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 }
             }
         });
+    }
+
+    private void onBtnChatClicked() {
+        Fragment chatFragment = ChatFragment.newInstance(ProfileFragment.this, mFriendProfileId, "Jon");
+        openFragment(chatFragment, ChatFragment.class);
     }
 
     private void onBlockUserClicked() {
@@ -354,5 +347,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 }
             }
         });
+    }
+
+    public void setCheckInUsers(List<UserDto> mCheckInUsers) {
+        this.mCheckInUsers = mCheckInUsers;
     }
 }

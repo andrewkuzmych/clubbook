@@ -14,6 +14,7 @@
 @interface BaseViewControllerHelper : NSObject
 {
     Reachability *internetReachableFoo;
+    
 }
 
 @property (strong, nonatomic) UIActivityIndicatorView *spinner;

@@ -1,5 +1,7 @@
 package com.nl.clubbook.datasource;
 
+import android.content.Context;
+
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -29,36 +31,36 @@ public class ClubbookRestClient {
         client.post(getBcAbsoluteUrl("signup"), params, responseHandler);
     }
 
-    public static void updateProfile(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.put(getBcAbsoluteUrl("obj/user/" + user_id), params, responseHandler);
+    public static void updateProfile(RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.put(getBcAbsoluteUrl("obj/user/me"), params, responseHandler);
     }
 
-    public static void profileAddImage(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.post(getBcAbsoluteUrl("obj/user/" + user_id + "/image"), params, responseHandler);
+    public static void profileAddImage(String userId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.post(getBcAbsoluteUrl("obj/user/" + userId + "/image"), params, responseHandler);
     }
 
-    public static void profileUpdateImage(String user_id, String image_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.put(getBcAbsoluteUrl("obj/user/" + user_id + "/image/" + image_id), params, responseHandler);
+    public static void profileUpdateImage(String userId, String imageId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.put(getBcAbsoluteUrl("obj/user/" + userId + "/image/" + imageId), params, responseHandler);
     }
 
-    public static void profileDeleteImage(String user_id, String image_id, AsyncHttpResponseHandler responseHandler) {
-        client.delete(getBcAbsoluteUrl("obj/user/" + user_id + "/image/" + image_id), responseHandler);
+    public static void profileDeleteImage(Context context, String userId, String imageId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.delete(context, getBcAbsoluteUrl("obj/user/" + userId + "/image/" + imageId), null, params, responseHandler);
     }
 
     public static void loginByEmail(RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.post(getBcAbsoluteUrl("signinmail"), params, responseHandler);
     }
 
-    public static void retrieveUser(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("user/by_id/" + user_id), params, responseHandler);
+    public static void retrieveUser(RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/user/me"), params, responseHandler);
     }
 
-    public static void retrieveUserFriend(String userId, String friendId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("user/by_id/" + friendId + "/" + userId), params, responseHandler);
+    public static void retrieveUserFriend(String friendId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/user/" + friendId), params, responseHandler);
     }
 
-    public static void retrieveFriends(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("obj/user/" + user_id + "/friends"), params, responseHandler);
+    public static void retrieveFriends(String userId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/user/" + userId + "/friends"), params, responseHandler);
     }
 
     public static void addFriend(String userId, String friendId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
@@ -70,47 +72,47 @@ public class ClubbookRestClient {
     }
 
     //list_club/:distance/:user_lat/:user_lon
-    public static void retrievePlaces(String distance, String lat, String lon, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("list_club/" + distance + "/" + lat + "/" + lon), params, responseHandler);
+    public static void retrievePlaces(RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/club"), params, responseHandler);
     }
 
-    public static void retrievePlace(String place_id, String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("find_club/" + place_id + "/" + user_id), params, responseHandler);
+    public static void retrievePlace(String placeId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/club/" + placeId), params, responseHandler);
     }
 
-    public static void checkin(String place_id, String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("checkin/" + place_id + "/" + user_id), params, responseHandler);
+    public static void checkin(String placeId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/club/" + placeId + "/checkin"), params, responseHandler);
     }
 
-    public static void updateCheckin(String place_id, String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("checkin/update/" + place_id + "/" + user_id), params, responseHandler);
+    public static void updateCheckin(String placeId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/club/" + placeId + "/update"), params, responseHandler);
     }
 
-    public static void checkout(String place_id, String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("checkout/" + place_id + "/" + user_id), params, responseHandler);
+    public static void checkout(String placeId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/club/" + placeId + "/checkout"), params, responseHandler);
     }
 
     public static void file(RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.post(getBcAbsoluteUrl("file"), params, responseHandler);
     }
 
-    public static void get_conversation(String user1, String user2, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("conversation/" + user1 + "/" + user2), params, responseHandler);
+    public static void sendMsg(RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.post(getBcAbsoluteUrl("obj/chat"), params, responseHandler);
     }
 
-    public static void get_conversations(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("conversations/" + user_id ), params, responseHandler);
+    public static void getConversation(String currentUserId, String receiverUserId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/chat/" + currentUserId + "/" + receiverUserId), params, responseHandler);
     }
 
-    public static void send_msg(RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.post(getBcAbsoluteUrl("chat"), params, responseHandler);
+    public static void readMessages(String currentUser, String receiver, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/chat/" + currentUser + "/" + receiver + "/read"), params, responseHandler);
     }
 
-    public static void unread_messages_count(String user_id, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("unread/messages/count/" + user_id), params, responseHandler);
+    public static void getConversations(String userId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/chat/" + userId ), params, responseHandler);
     }
 
-    public static void read_messages(String current_user, String receiver, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("readchat/" + current_user + "/" + receiver), params, responseHandler);
+    public static void getNotifications(RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/user/me/notifications"), params, responseHandler);
     }
 }

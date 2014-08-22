@@ -2,14 +2,12 @@ package com.nl.clubbook.fragment;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.view.View;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
-import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.activity.NoInternetActivity;
 import com.nl.clubbook.helper.SessionManager;
 
@@ -17,35 +15,6 @@ import com.nl.clubbook.helper.SessionManager;
  * Created by Andrew on 6/8/2014.
  */
 public class BaseFragment extends Fragment {
-    BaseFragment previousFragment;
-
-    public BaseFragment() {
-    }
-
-    public BaseFragment(BaseFragment previousFragment) {
-        this.previousFragment = previousFragment;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-    public void backButtonWasPressed() {
-        ((MainActivity) getActivity()).setCurrentFragment(previousFragment);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        ((MainActivity) getActivity()).setCurrentFragment(this);
-
-        if (!((MainActivity) getActivity()).getDrawerToggle().isDrawerIndicatorEnabled()) {
-            ((MainActivity) getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(true);
-            ((MainActivity) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        }
-    }
 
     protected SessionManager getSession() {
         return ((BaseActivity) getActivity()).getSession();
@@ -55,12 +24,35 @@ public class BaseFragment extends Fragment {
         return ((BaseActivity) getActivity()).getCurrentUserId();
     }
 
-    protected void openFragment(BaseFragment fragment){
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
+    protected void openFragment(Fragment fragment, Class fragmentClass) {
+        ActionBarActivity activity = (ActionBarActivity)getActivity();
 
-        mFragmentTransaction.addToBackStack(null);
-        mFragmentTransaction.replace(R.id.frame_container, fragment).commit();
+        FragmentTransaction fTransaction = activity.getSupportFragmentManager().beginTransaction();
+        fTransaction.add(R.id.frame_container, fragment);
+        fTransaction.hide(this);
+        fTransaction.addToBackStack(fragmentClass.getSimpleName());
+        fTransaction.commitAllowingStateLoss();
+
+        if(activity instanceof OnInnerFragmentOpenedListener) {
+            OnInnerFragmentOpenedListener listener = (OnInnerFragmentOpenedListener)activity;
+            listener.onInnerFragmentOpened();
+        }
+    }
+
+    protected void initActionBarTitle(String title) {
+        ActionBarActivity activity = (ActionBarActivity) getActivity();
+        if(activity == null) {
+            return;
+        }
+
+        ActionBar actionBar = activity.getSupportActionBar();
+        actionBar.setTitle(title);
+    }
+
+    protected void showNoInternetActivity() {
+        Intent intent = new Intent(getActivity(), NoInternetActivity.class);
+        startActivity(intent);
+        getActivity().finish();
     }
 
     protected void showProgress() {
@@ -71,9 +63,11 @@ public class BaseFragment extends Fragment {
         ((BaseActivity) getActivity()).hideProgress(showContent);
     }
 
-    protected void showNoInternetActivity() {
-        Intent i = new Intent(getActivity(), NoInternetActivity.class);
-        startActivity(i);
-        getActivity().finish();
+    public interface OnInnerFragmentDestroyedListener {
+        public void onInnerFragmentDestroyed();
+    }
+
+    public interface OnInnerFragmentOpenedListener {
+        public void onInnerFragmentOpened();
     }
 }

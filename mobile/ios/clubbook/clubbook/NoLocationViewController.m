@@ -35,6 +35,17 @@
     // Dispose of any resources that can be recreated.
 }
 
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    //Google Analytics
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName
+           value:@"No Location Screen"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+}
 /*
 #pragma mark - Navigation
 

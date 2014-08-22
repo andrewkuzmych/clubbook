@@ -20,6 +20,7 @@
 //@property (weak, nonatomic) IBOutlet TTTAttributedLabel *termsOfUserLabel;
 @property (weak, nonatomic) IBOutlet UILabel *termOfUseLabel;
 @property (weak, nonatomic) IBOutlet UIButton *termOfUseButton;
+@property (weak, nonatomic) IBOutlet UILabel *facebookPostLabel;
 - (IBAction)termsAction:(id)sender;
 - (IBAction)fbAction:(id)sender;
 @end

@@ -41,6 +41,14 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    
+    //Google Analytics
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName
+           value:@"Messages Screen"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+    
     [PubNub setDelegate:self];
     [self showProgress:NO title:nil];
     [self loadChats];
@@ -53,7 +61,7 @@
 }
 
 - (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message {
-    PNLog(PNLogGeneralLevel, self, @"PubNub client received message: %@", message);
+    //PNLog(PNLogGeneralLevel, self, @"PubNub client received message: %@", message);
     [self loadChats];
 }
 
@@ -109,7 +117,7 @@
     [cell.messageLabel setText:conv.msg];
     
     cell.unreadMsgCount.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:16];
-    [cell.unreadMsgCount setText: [NSString stringWithFormat:@"%d", chat.unreadMessages]];
+    [cell.unreadMsgCount setText: [NSString stringWithFormat:@"%ld", (long)chat.unreadMessages]];
     cell.unreadMsgCount.hidden = (chat.unreadMessages == 0);
     
     //[cell.checkinButton setBackgroundColor:[UIColor colorWithRed:92/255.0 green:142/255.0 blue:95/255.0 alpha:1.0] forState:UIControlStateNormal];

@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.utils.L;
 
 import org.apache.http.Header;
@@ -19,10 +18,10 @@ import java.util.List;
  * Created by Andrew on 5/19/2014.
  */
 public class DataStore {
-    private static Context context;
+    private static Context mContext;
 
-    public static void setContext(Context mcontext) {
-        context = mcontext;
+    public static void setContext(Context context) {
+        mContext = context;
     }
 
     public static void regByEmail(String name, String email, String pass, String gender, String dob, String country, String city, String bio, JSONObject avatar,
@@ -74,15 +73,16 @@ public class DataStore {
         });
     }
 
-    public static void updateUserProfile(String userId, String name, String gender, String dob, String country, String bio, final OnResultReady onResultReady) {
+    public static void updateUserProfile(String accessToken, String name, String gender, String dob, String country, String bio, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("name", name);
         params.put("gender", gender);
         params.put("dob", dob);
         params.put("country", country);
         params.put("bio", bio);
+        params.put("access_token", accessToken);
 
-        ClubbookRestClient.updateProfile(userId, params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.updateProfile(params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
@@ -118,8 +118,9 @@ public class DataStore {
         });
     }
 
-    public static void profileAddImage(String userId, JSONObject avatar, final OnResultReady onResultReady) {
+    public static void profileAddImage(String accessToken, String userId, JSONObject avatar, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
         params.put("avatar", avatar);
 
         ClubbookRestClient.profileAddImage(userId, params, new JsonHttpResponseHandler() {
@@ -129,7 +130,7 @@ public class DataStore {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
                 UserPhotoDto userPhotoDto = null;
                 try {
-                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
+                    if ("ok".equalsIgnoreCase(response_json.getString("status"))) {
                         userPhotoDto = new UserPhotoDto(response_json.getJSONObject("result").getJSONObject("image"));
                         failed = false;
                     } else
@@ -158,15 +159,17 @@ public class DataStore {
         });
     }
 
-    public static void profileDeleteImage(String userId, String imageId, final OnResultReady onResultReady) {
+    public static void profileDeleteImage(Context context, String accessToken, String userId, String imageId, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
 
-        ClubbookRestClient.profileDeleteImage(userId, imageId, new JsonHttpResponseHandler() {
+        ClubbookRestClient.profileDeleteImage(context, userId, imageId, params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 try {
-                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
+                    if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         failed = false;
                     } else
                         failed = true;
@@ -194,19 +197,20 @@ public class DataStore {
         });
     }
 
-    public static void profileUpdateImage(String userId, String imageId, Boolean isAvatar, final OnResultReady onResultReady) {
+    public static void profileUpdateImage(String accessToken, String userId, String imageId, Boolean isAvatar, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
         params.put("is_avatar", isAvatar);
 
         ClubbookRestClient.profileUpdateImage(userId, imageId, params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 UserDto user = null;
                 try {
-                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        user = new UserDto(response_json.getJSONObject("result").getJSONObject("user"));
+                    if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
+                        user = new UserDto(responseJson.getJSONObject("result").getJSONObject("user"));
                         failed = false;
                     } else
                         failed = true;
@@ -243,14 +247,15 @@ public class DataStore {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 UserDto user = null;
                 try {
-                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        user = new UserDto(response_json.getJSONObject("result").getJSONObject("user"));
+                    if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
+                        user = new UserDto(responseJson.getJSONObject("result").getJSONObject("user"));
                         failed = false;
-                    } else
+                    } else {
                         failed = true;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -290,11 +295,11 @@ public class DataStore {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 UserDto user = null;
                 try {
-                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        user = new UserDto(response_json.getJSONObject("result").getJSONObject("user"));
+                    if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
+                        user = new UserDto(responseJson.getJSONObject("result").getJSONObject("user"));
                         failed = false;
                     } else
                         failed = true;
@@ -322,10 +327,14 @@ public class DataStore {
         });
     }
 
-    public static void retrievePlaces(String distance, String lat, String lon, final OnResultReady onResultReady) {
+    public static void retrievePlaces(String distance, String lat, String lon, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.add("distance", distance);
+        params.add("user_lat", lat);
+        params.add("user_lon", lon);
+        params.add("access_token", accessToken);
 
-        ClubbookRestClient.retrievePlaces(distance, lat, lon, params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.retrievePlaces(params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
@@ -358,10 +367,11 @@ public class DataStore {
         });
     }
 
-    public static void retrievePlace(String place_id, String user_id, final OnResultReady onResultReady) {
+    public static void retrievePlace(String placeId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
 
-        ClubbookRestClient.retrievePlace(place_id, user_id, params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.retrievePlace(placeId, params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
@@ -372,21 +382,14 @@ public class DataStore {
                     JSONObject jsonClub = responseJson.getJSONObject("club");
 
                     club = JSONConverter.newClub(jsonClub);
-                    if(club != null) {
-                        List<String> photos = new ArrayList<String>();
-                        JSONArray photo_list = jsonClub.getJSONArray("club_photos");
-                        for (int i = 0; i < photo_list.length(); i++) {
-                            photos.add(photo_list.getString(i));
-                        }
-
+                    if(jsonClub != null && club != null) {
                         JSONArray jsonArrUsers = responseJson.getJSONArray("users");
                         List<UserDto> users = new ArrayList<UserDto>();
                         for (int i = 0; i < jsonArrUsers.length(); i++) {
                             users.add(new UserDto(jsonArrUsers.getJSONObject(i)));
                         }
 
-                        club.setUsers(users);
-                        club.setPhotos(photos);
+                        club.setUsers(users);//TODO
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -414,18 +417,19 @@ public class DataStore {
         });
     }
 
-    public static void retrieveUser(String user_id, final OnResultReady onResultReady) {
+    public static void retrieveUser(String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
 
-        ClubbookRestClient.retrieveUser(user_id, params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.retrieveUser(params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 UserDto user = null;
                 try {
-                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        user = new UserDto(response_json.getJSONObject("result").getJSONObject("user"));
+                    if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
+                        user = new UserDto(responseJson.getJSONObject("result").getJSONObject("user"));
                         failed = false;
                     } else
                         failed = true;
@@ -457,10 +461,11 @@ public class DataStore {
         });
     }
 
-    public static void retrieveFriends(String user_id, final OnResultReady onResultReady) {
+    public static void retrieveFriends(String userId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
 
-        ClubbookRestClient.retrieveFriends(user_id, params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.retrieveFriends(userId, params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
@@ -468,7 +473,7 @@ public class DataStore {
                 List<UserDto> friends = new ArrayList<UserDto>();
 
                 try {
-                    if (responseJson.getString("status").equalsIgnoreCase("ok")) {
+                    if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         JSONArray friendsJson = responseJson.getJSONObject("result").getJSONArray("friends");
                         friends = JSONConverter.newFriendList(friendsJson);
 
@@ -503,13 +508,14 @@ public class DataStore {
         });
     }
 
-    public static void addFriendRequest(String userId, String friendId, final OnResultReady onResultReady) {
+    public static void addFriendRequest(String userId, String friendId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
 
         ClubbookRestClient.addFriend(userId, friendId, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                if ("ok".equalsIgnoreCase(responseJson.optString("status", ""))) {
+                if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
                     onResultReady.onReady(null, false);
                 } else {
                     onResultReady.onReady(null, true);
@@ -540,7 +546,7 @@ public class DataStore {
         ClubbookRestClient.removeFriend(userId, friendId, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                if ("ok".equalsIgnoreCase(responseJson.optString("status", ""))) {
+                if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
                     onResultReady.onReady(null, false);
                 } else {
                     onResultReady.onReady(null, true);
@@ -565,13 +571,14 @@ public class DataStore {
         });
     }
 
-    public static void retrieveUserFriend(String userId, String friendId, final OnResultReady onResultReady) {
+    public static void retrieveUserFriend(String accessToken, String friendId, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
 
-        ClubbookRestClient.retrieveUserFriend(userId, friendId, params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.retrieveUserFriend(friendId, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                if ("ok".equalsIgnoreCase(responseJson.optString("status", ""))) {
+                if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
                     JSONObject jsonResult = responseJson.optJSONObject("result");
                     if(jsonResult == null) {
                         L.v("jsonResult = null");
@@ -610,18 +617,20 @@ public class DataStore {
         });
     }
 
-    public static void checkin(String place_id, String user_id, final OnResultReady onResultReady) {
+    //TODO
+    public static void checkin(String placeId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
 
-        ClubbookRestClient.checkin(place_id, user_id, params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.checkin(placeId, params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 UserDto user = null;
                 try {
-                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        user = new UserDto(response_json.getJSONObject("user"));
+                    if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
+                        user = new UserDto(responseJson.getJSONObject("user"));
                         failed = false;
                     } else
                         failed = true;
@@ -653,18 +662,19 @@ public class DataStore {
         });
     }
 
-    public static void updateCheckin(String place_id, String user_id, final OnResultReady onResultReady) {
+    public static void updateCheckin(String placeId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
 
-        ClubbookRestClient.updateCheckin(place_id, user_id, params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.updateCheckin(placeId, params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 UserDto user = null;
                 try {
-                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        user = new UserDto(response_json.getJSONObject("user"));
+                    if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
+                        user = new UserDto(responseJson.getJSONObject("user"));
                         failed = false;
                     } else
                         failed = true;
@@ -696,18 +706,19 @@ public class DataStore {
         });
     }
 
-    public static void checkout(String place_id, String user_id, final OnResultReady onResultReady) {
+    public static void checkout(String placeId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
 
-        ClubbookRestClient.checkout(place_id, user_id, params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.checkout(placeId, params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 UserDto user = null;
                 try {
-                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        user = new UserDto(response_json.getJSONObject("user"));
+                    if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
+                        user = new UserDto(responseJson.getJSONObject("user"));
                         failed = false;
                     } else
                         failed = true;
@@ -741,29 +752,30 @@ public class DataStore {
     /**
      * Get conversation between 2 people
      *
-     * @param user1
-     * @param user2
+     * @param currentUserId
+     * @param receiverUserId
      * @param onResultReady
      */
-    public static void get_conversation(String user1, String user2, final OnResultReady onResultReady) {
+    public static void getConversation(String currentUserId, String receiverUserId, String accessToken,
+                                       final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
-        ClubbookRestClient.get_conversation(user1, user2, params, new JsonHttpResponseHandler() {
+        params.put("access_token", accessToken);
+
+        ClubbookRestClient.getConversation(currentUserId, receiverUserId, params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 ChatDto chat = null;
-                try {
-                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        chat = new ChatDto(response_json.getJSONObject("result"));
-                        failed = false;
-                    } else
-                        failed = true;
-                } catch (Exception e) {
-                    e.printStackTrace();
+
+                if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
+                    JSONObject jsonResult = responseJson.optJSONObject("result");
+                    chat = JSONConverter.newChatDto(jsonResult);
+                    failed = false;
+                } else {
+                    failed = true;
                 }
 
-                //failed = false;
                 onResultReady.onReady(chat, failed);
             }
 
@@ -787,22 +799,25 @@ public class DataStore {
     /**
      * Get all conversation one person have with all people
      *
-     * @param user_id
+     * @param userId
+     * @param accessToken
      * @param onResultReady
      */
-    public static void get_conversations(final String user_id, final OnResultReady onResultReady) {
+    public static void getConversations(final String userId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
-        ClubbookRestClient.get_conversations(user_id, params, new JsonHttpResponseHandler() {
+        params.put("access_token", accessToken);
+
+        ClubbookRestClient.getConversations(userId, params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 List<ChatDto> chats = new ArrayList<ChatDto>();
                 try {
-                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        JSONArray chatsJson = response_json.getJSONObject("result").getJSONArray("chats");
+                    if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
+                        JSONArray chatsJson = responseJson.getJSONObject("result").getJSONArray("chats");
                         for (int i = 0; i < chatsJson.length(); i++) {
-                            chats.add(new ChatDto(chatsJson.getJSONObject(i)));
+                            chats.add(JSONConverter.newChatDto(chatsJson.optJSONObject(i)));
                         }
                         failed = false;
                     } else
@@ -832,20 +847,22 @@ public class DataStore {
         });
     }
 
-    public static void chat(String user_from, String user_to, String msg, String type, final OnResultReady onResultReady) {
+    public static void chat(String userFrom, String userTo, String msg, String type, String accessToken,
+                            final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
-        params.put("user_from", user_from);
-        params.put("user_to", user_to);
+        params.put("user_from", userFrom);
+        params.put("user_to", userTo);
         params.put("msg", msg);
         params.put("msg_type", type);
+        params.put("access_token", accessToken);
 
-        ClubbookRestClient.send_msg(params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.sendMsg(params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 try {
-                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
+                    if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         failed = false;
                     } else
                         failed = true;
@@ -873,15 +890,18 @@ public class DataStore {
         });
     }
 
-    public static void read_messages(String chat_id, String user_id, final OnResultReady onResultReady) {
+    public static void readMessages(String currentUserId, String receiverId, String accessToken,
+                                    final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
-        ClubbookRestClient.read_messages(chat_id, user_id, params, new JsonHttpResponseHandler() {
+        params.put("access_token", accessToken);
+
+        ClubbookRestClient.readMessages(currentUserId, receiverId, params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 try {
-                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
+                    if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         failed = false;
                     } else
                         failed = true;
@@ -956,19 +976,20 @@ public class DataStore {
         });
     }
 
-    public static void unread_messages_count(String user_id, final OnResultReady onResultReady) {
+    public static void getNotifications(String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
 
-        ClubbookRestClient.unread_messages_count(user_id, params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.getNotifications(params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 String count = "0";
                 try {
-                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
+                    if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         failed = false;
-                        count = response_json.getString("unread_chat_count");
+                        count = responseJson.getString("unread_chat_count");
                     } else
                         failed = true;
                 } catch (Exception e) {

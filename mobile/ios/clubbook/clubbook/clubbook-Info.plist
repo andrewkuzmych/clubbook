@@ -8,6 +8,10 @@
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
+	<key>CFBundleIcons</key>
+	<dict/>
+	<key>CFBundleIcons~ipad</key>
+	<dict/>
 	<key>CFBundleIdentifier</key>
 	<string>com.cb.clubbookapp</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -39,11 +43,8 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>HelveticaRegular.ttf</string>
 		<string>helvetica-s-regular.ttf</string>
 		<string>HelveticaBold.ttf</string>
-		<string>TITILLIUMWEB-REGULAR.TTF</string>
-		<string>TITILLIUMWEB-BOLD.TTF</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

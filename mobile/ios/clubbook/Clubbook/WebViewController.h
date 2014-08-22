@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BaseViewController.h"
 
-@interface WebViewController : UIViewController
+@interface WebViewController : BaseViewController
 @property (weak, nonatomic) IBOutlet UIWebView *webBrowser;
 @property (weak, nonatomic) NSString *web;
 

@@ -3,13 +3,17 @@ package com.nl.clubbook.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.PhotoPagerAdapter;
 import com.nl.clubbook.datasource.ClubDto;
+import com.nl.clubbook.datasource.ClubWorkingHoursDto;
 import com.nl.clubbook.datasource.JSONConverter;
 import com.nl.clubbook.ui.view.ViewPagerBulletIndicatorView;
 import com.nl.clubbook.utils.L;
@@ -94,17 +98,116 @@ public class ClubInfoFragment extends Fragment implements ViewPager.OnPageChange
     private void initLoader() {
         mImageLoader = ImageLoader.getInstance();
         mOptions = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.default_list_image)
-                .showImageOnFail(R.drawable.default_list_image)
+                .showImageForEmptyUri(R.drawable.ic_club_avatar_default)
+                .showImageOnFail(R.drawable.ic_club_avatar_default)
                 .cacheInMemory()
                 .cacheOnDisc()
                 .build();
     }
 
     private void fillView(View view, ClubDto club) {
-        //TODO
-
         initViewPager(view, club.getPhotos());
+
+        String info = club.getInfo();
+        if(!setTextToTextView(view, info, R.id.txtInfo)) {
+            view.findViewById(R.id.dividerInfo).setVisibility(View.GONE);
+        }
+
+        fillClubRequirementsHolder(view, club);
+        fillContactHolder(view, club);
+
+        LinearLayout holderWorkingHours = (LinearLayout)view.findViewById(R.id.holderWorkingHours);
+        List<ClubWorkingHoursDto> workingHours = club.getWorkingHours();
+        if(workingHours != null && !workingHours.isEmpty()) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            for (ClubWorkingHoursDto clubWorkHours : workingHours) {
+                View row = inflater.inflate(R.layout.view_club_work_hours, null);
+                String dayName = getDayNameByDayNumber(clubWorkHours.getDay());
+                TextView txtDayName = (TextView) row.findViewById(R.id.txtDayName);
+                txtDayName.setText(dayName != null ? dayName : dayName);
+
+                TextView txtWorkHours = (TextView) row.findViewById(R.id.txtWorkHours);
+                if(ClubWorkingHoursDto.STATUS_OPENED.equals(clubWorkHours.getStatus())) {
+                    String startTime = clubWorkHours.getStartTime();
+                    String endTime = clubWorkHours.getEndTime();
+
+                    txtWorkHours.setText(!TextUtils.isEmpty(startTime) ? startTime + " - " : "");
+                    txtWorkHours.append(endTime != null ? endTime : "");
+                } else {
+                    txtWorkHours.setText(getString(R.string.closed));
+                }
+
+                holderWorkingHours.addView(row);
+            }
+        } else {
+            holderWorkingHours.setVisibility(View.GONE);
+        }
+    }
+
+    private void fillContactHolder(View view, ClubDto club) {
+        boolean result = false;
+
+        if(fillTextViewHolder(view, club.getAddress(), R.id.txtLocation, R.id.txtLocation)) {
+            result = true;
+        }
+
+        if(fillTextViewHolder(view, club.getPhone(), R.id.txtPhone, R.id.txtPhone)) {
+            result = true;
+        }
+
+        if(fillTextViewHolder(view, club.getWebsite(), R.id.txtWebsite, R.id.txtWebsite)) {
+            result = true;
+        }
+
+        if(fillTextViewHolder(view, club.getEmail(), R.id.txtEmail, R.id.txtEmail)) {
+            result = true;
+        }
+
+        if(!result) {
+            view.findViewById(R.id.holderContacts).setVisibility(View.GONE);
+            view.findViewById(R.id.holderClubRequirements).setVisibility(View.GONE);
+        }
+    }
+
+    private void fillClubRequirementsHolder(View view, ClubDto club) {
+        boolean result = false;
+
+        if(fillTextViewHolder(view, club.getAgeRestriction(), R.id.txtAgeRestriction, R.id.holderAgeRestriction)) {
+            result = true;
+        }
+
+        if(fillTextViewHolder(view, club.getDressCode(), R.id.txtDressCode, R.id.holderDressCode)) {
+            result = true;
+        }
+
+        if(fillTextViewHolder(view, club.getCapacity(), R.id.txtCapacity, R.id.holderCapacity)) {
+            result = true;
+        }
+
+        if(!result) {
+            view.findViewById(R.id.holderRequirements).setVisibility(View.GONE);
+            view.findViewById(R.id.dividerContacts).setVisibility(View.GONE);
+        }
+    }
+
+    private boolean fillTextViewHolder(View view, String text, int textViewId, int textViewHolderId) {
+        if(setTextToTextView(view, text, textViewId)) {
+            return true;
+        } else {
+            view.findViewById(textViewHolderId).setVisibility(View.GONE);
+            return false;
+        }
+    }
+
+    private boolean setTextToTextView(View view, String text, int textViewId) {
+        if(text != null && text.length() != 0) {
+            TextView txtInfo = (TextView) view.findViewById(textViewId);
+            txtInfo.setText(text);
+            return true;
+        } else {
+            view.findViewById(textViewId).setVisibility(View.GONE);
+            return false;
+        }
     }
 
     private void initViewPager(View view, List<String> photos) {
@@ -119,14 +222,38 @@ public class ClubInfoFragment extends Fragment implements ViewPager.OnPageChange
         PhotoPagerAdapter adapter = new PhotoPagerAdapter(getChildFragmentManager(), photos, mImageLoader, mOptions, animateFirstListener);
         pagerImage.setAdapter(adapter);
 
-//        for(int i = 0; i < userPhotoList.size(); i++) {
-//            UserPhotoDto userPhoto = userPhotoList.get(i);
-//            if(userPhoto.getIsAvatar()) {
-//                pagerImage.setCurrentItem(i, false);
-//                mBulletIndicator.setSelectedView(i);
-//            }
-//        }
-
         pagerImage.setOnPageChangeListener(this);
+    }
+
+    private String getDayNameByDayNumber(int day) {
+        String result;
+        switch (day) {
+            case 1:
+                result = getString(R.string.monday);
+                break;
+            case 2:
+                result = getString(R.string.tuesday);
+                break;
+            case 3:
+                result = getString(R.string.wednesday);
+                break;
+            case 4:
+                result = getString(R.string.thursday);
+                break;
+            case 5:
+                result = getString(R.string.friday);
+                break;
+            case 6:
+                result = getString(R.string.saturday);
+                break;
+            case 0:
+                result = getString(R.string.sunday);
+                break;
+            default:
+                result = getString(R.string.monday);
+                break;
+        }
+
+        return result;
     }
 }

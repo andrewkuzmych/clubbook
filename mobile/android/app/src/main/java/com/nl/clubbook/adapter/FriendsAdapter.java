@@ -102,10 +102,10 @@ public class FriendsAdapter extends BaseAdapter {
         holder.txtUsername.setTag(userDto.getId());
 
         if (userDto.getAvatar() != null) {
-            String image_url = ImageHelper.getUserListAvatar(userDto.getAvatar());
+            String imageUrl = ImageHelper.getUserListAvatar(userDto.getAvatar());
 
-            holder.imgUserAvatar.setTag(image_url);
-            mImageLoader.displayImage(image_url, holder.imgUserAvatar, mOptions, mAnimateFirstListener);
+            holder.imgUserAvatar.setTag(imageUrl);
+            mImageLoader.displayImage(imageUrl, holder.imgUserAvatar, mOptions, mAnimateFirstListener);
         }
 
         CheckInDto checkIn = userDto.getLastCheckIn();
@@ -113,7 +113,7 @@ public class FriendsAdapter extends BaseAdapter {
             return;
         }
 
-        if(checkIn.isActive()) {
+        if(!checkIn.isActive()) {
             holder.txtCheckedInPlace.setVisibility(View.GONE);
             holder.txtCheckIn.setText(mNotCheckIn);
         } else {

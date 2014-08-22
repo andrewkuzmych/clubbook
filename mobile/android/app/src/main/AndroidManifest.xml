@@ -64,6 +64,9 @@
             android:name=".activity.NoInternetActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.EditProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.NoLocationActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"/>

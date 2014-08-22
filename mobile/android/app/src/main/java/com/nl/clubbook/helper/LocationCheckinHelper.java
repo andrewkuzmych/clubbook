@@ -109,7 +109,7 @@ public class LocationCheckinHelper {
         final SessionManager session = new SessionManager(context.getApplicationContext());
         final HashMap<String, String> user = session.getUserDetails();
 
-        DataStore.checkin(club.getId(), user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
+        DataStore.checkin(club.getId(), user.get(SessionManager.KEY_ACCESS_TOCKEN), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (failed) {
@@ -135,7 +135,9 @@ public class LocationCheckinHelper {
         final SessionManager session = new SessionManager(context.getApplicationContext());
         final HashMap<String, String> user = session.getUserDetails();
 
-        DataStore.checkout(getCurrentClub().getId(), user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
+        DataStore.checkout(getCurrentClub().getId(), user.get(SessionManager.KEY_ACCESS_TOCKEN),
+                new DataStore.OnResultReady() {
+
             @Override
             public void onReady(Object result, boolean failed) {
                 if (failed) {
@@ -200,7 +202,7 @@ public class LocationCheckinHelper {
                             });
                         } else {
                             // update time of last presence of user near a club at sever side
-                            DataStore.updateCheckin(currentClub.getId(), user.get(SessionManager.KEY_ID), new DataStore.OnResultReady() {
+                            DataStore.updateCheckin(currentClub.getId(), user.get(SessionManager.KEY_ACCESS_TOCKEN), new DataStore.OnResultReady() {
                                 @Override
                                 public void onReady(Object result, boolean failed) {
                                     if (failed) {

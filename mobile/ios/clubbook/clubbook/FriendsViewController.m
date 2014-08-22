@@ -38,7 +38,7 @@
     self.friendsTable.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     // Do any additional setup after loading the view.
     
-    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12], UITextAttributeFont, nil];
+    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:15], UITextAttributeFont, nil];
     [self.segmentControl setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
 
     [self.segmentControl setTitle:[NSString stringWithFormat:NSLocalizedString(@"friends", nil)] forSegmentAtIndex:0];
@@ -47,7 +47,11 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-
+    [super viewWillAppear:animated];
+    
+    //Google Analytics
+    self.screenName = @"Friends Screen";
+    
     if (self.segmentControl.selectedSegmentIndex == 0) {
         [self loadFriends];
     } else {
@@ -122,7 +126,7 @@
     cell.friendName.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
     [cell.friendName setText:user.name];
     
-    cell.friendCheckin.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12];
+    cell.friendCheckin.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:11];
     
     cell.acceptButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12];
     [cell.acceptButton setTitle:NSLocalizedString(@"accept", nil) forState:UIControlStateNormal];
@@ -153,7 +157,7 @@
     
     NSString * avatarUrl  = [cloudinary url: [user.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
     
-    [cell.friendAvatar setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"Default.png"]];
+    [cell.friendAvatar setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
     
     return cell;
 }

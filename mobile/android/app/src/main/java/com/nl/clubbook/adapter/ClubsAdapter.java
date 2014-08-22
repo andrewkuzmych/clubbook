@@ -40,9 +40,9 @@ public class ClubsAdapter extends BaseAdapter {
 
         imageLoader = ImageLoader.getInstance();
         options = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.default_list_image)
-                .showImageForEmptyUri(R.drawable.default_list_image)
-                .showImageOnFail(R.drawable.default_list_image)
+                .showStubImage(R.drawable.ic_club_avatar_default)
+                .showImageForEmptyUri(R.drawable.ic_club_avatar_default)
+                .showImageOnFail(R.drawable.ic_club_avatar_default)
                 .cacheInMemory()
                 .cacheOnDisc()
                 .build();

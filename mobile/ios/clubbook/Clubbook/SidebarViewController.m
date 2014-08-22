@@ -15,6 +15,7 @@
 #import "LocationHelper.h"
 #import "ClubUsersViewController.h"
 #import "GlobalVars.h"
+#import <Parse/Parse.h>
 
 @interface SidebarViewController (){
     long unreadMessagesCount;
@@ -46,11 +47,22 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    
+    //Google Analytics
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName
+           value:@"Sidebar Screen"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+    
     //Pubnub staff
     [PubNub setDelegate:self];
     
     // clear badge value
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    currentInstallation.badge = 0;
+    [currentInstallation saveEventually];
     
     [self loadData];
 }
@@ -64,12 +76,12 @@
 
 - (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message
 {
-    PNLog(PNLogGeneralLevel, self, @"PubNub client received message: %@", message);
+    //PNLog(PNLogGeneralLevel, self, @"PubNub client received message: %@", message);
     
-    NSString *msg = [message.message valueForKey:@"msg"];
+    /*NSString *msg = [message.message valueForKey:@"msg"];
     NSString *type = [message.message valueForKey:@"type"];
     NSString *user_from = [message.message valueForKey:@"user_from"];
-    NSString *user_to = [message.message valueForKey:@"user_to"];
+    NSString *user_to = [message.message valueForKey:@"user_to"];*/
     
     [self loadData];
 }
@@ -159,7 +171,7 @@
         
         NSString * avatarUrl  = [cloudinary url: [userAvatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
         
-        [cell.avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"Default.png"]];
+        [cell.avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
         
     } else if ([cellIdentifier isEqualToString:@"messages"]) {
         cell.countLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:16];
@@ -173,7 +185,6 @@
     }
     
     cell.titleLabel.text = NSLocalizedString(cellIdentifier, nil);
-    
    
     cell.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
     cell.nameLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
@@ -238,12 +249,42 @@
 }
 
 - (IBAction)checkoutClubAction:(id)sender {
-    Place * checkinClub = [LocationHelper getCheckinClub];
+    
+   UIActionSheet *checkoutPopup = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"youSureCheckout", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:
+                   NSLocalizedString(@"yes", nil),
+                   nil];
+    [checkoutPopup showInView:[UIApplication sharedApplication].keyWindow];
+    
+    /*Place * checkinClub = [LocationHelper getCheckinClub];
     [self showProgress:NO title:nil];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
-    [self._manager checkout:checkinClub.id accessToken:accessToken userInfo:sender];
+    [self._manager checkout:checkinClub.id accessToken:accessToken userInfo:sender];*/
 }
+
+- (void)actionSheet:(UIActionSheet *)popup clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex) {
+        case 0:
+        {
+            // click yes
+            Place * checkinClub = [LocationHelper getCheckinClub];
+            [self showProgress:NO title:nil];
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            NSString *accessToken = [defaults objectForKey:@"accessToken"];
+            [self._manager checkout:checkinClub.id accessToken:accessToken userInfo:popup];
+            
+            break;
+        }
+        case 1:
+            // click cancel
+            break;
+        default:
+            break;
+    }
+    
+}
+
 
 - (void)didCheckout:(User *) user userInfo:(NSObject *)userInfo
 {

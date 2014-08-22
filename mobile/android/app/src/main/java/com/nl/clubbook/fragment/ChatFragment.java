@@ -2,7 +2,7 @@ package com.nl.clubbook.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.nl.clubbook.R;
@@ -19,62 +18,113 @@ import com.nl.clubbook.adapter.ChatAdapter;
 import com.nl.clubbook.datasource.ChatDto;
 import com.nl.clubbook.datasource.ChatMessageDto;
 import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.SessionManager;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.nl.clubbook.utils.KeyboardUtils;
 
 /**
  * Created by Andrew on 6/8/2014.
  */
-public class ChatFragment extends BaseFragment {
+public class ChatFragment extends BaseInnerFragment implements View.OnClickListener {
 
-    private TextView userName;
-    private ImageView userAvatar;
-    private ListView chat_list;
-    private ChatAdapter adapter;
+    private static final String ARG_USER_ID = "ARG_USER_ID";
+    private static final String ARG_USER_NAME = "ARG_USER_NAME";
+
+    private ChatAdapter mAdapter;
     private EditText inputText;
-    private String user_to;
-    private String user_name_to;
-    private String user_from;
+    private String mUserToId;
+    private String mUserFromId;
+    private String mAccessToken;
     private ChatDto chatDto;
 
-    protected ImageLoader imageLoader;
-    protected DisplayImageOptions options;
-    protected ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
+    public static Fragment newInstance(Fragment targetFragment, String userId, String userName) {
+        Fragment fragment = new ChatFragment();
+        fragment.setTargetFragment(targetFragment, 0);
 
-    public ChatFragment(BaseFragment provoiusFregment, String user_id, String user_name) {
-        super(provoiusFregment);
-        this.user_to = user_id;
-        this.user_name_to = user_name;
+        Bundle args = new Bundle();
+        args.putString(ARG_USER_ID, userId);
+        args.putString(ARG_USER_NAME, userName);
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fr_chat, container, false);
+    }
 
-        View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        getActivity().setTitle("chat");
+        handleArgs();
+        initView();
+        loadConversation();
+    }
 
-        user_from = getCurrentUserId();
+    @Override
+    public void onStart() {
+        super.onStart();
 
-        userName = (TextView) rootView.findViewById(R.id.chatUserName);
-        userAvatar = (ImageView) rootView.findViewById(R.id.chatUserAvatar);
+        SessionManager session = new SessionManager(getActivity().getApplicationContext());
+        session.setConversationListner(mUserToId + "_" + mUserFromId);
+    }
 
-        chat_list = (ListView) rootView.findViewById(R.id.chatList);
+    @Override
+    public void onStop() {
+        super.onStop();
 
-        // send message input
-        inputText = (EditText) rootView.findViewById(R.id.messageInput);
-        rootView.findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        SessionManager session = new SessionManager(getActivity().getApplicationContext());
+        session.setConversationListner(null);
+    }
+
+    @Override
+    public void onDestroyView() {
+        View view = getView();
+        if(view != null) {
+            KeyboardUtils.closeKeyboard(getActivity(), view.findViewById(R.id.messageInput));
+        }
+
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.txtLike:
+                sendMessageTemp(ChatMessageDto.TYPE_SMILE);
+                break;
+            case R.id.imgSendDrink:
+                sendMessageTemp(ChatMessageDto.TYPE_DRINK);
+                break;
+            case R.id.txtSend:
                 sendMessage();
-            }
-        });
-        // Setup our input methods. Enter key on the keyboard or pushing the send button
+                break;
+        }
+    }
+
+    private void handleArgs() {
+        Bundle args = getArguments();
+        if(args == null) {
+            return;
+        }
+
+        mUserToId = args.getString(ARG_USER_ID);
+        String userName = args.getString(ARG_USER_NAME);
+
+        initActionBarTitle(userName != null ? userName : "");
+    }
+
+    private void initView() {
+        View view = getView();
+        if(view == null) {
+            return;
+        }
+
+        mUserFromId = getCurrentUserId();
+        mAccessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
+
+        inputText = (EditText) view.findViewById(R.id.messageInput);
         inputText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
@@ -85,48 +135,34 @@ public class ChatFragment extends BaseFragment {
             }
         });
 
-        rootView.findViewById(R.id.sendDrinkButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendMessageTemp("drink");
-            }
-        });
-        rootView.findViewById(R.id.sendSmileButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendMessageTemp("smile");
-            }
-        });
-
-        imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.default_list_image)
-                .showImageForEmptyUri(R.drawable.default_list_image)
-                .showImageOnFail(R.drawable.default_list_image)
-                .cacheInMemory()
-                .cacheOnDisc()
-                .build();
-
-        fillConversation();
-
-        return rootView;
+        view.findViewById(R.id.txtSend).setOnClickListener(ChatFragment.this);
+        view.findViewById(R.id.imgSendDrink).setOnClickListener(ChatFragment.this);
+        view.findViewById(R.id.txtLike).setOnClickListener(ChatFragment.this);
     }
 
     public void receiveComment(ChatMessageDto message) {
-        adapter.add(message);
+        mAdapter.add(message);
 
-        DataStore.read_messages(chatDto.getCurrentUser().getId(), chatDto.getReceiver().getId(), new DataStore.OnResultReady() {
-            @Override
-            public void onReady(Object result, boolean failed) {
-                if (failed) {
-                    return;
+        DataStore.readMessages(
+                chatDto.getCurrentUser().getId(),
+                chatDto.getReceiver().getId(),
+                chatDto.getCurrentUser().getAccessToken(),
+                new DataStore.OnResultReady() {
+
+                    @Override
+                    public void onReady(Object result, boolean failed) {
+                        if (failed) {
+                            return;
+                        }
+                    }
                 }
-            }
-        });
+        );
     }
 
     private void sendMessageTemp(String type) {
-        DataStore.chat(user_from, user_to, "", type, new DataStore.OnResultReady() {
+        String accessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
+
+        DataStore.chat(mUserFromId, mUserToId, "", type, accessToken, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
 
@@ -140,91 +176,98 @@ public class ChatFragment extends BaseFragment {
         chatMessageDto.setUserFromName(chatDto.getCurrentUser().getName());
         chatMessageDto.setUserFromAvatar(chatDto.getCurrentUser().getAvatar());
 
-        adapter.add(chatMessageDto);
+        mAdapter.add(chatMessageDto);
     }
 
     private void sendMessage() {
-        String input = inputText.getText().toString();
+        String accessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
+        String input = inputText.getText().toString().trim();
+
         if (!input.equals("")) {
-            DataStore.chat(user_from, user_to, input, "message", new DataStore.OnResultReady() {
+            DataStore.chat(mUserFromId, mUserToId, input, ChatMessageDto.TYPE_MESSAGE, accessToken, new DataStore.OnResultReady() {
                 @Override
                 public void onReady(Object result, boolean failed) {
 
                 }
             });
 
-            adapter.add(new ChatMessageDto(inputText.getText().toString()));
+            ChatMessageDto myNewMessage = new ChatMessageDto();
+            myNewMessage.setMsg(input);
+            myNewMessage.setType(ChatMessageDto.TYPE_MESSAGE);
+            myNewMessage.setIsMyMessage(true);
+            myNewMessage.setUserFrom(chatDto.getCurrentUser().getId());
+            myNewMessage.setUserFromName(chatDto.getCurrentUser().getName());
+            myNewMessage.setUserFromAvatar(chatDto.getCurrentUser().getAvatar());
+
+            mAdapter.add(myNewMessage);
             inputText.setText("");
         }
     }
 
-    private void fillConversation() {
-        DataStore.get_conversation(user_from, user_to, new DataStore.OnResultReady() {
+    private void loadConversation() {
+        setLoading(true);
+
+        DataStore.getConversation(mUserFromId, mUserToId, mAccessToken, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
+                if(isDetached() || getActivity() == null || getActivity().isFinishing()) {
+                    return;
+                }
+
                 if (failed) {
+                    return;
+                }
+
+                View view = getView();
+                if(view == null) {
                     return;
                 }
 
                 chatDto = (ChatDto) result;
 
-                // set user name
-                userName.setText(chatDto.getReceiver().getName());
-                // set avatar
-                String image_url = ImageHelper.getProfileImage(chatDto.getReceiver().getAvatar());
-                imageLoader.displayImage(image_url, userAvatar, options, animateFirstListener);
-                // display chat messages
-
-                // chat messages
-
-                adapter = new ChatAdapter(getActivity().getApplicationContext(), R.layout.chat_item, chatDto.getConversation());
-                chat_list.setAdapter(adapter);
-
-                chat_list.setSelection(chatDto.getConversation().size());
+                mAdapter = new ChatAdapter(getActivity().getApplicationContext(), R.layout.item_chat_left, chatDto.getConversation());
+                ListView listChat = (ListView) view.findViewById(R.id.listChat);
+                listChat.setAdapter(mAdapter);
+                listChat.setSelection(chatDto.getConversation().size());
 
                 inputText.requestFocus();
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(inputText, InputMethodManager.SHOW_IMPLICIT);
 
                 // make conversation between 2 people as read
-                DataStore.read_messages(chatDto.getCurrentUser().getId(), chatDto.getReceiver().getId(), new DataStore.OnResultReady() {
-                    @Override
-                    public void onReady(Object result, boolean failed) {
-                        if (failed) {
-                            return;
-                        }
-                        ((MainActivity) getActivity()).updateMessagesCount();
-                    }
-                });
+                DataStore.readMessages(
+                        chatDto.getCurrentUser().getId(),
+                        chatDto.getReceiver().getId(),
+                        chatDto.getCurrentUser().getAccessToken(),
+                        new DataStore.OnResultReady() {
+                            @Override
+                            public void onReady(Object result, boolean failed) {
+                                if (failed) {
+                                    return;
+                                }
+                                ((MainActivity) getActivity()).updateMessagesCount();
+                            }
+                        });
+
+                setLoading(false);
             }
         });
     }
 
-    @Override
-    public void backButtonWasPressed() {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        // hide keyboard
-        imm.hideSoftInputFromWindow(getActivity().getWindow().getCurrentFocus().getWindowToken(), 0);
-
-        ((MainActivity) getActivity()).setCurrentFragment(previousFragment);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (((MainActivity) getActivity()).getDrawerToggle().isDrawerIndicatorEnabled()) {
-            ((MainActivity) getActivity()).getDrawerToggle().setDrawerIndicatorEnabled(false);
-            ((MainActivity) getActivity()).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    private void setLoading(boolean isLoading) {
+        View view = getView();
+        if(view == null) {
+            return;
         }
 
-        SessionManager session = new SessionManager(getActivity().getApplicationContext());
-        session.setConversationListner(user_to + "_" + user_from);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        SessionManager session = new SessionManager(getActivity().getApplicationContext());
-        session.setConversationListner(null);
+        if(isLoading) {
+            view.findViewById(R.id.listChat).setVisibility(View.GONE);
+            view.findViewById(R.id.holderNewMessage).setVisibility(View.GONE);
+            view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+        } else {
+            view.findViewById(R.id.listChat).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.holderNewMessage).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.progressBar).setVisibility(View.GONE);
+        }
     }
 }

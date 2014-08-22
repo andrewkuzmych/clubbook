@@ -291,6 +291,21 @@ exports.friends_request = (req, res)->
     db_model.User.findById(req.params.objectId).exec (err, user)->
       user.friends.push req.params.friendId
       db_model.save_or_update_user user, ()->
+
+        #send push
+        Parse = require("parse").Parse
+        Parse.initialize config.parse_app_id, config.parse_js_key
+
+        queryIOS = new Parse.Query(Parse.Installation)
+        queryIOS.equalTo "channels", 'user_' + req.params.friendId
+        queryIOS.equalTo "deviceType", "ios"      
+        Parse.Push.send
+          where: queryIOS 
+          data:
+            badge: "Increment"
+            alert: user.name + ' sent you friend request'
+
+
         res.json
           status: "ok"
           result:
@@ -311,6 +326,18 @@ exports.friends_confirm = (req, res)->
     db_model.User.findById(req.params.objectId).exec (err, user)->
       user.friends.push req.params.friendId
       db_model.save_or_update_user user, ()->
+        #send push
+        Parse = require("parse").Parse
+        Parse.initialize config.parse_app_id, config.parse_js_key
+        queryIOS = new Parse.Query(Parse.Installation)
+        queryIOS.equalTo "channels", 'user_' + req.params.friendId
+        queryIOS.equalTo "deviceType", "ios"      
+        Parse.Push.send
+          where: queryIOS 
+          data:
+            badge: "Increment"
+            alert: user.name + ' confirmed your friend request'
+
         res.json
           status: "ok"
           result:

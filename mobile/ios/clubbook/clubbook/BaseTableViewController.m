@@ -73,7 +73,7 @@
 {
     NSArray *segItemsArray = [NSArray arrayWithObjects: @"Previous", @"Next", nil];
     UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:segItemsArray];
-    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:@"TitilliumWeb-Bold" size:12], UITextAttributeFont, nil];
+    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:12], UITextAttributeFont, nil];
     [segmentedControl setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
     
     segmentedControl.frame = CGRectMake(0, 0, 130, 10);
@@ -96,7 +96,7 @@
     
     UIBarButtonItem * done = [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneWithNumberPad)];
     
-    [done setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"TitilliumWeb-Bold" size:16.0]} forState:UIControlStateNormal];
+    [done setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:16.0]} forState:UIControlStateNormal];
     
     baseToolbar.items = [NSArray arrayWithObjects:
                          [[UIBarButtonItem alloc] initWithCustomView:(UIView *)segmentedControl],

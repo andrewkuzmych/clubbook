@@ -12,35 +12,10 @@ import java.util.List;
  */
 public class ChatDto {
     private String chatId;
-    private Integer unreadMessages = 0;
+    private int unreadMessages;
     private List<ChatMessageDto> conversation;
     private UserDto currentUser;
     private UserDto receiver;
-
-    public ChatDto() {
-    }
-
-    public ChatDto(JSONObject chatJson) throws JSONException {
-        JSONArray conversation_dto = chatJson.getJSONArray("conversation");
-
-        List<ChatMessageDto> conversation = new ArrayList<ChatMessageDto>();
-        for (int i = 0; i < conversation_dto.length(); i++) {
-            conversation.add(new ChatMessageDto(conversation_dto.getJSONObject(i)));
-        }
-        setConversation(conversation);
-
-        setCurrentUser(new UserDto(chatJson.getJSONObject("current_user")));
-        setReceiver(new UserDto(chatJson.getJSONObject("receiver")));
-        if(chatJson.has("chat_id")) {
-            // new chat between 2 people
-            setChatId(chatJson.getString("chat_id"));
-        }
-
-        if(chatJson.has("unread_messages")){
-            setUnreadMessages(chatJson.getInt("unread_messages"));
-        }
-    }
-
 
     public String getChatId() {
         return chatId;
@@ -74,11 +49,11 @@ public class ChatDto {
         this.currentUser = currentUser;
     }
 
-    public Integer getUnreadMessages() {
+    public int getUnreadMessages() {
         return unreadMessages;
     }
 
-    public void setUnreadMessages(Integer unreadMessages) {
+    public void setUnreadMessages(int unreadMessages) {
         this.unreadMessages = unreadMessages;
     }
 

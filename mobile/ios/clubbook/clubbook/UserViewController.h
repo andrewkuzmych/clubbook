@@ -25,6 +25,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *checkinLabel;
 @property (weak, nonatomic) IBOutlet UIScrollView *userPhotosScroll;
 
+@property (assign, nonatomic) BOOL isFromChat;
+
 @property (weak, nonatomic) Place *currentPlace;
 @property (weak, nonatomic) NSString *clubCheckinName;
 - (IBAction)chatAction:(id)sender;

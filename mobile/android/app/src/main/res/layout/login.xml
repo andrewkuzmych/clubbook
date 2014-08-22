@@ -7,44 +7,50 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/main_background_color"
-        android:baselineAligned="false"
-        android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:background="@color/bg_screen_grey_light"
+        android:orientation="vertical">
 
-        <com.nl.clubbook.ui.view.TitilliumRegularEditText
-            android:id="@+id/txtUsername"
+        <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="8dp"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress"
-            android:singleLine="true"
-            android:textColor="@android:color/white" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@android:color/white"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
-        <com.nl.clubbook.ui.view.TitilliumRegularEditText
-            android:id="@+id/txtPassword"
-            android:layout_width="fill_parent"
-            android:layout_height="48dp"
-            android:layout_below="@+id/txtUsername"
-            android:layout_marginTop="8dp"
-            android:hint="@string/password"
-            android:password="true"
-            android:singleLine="true"
-            android:textColor="@android:color/white" />
+            <com.nl.clubbook.ui.view.TitilliumRegularEditText
+                android:id="@+id/txtUsername"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:textColor="@color/grey" />
+
+            <com.nl.clubbook.ui.view.TitilliumRegularEditText
+                android:id="@+id/txtPassword"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:hint="@string/password"
+                android:password="true"
+                android:singleLine="true"
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/grey"/>
+        </LinearLayout>
 
         <com.nl.clubbook.ui.view.TitilliumBoldTextView
             android:id="@+id/btnLogin"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/main_button"
+            android:layout_margin="16dp"
+            android:background="@drawable/bg_btn_violet_light"
             android:gravity="center"
             android:text="@string/log_in"
-            android:textColor="@color/checkin_button_color"
-            android:textSize="@dimen/text_size_medium" />
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_medium"/>
     </RelativeLayout>
 
 </ScrollView>

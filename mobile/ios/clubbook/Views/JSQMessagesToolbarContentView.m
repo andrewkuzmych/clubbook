@@ -189,7 +189,7 @@ const CGFloat kJSQMessagesToolbarContentViewHorizontalSpacingDefault = 4.0f;
                                               CGRectGetHeight(self.rightBarButtonContainerView.frame));
     }
     
-     rightBarButtonItem.titleLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:19];
+     rightBarButtonItem.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:19];
     
     self.rightBarButtonContainerView.hidden = NO;
     self.rightHorizontalSpacingConstraint.constant = kJSQMessagesToolbarContentViewHorizontalSpacingDefault;

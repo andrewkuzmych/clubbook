@@ -18,6 +18,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.cloudinary.Cloudinary;
+import com.nl.clubbook.R;
+import com.nl.clubbook.activity.BaseActivity;
+import com.nl.clubbook.utils.L;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,19 +46,18 @@ public abstract class ImageUploader {
     private static final int PICK_FROM_CAMERA = 1;
     private static final int CROP_FROM_CAMERA = 2;
     private static final int PICK_FROM_FILE = 3;
-    private static final int DEFAULT_VIEW = 1;
 
-    private Activity activity;
+    private BaseActivity mActivity;
 
     public Activity getActivity() {
-        return activity;
+        return mActivity;
     }
 
-    public void setActivity(Activity activity) {
-        this.activity = activity;
+    public void setActivity(BaseActivity activity) {
+        mActivity = activity;
     }
 
-    public ImageUploader(Activity activity) {
+    public ImageUploader(BaseActivity activity) {
         setActivity(activity);
         cloudinary = new Cloudinary(getActivity().getApplicationContext());
     }
@@ -65,11 +67,15 @@ public abstract class ImageUploader {
     public abstract void onImageSelected(JSONObject imageObj) throws JSONException;
 
     public AlertDialog selectPhoto() {
-        final String[] items = new String[]{"Take from camera", "Select from gallery"};
+        final String[] items = new String[] {
+                mActivity.getString(R.string.take_from_camera),
+                mActivity.getString(R.string.select_from_gallery)
+        };
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, items);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle("Select Image");
+        builder.setTitle(mActivity.getString(R.string.select_image));
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 if (item == 0) {
@@ -90,7 +96,10 @@ public abstract class ImageUploader {
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
 
-                    startActivityForResultHolder(Intent.createChooser(intent, "Complete action using"), PICK_FROM_FILE);
+                    startActivityForResultHolder(
+                            Intent.createChooser(intent, mActivity.getString(R.string.complete_action_using)),
+                            PICK_FROM_FILE
+                    );
                 }
             }
         });
@@ -98,101 +107,20 @@ public abstract class ImageUploader {
         return builder.create();
     }
 
-    public void onActivityResult(int requestCode, int resultCode,
-                                 Intent imageReturnedIntent) {
-
-        if (resultCode != getActivity().RESULT_OK) return;
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
 
         switch (requestCode) {
             case PICK_FROM_CAMERA:
                 doCrop();
                 break;
-
             case PICK_FROM_FILE:
-                // mImageCaptureUri = imageReturnedIntent.getData();
-                // doCrop();
-                final Uri selectedImage = imageReturnedIntent.getData();
-
-                new AsyncTask<Void, Void, JSONObject>() {
-                    @Override
-                    protected JSONObject doInBackground(Void... params) {
-                        org.json.JSONObject imageObj = null;
-
-                        try {
-                            // TODO: rotate image
-                            // http://stackoverflow.com/questions/3647993/android-bitmaps-loaded-from-gallery-are-rotated-in-imageview
-
-                            Bitmap mBitmap = readBitmap(selectedImage);
-                            Bitmap scaled = getResizedBitmap(mBitmap, 800);
-
-                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                            scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                            InputStream is = new ByteArrayInputStream(stream.toByteArray());
-                            imageObj = cloudinary.uploader().upload(is, Cloudinary.asMap("format", "jpg"));
-
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-
-                        return imageObj;
-                    }
-
-                    @Override
-                    protected void onPostExecute(JSONObject result) {
-                        if (result == null) {
-                            //TODO error
-                            return;
-                        }
-
-                        try {
-                            onImageSelected(result);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }.execute();
-
+                pickFromFile(imageReturnedIntent);
                 break;
-
             case CROP_FROM_CAMERA:
-                final Bundle extras = imageReturnedIntent.getExtras();
-
-                if (extras != null) {
-
-                    new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... params) {
-                            Bitmap photo = extras.getParcelable("data");
-                            //mImageView.setImageBitmap(photo);
-
-                            // Bitmap  mBitmap = MediaStore.Images.Media.getBitmap(MainActivity.this.getContentResolver(), selectedImage);
-                            Bitmap scaled = getResizedBitmap(photo, 800);//Bitmap.createScaledBitmap(mBitmap, 500, 500, true);
-
-                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                            scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                            InputStream is = new ByteArrayInputStream(stream.toByteArray());
-
-                            try {
-                                cloudinary.uploader().upload(is, Cloudinary.asMap("width", "1000", "height", "1000", "crop", "limit", "format", "jpg"));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
-                            return null;
-                        }
-
-                        @Override
-                        protected void onPostExecute(Void result) {
-                            File f = new File(mImageCaptureUri.getPath());
-
-                            if (f.exists()) {
-                                f.delete();
-                            }
-                        }
-                    }.execute();
-
-                }
-
+                cropFromCamera(imageReturnedIntent);
                 break;
 
         }
@@ -209,9 +137,7 @@ public abstract class ImageUploader {
         int size = list.size();
 
         if (size == 0) {
-            Toast.makeText(getActivity(), "Can not find image crop app", Toast.LENGTH_SHORT).show();
-
-            return;
+            Toast.makeText(getActivity(), mActivity.getString(R.string.can_not_find_image_crop_app), Toast.LENGTH_SHORT).show();
         } else {
             intent.setData(mImageCaptureUri);
 
@@ -231,15 +157,15 @@ public abstract class ImageUploader {
                 startActivityForResultHolder(i, CROP_FROM_CAMERA);
             } else {
                 for (ResolveInfo res : list) {
-                    final CropOption co = new CropOption();
+                    final CropOption cropOption = new CropOption();
 
-                    co.title = getActivity().getPackageManager().getApplicationLabel(res.activityInfo.applicationInfo);
-                    co.icon = getActivity().getPackageManager().getApplicationIcon(res.activityInfo.applicationInfo);
-                    co.appIntent = new Intent(intent);
+                    cropOption.title = getActivity().getPackageManager().getApplicationLabel(res.activityInfo.applicationInfo);
+                    cropOption.icon = getActivity().getPackageManager().getApplicationIcon(res.activityInfo.applicationInfo);
+                    cropOption.appIntent = new Intent(intent);
 
-                    co.appIntent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+                    cropOption.appIntent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
 
-                    cropOptions.add(co);
+                    cropOptions.add(cropOption);
                 }
 
                 CropOptionAdapter adapter = new CropOptionAdapter(getActivity().getApplicationContext(), cropOptions);
@@ -270,6 +196,103 @@ public abstract class ImageUploader {
         }
     }
 
+    private void pickFromFile(Intent imageReturnedIntent) {
+        final Uri selectedImage = imageReturnedIntent.getData();
+
+        new AsyncTask<Void, Void, JSONObject>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+
+                mActivity.showProgress(mActivity.getString(R.string.upload_new_image));
+            }
+
+            @Override
+            protected JSONObject doInBackground(Void... params) {
+                JSONObject imageObj = null;
+
+                try {
+                    // TODO: rotate image
+                    // http://stackoverflow.com/questions/3647993/android-bitmaps-loaded-from-gallery-are-rotated-in-imageview
+
+                    Bitmap mBitmap = readBitmap(selectedImage);
+                    Bitmap scaled = getResizedBitmap(mBitmap, 800);
+
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    InputStream is = new ByteArrayInputStream(stream.toByteArray());
+                    imageObj = cloudinary.uploader().upload(is, Cloudinary.asMap("format", "jpg"));
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+                return imageObj;
+            }
+
+            @Override
+            protected void onPostExecute(JSONObject result) {
+                if (result == null) {
+                    return;
+                }
+
+                try {
+                    onImageSelected(result);
+                } catch (JSONException e) {
+                    L.i("" + e);
+                }
+            }
+        }.execute();
+    }
+
+    private void cropFromCamera(Intent imageReturnedIntent) {
+        final Bundle extras = imageReturnedIntent.getExtras();
+
+        if (extras != null) {
+
+            new AsyncTask<Void, Void, JSONObject>() {
+                @Override
+                protected JSONObject doInBackground(Void... params) {
+                    Bitmap photo = extras.getParcelable("data");
+
+                    Bitmap scaled = getResizedBitmap(photo, 800);
+
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    InputStream is = new ByteArrayInputStream(stream.toByteArray());
+
+                    JSONObject imageObj = null;
+
+                    try {
+                        imageObj = cloudinary.uploader().upload(is, Cloudinary.asMap("width", "1000", "height", "1000", "crop", "limit", "format", "jpg"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    return imageObj;
+                }
+
+                @Override
+                protected void onPostExecute(JSONObject result) {
+                    File f = new File(mImageCaptureUri.getPath());
+
+                    if (f.exists()) {
+                        f.delete();
+                    }
+
+                    if(result != null) {
+                        try {
+                            onImageSelected(result);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }.execute();
+
+        }
+    }
+
     private Bitmap getResizedBitmap(Bitmap image, int maxSize) {
         int width = image.getWidth();
         int height = image.getHeight();
@@ -293,13 +316,15 @@ public abstract class ImageUploader {
         try {
             fileDescriptor = getActivity().getContentResolver().openAssetFileDescriptor(selectedImage, "r");
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            L.i("" + e);
         } finally {
-            try {
-                bm = BitmapFactory.decodeFileDescriptor(fileDescriptor.getFileDescriptor(), null, options);
-                fileDescriptor.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if(fileDescriptor != null) {
+                try {
+                    bm = BitmapFactory.decodeFileDescriptor(fileDescriptor.getFileDescriptor(), null, options);
+                    fileDescriptor.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return bm;

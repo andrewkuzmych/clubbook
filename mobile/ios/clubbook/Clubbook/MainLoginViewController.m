@@ -54,7 +54,10 @@
         [self performSegueWithIdentifier: @"onLogin" sender: self];
     }
     
-    self.sloganLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:20];
+    self.sloganLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
+    self.facebookPostLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:11];
+    self.facebookPostLabel.text = NSLocalizedString(@"facebookPost", nil);
+    
     self.sloganLabel.text = NSLocalizedString(@"slogan", nil);
     self.fbButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
     [self.fbButton setTitle:NSLocalizedString(@"fbSign", nil) forState:UIControlStateNormal];
@@ -63,9 +66,9 @@
     self.loginButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
     [self.loginButton setTitle:NSLocalizedString(@"emailSignIn", nil) forState:UIControlStateNormal];
     
-    self.termOfUseLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12];
+    self.termOfUseLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:11];
     self.termOfUseLabel.text = NSLocalizedString(@"termsText", nil);
-    self.termOfUseButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:12];
+    self.termOfUseButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:11];
     [self.termOfUseButton setTitle:NSLocalizedString(@"termsAction", nil) forState:UIControlStateNormal];
   
 }
@@ -77,6 +80,7 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES];   //it hides
+    self.screenName = @"Main Login Screen";
 }
 
 -(void)viewWillDisappear:(BOOL)animated{

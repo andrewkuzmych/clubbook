@@ -99,9 +99,9 @@
     [self.communicator addUserImage:userId avatar:avatar accessToken:accessToken];
 }
 
-- (void)changeUserPush:(NSString *) userId push:(BOOL) push
+- (void)changeUserPush:(NSString *) accessToken push:(BOOL) push
 {
-    [self.communicator changeUserPush:userId push:push];
+    [self.communicator changeUserPush:accessToken push:push];
 }
 
 - (void)updateUserImage:(NSString *) userId objectId:(NSString *) objectId accessToken:(NSString *) accessToken
@@ -332,23 +332,7 @@
 
 - (void)readChatJSON:(NSData *)objectNotation
 {
-    NSError *localError = nil;
-    NSDictionary *parsedObject = [NSJSONSerialization JSONObjectWithData:objectNotation options:0 error:&localError];
     
-    if (localError != nil)
-    {
-//*error = localError;
-        //return nil;
-    }
-
-    //NSError *error = nil;
-    //User *user = [ObjectBuilder checkinFromJSON:objectNotation error:&error];
-    
-    //if (error != nil) {
-    //    [self.delegate  failedWithError:error];
-        
-    //} else {
-    //[self.delegate didReadChat:@"ok"];
 }
 
 - (void)updateCheckinJSON:(NSData *)objectNotation

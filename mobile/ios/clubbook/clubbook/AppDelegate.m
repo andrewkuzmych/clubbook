@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import <FacebookSDK/FacebookSDK.h>
 #import <Parse/Parse.h>
+#import "GAI.h"
 
 
 @implementation AppDelegate
@@ -40,29 +41,19 @@
     [Parse setApplicationId:@"71OeWikSy4nxlGuefO2O6AFhuENP2Nqz1fjB88x3"
                   clientKey:@"J5RrDFEhrHH7ns75OOWmNM4Wg52yEjkfxYAxvvDj"];
    
-    /*if ([CLLocationManager locationServicesEnabled])
-    {
-        //locationManager;
-        locationManager = [[CLLocationManager alloc] init];
-        locationManager.delegate=self;
-        locationManager.desiredAccuracy=kCLLocationAccuracyBest;
-        locationManager.distanceFilter=kCLDistanceFilterNone;
-        [locationManager startUpdatingLocation];
-    }*/
     
-    [PubNub setDelegate:self];
+   // [PubNub setDelegate:self];
     
     
-    // Extract the notification data
-    NSDictionary *notificationPayload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
-    
-    // Create a pointer to the Photo object
-    NSString *photoId = [notificationPayload objectForKey:@"p"];
-    PFObject *targetPhoto = [PFObject objectWithoutDataWithClassName:@"Photo"
-                                                            objectId:photoId];
-    
-    
-    
+    //Google Analytics
+    // Optional: automatically send uncaught exceptions to Google Analytics.
+    [GAI sharedInstance].trackUncaughtExceptions = YES;
+    // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
+    [GAI sharedInstance].dispatchInterval = 20;
+    // Optional: set Logger to VERBOSE for debug information.
+    [[[GAI sharedInstance] logger] setLogLevel:kGAILogLevelVerbose];
+    // Initialize tracker. Replace with your tracking ID.
+    [[GAI sharedInstance] trackerWithTrackingId:@"UA-53930044-1"];
     
     return YES;
 }
@@ -77,28 +68,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
 
 - (void)application:(UIApplication *)application
 didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    [PFPush handlePush:userInfo];
+   // [PFPush handlePush:userInfo];
 }
-
-- (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message {
-    PNLog(PNLogGeneralLevel, self, @"PubNub client received message: %@", message);
-    NSString *msg = [message.message valueForKey:@"msg"];
-    NSString *type = [message.message valueForKey:@"type"];
-    NSString *user_from = [message.message valueForKey:@"user_from"];
-    NSString *user_to = [message.message valueForKey:@"user_to"];
-}
-
-/*- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
-{
-    CLLocation *loc =[locations lastObject];
-}
-
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
-{
-    [manager stopUpdatingLocation];
-    //[self empty:[NSString stringWithFormat:NSLocalizedString(@"locationDisabled", nil)]];
-    
-}*/
 
 
 // During the Facebook login flow, your app passes control to the Facebook iOS app or Facebook in a mobile browser.
@@ -143,7 +114,6 @@ didReceiveRemoteNotification:(NSDictionary *)userInfo {
 }
 
 -(void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler{
-     UIViewController *viewController = self.window.rootViewController;
 }
 
 @end

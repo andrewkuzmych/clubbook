@@ -12,6 +12,10 @@
 #import "WebViewController.h"
 
 @interface SettingsViewController ()
+{
+    UIActionSheet *deletePopup;
+    UIActionSheet *logoutPopup;
+}
 
 @property (nonatomic, strong) NSArray *settingsItems;
 @end
@@ -48,8 +52,17 @@
     } else {
         [self.pushSwitch setOn:NO animated:YES];
     }
+}
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     
+    //Google Analytics
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName
+           value:@"Settings Screen"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -64,15 +77,19 @@
     } else if ([cellIdentifier isEqualToString:@"terms"]) {
         [self performSegueWithIdentifier:@"onWeb" sender:NSLocalizedString(@"termsUrl", nil)];
     } else if ([cellIdentifier isEqualToString:@"delete"]) {
+        deletePopup = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"youSureDelete", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:
+                                NSLocalizedString(@"yes", nil),
+                                nil];
+        [deletePopup showInView:[UIApplication sharedApplication].keyWindow];
     } else if ([cellIdentifier isEqualToString:@"contacts"]) {
         NSString *email = @"mailto:feedback@clubbook.com?subject=Question about clubbook";
         email = [email stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:email]];
     } else if ([cellIdentifier isEqualToString:@"logout"]){
-        UIActionSheet *popup = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"youSureLogOut", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:
+        logoutPopup = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"youSureLogOut", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:
                                 NSLocalizedString(@"yes", nil),
                                 nil];
-        [popup showInView:[UIApplication sharedApplication].keyWindow];
+        [logoutPopup showInView:[UIApplication sharedApplication].keyWindow];
     
     }
 }
@@ -92,8 +109,16 @@
         case 0:
         {
             // click yes
-            [SessionHelper DeleteUser];
-            [self performSegueWithIdentifier:@"onLogout" sender:nil];
+            if ([popup isEqual:logoutPopup]) {
+                [SessionHelper DeleteUser];
+                [self performSegueWithIdentifier:@"onLogout" sender:nil];
+            } else {
+                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                NSString *accessToken = [defaults objectForKey:@"accessToken"];
+               [self._manager deleteUser:accessToken];
+
+            }
+
             break;
         }
         case 1:
@@ -103,6 +128,12 @@
             break;
     }
     
+}
+
+- (void)didDeleteUser:(NSString *)result
+{
+    [SessionHelper DeleteUser];
+    [self performSegueWithIdentifier:@"onLogout" sender:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -126,11 +157,11 @@
     BOOL state = [sender isOn];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *userId = [defaults objectForKey:@"userId"];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
     if (state) {
-        [self._manager changeUserPush:userId push:YES];
+        [self._manager changeUserPush:accessToken push:YES];
     } else {
-        [self._manager changeUserPush:userId push:NO];
+        [self._manager changeUserPush:accessToken push:NO];
     }
 }
 

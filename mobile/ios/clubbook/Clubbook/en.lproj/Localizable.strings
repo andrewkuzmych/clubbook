@@ -23,10 +23,17 @@
 "sentRequest" = "sent_request";
 "receiveRequest" = "receive_request";
 "friend" = "friend";
+
+"unfriendTitle" = "Unfriend";
+"sentRequestTitle" = "Request Pending";
+"receiveRequestTitle" = "Accept Friend Request";
+"noneFriendTitle"="Add Friend";
+
+
 "url" = "clubbook.com";
 "termsUrl" = "http://clubbookapp.herokuapp.com/terms";
 "privacyUrl" = "http://clubbookapp.herokuapp.com/privacy";
-
+"facebookPost" = "We don't post anything to Facebook.";
 
 "checkApp" = "Hey there! I'm using Clubbook. Check it out!";
 "wrongName" = "Wrong Name";
@@ -39,8 +46,8 @@
 "error" = "Error";
 "kilometers" = "km";
 "meters" = "m";
-"invite_for_drink" = "Invites you for a Drink";
-"send_like" = "Likes your Profile";
+"invite_for_drink" = "Invite you for a Drink";
+"send_like" = "likes your Profile";
 "email"= "Email";
 "pass"= "Password (minimum 6 characters)";
 "first_name"= "First Name";
@@ -72,7 +79,7 @@
 "defoutBio" = "Hey there! I’m using Clubbook";
 "bio" = "Short bio about yourself, a mood message or say something cool!.";
 "usersLeftToChecdkin" = "Profile Pictures will be visible when %d users more are Checked-in.";
-"nonePeople" = "none people";
+"nonePeople" = "no users";
 "needToCheckinFirst" = "To interact with this user, you need to Check-in to this Club first.";
 "cannotSeeOwnPofile" = "This is You";
 
@@ -83,7 +90,7 @@
 "zero_plus" = "0+";
 "processing" = "Processing Request...";
 "friends" = "Friends";
-"pending_requests" = "Pending";
+"pending_requests" = "Requests";
 "not_checked_in" = "Not Checked-in";
 "checked_in" = "Checked-in:";
 "chat_limit" = "You cannot send more than 3 messages to this user without receiving a reply";
@@ -123,6 +130,7 @@
 "youSureUnfriend" = "Are you sure you want to ‘Unfriend' this user?";
 "youSureDelete" = "Are you sure you want to Delete Your Account?";
 "youSureLogOut" = "Are you sure you want to Log Out?";
+"youSureCheckout" = "Are you sure you want to Check-out?";
 
 
 "push" = "Push Notifications";
@@ -131,3 +139,5 @@
 "account" = "Delete Your Account";
 "contact" = "Contact";
 "logOut" = "Log Out";
+"clubProfile" = "Club Profile";
+"userProfile" = "User Profile";

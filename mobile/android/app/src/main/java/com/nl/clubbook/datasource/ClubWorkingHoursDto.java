@@ -4,6 +4,10 @@ package com.nl.clubbook.datasource;
  * Created by Volodymyr on 15.08.2014.
  */
 public class ClubWorkingHoursDto {
+
+    public static final String STATUS_OPENED = "opened";
+    public static final String STATUS_CLOSED = "closed";
+
     private String id;
     private String status;
     private String startTime;

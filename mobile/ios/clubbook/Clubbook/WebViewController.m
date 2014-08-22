@@ -34,7 +34,13 @@
     [self.webBrowser loadRequest:requestObj];
 }
 
-
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    //Google Analytics
+    self.screenName = @"Web Screen";
+}
 
 - (void)didReceiveMemoryWarning
 {

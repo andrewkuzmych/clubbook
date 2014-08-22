@@ -71,7 +71,7 @@
     
     isShown = YES;
 
-    UIFont *font = [UIFont fontWithName:@"TitilliumWeb-REGULAR" size:13.0];
+    UIFont *font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
     message = [[UILabel alloc] init];
     CGSize textSize = [alertText sizeWithFont:font constrainedToSize:CGSizeMake(kMessageWidth, kMessageMaxHeight) lineBreakMode:message.lineBreakMode];
     CGFloat y = kMessageMaxHeight/2 - textSize.height/2;
@@ -87,7 +87,7 @@
     CGSize titleSize = [titleText sizeWithFont:font constrainedToSize:CGSizeMake(kTitleWidth, kTitleMaxHeight) lineBreakMode:title.lineBreakMode];
     y = kTitleMaxHeight/2 - titleSize.height/2;
     [title setFrame:CGRectMake(kX, y, kTitleWidth, 20)];
-    UIFont * titleFont = [UIFont fontWithName:@"TitilliumWeb-REGULAR" size:20.0];
+    UIFont * titleFont = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:20.0];
     [title setFont:titleFont];
     [title setBackgroundColor:[UIColor clearColor]];
     [title setTextColor:[UIColor whiteColor]];
