@@ -513,7 +513,6 @@ exports.chat = (req, res)->
         where: queryAndroid 
         data:
           action: "com.nl.clubbook.UPDATE_STATUS"
-          alert: "hello Amsterdam"
           msg: message
           unique_id: req.body.user_from + "_" + req.body.user_to
           header: user_from.name
