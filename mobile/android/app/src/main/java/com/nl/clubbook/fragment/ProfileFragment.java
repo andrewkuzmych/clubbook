@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
@@ -26,15 +27,20 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.List;
 
-public class ProfileFragment extends BaseInnerFragment implements View.OnClickListener, ViewPager.OnPageChangeListener {
+public class ProfileFragment extends BaseInnerFragment implements View.OnClickListener, ViewPager.OnPageChangeListener,
+        AdapterView.OnItemClickListener {
 
     private static final String ARG_PROFILE_ID = "ARG_PROFILE_ID";
 
-    private String mFriendProfileId;
+    private String mProfileId;
     private List<CheckInUserDto> mCheckInUsers;
+    private UserAvatarPagerAdapter mPhotoAdapter;
 
     private ImageLoader mImageLoader;
     private DisplayImageOptions mOptions;
@@ -68,7 +74,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         initLoader();
         initView();
         initCheckInUserList();
-        loadData();
+        loadData(mProfileId);
     }
 
     @Override
@@ -103,6 +109,15 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         mBulletIndicator.setSelectedView(position);
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        View userId = view.findViewById(R.id.userId);
+        String userProfileId = (String)userId.getTag();
+
+        mProfileId = userProfileId;
+        loadData(mProfileId);
+    }
+
     private void initLoader() {
         mImageLoader = ImageLoader.getInstance();
         mOptions = new DisplayImageOptions.Builder()
@@ -119,7 +134,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             return;
         }
 
-        mFriendProfileId = args.getString(ARG_PROFILE_ID);
+        mProfileId = args.getString(ARG_PROFILE_ID);
     }
 
     private void initView() {
@@ -129,7 +144,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         }
 
         View btnChat = view.findViewById(R.id.btnChat);
-        if(mFriendProfileId != null && mFriendProfileId.equalsIgnoreCase(this.getSession().getUserDetails().get(SessionManager.KEY_ID))){
+        if(mProfileId != null && mProfileId.equalsIgnoreCase(getSession().getUserDetails().get(SessionManager.KEY_ID))){
             btnChat.setVisibility(View.GONE);
         } else {
             btnChat.setOnClickListener(this);
@@ -156,16 +171,22 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         ProfileAdapter adapter = new ProfileAdapter(getActivity(), mCheckInUsers, currentUserId, ProfileAdapter.MODE_LIST);
         listCheckInUser.setAdapter(adapter);
         listCheckInUser.setVisibility(View.VISIBLE);
+        listCheckInUser.setOnItemClickListener(this);
     }
 
-    protected void loadData() {
+    protected void loadData(@Nullable String profileId) {
+        if(profileId == null) {
+            L.i("Profile id = null");
+            return;
+        }
+
         setRefreshing(getView(), true);
 
         final SessionManager session = new SessionManager(getActivity());
         final HashMap<String, String> user = session.getUserDetails();
         final String accessToken = user.get(SessionManager.KEY_ACCESS_TOCKEN);
 
-        DataStore.retrieveUserFriend(accessToken, mFriendProfileId, new DataStore.OnResultReady() {
+        DataStore.retrieveUserFriend(accessToken, profileId, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (getView() == null || isDetached()) {
@@ -184,15 +205,13 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         });
     }
 
-    private void fillProfile(FriendDto profile) {
+    private void fillProfile(@Nullable FriendDto profile) {
         if(profile == null) {
-            L.v("profile = null");
             return;
         }
 
         View view = getView();
         if(view == null) {
-            L.v("view = null");
             return;
         }
 
@@ -235,7 +254,6 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         //check is this user your friend
         String friendStatus = profile.getFriendStatus();
-        L.v("friendStatus - " + friendStatus);
         if(FriendDto.STATUS_FRIEND.equalsIgnoreCase(friendStatus)) {
             view.findViewById(R.id.txtAddFriend).setVisibility(View.GONE);
             view.findViewById(R.id.txtRemoveFriend).setVisibility(View.VISIBLE);
@@ -250,7 +268,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         }
     }
 
-    private void initViewPager(View view, List<UserPhotoDto> userPhotoList) {
+    private void initViewPager(@NotNull View view, @NotNull List<UserPhotoDto> userPhotoList) {
         mBulletIndicator = (ViewPagerBulletIndicatorView)view.findViewById(R.id.indicatorAvatars);
         mBulletIndicator.setBulletViewCount(userPhotoList.size());
         if(userPhotoList.size() <= 1) {
@@ -258,8 +276,12 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         }
 
         ViewPager pagerImage = (ViewPager) view.findViewById(R.id.pagerAvatars);
-        UserAvatarPagerAdapter adapter = new UserAvatarPagerAdapter(getChildFragmentManager(), userPhotoList, mImageLoader, mOptions, animateFirstListener);
-        pagerImage.setAdapter(adapter);
+        if(mPhotoAdapter == null) {
+            mPhotoAdapter = new UserAvatarPagerAdapter(getChildFragmentManager(), userPhotoList, mImageLoader, mOptions, animateFirstListener);
+            pagerImage.setAdapter(mPhotoAdapter);
+        } else {
+            mPhotoAdapter.updateData(userPhotoList);
+        }
 
         for(int i = 0; i < userPhotoList.size(); i++) {
             UserPhotoDto userPhoto = userPhotoList.get(i);
@@ -293,7 +315,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         ((BaseActivity) getActivity()).showProgress("Loading...");
 
-        DataStore.addFriendRequest(user.get(SessionManager.KEY_ID), mFriendProfileId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
+        DataStore.addFriendRequest(user.get(SessionManager.KEY_ID), mProfileId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
                 new DataStore.OnResultReady() {
 
             @Override
@@ -316,7 +338,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     }
 
     private void onBtnChatClicked() {
-        Fragment chatFragment = ChatFragment.newInstance(ProfileFragment.this, mFriendProfileId, "Jon");
+        Fragment chatFragment = ChatFragment.newInstance(ProfileFragment.this, mProfileId, "Jon");
         openFragment(chatFragment, ChatFragment.class);
     }
 
@@ -330,7 +352,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         ((BaseActivity) getActivity()).showProgress("Loading...");
 
-        DataStore.removeFriendRequest(user.get(SessionManager.KEY_ID), mFriendProfileId, new DataStore.OnResultReady() {
+        DataStore.removeFriendRequest(user.get(SessionManager.KEY_ID), mProfileId, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 View view = getView();

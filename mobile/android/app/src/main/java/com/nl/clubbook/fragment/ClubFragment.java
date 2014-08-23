@@ -256,6 +256,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         if (LocationCheckinHelper.isCheckinHere(mClub)) {
             showProgressDialog(getString(R.string.checking_out));
 
+            //TODO Refactor this code
             LocationCheckinHelper.checkout(getActivity(), new CheckInOutCallbackInterface() {
                 @Override
                 public void onCheckInOutFinished(boolean result) {

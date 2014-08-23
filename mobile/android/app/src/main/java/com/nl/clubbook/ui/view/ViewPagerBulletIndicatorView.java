@@ -26,6 +26,8 @@ public class ViewPagerBulletIndicatorView extends LinearLayout {
     }
 
     public void setBulletViewCount(int count) {
+        removeAllViews();
+
         for(int i = 0; i < count; i ++) {
             addView(getBulletView());
         }
