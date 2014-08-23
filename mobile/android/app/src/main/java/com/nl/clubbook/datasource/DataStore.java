@@ -1,6 +1,8 @@
 package com.nl.clubbook.datasource;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -569,13 +571,13 @@ public class DataStore {
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
                     JSONObject jsonResult = responseJson.optJSONObject("result");
-                    if(jsonResult == null) {
+                    if (jsonResult == null) {
                         onResultReady.onReady(null, true);
                         return;
                     }
 
                     JSONObject jsonFriend = jsonResult.optJSONObject("user");
-                    if(jsonFriend == null) {
+                    if (jsonFriend == null) {
                         onResultReady.onReady(null, true);
                         return;
                     }
@@ -743,7 +745,7 @@ public class DataStore {
      * @param receiverUserId
      * @param onResultReady
      */
-    public static void getConversation(String currentUserId, String receiverUserId, String accessToken,
+    public static void getConversation(final Activity activity, String currentUserId, String receiverUserId, String accessToken,
                                        final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
@@ -752,18 +754,30 @@ public class DataStore {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                ChatDto chat = null;
+            public void onSuccess(int statusCode, Header[] headers, final JSONObject responseJson) {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final ChatDto chat;
 
-                if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
-                    JSONObject jsonResult = responseJson.optJSONObject("result");
-                    chat = JSONConverter.newChatDto(jsonResult);
-                    failed = false;
-                } else {
-                    failed = true;
-                }
+                        if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
+                            JSONObject jsonResult = responseJson.optJSONObject("result");
+                            chat = JSONConverter.newChatDto(jsonResult);
+                            failed = false;
+                        } else {
+                            failed = true;
+                            chat = null;
+                        }
 
-                onResultReady.onReady(chat, failed);
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                onResultReady.onReady(chat, failed);
+                            }
+                        });
+                    }
+                });
+                thread.start();
             }
 
             @Override

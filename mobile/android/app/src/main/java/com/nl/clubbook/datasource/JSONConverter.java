@@ -9,13 +9,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Volodymyr on 14.08.2014.
  */
 public class JSONConverter {
+
+    public static final SimpleDateFormat FORMAT_DATE = new SimpleDateFormat("yyyy-MM-dd, HH:mm:ss", Locale.getDefault());
+    public static final SimpleDateFormat FORMAT_DATE_WITHOUT_HOURS = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     private JSONConverter() {
     }
@@ -382,12 +388,19 @@ public class JSONConverter {
         ChatMessageDto result = new ChatMessageDto();
 
         result.setMsg(jsonChatMessage.optString("msg"));
-        result.setTime(jsonChatMessage.optString("time"));
         result.setType(jsonChatMessage.optString("type"));
         result.setUserFrom(jsonChatMessage.optString("from_who"));
         result.setRead(jsonChatMessage.optBoolean("read"));
         result.setIsMyMessage(jsonChatMessage.optBoolean("is_my_message"));
         result.setUserFromName(jsonChatMessage.optString("from_who_name"));
+
+        String date = jsonChatMessage.optString("time");
+        try {
+            result.setTime(FORMAT_DATE.parse(date).getTime());
+            result.setTimeWithoutHours(FORMAT_DATE_WITHOUT_HOURS.parse(date).getTime());
+        } catch (ParseException e) {
+            L.i("" + e);
+        }
 
         JSONObject jsonAvatar = jsonChatMessage.optJSONObject("from_who_avatar");
         if(jsonAvatar != null) {

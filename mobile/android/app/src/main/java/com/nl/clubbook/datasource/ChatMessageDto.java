@@ -7,7 +7,7 @@ import com.nl.clubbook.R;
 /**
  * Created by Andrew on 6/6/2014.
  */
-public class ChatMessageDto {
+public class ChatMessageDto extends BaseChatMessage {
     public static final String TYPE_MESSAGE = "message";
     public static final String TYPE_DRINK = "drink";
     public static final String TYPE_SMILE = "smile";
@@ -17,12 +17,9 @@ public class ChatMessageDto {
     private String userFromAvatar;
     private String msg;
     private String type;
-    private String time;
+    private long time;
     private boolean isMyMessage;
     private boolean isRead;
-
-    public ChatMessageDto() {
-    }
 
     public String getFormatMessage(Context context){
         String result;
@@ -91,11 +88,11 @@ public class ChatMessageDto {
         this.userFromName = userFromName;
     }
 
-    public String getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(long time) {
         this.time = time;
     }
 

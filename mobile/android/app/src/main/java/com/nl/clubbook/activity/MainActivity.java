@@ -324,7 +324,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 String userFrom = data.optString("user_from");
                 SessionManager session = new SessionManager(this);
                 if (session.getConversationListner() != null && session.getConversationListner().equalsIgnoreCase(userFrom + "_" + userTo)) {
-                    ChatMessageDto lastMessage = JSONConverter.newChatMessage(data.optJSONObject("last_message"));
+                    ChatMessageDto lastMessage = JSONConverter.newChatMessage(data.optJSONObject("last_message")); //TODO
                     chatFragment.receiveComment(lastMessage);
                 } else {
                     updateMessagesCount();

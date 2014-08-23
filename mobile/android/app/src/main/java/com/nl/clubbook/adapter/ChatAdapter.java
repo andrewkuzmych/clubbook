@@ -9,33 +9,44 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
+import com.nl.clubbook.datasource.BaseChatMessage;
 import com.nl.clubbook.datasource.ChatMessageDto;
 import com.nl.clubbook.helper.ImageHelper;
+import com.nl.clubbook.utils.CalendarUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Andrew on 6/6/2014.
  */
-public class ChatAdapter extends ArrayAdapter<ChatMessageDto> {
+public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
+
+    private final SimpleDateFormat mFormat = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
 
     private static final int TYPE_MESSAGE = 0;
     private static final int TYPE_DRINK = 1;
     private static final int TYPE_SMILE = 2;
+    private static final int TYPE_DATE = 3;
 
-    private static final int TYPE_COUNT = 3;
+    private static final int TYPE_COUNT = 4; //date item
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<ChatMessageDto> mMessages = new ArrayList<ChatMessageDto>();
+    private List<BaseChatMessage> mMessages = new ArrayList<BaseChatMessage>();
 
-    protected ImageLoader mImageLoader;
-    protected DisplayImageOptions mOptions;
+    private ImageLoader mImageLoader;
+    private DisplayImageOptions mOptions;
+    private long mCurrentTimeWithoutHours;
+    private long mDayTimeInMilliseconds;
+    private String mToday;
+    private String mYesterday;
 
-    public ChatAdapter(Context context, int textViewResourceId, List<ChatMessageDto> messages) {
+    public ChatAdapter(Context context, int textViewResourceId, List<BaseChatMessage> messages) {
         super(context, textViewResourceId);
 
         mContext = context;
@@ -50,27 +61,32 @@ public class ChatAdapter extends ArrayAdapter<ChatMessageDto> {
                 .cacheInMemory()
                 .cacheOnDisc()
                 .build();
+
+        mCurrentTimeWithoutHours = CalendarUtils.getCurrentTimeWithoutHours();
+        mDayTimeInMilliseconds = CalendarUtils.getDayTimeInMilliseconds();
+        mToday = mContext.getString(R.string.today);
+        mYesterday = mContext.getString(R.string.yesterday);
     }
 
     @Override
-    public void add(ChatMessageDto object) {
+    public void add(BaseChatMessage object) {
         mMessages.add(object);
         super.add(object);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View row;
-        ChatMessageDto message = getItem(position);
+        BaseChatMessage message = getItem(position);
+        if(message.isDateObject()) {
+            return initDateRow(message);
+        }
 
         int type = getItemViewType(position);
         if (type == TYPE_DRINK) {
-            row = initDrinkRow(message);
+            return initDrinkRow((ChatMessageDto)message);
         } else {
-            row = initMessageRow(message);
+            return initMessageRow((ChatMessageDto)message);
         }
-
-        return row;
     }
 
     @Override
@@ -79,7 +95,7 @@ public class ChatAdapter extends ArrayAdapter<ChatMessageDto> {
     }
 
     @Override
-    public ChatMessageDto getItem(int index) {
+    public BaseChatMessage getItem(int index) {
         return mMessages.get(index);
     }
 
@@ -95,7 +111,12 @@ public class ChatAdapter extends ArrayAdapter<ChatMessageDto> {
 
     @Override
     public int getItemViewType(int position) {
-        ChatMessageDto chatMessageDto = mMessages.get(position);
+        BaseChatMessage baseMessage = mMessages.get(position);
+        if(baseMessage.isDateObject()) {
+            return TYPE_DATE;
+        }
+
+        ChatMessageDto chatMessageDto = (ChatMessageDto) baseMessage;
         String type = chatMessageDto.getType();
 
         if (ChatMessageDto.TYPE_MESSAGE.equalsIgnoreCase(type)) {
@@ -105,6 +126,22 @@ public class ChatAdapter extends ArrayAdapter<ChatMessageDto> {
         } else {
             return TYPE_SMILE;
         }
+    }
+
+    private View initDateRow(BaseChatMessage dateMessage) {
+        View row = mInflater.inflate(R.layout.item_date, null);
+
+        TextView txtDate = (TextView) row.findViewById(R.id.txtDate);
+        long messageTime = dateMessage.getTimeWithoutHours();
+        if(messageTime == mCurrentTimeWithoutHours) {
+            txtDate.setText(mToday);
+        } else if(messageTime == mCurrentTimeWithoutHours - mDayTimeInMilliseconds) {
+            txtDate.setText(mYesterday);
+        } else {
+            txtDate.setText(mFormat.format(messageTime));
+        }
+
+        return row;
     }
 
     private View initMessageRow(ChatMessageDto message) {
