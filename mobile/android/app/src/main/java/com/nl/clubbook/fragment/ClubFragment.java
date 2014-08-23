@@ -16,11 +16,11 @@ import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.ClubInfoActivity;
 import com.nl.clubbook.adapter.ProfileAdapter;
+import com.nl.clubbook.datasource.CheckInUserDto;
 import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.ClubWorkingHoursDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.JSONConverter;
-import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.*;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -263,12 +263,12 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
                         return;
                     }
 
-//                    if (result) {
-//                        UiHelper.changeCheckinState(getActivity(), view, true);
-//                        loadData(LOAD_MODE_CHECK_IN);
-//                    } else {
-//                        setProgressViewState(LOAD_MODE_CHECK_IN, false);
-//                    }
+                    if (result) {
+                        UiHelper.changeCheckinState(getActivity(), view, true);
+                        loadData(LOAD_MODE_CHECK_IN);
+                    } else {
+                        setProgressViewState(LOAD_MODE_CHECK_IN, false);
+                    }
                 }
             });
         } else {
@@ -281,12 +281,12 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
                         return;
                     }
 
-//                    if (isUserCheckIn) {
-//                        UiHelper.changeCheckinState(getActivity(), view, false);
-//                        loadData(LOAD_MODE_CHECK_IN);
-//                    } else {
-//                        setProgressViewState(LOAD_MODE_CHECK_IN, false);
-//                    }
+                    if (isUserCheckIn) {
+                        UiHelper.changeCheckinState(getActivity(), view, false);
+                        loadData(LOAD_MODE_CHECK_IN);
+                    } else {
+                        setProgressViewState(LOAD_MODE_CHECK_IN, false);
+                    }
                 }
             });
         }
@@ -320,13 +320,14 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         }
     }
 
-    private void initGridView(View view, List<UserDto> users) {
+    private void initGridView(View view, List<CheckInUserDto> users) {
         if(users == null) {
             return;
         }
 
+        String currentUserId = getSession().getUserDetails().get(SessionManager.KEY_ID);
         GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
-        ProfileAdapter profileAdapter = new ProfileAdapter(getActivity(), users, ProfileAdapter.MODE_GRID);
+        ProfileAdapter profileAdapter = new ProfileAdapter(getActivity(), users, currentUserId, ProfileAdapter.MODE_GRID);
         gridUsers.setAdapter(profileAdapter);
     }
 }

@@ -375,23 +375,13 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                ClubDto club = null;
+                JSONObject jsonClub = responseJson.optJSONObject("club");
 
-                try {
-                    JSONObject jsonClub = responseJson.getJSONObject("club");
-
-                    club = JSONConverter.newClub(jsonClub);
-                    if(jsonClub != null && club != null) {
-                        JSONArray jsonArrUsers = responseJson.getJSONArray("users");
-                        List<UserDto> users = new ArrayList<UserDto>();
-                        for (int i = 0; i < jsonArrUsers.length(); i++) {
-                            users.add(new UserDto(jsonArrUsers.getJSONObject(i)));
-                        }
-
-                        club.setUsers(users);//TODO
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                ClubDto club = JSONConverter.newClub(jsonClub);
+                if(jsonClub != null && club != null) {
+                    JSONArray jsonArrUsers = responseJson.optJSONArray("users");
+                    List<CheckInUserDto> checkInUsers = JSONConverter.newCheckInUsersList(jsonArrUsers);
+                    club.setUsers(checkInUsers);
                 }
 
                 failed = false;

@@ -13,9 +13,9 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.adapter.ProfileAdapter;
 import com.nl.clubbook.adapter.UserAvatarPagerAdapter;
+import com.nl.clubbook.datasource.CheckInUserDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.FriendDto;
-import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.datasource.UserPhotoDto;
 import com.nl.clubbook.helper.*;
 import com.nl.clubbook.ui.view.HorizontalListView;
@@ -34,7 +34,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     private static final String ARG_PROFILE_ID = "ARG_PROFILE_ID";
 
     private String mFriendProfileId;
-    private List<UserDto> mCheckInUsers;
+    private List<CheckInUserDto> mCheckInUsers;
 
     private ImageLoader mImageLoader;
     private DisplayImageOptions mOptions;
@@ -42,7 +42,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
     private ViewPagerBulletIndicatorView mBulletIndicator;
 
-    public static Fragment newInstance(Fragment targetFragment, String profileId, List<UserDto> checkedInUsers) {
+    public static Fragment newInstance(Fragment targetFragment, String profileId, List<CheckInUserDto> checkedInUsers) {
         ProfileFragment fragment = new ProfileFragment();
         fragment.setTargetFragment(targetFragment, 0);
         fragment.setCheckInUsers(checkedInUsers);
@@ -151,8 +151,9 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             return;
         }
 
+        String currentUserId = getSession().getUserDetails().get(SessionManager.KEY_ID);
         HorizontalListView listCheckInUser = (HorizontalListView) view.findViewById(R.id.listCheckInUsers);
-        ProfileAdapter adapter = new ProfileAdapter(getActivity(), mCheckInUsers, ProfileAdapter.MODE_LIST);
+        ProfileAdapter adapter = new ProfileAdapter(getActivity(), mCheckInUsers, currentUserId, ProfileAdapter.MODE_LIST);
         listCheckInUser.setAdapter(adapter);
         listCheckInUser.setVisibility(View.VISIBLE);
     }
@@ -349,7 +350,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         });
     }
 
-    public void setCheckInUsers(List<UserDto> mCheckInUsers) {
+    public void setCheckInUsers(List<CheckInUserDto> mCheckInUsers) {
         this.mCheckInUsers = mCheckInUsers;
     }
 }
