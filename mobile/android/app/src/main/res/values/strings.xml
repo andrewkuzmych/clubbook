@@ -112,5 +112,7 @@
     <string name="checking_out">Checking out&#8230;</string>
     <string name="yesterday">Yesterday</string>
     <string name="today">Today</string>
+    <string name="nearby">Nearby</string>
+    <string name="a_z">A-Z</string>
 
 </resources>
