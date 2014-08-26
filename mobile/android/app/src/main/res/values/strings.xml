@@ -114,5 +114,7 @@
     <string name="today">Today</string>
     <string name="nearby">Nearby</string>
     <string name="a_z">A-Z</string>
+    <string name="pending">Pending</string>
+    <string name="accept">Accept</string>
 
 </resources>

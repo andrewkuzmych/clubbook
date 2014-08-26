@@ -63,15 +63,26 @@ public class ClubbookRestClient {
         client.get(getBcAbsoluteUrl("obj/user/" + userId + "/friends"), params, responseHandler);
     }
 
+    public static void retrievePendingFriends(String userId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/user/" + userId + "/friends/pending"), params, responseHandler);
+    }
+
     public static void addFriend(String userId, String friendId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getBcAbsoluteUrl("obj/user/" + userId + "/friends/" + friendId + "/friend"), params, responseHandler);
     }
 
-    public static void removeFriend(String userId, String friendId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+    public static void acceptFriend(String userId, String friendId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/user/" + userId + "/friends/" + friendId + "/confirm"), params, responseHandler);
+    }
+
+    public static void declineFriendRequest(String userId, String friendId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getBcAbsoluteUrl("obj/user/" + userId + "/friends/" + friendId + "/remove"), params, responseHandler);
     }
 
-    //list_club/:distance/:user_lat/:user_lon
+    public static void unfriendFriend(String userId, String friendId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/user/" + userId + "/friends/" + friendId + "/unfriend"), params, responseHandler);
+    }
+
     public static void retrievePlaces(RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getBcAbsoluteUrl("obj/club"), params, responseHandler);
     }

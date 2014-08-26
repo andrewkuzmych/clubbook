@@ -26,7 +26,7 @@ public class JSONConverter {
     private JSONConverter() {
     }
 
-    public static List<UserDto> newFriendList(@Nullable JSONArray jsonArrUsers) {
+    public static List<UserDto> newFriendList(@Nullable JSONArray jsonArrUsers, boolean parseCheckin) {
         if(jsonArrUsers == null) {
             return new ArrayList<UserDto>();
         }
@@ -34,7 +34,7 @@ public class JSONConverter {
         List<UserDto> friends = new ArrayList<UserDto>();
         for (int i = 0; i < jsonArrUsers.length(); i++) {
             JSONObject jsonFriend = jsonArrUsers.optJSONObject(i);
-            friends.add(newUser(jsonFriend, true));
+            friends.add(newUser(jsonFriend, parseCheckin));
         }
 
         return friends;

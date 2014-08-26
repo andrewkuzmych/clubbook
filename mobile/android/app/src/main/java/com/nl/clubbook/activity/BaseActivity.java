@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.AlertDialogManager;
 import com.nl.clubbook.helper.SessionManager;
@@ -33,9 +32,6 @@ public class BaseActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         setSession(new SessionManager(getApplicationContext()));
-
-        // set context to use from DataStore for all app
-        DataStore.setContext(this);
     }
 
     @Override
