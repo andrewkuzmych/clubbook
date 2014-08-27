@@ -63,10 +63,12 @@
             android:layout_weight="1"
             android:textSize="@dimen/text_size_medium"
             android:background="@drawable/bg_btn_green"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"
+            android:text="@string/check_out"
+            android:gravity="center"/>
 
         <ImageView
-            android:id="@+id/imgBtnCheckOut"
+            android:id="@+id/imgCheckOut"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_btn_violet_light"

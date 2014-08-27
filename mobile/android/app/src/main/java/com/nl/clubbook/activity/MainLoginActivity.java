@@ -38,8 +38,8 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.ac_main_login);
 
         // start to track user location
-        LocationCheckinHelper.startSmartLocationTracker(this);
-        if (!LocationCheckinHelper.isLocationEnabled(this)) {
+        LocationCheckinHelper.getInstance().startSmartLocationTracker(this);
+        if (!LocationCheckinHelper.getInstance().isLocationEnabled(this)) {
             return;
         }
 

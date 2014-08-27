@@ -64,7 +64,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fr_club, container, false);
+        return inflater.inflate(R.layout.fr_club, null);
     }
 
     @Override
@@ -184,13 +184,13 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         ImageView imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
 
         // if we checked in this this club set related style
-        if (LocationCheckinHelper.isCheckinHere(mClub)) {
-            UiHelper.changeCheckinState(getActivity(), txtCheckIn, false);
+        if (LocationCheckinHelper.getInstance().isCheckInHere(mClub)) {
+            UiHelper.changeCheckInState(getActivity(), txtCheckIn, true);
         } else {
-            UiHelper.changeCheckinState(getActivity(), txtCheckIn, true);
+            UiHelper.changeCheckInState(getActivity(), txtCheckIn, false);
         }
         // can we check in this club
-        if (LocationCheckinHelper.canCheckinHere(mClub)) {
+        if (LocationCheckinHelper.getInstance().canCheckInHere(mClub)) {
             txtCheckIn.setEnabled(true);
         } else {
             txtCheckIn.setEnabled(false);
@@ -253,43 +253,37 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     }
 
     private void onCheckInBtnClicked(final View view) {
-        if (LocationCheckinHelper.isCheckinHere(mClub)) {
+        if (LocationCheckinHelper.getInstance().isCheckInHere(mClub)) {
             showProgressDialog(getString(R.string.checking_out));
 
-            //TODO Refactor this code
-            LocationCheckinHelper.checkout(getActivity(), new CheckInOutCallbackInterface() {
+            LocationCheckinHelper.getInstance().checkOut(getActivity(), new CheckInOutCallbackInterface() {
                 @Override
-                public void onCheckInOutFinished(boolean result) {
-                    if(isDetached() || getActivity() == null || getActivity().isFinishing()) {
-                        return;
-                    }
-
-                    if (result) {
-                        UiHelper.changeCheckinState(getActivity(), view, true);
-                        loadData(LOAD_MODE_CHECK_IN);
-                    } else {
-                        setProgressViewState(LOAD_MODE_CHECK_IN, false);
-                    }
+                public void onCheckInOutFinished(boolean isUserCheckOut) {
+                    handleCheckInCheckOutResults(view, isUserCheckOut);
                 }
             });
         } else {
             showProgressDialog(getString(R.string.checking_in));
 
-            LocationCheckinHelper.checkin(getActivity(), mClub, new CheckInOutCallbackInterface() {
+            LocationCheckinHelper.getInstance().checkIn(getActivity(), mClub, new CheckInOutCallbackInterface() {
                 @Override
                 public void onCheckInOutFinished(boolean isUserCheckIn) {
-                    if(isDetached() || getActivity() == null || getActivity().isFinishing()) {
-                        return;
-                    }
-
-                    if (isUserCheckIn) {
-                        UiHelper.changeCheckinState(getActivity(), view, false);
-                        loadData(LOAD_MODE_CHECK_IN);
-                    } else {
-                        setProgressViewState(LOAD_MODE_CHECK_IN, false);
-                    }
+                    handleCheckInCheckOutResults(view, isUserCheckIn);
                 }
             });
+        }
+    }
+
+    private void handleCheckInCheckOutResults(View view, boolean result) {
+        if(isDetached() || getActivity() == null || getActivity().isFinishing()) {
+            return;
+        }
+
+        if (result) {
+            UiHelper.changeCheckInState(getActivity(), view, false);
+            loadData(LOAD_MODE_CHECK_IN);
+        } else {
+            setProgressViewState(LOAD_MODE_CHECK_IN, false);
         }
     }
 
@@ -330,5 +324,11 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
         ProfileAdapter profileAdapter = new ProfileAdapter(getActivity(), users, currentUserId, ProfileAdapter.MODE_GRID);
         gridUsers.setAdapter(profileAdapter);
+    }
+
+    public interface OnCheckInCheckOutListener {
+        public void onCheckedIn();
+
+        public void onCheckedOut();
     }
 }

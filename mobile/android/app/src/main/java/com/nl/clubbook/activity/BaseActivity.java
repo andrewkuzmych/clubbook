@@ -11,8 +11,6 @@ import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.AlertDialogManager;
 import com.nl.clubbook.helper.SessionManager;
 
-import java.util.HashMap;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Andrew
@@ -23,7 +21,7 @@ import java.util.HashMap;
 public class BaseActivity extends ActionBarActivity {
     protected AlertDialogManager alert = new AlertDialogManager();
 
-    private SessionManager session;
+    private SessionManager mSession;
 
     private boolean isProgressShow = false;
 
@@ -31,7 +29,7 @@ public class BaseActivity extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setSession(new SessionManager(getApplicationContext()));
+        mSession = SessionManager.getInstance();
     }
 
     @Override
@@ -51,16 +49,11 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     public SessionManager getSession() {
-        return session;
-    }
-
-    protected void setSession(SessionManager session) {
-        this.session = session;
+        return mSession;
     }
 
     public String getCurrentUserId() {
-        HashMap<String, String> user = getSession().getUserDetails();
-        return user.get(SessionManager.KEY_ID);
+        return mSession.getUserId();
     }
 
     public void showProgress(String message) {

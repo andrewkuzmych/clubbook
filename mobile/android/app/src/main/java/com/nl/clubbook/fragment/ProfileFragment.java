@@ -116,9 +116,8 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         View userId = view.findViewById(R.id.userId);
-        String userProfileId = (String)userId.getTag();
+        mProfileId = (String)userId.getTag();
 
-        mProfileId = userProfileId;
         loadData(mProfileId);
     }
 
@@ -186,7 +185,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         setRefreshing(getView(), true);
 
-        final SessionManager session = new SessionManager(getActivity());
+        final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
         final String accessToken = user.get(SessionManager.KEY_ACCESS_TOCKEN);
 
@@ -329,7 +328,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     }
 
     private void onAddFriendsClicked() {
-        final SessionManager session = new SessionManager(getActivity());
+        final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
         ((BaseActivity) getActivity()).showProgress("Loading...");
@@ -357,7 +356,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     }
 
     private void onAcceptFriendsRequestClicked() {
-        final SessionManager session = new SessionManager(getActivity());
+        final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
         ((BaseActivity) getActivity()).showProgress("Loading...");
@@ -394,7 +393,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     }
 
     private void onRemoveFriendClicked() {
-        final SessionManager session = new SessionManager(getActivity());
+        final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
         ((BaseActivity) getActivity()).showProgress("Loading...");

@@ -89,7 +89,7 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
         Log.d("Location Updates", "Google Play services is available.");
 
         // retrieve my current location
-        Location currentLocation = LocationCheckinHelper.getCurrentLocation();
+        Location currentLocation = LocationCheckinHelper.getInstance().getCurrentLocation();
         if(currentLocation == null) {
             L.v("Location is empty");
             return;

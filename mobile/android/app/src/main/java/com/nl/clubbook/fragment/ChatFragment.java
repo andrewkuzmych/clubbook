@@ -73,7 +73,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     public void onStart() {
         super.onStart();
 
-        SessionManager session = new SessionManager(getActivity().getApplicationContext());
+        SessionManager session = SessionManager.getInstance();
         session.setConversationListner(mUserToId + "_" + mUserFromId);
     }
 
@@ -81,7 +81,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     public void onStop() {
         super.onStop();
 
-        SessionManager session = new SessionManager(getActivity().getApplicationContext());
+        SessionManager session = SessionManager.getInstance();
         session.setConversationListner(null);
     }
 

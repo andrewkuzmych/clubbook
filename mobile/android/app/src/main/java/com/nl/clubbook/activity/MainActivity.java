@@ -1,9 +1,13 @@
 package com.nl.clubbook.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,13 +25,19 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.NavDrawerItem;
 import com.nl.clubbook.datasource.ChatMessageDto;
+import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.JSONConverter;
 import com.nl.clubbook.fragment.ChatFragment;
+import com.nl.clubbook.fragment.ClubFragment;
 import com.nl.clubbook.fragment.ShareFragment;
+import com.nl.clubbook.fragment.dialog.ProgressDialog;
+import com.nl.clubbook.helper.CheckInOutCallbackInterface;
+import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.ui.drawer.NavDrawerData;
 import com.nl.clubbook.ui.drawer.NavDrawerListAdapter;
 import com.nl.clubbook.datasource.DataStore;
@@ -59,7 +69,11 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class MainActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener,
-        BaseFragment.OnInnerFragmentDestroyedListener, BaseFragment.OnInnerFragmentOpenedListener {
+        BaseFragment.OnInnerFragmentDestroyedListener, BaseFragment.OnInnerFragmentOpenedListener,
+        ClubFragment.OnCheckInCheckOutListener {
+
+    public static final String ACTION_CHECK_IN = "ACTION_CHECK_IN";
+    public static final String ACTION_CHECK_OUT = "ACTION_CHECK_OUT";
 
     public static final String EXTRA_TYPE = "EXTRA_TYPE";
 
@@ -87,9 +101,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_main);
 
+        getSession().clearCheckInClubInfo();
+
         if (!getSession().isLoggedIn()) {
             Intent intent = new Intent(getApplicationContext(), MainLoginActivity.class);
             startActivity(intent);
+            finish();
             return;
         }
 
@@ -98,6 +115,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         fragmentMap.put(NavDrawerData.FRIENDS_POSITION, new FriendsFragment());
         fragmentMap.put(NavDrawerData.SHARE_POSITION, new ShareFragment());
         fragmentMap.put(NavDrawerData.SETTINGS_POSITION, new SettingsFragment());
+
+        initReceivers();
 
         initImageLoader();
         initActionBar();
@@ -109,7 +128,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onStart() {
         super.onStart();
-        SessionManager session = new SessionManager(getApplicationContext());
+        SessionManager session = SessionManager.getInstance();
         HashMap<String, String> user = session.getUserDetails();
         String userId = user.get(SessionManager.KEY_ID);
         subscribeToChannel("message_" + userId);
@@ -127,10 +146,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onStop() {
         super.onStop();
-        SessionManager session = new SessionManager(getApplicationContext());
+        SessionManager session = SessionManager.getInstance();
         HashMap<String, String> user = session.getUserDetails();
         String userId = user.get(SessionManager.KEY_ID);
         NotificationHelper.pubnub.unsubscribe("message_" + userId);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        unregisterReceiver(mCheckInReceiver);
+        unregisterReceiver(mCheckOutReceiver);
     }
 
     @Override
@@ -211,6 +238,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.holderNavDrawerHeader:
                 onNavDrawerHeaderClicked();
                 break;
+            case R.id.imgCheckOut:
+                onImgCheckOutClicked();
+                break;
         }
     }
 
@@ -239,6 +269,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             mDrawerToggle.setDrawerIndicatorEnabled(false);
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
+    }
+
+    @Override
+    public void onCheckedIn() {
+        updateNavDrawerFooter();
+    }
+
+    @Override
+    public void onCheckedOut() {
+        updateNavDrawerFooter();
     }
 
     private void initImageLoader() {
@@ -279,6 +319,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
+    private void initReceivers() {
+        registerReceiver(mCheckInReceiver, new IntentFilter(ACTION_CHECK_IN));
+        registerReceiver(mCheckOutReceiver, new IntentFilter(ACTION_CHECK_OUT));
+    }
+
     private View initNavDrawerHeader() {
         mNavDrawerHeaderView = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_nav_drawer_header, null);
         mNavDrawerHeaderView.findViewById(R.id.holderNavDrawerHeader).setOnClickListener(MainActivity.this);
@@ -310,6 +355,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         txtProfileInfo.append(profileGender != null ? profileGender : "");
 
         mNavDrawerHeaderView.findViewById(R.id.holderNavDrawerHeader).setOnClickListener(MainActivity.this);
+
+        updateNavDrawerFooter();
     }
 
     private void handleNotification(JSONObject messageJson) {
@@ -322,9 +369,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 JSONObject data = messageJson.optJSONObject("data");
                 String userTo = data.optString("user_to");
                 String userFrom = data.optString("user_from");
-                SessionManager session = new SessionManager(this);
+
+                SessionManager session = SessionManager.getInstance();
                 if (session.getConversationListner() != null && session.getConversationListner().equalsIgnoreCase(userFrom + "_" + userTo)) {
-                    ChatMessageDto lastMessage = JSONConverter.newChatMessage(data.optJSONObject("last_message")); //TODO
+                    ChatMessageDto lastMessage = JSONConverter.newChatMessage(data.optJSONObject("last_message"));
                     chatFragment.receiveComment(lastMessage);
                 } else {
                     updateMessagesCount();
@@ -375,6 +423,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         initActionBar("");
     }
 
+    private void updateNavDrawerFooter() {
+        ClubDto club = LocationCheckinHelper.getInstance().getCurrentClub();
+
+        TextView txtClubName = (TextView) mNavDrawerHeaderView.findViewById(R.id.txtClubName);
+        View imgCheckIn = mNavDrawerHeaderView.findViewById(R.id.imgCheckOut);
+
+        if(club != null) {
+            txtClubName.setText(club.getTitle());
+            imgCheckIn.setTag(club.getId());
+            imgCheckIn.setOnClickListener(MainActivity.this);
+        } else {
+            imgCheckIn.setTag(null);
+        }
+    }
+
     private void displayView(final int position) {
         mCurrentFragment = fragmentMap.get(position);
 
@@ -394,7 +457,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             L.i("Error in creating fragment");
         }
     }
-
 
     private void subscribeToChannel(String channel_name) {
         try {
@@ -422,8 +484,44 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void onNavDrawerHeaderClicked() {
-        Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);//TODO
+        Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
         startActivityForResult(intent, EditProfileActivity.REQUEST_CODE);
+    }
+
+    private void onImgCheckOutClicked() {
+        showProgressDialog(getString(R.string.checking_out));
+
+        LocationCheckinHelper.getInstance().checkOut(MainActivity.this, new CheckInOutCallbackInterface() {
+            @Override
+            public void onCheckInOutFinished(boolean isUserCheckOut) {
+                handleCheckInCheckOutResults(isUserCheckOut);
+            }
+        });
+    }
+
+    private void hideProgressDialog() {
+        DialogFragment dialogFragment = (DialogFragment)getSupportFragmentManager().findFragmentByTag(ProgressDialog.TAG);
+        if(dialogFragment != null) {
+            dialogFragment.dismissAllowingStateLoss();
+        }
+    }
+
+    private void showProgressDialog(String message) {
+        Fragment dialogFragment = ProgressDialog.newInstance(getString(R.string.app_name), message);
+        getSupportFragmentManager().beginTransaction().add(dialogFragment, ProgressDialog.TAG).commitAllowingStateLoss();
+    }
+
+    private void handleCheckInCheckOutResults(boolean result) {
+        if(isFinishing()) {
+            return;
+        }
+
+        if (result) {
+            mNavDrawerHeaderView.findViewById(R.id.holderCheckOut).setVisibility(View.GONE);
+            hideProgressDialog();
+        } else {
+            Toast.makeText(MainActivity.this, R.string.problem_occurred_please_try_again, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private Callback callback = new Callback() {
@@ -465,6 +563,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         public void errorCallback(String channel, PubnubError error) {
             System.out.println("SUBSCRIBE : ERROR on channel " + channel
                     + " : " + error.toString());
+        }
+    };
+
+    private BroadcastReceiver mCheckInReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String clubName = getSession().getValueByKey(SessionManager.KEY_CHECKIN_CLUB_NAME);
+            TextView txtClubName = (TextView) mNavDrawerHeaderView.findViewById(R.id.txtClubName);
+            txtClubName.setText(clubName);
+
+            mNavDrawerHeaderView.findViewById(R.id.holderCheckOut).setVisibility(View.VISIBLE);
+        }
+    };
+
+    private BroadcastReceiver mCheckOutReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            TextView txtClubName = (TextView) mNavDrawerHeaderView.findViewById(R.id.txtClubName);
+            txtClubName.setText("");
+
+            mNavDrawerHeaderView.findViewById(R.id.holderCheckOut).setVisibility(View.GONE);
         }
     };
 }

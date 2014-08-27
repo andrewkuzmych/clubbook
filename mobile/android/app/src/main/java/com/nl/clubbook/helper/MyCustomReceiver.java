@@ -37,7 +37,7 @@ public class MyCustomReceiver extends BroadcastReceiver {
             String uniqueId = json.getString("unique_id");
             String msg = json.getString("msg");
 
-            SessionManager session = new SessionManager(context);
+            SessionManager session = SessionManager.getInstance();
             String con = session.getConversationListner();
             if(con == null || !con.equalsIgnoreCase(uniqueId)) {
                 int notificationId = (uniqueId).hashCode();

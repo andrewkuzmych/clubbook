@@ -101,7 +101,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
             return;
         }
 
-        final SessionManager session = new SessionManager(getActivity());
+        final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
         mSwipeRefreshLayout.setRefreshing(true);
@@ -133,7 +133,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
     }
 
     private void onAcceptClicked(String friendId) {
-        final SessionManager session = new SessionManager(getActivity());
+        final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
         ((BaseActivity) getActivity()).showProgress("Loading...");
@@ -170,7 +170,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
     }
 
     private void onDeclineClicked(String friendId) {
-        final SessionManager session = new SessionManager(getActivity());
+        final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
         ((BaseActivity) getActivity()).showProgress("Loading...");

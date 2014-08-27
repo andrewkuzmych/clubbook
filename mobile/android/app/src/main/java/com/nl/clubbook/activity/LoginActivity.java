@@ -56,7 +56,7 @@ public class LoginActivity extends BaseActivity {
                 }
 
                 //login request
-                showProgress("Loading...");
+                showProgress(getString(R.string.loading));
                 DataStore.loginByEmail(email, password, new DataStore.OnResultReady() {
                     @Override
                     public void onReady(Object result, boolean failed) {
@@ -70,12 +70,13 @@ public class LoginActivity extends BaseActivity {
                         hideProgress(true);
 
                         if (result == null) {
-                            alert.showAlertDialog(LoginActivity.this, "Error", "Incorrect credentials", false);
+                            alert.showAlertDialog(LoginActivity.this, "Error", getString(R.string.incorrect_credentials), false);
                         } else {
                             UserDto user = (UserDto) result;
                             getSession().createLoginSession(user);
                             Intent i = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(i);
+                            finish();
                         }
                     }
                 });

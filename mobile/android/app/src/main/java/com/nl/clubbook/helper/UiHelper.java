@@ -16,9 +16,9 @@ import java.util.List;
  * Created by Andrew on 6/4/2014.
  */
 public class UiHelper {
-    public static void changeCheckinState(Context context, View view, boolean isCheckIn) {
+    public static void changeCheckInState(Context context, View view, boolean isCheckIn) {
         TextView button = (TextView) view;
-        if (isCheckIn) {
+        if (!isCheckIn) {
             button.setBackgroundResource(R.drawable.bg_btn_green);
             button.setText(context.getResources().getString(R.string.check_in));
         } else {

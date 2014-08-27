@@ -59,7 +59,7 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
 
     @Override
     protected void loadData() {
-        final SessionManager session = new SessionManager(getActivity());
+        final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
         mSwipeRefreshLayout.setRefreshing(true);

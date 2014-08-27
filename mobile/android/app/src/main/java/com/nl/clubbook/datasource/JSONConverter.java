@@ -229,7 +229,7 @@ public class JSONConverter {
         if(jsonClubLocation != null) {
             club.setLon(jsonClubLocation.optDouble("lon"));
             club.setLat(jsonClubLocation.optDouble("lat"));
-            club.setDistance(LocationCheckinHelper.calculateDistance(club.getLat(), club.getLon()));
+            club.setDistance(LocationCheckinHelper.getInstance().calculateDistance(club.getLat(), club.getLon()));
         }
 
         List<String> photos = new ArrayList<String>();

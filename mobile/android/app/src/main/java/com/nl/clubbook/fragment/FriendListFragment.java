@@ -61,7 +61,7 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
             return;
         }
 
-        final SessionManager session = new SessionManager(getActivity());
+        final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
         mSwipeRefreshLayout.setRefreshing(true);
