@@ -184,13 +184,13 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         ImageView imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
 
         // if we checked in this this club set related style
-        if (LocationCheckInHelper.getInstance().isCheckInHere(mClub)) {
+        if (LocationCheckinHelper.getInstance().isCheckInHere(mClub)) {
             UiHelper.changeCheckInState(getActivity(), txtCheckIn, true);
         } else {
             UiHelper.changeCheckInState(getActivity(), txtCheckIn, false);
         }
         // can we check in this club
-        if (LocationCheckInHelper.getInstance().canCheckInHere(mClub)) {
+        if (LocationCheckinHelper.getInstance().canCheckInHere(mClub)) {
             txtCheckIn.setEnabled(true);
         } else {
             txtCheckIn.setEnabled(false);
@@ -202,7 +202,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         txtClubName.setText(mClub.getTitle());
         txtCheckInCount.setText(mClub.getActiveCheckIns() + "\n" + getString(R.string.checked_in));
         txtFriendsCount.setText(mClub.getActiveFriendsCheckIns() + "\n" + getString(R.string.friends));
-        txtDistance.setText(LocationCheckInHelper.formatDistance(getActivity().getApplicationContext(), mClub.getDistance()));
+        txtDistance.setText(LocationCheckinHelper.formatDistance(getActivity().getApplicationContext(), mClub.getDistance()));
 
         ClubWorkingHoursDto workingHours = mClub.getTodayWorkingHours();
         if(workingHours != null) {
@@ -253,10 +253,10 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     }
 
     private void onCheckInBtnClicked(final View view) {
-        if (LocationCheckInHelper.getInstance().isCheckInHere(mClub)) {
+        if (LocationCheckinHelper.getInstance().isCheckInHere(mClub)) {
             showProgressDialog(getString(R.string.checking_out));
 
-            LocationCheckInHelper.getInstance().checkOut(getActivity(), new CheckInOutCallbackInterface() {
+            LocationCheckinHelper.getInstance().checkOut(getActivity(), new CheckInOutCallbackInterface() {
                 @Override
                 public void onCheckInOutFinished(boolean isUserCheckOut) {
                     handleCheckInCheckOutResults(view, isUserCheckOut);
@@ -265,7 +265,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         } else {
             showProgressDialog(getString(R.string.checking_in));
 
-            LocationCheckInHelper.getInstance().checkIn(getActivity(), mClub, new CheckInOutCallbackInterface() {
+            LocationCheckinHelper.getInstance().checkIn(getActivity(), mClub, new CheckInOutCallbackInterface() {
                 @Override
                 public void onCheckInOutFinished(boolean isUserCheckIn) {
                     handleCheckInCheckOutResults(view, isUserCheckIn);

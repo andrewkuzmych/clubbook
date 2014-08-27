@@ -37,7 +37,7 @@ import com.nl.clubbook.fragment.ClubFragment;
 import com.nl.clubbook.fragment.ShareFragment;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.CheckInOutCallbackInterface;
-import com.nl.clubbook.helper.LocationCheckInHelper;
+import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.ui.drawer.NavDrawerData;
 import com.nl.clubbook.ui.drawer.NavDrawerListAdapter;
 import com.nl.clubbook.datasource.DataStore;
@@ -424,7 +424,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void updateNavDrawerFooter() {
-        ClubDto club = LocationCheckInHelper.getInstance().getCurrentClub();
+        ClubDto club = LocationCheckinHelper.getInstance().getCurrentClub();
 
         TextView txtClubName = (TextView) mNavDrawerHeaderView.findViewById(R.id.txtClubName);
         View imgCheckIn = mNavDrawerHeaderView.findViewById(R.id.imgCheckOut);
@@ -491,7 +491,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void onImgCheckOutClicked() {
         showProgressDialog(getString(R.string.checking_out));
 
-        LocationCheckInHelper.getInstance().checkOut(MainActivity.this, new CheckInOutCallbackInterface() {
+        LocationCheckinHelper.getInstance().checkOut(MainActivity.this, new CheckInOutCallbackInterface() {
             @Override
             public void onCheckInOutFinished(boolean isUserCheckOut) {
                 handleCheckInCheckOutResults(isUserCheckOut);
