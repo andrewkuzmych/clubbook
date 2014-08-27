@@ -11,7 +11,7 @@ import com.facebook.Session;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
-import com.nl.clubbook.helper.LocationCheckinHelper;
+import com.nl.clubbook.helper.LocationCheckInHelper;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.entities.Profile;
@@ -38,8 +38,8 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.ac_main_login);
 
         // start to track user location
-        LocationCheckinHelper.getInstance().startSmartLocationTracker(this);
-        if (!LocationCheckinHelper.getInstance().isLocationEnabled(this)) {
+        LocationCheckInHelper.getInstance().startSmartLocationTracker(this);
+        if (!LocationCheckInHelper.getInstance().isLocationEnabled(this)) {
             return;
         }
 
