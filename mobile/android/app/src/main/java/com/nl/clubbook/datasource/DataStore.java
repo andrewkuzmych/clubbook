@@ -336,9 +336,8 @@ public class DataStore {
         });
     }
 
-    public static void retrievePlaces(String distance, String lat, String lon, String accessToken, final OnResultReady onResultReady) {
+    public static void retrievePlaces(String lat, String lon, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
-        params.add("distance", distance);
         params.add("user_lat", lat);
         params.add("user_lon", lon);
         params.add("access_token", accessToken);

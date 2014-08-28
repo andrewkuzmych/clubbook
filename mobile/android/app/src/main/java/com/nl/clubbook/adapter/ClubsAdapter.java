@@ -16,17 +16,12 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
  * Created by Andrew on 5/27/2014.
  */
 public class ClubsAdapter extends BaseAdapter {
-
-    public static final int MODE_NEARBY = 1000;
-    public static final int MODE_A_Z = 2000;
 
     private ImageLoader imageLoader;
     private DisplayImageOptions options;
@@ -96,38 +91,12 @@ public class ClubsAdapter extends BaseAdapter {
         return row;
     }
 
-    public void updateData(List<ClubDto> data, int sortMode) {
+    public void updateData(List<ClubDto> data) {
         if (data == null) {
-            return;
-        }
-
-        mClubs = data;
-
-        if (sortMode == MODE_NEARBY) {
-            sortByDistance();
+            mClubs.clear();
         } else {
-            sortByName();
+            mClubs = data;
         }
-    }
-
-    public void sortByDistance() {
-        Collections.sort(mClubs, new Comparator<ClubDto>() {
-            @Override
-            public int compare(ClubDto lhs, ClubDto rhs) {
-                return Float.compare(lhs.getDistance(), rhs.getDistance());
-            }
-        });
-
-        notifyDataSetChanged();
-    }
-
-    public void sortByName() {
-        Collections.sort(mClubs, new Comparator<ClubDto>() {
-            @Override
-            public int compare(ClubDto lhs, ClubDto rhs) {
-                return lhs.getTitle().compareToIgnoreCase(rhs.getTitle());
-            }
-        });
 
         notifyDataSetChanged();
     }

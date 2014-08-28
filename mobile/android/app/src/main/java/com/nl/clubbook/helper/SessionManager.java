@@ -23,8 +23,6 @@ public class SessionManager {
 
     private static final String PREF_NAME = "com.nl.clubbook.preferences";
 
-    public static final int DEFAULT_DISTANCE = 4;
-
     private static SessionManager mSessionManaged;
     private final SharedPreferences mPreferences;
     private final Context mContext;
