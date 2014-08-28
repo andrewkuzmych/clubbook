@@ -72,4 +72,8 @@ dependencies: \
   /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Parse.framework/Headers/PFPush.h \
   /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Parse.framework/Headers/PFTwitterUtils.h \
   /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Parse.framework/Headers/PF_Twitter.h \
-  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Parse.framework/Headers/PFFacebookUtils.h
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Parse.framework/Headers/PFFacebookUtils.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/GoogleAnalytics/GAI.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/GoogleAnalytics/GAILogger.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/GoogleAnalytics/GAITracker.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/GoogleAnalytics/GAITrackedViewController.h

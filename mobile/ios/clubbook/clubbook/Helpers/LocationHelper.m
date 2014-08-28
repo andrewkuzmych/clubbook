@@ -65,7 +65,7 @@ static Place * clubCheckin;
     [self stopTimer];
     
     clubCheckin = club;
-    NSTimeInterval time = 6;//[GlobalVars getInstance].CheckinUpdateTime;
+    NSTimeInterval time = 30;//[GlobalVars getInstance].CheckinUpdateTime;
 	locationUpdateTimer =
     [NSTimer scheduledTimerWithTimeInterval:time
                                      target:[self class]

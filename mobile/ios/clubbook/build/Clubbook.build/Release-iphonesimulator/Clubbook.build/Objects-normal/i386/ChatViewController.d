@@ -10,8 +10,20 @@ dependencies: \
   /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/DTO/User.h \
   /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/DTO/BaseDto.h \
   /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/DTO/Place.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/DTO/WorkingHour.h \
   /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/DTO/Chat.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/DTO/UnreadMessages.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/DTO/Config.h \
   /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Manager/ClubbookCommunicatorDelegate.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/GoogleAnalytics/GAI.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/GoogleAnalytics/GAILogger.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/GoogleAnalytics/GAITracker.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/GoogleAnalytics/GAITrackedViewController.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/GoogleAnalytics/GAIFields.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/GoogleAnalytics/GAIDictionaryBuilder.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/GoogleAnalytics/GAIEcommerceProduct.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/GoogleAnalytics/GAIEcommerceProductAction.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/GoogleAnalytics/GAIEcommercePromotion.h \
   /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/JSQMessages.h \
   /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Views/JSQMessagesCollectionViewCellIncoming.h \
   /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Views/JSQMessagesCollectionViewCell.h \
@@ -42,4 +54,12 @@ dependencies: \
   /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/cloudinary/include/Cloudinary/CLTransformation.h \
   /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/cloudinary/include/Cloudinary/CLEagerTransformation.h \
   /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/cloudinary/include/Cloudinary/CLUploader.h \
-  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Constants.h
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Constants.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/CSNotificationView/CSNotificationView.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/UserViewController.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/BaseViewController.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/BaseViewControllerHelper.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Manager/ClubbookCommunicator.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Reachability.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Controls/CbLabel.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Controls/AddFriendButton.h
