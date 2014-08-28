@@ -1,24 +1,32 @@
 package com.nl.clubbook.datasource;
 
-import com.nl.clubbook.helper.LocationCheckinHelper;
+import com.nl.clubbook.helper.LocationCheckInHelper;
 import com.nl.clubbook.utils.L;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Volodymyr on 14.08.2014.
  */
 public class JSONConverter {
 
+    public static final SimpleDateFormat FORMAT_DATE = new SimpleDateFormat("yyyy-MM-dd, HH:mm:ss", Locale.getDefault());
+    public static final SimpleDateFormat FORMAT_DATE_WITHOUT_HOURS = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
     private JSONConverter() {
     }
 
-    public static List<UserDto> newFriendList(JSONArray jsonArrUsers) {
+    public static List<UserDto> newFriendList(@Nullable JSONArray jsonArrUsers, boolean parseCheckin) {
         if(jsonArrUsers == null) {
             return new ArrayList<UserDto>();
         }
@@ -26,13 +34,13 @@ public class JSONConverter {
         List<UserDto> friends = new ArrayList<UserDto>();
         for (int i = 0; i < jsonArrUsers.length(); i++) {
             JSONObject jsonFriend = jsonArrUsers.optJSONObject(i);
-            friends.add(newUser(jsonFriend, true));
+            friends.add(newUser(jsonFriend, parseCheckin));
         }
 
         return friends;
     }
 
-    public static UserDto newUser(JSONObject jsonUser, boolean parseCheckIn) {
+    public static UserDto newUser(@Nullable JSONObject jsonUser, boolean parseCheckIn) {
         if(jsonUser == null) {
             return null;
         }
@@ -78,7 +86,44 @@ public class JSONConverter {
         return result;
     }
 
-    public static List<UserPhotoDto> newUserPhotoList(JSONArray photosJson) {
+    public static List<CheckInUserDto> newCheckInUsersList(@Nullable JSONArray jsonArrUsers) {
+        if(jsonArrUsers == null) {
+            return null;
+        }
+
+        List<CheckInUserDto> checkInUsersList = new ArrayList<CheckInUserDto>();
+        for(int i = 0; i < jsonArrUsers.length(); i++) {
+            JSONObject jsonCheckInUser = jsonArrUsers.optJSONObject(i);
+            CheckInUserDto checkInUser = newCheckInUser(jsonCheckInUser);
+            checkInUsersList.add(checkInUser);
+        }
+
+        return checkInUsersList;
+    }
+
+    public static CheckInUserDto newCheckInUser(@Nullable JSONObject jsonCheckInUser) {
+        if(jsonCheckInUser == null) {
+            return null;
+        }
+
+        CheckInUserDto result = new CheckInUserDto();
+
+        result.setId(jsonCheckInUser.optString("_id"));
+        result.setName(jsonCheckInUser.optString("name"));
+        result.setGender(jsonCheckInUser.optString("gender"));
+
+        JSONObject jsonAvatar = jsonCheckInUser.optJSONObject("avatar");
+        if(jsonAvatar != null) {
+            String url = jsonAvatar.optString("url");
+            result.setAvatarUrl(url);
+        }
+
+        result.setFriend(jsonCheckInUser.optBoolean("is_friend"));
+
+        return result;
+    }
+
+    public static List<UserPhotoDto> newUserPhotoList(@Nullable JSONArray photosJson) {
         if(photosJson == null) {
             return null;
         }
@@ -92,7 +137,7 @@ public class JSONConverter {
         return photos;
     }
 
-    public static UserPhotoDto newUserPhoto(JSONObject jsonPhoto) {
+    public static UserPhotoDto newUserPhoto(@Nullable JSONObject jsonPhoto) {
         if(jsonPhoto == null) {
             return null;
         }
@@ -105,7 +150,7 @@ public class JSONConverter {
         return photo;
     }
 
-    public static CheckInDto newCheckIn(JSONObject jsonObject) {
+    public static CheckInDto newCheckIn(@Nullable JSONObject jsonObject) {
         if(jsonObject == null) {
             return null;
         }
@@ -124,7 +169,7 @@ public class JSONConverter {
         return checkIn;
     }
 
-    public static List<ClubDto> newClubList(JSONArray jsonArrClub) {
+    public static List<ClubDto> newClubList(@Nullable JSONArray jsonArrClub) {
         if(jsonArrClub == null) {
             return new ArrayList<ClubDto>();
         }
@@ -142,7 +187,7 @@ public class JSONConverter {
         return result;
     }
 
-    public static ClubDto newClub(String strJsonClub) {
+    public static ClubDto newClub(@Nullable String strJsonClub) {
         if(strJsonClub == null) {
             return null;
         }
@@ -159,7 +204,7 @@ public class JSONConverter {
         return club;
     }
 
-    public static ClubDto newClub(JSONObject jsonClub) {
+    public static ClubDto newClub(@Nullable JSONObject jsonClub) {
         if(jsonClub == null) {
             return null;
         }
@@ -184,7 +229,7 @@ public class JSONConverter {
         if(jsonClubLocation != null) {
             club.setLon(jsonClubLocation.optDouble("lon"));
             club.setLat(jsonClubLocation.optDouble("lat"));
-            club.setDistance(LocationCheckinHelper.calculateDistance(club.getLat(), club.getLon()));
+            club.setDistance(LocationCheckInHelper.getInstance().calculateDistance(club.getLat(), club.getLon()));
         }
 
         List<String> photos = new ArrayList<String>();
@@ -216,7 +261,7 @@ public class JSONConverter {
         return club;
     }
 
-    public static JSONObject newClub(ClubDto club) {
+    public static JSONObject newClub(@Nullable ClubDto club) {
         if(club == null) {
             return null;
         }
@@ -271,7 +316,7 @@ public class JSONConverter {
         return jsonClub;
     }
 
-    public static ClubWorkingHoursDto newClubWorkingHours(JSONObject jsonClubWorkingHours) {
+    public static ClubWorkingHoursDto newClubWorkingHours(@Nullable JSONObject jsonClubWorkingHours) {
         if(jsonClubWorkingHours == null) {
             return null;
         }
@@ -286,7 +331,7 @@ public class JSONConverter {
         return result;
     }
 
-    public static JSONObject newClubWorkingHours(ClubWorkingHoursDto workingHours) throws JSONException {
+    public static JSONObject newClubWorkingHours(@Nullable ClubWorkingHoursDto workingHours) throws JSONException {
         if(workingHours == null) {
             return null;
         }
@@ -302,7 +347,7 @@ public class JSONConverter {
         return jsonWorkingHours;
     }
 
-    public static ChatDto newChatDto(JSONObject jsonChatDto) {
+    public static ChatDto newChatDto(@NotNull JSONObject jsonChatDto) {
         ChatDto result = new ChatDto();
 
         result.setChatId(jsonChatDto.optString("chat_id"));
@@ -324,7 +369,7 @@ public class JSONConverter {
         return result;
     }
 
-    public static List<ChatMessageDto> newChatMessagesList(JSONArray jsonArray) {
+    public static List<ChatMessageDto> newChatMessagesList(@Nullable JSONArray jsonArray) {
         if(jsonArray == null) {
             return null;
         }
@@ -339,16 +384,23 @@ public class JSONConverter {
         return result;
     }
 
-    public static ChatMessageDto newChatMessage(JSONObject jsonChatMessage) {
+    public static ChatMessageDto newChatMessage(@NotNull JSONObject jsonChatMessage) {
         ChatMessageDto result = new ChatMessageDto();
 
         result.setMsg(jsonChatMessage.optString("msg"));
-        result.setTime(jsonChatMessage.optString("time"));
         result.setType(jsonChatMessage.optString("type"));
         result.setUserFrom(jsonChatMessage.optString("from_who"));
         result.setRead(jsonChatMessage.optBoolean("read"));
         result.setIsMyMessage(jsonChatMessage.optBoolean("is_my_message"));
         result.setUserFromName(jsonChatMessage.optString("from_who_name"));
+
+        String date = jsonChatMessage.optString("time");
+        try {
+            result.setTime(FORMAT_DATE.parse(date).getTime());
+            result.setTimeWithoutHours(FORMAT_DATE_WITHOUT_HOURS.parse(date).getTime());
+        } catch (ParseException e) {
+            L.i("" + e);
+        }
 
         JSONObject jsonAvatar = jsonChatMessage.optJSONObject("from_who_avatar");
         if(jsonAvatar != null) {

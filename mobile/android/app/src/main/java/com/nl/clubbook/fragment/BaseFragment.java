@@ -11,10 +11,30 @@ import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.activity.NoInternetActivity;
 import com.nl.clubbook.helper.SessionManager;
 
+import java.lang.reflect.Field;
+
 /**
  * Created by Andrew on 6/8/2014.
  */
 public class BaseFragment extends Fragment {
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        //workaround for fixing crash "No Activity"
+        //http://stackoverflow.com/questions/15207305/getting-the-error-java-lang-illegalstateexception-activity-has-been-destroyed
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     protected SessionManager getSession() {
         return ((BaseActivity) getActivity()).getSession();

@@ -7,13 +7,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.fragment.BaseFragment;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.AlertDialogManager;
 import com.nl.clubbook.helper.SessionManager;
-
-import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,9 +20,8 @@ import java.util.HashMap;
  */
 public class BaseActivity extends ActionBarActivity {
     protected AlertDialogManager alert = new AlertDialogManager();
-    protected BaseFragment currentFragment;
 
-    private SessionManager session;
+    private SessionManager mSession;
 
     private boolean isProgressShow = false;
 
@@ -34,10 +29,7 @@ public class BaseActivity extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setSession(new SessionManager(getApplicationContext()));
-
-        // set context to use from DataStore for all app
-        DataStore.setContext(this);
+        mSession = SessionManager.getInstance();
     }
 
     @Override
@@ -57,16 +49,11 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     public SessionManager getSession() {
-        return session;
-    }
-
-    protected void setSession(SessionManager session) {
-        this.session = session;
+        return mSession;
     }
 
     public String getCurrentUserId() {
-        HashMap<String, String> user = getSession().getUserDetails();
-        return user.get(SessionManager.KEY_ID);
+        return mSession.getUserId();
     }
 
     public void showProgress(String message) {

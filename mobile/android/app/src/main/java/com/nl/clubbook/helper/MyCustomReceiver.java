@@ -12,6 +12,8 @@ import android.app.NotificationManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import com.nl.clubbook.activity.MainActivity;
+import com.nl.clubbook.utils.L;
+
 import org.apache.commons.logging.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,29 +37,29 @@ public class MyCustomReceiver extends BroadcastReceiver {
             String uniqueId = json.getString("unique_id");
             String msg = json.getString("msg");
 
-            SessionManager session = new SessionManager(context);
+            SessionManager session = SessionManager.getInstance();
             String con = session.getConversationListner();
             if(con == null || !con.equalsIgnoreCase(uniqueId)) {
                 int notificationId = (uniqueId).hashCode();
-                generateNotification(context, 1, header, msg, type, notificationId);
+                generateNotification(context, R.drawable.icon_play, header, msg, type, notificationId);
             }
 
         } catch (JSONException e) {
+            L.i("" + e);
         }
     }
 
     public static void generateNotification(Context context, int icon, String title, String message, String type, int notificationId) {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.icon_play)
+                        .setSmallIcon(icon)
                         .setContentTitle(title)
                         .setContentText(message)
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
         mBuilder.setAutoCancel(true);
         Intent viewIntent = new Intent(context, MainActivity.class);
-        viewIntent.putExtra("type", type);
+        viewIntent.putExtra(MainActivity.EXTRA_TYPE, type);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(MainActivity.class);

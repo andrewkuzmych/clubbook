@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,26 +19,24 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.ClubsAdapter;
 import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.helper.LocationCheckinHelper;
+import com.nl.clubbook.helper.LocationCheckInHelper;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class ClubsListFragment extends BaseRefreshFragment implements AdapterView.OnItemClickListener,
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener, TabHost.OnTabChangeListener {
 
     private ClubsAdapter mClubsAdapter;
+    private int mMode = ClubsAdapter.MODE_NEARBY;
 
     private int mCurrentDistance = SessionManager.DEFAULT_DISTANCE;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fr_clubs_list, container, false);
     }
 
@@ -46,6 +45,7 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
         super.onActivityCreated(savedInstanceState);
 
         initActionBarTitle(getString(R.string.club_list));
+        initTabHost();
         initView();
     }
 
@@ -68,6 +68,17 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
     }
 
     @Override
+    public void onTabChanged(String tabId) {
+        String aZ = getString(R.string.a_z);
+
+        if(aZ.equalsIgnoreCase(tabId)) {
+            sortByName();
+        } else {
+            sortByDistance();
+        }
+    }
+
+    @Override
     protected void loadData() {
         if(!NetworkUtils.isOn(getActivity())) {
             Toast.makeText(getActivity(), R.string.no_connection, Toast.LENGTH_SHORT).show();
@@ -78,7 +89,7 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
         Log.d("Location Updates", "Google Play services is available.");
 
         // retrieve my current location
-        Location currentLocation = LocationCheckinHelper.getCurrentLocation();
+        Location currentLocation = LocationCheckInHelper.getInstance().getCurrentLocation();
         if(currentLocation == null) {
             L.v("Location is empty");
             return;
@@ -119,21 +130,33 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
                 seekBarDistance.setEnabled(true);
 
                 List<ClubDto> places = (List<ClubDto>) result;
-                // sort by distance
-                Collections.sort(places, new Comparator<ClubDto>() {
-                    @Override
-                    public int compare(ClubDto lhs, ClubDto rhs) {
-                        if (lhs.getDistance() > rhs.getDistance()) {
-                            return 0;
-                        } else {
-                            return 1;
-                        }
-                    }
-                });
 
-                mClubsAdapter.updateData(places);
+                mClubsAdapter.updateData(places, mMode);
             }
         });
+    }
+
+    private void initTabHost() {
+        View view = getView();
+        if(view == null) {
+            return;
+        }
+
+        TabHost tabHost = (TabHost) view.findViewById(android.R.id.tabhost);
+        tabHost.setup();
+
+        tabHost.addTab(newTabSpec(tabHost, getString(R.string.nearby)));
+        tabHost.addTab(newTabSpec(tabHost, getString(R.string.a_z)));
+
+        tabHost.setOnTabChangedListener(ClubsListFragment.this);
+    }
+
+    private TabHost.TabSpec newTabSpec(TabHost tabHost, String tabIndicator) {
+        View tabIndicatorView = LayoutInflater.from(getActivity()).inflate(R.layout.apptheme_tab_indicator_holo, tabHost.getTabWidget(), false);
+        TextView title = (TextView) tabIndicatorView.findViewById(android.R.id.title);
+        title.setText(tabIndicator);
+
+        return tabHost.newTabSpec(tabIndicator).setContent(android.R.id.tabcontent).setIndicator(tabIndicatorView);
     }
 
     private void initView() {
@@ -183,6 +206,16 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
         loadData();
     }
 
+    private void sortByName() {
+        mMode = ClubsAdapter.MODE_A_Z;
+        mClubsAdapter.sortByName();
+    }
+
+    private void sortByDistance() {
+        mMode = ClubsAdapter.MODE_NEARBY;
+        mClubsAdapter.sortByDistance();
+    }
+
     private int convertToKm(int value) {
         int result = 0;
         switch (value) {
@@ -221,4 +254,45 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
         }
         return result;
     }
+
+//    private void test() {
+//        final GestureDetector gestureDetector = new GestureDetector(getActivity(), new MyGestureDetector());
+//
+//        View.OnTouchListener gestureListener =  new View.OnTouchListener() {
+//            public boolean onTouch(View v, MotionEvent event) {
+//                return gestureDetector.onTouchEvent(event);
+//            }
+//        };
+//
+//        ListView listView = (ListView) getView().findViewById(R.id.listClub);
+//        listView.setOnTouchListener(gestureListener);
+//    }
+//
+//    class MyGestureDetector extends GestureDetector.SimpleOnGestureListener {
+//        private static final int SWIPE_MIN_DISTANCE = 120;
+//        private static final int SWIPE_MAX_OFF_PATH = 250;
+//        private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+//
+//        @Override
+//        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+//            try {
+//                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+//                    return false;
+//                // right to left swipe
+//                if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+//                    Toast.makeText(getActivity(), "Left Swipe", Toast.LENGTH_SHORT).show();
+//                }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+//                    Toast.makeText(getActivity(), "Right Swipe", Toast.LENGTH_SHORT).show();
+//                }
+//            } catch (Exception e) {
+//                // nothing
+//            }
+//            return false;
+//        }
+//
+//        @Override
+//        public boolean onDown(MotionEvent e) {
+//            return true;
+//        }
+//    }
 }

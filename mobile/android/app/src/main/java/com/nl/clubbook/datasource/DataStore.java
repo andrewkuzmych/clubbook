@@ -1,5 +1,6 @@
 package com.nl.clubbook.datasource;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -18,10 +19,8 @@ import java.util.List;
  * Created by Andrew on 5/19/2014.
  */
 public class DataStore {
-    private static Context mContext;
 
-    public static void setContext(Context context) {
-        mContext = context;
+    private DataStore() {
     }
 
     public static void regByEmail(String name, String email, String pass, String gender, String dob, String country, String city, String bio, JSONObject avatar,
@@ -47,8 +46,9 @@ public class DataStore {
                     if (response_json.getString("status").equalsIgnoreCase("ok")) {
                         user = new UserDto(response_json.getJSONObject("result").getJSONObject("user"));
                         failed = false;
-                    } else
+                    } else {
                         failed = true;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -92,8 +92,9 @@ public class DataStore {
                     if (response_json.getString("status").equalsIgnoreCase("ok")) {
                         user = new UserDto(response_json.getJSONObject("result").getJSONObject("user"));
                         failed = false;
-                    } else
+                    } else {
                         failed = true;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -133,8 +134,9 @@ public class DataStore {
                     if ("ok".equalsIgnoreCase(response_json.getString("status"))) {
                         userPhotoDto = new UserPhotoDto(response_json.getJSONObject("result").getJSONObject("image"));
                         failed = false;
-                    } else
+                    } else {
                         failed = true;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -171,8 +173,9 @@ public class DataStore {
                 try {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         failed = false;
-                    } else
+                    } else {
                         failed = true;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -212,8 +215,9 @@ public class DataStore {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         user = new UserDto(responseJson.getJSONObject("result").getJSONObject("user"));
                         failed = false;
-                    } else
+                    } else {
                         failed = true;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -283,12 +287,16 @@ public class DataStore {
     public static void loginByFb(String name, String email, String fb_id, String fb_access_token, String gender, String dob, JSONObject avatar,
                                  final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
-        params.put("email", email);
+        if(email != null && !email.equalsIgnoreCase("null")) {
+            params.put("email", email);
+        }
         params.put("name", name);
         params.put("fb_id", fb_id);
         params.put("fb_access_token", fb_access_token);
         params.put("gender", gender);
-        params.put("dob", dob);
+        if(dob != null && !dob.equalsIgnoreCase("null")) {
+            params.put("dob", dob);
+        }
         params.put("avatar", avatar);
 
         ClubbookRestClient.loginByFb(params, new JsonHttpResponseHandler() {
@@ -301,10 +309,11 @@ public class DataStore {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         user = new UserDto(responseJson.getJSONObject("result").getJSONObject("user"));
                         failed = false;
-                    } else
+                    } else {
                         failed = true;
+                    }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    L.i("" + e);
                 }
 
                 onResultReady.onReady(user, failed);
@@ -376,23 +385,13 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                ClubDto club = null;
+                JSONObject jsonClub = responseJson.optJSONObject("club");
 
-                try {
-                    JSONObject jsonClub = responseJson.getJSONObject("club");
-
-                    club = JSONConverter.newClub(jsonClub);
-                    if(jsonClub != null && club != null) {
-                        JSONArray jsonArrUsers = responseJson.getJSONArray("users");
-                        List<UserDto> users = new ArrayList<UserDto>();
-                        for (int i = 0; i < jsonArrUsers.length(); i++) {
-                            users.add(new UserDto(jsonArrUsers.getJSONObject(i)));
-                        }
-
-                        club.setUsers(users);//TODO
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                ClubDto club = JSONConverter.newClub(jsonClub);
+                if (jsonClub != null && club != null) {
+                    JSONArray jsonArrUsers = responseJson.optJSONArray("users");
+                    List<CheckInUserDto> checkInUsers = JSONConverter.newCheckInUsersList(jsonArrUsers);
+                    club.setUsers(checkInUsers);
                 }
 
                 failed = false;
@@ -431,10 +430,11 @@ public class DataStore {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         user = new UserDto(responseJson.getJSONObject("result").getJSONObject("user"));
                         failed = false;
-                    } else
+                    } else {
                         failed = true;
+                    }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    L.i("" + e);
                 }
 
                 //failed = false;
@@ -475,7 +475,7 @@ public class DataStore {
                 try {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         JSONArray friendsJson = responseJson.getJSONObject("result").getJSONArray("friends");
-                        friends = JSONConverter.newFriendList(friendsJson);
+                        friends = JSONConverter.newFriendList(friendsJson, true);
 
                         failed = false;
                     } else {
@@ -483,6 +483,53 @@ public class DataStore {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                }
+
+                onResultReady.onReady(friends, failed);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                //if (failed)
+                //    onResultReady.onReady(null, true);
+            }
+        });
+    }
+
+    public static void retrievePendingFriends(String userId, String accessToken, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
+
+        ClubbookRestClient.retrievePendingFriends(userId, params, new JsonHttpResponseHandler() {
+            private boolean failed = true;
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                List<UserDto> friends = new ArrayList<UserDto>();
+
+                try {
+                    if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
+                        JSONArray friendsJson = responseJson.getJSONObject("result").getJSONArray("friends");
+                        friends = JSONConverter.newFriendList(friendsJson, false);
+
+                        failed = false;
+                    } else {
+                        failed = true;
+                    }
+                } catch (Exception e) {
+                    L.i("" + e);
                 }
 
                 onResultReady.onReady(friends, failed);
@@ -540,10 +587,75 @@ public class DataStore {
         });
     }
 
-    public static void removeFriendRequest(String userId, String friendId, final OnResultReady onResultReady) {
+    public static void acceptFriendRequest(String userId, String friendId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
 
-        ClubbookRestClient.removeFriend(userId, friendId, params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.acceptFriend(userId, friendId, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
+                    onResultReady.onReady(null, false);
+                } else {
+                    onResultReady.onReady(null, true);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+    }
+
+    public static void unfriendRequest(String accessToken, String userId, String friendId, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
+
+        ClubbookRestClient.unfriendFriend(userId, friendId, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
+                    onResultReady.onReady(null, false);
+                } else {
+                    onResultReady.onReady(null, true);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+    }
+
+    public static void declineFriendRequest(String accessToken, String userId, String friendId, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
+
+        ClubbookRestClient.declineFriendRequest(userId, friendId, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
@@ -580,15 +692,13 @@ public class DataStore {
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
                     JSONObject jsonResult = responseJson.optJSONObject("result");
-                    if(jsonResult == null) {
-                        L.v("jsonResult = null");
+                    if (jsonResult == null) {
                         onResultReady.onReady(null, true);
                         return;
                     }
 
                     JSONObject jsonFriend = jsonResult.optJSONObject("user");
-                    if(jsonFriend == null) {
-                        L.v("jsonResult = null");
+                    if (jsonFriend == null) {
                         onResultReady.onReady(null, true);
                         return;
                     }
@@ -617,7 +727,6 @@ public class DataStore {
         });
     }
 
-    //TODO
     public static void checkin(String placeId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
@@ -632,10 +741,11 @@ public class DataStore {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         user = new UserDto(responseJson.getJSONObject("user"));
                         failed = false;
-                    } else
+                    } else {
                         failed = true;
+                    }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    L.i("" + e);
                 }
 
                 //failed = false;
@@ -676,10 +786,11 @@ public class DataStore {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         user = new UserDto(responseJson.getJSONObject("user"));
                         failed = false;
-                    } else
+                    } else {
                         failed = true;
+                    }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    L.i("" + e);
                 }
 
                 //failed = false;
@@ -720,10 +831,11 @@ public class DataStore {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         user = new UserDto(responseJson.getJSONObject("user"));
                         failed = false;
-                    } else
+                    } else {
                         failed = true;
+                    }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    L.i("" + e);
                 }
 
                 //failed = false;
@@ -756,7 +868,7 @@ public class DataStore {
      * @param receiverUserId
      * @param onResultReady
      */
-    public static void getConversation(String currentUserId, String receiverUserId, String accessToken,
+    public static void getConversation(final Activity activity, String currentUserId, String receiverUserId, String accessToken,
                                        final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
@@ -765,18 +877,30 @@ public class DataStore {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                ChatDto chat = null;
+            public void onSuccess(int statusCode, Header[] headers, final JSONObject responseJson) {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final ChatDto chat;
 
-                if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
-                    JSONObject jsonResult = responseJson.optJSONObject("result");
-                    chat = JSONConverter.newChatDto(jsonResult);
-                    failed = false;
-                } else {
-                    failed = true;
-                }
+                        if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
+                            JSONObject jsonResult = responseJson.optJSONObject("result");
+                            chat = JSONConverter.newChatDto(jsonResult);
+                            failed = false;
+                        } else {
+                            failed = true;
+                            chat = null;
+                        }
 
-                onResultReady.onReady(chat, failed);
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                onResultReady.onReady(chat, failed);
+                            }
+                        });
+                    }
+                });
+                thread.start();
             }
 
             @Override
@@ -820,10 +944,11 @@ public class DataStore {
                             chats.add(JSONConverter.newChatDto(chatsJson.optJSONObject(i)));
                         }
                         failed = false;
-                    } else
+                    } else {
                         failed = true;
+                    }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    L.i("" + e);
                 }
 
                 //failed = false;
@@ -864,10 +989,11 @@ public class DataStore {
                 try {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         failed = false;
-                    } else
+                    } else {
                         failed = true;
+                    }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    L.i("" + e);
                 }
                 //failed = false;
                 onResultReady.onReady("ok", failed);
@@ -900,15 +1026,12 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                try {
-                    if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
-                        failed = false;
-                    } else
-                        failed = true;
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
+                    failed = false;
+                } else {
+                    failed = true;
                 }
-                //failed = false;
+
                 onResultReady.onReady("ok", failed);
             }
 
@@ -990,10 +1113,11 @@ public class DataStore {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         failed = false;
                         count = responseJson.getString("unread_chat_count");
-                    } else
+                    } else {
                         failed = true;
+                    }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    L.i("" + e);
                 }
 
                 onResultReady.onReady(count, failed);

@@ -1,9 +1,13 @@
 package com.nl.clubbook.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,17 +25,23 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.NavDrawerItem;
+import com.nl.clubbook.datasource.ChatMessageDto;
+import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.JSONConverter;
+import com.nl.clubbook.fragment.ChatFragment;
+import com.nl.clubbook.fragment.ClubFragment;
 import com.nl.clubbook.fragment.ShareFragment;
+import com.nl.clubbook.fragment.dialog.ProgressDialog;
+import com.nl.clubbook.helper.CheckInOutCallbackInterface;
+import com.nl.clubbook.helper.LocationCheckInHelper;
 import com.nl.clubbook.ui.drawer.NavDrawerData;
 import com.nl.clubbook.ui.drawer.NavDrawerListAdapter;
-import com.nl.clubbook.datasource.ChatMessageDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.fragment.BaseFragment;
-import com.nl.clubbook.fragment.ChatFragment;
 import com.nl.clubbook.fragment.ClubsListFragment;
 import com.nl.clubbook.fragment.FriendsFragment;
 import com.nl.clubbook.fragment.MessagesFragment;
@@ -46,7 +56,6 @@ import com.pubnub.api.Callback;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -60,14 +69,21 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class MainActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener,
-        BaseFragment.OnInnerFragmentDestroyedListener, BaseFragment.OnInnerFragmentOpenedListener {
+        BaseFragment.OnInnerFragmentDestroyedListener, BaseFragment.OnInnerFragmentOpenedListener,
+        ClubFragment.OnCheckInCheckOutListener {
+
+    public static final String ACTION_CHECK_IN = "ACTION_CHECK_IN";
+    public static final String ACTION_CHECK_OUT = "ACTION_CHECK_OUT";
+
+    public static final String EXTRA_TYPE = "EXTRA_TYPE";
+
+    public static final String TYPE_CHAT = "chat";
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private View mNavDrawerHeaderView;
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private ImageButton actionbarChatButton;
     private TextView actionbarChatCount;
     private Integer chatCountOfNewMessages = 0;
 
@@ -78,6 +94,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private ImageLoader mImageLoader;
     private DisplayImageOptions mOptions;
 
+    private Fragment mCurrentFragment;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +104,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (!getSession().isLoggedIn()) {
             Intent intent = new Intent(getApplicationContext(), MainLoginActivity.class);
             startActivity(intent);
+            finish();
             return;
         }
 
@@ -94,6 +113,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         fragmentMap.put(NavDrawerData.FRIENDS_POSITION, new FriendsFragment());
         fragmentMap.put(NavDrawerData.SHARE_POSITION, new ShareFragment());
         fragmentMap.put(NavDrawerData.SETTINGS_POSITION, new SettingsFragment());
+
+        initReceivers();
 
         initImageLoader();
         initActionBar();
@@ -105,19 +126,36 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onStart() {
         super.onStart();
-        SessionManager session = new SessionManager(getApplicationContext());
+        SessionManager session = SessionManager.getInstance();
         HashMap<String, String> user = session.getUserDetails();
-        String user_id = user.get(SessionManager.KEY_ID);
-        subscribeToChannel("message_" + user_id);
+        String userId = user.get(SessionManager.KEY_ID);
+        subscribeToChannel("message_" + userId);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        L.d("on New intent - display default view");
+
+        displayDefaultView();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        SessionManager session = new SessionManager(getApplicationContext());
+        SessionManager session = SessionManager.getInstance();
         HashMap<String, String> user = session.getUserDetails();
-        String user_id = user.get(SessionManager.KEY_ID);
-        NotificationHelper.pubnub.unsubscribe("message_" + user_id);
+        String userId = user.get(SessionManager.KEY_ID);
+        NotificationHelper.pubnub.unsubscribe("message_" + userId);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        unregisterReceiver(mCheckInReceiver);
+        unregisterReceiver(mCheckOutReceiver);
     }
 
     @Override
@@ -136,7 +174,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         View badgeMessages = MenuItemCompat.getActionView(menu.findItem(R.id.badgeMessages));
         RelativeLayout messagesActionBar = (RelativeLayout) badgeMessages.findViewById(R.id.messagesActionBar);
-        actionbarChatButton = (ImageButton) messagesActionBar.findViewById(R.id.actionbarChatButton);
+        ImageButton actionbarChatButton = (ImageButton) messagesActionBar.findViewById(R.id.actionbarChatButton);
         actionbarChatCount = (TextView) messagesActionBar.findViewById(R.id.actionbarChatCount);
         actionbarChatCount.setText(String.valueOf(chatCountOfNewMessages));
 
@@ -198,6 +236,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.holderNavDrawerHeader:
                 onNavDrawerHeaderClicked();
                 break;
+            case R.id.imgCheckOut:
+                onImgCheckOutClicked();
+                break;
         }
     }
 
@@ -226,6 +267,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             mDrawerToggle.setDrawerIndicatorEnabled(false);
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
+    }
+
+    @Override
+    public void onCheckedIn() {
+        updateNavDrawerHeader();
+    }
+
+    @Override
+    public void onCheckedOut() {
+        updateNavDrawerHeader();
     }
 
     private void initImageLoader() {
@@ -266,6 +317,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
+    private void initReceivers() {
+        registerReceiver(mCheckInReceiver, new IntentFilter(ACTION_CHECK_IN));
+        registerReceiver(mCheckOutReceiver, new IntentFilter(ACTION_CHECK_OUT));
+    }
+
     private View initNavDrawerHeader() {
         mNavDrawerHeaderView = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_nav_drawer_header, null);
         mNavDrawerHeaderView.findViewById(R.id.holderNavDrawerHeader).setOnClickListener(MainActivity.this);
@@ -296,41 +352,43 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         txtProfileInfo.setText((profileAge != null && profileAge.length() > 0) ? profileAge + ", " : "");
         txtProfileInfo.append(profileGender != null ? profileGender : "");
 
-        mNavDrawerHeaderView.findViewById(R.id.holderNavDrawerHeader).setOnClickListener(MainActivity.this);
-    }
+        mNavDrawerHeaderView.findViewById(R.id.holderUserInfo).setOnClickListener(MainActivity.this);
 
-    public BaseFragment getCurrentFragment() {
-        return currentFragment;
+        updateNavDrawerHeader();
     }
 
     private void handleNotification(JSONObject messageJson) {
-        try {
-            if (getCurrentFragment() instanceof ChatFragment && messageJson.getString("type").equalsIgnoreCase("chat")) {
-                ChatFragment chatFragment = (ChatFragment) getCurrentFragment();
-                JSONObject data = messageJson.getJSONObject("data");
-                String userTo = data.getString("user_to");
-                String userFrom = data.getString("user_from");
-                SessionManager session = new SessionManager(this);
+        if(mCurrentFragment instanceof MessagesFragment) {
+
+            MessagesFragment messagesFragment = (MessagesFragment) mCurrentFragment;
+            ChatFragment chatFragment = messagesFragment.getChatFragment();
+
+            if (chatFragment != null && TYPE_CHAT.equalsIgnoreCase(messageJson.optString("type"))) {
+                JSONObject data = messageJson.optJSONObject("data");
+                String userTo = data.optString("user_to");
+                String userFrom = data.optString("user_from");
+
+                SessionManager session = SessionManager.getInstance();
                 if (session.getConversationListner() != null && session.getConversationListner().equalsIgnoreCase(userFrom + "_" + userTo)) {
-                    ChatMessageDto lastMessage = JSONConverter.newChatMessage(data.getJSONObject("last_message"));
+                    ChatMessageDto lastMessage = JSONConverter.newChatMessage(data.optJSONObject("last_message"));
                     chatFragment.receiveComment(lastMessage);
                 } else {
                     updateMessagesCount();
                 }
-
             } else {
                 updateMessagesCount();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } else {
+            updateMessagesCount();
         }
     }
 
     private void displayDefaultView() {
-        Intent in = getIntent();
+        Intent intent = getIntent();
+
         int displayView = NavDrawerData.DEFAULT_FRAGMENT_NUMBER;
-        if (in.hasExtra("type")) {
-            if (in.getStringExtra("type").equalsIgnoreCase("chat")) {
+        if (intent.hasExtra(EXTRA_TYPE)) {
+            if (TYPE_CHAT.equalsIgnoreCase(intent.getStringExtra(EXTRA_TYPE))) {
                 displayView = NavDrawerData.MESSAGES_POSITION;
             }
         }
@@ -340,8 +398,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     public void updateMessagesCount() {
         // if user on List of All messages fragment then reload data
-        if (getCurrentFragment() instanceof MessagesFragment) {
-            ((MessagesFragment) getCurrentFragment()).onRefresh();
+        if (mCurrentFragment instanceof MessagesFragment) {
+            ((MessagesFragment) mCurrentFragment).onRefresh();
         }
 
         // retrieve the count of not read messages and update UI
@@ -363,14 +421,35 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         initActionBar("");
     }
 
-    private void displayView(final int position) {
-        Fragment fragment = fragmentMap.get(position);
+    private void updateNavDrawerHeader() {
+        ClubDto club = LocationCheckInHelper.getInstance().getCurrentClub();
 
-        if (fragment != null) {
+        TextView txtClubName = (TextView) mNavDrawerHeaderView.findViewById(R.id.txtClubName);
+        View imgCheckOut = mNavDrawerHeaderView.findViewById(R.id.imgCheckOut);
+
+        if(club != null && club.getId() != null && club.getId().length() > 0) {
+            txtClubName.setText(club.getTitle());
+            imgCheckOut.setTag(club.getId());
+            imgCheckOut.setOnClickListener(MainActivity.this);
+
+            mNavDrawerHeaderView.findViewById(R.id.holderCheckOut).setVisibility(View.VISIBLE);
+
+            LocationCheckInHelper.getInstance().startLocationUpdate(MainActivity.this);
+        } else {
+            imgCheckOut.setTag(null);
+
+            mNavDrawerHeaderView.findViewById(R.id.holderCheckOut).setVisibility(View.GONE);
+        }
+    }
+
+    private void displayView(final int position) {
+        mCurrentFragment = fragmentMap.get(position);
+
+        if (mCurrentFragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
 
-            mFragmentTransaction.replace(R.id.frame_container, fragment);
+            mFragmentTransaction.replace(R.id.frame_container, mCurrentFragment);
             mFragmentTransaction.commit();
 
             // update selected item and title, then close the drawer
@@ -382,7 +461,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             L.i("Error in creating fragment");
         }
     }
-
 
     private void subscribeToChannel(String channel_name) {
         try {
@@ -410,8 +488,44 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void onNavDrawerHeaderClicked() {
-        Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);//TODO
+        Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
         startActivityForResult(intent, EditProfileActivity.REQUEST_CODE);
+    }
+
+    private void onImgCheckOutClicked() {
+        showProgressDialog(getString(R.string.checking_out));
+
+        LocationCheckInHelper.getInstance().checkOut(MainActivity.this, new CheckInOutCallbackInterface() {
+            @Override
+            public void onCheckInOutFinished(boolean isUserCheckOut) {
+                handleCheckInCheckOutResults(isUserCheckOut);
+            }
+        });
+    }
+
+    private void hideProgressDialog() {
+        DialogFragment dialogFragment = (DialogFragment)getSupportFragmentManager().findFragmentByTag(ProgressDialog.TAG);
+        if(dialogFragment != null) {
+            dialogFragment.dismissAllowingStateLoss();
+        }
+    }
+
+    private void showProgressDialog(String message) {
+        Fragment dialogFragment = ProgressDialog.newInstance(getString(R.string.app_name), message);
+        getSupportFragmentManager().beginTransaction().add(dialogFragment, ProgressDialog.TAG).commitAllowingStateLoss();
+    }
+
+    private void handleCheckInCheckOutResults(boolean result) {
+        if(isFinishing()) {
+            return;
+        }
+
+        if (result) {
+            mNavDrawerHeaderView.findViewById(R.id.holderCheckOut).setVisibility(View.GONE);
+            hideProgressDialog();
+        } else {
+            Toast.makeText(MainActivity.this, R.string.problem_occurred_please_try_again, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private Callback callback = new Callback() {
@@ -453,6 +567,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         public void errorCallback(String channel, PubnubError error) {
             System.out.println("SUBSCRIBE : ERROR on channel " + channel
                     + " : " + error.toString());
+        }
+    };
+
+    private BroadcastReceiver mCheckInReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String clubName = getSession().getValueByKey(SessionManager.KEY_CHECKIN_CLUB_NAME);
+            TextView txtClubName = (TextView) mNavDrawerHeaderView.findViewById(R.id.txtClubName);
+            txtClubName.setText(clubName);
+
+            mNavDrawerHeaderView.findViewById(R.id.holderCheckOut).setVisibility(View.VISIBLE);
+        }
+    };
+
+    private BroadcastReceiver mCheckOutReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            TextView txtClubName = (TextView) mNavDrawerHeaderView.findViewById(R.id.txtClubName);
+            txtClubName.setText("");
+
+            mNavDrawerHeaderView.findViewById(R.id.holderCheckOut).setVisibility(View.GONE);
         }
     };
 }

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:background="@drawable/selector_list"
+    android:orientation="horizontal"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <com.nl.clubbook.ui.view.CircleImageView
+        android:id="@+id/imgAvatar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="centerCrop" />
+
+
+    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+        android:id="@+id/txtName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:singleLine="true"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/text_size_medium"
+        android:layout_marginLeft="8dp"/>
+
+    <ImageView
+        android:id="@+id/imgAccept"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_accept"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"/>
+
+    <ImageView
+        android:id="@+id/imgDecline"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_decline" />
+
+</LinearLayout>

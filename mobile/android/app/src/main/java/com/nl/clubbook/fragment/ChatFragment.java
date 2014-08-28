@@ -12,14 +12,21 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.adapter.ChatAdapter;
+import com.nl.clubbook.datasource.BaseChatMessage;
 import com.nl.clubbook.datasource.ChatDto;
 import com.nl.clubbook.datasource.ChatMessageDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.helper.SessionManager;
+import com.nl.clubbook.utils.CalendarUtils;
 import com.nl.clubbook.utils.KeyboardUtils;
+import com.nl.clubbook.utils.L;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Andrew on 6/8/2014.
@@ -66,7 +73,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     public void onStart() {
         super.onStart();
 
-        SessionManager session = new SessionManager(getActivity().getApplicationContext());
+        SessionManager session = SessionManager.getInstance();
         session.setConversationListner(mUserToId + "_" + mUserFromId);
     }
 
@@ -74,7 +81,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     public void onStop() {
         super.onStop();
 
-        SessionManager session = new SessionManager(getActivity().getApplicationContext());
+        SessionManager session = SessionManager.getInstance();
         session.setConversationListner(null);
     }
 
@@ -207,7 +214,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     private void loadConversation() {
         setLoading(true);
 
-        DataStore.getConversation(mUserFromId, mUserToId, mAccessToken, new DataStore.OnResultReady() {
+        DataStore.getConversation(getActivity(), mUserFromId, mUserToId, mAccessToken, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if(isDetached() || getActivity() == null || getActivity().isFinishing()) {
@@ -225,7 +232,9 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
                 chatDto = (ChatDto) result;
 
-                mAdapter = new ChatAdapter(getActivity().getApplicationContext(), R.layout.item_chat_left, chatDto.getConversation());
+                List<BaseChatMessage> baseChatMessages = getChatsMessages(chatDto.getConversation());
+
+                mAdapter = new ChatAdapter(getActivity().getApplicationContext(), R.layout.item_chat_left, baseChatMessages);
                 ListView listChat = (ListView) view.findViewById(R.id.listChat);
                 listChat.setAdapter(mAdapter);
                 listChat.setSelection(chatDto.getConversation().size());
@@ -234,15 +243,16 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(inputText, InputMethodManager.SHOW_IMPLICIT);
 
-                // make conversation between 2 people as read
+                String accessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
                 DataStore.readMessages(
                         chatDto.getCurrentUser().getId(),
                         chatDto.getReceiver().getId(),
-                        chatDto.getCurrentUser().getAccessToken(),
+                        accessToken,
                         new DataStore.OnResultReady() {
                             @Override
                             public void onReady(Object result, boolean failed) {
                                 if (failed) {
+                                    L.i("readMessages failed");
                                     return;
                                 }
                                 ((MainActivity) getActivity()).updateMessagesCount();
@@ -252,6 +262,29 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                 setLoading(false);
             }
         });
+    }
+
+    //TODO move this operation to background
+    private List<BaseChatMessage> getChatsMessages(List<ChatMessageDto> chatMessages) {
+        long previousTime = 0;
+        int dayTimeInMilliseconds = CalendarUtils.getDayTimeInMilliseconds();
+        List<BaseChatMessage> baseChatMessages = new ArrayList<BaseChatMessage>();
+        for(ChatMessageDto message : chatMessages) {
+            long timeWithoutHours = message.getTimeWithoutHours();
+            if(timeWithoutHours > previousTime + dayTimeInMilliseconds) {
+                BaseChatMessage baseMessage = new BaseChatMessage();
+                baseMessage.setTimeWithoutHours(timeWithoutHours);
+                baseMessage.setDateObject(true);
+
+                baseChatMessages.add(baseMessage);
+                baseChatMessages.add(message);
+                previousTime = timeWithoutHours;
+            } else {
+                baseChatMessages.add(message);
+            }
+        }
+
+        return baseChatMessages;
     }
 
     private void setLoading(boolean isLoading) {

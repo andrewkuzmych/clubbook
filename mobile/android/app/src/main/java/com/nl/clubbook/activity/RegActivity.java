@@ -186,14 +186,14 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
                 // show error
                 if (failed) {
                     hideProgress(false);
-                    alert.showAlertDialog(RegActivity.this, "Error", getString(R.string.no_connection), false);
+                    alert.showAlertDialog(RegActivity.this, "Error", getString(R.string.no_connection));
                     return;
                 }
 
                 hideProgress(true);
 
                 if (result == null) {
-                    alert.showAlertDialog(RegActivity.this, "Error", getString(R.string.email_exists), false);
+                    alert.showAlertDialog(RegActivity.this, "Error", getString(R.string.email_exists));
                 } else {
                     UserDto user = (UserDto) result;
                     // save user in session
@@ -211,33 +211,33 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
         EditText editName = (EditText) findViewById(R.id.editName);
         String userName = editName.getText().toString().trim();
         if (userName.trim().length() < 2) {
-            alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.name_incorrect), false);
+            alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.name_incorrect));
             return false;
         }
 
         EditText editEmail = (EditText) findViewById(R.id.editEmail);
         String email = editEmail.getText().toString().trim();
         if (!Validator.isEmailValid(email)) {
-            alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.email_incorrect), false);
+            alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.email_incorrect));
             return false;
         }
 
         EditText editPassword = (EditText) findViewById(R.id.editPassword);
         String password = editPassword.getText().toString().trim();
         if (password.trim().length() < 6) {
-            alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.pass_incorrect), false);
+            alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.pass_incorrect));
             return false;
         }
 
         EditText editBirthDate = (EditText) findViewById(R.id.editBirthDate);
         String dob = editBirthDate.getText().toString().trim();
         if (dob.trim().length() < 6) {
-            alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.dob_incorrect), false);
+            alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.dob_incorrect));
             return false;
         }
 
         if(avatar == null) {
-            alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.avatar_incorrect), false);
+            alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.avatar_incorrect));
             return false;
         }
 

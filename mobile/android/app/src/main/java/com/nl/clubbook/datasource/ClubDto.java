@@ -25,7 +25,7 @@ public class ClubDto {
     private ClubWorkingHoursDto todayWorkingHours;
     private List<ClubWorkingHoursDto> workingHours;
     private List<String> photos;
-    private List<UserDto> users;
+    private List<CheckInUserDto> users;
 
 
     public String getId() {
@@ -36,11 +36,11 @@ public class ClubDto {
         this.id = id;
     }
 
-    public List<UserDto> getUsers() {
+    public List<CheckInUserDto> getUsers() {
         return users;
     }
 
-    public void setUsers(List<UserDto> users) {
+    public void setUsers(List<CheckInUserDto> users) {
         this.users = users;
     }
 

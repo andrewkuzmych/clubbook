@@ -9,8 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
+import com.nl.clubbook.datasource.CheckInUserDto;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.ImageHelper;
+import com.nl.clubbook.utils.L;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
@@ -26,7 +28,9 @@ public class ProfileAdapter extends BaseAdapter {
     public static final int MODE_GRID = 7777;
     public static final int MODE_LIST = 8888;
 
-    private List<UserDto> mUsers = new ArrayList<UserDto>();
+    private List<CheckInUserDto> mUsers;
+    private String mCurrentUserId;
+
     private ImageLoader imageLoader;
     private DisplayImageOptions options;
     private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
@@ -34,9 +38,11 @@ public class ProfileAdapter extends BaseAdapter {
     private int mMode = MODE_GRID;
 
 
-    public ProfileAdapter(Context context, List<UserDto> users, int mode) {
+    public ProfileAdapter(Context context, List<CheckInUserDto> users, String currentUserId, int mode) {
         mInflater = LayoutInflater.from(context);
-        this.mUsers = users;
+        mCurrentUserId = currentUserId;
+
+        mUsers = users;
         mMode = mode;
 
         imageLoader = ImageLoader.getInstance();
@@ -92,14 +98,20 @@ public class ProfileAdapter extends BaseAdapter {
         return row;
     }
 
-    private void fillView(ViewHolder holder, UserDto item) {
-        String imageUrl = ImageHelper.getUserListAvatar(item.getAvatar());
+    private void fillView(ViewHolder holder, CheckInUserDto item) {
+        String imageUrl = ImageHelper.getUserListAvatar(item.getAvatarUrl());
         holder.imgAvatar.setTag(imageUrl);
         imageLoader.displayImage(imageUrl, holder.imgAvatar, options, animateFirstListener);
 
         holder.userId.setTag(item.getId());
 
-        //TODO implement friends indicator
+        if(item.isFriend()) {
+            holder.txtFriendIndicator.setVisibility(View.GONE);
+        } else if(mCurrentUserId.equals(item.getId())) {
+            holder.txtFriendIndicator.setVisibility(View.GONE);
+        } else {
+            holder.txtFriendIndicator.setVisibility(View.VISIBLE);
+        }
     }
 
     static class ViewHolder {

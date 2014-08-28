@@ -46,36 +46,37 @@ public class LoginActivity extends BaseActivity {
                 String password = txtPassword.getText().toString().trim();
 
                 if (!Validator.isEmailValid(email)) {
-                    alert.showAlertDialog(LoginActivity.this, "Login failed..", getString(R.string.email_incorrect), false);
+                    alert.showAlertDialog(LoginActivity.this, "Login failed..", getString(R.string.email_incorrect));
                     return;
                 }
 
                 if (password.trim().length() < 6) {
-                    alert.showAlertDialog(LoginActivity.this, "Login failed..", getString(R.string.pass_incorrect), false);
+                    alert.showAlertDialog(LoginActivity.this, "Login failed..", getString(R.string.pass_incorrect));
                     return;
                 }
 
                 //login request
-                showProgress("Loading...");
+                showProgress(getString(R.string.loading));
                 DataStore.loginByEmail(email, password, new DataStore.OnResultReady() {
                     @Override
                     public void onReady(Object result, boolean failed) {
                         // show error
                         if (failed) {
                             hideProgress(false);
-                            alert.showAlertDialog(LoginActivity.this, "Error", getString(R.string.no_connection), false);
+                            alert.showAlertDialog(LoginActivity.this, "Error", getString(R.string.no_connection));
                             return;
                         }
 
                         hideProgress(true);
 
                         if (result == null) {
-                            alert.showAlertDialog(LoginActivity.this, "Error", "Incorrect credentials", false);
+                            alert.showAlertDialog(LoginActivity.this, "Error", getString(R.string.incorrect_credentials));
                         } else {
                             UserDto user = (UserDto) result;
                             getSession().createLoginSession(user);
                             Intent i = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(i);
+                            finish();
                         }
                     }
                 });

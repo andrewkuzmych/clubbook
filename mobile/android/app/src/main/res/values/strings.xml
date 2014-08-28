@@ -108,5 +108,16 @@
     <string name="send">Send</string>
     <string name="invite_you_for_a_drink">Invite you for a drink</string>
     <string name="likes_you">likes you</string>
+    <string name="checking_in">Checking in&#8230;</string>
+    <string name="checking_out">Checking out&#8230;</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="today">Today</string>
+    <string name="nearby">Nearby</string>
+    <string name="a_z">A-Z</string>
+    <string name="pending">Pending</string>
+    <string name="accept">Accept</string>
+    <string name="incorrect_credentials">Incorrect credentials</string>
+    <string name="problem_occurred_please_try_again">Problem occurred, please, try again</string>
+    <string name="ok">Ok</string>
 
 </resources>
