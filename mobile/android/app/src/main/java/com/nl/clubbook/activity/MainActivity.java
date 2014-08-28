@@ -110,7 +110,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         fragmentMap.put(NavDrawerData.CLUB_LIST_POSITION, new ClubsListFragment());
         fragmentMap.put(NavDrawerData.MESSAGES_POSITION, new MessagesFragment());
         fragmentMap.put(NavDrawerData.FRIENDS_POSITION, new FriendsFragment());
-//        fragmentMap.put(NavDrawerData.SHARE_POSITION, new ShareFragment());//TODO
         fragmentMap.put(NavDrawerData.SETTINGS_POSITION, new SettingsFragment());
 
         initReceivers();
@@ -246,6 +245,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if(position - 1 == NavDrawerData.SHARE_POSITION) {
+            mDrawerLayout.closeDrawer(mDrawerList);
+            onShareClicked();
+            return;
+        }
+
         //list header has positions equals '0'
         displayView(position - 1);
     }
@@ -462,6 +467,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         } else {
             L.i("Error in creating fragment");
         }
+    }
+
+    private void onShareClicked() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        startActivity(Intent.createChooser(intent, getString(R.string.share_to)));
     }
 
     private void subscribeToChannel(String channel_name) {

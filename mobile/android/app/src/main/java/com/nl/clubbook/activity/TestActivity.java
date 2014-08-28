@@ -3,199 +3,207 @@ package com.nl.clubbook.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
-import com.facebook.Request;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.model.GraphUser;
 import com.nl.clubbook.R;
-import com.nl.clubbook.utils.L;
-
-import java.util.Arrays;
 
 /**
  * Created by Volodymyr on 11.08.2014.
  */
-public class TestActivity extends BaseActivity implements View.OnClickListener {
-
-//    private UiLifecycleHelper uiHelper;
-//    private Session.StatusCallback callback = new Session.StatusCallback() {
-//        @Override
-//        public void call(final Session session, final SessionState state, final Exception exception) {
-//            onSessionStateChange(session, state, exception);
-//        }
-//    };
-
-    private TextView userInfoTextView;
-    private boolean isReopened = false;
-
+public class TestActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_test);
 
-        userInfoTextView = (TextView) findViewById(R.id.textUserInfo);
+        findViewById(R.id.txtShare).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "SUBJECT");
+                intent.putExtra(Intent.EXTRA_TEXT,"Extra Text");
 
-//        uiHelper = new UiLifecycleHelper(TestActivity.this, callback);
-//        uiHelper.onCreate(savedInstanceState);
-
-        findViewById(R.id.txtSignUp).setOnClickListener(this);
+                startActivity(Intent.createChooser(intent, "Share to"));
+            }
+        });
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
+    ////    private UiLifecycleHelper uiHelper;
+////    private Session.StatusCallback callback = new Session.StatusCallback() {
+////        @Override
+////        public void call(final Session session, final SessionState state, final Exception exception) {
+////            onSessionStateChange(session, state, exception);
+////        }
+////    };
 //
-//        uiHelper.onResume();
-//    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Session.getActiveSession().onActivityResult(TestActivity.this, requestCode, resultCode, data);
-//        uiHelper.onActivityResult(requestCode, resultCode, data);
-//
-//        Session.getActiveSession().
-    }
-
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        uiHelper.onPause();
-//    }
+//    private TextView userInfoTextView;
+//    private boolean isReopened = false;
 //
 //    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        uiHelper.onDestroy();
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.ac_test);
+//
+//        userInfoTextView = (TextView) findViewById(R.id.textUserInfo);
+//
+////        uiHelper = new UiLifecycleHelper(TestActivity.this, callback);
+////        uiHelper.onCreate(savedInstanceState);
+//
+//        findViewById(R.id.txtSignUp).setOnClickListener(this);
 //    }
+//
+////    @Override
+////    protected void onResume() {
+////        super.onResume();
+////
+////        uiHelper.onResume();
+////    }
 //
 //    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        uiHelper.onSaveInstanceState(outState);
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        Session.getActiveSession().onActivityResult(TestActivity.this, requestCode, resultCode, data);
+////        uiHelper.onActivityResult(requestCode, resultCode, data);
+////
+////        Session.getActiveSession().
 //    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.txtSignUp) {
-            onBtnClicked();
-        }
-    }
-
-    private void onBtnClicked() {
-
-//        Session.openActiveSession(this, true, new Session.StatusCallback() {
-//            @Override
-//            public void call(Session session, SessionState state, Exception exception) {
-//                if (session.isOpened()) {
 //
-//                    Session.getActiveSession().openForRead(new Session.OpenRequest(TestActivity.this)
-//                                    .setPermissions(Arrays.asList("public_profile", "email", "user_birthday"))
-//                                    .setCallback(new Session.StatusCallback() {
-//                                        @Override
-//                                        public void call(Session session, SessionState state, Exception exception) {
-//                                            if (state.isOpened()) {
-//                                                Request.newMeRequest(session, new Request.GraphUserCallback() {
+////    @Override
+////    public void onPause() {
+////        super.onPause();
+////        uiHelper.onPause();
+////    }
+////
+////    @Override
+////    public void onDestroy() {
+////        super.onDestroy();
+////        uiHelper.onDestroy();
+////    }
+////
+////    @Override
+////    public void onSaveInstanceState(Bundle outState) {
+////        super.onSaveInstanceState(outState);
+////        uiHelper.onSaveInstanceState(outState);
+////    }
 //
-//                                                    @Override
-//                                                    public void onCompleted(GraphUser user, Response response) {
-//                                                        if (user != null) {
-//                                                            userInfoTextView.setText("Hello " + user.getName() + "!");
-//                                                            userInfoTextView.append("\nEmail " + user.asMap().get("email"));
-//                                                            userInfoTextView.append("\nUser birthday " + user.asMap().get("user_birthday"));
-//                                                        }
-//                                                    }
-//                                                }).executeAsync();
-//                                            }
-//                                        }
-//                                    })
-//                    );
-//                }
-//            }
-//        });
-
-//            Session.openForRead(new Session.OpenRequest(TestActivity.this)
-//                    .setPermissions(Arrays.asList("public_profile", "email", "user_birthday"))
-//                    .setCallback(new Session.StatusCallback() {
-//                        @Override
-//                        public void call(Session session, SessionState state, Exception exception) {
-//                            if(state.isOpened()) {
-//                                Request.newMeRequest(session, new Request.GraphUserCallback() {
+//    @Override
+//    public void onClick(View v) {
+//        if (v.getId() == R.id.txtSignUp) {
+//            onBtnClicked();
+//        }
+//    }
 //
-//                                    @Override
-//                                    public void onCompleted(GraphUser user, Response response) {
-//                                        if (user != null) {
-//                                            userInfoTextView.setText("Hello " + user.getName() + "!");
-//                                            userInfoTextView.append("\nEmail " + user.asMap().get("email"));
-//                                            userInfoTextView.append("\nUser birthday " + user.asMap().get("user_birthday"));
-//                                        }
-//                                    }
-//                                }).executeAsync();
-//                            }
-//                        }
-//                    })
-//            );
-
-            Session.openActiveSession(this, true, new Session.StatusCallback() {
-                @Override
-                public void call(Session session, SessionState state, Exception exception) {
-                    if (session.isOpened()) {
-
-                        L.i("session.isOpened()");
-                        L.w("permissions - " + session.getPermissions());
-
-                        if(!session.getPermissions().containsAll(Arrays.asList("email"))) {
-                            L.e("!contains");
-                            session.requestNewReadPermissions(new Session.NewPermissionsRequest(TestActivity.this,
-                                    Arrays.asList("email", "user_birthday")));
-                        } else {
-                            Request.newMeRequest(session, new Request.GraphUserCallback() {
-
-                                @Override
-                                public void onCompleted(GraphUser user, Response response) {
-                                    if (user != null) {
-                                        userInfoTextView.setText("Hello " + user.getName() + "!");
-                                        userInfoTextView.append("\nEmail " + user.asMap().get("email"));
-                                        userInfoTextView.append("\nUser birthday " + user.asMap().get("user_birthday"));
-                                    }
-                                }
-                            }).executeAsync();
-                        }
-                    }
-                }
-            });
-    }
-
-    private void onSessionStateChange(Session session, SessionState state, Exception exception) {
-        if (state.isOpened()) {
-            userInfoTextView.setVisibility(View.VISIBLE);
-
-
-            L.e("isOpened");
-//            session.requestNewReadPermissions(new Session.NewPermissionsRequest(TestActivity.this,
-//                    Arrays.asList("public_profile", "email", "user_birthday")));
+//    private void onBtnClicked() {
 //
-//            Request.newMeRequest(session, new Request.GraphUserCallback() {
+////        Session.openActiveSession(this, true, new Session.StatusCallback() {
+////            @Override
+////            public void call(Session session, SessionState state, Exception exception) {
+////                if (session.isOpened()) {
+////
+////                    Session.getActiveSession().openForRead(new Session.OpenRequest(TestActivity.this)
+////                                    .setPermissions(Arrays.asList("public_profile", "email", "user_birthday"))
+////                                    .setCallback(new Session.StatusCallback() {
+////                                        @Override
+////                                        public void call(Session session, SessionState state, Exception exception) {
+////                                            if (state.isOpened()) {
+////                                                Request.newMeRequest(session, new Request.GraphUserCallback() {
+////
+////                                                    @Override
+////                                                    public void onCompleted(GraphUser user, Response response) {
+////                                                        if (user != null) {
+////                                                            userInfoTextView.setText("Hello " + user.getName() + "!");
+////                                                            userInfoTextView.append("\nEmail " + user.asMap().get("email"));
+////                                                            userInfoTextView.append("\nUser birthday " + user.asMap().get("user_birthday"));
+////                                                        }
+////                                                    }
+////                                                }).executeAsync();
+////                                            }
+////                                        }
+////                                    })
+////                    );
+////                }
+////            }
+////        });
 //
+////            Session.openForRead(new Session.OpenRequest(TestActivity.this)
+////                    .setPermissions(Arrays.asList("public_profile", "email", "user_birthday"))
+////                    .setCallback(new Session.StatusCallback() {
+////                        @Override
+////                        public void call(Session session, SessionState state, Exception exception) {
+////                            if(state.isOpened()) {
+////                                Request.newMeRequest(session, new Request.GraphUserCallback() {
+////
+////                                    @Override
+////                                    public void onCompleted(GraphUser user, Response response) {
+////                                        if (user != null) {
+////                                            userInfoTextView.setText("Hello " + user.getName() + "!");
+////                                            userInfoTextView.append("\nEmail " + user.asMap().get("email"));
+////                                            userInfoTextView.append("\nUser birthday " + user.asMap().get("user_birthday"));
+////                                        }
+////                                    }
+////                                }).executeAsync();
+////                            }
+////                        }
+////                    })
+////            );
+//
+//            Session.openActiveSession(this, true, new Session.StatusCallback() {
 //                @Override
-//                public void onCompleted(GraphUser user, Response response) {
-//                    if (user != null) {
-//                        userInfoTextView.setText("Hello " + user.getName() + "!");
-//                        userInfoTextView.append("\nEmail " + user.asMap().get("email"));
-//                        userInfoTextView.append("\nUser birthday " + user.asMap().get("user_birthday"));
+//                public void call(Session session, SessionState state, Exception exception) {
+//                    if (session.isOpened()) {
+//
+//                        L.i("session.isOpened()");
+//                        L.w("permissions - " + session.getPermissions());
+//
+//                        if(!session.getPermissions().containsAll(Arrays.asList("email"))) {
+//                            L.e("!contains");
+//                            session.requestNewReadPermissions(new Session.NewPermissionsRequest(TestActivity.this,
+//                                    Arrays.asList("email", "user_birthday")));
+//                        } else {
+//                            Request.newMeRequest(session, new Request.GraphUserCallback() {
+//
+//                                @Override
+//                                public void onCompleted(GraphUser user, Response response) {
+//                                    if (user != null) {
+//                                        userInfoTextView.setText("Hello " + user.getName() + "!");
+//                                        userInfoTextView.append("\nEmail " + user.asMap().get("email"));
+//                                        userInfoTextView.append("\nUser birthday " + user.asMap().get("user_birthday"));
+//                                    }
+//                                }
+//                            }).executeAsync();
+//                        }
 //                    }
 //                }
-//            }).executeAsync();
-        } else if (state.isClosed()) {
-
-            L.e("isClosed");
-//            userInfoTextView.setVisibility(View.INVISIBLE);
-        }
-    }
+//            });
+//    }
+//
+//    private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+//        if (state.isOpened()) {
+//            userInfoTextView.setVisibility(View.VISIBLE);
+//
+//
+//            L.e("isOpened");
+////            session.requestNewReadPermissions(new Session.NewPermissionsRequest(TestActivity.this,
+////                    Arrays.asList("public_profile", "email", "user_birthday")));
+////
+////            Request.newMeRequest(session, new Request.GraphUserCallback() {
+////
+////                @Override
+////                public void onCompleted(GraphUser user, Response response) {
+////                    if (user != null) {
+////                        userInfoTextView.setText("Hello " + user.getName() + "!");
+////                        userInfoTextView.append("\nEmail " + user.asMap().get("email"));
+////                        userInfoTextView.append("\nUser birthday " + user.asMap().get("user_birthday"));
+////                    }
+////                }
+////            }).executeAsync();
+//        } else if (state.isClosed()) {
+//
+//            L.e("isClosed");
+////            userInfoTextView.setVisibility(View.INVISIBLE);
+//        }
+//    }
 
 
     //    private UiLifecycleHelper uiHelper;

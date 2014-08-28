@@ -6,27 +6,16 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/txtSignUp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_above="@+id/textUserInfo"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/bg_btn_blue"
-        android:text="@string/sing_in_with_facebook"
-        android:drawableLeft="@drawable/ic_sign_up_by_facebook"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:gravity="left|center_vertical"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/text_size_medium"/>
-
-    <TextView
-        android:id="@+id/textUserInfo"
+        android:id="@+id/txtShare"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Login"/>
+        android:background="@drawable/bg_btn_green"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_size_medium"
+        android:text="@string/share"
+        android:gravity="center"
+        android:paddingRight="32dp"
+        android:paddingLeft="32dp"/>
 
 </RelativeLayout>
