@@ -19,7 +19,7 @@ public class UiHelper {
     public static void changeCheckInState(Context context, View view, boolean isCheckIn) {
         TextView button = (TextView) view;
         if (!isCheckIn) {
-            button.setBackgroundResource(R.drawable.bg_btn_green);
+            button.setBackgroundResource(R.drawable.selector_btn_check_in);
             button.setText(context.getResources().getString(R.string.check_in));
         } else {
             button.setBackgroundResource(R.drawable.bg_btn_red);

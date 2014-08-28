@@ -138,7 +138,7 @@
                 android:text="@string/check_in"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/text_size_medium"
-                android:background="@drawable/bg_btn_green"/>
+                android:background="@drawable/selector_btn_check_in"/>
 
         </LinearLayout>
 
