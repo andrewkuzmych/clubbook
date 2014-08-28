@@ -34,7 +34,6 @@ import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.JSONConverter;
 import com.nl.clubbook.fragment.ChatFragment;
 import com.nl.clubbook.fragment.ClubFragment;
-import com.nl.clubbook.fragment.ShareFragment;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.CheckInOutCallbackInterface;
 import com.nl.clubbook.helper.LocationCheckinHelper;
@@ -111,7 +110,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         fragmentMap.put(NavDrawerData.CLUB_LIST_POSITION, new ClubsListFragment());
         fragmentMap.put(NavDrawerData.MESSAGES_POSITION, new MessagesFragment());
         fragmentMap.put(NavDrawerData.FRIENDS_POSITION, new FriendsFragment());
-        fragmentMap.put(NavDrawerData.SHARE_POSITION, new ShareFragment());
+//        fragmentMap.put(NavDrawerData.SHARE_POSITION, new ShareFragment());//TODO
         fragmentMap.put(NavDrawerData.SETTINGS_POSITION, new SettingsFragment());
 
         initReceivers();
