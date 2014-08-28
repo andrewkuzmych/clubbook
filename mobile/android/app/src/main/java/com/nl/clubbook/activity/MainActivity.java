@@ -235,7 +235,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.actionbarChatButton:
                 onChatBtnClicked();
                 break;
-            case R.id.holderNavDrawerHeader:
+            case R.id.holderUserInfo:
                 onNavDrawerHeaderClicked();
                 break;
             case R.id.imgCheckOut:
