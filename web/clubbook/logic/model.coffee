@@ -4,6 +4,28 @@ check = require('validator').check
 moment = require('moment-timezone')
 
 #-------------------------------------------------------------------------------------
+#  Admin
+#-------------------------------------------------------------------------------------
+
+AdminSchema = new mongoose.Schema
+  created_on: { type: Date, 'default': Date.now }
+  updated_on: { type: Date, 'default': Date.now }
+
+  login: {type: String, trim: true, required: true, unique: true}
+  password: {type: String, trim: true, required: true}
+  email: {type: String}
+  type: {type: String, trim: true, required: true, default: 'merchant', 'enum': ["merchant", "admin"]}
+
+AdminSchema.virtual('is_admin').get ()->
+  this.type in ["admin"]
+
+AdminSchema.pre 'save', (next, done) ->
+  this.updated_on = new Date().toISOString()
+  next()
+
+exports.Admin = mongoose.model 'Admin', AdminSchema
+
+#-------------------------------------------------------------------------------------
 #  User
 #-------------------------------------------------------------------------------------
 UserSchema = new mongoose.Schema

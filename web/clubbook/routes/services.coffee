@@ -462,7 +462,7 @@ exports.list_club = (req, res)->
   console.log req.params
 
   params =
-    distance: req.query.distance
+    #distance: req.query.distance
     lat: req.query.user_lat
     lon: req.query.user_lon
 

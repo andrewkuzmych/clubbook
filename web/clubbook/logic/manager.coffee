@@ -58,13 +58,17 @@ exports.signinmail = (params, callback)->
         callback "Wrong User or password " ,user
 
 exports.list_club = (params, callback)->
-  query = { 'club_loc':{ '$near' : [ params.lat,params.lon], '$maxDistance' :  exports.radius_to_km(params.distance) }}
-  if params.sort_by is 'dist'
-    db_model.Venue.find(query).exec (err, clubs)->
-      callback err, clubs
-  else
-    db_model.Venue.find(query).sort("club_name").exec (err, clubs)->
-      callback err, clubs
+  query = { 'club_loc':{ '$near' : [ params.lat,params.lon] }}
+  db_model.Venue.find(query).exec (err, clubs)->
+    callback err, clubs
+  
+  #if params.sort_by is 'dist'
+  #  db_model.Venue.find(query).exec (err, clubs)->
+  #    callback err, clubs
+  #else
+  #  db_model.Venue.find(query).sort("club_name").exec (err, clubs)->
+  #    callback err, clubs
+
 exports.get_people_count_in_club = (club, callback)->
   db_model.User.count({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}}).exec callback
 

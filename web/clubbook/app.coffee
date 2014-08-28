@@ -24,6 +24,7 @@ app = express();
 
 # global modules: config, db manager
 global.config = require('yaml-config').readConfig('./config/config.yaml', app.settings.env)
+
 # global.manager = require("./logic/manager")
 db_model = require("./logic/model")
 
@@ -33,7 +34,7 @@ services = require('./routes/services')
 cron = require('./routes/cron')
 #---------------------------------------------------------------------
 
-###passport.serializeUser (user, done) ->
+passport.serializeUser (user, done) ->
   done null, user._id
 
 passport.deserializeUser (id, done) ->
@@ -53,7 +54,6 @@ passport.use new LocalStrategy
         return done(null, false, message: "Incorrect password.")
 
       done null, user
-###
 
 #---------------------------------------------------------------------
 
@@ -61,7 +61,7 @@ app.use (req, res, next)->
   next()
 
 # all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 4000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use require('connect-assets')()
@@ -102,8 +102,27 @@ if ('development' == app.get('env'))
 app.locals.moment = require('moment-timezone')
 app.locals.moment_tz = "Europe/Kiev"
 
+#--------------------------------------------------------------------------------
+# utils
+#--------------------------------------------------------------------------------
+
+require_role = (role)->
+  (req, res, next)->
+    if req.isAuthenticated()
+      switch role
+        when "user" then next()
+        when "admin"
+          if req.user.is_admin
+            next()
+          else
+            res.redirect("/login")
+        else next()
+    else
+      res.redirect("/login")
+      #res.send(403)
+
 local_user = (req, res, next)->
-  res.locals.current_user = req.user;
+  res.locals.current_user = req.user
   next()
 
 handle_access_token = (req, res, next)->
@@ -130,10 +149,30 @@ handle_access_token = (req, res, next)->
 # Web pages
 #--------------------------------------------------------------------------------
 
-# landing page
 app.get '/', controller.index
+app.get '/login', controller.login
+app.post '/login', (req, res, next)->
+  passport.authenticate("local", (err, user, info) ->
+    if err
+      console.log err
+      return next(err)
+    if not user
+      res.render "login", {title: "Clubbook", error: info}
+    else
+      req.logIn user, (err) ->
+        if err then return next(err)
+        res.redirect "/"
+
+  ) req, res, next
+
+app.get '/logout', (req, res)->
+  req.logout()
+  res.redirect('/')
+
 app.get '/terms', controller.terms
 app.get '/privacy', controller.privacy
+
+app.get '/home', controller.home
 
 #--------------------------------------------------------------------------------
 # Mobile API

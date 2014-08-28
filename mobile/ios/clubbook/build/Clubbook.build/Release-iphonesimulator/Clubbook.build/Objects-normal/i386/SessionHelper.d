@@ -74,4 +74,14 @@ dependencies: \
   /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/FacebookSDK/FacebookSDK.framework/Headers/FBShareDialogPhotoParams.h \
   /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/FacebookSDK/FacebookSDK.framework/Headers/FBUserSettingsViewController.h \
   /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/FacebookSDK/FacebookSDK.framework/Headers/NSError+FBError.h \
-  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Parse.framework/Headers/PFFacebookUtils.h
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Parse.framework/Headers/PFFacebookUtils.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Helpers/LocationHelper.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/ClubbookManager.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/ClubbookManagerDelegate.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/DTO/Place.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/DTO/WorkingHour.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/DTO/Chat.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/DTO/UnreadMessages.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/DTO/Config.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Manager/ClubbookCommunicatorDelegate.h \
+  /Users/andrew/Documents/Dev/clubbook/clubbook/mobile/ios/clubbook/Clubbook/Manager/ClubbookCommunicator.h
