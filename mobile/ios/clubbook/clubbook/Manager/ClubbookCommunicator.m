@@ -397,11 +397,11 @@
     
 }
 
-- (void)retrievePlaces:(double) distance lat:(double) lat lon:(double) lon accessToken:(NSString *) accessToken;
+- (void)retrievePlaces:(double) lat lon:(double) lon accessToken:(NSString *) accessToken;
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/club?distance=%f&user_lat=%f&user_lon=%f&access_token=%@", baseURL, distance, lat, lon, accessToken];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/club?user_lat=%f&user_lon=%f&access_token=%@", baseURL, lat, lon, accessToken];
 
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];

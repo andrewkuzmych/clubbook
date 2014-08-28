@@ -79,8 +79,9 @@
 {
     self.loadingView = [[UIView alloc] initWithFrame:currentController.view.bounds];
     
+    //[self.loadingView setBackgroundColor: [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:0.8]];
     if(clearContext) {
-        [self.loadingView setBackgroundColor: [UIColor colorWithPatternImage: [UIImage imageNamed:@"background.png"]]];
+        [self.loadingView setBackgroundColor: [UIColor whiteColor]];
         
     }
     else {
