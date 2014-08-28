@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Andrew on 5/27/2014.
  */
-public class LocationCheckinHelper {
+public class LocationCheckInHelper {
 
     public static final int MAX_RADIUS = 5500;
     private ScheduledExecutorService scheduleTaskExecutor;
@@ -39,25 +39,25 @@ public class LocationCheckinHelper {
 
     private ClubDto mCurrentClub;
 
-    private static LocationCheckinHelper mCheckInHelper;
+    private static LocationCheckInHelper mCheckInHelper;
 
     public static void init() {
         if(mCheckInHelper == null) {
-            mCheckInHelper = new LocationCheckinHelper();
+            mCheckInHelper = new LocationCheckInHelper();
         }
 
         mCheckInHelper.setCurrentClub(SessionManager.getInstance().getCheckedInClubInfo());
     }
 
-    public static LocationCheckinHelper getInstance() {
+    public static LocationCheckInHelper getInstance() {
         if(mCheckInHelper == null) {
-            throw new IllegalArgumentException(LocationCheckinHelper.class.getSimpleName() + " is not initialized, call init() method in your application class");
+            throw new IllegalArgumentException(LocationCheckInHelper.class.getSimpleName() + " is not initialized, call init() method in your application class");
         }
 
         return mCheckInHelper;
     }
 
-    private LocationCheckinHelper() {
+    private LocationCheckInHelper() {
     }
 
     public ClubDto getCurrentClub() {
