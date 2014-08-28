@@ -12,7 +12,7 @@ import com.facebook.Session;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
-import com.nl.clubbook.helper.LocationCheckInHelper;
+import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
@@ -40,8 +40,11 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.ac_main_login);
 
         // start to track user location
-        LocationCheckInHelper.getInstance().startSmartLocationTracker(this);
-        if (!LocationCheckInHelper.getInstance().isLocationEnabled(this)) {
+        LocationCheckinHelper.getInstance().startSmartLocationTracker(this);
+        if (!LocationCheckinHelper.getInstance().isLocationEnabled(this)) {
+            Intent i = new Intent(getApplicationContext(), NoLocationActivity.class);
+            startActivity(i);
+            finish();
             return;
         }
 
@@ -50,6 +53,7 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(i);
             finish();
+            return;
         }
 
         initView();

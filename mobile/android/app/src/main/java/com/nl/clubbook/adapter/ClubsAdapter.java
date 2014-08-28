@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.helper.ImageHelper;
-import com.nl.clubbook.helper.LocationCheckInHelper;
+import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
@@ -133,7 +133,7 @@ public class ClubsAdapter extends BaseAdapter {
     }
 
     private void fillRow(ClubItemHolder holder, ClubDto club) {
-        String distance = LocationCheckInHelper.formatDistance(mContext, club.getDistance());
+        String distance = LocationCheckinHelper.formatDistance(mContext, club.getDistance());
         holder.txtDistance.setText(distance);
 
         holder.txtCheckedInCount.setText(club.getActiveCheckIns() + "\n" + mCheckedIn);

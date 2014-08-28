@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Andrew on 5/27/2014.
  */
-public class LocationCheckInHelper {
+public class LocationCheckinHelper {
 
     public static final int MAX_RADIUS = 5500;
     private ScheduledExecutorService scheduleTaskExecutor;
@@ -36,28 +36,30 @@ public class LocationCheckInHelper {
     private Location currentLocation;
     private final int updateLocationInterval = 0;
     private Boolean isLocationTrackerStarted = false;
+    private boolean mIsListenerRemoved = false;
 
     private ClubDto mCurrentClub;
+    private LocationListener mLocationListener;
 
-    private static LocationCheckInHelper mCheckInHelper;
+    private static LocationCheckinHelper mCheckInHelper;
 
     public static void init() {
         if(mCheckInHelper == null) {
-            mCheckInHelper = new LocationCheckInHelper();
+            mCheckInHelper = new LocationCheckinHelper();
         }
 
         mCheckInHelper.setCurrentClub(SessionManager.getInstance().getCheckedInClubInfo());
     }
 
-    public static LocationCheckInHelper getInstance() {
+    public static LocationCheckinHelper getInstance() {
         if(mCheckInHelper == null) {
-            throw new IllegalArgumentException(LocationCheckInHelper.class.getSimpleName() + " is not initialized, call init() method in your application class");
+            throw new IllegalArgumentException(LocationCheckinHelper.class.getSimpleName() + " is not initialized, call init() method in your application class");
         }
 
         return mCheckInHelper;
     }
 
-    private LocationCheckInHelper() {
+    private LocationCheckinHelper() {
     }
 
     public ClubDto getCurrentClub() {
@@ -166,6 +168,8 @@ public class LocationCheckInHelper {
                     Intent intent = new Intent();
                     intent.setAction(MainActivity.ACTION_CHECK_OUT);
                     context.sendBroadcast(intent);
+
+                    cancelLocationUpdates(context);
                 }
             }
         });
@@ -292,6 +296,7 @@ public class LocationCheckInHelper {
         // launch only once
         if (!isLocationTrackerStarted) {
             isLocationTrackerStarted = true;
+            mIsListenerRemoved = false;
 
             // http://developer.android.com/guide/topics/location/strategies.html
             // Acquire a reference to the system Location Manager
@@ -302,7 +307,7 @@ public class LocationCheckInHelper {
                 currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
             // Define a listener that responds to location updates
-            LocationListener locationListener = new LocationListener() {
+            mLocationListener = new LocationListener() {
                 boolean shouldHideLocationErrorView = false;
 
                 public void onLocationChanged(Location location) {
@@ -329,20 +334,28 @@ public class LocationCheckInHelper {
 
                 public void onProviderEnabled(String provider) {
                     shouldHideLocationErrorView = true;
-
-//                    hideLocationErrorView(application);
                 }
 
                 public void onProviderDisabled(String provider) {
-                    if (!isLocationProvidersEnabled(locationManager)) {
+                    if (!isLocationProvidersEnabled(locationManager) && !mIsListenerRemoved) {
                         showLocationErrorView(application);
                     }
                 }
             };
 
             // Register the listener with the Location Manager to receive location updates
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, updateLocationInterval, 200, locationListener);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, updateLocationInterval, 200, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, updateLocationInterval, 200, mLocationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, updateLocationInterval, 200, mLocationListener);
+        }
+    }
+
+    public void cancelLocationUpdates(Context context) {
+        mIsListenerRemoved = true;
+
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if(mLocationListener != null) {
+            locationManager.removeUpdates(mLocationListener);
+            mLocationListener = null;
         }
     }
 
@@ -353,6 +366,10 @@ public class LocationCheckInHelper {
     }
 
     private static void hideLocationErrorView(final Context application) {
+        Intent intent = new Intent();
+        intent.setAction(NoLocationActivity.ACTION_CLOSE);
+        application.sendBroadcast(intent);
+
         Intent i = new Intent(application, MainLoginActivity.class);
         application.startActivity(i);
         ((BaseActivity) application).finish();
