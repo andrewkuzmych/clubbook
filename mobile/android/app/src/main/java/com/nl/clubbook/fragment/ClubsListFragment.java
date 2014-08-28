@@ -19,7 +19,7 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.ClubsAdapter;
 import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.helper.LocationCheckinHelper;
+import com.nl.clubbook.helper.LocationCheckInHelper;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
@@ -89,7 +89,7 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
         Log.d("Location Updates", "Google Play services is available.");
 
         // retrieve my current location
-        Location currentLocation = LocationCheckinHelper.getInstance().getCurrentLocation();
+        Location currentLocation = LocationCheckInHelper.getInstance().getCurrentLocation();
         if(currentLocation == null) {
             L.v("Location is empty");
             return;
