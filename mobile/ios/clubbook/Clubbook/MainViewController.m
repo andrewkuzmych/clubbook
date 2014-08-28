@@ -179,7 +179,7 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
     [self showProgress:NO title:nil];
-    [self._manager retrievePlaces:distanceKm lat:lat lon:lng accessToken:accessToken];
+    [self._manager retrievePlaces:lat lon:lng accessToken:accessToken];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

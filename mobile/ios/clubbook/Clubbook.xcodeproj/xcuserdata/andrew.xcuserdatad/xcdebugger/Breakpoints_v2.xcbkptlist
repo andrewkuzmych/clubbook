@@ -983,7 +983,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "407"
             endingLineNumber = "407"
-            landmarkName = "-retrievePlaces:lat:lon:accessToken:"
+            landmarkName = "-retrievePlaces:lon:accessToken:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -5992,11 +5992,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/BaseViewControllerHelper.m"
-            timestampString = "430128823.118999"
+            timestampString = "430920965.263129"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "119"
-            endingLineNumber = "119"
+            startingLineNumber = "120"
+            endingLineNumber = "120"
             landmarkName = "-hideProgress"
             landmarkType = "5">
          </BreakpointContent>
@@ -6621,7 +6621,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "404"
             endingLineNumber = "404"
-            landmarkName = "-retrievePlaces:lat:lon:accessToken:"
+            landmarkName = "-retrievePlaces:lon:accessToken:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -6637,7 +6637,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "401"
             endingLineNumber = "401"
-            landmarkName = "-retrievePlaces:lat:lon:accessToken:"
+            landmarkName = "-retrievePlaces:lon:accessToken:"
             landmarkType = "5">
             <Locations>
                <Location
@@ -6843,7 +6843,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "402"
             endingLineNumber = "402"
-            landmarkName = "-retrievePlaces:lat:lon:accessToken:"
+            landmarkName = "-retrievePlaces:lon:accessToken:"
             landmarkType = "5">
             <Locations>
                <Location
@@ -7276,7 +7276,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/MainLoginViewController.m"

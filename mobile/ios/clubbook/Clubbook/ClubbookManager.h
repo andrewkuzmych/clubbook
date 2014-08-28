@@ -28,7 +28,7 @@
 
 - (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type accessToken:(NSString *) accessToken;
 
-- (void)retrievePlaces:(double) distance lat:(double) lat lon:(double) lon accessToken:(NSString *) accessToken;
+- (void)retrievePlaces:(double) lat lon:(double) lon accessToken:(NSString *) accessToken;
 
 - (void)retrievePlace:(NSString *) clubId accessToken:(NSString *) accessToken;
 

@@ -39,9 +39,9 @@
     [self.communicator chat:user_from user_to:user_to msg:msg msg_type:msg_type accessToken:accessToken];
 }
 
-- (void)retrievePlaces:(double) distance lat:(double) lat lon:(double) lon accessToken:(NSString *) accessToken
+- (void)retrievePlaces:(double) lat lon:(double) lon accessToken:(NSString *) accessToken
 {
-    [self.communicator retrievePlaces:distance lat:lat lon:lon accessToken:accessToken];
+    [self.communicator retrievePlaces:lat lon:lon accessToken:accessToken];
 }
 
 - (void)retrievePlace:(NSString *) clubId accessToken:(NSString *) accessToken

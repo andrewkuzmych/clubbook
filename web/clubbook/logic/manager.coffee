@@ -14,6 +14,15 @@ exports.get_user_by_id = (user_id, callback)->
     else
       callback null, user
 
+exports.findUserByEmail = (email, callback)->
+  console.log email
+  query = {"$and": [{"email": email},{"email": {"$exists": true}},{"password": {"$exists": true}}]}
+
+  db_model.User.findOne(query).exec (err, user)->
+    console.log user
+    callback err, user
+
+
 exports.get_friend = (friend_id, current_user_id, callback)->
   db_model.User.findById(friend_id).select('-checkin').exec (err, user)->
     db_model.User.findById(current_user_id).select('-checkin').exec (err, current_user)->

@@ -171,6 +171,8 @@ app.get '/logout', (req, res)->
 
 app.get '/terms', controller.terms
 app.get '/privacy', controller.privacy
+app.get '/reset_pass', controller.reset_pass
+app.post '/reset_pass', controller.reset_pass_action
 
 app.get '/home', controller.home
 
