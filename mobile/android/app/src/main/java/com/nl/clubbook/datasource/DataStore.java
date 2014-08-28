@@ -287,12 +287,16 @@ public class DataStore {
     public static void loginByFb(String name, String email, String fb_id, String fb_access_token, String gender, String dob, JSONObject avatar,
                                  final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
-        params.put("email", email);
+        if(email != null && !email.equalsIgnoreCase("null")) {
+            params.put("email", email);
+        }
         params.put("name", name);
         params.put("fb_id", fb_id);
         params.put("fb_access_token", fb_access_token);
         params.put("gender", gender);
-        params.put("dob", dob);
+        if(dob != null && !dob.equalsIgnoreCase("null")) {
+            params.put("dob", dob);
+        }
         params.put("avatar", avatar);
 
         ClubbookRestClient.loginByFb(params, new JsonHttpResponseHandler() {
@@ -384,7 +388,7 @@ public class DataStore {
                 JSONObject jsonClub = responseJson.optJSONObject("club");
 
                 ClubDto club = JSONConverter.newClub(jsonClub);
-                if(jsonClub != null && club != null) {
+                if (jsonClub != null && club != null) {
                     JSONArray jsonArrUsers = responseJson.optJSONArray("users");
                     List<CheckInUserDto> checkInUsers = JSONConverter.newCheckInUsersList(jsonArrUsers);
                     club.setUsers(checkInUsers);

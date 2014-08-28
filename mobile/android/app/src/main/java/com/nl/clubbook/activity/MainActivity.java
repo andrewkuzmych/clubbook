@@ -101,8 +101,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_main);
 
-        getSession().clearCheckInClubInfo();
-
         if (!getSession().isLoggedIn()) {
             Intent intent = new Intent(getApplicationContext(), MainLoginActivity.class);
             startActivity(intent);
@@ -273,12 +271,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onCheckedIn() {
-        updateNavDrawerFooter();
+        updateNavDrawerHeader();
     }
 
     @Override
     public void onCheckedOut() {
-        updateNavDrawerFooter();
+        updateNavDrawerHeader();
     }
 
     private void initImageLoader() {
@@ -354,9 +352,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         txtProfileInfo.setText((profileAge != null && profileAge.length() > 0) ? profileAge + ", " : "");
         txtProfileInfo.append(profileGender != null ? profileGender : "");
 
-        mNavDrawerHeaderView.findViewById(R.id.holderNavDrawerHeader).setOnClickListener(MainActivity.this);
+        mNavDrawerHeaderView.findViewById(R.id.holderUserInfo).setOnClickListener(MainActivity.this);
 
-        updateNavDrawerFooter();
+        updateNavDrawerHeader();
     }
 
     private void handleNotification(JSONObject messageJson) {
@@ -423,18 +421,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         initActionBar("");
     }
 
-    private void updateNavDrawerFooter() {
+    private void updateNavDrawerHeader() {
         ClubDto club = LocationCheckinHelper.getInstance().getCurrentClub();
 
         TextView txtClubName = (TextView) mNavDrawerHeaderView.findViewById(R.id.txtClubName);
-        View imgCheckIn = mNavDrawerHeaderView.findViewById(R.id.imgCheckOut);
+        View imgCheckOut = mNavDrawerHeaderView.findViewById(R.id.imgCheckOut);
 
-        if(club != null) {
+        if(club != null && club.getId() != null && club.getId().length() > 0) {
             txtClubName.setText(club.getTitle());
-            imgCheckIn.setTag(club.getId());
-            imgCheckIn.setOnClickListener(MainActivity.this);
+            imgCheckOut.setTag(club.getId());
+            imgCheckOut.setOnClickListener(MainActivity.this);
+
+            mNavDrawerHeaderView.findViewById(R.id.holderCheckOut).setVisibility(View.VISIBLE);
+
+            LocationCheckinHelper.getInstance().startLocationUpdate(MainActivity.this);
         } else {
-            imgCheckIn.setTag(null);
+            imgCheckOut.setTag(null);
+
+            mNavDrawerHeaderView.findViewById(R.id.holderCheckOut).setVisibility(View.GONE);
         }
     }
 

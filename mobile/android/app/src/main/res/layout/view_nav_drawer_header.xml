@@ -10,14 +10,15 @@
     android:paddingTop="8dp">
 
     <LinearLayout
+        android:id="@+id/holderUserInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <com.nl.clubbook.ui.view.CircleImageView
             android:id="@+id/imgAvatar"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_avatar_unknown" />
 

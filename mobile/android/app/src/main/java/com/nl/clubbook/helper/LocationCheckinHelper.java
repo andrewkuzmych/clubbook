@@ -28,13 +28,13 @@ public class LocationCheckinHelper {
 
     public static final int MAX_RADIUS = 5500;
     private ScheduledExecutorService scheduleTaskExecutor;
-    private int failed_checkin_count = 0;
-    private int max_failed_checkin_count = 3;
-    private int update_checkin_status_interval = 10 * 60; // every 10min.
+    private int failedCheckInCount = 0;
+    private int maxFailedCheckInCount = 3;
+    private int updateCheckInStatusInterval = 10 * 60; // every 10min.
 
     // current user location, updated every 10sec
     private Location currentLocation;
-    private final int update_location_interval = 0;
+    private final int updateLocationInterval = 0;
     private Boolean isLocationTrackerStarted = false;
 
     private ClubDto mCurrentClub;
@@ -86,9 +86,6 @@ public class LocationCheckinHelper {
 
     /**
      * Check if user is currently check in in this club
-     *
-     * @param club
-     * @return
      */
     public boolean isCheckInHere(ClubDto club) {
         if (mCurrentClub == null || club == null) {
@@ -104,9 +101,6 @@ public class LocationCheckinHelper {
 
     /**
      * Check location and distance to club to allow check in
-     *
-     * @param club
-     * @return
      */
     public boolean canCheckInHere(ClubDto club) {
         if (club == null || currentLocation == null) {
@@ -120,10 +114,6 @@ public class LocationCheckinHelper {
 
     /**
      * Set current club
-     *
-     * @param context
-     * @param club
-     * @param callback
      */
     public void checkIn(final Context context, final ClubDto club, final CheckInOutCallbackInterface callback) {
         // location validation
@@ -156,8 +146,6 @@ public class LocationCheckinHelper {
 
     /**
      * Check out user from club and set currentClub to null
-     *
-     * @param callback
      */
     public void checkOut(final Context context, final CheckInOutCallbackInterface callback) {
         L.d("Try to Check out user");
@@ -188,12 +176,6 @@ public class LocationCheckinHelper {
 
     /**
      * Measure distance between points
-     *
-     * @param lat_a
-     * @param lng_a
-     * @param lat_b
-     * @param lng_b
-     * @return
      */
     private static double distanceBwPoints(double lat_a, double lng_a, double lat_b, double lng_b) {
         Location loc1 = new Location("");
@@ -209,10 +191,8 @@ public class LocationCheckinHelper {
 
     /**
      * Every 10min check if user is near the club. If he is more 200m from the club execute checkout.
-     *
-     * @param context
      */
-    private void startLocationUpdate(final Context context) {
+    public void startLocationUpdate(final Context context) {
         final SessionManager sessionManager = SessionManager.getInstance();
 
         scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
@@ -238,8 +218,8 @@ public class LocationCheckinHelper {
                                 @Override
                                 public void onReady(Object result, boolean failed) {
                                     if (failed) {
-                                        failed_checkin_count += 1;
-                                        if (failed_checkin_count >= max_failed_checkin_count) {
+                                        failedCheckInCount += 1;
+                                        if (failedCheckInCount >= maxFailedCheckInCount) {
                                             // checkout user
                                             checkOut(context, new CheckInOutCallbackInterface() {
                                                 @Override
@@ -249,7 +229,7 @@ public class LocationCheckinHelper {
                                             });
                                         }
                                     } else {
-                                        failed_checkin_count = 0;
+                                        failedCheckInCount = 0;
                                     }
                                 }
                             });
@@ -257,15 +237,11 @@ public class LocationCheckinHelper {
                     }
                 });
             }
-        }, 0, update_checkin_status_interval, TimeUnit.SECONDS);
+        }, 0, updateCheckInStatusInterval, TimeUnit.SECONDS);
     }
 
     /**
      * Format distance
-     *
-     * @param context
-     * @param distance
-     * @return
      */
     public static String formatDistance(Context context, float distance) {
         Resources resources = context.getResources();
@@ -286,17 +262,13 @@ public class LocationCheckinHelper {
 
     /**
      * Calculate distance between my location and club
-     *
-     * @param lat
-     * @param lon
-     * @return
      */
     public float calculateDistance(double lat, double lon) {
         float distanceBtwPoints = 0;
-        Location current_location = getCurrentLocation();
-        if (current_location != null) {
-            double mLat = current_location.getLatitude();
-            double mLong = current_location.getLongitude();
+        Location currentLocation = getCurrentLocation();
+        if (currentLocation != null) {
+            double mLat = currentLocation.getLatitude();
+            double mLong = currentLocation.getLongitude();
             double eventLat = Double.valueOf(lat);
             double eventLon = Double.valueOf(lon);
 
@@ -315,8 +287,6 @@ public class LocationCheckinHelper {
 
     /**
      * Track user location
-     *
-     * @param application
      */
     public void startSmartLocationTracker(final Context application) {
         // launch only once
@@ -371,8 +341,8 @@ public class LocationCheckinHelper {
             };
 
             // Register the listener with the Location Manager to receive location updates
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, update_location_interval, 200, locationListener);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, update_location_interval, 200, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, updateLocationInterval, 200, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, updateLocationInterval, 200, locationListener);
         }
     }
 

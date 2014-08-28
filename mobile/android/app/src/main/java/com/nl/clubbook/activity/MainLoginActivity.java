@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.cloudinary.Cloudinary;
 import com.facebook.Session;
@@ -12,6 +13,7 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.LocationCheckinHelper;
+import com.nl.clubbook.utils.NetworkUtils;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.entities.Profile;
@@ -87,6 +89,11 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void onBtnFacebookLoginClicked() {
+        if(!NetworkUtils.isOn(MainLoginActivity.this)) {
+            Toast.makeText(MainLoginActivity.this, R.string.no_connection, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (mSimpleFacebook.isLogin()) {
             // get profile and update data on server
             getFacebookProfile();
@@ -144,7 +151,7 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
             public void onReady(Object result, boolean failed) {
                 hideProgress(true);
                 if (failed) {
-                    alert.showAlertDialog(MainLoginActivity.this, "Error", "Incorrect credentials", false);
+                    alert.showAlertDialog(MainLoginActivity.this, "Error", getString(R.string.incorrect_credentials));
                 } else {
                     UserDto user = (UserDto) result;
                     getSession().createLoginSession(user);

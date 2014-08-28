@@ -73,11 +73,4 @@
         <item name="android:minWidth">80dip</item>
     </style>
 
-
-    <!--DEPRECATED-->
-    <style name="AlertDialogCustom" parent="@android:style/Theme.Dialog">
-        <item name="android:typeface">monospace</item>
-        <item name="android:textSize">10sp</item>
-    </style>
-
 </resources>

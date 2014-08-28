@@ -193,7 +193,7 @@ public class SessionManager {
         checkedInClub.setId(mPreferences.getString(KEY_CHECKIN_CLUB_ID, ""));
         checkedInClub.setLat(mPreferences.getFloat(KEY_CHECKIN_CLUB_LAT, 0f));
         checkedInClub.setLon(mPreferences.getFloat(KEY_CHECKIN_CLUB_LON, 0f));
-        checkedInClub.setId(mPreferences.getString(KEY_CHECKIN_CLUB_NAME, ""));
+        checkedInClub.setTitle(mPreferences.getString(KEY_CHECKIN_CLUB_NAME, ""));
 
         return checkedInClub;
     }

@@ -118,5 +118,6 @@
     <string name="accept">Accept</string>
     <string name="incorrect_credentials">Incorrect credentials</string>
     <string name="problem_occurred_please_try_again">Problem occurred, please, try again</string>
+    <string name="ok">Ok</string>
 
 </resources>

@@ -108,7 +108,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         EditText editName = (EditText)findViewById(R.id.editName);
         final String userName = editName.getText().toString().trim();
         if (userName.length() < 2) {
-            alert.showAlertDialog(EditProfileActivity.this, errorTitle, getString(R.string.name_incorrect), false);
+            alert.showAlertDialog(EditProfileActivity.this, errorTitle, getString(R.string.name_incorrect));
             return;
         }
 
@@ -116,7 +116,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         EditText editBirthDate = (EditText) findViewById(R.id.editBirthDate);
         final String birthDate = editBirthDate.getText().toString().trim();
         if (birthDate.length() < 6) {
-            alert.showAlertDialog(EditProfileActivity.this, errorTitle, getString(R.string.dob_incorrect), false);
+            alert.showAlertDialog(EditProfileActivity.this, errorTitle, getString(R.string.dob_incorrect));
             return;
         }
 
