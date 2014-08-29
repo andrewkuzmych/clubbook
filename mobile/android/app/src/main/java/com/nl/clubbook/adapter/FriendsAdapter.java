@@ -45,7 +45,7 @@ public class FriendsAdapter extends BaseAdapter {
                 .cacheOnDisc()
                 .build();
 
-        mCheckIn = context.getString(R.string.checked_in);
+        mCheckIn = context.getString(R.string.checked_in_double_dots);
         mNotCheckIn = context.getString(R.string.not_checked_in);
     }
 

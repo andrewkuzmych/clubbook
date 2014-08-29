@@ -151,6 +151,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onDestroy() {
 
+        //TODO fix crash java.lang.IllegalArgumentException: Receiver not registered: com.nl.clubbook.activity.MainActivity$5@41bf1240
         unregisterReceiver(mCheckInReceiver);
         unregisterReceiver(mCheckOutReceiver);
 

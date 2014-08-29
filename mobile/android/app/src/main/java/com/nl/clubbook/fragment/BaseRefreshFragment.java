@@ -3,8 +3,10 @@ package com.nl.clubbook.fragment;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.widget.Toast;
 
 import com.nl.clubbook.R;
+import com.nl.clubbook.utils.NetworkUtils;
 
 /**
  * Created by Volodymyr on 14.08.2014.
@@ -36,6 +38,15 @@ public abstract class BaseRefreshFragment extends BaseFragment implements SwipeR
 
     @Override
     public void onRefresh() {
+        if(!NetworkUtils.isOn(getActivity())) {
+            Toast.makeText(getActivity(), R.string.no_connection, Toast.LENGTH_SHORT).show();
+
+            if(mSwipeRefreshLayout.isRefreshing()) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+            return;
+        }
+
         loadData();
     }
 

@@ -56,7 +56,8 @@
     <string name="sing_up">Sign Up</string>
     <string name="open_today">Open Today:</string>
     <string name="club_info_and_wall">Club Info &amp; Wall</string>
-    <string name="checked_in">Checked-in:</string>
+    <string name="checked_in">Checked-in</string>
+    <string name="checked_in_double_dots">Checked-in:</string>
     <string name="not_checked_in">Not Checked-in</string>
     <string name="friends">Friends</string>
     <string name="share">Share</string>
@@ -120,5 +121,7 @@
     <string name="problem_occurred_please_try_again">Problem occurred, please, try again</string>
     <string name="ok">Ok</string>
     <string name="share_to">Share to&#8230;</string>
+    <string name="password_min_six_characters">Password (minimum 6 characters)</string>
+    <string name="update_profile_failed">Update profile failed</string>
 
 </resources>

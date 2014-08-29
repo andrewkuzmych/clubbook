@@ -77,7 +77,7 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
                         mSwipeRefreshLayout.setRefreshing(false);
 
                         if (failed) {
-                            //TODO implement show message about error
+                            showNoInternetActivity();
                             return;
                         }
 

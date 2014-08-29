@@ -284,15 +284,15 @@ public class DataStore {
         });
     }
 
-    public static void loginByFb(String name, String email, String fb_id, String fb_access_token, String gender, String dob, JSONObject avatar,
+    public static void loginByFb(String name, String email, String fbId, String fbAccessToken, String gender, String dob, JSONObject avatar,
                                  final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         if(email != null && !email.equalsIgnoreCase("null")) {
             params.put("email", email);
         }
         params.put("name", name);
-        params.put("fb_id", fb_id);
-        params.put("fb_access_token", fb_access_token);
+        params.put("fb_id", fbId);
+        params.put("fb_access_token", fbAccessToken);
         params.put("gender", gender);
         if(dob != null && !dob.equalsIgnoreCase("null")) {
             params.put("dob", dob);

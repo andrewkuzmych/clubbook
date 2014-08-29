@@ -53,7 +53,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.RegActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.LoginActivity"
             android:screenOrientation="portrait" />

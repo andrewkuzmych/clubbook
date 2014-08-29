@@ -5,9 +5,10 @@
     android:background="@color/bg_screen_grey_light"
     android:fillViewport="true">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/holderUserInfo"
@@ -52,7 +53,6 @@
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
                 android:textColor="@color/grey"
-                android:layout_marginBottom="5dip"
                 android:hint="@string/email"
                 android:inputType="textEmailAddress" />
 
@@ -62,9 +62,8 @@
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
                 android:textColor="@color/grey"
-                android:layout_marginBottom="5dip"
-                android:hint="@string/password"
-                android:password="true" />
+                android:hint="@string/password_min_six_characters"
+                android:inputType="textPassword"/>
 
             <com.nl.clubbook.ui.view.TitilliumRegularEditText
                 android:id="@+id/editBirthDate"
@@ -72,7 +71,6 @@
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
                 android:textColor="@color/grey"
-                android:layout_marginBottom="5dip"
                 android:clickable="true"
                 android:focusable="false"
                 android:hint="@string/birth_date"
@@ -83,7 +81,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|center_vertical"
-                android:layout_marginBottom="5dip"
                 android:focusable="true"
                 android:minHeight="48dp" />
 
@@ -97,6 +94,11 @@
                 android:minHeight="48dp"/>
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
         <com.nl.clubbook.ui.view.TitilliumBoldTextView
             android:id="@+id/btnRegister"
             android:layout_width="fill_parent"
@@ -108,5 +110,5 @@
             android:text="@string/sing_up"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_medium"/>
-    </RelativeLayout>
+    </LinearLayout>
 </ScrollView>

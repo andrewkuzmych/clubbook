@@ -19,6 +19,7 @@ import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.ImageUploader;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.helper.UiHelper;
+import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.nl.clubbook.utils.UIUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -29,6 +30,8 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -102,13 +105,11 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
     }
 
     private void onSaveClicked() {
-        String errorTitle = "Update profile failed";
-
         //username
         EditText editName = (EditText)findViewById(R.id.editName);
         final String userName = editName.getText().toString().trim();
         if (userName.length() < 2) {
-            alert.showAlertDialog(EditProfileActivity.this, errorTitle, getString(R.string.name_incorrect));
+            alert.showAlertDialog(EditProfileActivity.this, getString(R.string.update_profile_failed), getString(R.string.name_incorrect));
             return;
         }
 
@@ -116,9 +117,11 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         EditText editBirthDate = (EditText) findViewById(R.id.editBirthDate);
         final String birthDate = editBirthDate.getText().toString().trim();
         if (birthDate.length() < 6) {
-            alert.showAlertDialog(EditProfileActivity.this, errorTitle, getString(R.string.dob_incorrect));
+            alert.showAlertDialog(EditProfileActivity.this, getString(R.string.update_profile_failed), getString(R.string.dob_incorrect));
             return;
         }
+
+        final String age = getAge(birthDate);
 
         //about me
         EditText editAboutMe = (EditText) findViewById(R.id.editAboutMe);
@@ -150,6 +153,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                         sessionManager.updateValue(SessionManager.KEY_BIRTHDAY, birthDate);
                         sessionManager.updateValue(SessionManager.KEY_ABOUT_ME, aboutMe);
                         sessionManager.updateValue(SessionManager.KEY_GENDER, gender);
+                        sessionManager.updateValue(SessionManager.KEY_AGE, age);
                         sessionManager.updateValue(SessionManager.KEY_COUNTRY, country);
 
                         hideProgress(true);
@@ -363,6 +367,31 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                 setResult(RESULT_OK);
             }
         });
+    }
+
+    private String getAge(String birthDate) {
+        String result = profile.getAge();
+
+        long birthdayTime = 0;
+        try {
+            birthdayTime = mDisplayFormat.parse(birthDate).getTime();
+        } catch (ParseException e) {
+            L.i("" + e);
+        }
+
+        if(birthdayTime > 0) {
+            long ageTime = System.currentTimeMillis() - birthdayTime;
+
+            Calendar calendarAgeTime = Calendar.getInstance();
+            Calendar calendarBeginTime = (Calendar) calendarAgeTime.clone();
+
+            calendarAgeTime.setTimeInMillis(ageTime);
+            calendarBeginTime.setTimeInMillis(0);
+
+            result = "" + (calendarAgeTime.get(Calendar.YEAR) - calendarBeginTime.get(Calendar.YEAR));
+        }
+
+        return result;
     }
 
     private void setLoading(boolean isLoading) {

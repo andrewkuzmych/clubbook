@@ -149,18 +149,20 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
         // TODO request DOB permission from From Facebook
         final String finalDob = "";
 
-        showProgress("Loading...");
+        showProgress(getString(R.string.loading));
         DataStore.loginByFb(name, email, fb_id, access_token, gender, finalDob, avatar, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 hideProgress(true);
                 if (failed) {
-                    alert.showAlertDialog(MainLoginActivity.this, "Error", getString(R.string.incorrect_credentials));
+                    alert.showAlertDialog(MainLoginActivity.this, getString(R.string.app_name), getString(R.string.incorrect_credentials));
                 } else {
                     UserDto user = (UserDto) result;
                     getSession().createLoginSession(user);
-                    Intent in = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(in);
+
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -176,7 +178,7 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
 
         @Override
         protected void onPreExecute() {
-            showProgress("Loading...");
+            showProgress(getString(R.string.loading));
         }
 
         // Executed on a special thread and all your

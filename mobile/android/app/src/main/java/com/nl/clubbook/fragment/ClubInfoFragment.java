@@ -22,6 +22,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -115,33 +116,7 @@ public class ClubInfoFragment extends Fragment implements ViewPager.OnPageChange
 
         fillClubRequirementsHolder(view, club);
         fillContactHolder(view, club);
-
-        LinearLayout holderWorkingHours = (LinearLayout)view.findViewById(R.id.holderWorkingHours);
-        List<ClubWorkingHoursDto> workingHours = club.getWorkingHours();
-        if(workingHours != null && !workingHours.isEmpty()) {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            for (ClubWorkingHoursDto clubWorkHours : workingHours) {
-                View row = inflater.inflate(R.layout.view_club_work_hours, null);
-                String dayName = getDayNameByDayNumber(clubWorkHours.getDay());
-                TextView txtDayName = (TextView) row.findViewById(R.id.txtDayName);
-                txtDayName.setText(dayName != null ? dayName : dayName);
-
-                TextView txtWorkHours = (TextView) row.findViewById(R.id.txtWorkHours);
-                if(ClubWorkingHoursDto.STATUS_OPENED.equals(clubWorkHours.getStatus())) {
-                    String startTime = clubWorkHours.getStartTime();
-                    String endTime = clubWorkHours.getEndTime();
-
-                    txtWorkHours.setText(!TextUtils.isEmpty(startTime) ? startTime + " - " : "");
-                    txtWorkHours.append(endTime != null ? endTime : "");
-                } else {
-                    txtWorkHours.setText(getString(R.string.closed));
-                }
-
-                holderWorkingHours.addView(row);
-            }
-        } else {
-            holderWorkingHours.setVisibility(View.GONE);
-        }
+        fillWorkingHoursHolder(view, club);
     }
 
     private void fillContactHolder(View view, ClubDto club) {
@@ -187,6 +162,47 @@ public class ClubInfoFragment extends Fragment implements ViewPager.OnPageChange
         if(!result) {
             view.findViewById(R.id.holderRequirements).setVisibility(View.GONE);
             view.findViewById(R.id.dividerContacts).setVisibility(View.GONE);
+        }
+    }
+
+    private void fillWorkingHoursHolder(View view, ClubDto club) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+
+        L.e("day of week - " + calendar.get(Calendar.DAY_OF_WEEK));
+        int calendarDayOfWeekIndex =  calendar.get(Calendar.DAY_OF_WEEK);
+
+        LinearLayout holderWorkingHours = (LinearLayout)view.findViewById(R.id.holderWorkingHours);
+        List<ClubWorkingHoursDto> workingHours = club.getWorkingHours();
+        if(workingHours != null && !workingHours.isEmpty()) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            for (ClubWorkingHoursDto clubWorkHours : workingHours) {
+                View row;
+                if(calendarDayOfWeekIndex - 1 == clubWorkHours.getDay()) {
+                    row = inflater.inflate(R.layout.view_club_work_hours_bold, null);
+                } else {
+                    row = inflater.inflate(R.layout.view_club_work_hours, null);
+                }
+
+                String dayName = getDayNameByDayNumber(clubWorkHours.getDay());
+                TextView txtDayName = (TextView) row.findViewById(R.id.txtDayName);
+                txtDayName.setText(dayName != null ? dayName : dayName);
+
+                TextView txtWorkHours = (TextView) row.findViewById(R.id.txtWorkHours);
+                if(ClubWorkingHoursDto.STATUS_OPENED.equals(clubWorkHours.getStatus())) {
+                    String startTime = clubWorkHours.getStartTime();
+                    String endTime = clubWorkHours.getEndTime();
+
+                    txtWorkHours.setText(!TextUtils.isEmpty(startTime) ? startTime + " - " : "");
+                    txtWorkHours.append(endTime != null ? endTime : "");
+                } else {
+                    txtWorkHours.setText(getString(R.string.closed));
+                }
+
+                holderWorkingHours.addView(row);
+            }
+        } else {
+            holderWorkingHours.setVisibility(View.GONE);
         }
     }
 
