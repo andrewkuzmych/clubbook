@@ -5,7 +5,6 @@ import android.content.Context;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.nl.clubbook.utils.L;
 
 /**
  * Created by Andrew on 5/19/2014.
@@ -121,9 +120,6 @@ public class ClubbookRestClient {
     }
 
     public static void getConversations(String userId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        L.e("params - " + params);
-        L.e("url - " + getBcAbsoluteUrl("obj/chat/" + userId ));
-
         client.get(getBcAbsoluteUrl("obj/chat/" + userId ), params, responseHandler);
     }
 

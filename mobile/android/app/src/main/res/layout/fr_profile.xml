@@ -190,7 +190,8 @@
                         android:paddingRight="16dp"
                         android:text="@string/remove_friend"
                         android:textSize="@dimen/text_size_small"
-                        android:textColor="@color/grey"/>
+                        android:textColor="@color/grey"
+                        android:visibility="gone"/>
 
                 </LinearLayout>
 

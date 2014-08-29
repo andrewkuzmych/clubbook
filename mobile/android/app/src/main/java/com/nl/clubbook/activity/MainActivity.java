@@ -495,10 +495,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private void onChatBtnClicked() {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
+        if(fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+        onInnerFragmentDestroyed();
 
-        mFragmentTransaction.addToBackStack(null);
-        mFragmentTransaction.replace(R.id.frame_container, new MessagesFragment()).commit();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_container, new MessagesFragment()).commit();
     }
 
     private void onNavDrawerHeaderClicked() {
@@ -545,28 +548,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private Callback callback = new Callback() {
         @Override
         public void connectCallback(String channel, Object message) {
-            System.out.println("SUBSCRIBE : CONNECT on channel:" + channel
-                    + " : " + message.getClass() + " : "
-                    + message.toString());
+            L.d("SUBSCRIBE : CONNECT on channel:" + channel + " : " + message.getClass() + " : " + message.toString());
         }
 
         @Override
         public void disconnectCallback(String channel, Object message) {
-            System.out.println("SUBSCRIBE : DISCONNECT on channel:" + channel
-                    + " : " + message.getClass() + " : "
-                    + message.toString());
+            L.d("SUBSCRIBE : DISCONNECT on channel:" + channel + " : " + message.getClass() + " : " + message.toString());
         }
 
         public void reconnectCallback(String channel, Object message) {
-            System.out.println("SUBSCRIBE : RECONNECT on channel:" + channel
-                    + " : " + message.getClass() + " : "
-                    + message.toString());
+            L.d("SUBSCRIBE : RECONNECT on channel:" + channel + " : " + message.getClass() + " : " + message.toString());
         }
 
         @Override
         public void successCallback(String channel, final Object message) {
-            System.out.println("SUBSCRIBE : " + channel + " : "
-                    + message.getClass() + " : " + message.toString());
+            L.d("SUBSCRIBE : " + channel + " : " + message.getClass() + " : " + message.toString());
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -579,8 +575,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         @Override
         public void errorCallback(String channel, PubnubError error) {
-            System.out.println("SUBSCRIBE : ERROR on channel " + channel
-                    + " : " + error.toString());
+            L.d("SUBSCRIBE : ERROR on channel " + channel + " : " + error.toString());
         }
     };
 
