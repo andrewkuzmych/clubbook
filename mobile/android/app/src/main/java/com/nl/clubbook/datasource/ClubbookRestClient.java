@@ -35,6 +35,10 @@ public class ClubbookRestClient {
         client.put(getBcAbsoluteUrl("obj/user/me"), params, responseHandler);
     }
 
+    public static void deleteProfile(Context context, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.delete(context, getBcAbsoluteUrl("obj/user/me"), null, params, responseHandler);
+    }
+
     public static void profileAddImage(String userId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.post(getBcAbsoluteUrl("obj/user/" + userId + "/image"), params, responseHandler);
     }

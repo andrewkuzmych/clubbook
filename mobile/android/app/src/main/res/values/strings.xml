@@ -125,5 +125,9 @@
     <string name="update_profile_failed">Update profile failed</string>
     <string name="decline">Decline</string>
     <string name="you_cannot_send_three_messages_without_reply">You cannot send more than 3 messages to this user without receiving a reply</string>
+    <string name="deleting_profile">Deleting profile&#8230;</string>
+    <string name="something_went_wrong_please_try_again">Something went wrong, please try again</string>
+    <string name="error">Error</string>
+    <string name="login_failed">Login failed</string>
 
 </resources>

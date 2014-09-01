@@ -46,12 +46,12 @@ public class LoginActivity extends BaseActivity {
                 String password = txtPassword.getText().toString().trim();
 
                 if (!Validator.isEmailValid(email)) {
-                    alert.showAlertDialog(LoginActivity.this, "Login failed..", getString(R.string.email_incorrect));
+                    alert.showAlertDialog(LoginActivity.this, getString(R.string.app_name), getString(R.string.email_incorrect));
                     return;
                 }
 
                 if (password.trim().length() < 6) {
-                    alert.showAlertDialog(LoginActivity.this, "Login failed..", getString(R.string.pass_incorrect));
+                    alert.showAlertDialog(LoginActivity.this, getString(R.string.app_name), getString(R.string.pass_incorrect));
                     return;
                 }
 
@@ -63,19 +63,23 @@ public class LoginActivity extends BaseActivity {
                         // show error
                         if (failed) {
                             hideProgress(false);
-                            alert.showAlertDialog(LoginActivity.this, "Error", getString(R.string.no_connection));
+                            alert.showAlertDialog(LoginActivity.this, getString(R.string.login_failed), getString(R.string.no_connection));
                             return;
                         }
 
                         hideProgress(true);
 
                         if (result == null) {
-                            alert.showAlertDialog(LoginActivity.this, "Error", getString(R.string.incorrect_credentials));
+                            alert.showAlertDialog(LoginActivity.this, getString(R.string.login_failed), getString(R.string.incorrect_credentials));
                         } else {
                             UserDto user = (UserDto) result;
                             getSession().createLoginSession(user);
+
                             Intent i = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(i);
+
+                            sendBroadcast(new Intent(MainLoginActivity.ACTION_CLOSE_ACTIVITY));
+
                             finish();
                         }
                     }

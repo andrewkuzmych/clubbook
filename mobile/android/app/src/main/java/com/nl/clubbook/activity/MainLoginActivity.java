@@ -1,6 +1,9 @@
 package com.nl.clubbook.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -31,6 +34,8 @@ import org.json.JSONObject;
  */
 public class MainLoginActivity extends BaseActivity implements View.OnClickListener {
 
+    public static final String ACTION_CLOSE_ACTIVITY = "ACTION_CLOSE_ACTIVITY";
+
     private SimpleFacebook mSimpleFacebook;
 
     @Override
@@ -56,6 +61,8 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
             return;
         }
 
+        registerReceiver(mCloseActivityReceiver, new IntentFilter(ACTION_CLOSE_ACTIVITY));
+
         initView();
     }
 
@@ -63,6 +70,13 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         mSimpleFacebook = SimpleFacebook.getInstance(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        unregisterReceiver(mCloseActivityReceiver);
     }
 
     @Override
@@ -227,6 +241,13 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void onNotAcceptingPermissions(Permission.Type type) {
             // toast(String.format("You didn't accept %s permissions", type.name()));
+        }
+    };
+
+    private BroadcastReceiver mCloseActivityReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            finish();
         }
     };
 }

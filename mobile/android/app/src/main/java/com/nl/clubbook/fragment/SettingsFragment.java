@@ -8,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.MainLoginActivity;
+import com.nl.clubbook.datasource.DataStore;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.listeners.OnLogoutListener;
 
@@ -62,7 +64,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 onTxtContactClicked();
                 break;
             case R.id.txtLogOut:
-                onTxtLogOutClicked();
+                doLogOut();
                 break;
         }
     }
@@ -109,7 +111,24 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void onTxtDeleteAccountClicked() {
-        //TODO
+        showProgress(getString(R.string.checked_in));
+
+        String accessToken = getSession().getAccessToken();
+        DataStore.deleteProfile(getActivity(), accessToken, new DataStore.OnResultReady() {
+            @Override
+            public void onReady(Object result, boolean failed) {
+                if(!failed) {
+                    hideProgress();
+
+                    doLogOut();
+
+                    getActivity().finish();
+                } else {
+                    hideProgress();
+                    Toast.makeText(getActivity(), R.string.something_went_wrong_please_try_again, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void onTxtContactClicked() {
@@ -120,7 +139,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         startActivity(Intent.createChooser(intentEmail, "Choose an email provider: "));
     }
 
-    private void onTxtLogOutClicked() {
+    private void doLogOut() {
         getSession().logoutUser();
         mSimpleFacebook.logout(mOnLogoutListener);
         Intent intent = new Intent(getActivity(), MainLoginActivity.class);

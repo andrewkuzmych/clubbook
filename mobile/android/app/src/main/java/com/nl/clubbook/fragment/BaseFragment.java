@@ -1,6 +1,7 @@
 package com.nl.clubbook.fragment;
 
 import android.content.Intent;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -10,6 +11,7 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.activity.NoInternetActivity;
 import com.nl.clubbook.activity.NoLocationActivity;
+import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.SessionManager;
 
 import java.lang.reflect.Field;
@@ -82,12 +84,26 @@ public class BaseFragment extends Fragment {
         getActivity().finish();
     }
 
-    protected void showProgress() {
-        ((BaseActivity) getActivity()).showProgress("Loading...");
+    public void showProgress(String message) {
+        Fragment progressDialog = ProgressDialog.newInstance(null, message);
+        FragmentTransaction fTransaction = getChildFragmentManager().beginTransaction();
+        fTransaction.add(progressDialog, ProgressDialog.TAG);
+        fTransaction.commitAllowingStateLoss();
     }
 
-    protected void hideProgress(boolean showContent) {
-        ((BaseActivity) getActivity()).hideProgress(showContent);
+    public void hideProgress(boolean isSuccessfully) {
+        hideProgress();
+
+        if (!isSuccessfully) {
+            showNoInternetActivity();
+        }
+    }
+
+    public void hideProgress() {
+        DialogFragment progressDialog = (DialogFragment) getChildFragmentManager().findFragmentByTag(ProgressDialog.TAG);
+        if(progressDialog != null) {
+            progressDialog.dismissAllowingStateLoss();
+        }
     }
 
     public interface OnInnerFragmentDestroyedListener {
