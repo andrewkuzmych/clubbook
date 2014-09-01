@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">clubbook</string>
+    <string name="app_name">Clubbook</string>
     <string name="sing_in_with_facebook">Sing In with Facebook</string>
     <string name="sign_up_by_email">Sign Up with Email</string>
     <string name="splash_intro">Getting Social in The Club</string>

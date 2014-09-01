@@ -1,5 +1,6 @@
 package com.nl.clubbook.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -36,6 +37,8 @@ import java.util.List;
  */
 public class ClubFragment extends BaseInnerFragment implements View.OnClickListener, AdapterView.OnItemClickListener,
         ProgressDialog.OnDialogCanceledListener {
+
+    public static final String TAG = ClubFragment.class.getSimpleName();
 
     private static final String ARG_CLUB_ID = "ARG_CLUB_ID";
 
@@ -152,6 +155,10 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         gridUsers.setOnItemClickListener(ClubFragment.this);
     }
 
+    public void onClubCheckedOut() {
+        loadData(LOAD_MODE_CHECK_IN);
+    }
+
     protected void loadData(final int mode) {
         final View view = getView();
         if(view == null) {
@@ -160,7 +167,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
         final HashMap<String, String> user = this.getSession().getUserDetails();
 
-        setProgressViewState(mode, !mIsLoading);
+        setProgressViewState(mode, true);
 
         DataStore.retrievePlace(mClubId, user.get(SessionManager.KEY_ACCESS_TOCKEN), new DataStore.OnResultReady() {
             @Override
@@ -184,6 +191,11 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     }
 
     private void fillView(View view) {
+        if(mClub == null) {
+            view.findViewById(R.id.progressBar).setVisibility(View.GONE);
+            return;
+        }
+
         TextView txtCheckIn = (TextView) view.findViewById(R.id.txtCheckIn);
         TextView txtClubName = (TextView) view.findViewById(R.id.txtClubName);
         TextView txtOpenToday = (TextView) view.findViewById(R.id.txtOpenToday);
@@ -333,11 +345,5 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
         ProfileAdapter profileAdapter = new ProfileAdapter(getActivity(), users, currentUserId, ProfileAdapter.MODE_GRID);
         gridUsers.setAdapter(profileAdapter);
-    }
-
-    public interface OnCheckInCheckOutListener {
-        public void onCheckedIn();
-
-        public void onCheckedOut();
     }
 }

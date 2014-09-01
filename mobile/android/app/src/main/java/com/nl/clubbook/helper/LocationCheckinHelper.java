@@ -138,8 +138,9 @@ public class LocationCheckinHelper {
                     callback.onCheckInOutFinished(true);
                     startLocationUpdate(context);
 
+                    //sent broadcast
                     Intent intent = new Intent();
-                    intent.setAction(MainActivity.ACTION_CHECK_IN);
+                    intent.setAction(MainActivity.ACTION_CHECK_IN_CHECK_OUT);
                     context.sendBroadcast(intent);
                 }
             }
@@ -165,8 +166,9 @@ public class LocationCheckinHelper {
                     clearCheckedInClubInfo();
                     callback.onCheckInOutFinished(true);
 
+                    //sent broadcast
                     Intent intent = new Intent();
-                    intent.setAction(MainActivity.ACTION_CHECK_OUT);
+                    intent.setAction(MainActivity.ACTION_CHECK_IN_CHECK_OUT);
                     context.sendBroadcast(intent);
 
                     cancelLocationUpdates(context);
