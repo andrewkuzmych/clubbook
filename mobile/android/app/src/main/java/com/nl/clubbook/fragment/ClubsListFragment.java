@@ -72,7 +72,7 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
         // retrieve my current location
         Location currentLocation = LocationCheckinHelper.getInstance().getCurrentLocation();
         if(currentLocation == null) {
-            L.v("Location is empty");
+            showNoLocationActivity();
             return;
         }
 

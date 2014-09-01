@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarActivity;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.activity.NoInternetActivity;
+import com.nl.clubbook.activity.NoLocationActivity;
 import com.nl.clubbook.helper.SessionManager;
 
 import java.lang.reflect.Field;
@@ -71,6 +72,12 @@ public class BaseFragment extends Fragment {
 
     protected void showNoInternetActivity() {
         Intent intent = new Intent(getActivity(), NoInternetActivity.class);
+        startActivity(intent);
+        getActivity().finish();
+    }
+
+    protected void showNoLocationActivity() {
+        Intent intent = new Intent(getActivity(), NoLocationActivity.class);
         startActivity(intent);
         getActivity().finish();
     }

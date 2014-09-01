@@ -77,8 +77,6 @@ public class LocationCheckinHelper {
     }
 
     public Location getCurrentLocation() {
-        if (currentLocation == null)
-            throw new RuntimeException("Current location is empty");
         return currentLocation;
     }
 
