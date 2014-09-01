@@ -27,20 +27,28 @@
         android:textSize="@dimen/text_size_medium"
         android:layout_marginLeft="8dp"/>
 
-    <ImageView
-        android:id="@+id/imgAccept"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_accept"
+    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+        android:id="@+id/txtAccept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"/>
+        android:layout_marginRight="8dp"
+        android:textSize="@dimen/text_size_small"
+        android:text="@string/accept"
+        android:gravity="center"
+        android:padding="12dp"
+        android:background="@drawable/bg_btn_accept"
+        android:textColor="@android:color/white"/>
 
-    <ImageView
-        android:id="@+id/imgDecline"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_decline" />
+    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+        android:id="@+id/txtDecline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_small"
+        android:text="@string/decline"
+        android:gravity="center"
+        android:padding="12dp"
+        android:background="@drawable/bg_btn_decline"
+        android:textColor="@android:color/white" />
 
 </LinearLayout>

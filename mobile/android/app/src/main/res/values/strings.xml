@@ -107,7 +107,7 @@
     <string name="follow_our_tweets">Follow Our Tweets</string>
     <string name="like">Like</string>
     <string name="send">Send</string>
-    <string name="invite_you_for_a_drink">Invite you for a drink</string>
+    <string name="invite_you_for_a_drink">invite you for a drink</string>
     <string name="likes_you">likes you</string>
     <string name="checking_in">Checking in&#8230;</string>
     <string name="checking_out">Checking out&#8230;</string>
@@ -123,5 +123,6 @@
     <string name="share_to">Share to&#8230;</string>
     <string name="password_min_six_characters">Password (minimum 6 characters)</string>
     <string name="update_profile_failed">Update profile failed</string>
+    <string name="decline">Decline</string>
 
 </resources>

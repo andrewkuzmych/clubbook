@@ -35,7 +35,6 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
 
     private static final int TYPE_COUNT = 4; //date item
 
-    private Context mContext;
     private LayoutInflater mInflater;
     private List<BaseChatMessage> mMessages = new ArrayList<BaseChatMessage>();
 
@@ -49,7 +48,6 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
     public ChatAdapter(Context context, int textViewResourceId, List<BaseChatMessage> messages) {
         super(context, textViewResourceId);
 
-        mContext = context;
         mMessages = messages;
         mInflater = LayoutInflater.from(context);
 
@@ -64,8 +62,8 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
 
         mCurrentTimeWithoutHours = CalendarUtils.getCurrentTimeWithoutHours();
         mDayTimeInMilliseconds = CalendarUtils.getDayTimeInMilliseconds();
-        mToday = mContext.getString(R.string.today);
-        mYesterday = mContext.getString(R.string.yesterday);
+        mToday = context.getString(R.string.today);
+        mYesterday = context.getString(R.string.yesterday);
     }
 
     @Override
@@ -182,8 +180,7 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
             mImageLoader.displayImage(message.getUserFromAvatar(), imgAvatar, mOptions);
         }
 
-        String chatMessage = message.getFormatMessage(mContext);
-        txtChatMessage.setText(chatMessage);
+        txtChatMessage.setText(message.getMsg());
     }
 
 }

@@ -26,6 +26,7 @@ import com.nl.clubbook.utils.KeyboardUtils;
 import com.nl.clubbook.utils.L;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -99,10 +100,10 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.txtLike:
-                sendMessageTemp(ChatMessageDto.TYPE_SMILE);
+                sendMessageTemp(ChatMessageDto.TYPE_SMILE, getString(R.string.likes_you));
                 break;
             case R.id.imgSendDrink:
-                sendMessageTemp(ChatMessageDto.TYPE_DRINK);
+                sendMessageTemp(ChatMessageDto.TYPE_DRINK, getString(R.string.invite_you_for_a_drink));
                 break;
             case R.id.txtSend:
                 sendMessage();
@@ -166,10 +167,14 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         );
     }
 
-    private void sendMessageTemp(String type) {
-        String accessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
+    private void sendMessageTemp(String type, String messages) {
+        HashMap<String, String> userDetails = getSession().getUserDetails();
+        String accessToken = userDetails.get(SessionManager.KEY_ACCESS_TOCKEN);
+        String userName = userDetails.get(SessionManager.KEY_NAME);
 
-        DataStore.chat(mUserFromId, mUserToId, "", type, accessToken, new DataStore.OnResultReady() {
+        String formatMessage = (userName != null ? userName : "") + " " + messages;
+
+        DataStore.chat(mUserFromId, mUserToId, formatMessage, type, accessToken, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
 
@@ -182,6 +187,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         chatMessageDto.setUserFrom(chatDto.getCurrentUser().getId());
         chatMessageDto.setUserFromName(chatDto.getCurrentUser().getName());
         chatMessageDto.setUserFromAvatar(chatDto.getCurrentUser().getAvatar());
+        chatMessageDto.setMsg(formatMessage);
 
         mAdapter.add(chatMessageDto);
     }

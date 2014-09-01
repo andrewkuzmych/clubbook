@@ -69,10 +69,10 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
         String userId = (String)v.getTag();
 
         switch (v.getId()) {
-            case R.id.imgAccept:
+            case R.id.txtAccept:
                 onAcceptClicked(userId);
                 break;
-            case R.id.imgDecline:
+            case R.id.txtDecline:
                 onDeclineClicked(userId);
                 break;
         }

@@ -71,8 +71,8 @@ public class PendingFriendsAdapter extends BaseAdapter {
 
             holder.imgAvatar = (ImageView) row.findViewById(R.id.imgAvatar);
             holder.txtName = (TextView) row.findViewById(R.id.txtName);
-            holder.imgAccept = (ImageView) row.findViewById(R.id.imgAccept);
-            holder.imgDecline = (ImageView) row.findViewById(R.id.imgDecline);
+            holder.imgAccept = (TextView) row.findViewById(R.id.txtAccept);
+            holder.imgDecline = (TextView) row.findViewById(R.id.txtDecline);
 
             row.setTag(holder);
         } else {
@@ -116,7 +116,7 @@ public class PendingFriendsAdapter extends BaseAdapter {
     private class ViewHolder {
         ImageView imgAvatar;
         TextView txtName;
-        ImageView imgAccept;
-        ImageView imgDecline;
+        TextView imgAccept;
+        TextView imgDecline;
     }
 }
