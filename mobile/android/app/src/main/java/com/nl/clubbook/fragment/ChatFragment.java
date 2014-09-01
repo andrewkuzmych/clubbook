@@ -87,6 +87,15 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+        if(!hidden) {
+            handleArgs();
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         View view = getView();
         if(view != null) {
@@ -107,6 +116,9 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                 break;
             case R.id.txtSend:
                 sendMessage();
+                break;
+            case R.id.imgAvatar:
+                onUserProfileClicked((String)v.getTag());
                 break;
         }
     }
@@ -217,6 +229,11 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         }
     }
 
+    private void onUserProfileClicked(String userId) {
+        Fragment fragment = ProfileFragment.newInstance(ChatFragment.this, userId, null, ProfileFragment.OPEN_FROM_CHAT);
+        openFragment(fragment, ProfileFragment.class);
+    }
+
     private void loadConversation() {
         setLoading(true);
 
@@ -240,7 +257,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
                 List<BaseChatMessage> baseChatMessages = getChatsMessages(chatDto.getConversation());
 
-                mAdapter = new ChatAdapter(getActivity().getApplicationContext(), R.layout.item_chat_left, baseChatMessages);
+                mAdapter = new ChatAdapter(getActivity().getApplicationContext(), R.layout.item_chat_left, baseChatMessages, ChatFragment.this);
                 ListView listChat = (ListView) view.findViewById(R.id.listChat);
                 listChat.setAdapter(mAdapter);
                 listChat.setSelection(chatDto.getConversation().size());

@@ -79,6 +79,15 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+        if(!hidden) {
+            initActionBarTitle(getString(R.string.club_page));
+        }
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.txtCheckIn:
@@ -93,7 +102,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         View userId = view.findViewById(R.id.userId);
-        Fragment fragment = ProfileFragment.newInstance(ClubFragment.this, (String)userId.getTag(), mClub.getUsers());
+        Fragment fragment = ProfileFragment.newInstance(ClubFragment.this, (String)userId.getTag(), mClub.getUsers(), ProfileFragment.OPEN_MODE_DEFAULT);
         openFragment(fragment, ProfileFragment.class);
     }
 

@@ -39,13 +39,15 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
     private List<BaseChatMessage> mMessages = new ArrayList<BaseChatMessage>();
 
     private ImageLoader mImageLoader;
+    private View.OnClickListener mUserProfileClickListener;
+
     private DisplayImageOptions mOptions;
     private long mCurrentTimeWithoutHours;
     private long mDayTimeInMilliseconds;
     private String mToday;
     private String mYesterday;
 
-    public ChatAdapter(Context context, int textViewResourceId, List<BaseChatMessage> messages) {
+    public ChatAdapter(Context context, int textViewResourceId, List<BaseChatMessage> messages, View.OnClickListener userProfileClickListener) {
         super(context, textViewResourceId);
 
         mMessages = messages;
@@ -59,6 +61,8 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
                 .cacheInMemory()
                 .cacheOnDisc()
                 .build();
+
+        mUserProfileClickListener = userProfileClickListener;
 
         mCurrentTimeWithoutHours = CalendarUtils.getCurrentTimeWithoutHours();
         mDayTimeInMilliseconds = CalendarUtils.getDayTimeInMilliseconds();
@@ -181,6 +185,14 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         }
 
         txtChatMessage.setText(message.getMsg());
+
+        if(!message.getIsMyMessage()) {
+            imgAvatar.setTag(message.getUserFrom());
+            imgAvatar.setOnClickListener(mUserProfileClickListener);
+        } else {
+            imgAvatar.setTag(null);
+            imgAvatar.setOnClickListener(null);
+        }
     }
 
 }
