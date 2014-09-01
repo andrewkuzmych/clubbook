@@ -124,5 +124,6 @@
     <string name="password_min_six_characters">Password (minimum 6 characters)</string>
     <string name="update_profile_failed">Update profile failed</string>
     <string name="decline">Decline</string>
+    <string name="you_cannot_send_three_messages_without_reply">You cannot send more than 3 messages to this user without receiving a reply</string>
 
 </resources>

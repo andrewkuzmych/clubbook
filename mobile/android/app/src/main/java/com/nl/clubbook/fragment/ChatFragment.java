@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.MainActivity;
@@ -180,6 +181,11 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     }
 
     private void sendMessageTemp(String type, String messages) {
+        if(!isSendingMessagesEnabled()) {
+            Toast.makeText(getActivity(), R.string.you_cannot_send_three_messages_without_reply, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         HashMap<String, String> userDetails = getSession().getUserDetails();
         String accessToken = userDetails.get(SessionManager.KEY_ACCESS_TOCKEN);
         String userName = userDetails.get(SessionManager.KEY_NAME);
@@ -205,6 +211,14 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     }
 
     private void sendMessage() {
+        if(!isSendingMessagesEnabled()) {
+            Toast.makeText(getActivity(), R.string.you_cannot_send_three_messages_without_reply, Toast.LENGTH_SHORT).show();
+            L.e("!enabled");
+            return;
+        } else {
+            L.i("enabled");
+        }
+
         String accessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
         String input = inputText.getText().toString().trim();
 
@@ -226,6 +240,39 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
             mAdapter.add(myNewMessage);
             inputText.setText("");
+        }
+    }
+
+    private boolean isSendingMessagesEnabled() {
+        int maxSendMessagesCountWithoutReply = 3;
+
+        List<BaseChatMessage> messages = mAdapter.getMessages();
+
+        if(messages == null || messages.isEmpty()) {
+            return true;
+        }
+
+        int sendMessagesCount = 0;
+        for(BaseChatMessage baseMessage : messages) {
+            if(baseMessage instanceof ChatMessageDto) {
+                ChatMessageDto chatMessageDto = (ChatMessageDto) baseMessage;
+
+                if(chatMessageDto.getIsMyMessage()) {
+                    sendMessagesCount++;
+
+                    if(sendMessagesCount == (maxSendMessagesCountWithoutReply + 1)) {
+                        break;
+                    }
+                } else {
+                    return true;
+                }
+            }
+        }
+
+        if(sendMessagesCount >= maxSendMessagesCountWithoutReply) {
+            return false;
+        } else {
+            return true;
         }
     }
 

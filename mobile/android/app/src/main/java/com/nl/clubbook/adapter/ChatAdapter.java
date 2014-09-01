@@ -17,7 +17,6 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,7 +35,7 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
     private static final int TYPE_COUNT = 4; //date item
 
     private LayoutInflater mInflater;
-    private List<BaseChatMessage> mMessages = new ArrayList<BaseChatMessage>();
+    private List<BaseChatMessage> mMessages;
 
     private ImageLoader mImageLoader;
     private View.OnClickListener mUserProfileClickListener;
@@ -128,6 +127,10 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         } else {
             return TYPE_SMILE;
         }
+    }
+
+    public List<BaseChatMessage> getMessages() {
+        return mMessages;
     }
 
     private View initDateRow(BaseChatMessage dateMessage) {
