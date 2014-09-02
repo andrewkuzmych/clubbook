@@ -136,7 +136,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
         final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
-        ((BaseActivity) getActivity()).showProgress("Loading...");
+        ((BaseActivity) getActivity()).showProgressDialog("Loading...");
 
         DataStore.acceptFriendRequest(user.get(SessionManager.KEY_ID), friendId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
                 new DataStore.OnResultReady() {
@@ -149,9 +149,9 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
                         }
 
                         if (failed) {
-                            ((BaseActivity) getActivity()).hideProgress(false);
+                            ((BaseActivity) getActivity()).hideProgressDialog(false);
                         } else {
-                            ((BaseActivity) getActivity()).hideProgress(true);
+                            ((BaseActivity) getActivity()).hideProgressDialog(true);
 
                             refreshFriends();
                         }
@@ -173,7 +173,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
         final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
-        ((BaseActivity) getActivity()).showProgress("Loading...");
+        ((BaseActivity) getActivity()).showProgressDialog("Loading...");
 
         String userId = user.get(SessionManager.KEY_ID);
         String accessToken = user.get(SessionManager.KEY_ACCESS_TOCKEN);
@@ -187,9 +187,9 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
                 }
 
                 if (failed) {
-                    ((BaseActivity) getActivity()).hideProgress(false);
+                    ((BaseActivity) getActivity()).hideProgressDialog(false);
                 } else {
-                    ((BaseActivity) getActivity()).hideProgress(true);
+                    ((BaseActivity) getActivity()).hideProgressDialog(true);
 
                     doLoadPendingFriends();
                 }

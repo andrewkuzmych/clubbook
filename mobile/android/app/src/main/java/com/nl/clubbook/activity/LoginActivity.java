@@ -46,31 +46,31 @@ public class LoginActivity extends BaseActivity {
                 String password = txtPassword.getText().toString().trim();
 
                 if (!Validator.isEmailValid(email)) {
-                    alert.showAlertDialog(LoginActivity.this, getString(R.string.app_name), getString(R.string.email_incorrect));
+                    showMessageDialog(getString(R.string.app_name), getString(R.string.email_incorrect));
                     return;
                 }
 
                 if (password.trim().length() < 6) {
-                    alert.showAlertDialog(LoginActivity.this, getString(R.string.app_name), getString(R.string.pass_incorrect));
+                    showMessageDialog(getString(R.string.app_name), getString(R.string.pass_incorrect));
                     return;
                 }
 
                 //login request
-                showProgress(getString(R.string.loading));
+                showProgressDialog(getString(R.string.loading));
                 DataStore.loginByEmail(email, password, new DataStore.OnResultReady() {
                     @Override
                     public void onReady(Object result, boolean failed) {
                         // show error
                         if (failed) {
-                            hideProgress(false);
-                            alert.showAlertDialog(LoginActivity.this, getString(R.string.login_failed), getString(R.string.no_connection));
+                            hideProgressDialog(false);
+                            showMessageDialog(getString(R.string.login_failed), getString(R.string.something_went_wrong_please_try_again));
                             return;
                         }
 
-                        hideProgress(true);
+                        hideProgressDialog(true);
 
                         if (result == null) {
-                            alert.showAlertDialog(LoginActivity.this, getString(R.string.login_failed), getString(R.string.incorrect_credentials));
+                            showMessageDialog(getString(R.string.login_failed), getString(R.string.incorrect_credentials));
                         } else {
                             UserDto user = (UserDto) result;
                             getSession().createLoginSession(user);

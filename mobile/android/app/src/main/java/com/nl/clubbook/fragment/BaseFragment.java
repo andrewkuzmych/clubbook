@@ -11,6 +11,7 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.activity.NoInternetActivity;
 import com.nl.clubbook.activity.NoLocationActivity;
+import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.SessionManager;
 
@@ -84,14 +85,14 @@ public class BaseFragment extends Fragment {
         getActivity().finish();
     }
 
-    public void showProgress(String message) {
+    protected void showProgress(String message) {
         Fragment progressDialog = ProgressDialog.newInstance(null, message);
         FragmentTransaction fTransaction = getChildFragmentManager().beginTransaction();
         fTransaction.add(progressDialog, ProgressDialog.TAG);
         fTransaction.commitAllowingStateLoss();
     }
 
-    public void hideProgress(boolean isSuccessfully) {
+    protected void hideProgress(boolean isSuccessfully) {
         hideProgress();
 
         if (!isSuccessfully) {
@@ -99,11 +100,27 @@ public class BaseFragment extends Fragment {
         }
     }
 
-    public void hideProgress() {
+    protected void hideProgress() {
         DialogFragment progressDialog = (DialogFragment) getChildFragmentManager().findFragmentByTag(ProgressDialog.TAG);
         if(progressDialog != null) {
             progressDialog.dismissAllowingStateLoss();
         }
+    }
+
+    protected void showMessageDialog(Fragment targetFragment, int mode, String title, String message, String txtPosBtn, String txtNegBtn) {
+        MessageDialog messageDialog = MessageDialog.newInstance(targetFragment, mode, title, message, txtPosBtn, txtNegBtn);
+
+        FragmentTransaction fTransaction = getChildFragmentManager().beginTransaction();
+        fTransaction.add(messageDialog, MessageDialog.TAG);
+        fTransaction.commitAllowingStateLoss();
+    }
+
+    protected void showMessageDialog(Fragment targetFragment, String title, String message, String txtPosBtn, String txtNegBtn) {
+        MessageDialog messageDialog = MessageDialog.newInstance(targetFragment, title, message, txtPosBtn, txtNegBtn);
+
+        FragmentTransaction fTransaction = getChildFragmentManager().beginTransaction();
+        fTransaction.add(messageDialog, MessageDialog.TAG);
+        fTransaction.commitAllowingStateLoss();
     }
 
     public interface OnInnerFragmentDestroyedListener {

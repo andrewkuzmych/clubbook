@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -31,24 +30,25 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.NavDrawerItem;
 import com.nl.clubbook.datasource.ChatMessageDto;
 import com.nl.clubbook.datasource.ClubDto;
+import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.JSONConverter;
+import com.nl.clubbook.fragment.BaseFragment;
 import com.nl.clubbook.fragment.ChatFragment;
 import com.nl.clubbook.fragment.ClubFragment;
-import com.nl.clubbook.fragment.dialog.ProgressDialog;
-import com.nl.clubbook.helper.CheckInOutCallbackInterface;
-import com.nl.clubbook.helper.LocationCheckinHelper;
-import com.nl.clubbook.ui.drawer.NavDrawerData;
-import com.nl.clubbook.ui.drawer.NavDrawerListAdapter;
-import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.fragment.BaseFragment;
 import com.nl.clubbook.fragment.ClubsListFragment;
 import com.nl.clubbook.fragment.FriendsFragment;
 import com.nl.clubbook.fragment.MessagesFragment;
 import com.nl.clubbook.fragment.SettingsFragment;
+import com.nl.clubbook.fragment.dialog.MessageDialog;
+import com.nl.clubbook.helper.CheckInOutCallbackInterface;
 import com.nl.clubbook.helper.ImageHelper;
+import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.helper.NotificationHelper;
 import com.nl.clubbook.helper.SessionManager;
+import com.nl.clubbook.ui.drawer.NavDrawerData;
+import com.nl.clubbook.ui.drawer.NavDrawerListAdapter;
 import com.nl.clubbook.utils.L;
+import com.nl.clubbook.utils.NetworkUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.pubnub.api.Callback;
@@ -68,7 +68,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class MainActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener,
-        BaseFragment.OnInnerFragmentDestroyedListener, BaseFragment.OnInnerFragmentOpenedListener {
+        BaseFragment.OnInnerFragmentDestroyedListener, BaseFragment.OnInnerFragmentOpenedListener,
+        MessageDialog.MessageDialogListener {
 
     public static final String ACTION_CHECK_IN_CHECK_OUT = "ACTION_CHECK_IN_CHECK_OUT";
 
@@ -280,6 +281,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             mDrawerToggle.setDrawerIndicatorEnabled(false);
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
+    }
+
+    @Override
+    public void onPositiveButtonClick(MessageDialog dialogFragment) {
+        doCheckOut();
+    }
+
+    @Override
+    public void onNegativeButtonClick(MessageDialog dialogFragment) {
+        dialogFragment.dismissAllowingStateLoss();
     }
 
     private void initImageLoader() {
@@ -511,6 +522,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void onImgCheckOutClicked() {
+        showMessageDialog(
+                getString(R.string.check_out),
+                getString(R.string.check_out_from_this_club),
+                getString(R.string.check_out),
+                getString(R.string.cancel)
+        );
+    }
+
+    private void doCheckOut() {
+        if(!NetworkUtils.isOn(MainActivity.this)) {
+            Toast.makeText(MainActivity.this, R.string.no_connection, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         showProgressDialog(getString(R.string.checking_out));
 
         LocationCheckinHelper.getInstance().checkOut(MainActivity.this, new CheckInOutCallbackInterface() {
@@ -529,18 +554,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
         fTransaction.replace(R.id.frame_container, fragment, ClubFragment.TAG);
         fTransaction.commitAllowingStateLoss();
-    }
-
-    private void hideProgressDialog() {
-        DialogFragment dialogFragment = (DialogFragment)getSupportFragmentManager().findFragmentByTag(ProgressDialog.TAG);
-        if(dialogFragment != null) {
-            dialogFragment.dismissAllowingStateLoss();
-        }
-    }
-
-    private void showProgressDialog(String message) {
-        Fragment dialogFragment = ProgressDialog.newInstance(getString(R.string.app_name), message);
-        getSupportFragmentManager().beginTransaction().add(dialogFragment, ProgressDialog.TAG).commitAllowingStateLoss();
     }
 
     private void handleCheckInCheckOutResults(boolean result) {

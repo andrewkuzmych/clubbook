@@ -7,8 +7,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.widget.Toast;
+
+import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
-import com.nl.clubbook.helper.AlertDialogManager;
 import com.nl.clubbook.helper.SessionManager;
 
 /**
@@ -19,8 +21,6 @@ import com.nl.clubbook.helper.SessionManager;
  * To change this template use File | Settings | File Templates.
  */
 public class BaseActivity extends ActionBarActivity {
-    protected AlertDialogManager alert = new AlertDialogManager();
-
     private SessionManager mSession;
 
     private boolean isProgressShow = false;
@@ -56,7 +56,7 @@ public class BaseActivity extends ActionBarActivity {
         return mSession.getUserId();
     }
 
-    public void showProgress(String message) {
+    public void showProgressDialog(String message) {
         isProgressShow = true;
 
         Fragment progressDialog = ProgressDialog.newInstance(null, message);
@@ -65,22 +65,33 @@ public class BaseActivity extends ActionBarActivity {
         fTransaction.commitAllowingStateLoss();
     }
 
-    public void hideProgress(boolean showContent) {
+    public void hideProgressDialog(boolean showContent) {
         isProgressShow = false;
 
-        // hide progress
+        hideProgressDialog();
+
+        // there is error. Show error view.
+        if (!showContent) {
+            showNoInternetActivity();
+        }
+    }
+
+    protected void hideProgressDialog() {
         DialogFragment progressDialog = (DialogFragment) getSupportFragmentManager().findFragmentByTag(ProgressDialog.TAG);
         if(progressDialog != null) {
             progressDialog.dismissAllowingStateLoss();
         }
-
-        // there is error. Show error view.
-        if (!showContent) {
-            showNoInternetActiity();
-        }
     }
 
-    protected void showNoInternetActiity() {
+    protected void showToast(int messageResourceId) {
+        showToast(getString(messageResourceId));
+    }
+
+    protected void showToast(String message) {
+        Toast.makeText(BaseActivity.this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    protected void showNoInternetActivity() {
         Intent i = new Intent(getApplicationContext(), NoInternetActivity.class);
         startActivity(i);
         finish();
@@ -98,6 +109,22 @@ public class BaseActivity extends ActionBarActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle(title != null ? title : "");
+    }
+
+    protected void showMessageDialog(String title, String message, String txtPosBtn, String txtNegBtn) {
+        MessageDialog messageDialog = MessageDialog.newInstance(null, title, message, txtPosBtn, txtNegBtn);
+
+        FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
+        fTransaction.add(messageDialog, MessageDialog.TAG);
+        fTransaction.commitAllowingStateLoss();
+    }
+
+    protected void showMessageDialog(String title, String message) {
+        MessageDialog messageDialog = MessageDialog.newInstance(null, title, message, null, null);
+
+        FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
+        fTransaction.add(messageDialog, MessageDialog.TAG);
+        fTransaction.commitAllowingStateLoss();
     }
 
     protected void loadData() {

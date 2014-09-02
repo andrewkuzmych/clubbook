@@ -37,23 +37,16 @@ public class DataStore {
         params.put("avatar", avatar);
 
         ClubbookRestClient.regByEmail(params, new JsonHttpResponseHandler() {
-            private boolean failed = true;
-
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
-                UserDto user = null;
-                try {
-                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        user = new UserDto(response_json.getJSONObject("result").getJSONObject("user"));
-                        failed = false;
-                    } else {
-                        failed = true;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                L.w("responseJson - " + responseJson);
 
-                onResultReady.onReady(user, failed);
+                if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
+                    UserDto user = new UserDto(responseJson.optJSONObject("result").optJSONObject("user"));
+                    onResultReady.onReady(user, false);
+                } else {
+                    onResultReady.onReady(new UserDto(), true);
+                }
             }
 
             @Override
@@ -292,7 +285,7 @@ public class DataStore {
                         failed = true;
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    L.i("" + e);
                 }
 
                 onResultReady.onReady(user, failed);

@@ -21,6 +21,7 @@ import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.helper.UiHelper;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
+import com.nl.clubbook.utils.ParseUtils;
 import com.nl.clubbook.utils.UIUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -109,7 +110,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         EditText editName = (EditText)findViewById(R.id.editName);
         final String userName = editName.getText().toString().trim();
         if (userName.length() < 2) {
-            alert.showAlertDialog(EditProfileActivity.this, getString(R.string.update_profile_failed), getString(R.string.name_incorrect));
+            showMessageDialog(getString(R.string.app_name), getString(R.string.name_incorrect));
             return;
         }
 
@@ -117,11 +118,17 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         EditText editBirthDate = (EditText) findViewById(R.id.editBirthDate);
         final String birthDate = editBirthDate.getText().toString().trim();
         if (birthDate.length() < 6) {
-            alert.showAlertDialog(EditProfileActivity.this, getString(R.string.update_profile_failed), getString(R.string.dob_incorrect));
+            showMessageDialog(getString(R.string.app_name), getString(R.string.dob_incorrect));
             return;
         }
 
-        final String age = getAge(birthDate);
+        //age
+        final String strAge = getAge(birthDate);
+        int age = ParseUtils.parseInt(strAge);
+        if(age < 18) {
+            showMessageDialog(getString(R.string.app_name), getString(R.string.you_must_be_18_age_to_be_able_use_clubbook));
+            return;
+        }
 
         //about me
         EditText editAboutMe = (EditText) findViewById(R.id.editAboutMe);
@@ -138,13 +145,13 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         final String country = dataCountry.getValue();
 
         //upload data
-        showProgress(getString(R.string.loading));
+        showProgressDialog(getString(R.string.loading));
         DataStore.updateUserProfile(getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN),
                 userName, gender, mServerFormat.format(mBirthDate), country, aboutMe, new DataStore.OnResultReady() {
                     @Override
                     public void onReady(Object result, boolean failed) {
                         if (failed) {
-                            hideProgress(false);
+                            hideProgressDialog(false);
                             return;
                         }
 
@@ -153,10 +160,10 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                         sessionManager.updateValue(SessionManager.KEY_BIRTHDAY, birthDate);
                         sessionManager.updateValue(SessionManager.KEY_ABOUT_ME, aboutMe);
                         sessionManager.updateValue(SessionManager.KEY_GENDER, gender);
-                        sessionManager.updateValue(SessionManager.KEY_AGE, age);
+                        sessionManager.updateValue(SessionManager.KEY_AGE, strAge);
                         sessionManager.updateValue(SessionManager.KEY_COUNTRY, country);
 
-                        hideProgress(true);
+                        hideProgressDialog(true);
 
                         setResult(RESULT_OK);
                         finish();
@@ -191,7 +198,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
     protected void loadData() {
         if(!NetworkUtils.isOn(EditProfileActivity.this)) {
-            showNoInternetActiity();
+            showNoInternetActivity();
             return;
         }
 
@@ -205,7 +212,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                 }
 
                 if (failed) {
-                    showNoInternetActiity();
+                    showNoInternetActivity();
                     return;
                 }
 
@@ -283,7 +290,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
     private void addImage(JSONObject imageJson) {
         if(!isProgressShow()) {
-            showProgress(getString(R.string.upload_new_image));
+            showProgressDialog(getString(R.string.upload_new_image));
         }
 
         HashMap<String, String> userDetails = getSession().getUserDetails();
@@ -294,10 +301,10 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
             @Override
             public void onReady(Object result, boolean failed) {
                 if (failed) {
-                    hideProgress(false);
+                    hideProgressDialog(false);
                     return;
                 }
-                hideProgress(true);
+                hideProgressDialog(true);
 
                 UserPhotoDto imageDto = (UserPhotoDto) result;
 
@@ -310,7 +317,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
     }
 
     private void removeImage() {
-        showProgress(getString(R.string.deleting_image));
+        showProgressDialog(getString(R.string.deleting_image));
 
         HashMap<String, String> userDetails = getSession().getUserDetails();
         String userId = userDetails.get(SessionManager.KEY_ID);
@@ -320,10 +327,10 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
             @Override
             public void onReady(Object result, boolean failed) {
                 if (failed) {
-                    hideProgress(false);
+                    hideProgressDialog(false);
                     return;
                 }
-                hideProgress(true);
+                hideProgressDialog(true);
 
                 // remove from small preview
                 LinearLayout holderUserPhotos = (LinearLayout) findViewById(R.id.holderUserPhotos);
@@ -344,7 +351,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
     }
 
     private void setImageAsAvatar() {
-        showProgress(getString(R.string.loading));
+        showProgressDialog(getString(R.string.loading));
         HashMap<String, String> userDetails = getSession().getUserDetails();
         String userId = userDetails.get(SessionManager.KEY_ID);
         String accessToken = userDetails.get(SessionManager.KEY_ACCESS_TOCKEN);
@@ -354,10 +361,10 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
             @Override
             public void onReady(Object result, boolean failed) {
                 if (failed) {
-                    hideProgress(false);
+                    hideProgressDialog(false);
                     return;
                 }
-                hideProgress(true);
+                hideProgressDialog(true);
 
                 profile = (UserDto) result;
 
@@ -367,31 +374,6 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                 setResult(RESULT_OK);
             }
         });
-    }
-
-    private String getAge(String birthDate) {
-        String result = profile.getAge();
-
-        long birthdayTime = 0;
-        try {
-            birthdayTime = mDisplayFormat.parse(birthDate).getTime();
-        } catch (ParseException e) {
-            L.i("" + e);
-        }
-
-        if(birthdayTime > 0) {
-            long ageTime = System.currentTimeMillis() - birthdayTime;
-
-            Calendar calendarAgeTime = Calendar.getInstance();
-            Calendar calendarBeginTime = (Calendar) calendarAgeTime.clone();
-
-            calendarAgeTime.setTimeInMillis(ageTime);
-            calendarBeginTime.setTimeInMillis(0);
-
-            result = "" + (calendarAgeTime.get(Calendar.YEAR) - calendarBeginTime.get(Calendar.YEAR));
-        }
-
-        return result;
     }
 
     private void setLoading(boolean isLoading) {

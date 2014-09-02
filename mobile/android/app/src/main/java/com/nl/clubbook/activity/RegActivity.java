@@ -11,13 +11,14 @@ import android.widget.*;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
-import com.nl.clubbook.helper.AlertDialogManager;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.ImageUploader;
 import com.nl.clubbook.helper.UiHelper;
 import com.nl.clubbook.helper.UserEmailFetcher;
 import com.nl.clubbook.helper.Validator;
 import com.nl.clubbook.utils.L;
+import com.nl.clubbook.utils.NetworkUtils;
+import com.nl.clubbook.utils.ParseUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,7 +34,6 @@ import java.util.Calendar;
 public class RegActivity extends BaseDateActivity implements View.OnClickListener {
 
     private ImageUploader imageUploader;
-    private AlertDialogManager alert = new AlertDialogManager();
     private JSONObject avatar;
 
     @Override
@@ -131,10 +131,10 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
 
                     @Override
                     protected void onPostExecute(Drawable drawable) {
-                        hideProgress(true);
+                        hideProgressDialog(true);
 
                         if(drawable == null) {
-                            showNoInternetActiity();
+                            showNoInternetActivity();
                             return;
                         }
 
@@ -157,6 +157,11 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
             return;
         }
 
+        if(!NetworkUtils.isOn(RegActivity.this)) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
         //init view
         EditText editName = (EditText)findViewById(R.id.editName);
         EditText editEmail = (EditText)findViewById(R.id.editEmail);
@@ -175,34 +180,32 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
         String gender = data.getValue();
         String country = dataCountry.getValue();
         String city = "Amsterdam";
-        String bio = "Hi, I'm using Clubbook.";
+        String bio = getString(R.string.default_about_me);
 
-        showProgress(getString(R.string.loading));
+        showProgressDialog(getString(R.string.loading));
 
         // store data
         DataStore.regByEmail(userName, email, password, gender, mServerFormat.format(mBirthDate), country, city, bio, avatar, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
-                // show error
+
+                hideProgressDialog();
+
                 if (failed) {
-                    hideProgress(false);
-                    alert.showAlertDialog(RegActivity.this, "Error", getString(R.string.no_connection));
-                    return;
+                    if(result == null) {
+                        showToast(R.string.something_went_wrong_please_try_again);
+                    } else {
+                        showMessageDialog(getString(R.string.error), getString(R.string.user_with_this_email_has_already_exist));
+                        return;
+                    }
                 }
 
-                hideProgress(true);
+                UserDto user = (UserDto) result;
+                getSession().createLoginSession(user);
 
-                if (result == null) {
-                    alert.showAlertDialog(RegActivity.this, "Error", getString(R.string.email_exists));
-                } else {
-                    UserDto user = (UserDto) result;
-                    // save user in session
-                    getSession().createLoginSession(user);
-                    // navigate to main page
-                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(i);
-                    finish();
-                }
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -211,33 +214,40 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
         EditText editName = (EditText) findViewById(R.id.editName);
         String userName = editName.getText().toString().trim();
         if (userName.trim().length() < 2) {
-            alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.name_incorrect));
+            showMessageDialog(getString(R.string.app_name), getString(R.string.name_incorrect));
             return false;
         }
 
         EditText editEmail = (EditText) findViewById(R.id.editEmail);
         String email = editEmail.getText().toString().trim();
         if (!Validator.isEmailValid(email)) {
-            alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.email_incorrect));
+            showMessageDialog(getString(R.string.app_name), getString(R.string.email_incorrect));
             return false;
         }
 
         EditText editPassword = (EditText) findViewById(R.id.editPassword);
         String password = editPassword.getText().toString().trim();
         if (password.trim().length() < 6) {
-            alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.pass_incorrect));
+            showMessageDialog(getString(R.string.app_name), getString(R.string.pass_incorrect));
             return false;
         }
 
         EditText editBirthDate = (EditText) findViewById(R.id.editBirthDate);
         String dob = editBirthDate.getText().toString().trim();
         if (dob.trim().length() < 6) {
-            alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.dob_incorrect));
+            showMessageDialog(getString(R.string.app_name), getString(R.string.dob_incorrect));
             return false;
+        } else {
+            String strAge = getAge(dob);
+            int age = ParseUtils.parseInt(strAge);
+            if(age < 18) {
+                showMessageDialog(getString(R.string.app_name), getString(R.string.you_must_be_18_age_to_be_able_use_clubbook));
+                return false;
+            }
         }
 
         if(avatar == null) {
-            alert.showAlertDialog(RegActivity.this, "Login failed..", getString(R.string.avatar_incorrect));
+            showMessageDialog(getString(R.string.app_name), getString(R.string.avatar_incorrect));
             return false;
         }
 

@@ -13,11 +13,13 @@ import android.widget.Toast;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.MainLoginActivity;
 import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.fragment.dialog.MessageDialog;
+import com.nl.clubbook.utils.NetworkUtils;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.listeners.OnLogoutListener;
 
 public class SettingsFragment extends BaseFragment implements View.OnClickListener,
-        CompoundButton.OnCheckedChangeListener {
+        CompoundButton.OnCheckedChangeListener, MessageDialog.MessageDialogListener {
 
     private final String FEEDBACK_EMAIL = "feedback@clubbook.com";
     private final String URL_TEMPS_OF_SERVICE = "http://clubbookapp.herokuapp.com/terms";
@@ -25,9 +27,11 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
     private SimpleFacebook mSimpleFacebook;
 
+    private final int MESSAGE_DIALOG_ACTION_DELETE_ACCOUNT = 9876;
+    private final int MESSAGE_DIALOG_ACTION_LOG_OUT = 5432;
+
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fr_settings, container, false);
     }
 
@@ -58,13 +62,13 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 onTxtTermsOfServiceClicked();
                 break;
             case R.id.txtDeleteAccount:
-                onTxtDeleteAccountClicked();
+               onTxtDeleteAccountClicked();
                 break;
             case R.id.txtContact:
                 onTxtContactClicked();
                 break;
             case R.id.txtLogOut:
-                doLogOut();
+                onTxtLogOutClicked();
                 break;
         }
     }
@@ -74,6 +78,23 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         if(buttonView.getId() == R.id.cbPushNotifications) {
             onCbPushCheckedChanged();
         }
+    }
+
+    @Override
+    public void onPositiveButtonClick(MessageDialog dialogFragment) {
+        switch (dialogFragment.getActionId()) {
+            case MESSAGE_DIALOG_ACTION_DELETE_ACCOUNT:
+                doDeleteAccount();
+                break;
+            case MESSAGE_DIALOG_ACTION_LOG_OUT:
+                doLogOut();
+                break;
+        }
+    }
+
+    @Override
+    public void onNegativeButtonClick(MessageDialog dialogFragment) {
+        dialogFragment.dismissAllowingStateLoss();
     }
 
     private void initView() {
@@ -110,8 +131,43 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         openFragment(fragment, WebViewFragment.class);
     }
 
+    private void onTxtContactClicked() {
+        Intent intentEmail = new Intent(Intent.ACTION_SEND);
+        intentEmail.putExtra(Intent.EXTRA_EMAIL, new String[]{FEEDBACK_EMAIL});
+        intentEmail.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.question_about_clubbook));
+        intentEmail.setType("message/rfc822");
+        startActivity(Intent.createChooser(intentEmail, getString(R.string.choose_an_email_provider)));
+    }
+
     private void onTxtDeleteAccountClicked() {
-        showProgress(getString(R.string.checked_in));
+        showMessageDialog(
+                SettingsFragment.this,
+                MESSAGE_DIALOG_ACTION_DELETE_ACCOUNT,
+                getString(R.string.app_name),
+                getString(R.string.are_you_sure_you_want_delete_your_profile),
+                getString(R.string.delete),
+                getString(R.string.cancel)
+        );
+    }
+
+    private void onTxtLogOutClicked() {
+        showMessageDialog(
+                SettingsFragment.this,
+                MESSAGE_DIALOG_ACTION_LOG_OUT,
+                getString(R.string.log_out),
+                getString(R.string.log_out_now),
+                getString(R.string.log_out),
+                getString(R.string.cancel)
+        );
+    }
+
+    private void doDeleteAccount() {
+        if(!NetworkUtils.isOn(getActivity())) {
+            Toast.makeText(getActivity(), R.string.no_connection, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        showProgress(getString(R.string.deleting_profile));
 
         String accessToken = getSession().getAccessToken();
         DataStore.deleteProfile(getActivity(), accessToken, new DataStore.OnResultReady() {
@@ -129,14 +185,6 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 }
             }
         });
-    }
-
-    private void onTxtContactClicked() {
-        Intent intentEmail = new Intent(Intent.ACTION_SEND);
-        intentEmail.putExtra(Intent.EXTRA_EMAIL, new String[]{FEEDBACK_EMAIL});
-        intentEmail.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.question_about_clubbook));
-        intentEmail.setType("message/rfc822");
-        startActivity(Intent.createChooser(intentEmail, "Choose an email provider: "));
     }
 
     private void doLogOut() {

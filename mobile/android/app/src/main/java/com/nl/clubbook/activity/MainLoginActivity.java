@@ -44,6 +44,8 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
         this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.ac_main_login);
 
+        registerReceiver(mCloseActivityReceiver, new IntentFilter(ACTION_CLOSE_ACTIVITY));
+
         // start to track user location
         LocationCheckinHelper.getInstance().startSmartLocationTracker(this);
         if (!LocationCheckinHelper.getInstance().isLocationEnabled(this)) {
@@ -60,8 +62,6 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
             finish();
             return;
         }
-
-        registerReceiver(mCloseActivityReceiver, new IntentFilter(ACTION_CLOSE_ACTIVITY));
 
         initView();
     }
@@ -163,13 +163,13 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
         // TODO request DOB permission from From Facebook
         final String finalDob = "";
 
-        showProgress(getString(R.string.loading));
+        showProgressDialog(getString(R.string.loading));
         DataStore.loginByFb(name, email, fb_id, access_token, gender, finalDob, avatar, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
-                hideProgress(true);
+                hideProgressDialog(true);
                 if (failed) {
-                    alert.showAlertDialog(MainLoginActivity.this, getString(R.string.app_name), getString(R.string.incorrect_credentials));
+                    showMessageDialog(getString(R.string.app_name), getString(R.string.incorrect_credentials));
                 } else {
                     UserDto user = (UserDto) result;
                     getSession().createLoginSession(user);
@@ -192,7 +192,7 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
 
         @Override
         protected void onPreExecute() {
-            showProgress(getString(R.string.loading));
+            showProgressDialog(getString(R.string.loading));
         }
 
         // Executed on a special thread and all your
@@ -213,7 +213,7 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
 
         @Override
         protected void onPostExecute(Profile result) {
-            hideProgress(true);
+            hideProgressDialog(true);
             updateUserInfo(this.profile, avatar);
         }
     }

@@ -129,5 +129,13 @@
     <string name="something_went_wrong_please_try_again">Something went wrong, please try again</string>
     <string name="error">Error</string>
     <string name="login_failed">Login failed</string>
+    <string name="cancel">Cancel</string>
+    <string name="choose_an_email_provider">Choose an email provider:</string>
+    <string name="are_you_sure_you_want_delete_your_profile">Are you sure you want to delete your profile? This action cannot be undone</string>
+    <string name="log_out_now">Log out now?</string>
+    <string name="check_out_from_this_club">Check out from this club?</string>
+    <string name="default_about_me">Hi, I\'m using Clubbook.</string>
+    <string name="user_with_this_email_has_already_exist">User with this email has already exist</string>
+    <string name="you_must_be_18_age_to_be_able_use_clubbook">You must be 18+ age to be able use Clubbook</string>
 
 </resources>

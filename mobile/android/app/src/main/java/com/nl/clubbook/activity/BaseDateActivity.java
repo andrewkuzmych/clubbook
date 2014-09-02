@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.control.DatePickerFragment;
+import com.nl.clubbook.utils.L;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -70,5 +71,30 @@ public class BaseDateActivity extends BaseActivity implements DatePickerDialog.O
         DialogFragment date = DatePickerFragment.newInstance(year, month, day, BaseDateActivity.this);
         FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
         fTransaction.add(date, DatePickerFragment.TAG).commitAllowingStateLoss();
+    }
+
+    protected String getAge(String birthDate) {
+        String result = "";
+
+        long birthdayTime = 0;
+        try {
+            birthdayTime = mDisplayFormat.parse(birthDate).getTime();
+        } catch (ParseException e) {
+            L.i("" + e);
+        }
+
+        if(birthdayTime > 0) {
+            long ageTime = System.currentTimeMillis() - birthdayTime;
+
+            Calendar calendarAgeTime = Calendar.getInstance();
+            Calendar calendarBeginTime = (Calendar) calendarAgeTime.clone();
+
+            calendarAgeTime.setTimeInMillis(ageTime);
+            calendarBeginTime.setTimeInMillis(0);
+
+            result = "" + (calendarAgeTime.get(Calendar.YEAR) - calendarBeginTime.get(Calendar.YEAR));
+        }
+
+        return result;
     }
 }

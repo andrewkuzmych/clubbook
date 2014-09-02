@@ -204,7 +204,7 @@ public abstract class ImageUploader {
             protected void onPreExecute() {
                 super.onPreExecute();
 
-                mActivity.showProgress(mActivity.getString(R.string.upload_new_image));
+                mActivity.showProgressDialog(mActivity.getString(R.string.upload_new_image));
             }
 
             @Override

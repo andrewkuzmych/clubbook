@@ -356,7 +356,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
-        ((BaseActivity) getActivity()).showProgress("Loading...");
+        ((BaseActivity) getActivity()).showProgressDialog("Loading...");
 
         DataStore.addFriendRequest(user.get(SessionManager.KEY_ID), mProfileId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
                 new DataStore.OnResultReady() {
@@ -369,9 +369,9 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                 }
 
                 if (failed) {
-                    ((BaseActivity) getActivity()).hideProgress(false);
+                    ((BaseActivity) getActivity()).hideProgressDialog(false);
                 } else {
-                    ((BaseActivity) getActivity()).hideProgress(true);
+                    ((BaseActivity) getActivity()).hideProgressDialog(true);
 
                     view.findViewById(R.id.txtAddFriend).setVisibility(View.GONE);
                     view.findViewById(R.id.txtRemoveFriend).setVisibility(View.VISIBLE);
@@ -384,7 +384,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
-        ((BaseActivity) getActivity()).showProgress("Loading...");
+        ((BaseActivity) getActivity()).showProgressDialog("Loading...");
 
         DataStore.acceptFriendRequest(user.get(SessionManager.KEY_ID), mProfileId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
                 new DataStore.OnResultReady() {
@@ -397,9 +397,9 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                         }
 
                         if (failed) {
-                            ((BaseActivity) getActivity()).hideProgress(false);
+                            ((BaseActivity) getActivity()).hideProgressDialog(false);
                         } else {
-                            ((BaseActivity) getActivity()).hideProgress(true);
+                            ((BaseActivity) getActivity()).hideProgressDialog(true);
 
                             view.findViewById(R.id.txtAddFriend).setVisibility(View.GONE);
                             view.findViewById(R.id.txtRemoveFriend).setVisibility(View.VISIBLE);
@@ -433,7 +433,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
-        ((BaseActivity) getActivity()).showProgress("Loading...");
+        ((BaseActivity) getActivity()).showProgressDialog("Loading...");
 
         String userId = user.get(SessionManager.KEY_ID);
         String accessToken = user.get(SessionManager.KEY_ACCESS_TOCKEN);
@@ -447,9 +447,9 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                 }
 
                 if (failed) {
-                    ((BaseActivity) getActivity()).hideProgress(false);
+                    ((BaseActivity) getActivity()).hideProgressDialog(false);
                 } else {
-                    ((BaseActivity) getActivity()).hideProgress(true);
+                    ((BaseActivity) getActivity()).hideProgressDialog(true);
 
                     TextView txtAddFriend = (TextView) view.findViewById(R.id.txtAddFriend);
                     txtAddFriend.setVisibility(View.VISIBLE);
