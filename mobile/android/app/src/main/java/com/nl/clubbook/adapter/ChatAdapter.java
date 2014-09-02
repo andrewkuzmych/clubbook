@@ -187,7 +187,10 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
             mImageLoader.displayImage(message.getUserFromAvatar(), imgAvatar, mOptions);
         }
 
-        txtChatMessage.setText(message.getMsg());
+        String msg = message.getMsg();
+        if(msg != null) {
+            txtChatMessage.setText(msg.trim());
+        }
 
         if(!message.getIsMyMessage()) {
             imgAvatar.setTag(message.getUserFrom());
