@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.widget.Toast;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
@@ -121,6 +122,14 @@ public class BaseFragment extends Fragment {
         FragmentTransaction fTransaction = getChildFragmentManager().beginTransaction();
         fTransaction.add(messageDialog, MessageDialog.TAG);
         fTransaction.commitAllowingStateLoss();
+    }
+
+    protected void showToast(int messageResourceId) {
+        showToast(getString(messageResourceId));
+    }
+
+    protected void showToast(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
     public interface OnInnerFragmentDestroyedListener {

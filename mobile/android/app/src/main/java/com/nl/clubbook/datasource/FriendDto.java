@@ -9,6 +9,7 @@ public class FriendDto extends UserDto {
 
     public static String STATUS_FRIEND = "friend";
     public static String STATUS_RECEIVE_REQUEST = "receive_request";
+    public static String STATUS_SENT_REQUEST = "sent_request";
 
     private String friendStatus;
 

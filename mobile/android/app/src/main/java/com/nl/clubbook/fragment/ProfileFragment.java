@@ -12,17 +12,18 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.adapter.ProfileAdapter;
 import com.nl.clubbook.adapter.UserAvatarPagerAdapter;
 import com.nl.clubbook.datasource.CheckInUserDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.FriendDto;
 import com.nl.clubbook.datasource.UserPhotoDto;
+import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.*;
 import com.nl.clubbook.ui.view.HorizontalListView;
 import com.nl.clubbook.ui.view.ViewPagerBulletIndicatorView;
 import com.nl.clubbook.utils.L;
+import com.nl.clubbook.utils.NetworkUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
@@ -35,7 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ProfileFragment extends BaseInnerFragment implements View.OnClickListener, ViewPager.OnPageChangeListener,
-        AdapterView.OnItemClickListener {
+        AdapterView.OnItemClickListener, MessageDialog.MessageDialogListener {
 
     private static final String ARG_OPEN_FRAGMENT_MODE = "ARG_OPEN_FRAGMENT_MODE";
 
@@ -142,6 +143,16 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         mProfileId = userId;
         loadData(mProfileId);
+    }
+
+    @Override
+    public void onPositiveButtonClick(MessageDialog dialogFragment) {
+        doRemoveFriend();
+    }
+
+    @Override
+    public void onNegativeButtonClick(MessageDialog dialogFragment) {
+        dialogFragment.dismissAllowingStateLoss();
     }
 
     private void initLoader() {
@@ -290,6 +301,9 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         } else if(FriendDto.STATUS_RECEIVE_REQUEST.equalsIgnoreCase(friendStatus)) {
             txtAddFriends.setText(getString(R.string.accept));
             mBtnAddFriendMode = MODE_ACCEPT;
+        } else if(FriendDto.STATUS_SENT_REQUEST.equalsIgnoreCase(friendStatus)) {
+            initRequestPendingView(txtAddFriends);
+            view.findViewById(R.id.txtRemoveFriend).setVisibility(View.GONE);
         } else {
             mBtnAddFriendMode = MODE_ADD;
         }
@@ -353,10 +367,15 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     }
 
     private void onAddFriendsClicked() {
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
         final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
-        ((BaseActivity) getActivity()).showProgressDialog("Loading...");
+        showProgress(getString(R.string.loading));
 
         DataStore.addFriendRequest(user.get(SessionManager.KEY_ID), mProfileId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
                 new DataStore.OnResultReady() {
@@ -368,23 +387,27 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                     return;
                 }
 
+                hideProgress();
                 if (failed) {
-                    ((BaseActivity) getActivity()).hideProgressDialog(false);
+                    showToast(R.string.something_went_wrong_please_try_again);
                 } else {
-                    ((BaseActivity) getActivity()).hideProgressDialog(true);
-
-                    view.findViewById(R.id.txtAddFriend).setVisibility(View.GONE);
-                    view.findViewById(R.id.txtRemoveFriend).setVisibility(View.VISIBLE);
+                    TextView txtView = (TextView) view.findViewById(R.id.txtAddFriend);
+                    initRequestPendingView(txtView);
                 }
             }
         });
     }
 
     private void onAcceptFriendsRequestClicked() {
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
         final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
-        ((BaseActivity) getActivity()).showProgressDialog("Loading...");
+        showProgress(getString(R.string.loading));
 
         DataStore.acceptFriendRequest(user.get(SessionManager.KEY_ID), mProfileId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
                 new DataStore.OnResultReady() {
@@ -396,11 +419,10 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                             return;
                         }
 
+                        hideProgress();
                         if (failed) {
-                            ((BaseActivity) getActivity()).hideProgressDialog(false);
+                            showToast(R.string.something_went_wrong_please_try_again);
                         } else {
-                            ((BaseActivity) getActivity()).hideProgressDialog(true);
-
                             view.findViewById(R.id.txtAddFriend).setVisibility(View.GONE);
                             view.findViewById(R.id.txtRemoveFriend).setVisibility(View.VISIBLE);
                         }
@@ -417,23 +439,30 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         }
     }
 
-    private void closeFragment() {
-        FragmentTransaction fTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        fTransaction.show(getTargetFragment());
-        fTransaction.remove(ProfileFragment.this);
-        fTransaction.commitAllowingStateLoss();
-        getActivity().getSupportFragmentManager().popBackStack();
-    }
-
     private void onBlockUserClicked() {
         //TODO
     }
 
     private void onRemoveFriendClicked() {
+        showMessageDialog(
+                ProfileFragment.this,
+                getString(R.string.remove_friend),
+                getString(R.string.remove_friend_from_your_friend_list),
+                getString(R.string.remove),
+                getString(R.string.cancel)
+        );
+    }
+
+    private void doRemoveFriend() {
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
         final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
-        ((BaseActivity) getActivity()).showProgressDialog("Loading...");
+        showProgress(getString(R.string.removing_friend));
 
         String userId = user.get(SessionManager.KEY_ID);
         String accessToken = user.get(SessionManager.KEY_ACCESS_TOCKEN);
@@ -446,11 +475,11 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                     return;
                 }
 
-                if (failed) {
-                    ((BaseActivity) getActivity()).hideProgressDialog(false);
-                } else {
-                    ((BaseActivity) getActivity()).hideProgressDialog(true);
+                hideProgress();
 
+                if (failed) {
+                    showToast(R.string.something_went_wrong_please_try_again);
+                } else {
                     TextView txtAddFriend = (TextView) view.findViewById(R.id.txtAddFriend);
                     txtAddFriend.setVisibility(View.VISIBLE);
                     txtAddFriend.setText(getString(R.string.add_friend));
@@ -459,6 +488,24 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                 }
             }
         });
+    }
+
+    private void initRequestPendingView(TextView txtAddFriend) {
+        int leftPadding = txtAddFriend.getPaddingLeft();
+        int rightPadding = txtAddFriend.getPaddingRight();
+
+        txtAddFriend.setBackgroundResource(R.drawable.bg_btn_grey);
+        txtAddFriend.setText(getString(R.string.request_pending));
+        txtAddFriend.setOnClickListener(null);
+        txtAddFriend.setPadding(leftPadding, 0, rightPadding, 0);
+    }
+
+    private void closeFragment() {
+        FragmentTransaction fTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fTransaction.show(getTargetFragment());
+        fTransaction.remove(ProfileFragment.this);
+        fTransaction.commitAllowingStateLoss();
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 
     public void setCheckInUsers(List<CheckInUserDto> mCheckInUsers) {

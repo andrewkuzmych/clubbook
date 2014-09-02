@@ -53,6 +53,7 @@
     <string name="about_me">About Me</string>
     <string name="block_user">Block\nUser</string>
     <string name="remove_friend">Remove\nFriend</string>
+    <string name="remove">Remove</string>
     <string name="sing_up">Sign Up</string>
     <string name="open_today">Open Today:</string>
     <string name="club_info_and_wall">Club Info &amp; Wall</string>
@@ -137,5 +138,8 @@
     <string name="default_about_me">Hi, I\'m using Clubbook.</string>
     <string name="user_with_this_email_has_already_exist">User with this email has already exist</string>
     <string name="you_must_be_18_age_to_be_able_use_clubbook">You must be 18+ age to be able use Clubbook</string>
+    <string name="remove_friend_from_your_friend_list">Remove friends from your friend list?</string>
+    <string name="removing_friend">Removing Friend</string>
+    <string name="request_pending">Request\nPending</string>
 
 </resources>
