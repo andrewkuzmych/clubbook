@@ -149,6 +149,48 @@
             android:numColumns="@integer/grid_users_column_count"
             android:scrollbars="none"/>
 
+        <LinearLayout
+            android:id="@+id/holderCheckInExplanation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                android:id="@+id/txtUsers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_users"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_size_medium"
+                android:paddingTop="8dp"/>
+
+            <com.nl.clubbook.ui.view.TitilliumBoldTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/checked_in"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_size_medium"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"/>
+
+            <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_size_medium"
+                android:text="@string/profile_pictures_will_be_visible"
+                android:paddingBottom="8dp"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <ProgressBar

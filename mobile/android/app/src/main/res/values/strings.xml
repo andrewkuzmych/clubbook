@@ -141,5 +141,8 @@
     <string name="remove_friend_from_your_friend_list">Remove friends from your friend list?</string>
     <string name="removing_friend">Removing Friend</string>
     <string name="request_pending">Request\nPending</string>
+    <string name="profile_pictures_will_be_visible">Profile pictures will be visible\nwhen %d users more are\nchecked-in</string>
+    <string name="no_users">No users</string>
+    <string name="no_name">No name</string>
 
 </resources>

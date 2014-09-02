@@ -11,7 +11,8 @@
         android:id="@+id/imgAvatar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_avatar_unknown"/>
 
     <TextView
         android:id="@+id/txtFriendIndicator"
@@ -21,7 +22,8 @@
         android:layout_alignParentRight="true"
         android:background="@drawable/ic_friend_indicator"
         android:paddingBottom="4dp"
-        android:paddingRight="4dp"/>
+        android:paddingRight="4dp"
+        android:visibility="gone"/>
 
     <View
         android:id="@+id/userId"

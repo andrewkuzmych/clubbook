@@ -1,6 +1,5 @@
 package com.nl.clubbook.fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -29,6 +28,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -104,8 +104,13 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        View userId = view.findViewById(R.id.userId);
-        Fragment fragment = ProfileFragment.newInstance(ClubFragment.this, (String)userId.getTag(), mClub.getUsers(), ProfileFragment.OPEN_MODE_DEFAULT);
+        View viewUserId = view.findViewById(R.id.userId);
+        if(viewUserId.getTag() == null) {
+            return;
+        }
+
+        String userId = (String)viewUserId.getTag();
+        Fragment fragment = ProfileFragment.newInstance(ClubFragment.this, userId, mClub.getUsers(), ProfileFragment.OPEN_MODE_DEFAULT);
         openFragment(fragment, ProfileFragment.class);
     }
 
@@ -338,6 +343,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
     private void initGridView(View view, List<CheckInUserDto> users) {
         if(users == null) {
+            view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.VISIBLE);
             return;
         }
 
@@ -345,5 +351,27 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
         ProfileAdapter profileAdapter = new ProfileAdapter(getActivity(), users, currentUserId, ProfileAdapter.MODE_GRID);
         gridUsers.setAdapter(profileAdapter);
+
+        //check checked-in users count
+        if(users.size() < 10) {
+            view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.VISIBLE);
+
+            if(!users.isEmpty()) {
+                String noName = getString(R.string.no_name);
+                TextView txtUsers = (TextView) view.findViewById(R.id.txtUsers);
+                txtUsers.setText("");
+
+                for(int i = 0; i < users.size(); i++) {
+                    CheckInUserDto checkInUserDto = users.get(i);
+                    String name = checkInUserDto.getName();
+
+                    txtUsers.append(name != null ? name : noName);
+
+                    if(i < (users.size() - 1)) {
+                        txtUsers.append(", ");
+                    }
+                }
+            }
+        }
     }
 }

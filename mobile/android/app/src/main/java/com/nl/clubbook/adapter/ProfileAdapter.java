@@ -36,6 +36,7 @@ public class ProfileAdapter extends BaseAdapter {
     private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
     private LayoutInflater mInflater;
     private int mMode = MODE_GRID;
+    private boolean isAbleToLoadImages;
 
 
     public ProfileAdapter(Context context, List<CheckInUserDto> users, String currentUserId, int mode) {
@@ -53,6 +54,8 @@ public class ProfileAdapter extends BaseAdapter {
                 .cacheInMemory()
                 .cacheOnDisc()
                 .build();
+
+        isAbleToLoadImages = users.size() >= 10;
 
     }
 
@@ -99,18 +102,20 @@ public class ProfileAdapter extends BaseAdapter {
     }
 
     private void fillView(ViewHolder holder, CheckInUserDto item) {
-        String imageUrl = ImageHelper.getUserListAvatar(item.getAvatarUrl());
-        holder.imgAvatar.setTag(imageUrl);
-        imageLoader.displayImage(imageUrl, holder.imgAvatar, options, animateFirstListener);
+        if(mMode == MODE_GRID && isAbleToLoadImages) {
+            String imageUrl = ImageHelper.getUserListAvatar(item.getAvatarUrl());
+            holder.imgAvatar.setTag(imageUrl);
+            imageLoader.displayImage(imageUrl, holder.imgAvatar, options, animateFirstListener);
 
-        holder.userId.setTag(item.getId());
+            if(item.isFriend()) {
+                holder.txtFriendIndicator.setVisibility(View.GONE);
+            } else if(mCurrentUserId.equals(item.getId())) {
+                holder.txtFriendIndicator.setVisibility(View.GONE);
+            } else {
+                holder.txtFriendIndicator.setVisibility(View.VISIBLE);
+            }
 
-        if(item.isFriend()) {
-            holder.txtFriendIndicator.setVisibility(View.GONE);
-        } else if(mCurrentUserId.equals(item.getId())) {
-            holder.txtFriendIndicator.setVisibility(View.GONE);
-        } else {
-            holder.txtFriendIndicator.setVisibility(View.VISIBLE);
+            holder.userId.setTag(item.getId());
         }
     }
 
