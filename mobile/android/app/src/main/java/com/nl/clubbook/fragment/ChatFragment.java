@@ -168,7 +168,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         DataStore.readMessages(
                 chatDto.getCurrentUser().getId(),
                 chatDto.getReceiver().getId(),
-                chatDto.getCurrentUser().getAccessToken(),
+                mAccessToken,
                 new DataStore.OnResultReady() {
 
                     @Override
@@ -194,7 +194,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
         HashMap<String, String> userDetails = getSession().getUserDetails();
         String accessToken = userDetails.get(SessionManager.KEY_ACCESS_TOCKEN);
-//        String userName = userDetails.get(SessionManager.KEY_NAME);
+//        String userName = userDetails.get(SessionManager.KEY_NAME); //TODO temporary fix for iOS version
 
         String userName = type.equalsIgnoreCase(ChatMessageDto.TYPE_DRINK) ? "  " : "";
         userName += userDetails.get(SessionManager.KEY_NAME);
@@ -336,11 +336,10 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(inputText, InputMethodManager.SHOW_IMPLICIT);
 
-                String accessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
                 DataStore.readMessages(
                         chatDto.getCurrentUser().getId(),
                         chatDto.getReceiver().getId(),
-                        accessToken,
+                        mAccessToken,
                         new DataStore.OnResultReady() {
                             @Override
                             public void onReady(Object result, boolean failed) {

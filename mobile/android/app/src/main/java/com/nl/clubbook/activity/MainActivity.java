@@ -603,7 +603,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         @Override
         public void successCallback(String channel, final Object message) {
-            L.d("SUBSCRIBE : " + channel + " : " + message.getClass() + " : " + message.toString());
+//            L.d("SUBSCRIBE : " + channel + " : " + message.getClass() + " : " + message.toString());
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

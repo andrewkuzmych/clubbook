@@ -39,8 +39,6 @@ public class DataStore {
         ClubbookRestClient.regByEmail(params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                L.w("responseJson - " + responseJson);
-
                 if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
                     UserDto user = new UserDto(responseJson.optJSONObject("result").optJSONObject("user"));
                     onResultReady.onReady(user, false);
@@ -79,17 +77,13 @@ public class DataStore {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 UserDto user = null;
-                try {
-                    if (response_json.getString("status").equalsIgnoreCase("ok")) {
-                        user = new UserDto(response_json.getJSONObject("result").getJSONObject("user"));
-                        failed = false;
-                    } else {
-                        failed = true;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
+                    user = new UserDto(responseJson.optJSONObject("result").optJSONObject("user"));
+                    failed = false;
+                } else {
+                    failed = true;
                 }
 
                 onResultReady.onReady(user, failed);
@@ -152,11 +146,11 @@ public class DataStore {
             private boolean failed = true;
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response_json) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 UserPhotoDto userPhotoDto = null;
                 try {
-                    if ("ok".equalsIgnoreCase(response_json.getString("status"))) {
-                        userPhotoDto = new UserPhotoDto(response_json.getJSONObject("result").getJSONObject("image"));
+                    if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
+                        userPhotoDto = new UserPhotoDto(responseJson.getJSONObject("result").getJSONObject("image"));
                         failed = false;
                     } else {
                         failed = true;
@@ -1055,7 +1049,7 @@ public class DataStore {
                     failed = true;
                 }
 
-                onResultReady.onReady("ok", failed);
+                onResultReady.onReady(null, failed);
             }
 
             @Override
