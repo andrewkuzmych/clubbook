@@ -1,5 +1,6 @@
 package com.nl.clubbook.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,7 +12,6 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.activity.MainLoginActivity;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.utils.NetworkUtils;
@@ -189,11 +189,15 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void doLogOut() {
-        getSession().logoutUser();
-        mSimpleFacebook.logout(mOnLogoutListener);
-        Intent intent = new Intent(getActivity(), MainLoginActivity.class);
-        startActivity(intent);
-        getActivity().finish();
+        Activity activity = getActivity();
+        if(activity instanceof OnLogOutListener) {
+            mSimpleFacebook.logout(mOnLogoutListener);
+
+            OnLogOutListener listener = (OnLogOutListener) activity;
+            listener.onLogOut();
+        } else {
+            throw new IllegalArgumentException("Your activity must implement OnLogOutListener!");
+        }
     }
 
     private OnLogoutListener mOnLogoutListener = new OnLogoutListener() {
@@ -217,4 +221,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         }
     };
+
+    public interface OnLogOutListener {
+        public void onLogOut();
+    }
 }

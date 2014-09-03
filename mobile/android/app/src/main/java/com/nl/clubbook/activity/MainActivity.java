@@ -69,7 +69,7 @@ import java.util.List;
  */
 public class MainActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener,
         BaseFragment.OnInnerFragmentDestroyedListener, BaseFragment.OnInnerFragmentOpenedListener,
-        MessageDialog.MessageDialogListener {
+        MessageDialog.MessageDialogListener, SettingsFragment.OnLogOutListener {
 
     public static final String ACTION_CHECK_IN_CHECK_OUT = "ACTION_CHECK_IN_CHECK_OUT";
 
@@ -147,14 +147,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onStop() {
         super.onStop();
-        SessionManager session = SessionManager.getInstance();
-        HashMap<String, String> user = session.getUserDetails();
-        String userId = user.get(SessionManager.KEY_ID);
-        NotificationHelper.pubnub.unsubscribe("message_" + userId);
+
+        unsubscribePubnup();
     }
 
     @Override
     protected void onDestroy() {
+        fragmentMap.clear();
+
         unregisterReceiver(mCheckInCheckOutReceiver);
 
         LocationCheckinHelper.getInstance().cancelLocationUpdates(MainActivity.this);
@@ -292,6 +292,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         dialogFragment.dismissAllowingStateLoss();
     }
 
+    @Override
+    public void onLogOut() {
+        unsubscribePubnup();
+        getSession().logoutUser();
+
+        Intent intent = new Intent(MainActivity.this, MainLoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     private void initImageLoader() {
         mImageLoader = ImageLoader.getInstance();
         mOptions = new DisplayImageOptions.Builder()
@@ -390,6 +400,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         } else {
             updateMessagesCount();
         }
+    }
+
+    private void unsubscribePubnup() {
+        SessionManager session = SessionManager.getInstance();
+        HashMap<String, String> user = session.getUserDetails();
+        String userId = user.get(SessionManager.KEY_ID);
+        NotificationHelper.pubnub.unsubscribe("message_" + userId);
     }
 
     private void displayDefaultView() {
