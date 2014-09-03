@@ -28,7 +28,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -45,6 +44,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     public static final int LOAD_MODE_INIT = 1111;
     public static final int LOAD_MODE_CHECK_IN = 9999;
 
+    private final int MIN_CHECKED_IN_USERS = 10;
     private ClubDto mClub;
 
     private ImageLoader mImageLoader;
@@ -106,6 +106,8 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         View viewUserId = view.findViewById(R.id.userId);
         if(viewUserId.getTag() == null) {
+            TextView txtRequiredUsersNumber = (TextView) getView().findViewById(R.id.txtRequiredUsersNumber);
+            showToast(txtRequiredUsersNumber.getText().toString().trim());
             return;
         }
 
@@ -347,13 +349,11 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
             return;
         }
 
-        String currentUserId = getSession().getUserDetails().get(SessionManager.KEY_ID);
-        GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
-        ProfileAdapter profileAdapter = new ProfileAdapter(getActivity(), users, currentUserId, ProfileAdapter.MODE_GRID);
-        gridUsers.setAdapter(profileAdapter);
+        boolean isLoadingEnabled = true;
 
         //check checked-in users count
-        if(users.size() < 10) {
+        if(users.size() < MIN_CHECKED_IN_USERS) {
+            isLoadingEnabled = false;
             view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.VISIBLE);
 
             if(!users.isEmpty()) {
@@ -372,6 +372,19 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
                     }
                 }
             }
+
+            int requeredUsersNumber = MIN_CHECKED_IN_USERS - users.size();
+            TextView txtRequiredUsersNumber = (TextView) view.findViewById(R.id.txtRequiredUsersNumber);
+            txtRequiredUsersNumber.setText(String.format(getString(R.string.profile_pictures_will_be_visible), requeredUsersNumber));
+
+            while(users.size() < MIN_CHECKED_IN_USERS) {
+                users.add(new CheckInUserDto());
+            }
         }
+
+        String currentUserId = getSession().getUserDetails().get(SessionManager.KEY_ID);
+        GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
+        ProfileAdapter profileAdapter = new ProfileAdapter(getActivity(), users, currentUserId, ProfileAdapter.MODE_GRID, isLoadingEnabled);
+        gridUsers.setAdapter(profileAdapter);
     }
 }

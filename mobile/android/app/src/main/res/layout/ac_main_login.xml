@@ -35,13 +35,22 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_btn_blue"
             android:text="@string/sing_in_with_facebook"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="8dp"
             android:textSize="@dimen/text_size_medium"
             android:textColor="@android:color/white"
             android:drawableLeft="@drawable/ic_sign_up_by_facebook"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:paddingLeft="4dp"
-            android:paddingRight="4dp"/>
+            android:paddingRight="48dp"/>
+
+        <com.nl.clubbook.ui.view.TitilliumRegularTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/we_dont_post_anything_to_facebook"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_small"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="12dp"/>
 
         <com.nl.clubbook.ui.view.TitilliumBoldTextView
             android:id="@+id/txtRegWithEmail"
@@ -52,8 +61,7 @@
             android:layout_marginBottom="12dp"
             android:textSize="@dimen/text_size_medium"
             android:textColor="@android:color/white"
-            android:drawableLeft="@drawable/ic_sign_up_by_email"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:paddingLeft="4dp"
             android:paddingRight="4dp" />
 
@@ -63,12 +71,31 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_btn_violet"
             android:text="@string/log_in"
-            android:drawableLeft="@drawable/ic_login"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:textSize="@dimen/text_size_medium"
             android:textColor="@android:color/white"
             android:paddingLeft="4dp"
-            android:paddingRight="4dp"/>
+            android:paddingRight="4dp"
+            android:layout_marginBottom="24dp"/>
+
+        <com.nl.clubbook.ui.view.TitilliumRegularTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/by_signing_into_clubook_you_agree_with_the"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_small"
+            android:textColor="@android:color/white"/>
+
+        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+            android:id="@+id/txtTermsOfService"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/terms_of_service"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_small"
+            android:textColor="@android:color/white"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"/>
     </LinearLayout>
 
 </LinearLayout>

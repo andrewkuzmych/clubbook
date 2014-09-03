@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.facebook.Session;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
+import com.nl.clubbook.fragment.SettingsFragment;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.sromku.simple.fb.Permission;
@@ -97,6 +99,9 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
             case R.id.txtLogin:
                 onBtnLoginClicked();
                 break;
+            case R.id.txtTermsOfService:
+                onTxtTermsOfServiceClicked();
+                break;
         }
     }
 
@@ -104,6 +109,7 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
         findViewById(R.id.txtLoginFacebook).setOnClickListener(MainLoginActivity.this);
         findViewById(R.id.txtRegWithEmail).setOnClickListener(MainLoginActivity.this);
         findViewById(R.id.txtLogin).setOnClickListener(MainLoginActivity.this);
+        findViewById(R.id.txtTermsOfService).setOnClickListener(MainLoginActivity.this);
     }
 
     private void onBtnFacebookLoginClicked() {
@@ -124,6 +130,11 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
     private void onBtnRegClicked() {
         Intent intent = new Intent(getApplicationContext(), RegActivity.class);
         startActivity(intent);
+    }
+
+    private void onTxtTermsOfServiceClicked() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(SettingsFragment.URL_TEMPS_OF_SERVICE));
+        startActivity(Intent.createChooser(browserIntent, getString(R.string.open_in)));
     }
 
     private void onBtnLoginClicked() {

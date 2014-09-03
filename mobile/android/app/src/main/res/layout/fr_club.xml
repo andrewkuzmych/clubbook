@@ -181,6 +181,7 @@
                 android:paddingBottom="8dp"/>
 
             <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                android:id="@+id/txtRequiredUsersNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/grey"

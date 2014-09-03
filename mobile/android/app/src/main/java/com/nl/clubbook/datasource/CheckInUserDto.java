@@ -5,7 +5,9 @@ package com.nl.clubbook.datasource;
  */
 public class CheckInUserDto {
 
-    private String id;
+    public static String DEFAULT_ID = "-100";
+
+    private String id = DEFAULT_ID;
     private String name;
     private String gender;
     private String avatarUrl;

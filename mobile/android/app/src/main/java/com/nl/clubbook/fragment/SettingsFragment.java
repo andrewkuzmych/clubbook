@@ -21,8 +21,9 @@ import com.sromku.simple.fb.listeners.OnLogoutListener;
 public class SettingsFragment extends BaseFragment implements View.OnClickListener,
         CompoundButton.OnCheckedChangeListener, MessageDialog.MessageDialogListener {
 
+    public static final String URL_TEMPS_OF_SERVICE = "http://clubbookapp.herokuapp.com/terms";
+
     private final String FEEDBACK_EMAIL = "feedback@clubbook.com";
-    private final String URL_TEMPS_OF_SERVICE = "http://clubbookapp.herokuapp.com/terms";
     private final String URL_PRIVACY_POLICY = "http://clubbookapp.herokuapp.com/privacy";
 
     private SimpleFacebook mSimpleFacebook;
