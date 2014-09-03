@@ -19,7 +19,7 @@ import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.FriendDto;
 import com.nl.clubbook.datasource.UserPhotoDto;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
-import com.nl.clubbook.helper.*;
+import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.ui.view.HorizontalListView;
 import com.nl.clubbook.ui.view.ViewPagerBulletIndicatorView;
 import com.nl.clubbook.utils.L;

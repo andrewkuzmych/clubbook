@@ -15,11 +15,11 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.datasource.UserPhotoDto;
+import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.ImageUploader;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.helper.UiHelper;
-import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.nl.clubbook.utils.ParseUtils;
 import com.nl.clubbook.utils.UIUtils;
@@ -31,12 +31,11 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-public class EditProfileActivity extends BaseDateActivity implements View.OnClickListener {
+public class EditProfileActivity extends BaseDateActivity implements View.OnClickListener,
+        MessageDialog.MessageDialogListener {
 
     public static final int REQUEST_CODE = 6364;
 
@@ -93,6 +92,16 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPositiveButtonClick(MessageDialog dialogFragment) {
+        removeImage();
+    }
+
+    @Override
+    public void onNegativeButtonClick(MessageDialog dialogFragment) {
+        dialogFragment.dismissAllowingStateLoss();
     }
 
     private void initView() {
@@ -400,6 +409,11 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
     }
 
     private void onDeleteImageClicked() {
-        removeImage();
+        showMessageDialog(
+                getString(R.string.app_name),
+                getString(R.string.are_you_sure_you_want_delete_this_photo),
+                getString(R.string.delete),
+                getString(R.string.cancel)
+        );
     }
 }

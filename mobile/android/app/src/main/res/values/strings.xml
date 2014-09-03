@@ -122,7 +122,7 @@
     <string name="default_about_me">Hi, I\'m using Clubbook.</string>
     <string name="user_with_this_email_has_already_exist">User with this email has already exist</string>
     <string name="you_must_be_18_age_to_be_able_use_clubbook">You must be 18+ age to be able use Clubbook</string>
-    <string name="are_you_sure_you_want_unfriend_this_user">Are you sure you want to ‘Unfriend' this user?</string>
+    <string name="are_you_sure_you_want_unfriend_this_user">Are you sure you want to \'Unfriend\' this user?</string>
     <string name="removing_friend">Removing Friend</string>
     <string name="request_pending">Request\nPending</string>
     <string name="profile_pictures_will_be_visible">Profile pictures will be visible when %d users more are checked-in</string>
@@ -131,5 +131,6 @@
     <string name="we_dont_post_anything_to_facebook">We don\'t post anything to Facebook</string>
     <string name="by_signing_into_clubook_you_agree_with_the">By Signing into Clubbook, you agree with the</string>
     <string name="open_in">Open in&#8230;</string>
+    <string name="are_you_sure_you_want_delete_this_photo">Are you sure you want to Delete this photo?</string>
 
 </resources>

@@ -291,6 +291,8 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     }
 
     private void onUserProfileClicked(String userId) {
+        KeyboardUtils.closeKeyboard(getActivity(), getView().findViewById(R.id.messageInput));
+
         Fragment fragment = ProfileFragment.newInstance(ChatFragment.this, userId, null, ProfileFragment.OPEN_FROM_CHAT);
         openFragment(fragment, ProfileFragment.class);
     }
