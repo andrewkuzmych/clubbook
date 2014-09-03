@@ -40,7 +40,7 @@ public class NavDrawerData {
     }
 
     public static final int[] DRAWER_TITLES_RESOURCES = new int[] {
-            R.string.club_list,
+            R.string.clubs,
             R.string.messages,
             R.string.friends,
             R.string.share,

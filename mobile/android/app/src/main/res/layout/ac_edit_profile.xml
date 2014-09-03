@@ -115,7 +115,7 @@
                 android:layout_marginRight="16dp"
                 android:clickable="true"
                 android:focusable="false"
-                android:hint="@string/birth_date"
+                android:hint="@string/birthday"
                 android:inputType="date"
                 android:minHeight="48dp"
                 android:textColor="@color/grey" />

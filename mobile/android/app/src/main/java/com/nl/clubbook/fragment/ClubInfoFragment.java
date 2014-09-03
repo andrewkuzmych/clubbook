@@ -169,7 +169,6 @@ public class ClubInfoFragment extends Fragment implements ViewPager.OnPageChange
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
 
-        L.e("day of week - " + calendar.get(Calendar.DAY_OF_WEEK));
         int calendarDayOfWeekIndex =  calendar.get(Calendar.DAY_OF_WEEK);
 
         LinearLayout holderWorkingHours = (LinearLayout)view.findViewById(R.id.holderWorkingHours);

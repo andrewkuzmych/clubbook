@@ -89,7 +89,7 @@ public class FriendsFragment extends BaseFragment implements ViewPager.OnPageCha
         mTabHost.setup();
 
         mTabHost.addTab(newTabSpec(mTabHost, getString(R.string.friends)));
-        mTabHost.addTab(newTabSpec(mTabHost, getString(R.string.pending)));
+        mTabHost.addTab(newTabSpec(mTabHost, getString(R.string.requests)));
 
         mTabHost.setOnTabChangedListener(this);
 

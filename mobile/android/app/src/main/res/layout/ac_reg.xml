@@ -73,7 +73,7 @@
                 android:textColor="@color/grey"
                 android:clickable="true"
                 android:focusable="false"
-                android:hint="@string/birth_date"
+                android:hint="@string/birthday"
                 android:inputType="date"/>
 
             <Spinner

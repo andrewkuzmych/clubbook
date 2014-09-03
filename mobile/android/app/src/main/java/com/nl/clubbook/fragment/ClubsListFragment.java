@@ -38,7 +38,7 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initActionBarTitle(getString(R.string.club_list));
+        initActionBarTitle(getString(R.string.clubs));
         initView();
     }
 
@@ -47,7 +47,7 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
         super.onHiddenChanged(hidden);
 
         if(!hidden) {
-            initActionBarTitle(getString(R.string.club_list));
+            initActionBarTitle(getString(R.string.clubs));
         }
     }
 

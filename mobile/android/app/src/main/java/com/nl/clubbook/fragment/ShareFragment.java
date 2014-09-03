@@ -21,7 +21,7 @@ public class ShareFragment extends BaseFragment implements View.OnClickListener{
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initActionBarTitle(getString(R.string.club_list));
+        initActionBarTitle(getString(R.string.clubs));
         initView();
     }
 

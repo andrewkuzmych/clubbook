@@ -307,15 +307,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.listDrawer);
         mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout,
-                R.drawable.ic_drawer,  R.string.app_name, R.string.app_name) { //TODO
+                R.drawable.ic_drawer,  R.string.drawer_open, R.string.drawer_close) {
             public void onDrawerClosed(View view) {
-//                getSupportActionBar().setTitle("Settings");
-//                invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
-//                getSupportActionBar().setTitle("Settings1");
-//                invalidateOptionsMenu();
             }
         };
         navDrawerItems = NavDrawerData.getNavDrawerItems(MainActivity.this);
@@ -522,7 +518,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void onImgCheckOutClicked() {
         showMessageDialog(
                 getString(R.string.check_out),
-                getString(R.string.check_out_from_this_club),
+                getString(R.string.are_you_sure_you_want_to_check_out),
                 getString(R.string.check_out),
                 getString(R.string.cancel)
         );

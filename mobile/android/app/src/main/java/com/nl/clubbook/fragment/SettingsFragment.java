@@ -145,7 +145,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 SettingsFragment.this,
                 MESSAGE_DIALOG_ACTION_DELETE_ACCOUNT,
                 getString(R.string.app_name),
-                getString(R.string.are_you_sure_you_want_delete_your_profile),
+                getString(R.string.are_you_sure_you_want_delete_your_account),
                 getString(R.string.delete),
                 getString(R.string.cancel)
         );
@@ -156,7 +156,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 SettingsFragment.this,
                 MESSAGE_DIALOG_ACTION_LOG_OUT,
                 getString(R.string.log_out),
-                getString(R.string.log_out_now),
+                getString(R.string.are_you_sure_you_want_to_log_out),
                 getString(R.string.log_out),
                 getString(R.string.cancel)
         );

@@ -447,7 +447,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         showMessageDialog(
                 ProfileFragment.this,
                 getString(R.string.remove_friend),
-                getString(R.string.remove_friend_from_your_friend_list),
+                getString(R.string.are_you_sure_you_want_unfriend_this_user),
                 getString(R.string.remove),
                 getString(R.string.cancel)
         );
