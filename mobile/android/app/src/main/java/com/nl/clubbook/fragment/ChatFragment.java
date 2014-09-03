@@ -25,6 +25,7 @@ import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.CalendarUtils;
 import com.nl.clubbook.utils.KeyboardUtils;
 import com.nl.clubbook.utils.L;
+import com.nl.clubbook.utils.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -181,6 +182,11 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     }
 
     private void sendMessageTemp(String type, String messages) {
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
         if(!isSendingMessagesEnabled()) {
             Toast.makeText(getActivity(), R.string.you_cannot_send_three_messages_without_reply, Toast.LENGTH_SHORT).show();
             return;
@@ -217,6 +223,11 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     }
 
     private void sendMessage() {
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
         if(!isSendingMessagesEnabled()) {
             Toast.makeText(getActivity(), R.string.you_cannot_send_three_messages_without_reply, Toast.LENGTH_SHORT).show();
             return;
@@ -285,6 +296,11 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     }
 
     private void loadConversation() {
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
         setLoading(true);
 
         DataStore.getConversation(getActivity(), mUserFromId, mUserToId, mAccessToken, new DataStore.OnResultReady() {
@@ -294,12 +310,14 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                     return;
                 }
 
-                if (failed) {
+                View view = getView();
+                if(view == null) {
                     return;
                 }
 
-                View view = getView();
-                if(view == null) {
+                if (failed) {
+                    showToast(R.string.something_went_wrong_please_try_again);
+                    view.findViewById(R.id.progressBar).setVisibility(View.GONE);
                     return;
                 }
 
