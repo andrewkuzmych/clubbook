@@ -1,6 +1,9 @@
 package com.nl.clubbook.fragment;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -23,6 +26,7 @@ import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.JSONConverter;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.*;
+import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -100,6 +104,9 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
             case R.id.holderClubInfo:
                 onHolderClubInfoClicked();
                 break;
+            case R.id.txtDistance:
+                onDistanceClicked();
+                break;
         }
     }
 
@@ -158,6 +165,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
         view.findViewById(R.id.txtCheckIn).setOnClickListener(this);
         view.findViewById(R.id.holderClubInfo).setOnClickListener(this);
+        view.findViewById(R.id.txtDistance).setOnClickListener(this);
 
         GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
         gridUsers.setOnItemClickListener(ClubFragment.this);
@@ -262,6 +270,26 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         intent.putExtra(ClubInfoActivity.EXTRA_CLUB, JSONConverter.newClub(mClub).toString());
         intent.putExtra(ClubInfoActivity.EXTRA_TITLE, mClub.getTitle());
         startActivity(intent);
+    }
+
+    private void onDistanceClicked() {
+        Location location = LocationCheckinHelper.getInstance().getCurrentLocation();
+        if(location == null) {
+            return;
+        }
+
+        double myLat = location.getLatitude();
+        double myLong = location.getLongitude();
+        double clubLat = mClub.getLat();
+        double clubLong = mClub.getLon();
+
+        try {
+            Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                    Uri.parse("http://maps.google.com/maps?saddr=" + myLat + "," + myLong + "&daddr=" + clubLat + "," + clubLong));
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            L.i("" + e);
+        }
     }
 
     private void setProgressViewState(int mode, boolean isLoading) {
