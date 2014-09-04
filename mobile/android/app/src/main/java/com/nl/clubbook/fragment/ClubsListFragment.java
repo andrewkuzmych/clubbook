@@ -99,12 +99,16 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
 
             @Override
             public void onReady(Object result, boolean failed) {
-                if (failed) {
-                    mSwipeRefreshLayout.setRefreshing(false);
+                if(isDetached() || getActivity() == null) {
+                    L.i("fragment_is_detached");
                     return;
                 }
-                // hide progress
+
                 mSwipeRefreshLayout.setRefreshing(false);
+                if (failed) {
+                    showToast(R.string.something_went_wrong_please_try_again);
+                    return;
+                }
 
                 List<ClubDto> places = (List<ClubDto>) result;
                 mClubsAdapter.updateData(places);

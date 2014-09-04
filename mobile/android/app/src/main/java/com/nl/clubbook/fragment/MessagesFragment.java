@@ -24,8 +24,7 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
     private ChatFragment mChatFragment;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fr_messages, null);
     }
 
@@ -77,7 +76,7 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
                         mSwipeRefreshLayout.setRefreshing(false);
 
                         if (failed) {
-                            showNoInternetActivity();
+                            showToast(R.string.something_went_wrong_please_try_again);
                             return;
                         }
 

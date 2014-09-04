@@ -14,6 +14,7 @@ import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.L;
+import com.nl.clubbook.utils.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,6 +62,11 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
             return;
         }
 
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
         final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
@@ -72,18 +78,14 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
                     @Override
                     public void onReady(Object result, boolean failed) {
                         View view = getView();
-                        if (view == null || isDetached()) {
+                        if (view == null || isDetached() || getActivity() == null) {
                             return;
                         }
 
                         mSwipeRefreshLayout.setRefreshing(false);
 
                         if (failed) {
-                            if (getActivity() != null) {
-                                showNoInternetActivity();
-                            } else {
-                                L.i("getActivity is null");
-                            }
+                            showToast(R.string.something_went_wrong_please_try_again);
                             return;
                         }
 
