@@ -1,6 +1,5 @@
 package com.nl.clubbook.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -65,17 +64,6 @@ public class BaseActivity extends ActionBarActivity {
         fTransaction.commitAllowingStateLoss();
     }
 
-    public void hideProgressDialog(boolean showContent) {
-        isProgressShow = false;
-
-        hideProgressDialog();
-
-        // there is error. Show error view.
-        if (!showContent) {
-            showNoInternetActivity();
-        }
-    }
-
     protected void hideProgressDialog() {
         DialogFragment progressDialog = (DialogFragment) getSupportFragmentManager().findFragmentByTag(ProgressDialog.TAG);
         if(progressDialog != null) {
@@ -89,12 +77,6 @@ public class BaseActivity extends ActionBarActivity {
 
     protected void showToast(String message) {
         Toast.makeText(BaseActivity.this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    protected void showNoInternetActivity() {
-        Intent i = new Intent(getApplicationContext(), NoInternetActivity.class);
-        startActivity(i);
-        finish();
     }
 
     protected void initActionBar(int stringResourceId) {

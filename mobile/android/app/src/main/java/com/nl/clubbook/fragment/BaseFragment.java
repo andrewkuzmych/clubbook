@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
-import com.nl.clubbook.activity.NoInternetActivity;
 import com.nl.clubbook.activity.NoLocationActivity;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;

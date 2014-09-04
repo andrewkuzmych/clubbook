@@ -61,9 +61,6 @@
             android:name=".activity.ClubInfoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.NoInternetActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.EditProfileActivity"
             android:screenOrientation="portrait" />
         <activity

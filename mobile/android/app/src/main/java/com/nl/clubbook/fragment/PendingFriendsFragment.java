@@ -135,10 +135,15 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
     }
 
     private void onAcceptClicked(String friendId) {
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
         final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
-        ((BaseActivity) getActivity()).showProgressDialog("Loading...");
+        showProgress(getString(R.string.loading));
 
         DataStore.acceptFriendRequest(user.get(SessionManager.KEY_ID), friendId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
                 new DataStore.OnResultReady() {
@@ -150,11 +155,10 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
                             return;
                         }
 
+                        hideProgress();
                         if (failed) {
-                            ((BaseActivity) getActivity()).hideProgressDialog(false);
+                            showToast(R.string.something_went_wrong_please_try_again);
                         } else {
-                            ((BaseActivity) getActivity()).hideProgressDialog(true);
-
                             refreshFriends();
                         }
                     }
@@ -172,10 +176,15 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
     }
 
     private void onDeclineClicked(String friendId) {
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
         final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
-        ((BaseActivity) getActivity()).showProgressDialog("Loading...");
+        showProgress(getString(R.string.loading));
 
         String userId = user.get(SessionManager.KEY_ID);
         String accessToken = user.get(SessionManager.KEY_ACCESS_TOCKEN);
@@ -188,11 +197,10 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
                     return;
                 }
 
+                hideProgress();
                 if (failed) {
-                    ((BaseActivity) getActivity()).hideProgressDialog(false);
+                    showToast(R.string.something_went_wrong_please_try_again);
                 } else {
-                    ((BaseActivity) getActivity()).hideProgressDialog(true);
-
                     doLoadPendingFriends();
                 }
             }
