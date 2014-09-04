@@ -28,13 +28,24 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp">
 
-                <com.nl.clubbook.ui.view.CircleImageView
-                    android:id="@+id/imgAvatar"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/ic_add_photo_register"
-                    android:scaleType="centerCrop" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/imgAvatar"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/ic_add_photo_register"
+                        android:scaleType="centerCrop" />
+
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/ic_avatar_frame"
+                        android:scaleType="fitCenter" />
+
+                </RelativeLayout>
 
                 <com.nl.clubbook.ui.view.TitilliumRegularEditText
                     android:id="@+id/editName"
@@ -43,7 +54,7 @@
                     android:minHeight="48dp"
                     android:textColor="@color/grey"
                     android:hint="@string/first_name"
-                    android:inputType="text"
+                    android:inputType="textPersonName"
                     android:layout_marginLeft="16dp"/>
             </LinearLayout>
 

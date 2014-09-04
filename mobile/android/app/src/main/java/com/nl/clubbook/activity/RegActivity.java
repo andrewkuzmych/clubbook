@@ -2,8 +2,7 @@ package com.nl.clubbook.activity;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,21 +10,15 @@ import android.widget.*;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
-import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.ImageUploader;
 import com.nl.clubbook.helper.UiHelper;
 import com.nl.clubbook.helper.UserEmailFetcher;
 import com.nl.clubbook.helper.Validator;
-import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.nl.clubbook.utils.ParseUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.Calendar;
 
 /**
@@ -95,7 +88,7 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
         EditText editEmail = (EditText) findViewById(R.id.editEmail);
         editEmail.setText(UserEmailFetcher.getEmail(RegActivity.this));
 
-        UiHelper.createGenderSpinner((Spinner) findViewById(R.id.spinGender), this, "male");
+        UiHelper.createGenderSpinner((Spinner) findViewById(R.id.spinGender), this, getString(R.string.male));
         UiHelper.createCountrySpinner((Spinner) findViewById(R.id.spinCountry), this, getString(R.string.Netherlands));
     }
 
@@ -107,42 +100,23 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
             }
 
             @Override
-            public void onImageSelected(final JSONObject imageObj) throws JSONException {
-                L.d("avatar is selected: " + imageObj.getString("public_id"));
+            public void onImageSelected(Bitmap bitmap) {
+                if(bitmap != null) {
+                    ImageView imgAvatar = (ImageView)findViewById(R.id.imgAvatar);
+                    imgAvatar.setImageBitmap(bitmap);
+                } else {
+                    showToast(R.string.something_went_wrong_please_try_again);
+                }
+            }
 
-                new AsyncTask<Void, Void, Drawable>() {
-
-                    @Override
-                    protected Drawable doInBackground(Void... params) {
-                        Drawable buttonBg = null;
-
-                        try {
-                            String url = ImageHelper.getProfileImage(imageObj.getString("url"));
-                            InputStream is = (InputStream) new URL(url).getContent();
-                            buttonBg = Drawable.createFromStream(is, null);
-                        } catch (IOException e) {
-                            L.i("" + e);
-                        } catch (JSONException e) {
-                            L.i("" + e);
-                        }
-
-                        return buttonBg;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Drawable drawable) {
-                        hideProgressDialog(true);
-
-                        if(drawable == null) {
-                            showNoInternetActivity();
-                            return;
-                        }
-
-                        ImageView imgAvatar = (ImageView)findViewById(R.id.imgAvatar);
-                        imgAvatar.setImageDrawable(drawable);
-                        avatar = imageObj;
-                    }
-                }.execute();
+            @Override
+            public void onImageUploaded(final JSONObject imageObj) {
+                if(imageObj == null) {
+                    showToast(R.string.something_went_wrong_please_try_again);
+                } else {
+                    avatar = imageObj;
+                    doRegistration();
+                }
             }
         };
     }
@@ -153,6 +127,15 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
     }
 
     private void onBtnRegisterClicked() {
+        if(!NetworkUtils.isOn(RegActivity.this)) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
+        imageUploader.uploadImage();
+    }
+
+    private void doRegistration() {
         if(!isDataValid()) {
             return;
         }
@@ -196,8 +179,8 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
                         showToast(R.string.something_went_wrong_please_try_again);
                     } else {
                         showMessageDialog(getString(R.string.error), getString(R.string.user_with_this_email_has_already_exist));
-                        return;
                     }
+                    return;
                 }
 
                 UserDto user = (UserDto) result;

@@ -7,8 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.content.res.AssetFileDescriptor;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,7 +25,7 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.utils.L;
 
-import org.json.JSONException;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
@@ -48,6 +51,7 @@ public abstract class ImageUploader {
     private static final int PICK_FROM_FILE = 3;
 
     private BaseActivity mActivity;
+    private ImageIntentData mImageData = new ImageIntentData();
 
     public Activity getActivity() {
         return mActivity;
@@ -58,13 +62,15 @@ public abstract class ImageUploader {
     }
 
     public ImageUploader(BaseActivity activity) {
-        setActivity(activity);
-        cloudinary = new Cloudinary(getActivity().getApplicationContext());
+        mActivity = activity;
+        cloudinary = new Cloudinary(mActivity.getApplicationContext());
     }
 
     public abstract void startActivityForResultHolder(android.content.Intent intent, int requestCode);
 
-    public abstract void onImageSelected(JSONObject imageObj) throws JSONException;
+    public abstract void onImageSelected(@Nullable Bitmap bitmap);
+
+    public abstract void onImageUploaded(@Nullable JSONObject imageObj);
 
     public AlertDialog selectPhoto() {
         final String[] items = new String[] {
@@ -72,8 +78,8 @@ public abstract class ImageUploader {
                 mActivity.getString(R.string.select_from_gallery)
         };
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, items);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mActivity, android.R.layout.select_dialog_item, items);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 
         builder.setTitle(mActivity.getString(R.string.select_image));
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
@@ -90,7 +96,7 @@ public abstract class ImageUploader {
                     startActivityForResultHolder(intent, PICK_FROM_CAMERA);
 
                 } else {
-                    //pick from file
+                    //pick from gallery
                     Intent intent = new Intent();
 
                     intent.setType("image/*");
@@ -112,17 +118,18 @@ public abstract class ImageUploader {
             return;
         }
 
-        switch (requestCode) {
-            case PICK_FROM_CAMERA:
-                doCrop();
-                break;
-            case PICK_FROM_FILE:
-                pickFromFile(imageReturnedIntent);
-                break;
-            case CROP_FROM_CAMERA:
-                cropFromCamera(imageReturnedIntent);
-                break;
+        if(requestCode == PICK_FROM_CAMERA) {
+            doCrop();
+        } else {
+            decodeStream(requestCode, imageReturnedIntent);
+        }
+    }
 
+    public void uploadImage() {
+        if(mImageData.requestCode == PICK_FROM_FILE) {
+            pickFromFile(mImageData.imgIntent);
+        } else {
+            cropFromCamera(mImageData.imgIntent);
         }
     }
 
@@ -132,12 +139,12 @@ public abstract class ImageUploader {
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setType("image/*");
 
-        List<ResolveInfo> list = getActivity().getPackageManager().queryIntentActivities(intent, 0);
+        List<ResolveInfo> list = mActivity.getPackageManager().queryIntentActivities(intent, 0);
 
         int size = list.size();
 
         if (size == 0) {
-            Toast.makeText(getActivity(), mActivity.getString(R.string.can_not_find_image_crop_app), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, mActivity.getString(R.string.can_not_find_image_crop_app), Toast.LENGTH_SHORT).show();
         } else {
             intent.setData(mImageCaptureUri);
 
@@ -159,8 +166,8 @@ public abstract class ImageUploader {
                 for (ResolveInfo res : list) {
                     final CropOption cropOption = new CropOption();
 
-                    cropOption.title = getActivity().getPackageManager().getApplicationLabel(res.activityInfo.applicationInfo);
-                    cropOption.icon = getActivity().getPackageManager().getApplicationIcon(res.activityInfo.applicationInfo);
+                    cropOption.title = mActivity.getPackageManager().getApplicationLabel(res.activityInfo.applicationInfo);
+                    cropOption.icon = mActivity.getPackageManager().getApplicationIcon(res.activityInfo.applicationInfo);
                     cropOption.appIntent = new Intent(intent);
 
                     cropOption.appIntent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
@@ -168,10 +175,10 @@ public abstract class ImageUploader {
                     cropOptions.add(cropOption);
                 }
 
-                CropOptionAdapter adapter = new CropOptionAdapter(getActivity().getApplicationContext(), cropOptions);
+                CropOptionAdapter adapter = new CropOptionAdapter(mActivity.getApplicationContext(), cropOptions);
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Choose Crop App");
+                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                builder.setTitle(mActivity.getString(R.string.choose_crop_app));
                 builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         startActivityForResultHolder(cropOptions.get(item).appIntent, CROP_FROM_CAMERA);
@@ -183,7 +190,7 @@ public abstract class ImageUploader {
                     public void onCancel(DialogInterface dialog) {
 
                         if (mImageCaptureUri != null) {
-                            getActivity().getContentResolver().delete(mImageCaptureUri, null, null);
+                            mActivity.getContentResolver().delete(mImageCaptureUri, null, null);
                             mImageCaptureUri = null;
                         }
                     }
@@ -223,8 +230,8 @@ public abstract class ImageUploader {
                     InputStream is = new ByteArrayInputStream(stream.toByteArray());
                     imageObj = cloudinary.uploader().upload(is, Cloudinary.asMap("format", "jpg"));
 
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                } catch (Exception e) {
+                    L.i("" + e);
                 }
 
                 return imageObj;
@@ -232,15 +239,7 @@ public abstract class ImageUploader {
 
             @Override
             protected void onPostExecute(JSONObject result) {
-                if (result == null) {
-                    return;
-                }
-
-                try {
-                    onImageSelected(result);
-                } catch (JSONException e) {
-                    L.i("" + e);
-                }
+                onImageUploaded(result);
             }
         }.execute();
     }
@@ -266,7 +265,7 @@ public abstract class ImageUploader {
                     try {
                         imageObj = cloudinary.uploader().upload(is, Cloudinary.asMap("width", "1000", "height", "1000", "crop", "limit", "format", "jpg"));
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        L.i("" + e);
                     }
 
                     return imageObj;
@@ -280,13 +279,7 @@ public abstract class ImageUploader {
                         f.delete();
                     }
 
-                    if(result != null) {
-                        try {
-                            onImageSelected(result);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    onImageUploaded(result);
                 }
             }.execute();
 
@@ -314,7 +307,7 @@ public abstract class ImageUploader {
         options.inSampleSize = 5;
         AssetFileDescriptor fileDescriptor = null;
         try {
-            fileDescriptor = getActivity().getContentResolver().openAssetFileDescriptor(selectedImage, "r");
+            fileDescriptor = mActivity.getContentResolver().openAssetFileDescriptor(selectedImage, "r");
         } catch (FileNotFoundException e) {
             L.i("" + e);
         } finally {
@@ -323,11 +316,132 @@ public abstract class ImageUploader {
                     bm = BitmapFactory.decodeFileDescriptor(fileDescriptor.getFileDescriptor(), null, options);
                     fileDescriptor.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    L.i("" + e);
                 }
             }
         }
         return bm;
     }
 
+    private void decodeStream(final int requestCode, final Intent data) {
+        new AsyncTask<Void, Void, Bitmap>() {
+            @Override
+            protected Bitmap doInBackground(Void... params) {
+
+                if(requestCode == CROP_FROM_CAMERA) {
+                    return getBitmapFromCamera(data);
+                } else {
+                    return getBitmapFromFile(data);
+                }
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                if(bitmap != null) {
+                    mImageData.requestCode = requestCode;
+                    mImageData.imgIntent = data;
+                }
+
+                onImageSelected(bitmap);
+            }
+        }.execute();
+    }
+
+    private Bitmap getBitmapFromCamera(Intent data) {
+        Bundle extras = data.getExtras();
+
+        return extras.getParcelable("data");
+    }
+
+    private Bitmap getBitmapFromFile(Intent data) {
+        String filePath = getFilePath(data);
+
+        if(filePath != null) {
+            Bitmap result =  decodeSampledBitmapFromFile(filePath, 400, 400);
+
+            try {
+                ExifInterface exif = new ExifInterface(filePath);
+                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+
+                if(orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                    Matrix matrix = new Matrix();
+                    matrix.postRotate(270);
+                    result = Bitmap.createBitmap(result, 0, 0, result.getWidth(), result.getHeight(), matrix, true);
+                }else if(orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+                    Matrix matrix = new Matrix();
+                    matrix.postRotate(180);
+                    result = Bitmap.createBitmap(result, 0, 0, result.getWidth(), result.getHeight(), matrix, true);
+                } else if(orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+                    Matrix matrix = new Matrix();
+                    matrix.postRotate(90);
+                    result = Bitmap.createBitmap(result, 0, 0, result.getWidth(), result.getHeight(), matrix, true);
+                }
+            } catch (IOException e) {
+                L.i("" + e);
+            }
+
+            return result;
+        } else {
+            return null;
+        }
+    }
+
+    private Bitmap decodeSampledBitmapFromFile(String filePath, int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(filePath, options);
+    }
+
+    private int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
+
+    private String getFilePath(Intent data) {
+        Uri selectedImage = data.getData();
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+        Cursor cursor = mActivity.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+
+        String filePath = null;
+        if(cursor.moveToFirst()) {
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            filePath = cursor.getString(columnIndex);
+            cursor.close();
+        }
+
+        return filePath;
+    }
+
+    private class ImageIntentData {
+        int requestCode;
+        Intent imgIntent;
+    }
 }

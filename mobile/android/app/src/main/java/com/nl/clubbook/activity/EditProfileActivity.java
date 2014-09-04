@@ -2,6 +2,7 @@ package com.nl.clubbook.activity;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +29,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
-import org.json.JSONException;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -199,8 +200,13 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
             }
 
             @Override
-            public void onImageSelected(JSONObject imageObj) throws JSONException {
+            public void onImageUploaded(JSONObject imageObj) {
                 addImage(imageObj);
+            }
+
+            @Override
+            public void onImageSelected(@Nullable Bitmap bitmap) {
+                uploadImage();
             }
         };
     }
