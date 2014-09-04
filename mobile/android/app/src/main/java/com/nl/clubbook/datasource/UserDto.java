@@ -23,6 +23,7 @@ public class UserDto {
     protected String country;
     protected String bio;
     protected String accessToken;
+    protected boolean isNotificationEnabled;
     protected CheckInDto lastCheckIn;
     protected List<UserPhotoDto> photos;
 
@@ -31,33 +32,27 @@ public class UserDto {
     }
 
     protected UserDto(JSONObject userJson) {
-        this.setId(userJson.optString("_id"));
-        if (userJson.has("fb_id"))
-            this.setFb_id(userJson.optString("fb_id"));
-        this.setName(userJson.optString("name"));
-        if (userJson.has("email"))
-            this.setEmail(userJson.optString("email"));
-        this.setGender(userJson.optString("gender"));
-        if (userJson.has("dob_format"))
-            this.setDob(userJson.optString("dob_format"));
-        if (userJson.has("age") && userJson.optString("age") != "null")
-            this.setAge(userJson.optString("age"));
-        if (userJson.has("country"))
-            this.setCountry(userJson.optString("country"));
-        if (userJson.has("bio"))
-            this.setBio(userJson.optString("bio"));
-        if (userJson.has("access_token"))
-            this.setAccessToken(userJson.optString("access_token"));
+        id = userJson.optString("_id");
+        fb_id = userJson.optString("fb_id");
+        name = userJson.optString("name");
+        email = userJson.optString("email");
+        gender = userJson.optString("gender");
+        dob = userJson.optString("dob_format");
+        age = userJson.optString("age");
+        country = userJson.optString("country");
+        bio = userJson.optString("bio");
+        accessToken = userJson.optString("access_token");
+        isNotificationEnabled = userJson.optBoolean("push", true);
 
         JSONArray photosJson = userJson.optJSONArray("photos");
-        List<UserPhotoDto> photos = new ArrayList<UserPhotoDto>();
+        photos = new ArrayList<UserPhotoDto>();
         for (int i = 0; i < photosJson.length(); i++) {
-            if (photosJson.optJSONObject(i).optBoolean("profile"))
-                this.setAvatar(photosJson.optJSONObject(i).optString("url"));
+            if (photosJson.optJSONObject(i).optBoolean("profile")) {
+                avatar = photosJson.optJSONObject(i).optString("url");
+            }
 
             photos.add(new UserPhotoDto(photosJson.optJSONObject(i)));
         }
-        this.setPhotos(photos);
     }
 
     public String getId() {
@@ -172,4 +167,11 @@ public class UserDto {
         this.accessToken = accessToken;
     }
 
+    public boolean isNotificationEnabled() {
+        return isNotificationEnabled;
+    }
+
+    public void setNotificationEnabled(boolean isNotificationEnabled) {
+        this.isNotificationEnabled = isNotificationEnabled;
+    }
 }

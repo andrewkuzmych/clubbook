@@ -60,14 +60,11 @@ public class LoginActivity extends BaseActivity {
                 DataStore.loginByEmail(email, password, new DataStore.OnResultReady() {
                     @Override
                     public void onReady(Object result, boolean failed) {
-                        // show error
+                        hideProgressDialog();
                         if (failed) {
-                            hideProgressDialog(false);
-                            showMessageDialog(getString(R.string.login_failed), getString(R.string.something_went_wrong_please_try_again));
+                            showToast(R.string.something_went_wrong_please_try_again);
                             return;
                         }
-
-                        hideProgressDialog(true);
 
                         if (result == null) {
                             showMessageDialog(getString(R.string.login_failed), getString(R.string.incorrect_credentials));

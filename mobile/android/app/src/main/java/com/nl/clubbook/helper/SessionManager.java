@@ -123,7 +123,7 @@ public class SessionManager {
     public void updateLoginSession(UserDto user) {
         Editor editor = mPreferences.edit();
 
-        editor.putBoolean(IS_LOGIN, true);
+        editor.putBoolean(KEY_IS_LOGIN, true);
         editor.putString(KEY_ID, user.getId());
         editor.putString(KEY_NAME, user.getName());
         editor.putString(KEY_EMAIL, user.getEmail());
@@ -134,17 +134,18 @@ public class SessionManager {
         editor.putString(KEY_AGE, user.getAge());
         editor.putString(KEY_AVATAR, user.getAvatar());
         editor.putString(KEY_ACCESS_TOCKEN, user.getAccessToken());
+        editor.putBoolean(KEY_IS_NOTIFICATION_ENABLE, user.isNotificationEnabled());
 
         editor.commit();
     }
 
-    public void setConversationListner(String currentConversation) {
+    public void setConversationListener(String currentConversation) {
         Editor editor = mPreferences.edit();
         editor.putString(KEY_CURRENT_CONVERSATION, currentConversation);
         editor.commit();
     }
 
-    public String getConversationListner() {
+    public String getConversationListener() {
         return mPreferences.getString(KEY_CURRENT_CONVERSATION, null);
     }
 
@@ -207,9 +208,6 @@ public class SessionManager {
         editor.commit();
     }
 
-    /**
-     * Clear session details
-     */
     public void logoutUser() {
         // unsubscribe from parse
     	PushService.unsubscribe(mContext, "user_" + getUserDetails().get(KEY_ID));
@@ -219,17 +217,22 @@ public class SessionManager {
         editor.commit();
     }
 
-    public String getValueByKey(String key) {
-        return mPreferences.getString(key, "");
+    public boolean isNotificationEnabled() {
+        return mPreferences.getBoolean(KEY_IS_NOTIFICATION_ENABLE, true);
     }
 
-    /**
-     * Quick check for login
-     * *
-     */
-    // Get Login State
+    public void setNotificationEnabled(boolean isNotificationEnabled) {
+        Editor editor = mPreferences.edit();
+        editor.putBoolean(KEY_IS_NOTIFICATION_ENABLE, isNotificationEnabled);
+        editor.commit();
+    }
+
     public boolean isLoggedIn() {
-        return mPreferences.getBoolean(IS_LOGIN, false);
+        return mPreferences.getBoolean(KEY_IS_LOGIN, false);
+    }
+
+    public String getValueByKey(String key) {
+        return mPreferences.getString(key, "");
     }
 
     /*
@@ -254,7 +257,8 @@ public class SessionManager {
     public static final String KEY_CHECKIN_CLUB_NAME= "checkin_club_name";
     public static final String KEY_CURRENT_CONVERSATION = "current_conversation";
 
-    private static final String IS_LOGIN = "IsLoggedIn";
+    private static final String KEY_IS_LOGIN = "IsLoggedIn";
+    private static final String KEY_IS_NOTIFICATION_ENABLE = "KEY_IS_NOTIFICATION_ENABLE";
 }
 
 

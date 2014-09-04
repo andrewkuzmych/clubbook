@@ -6,19 +6,15 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import com.facebook.Session;
+
 import com.nl.clubbook.R;
 import android.app.NotificationManager;
-import android.app.Notification;
 import android.app.PendingIntent;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.utils.L;
 
-import org.apache.commons.logging.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Iterator;
 
 /**
  * Created by Andrew on 6/13/2014.
@@ -38,7 +34,7 @@ public class MyCustomReceiver extends BroadcastReceiver {
             String msg = json.getString("msg");
 
             SessionManager session = SessionManager.getInstance();
-            String con = session.getConversationListner();
+            String con = session.getConversationListener();
             if(con == null || !con.equalsIgnoreCase(uniqueId)) {
                 int notificationId = (uniqueId).hashCode();
                 generateNotification(context, R.drawable.icon_play, header, msg, type, notificationId);

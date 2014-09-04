@@ -109,7 +109,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         fragmentMap.put(NavDrawerData.CLUB_LIST_POSITION, new ClubsListFragment());
         fragmentMap.put(NavDrawerData.MESSAGES_POSITION, new MessagesFragment());
         fragmentMap.put(NavDrawerData.FRIENDS_POSITION, new FriendsFragment());
-        fragmentMap.put(NavDrawerData.SETTINGS_POSITION, new SettingsFragment());
 
         initImageLoader();
         initActionBar();
@@ -121,10 +120,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onStart() {
         super.onStart();
-        SessionManager session = SessionManager.getInstance();
-        HashMap<String, String> user = session.getUserDetails();
-        String userId = user.get(SessionManager.KEY_ID);
-        subscribeToChannel("message_" + userId);
+
+        subscribePubnup();
     }
 
 
@@ -388,7 +385,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 String userFrom = data.optString("user_from");
 
                 SessionManager session = SessionManager.getInstance();
-                if (session.getConversationListner() != null && session.getConversationListner().equalsIgnoreCase(userFrom + "_" + userTo)) {
+                if (session.getConversationListener() != null && session.getConversationListener().equalsIgnoreCase(userFrom + "_" + userTo)) {
                     ChatMessageDto lastMessage = JSONConverter.newChatMessage(data.optJSONObject("last_message"));
                     chatFragment.receiveComment(lastMessage);
                 } else {
@@ -407,6 +404,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         HashMap<String, String> user = session.getUserDetails();
         String userId = user.get(SessionManager.KEY_ID);
         NotificationHelper.pubnub.unsubscribe("message_" + userId);
+    }
+
+    private void subscribePubnup() {
+        SessionManager session = SessionManager.getInstance();
+        HashMap<String, String> user = session.getUserDetails();
+        String userId = user.get(SessionManager.KEY_ID);
+        subscribeToChannel("message_" + userId);
     }
 
     private void displayDefaultView() {
@@ -475,7 +479,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void displayView(final int position) {
-        mCurrentFragment = fragmentMap.get(position);
+        if(position == NavDrawerData.SETTINGS_POSITION) {
+            mCurrentFragment = new SettingsFragment();
+        } else {
+            mCurrentFragment = fragmentMap.get(position);
+        }
+
         if (mCurrentFragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
@@ -488,8 +497,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             mDrawerList.setSelection(position);
             mDrawerLayout.closeDrawer(mDrawerList);
 
-        } else {
-            L.i("Error in creating fragment");
         }
     }
 

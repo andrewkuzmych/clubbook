@@ -132,5 +132,6 @@
     <string name="by_signing_into_clubook_you_agree_with_the">By Signing into Clubbook, you agree with the</string>
     <string name="open_in">Open in&#8230;</string>
     <string name="are_you_sure_you_want_delete_this_photo">Are you sure you want to Delete this photo?</string>
+    <string name="uploading">Uploading&#8230;</string>
 
 </resources>

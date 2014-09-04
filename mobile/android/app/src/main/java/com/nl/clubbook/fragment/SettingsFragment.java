@@ -77,7 +77,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if(buttonView.getId() == R.id.cbPushNotifications) {
-            onCbPushCheckedChanged();
+            onPushEnablingChanged((CheckBox) buttonView, isChecked);
         }
     }
 
@@ -105,6 +105,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         }
 
         CheckBox cbPushNotifications = (CheckBox) view.findViewById(R.id.cbPushNotifications);
+        cbPushNotifications.setChecked(getSession().isNotificationEnabled());
         cbPushNotifications.setOnCheckedChangeListener(this);
 
         view.findViewById(R.id.txtPrivacyPolicy).setOnClickListener(this);
@@ -116,8 +117,29 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mSimpleFacebook = SimpleFacebook.getInstance(getActivity());
     }
 
-    private void onCbPushCheckedChanged() {
-        //TODO
+    private void onPushEnablingChanged(final CheckBox checkBox, final boolean isEnable) {
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
+        showProgress(getString(R.string.uploading));
+
+        final String accessToken = getSession().getAccessToken();
+
+        DataStore.updateNotificationEnabling(accessToken, String.valueOf(isEnable), new DataStore.OnResultReady() {
+            @Override
+            public void onReady(Object result, boolean failed) {
+                hideProgress();
+                if(failed) {
+                    showToast(R.string.something_went_wrong_please_try_again);
+                    checkBox.setChecked(!isEnable);
+                    return;
+                }
+
+                getSession().setNotificationEnabled(isEnable);
+            }
+        });
     }
 
     private void onTxtPrivacyPolicyClicked() {

@@ -77,7 +77,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         super.onStart();
 
         SessionManager session = SessionManager.getInstance();
-        session.setConversationListner(mUserToId + "_" + mUserFromId);
+        session.setConversationListener(mUserToId + "_" + mUserFromId);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         super.onStop();
 
         SessionManager session = SessionManager.getInstance();
-        session.setConversationListner(null);
+        session.setConversationListener(null);
     }
 
     @Override

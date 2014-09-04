@@ -155,7 +155,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
             <View
                 android:layout_width="match_parent"
@@ -164,11 +166,12 @@
 
             <com.nl.clubbook.ui.view.TitilliumRegularTextView
                 android:id="@+id/txtUsers"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/no_users"
                 android:textColor="@color/grey"
                 android:textSize="@dimen/text_size_medium"
+                android:gravity="center"
                 android:paddingTop="8dp"/>
 
             <com.nl.clubbook.ui.view.TitilliumBoldTextView
@@ -182,7 +185,7 @@
 
             <com.nl.clubbook.ui.view.TitilliumRegularTextView
                 android:id="@+id/txtRequiredUsersNumber"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/grey"
                 android:textSize="@dimen/text_size_medium"
