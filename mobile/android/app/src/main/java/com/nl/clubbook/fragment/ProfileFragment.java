@@ -218,6 +218,11 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             return;
         }
 
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
         setRefreshing(getView(), true);
 
         final SessionManager session = SessionManager.getInstance();
@@ -227,17 +232,19 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         DataStore.retrieveUserFriend(accessToken, profileId, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
-                if (getView() == null || isDetached()) {
+                View view = getView();
+                if (view == null || isDetached()) {
                     L.v("view == null || isDetached");
                     return;
                 }
 
-                setRefreshing(getView(), false);
                 if (failed) {
-                    showNoInternetActivity();
+                    showToast(R.string.something_went_wrong_please_try_again);
+                    view.findViewById(R.id.progressBar).setVisibility(View.GONE);
                     return;
                 }
 
+                setRefreshing(view, false);
                 fillProfile((FriendDto) result);
             }
         });

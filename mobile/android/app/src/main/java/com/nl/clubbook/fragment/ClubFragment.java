@@ -23,6 +23,7 @@ import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.JSONConverter;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.*;
+import com.nl.clubbook.utils.NetworkUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
@@ -172,6 +173,11 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
             return;
         }
 
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
         final HashMap<String, String> user = this.getSession().getUserDetails();
 
         setProgressViewState(mode, true);
@@ -179,16 +185,19 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         DataStore.retrievePlace(mClubId, user.get(SessionManager.KEY_ACCESS_TOCKEN), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
-                if(isDetached() || getActivity() == null) {
+                View view = getView();
+                if(view == null || isDetached() || getActivity() == null) {
+                    return;
+                }
+
+                if (failed) {
+                    showToast(R.string.something_went_wrong_please_try_again);
+                    view.findViewById(R.id.progressBar).setVisibility(View.GONE);
+                    hideProgressDialog();
                     return;
                 }
 
                 setProgressViewState(mode, false);
-
-                if (failed) {
-                    showNoInternetActivity();
-                    return;
-                }
 
                 mClub = (ClubDto) result;
 
@@ -281,6 +290,11 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     }
 
     private void onCheckInBtnClicked(final View view) {
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
         if (LocationCheckinHelper.getInstance().isCheckInHere(mClub)) {
             showProgressDialog(getString(R.string.checking_out));
 

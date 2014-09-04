@@ -74,12 +74,6 @@ public class BaseFragment extends Fragment {
         actionBar.setTitle(title);
     }
 
-    protected void showNoInternetActivity() {
-        Intent intent = new Intent(getActivity(), NoInternetActivity.class);
-        startActivity(intent);
-        getActivity().finish();
-    }
-
     protected void showNoLocationActivity() {
         Intent intent = new Intent(getActivity(), NoLocationActivity.class);
         startActivity(intent);
@@ -91,14 +85,6 @@ public class BaseFragment extends Fragment {
         FragmentTransaction fTransaction = getChildFragmentManager().beginTransaction();
         fTransaction.add(progressDialog, ProgressDialog.TAG);
         fTransaction.commitAllowingStateLoss();
-    }
-
-    protected void hideProgress(boolean isSuccessfully) {
-        hideProgress();
-
-        if (!isSuccessfully) {
-            showNoInternetActivity();
-        }
     }
 
     protected void hideProgress() {
