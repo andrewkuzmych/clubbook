@@ -178,7 +178,7 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
         DataStore.loginByFb(name, email, fb_id, access_token, gender, finalDob, avatar, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
-                hideProgressDialog(true);
+                hideProgressDialog();
                 if (failed) {
                     showMessageDialog(getString(R.string.app_name), getString(R.string.incorrect_credentials));
                 } else {
@@ -224,7 +224,7 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
 
         @Override
         protected void onPostExecute(Profile result) {
-            hideProgressDialog(true);
+            hideProgressDialog();
             updateUserInfo(this.profile, avatar);
         }
     }

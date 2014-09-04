@@ -160,8 +160,9 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                 userName, gender, mServerFormat.format(mBirthDate), country, aboutMe, new DataStore.OnResultReady() {
                     @Override
                     public void onReady(Object result, boolean failed) {
+                        hideProgressDialog();
                         if (failed) {
-                            hideProgressDialog(false);
+                            showToast(R.string.something_went_wrong_please_try_again);
                             return;
                         }
 
@@ -172,8 +173,6 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                         sessionManager.updateValue(SessionManager.KEY_GENDER, gender);
                         sessionManager.updateValue(SessionManager.KEY_AGE, strAge);
                         sessionManager.updateValue(SessionManager.KEY_COUNTRY, country);
-
-                        hideProgressDialog(true);
 
                         setResult(RESULT_OK);
                         finish();
@@ -213,7 +212,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
     protected void loadData() {
         if(!NetworkUtils.isOn(EditProfileActivity.this)) {
-            showNoInternetActivity();
+            showToast(R.string.no_connection);
             return;
         }
 
@@ -227,7 +226,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                 }
 
                 if (failed) {
-                    showNoInternetActivity();
+                    showToast(R.string.no_connection);
                     return;
                 }
 
@@ -315,11 +314,11 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         DataStore.profileAddImage(accessToken, userId, imageJson, new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
+                hideProgressDialog();
                 if (failed) {
-                    hideProgressDialog(false);
+                    showToast(R.string.something_went_wrong_please_try_again);
                     return;
                 }
-                hideProgressDialog(true);
 
                 UserPhotoDto imageDto = (UserPhotoDto) result;
 
@@ -341,11 +340,11 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         DataStore.profileDeleteImage(EditProfileActivity.this, accessToken, userId, selectedImageDto.getId(), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
+                hideProgressDialog();
                 if (failed) {
-                    hideProgressDialog(false);
+                    showToast(R.string.something_went_wrong_please_try_again);
                     return;
                 }
-                hideProgressDialog(true);
 
                 // remove from small preview
                 LinearLayout holderUserPhotos = (LinearLayout) findViewById(R.id.holderUserPhotos);
@@ -375,11 +374,11 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
             @Override
             public void onReady(Object result, boolean failed) {
+                hideProgressDialog();
                 if (failed) {
-                    hideProgressDialog(false);
+                    showToast(R.string.something_went_wrong_please_try_again);
                     return;
                 }
-                hideProgressDialog(true);
 
                 profile = (UserDto) result;
 
