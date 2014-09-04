@@ -13,70 +13,81 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/holderClubInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/selector_bg_btn_white"
             android:orientation="horizontal"
-            android:padding="16dp">
-
-            <com.nl.clubbook.ui.view.CircleImageView
-                android:id="@+id/imgAvatar"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_gravity="center_vertical"
-                android:scaleType="centerCrop" />
+            android:background="@android:color/white"
+            android:gravity="center_vertical">
 
             <LinearLayout
+                android:id="@+id/holderClubInfo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="16dp"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:background="@drawable/selector_bg_btn_white"
+                android:orientation="horizontal"
+                android:padding="16dp">
 
-                <com.nl.clubbook.ui.view.TitilliumRegularTextView
-                    android:id="@+id/txtClubName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:text="Test"
-                    android:textColor="@color/grey_club_title_text_color"
-                    android:textSize="@dimen/text_size_medium" />
+                <com.nl.clubbook.ui.view.CircleImageView
+                    android:id="@+id/imgAvatar"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="centerCrop" />
 
-                <com.nl.clubbook.ui.view.TitilliumRegularTextView
-                    android:id="@+id/txtOpenToday"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:text="@string/open_today"
-                    android:textColor="@color/grey_club_title_text_color"
-                    android:textSize="@dimen/text_size_micro" />
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="16dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <com.nl.clubbook.ui.view.TitilliumRegularTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="4dp"
-                    android:drawableRight="@drawable/ic_club_arrow_right"
-                    android:gravity="center_vertical"
-                    android:singleLine="true"
-                    android:text="@string/club_info_and_wall"
-                    android:textColor="@color/grey_club_title_text_color"
-                    android:textSize="@dimen/text_size_micro" />
+                    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                        android:id="@+id/txtClubName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:text="Test"
+                        android:textColor="@color/grey_club_title_text_color"
+                        android:textSize="@dimen/text_size_medium" />
+
+                    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                        android:id="@+id/txtOpenToday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:text="@string/open_today"
+                        android:textColor="@color/grey_club_title_text_color"
+                        android:textSize="@dimen/text_size_micro" />
+
+                    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="4dp"
+                        android:drawableRight="@drawable/ic_club_arrow_right"
+                        android:gravity="center_vertical"
+                        android:singleLine="true"
+                        android:text="@string/club_info_and_wall"
+                        android:textColor="@color/grey_club_title_text_color"
+                        android:textSize="@dimen/text_size_micro" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
             <com.nl.clubbook.ui.view.TitilliumRegularTextView
                 android:id="@+id/txtDistance"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
+                android:background="@drawable/selector_bg_btn_white"
                 android:drawablePadding="4dp"
                 android:drawableTop="@drawable/ic_distance_club_details"
-                android:text="10 m"
+                android:padding="16dp"
                 android:textColor="@color/green"
-                android:textSize="@dimen/text_size_small" />
-
+                android:textSize="@dimen/text_size_small"
+                android:gravity="center"/>
         </LinearLayout>
 
         <View
@@ -98,47 +109,47 @@
                 android:id="@+id/txtCheckInCount"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="16dp"
+                android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_checked_in_club_details"
                 android:drawablePadding="-4dp"
                 android:gravity="center_vertical"
                 android:lineSpacingExtra="0dp"
+                android:text="@string/checked_in"
                 android:textColor="@color/grey_light"
-                android:textSize="@dimen/text_size_small"
-                android:text="@string/checked_in"/>
+                android:textSize="@dimen/text_size_small" />
 
             <com.nl.clubbook.ui.view.TitilliumRegularTextView
                 android:id="@+id/txtFriendsCount"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="16dp"
+                android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_friends_club_details"
                 android:drawablePadding="4dp"
                 android:gravity="center_vertical"
                 android:lineSpacingExtra="-4dp"
+                android:text="@string/friends"
                 android:textColor="@color/grey_light"
-                android:textSize="@dimen/text_size_small"
-                android:text="@string/friends"/>
+                android:textSize="@dimen/text_size_small" />
 
             <com.nl.clubbook.ui.view.TitilliumRegularTextView
                 android:id="@+id/txtCheckIn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@drawable/selector_btn_check_in"
                 android:gravity="center"
-                android:paddingRight="16dp"
-                android:paddingLeft="16dp"
                 android:paddingBottom="4dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:paddingTop="4dp"
                 android:text="@string/check_in"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size_medium"
-                android:background="@drawable/selector_btn_check_in"/>
+                android:textSize="@dimen/text_size_medium" />
 
         </LinearLayout>
 
@@ -147,17 +158,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:numColumns="@integer/grid_users_column_count"
-            android:scrollbars="none"/>
+            android:scrollbars="none" />
 
         <LinearLayout
             android:id="@+id/holderCheckInExplanation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:gravity="center"
-            android:visibility="gone"
+            android:orientation="vertical"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:paddingRight="16dp"
+            android:visibility="gone">
 
             <View
                 android:layout_width="match_parent"
@@ -168,30 +179,30 @@
                 android:id="@+id/txtUsers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="8dp"
                 android:text="@string/no_users"
                 android:textColor="@color/grey"
-                android:textSize="@dimen/text_size_medium"
-                android:gravity="center"
-                android:paddingTop="8dp"/>
+                android:textSize="@dimen/text_size_medium" />
 
             <com.nl.clubbook.ui.view.TitilliumBoldTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
                 android:text="@string/checked_in"
                 android:textColor="@color/grey"
-                android:textSize="@dimen/text_size_medium"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"/>
+                android:textSize="@dimen/text_size_medium" />
 
             <com.nl.clubbook.ui.view.TitilliumRegularTextView
                 android:id="@+id/txtRequiredUsersNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/grey"
-                android:textSize="@dimen/text_size_medium"
-                android:text="@string/profile_pictures_will_be_visible"
+                android:gravity="center"
                 android:paddingBottom="8dp"
-                android:gravity="center"/>
+                android:text="@string/profile_pictures_will_be_visible"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_size_medium" />
 
         </LinearLayout>
 
