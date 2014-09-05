@@ -307,7 +307,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             view.findViewById(R.id.txtRemoveFriend).setVisibility(View.VISIBLE);
             mBtnAddFriendMode = -1;
         } else if(FriendDto.STATUS_RECEIVE_REQUEST.equalsIgnoreCase(friendStatus)) {
-            txtAddFriends.setText(getString(R.string.accept));
+            txtAddFriends.setText(getString(R.string.accept_request));
             mBtnAddFriendMode = MODE_ACCEPT;
         } else if(FriendDto.STATUS_SENT_REQUEST.equalsIgnoreCase(friendStatus)) {
             initRequestPendingView(txtAddFriends);
