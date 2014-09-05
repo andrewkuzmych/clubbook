@@ -299,6 +299,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
     private void loadConversation() {
         if(!NetworkUtils.isOn(getActivity())) {
+            getView().findViewById(R.id.progressBar).setVisibility(View.GONE);
             showToast(R.string.no_connection);
             return;
         }

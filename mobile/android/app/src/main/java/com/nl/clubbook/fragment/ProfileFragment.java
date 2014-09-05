@@ -219,6 +219,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         }
 
         if(!NetworkUtils.isOn(getActivity())) {
+            getView().findViewById(R.id.scrollView).setVisibility(View.GONE);
             showToast(R.string.no_connection);
             return;
         }

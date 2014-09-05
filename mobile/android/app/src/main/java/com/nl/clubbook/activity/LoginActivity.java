@@ -9,6 +9,7 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.Validator;
+import com.nl.clubbook.utils.NetworkUtils;
 
 /**
  * Created by Andrew on 5/26/2014.
@@ -52,6 +53,11 @@ public class LoginActivity extends BaseActivity {
 
                 if (password.trim().length() < 6) {
                     showMessageDialog(getString(R.string.app_name), getString(R.string.pass_incorrect));
+                    return;
+                }
+
+                if(!NetworkUtils.isOn(LoginActivity.this)) {
+                    showToast(R.string.no_connection);
                     return;
                 }
 

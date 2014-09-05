@@ -212,6 +212,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
     protected void loadData() {
         if(!NetworkUtils.isOn(EditProfileActivity.this)) {
+            findViewById(R.id.progressBar).setVisibility(View.GONE);
             showToast(R.string.no_connection);
             return;
         }
