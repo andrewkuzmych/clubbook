@@ -1,0 +1,56 @@
+extends ../layout
+
+block content
+  //
+     BEGIN PAGE HEADER
+  h3.page-title
+    | Clubs
+  .page-bar
+    ul.page-breadcrumb
+      li
+        i.fa.fa-home
+        a(href='/venue/#{current_venue._id}/clubs') Clubs
+  //
+     END PAGE HEADER
+  //
+     BEGIN PAGE CONTENT
+  .row
+    .col-md-12
+      table.table.table-bordered.table-striped.table-condensed.flip-content
+        thead.flip-content
+          tr
+            th(width='20%')
+              | Avatar
+            th
+              | Title
+            th
+              | Phone
+            th
+              | Email
+            th
+        tbody
+          for club in clubs
+            tr
+              td(style="vertical-align: middle;")
+                if club.club_logo
+                  img(src='#{club.club_logo}', alt='#{club.club_name}', height="50")
+              td(style="vertical-align: middle;")
+                | #{club.club_name} 
+              td(style="vertical-align: middle;")
+                | #{club.club_phone} 
+              td(style="vertical-align: middle;")
+                | #{club.club_email} 
+              td(style="vertical-align: middle;")
+                a.edit-btn.btn.default.yellow(href='/venue/#{current_venue._id}/club_edit/#{club._id}', style="margin:3px")
+                  i.fa.fa-edit
+                    &nbsp;
+                    | edit
+
+      div
+        a.btn.btn-primary(href="/venue/#{current_venue._id}/club_create") Add News
+
+
+  //
+     END PAGE CONTENT
+//
+ END CONTENT 

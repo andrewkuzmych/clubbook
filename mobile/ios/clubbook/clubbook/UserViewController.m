@@ -14,6 +14,7 @@
 #import "UIButton+WebCache.h"
 #import "UIView+StringTagAdditions.h"
 #import "CSNotificationView.h"
+#import "LocationHelper.h"
 
 @interface UserViewController (){
     User *_user;
@@ -209,10 +210,21 @@
 
 - (void)changeSelectedImage:(UIButton*)button
 {
+    BOOL isCheckinHere = [LocationHelper isCheckinHere:self.currentPlace];
     User *user = [self.currentPlace.users objectAtIndex:button.tag];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *userId = [defaults objectForKey:@"userId"];
-    if([user.id isEqualToString:userId]) {
+    
+    if (!isCheckinHere && !user.isFriend) {
+        // cannot see profile when you are not checked in and not friend
+        [CSNotificationView showInViewController:self
+                                       tintColor:[UIColor colorWithRed:153/255.0f green:0/255.0f blue:217/255.0f alpha:1]
+                                           image:nil
+                                         message:NSLocalizedString(@"needToCheckinFirst", nil)
+                                        duration:kCSNotificationViewDefaultShowDuration];
+        return;
+    }
+    else if([user.id isEqualToString:userId]) {
         // cannot see own profile :)
         [CSNotificationView showInViewController:self
                                        tintColor:[UIColor colorWithRed:153/255.0f green:0/255.0f blue:217/255.0f alpha:1]

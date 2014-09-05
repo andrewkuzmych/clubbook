@@ -51,6 +51,7 @@
 
     self.loginButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:18];
     [self.loginButton setTitle:NSLocalizedString(@"login", nil) forState:UIControlStateNormal];
+    [self.forgotPassButton setTitle:NSLocalizedString(@"forgotPass", nil) forState:UIControlStateNormal];
     
     [self.emailText becomeFirstResponder];
 }
@@ -73,6 +74,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+
+- (IBAction)forgotPassAction:(id)sender {
+    NSString *resetPassUrl = [NSString stringWithFormat:NSLocalizedString(@"resetPassUrl", nil), @(1000000)];
+    
+    NSURL *url = [ [ NSURL alloc ] initWithString: resetPassUrl];
+    [[UIApplication sharedApplication] openURL:url];
+}
 
 - (IBAction)loginAction:(id)sender {
     NSString *wrongeEmail = [NSString stringWithFormat:NSLocalizedString(@"wrongeEmail", nil)];

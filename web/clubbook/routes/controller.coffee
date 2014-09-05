@@ -6,7 +6,11 @@ moment = require('moment-timezone')
 moment.lang("ru")
 email_sender = require("../email/email_sender")
 async = require("async")
-
+http = require('http');
+path = require('path');
+crypto = require('crypto');
+cloudinary = require('cloudinary')
+fs = require('fs')
 
 
 exports.index = (req, res)->
@@ -39,10 +43,156 @@ exports.privacy = (req, res)->
 
 exports.home = (req, res)->
   create_base_model req, res, (model)->
-    #model.message_sent = req.flash("message_sent").length > 0
-    #db_model.Venue.find({visible:true}).exec (err, venues)->
-    #model.active_venues = venues
-    res.render "layout", model
+    db_model.Venue.findOne().exec (err, venue)->
+      res.redirect "/venue/#{venue._id}/news"
+
+exports.clubs = (req, res)->
+  create_base_model req, res, (model)->
+    db_model.Venue.find(req.params.venue_id).exec (err, venues)->
+        model.clubs = venues
+        res.render "pages/clubs", model
+
+exports.club_create = (req, res)->
+  create_base_model req, res, (model)->
+    console.log 'CLUB'
+    model.cloudinary = cloudinary
+    model.club = {}
+    res.render "pages/club_update", model
+
+
+exports.club_create_action = (req, res)->
+  validate_club_model req, null, (validation)->
+    if validation.has_error
+      res.redirect "/venue/#{req.params.venue_id}/club_create?error=1"
+    else
+      venue = new db_model.Venue
+        club_email : req.body.club_email
+        club_logo : req.body.club_logo
+        club_name : req.body.club_name
+        club_phone : req.body.club_phone
+        club_site : req.body.club_site
+        club_info : req.body.club_info
+        club_address : req.body.club_address
+        
+      venue.club_loc.lat = req.body.lat
+      venue.club_loc.lon = req.body.lon
+
+      venue.club_photos = [];
+
+      for club_photo in req.body.club_images.split(',')
+        venue.club_photos.push club_photo
+        
+      if req.body.club_logo
+        venue.club_logo = req.body.club_logo
+
+      venue.save (err)->
+        console.log err
+        res.redirect "/venue/#{req.params.venue_id}/clubs" 
+ 
+
+exports.club_edit = (req, res)->
+  create_base_model req, res, (model)->
+    db_model.Venue.findById(req.params.id).exec (err, venue)->
+      model.cloudinary = cloudinary
+      model.club = venue
+      console.log model.club
+      res.render "pages/club_update", model
+
+exports.club_edit_action = (req, res)->
+  validate_club_model req, null, (validation)->
+    if validation.has_error
+      res.redirect "/venue/#{req.params.venue_id}/club_edit?error=1"
+    else
+      db_model.Venue.findById(req.params.id).exec (err, venue)->
+        venue.club_email = req.body.club_email
+        venue.club_name = req.body.club_name
+        venue.club_phone = req.body.club_phone
+        venue.club_site = req.body.club_site
+        venue.club_info = req.body.club_info
+        venue.club_address = req.body.club_address
+        venue.club_loc.lat = req.body.lat
+        venue.club_loc.lon = req.body.lng
+
+        console.log req.body
+
+        venue.club_photos = [];
+
+        for club_photo in req.body.club_images.split(',')
+          venue.club_photos.push club_photo
+        
+        if req.body.club_logo
+          venue.club_logo = req.body.club_logo
+
+        venue.save (err)->
+          console.log err
+          res.redirect "/venue/#{req.params.venue_id}/clubs"
+     
+
+exports.news = (req, res)->
+  create_base_model req, res, (model)->
+    db_model.Venue.findById(req.params.venue_id).exec (err, venue)->
+      db_model.News.find({'venue' : venue}).sort({created_on: 'desc'}).exec (err, news)->
+        #model.news = news
+        news_new = []
+        if news
+          __.each news, ((the_new) ->
+            the_news_new = 
+              _id: the_new._id
+              title: the_new.title
+              description: the_new.description
+              image: the_new.image
+              updated_on: moment.utc(the_new.updated_on).format("DD.MM.YYYY")
+
+            news_new.push the_news_new
+          ), this
+
+        model.news = news_new
+
+        res.render "pages/news", model
+
+exports.news_create = (req, res)->
+  create_base_model req, res, (model)->
+    model.cloudinary = cloudinary
+    model.news = {}
+    res.render "pages/news_update", model
+
+exports.news_create_action = (req, res)->
+  validate_news_model req, null, (validation)->
+    if validation.has_error
+      res.redirect "/venue/#{req.params.venue_id}/news_create?error=1"
+    else
+      news = new db_model.News
+        venue: mongoose.Types.ObjectId(req.params.venue_id)
+        image: req.body.news_image
+        title: req.body.title
+        description: req.body.description
+
+      news.save (err)->
+        console.log 'SAVE'
+        res.redirect "/venue/#{req.params.venue_id}/news" 
+
+exports.news_edit = (req, res)->
+  create_base_model req, res, (model)->
+    db_model.News.findById(req.params.id).exec (err, news)->
+      model.cloudinary = cloudinary
+      model.news = news
+      console.log news
+      console.log model.news
+      res.render "pages/news_update", model
+
+exports.news_edit_action = (req, res)->
+  validate_news_model req, null, (validation)->
+    if validation.has_error
+      res.redirect "/venue/#{req.params.venue_id}/news_edit/#{req.params.id}?error=1"
+    else
+      db_model.News.findById(req.params.id).exec (err, news)->
+        news.title = req.body.title
+        news.description = req.body.description
+        if req.body.news_image
+          news.image = req.body.news_image
+
+        news.save (err)->
+          res.redirect "/venue/#{req.params.venue_id}/news" 
 
 exports.reset_pass = (req, res)->
   create_base_model req, res, (model)->
@@ -67,9 +217,42 @@ exports.reset_pass_action = (req, res)->
       error = 'email not registered'#req.i18n.t("email_not_registered")
       res.render "reset_pass", {title: "Clubbook", error: error, success: success}
 
+exports.cloudinary_upload = (req, res)->
+  cloudinary.api.resources (items) ->
+    res.render "index",
+      images: items.resources
+      cloudinary: cloudinary
+
+    return
+
 # -----------------------------------------------------------------------------------------
 # utils
 #------------------------------------------------------------------------------------------
+
+validate_news_model = (req, prize, callback)->
+  validation =
+    has_error:false
+  if not req.body.title or not req.body.title.trim()
+    validation.has_error = true
+    console.log "title"
+  if not req.body.description or not req.body.description.trim()
+    validation.has_error = true
+    console.log "description"
+  
+  callback validation
+  
+
+validate_club_model = (req, prize, callback)->
+  validation =
+    has_error:false
+  #if not req.body.title or not req.body.title.trim()
+  #  validation.has_error = true
+  #  console.log "title"
+  #if not req.body.description or not req.body.description.trim()
+  #  validation.has_error = true
+  #  console.log "description"
+  
+  callback validation
 
 create_base_model = (req, res, callback)->
   # default values
@@ -94,4 +277,18 @@ create_base_model = (req, res, callback)->
   else
     model.has_error = false
 
-  callback model
+  # manage venue page
+  if req.params.venue
+    model.current_venue = req.params.venue
+    # dropdown with available venues
+  if req.user
+    query_venue = if req.user.is_admin then {} else {"admins": req.user._id}
+    db_model.Venue.find(query_venue).sort("title").exec (err, venues)->
+      model.my_venues = venues
+      if venues.length > 0
+        if req.params.venue_id
+          model.active_venue = __.find venues, (venue)-> venue._id.toString() is req.params.venue_id
+        if not model.active_venue then model.active_venue = venues[0]
+      callback model
+  else
+    callback model
