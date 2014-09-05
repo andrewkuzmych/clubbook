@@ -19,7 +19,8 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/text_size_small"
-        android:gravity="center"/>
+        android:textSize="@dimen/text_size_medium"
+        android:gravity="center"
+        android:paddingBottom="1dp"/>
 
 </RelativeLayout>
