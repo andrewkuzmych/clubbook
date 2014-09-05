@@ -11,7 +11,7 @@
         android:layout_height="48dp"
         android:background="@null"
         android:clickable="true"
-        android:src="@drawable/icon_chat" />
+        android:src="@drawable/bg_btn_green_small"/>
 
 
     <com.nl.clubbook.ui.view.TitilliumRegularTextView
@@ -20,7 +20,6 @@
         android:layout_height="48dp"
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_size_small"
-        android:gravity="center"
-        android:paddingBottom="6dp"/>
+        android:gravity="center"/>
 
 </RelativeLayout>

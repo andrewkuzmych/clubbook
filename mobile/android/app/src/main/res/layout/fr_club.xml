@@ -9,16 +9,16 @@
     <LinearLayout
         android:id="@+id/holderScreen"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:background="@android:color/white"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/holderClubInfo"
@@ -84,10 +84,10 @@
                 android:background="@drawable/selector_bg_btn_white"
                 android:drawablePadding="4dp"
                 android:drawableTop="@drawable/ic_distance_club_details"
+                android:gravity="center"
                 android:padding="16dp"
                 android:textColor="@color/green"
-                android:textSize="@dimen/text_size_small"
-                android:gravity="center"/>
+                android:textSize="@dimen/text_size_small" />
         </LinearLayout>
 
         <View
@@ -158,12 +158,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:numColumns="@integer/grid_users_column_count"
-            android:scrollbars="none" />
+            android:scrollbars="none"/>
 
         <LinearLayout
             android:id="@+id/holderCheckInExplanation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingLeft="16dp"
@@ -171,7 +172,7 @@
             android:visibility="gone">
 
             <View
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
@@ -203,6 +204,11 @@
                 android:text="@string/profile_pictures_will_be_visible"
                 android:textColor="@color/grey"
                 android:textSize="@dimen/text_size_medium" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
         </LinearLayout>
 
