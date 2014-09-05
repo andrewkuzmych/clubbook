@@ -99,6 +99,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_main);
 
+        initReceivers();
+
         if (!getSession().isLoggedIn()) {
             Intent intent = new Intent(getApplicationContext(), MainLoginActivity.class);
             startActivity(intent);
@@ -122,14 +124,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onStart();
 
         subscribePubnup();
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        initReceivers();
     }
 
     @Override

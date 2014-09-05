@@ -40,6 +40,7 @@ public class LocationCheckinHelper {
 
     private ClubDto mCurrentClub;
     private LocationListener mLocationListener;
+    private boolean mShouldHideLocationErrorView = false;
 
     private static LocationCheckinHelper mCheckInHelper;
 
@@ -80,13 +81,6 @@ public class LocationCheckinHelper {
         return currentLocation;
     }
 
-    public void setCurrentLocation(Location currentLocation) {
-        this.currentLocation = currentLocation;
-    }
-
-    /**
-     * Check if user is currently check in in this club
-     */
     public boolean isCheckInHere(ClubDto club) {
         if (mCurrentClub == null || club == null) {
             return false;
@@ -308,7 +302,7 @@ public class LocationCheckinHelper {
 
             // Define a listener that responds to location updates
             mLocationListener = new LocationListener() {
-                boolean shouldHideLocationErrorView = false;
+
 
                 public void onLocationChanged(Location location) {
                     // Called when a new location is found by the network location provider.
@@ -320,9 +314,8 @@ public class LocationCheckinHelper {
                         currentLocation = location;
                     }
 
-                    if(shouldHideLocationErrorView) {
+                    if(mShouldHideLocationErrorView) {
                         hideLocationErrorView(application);
-                        shouldHideLocationErrorView = false;
                     }
 
                     L.d("LOCATION - " + String.valueOf(currentLocation.getLatitude()) + ":" + String.valueOf(currentLocation.getLongitude()));
@@ -333,10 +326,13 @@ public class LocationCheckinHelper {
                 }
 
                 public void onProviderEnabled(String provider) {
-                    shouldHideLocationErrorView = true;
+//                    mShouldHideLocationErrorView = true;
                 }
 
                 public void onProviderDisabled(String provider) {
+                    L.e("isLocationProvidersEnabled(locationManager) - " + isLocationProvidersEnabled(locationManager));
+                    L.e("mIsListenerRemoved - " + mIsListenerRemoved);
+
                     if (!isLocationProvidersEnabled(locationManager) && !mIsListenerRemoved) {
                         showLocationErrorView(application);
                     }
@@ -359,13 +355,17 @@ public class LocationCheckinHelper {
         }
     }
 
-    private static void showLocationErrorView(final Context application) {
+    public  void showLocationErrorView(Context application) {
         Intent intent = new Intent(application, NoLocationActivity.class);
         application.startActivity(intent);
         ((BaseActivity) application).finish();
+
+        mShouldHideLocationErrorView = true;
     }
 
-    private static void hideLocationErrorView(final Context application) {
+    private void hideLocationErrorView(final Context application) {
+        mShouldHideLocationErrorView = false;
+
         Intent intent = new Intent();
         intent.setAction(NoLocationActivity.ACTION_CLOSE);
         application.sendBroadcast(intent);

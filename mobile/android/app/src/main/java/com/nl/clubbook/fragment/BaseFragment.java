@@ -1,6 +1,5 @@
 package com.nl.clubbook.fragment;
 
-import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -10,7 +9,6 @@ import android.widget.Toast;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
-import com.nl.clubbook.activity.NoLocationActivity;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.SessionManager;
@@ -71,12 +69,6 @@ public class BaseFragment extends Fragment {
 
         ActionBar actionBar = activity.getSupportActionBar();
         actionBar.setTitle(title);
-    }
-
-    protected void showNoLocationActivity() {
-        Intent intent = new Intent(getActivity(), NoLocationActivity.class);
-        startActivity(intent);
-        getActivity().finish();
     }
 
     protected void showProgress(String message) {
