@@ -32,7 +32,7 @@
         android:background="@drawable/bg_btn_green_small"
         android:gravity="center"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/text_size_medium"
+        android:textSize="@dimen/text_size_small"
         android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"
         android:paddingBottom="1dp"/>

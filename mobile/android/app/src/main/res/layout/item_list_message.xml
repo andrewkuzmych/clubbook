@@ -50,7 +50,7 @@
         android:layout_gravity="center_vertical"
         android:gravity="center"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/text_size_medium"
-        android:paddingBottom="8dp"/>
+        android:textSize="@dimen/text_size_small"
+        android:paddingBottom="1dp"/>
 
 </LinearLayout>
