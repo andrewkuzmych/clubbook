@@ -37,6 +37,7 @@ public class LocationCheckinHelper {
     private final int updateLocationInterval = 0;
     private Boolean isLocationTrackerStarted = false;
     private boolean mIsListenerRemoved = false;
+    private LocationManager mLocationManager;
 
     private ClubDto mCurrentClub;
     private LocationListener mLocationListener;
@@ -286,7 +287,7 @@ public class LocationCheckinHelper {
     /**
      * Track user location
      */
-    public void startSmartLocationTracker(final Context application) {
+    public void startSmartLocationTracker(final Context context) {
         // launch only once
         if (!isLocationTrackerStarted) {
             isLocationTrackerStarted = true;
@@ -294,11 +295,11 @@ public class LocationCheckinHelper {
 
             // http://developer.android.com/guide/topics/location/strategies.html
             // Acquire a reference to the system Location Manager
-            final LocationManager locationManager = (LocationManager) application.getSystemService(Context.LOCATION_SERVICE);
+            mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
-            currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            currentLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (currentLocation == null)
-                currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                currentLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
             // Define a listener that responds to location updates
             mLocationListener = new LocationListener() {
@@ -315,7 +316,7 @@ public class LocationCheckinHelper {
                     }
 
                     if(mShouldHideLocationErrorView) {
-                        hideLocationErrorView(application);
+                        hideLocationErrorView(context);
                     }
 
                     L.d("LOCATION - " + String.valueOf(currentLocation.getLatitude()) + ":" + String.valueOf(currentLocation.getLongitude()));
@@ -326,22 +327,20 @@ public class LocationCheckinHelper {
                 }
 
                 public void onProviderEnabled(String provider) {
-//                    mShouldHideLocationErrorView = true;
+                    Intent intent = new Intent(NoLocationActivity.ACTION_LOCATION_PROVIDER_ENABLED);
+                    context.sendBroadcast(intent);
                 }
 
                 public void onProviderDisabled(String provider) {
-                    L.e("isLocationProvidersEnabled(locationManager) - " + isLocationProvidersEnabled(locationManager));
-                    L.e("mIsListenerRemoved - " + mIsListenerRemoved);
-
-                    if (!isLocationProvidersEnabled(locationManager) && !mIsListenerRemoved) {
-                        showLocationErrorView(application);
+                    if (!isLocationProvidersEnabled(mLocationManager) && !mIsListenerRemoved) {
+                        showLocationErrorView(context, false);
                     }
                 }
             };
 
             // Register the listener with the Location Manager to receive location updates
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, updateLocationInterval, 200, mLocationListener);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, updateLocationInterval, 200, mLocationListener);
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, updateLocationInterval, 200, mLocationListener);
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, updateLocationInterval, 200, mLocationListener);
         }
     }
 
@@ -355,8 +354,9 @@ public class LocationCheckinHelper {
         }
     }
 
-    public  void showLocationErrorView(Context application) {
+    public  void showLocationErrorView(Context application, boolean showProgress) {
         Intent intent = new Intent(application, NoLocationActivity.class);
+        intent.putExtra(NoLocationActivity.EXTRA_IS_PROGRESS_ENABLED, showProgress);
         application.startActivity(intent);
         ((BaseActivity) application).finish();
 
@@ -366,12 +366,12 @@ public class LocationCheckinHelper {
     private void hideLocationErrorView(final Context application) {
         mShouldHideLocationErrorView = false;
 
-        Intent intent = new Intent();
-        intent.setAction(NoLocationActivity.ACTION_CLOSE);
-        application.sendBroadcast(intent);
+        Intent actionCloseIntent = new Intent();
+        actionCloseIntent.setAction(NoLocationActivity.ACTION_CLOSE);
+        application.sendBroadcast(actionCloseIntent);
 
-        Intent i = new Intent(application, MainLoginActivity.class);
-        application.startActivity(i);
+        Intent intent = new Intent(application, MainLoginActivity.class);
+        application.startActivity(intent);
         ((BaseActivity) application).finish();
     }
 
@@ -454,7 +454,11 @@ public class LocationCheckinHelper {
         return isLocationEnabled;
     }
 
-    protected static boolean isLocationProvidersEnabled(LocationManager locationManager) {
+    public boolean isLocationProvidersEnabled() {
+        return isLocationProvidersEnabled(mLocationManager);
+    }
+
+    public boolean isLocationProvidersEnabled(LocationManager locationManager) {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 }

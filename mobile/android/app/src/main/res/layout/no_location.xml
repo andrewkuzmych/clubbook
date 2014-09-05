@@ -7,15 +7,71 @@
     android:layout_centerVertical="true"
     android:layout_gravity="center"
     android:background="@color/main_background_color"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/holderNoLocation"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/no_location"
-        android:textSize="17dp"
-        android:textColor="@android:color/white"
-        android:layout_centerInParent="true"/>
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+
+        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="64dp"
+            android:text="@string/where_are_you"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_large"
+            android:gravity="center"/>
+
+        <com.nl.clubbook.ui.view.TitilliumRegularTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/in_order_for_you_to_see_clubs_and_profile"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_medium" />
+
+        <com.nl.clubbook.ui.view.TitilliumRegularTextView
+            android:id="@+id/txtOpenSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/open_settings"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_medium"
+            android:paddingRight="24dp"
+            android:paddingLeft="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@drawable/bg_btn_green"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/holderProgressView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+
+        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="@string/wait_until_clubbook_will_determine_your_current_location"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_medium"
+            android:gravity="center"/>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

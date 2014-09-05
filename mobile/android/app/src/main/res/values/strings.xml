@@ -135,5 +135,9 @@
 
     <string name="uploading">Uploading&#8230;</string>
     <string name="choose_crop_app">Choose Crop App</string>
+    <string name="where_are_you">Where are you?</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="wait_until_clubbook_will_determine_your_current_location">Wait until Clubbok will determine your current location&#8230;</string>
+    <string name="in_order_for_you_to_see_clubs_and_profile">In order for you to see Clubs and Profiles nearby, we need to know your current location</string>
 
 </resources>
