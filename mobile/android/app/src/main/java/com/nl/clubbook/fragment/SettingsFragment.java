@@ -120,6 +120,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     private void onPushEnablingChanged(final CheckBox checkBox, final boolean isEnable) {
         if(!NetworkUtils.isOn(getActivity())) {
             showToast(R.string.no_connection);
+            checkBox.setChecked(!isEnable);
             return;
         }
 
