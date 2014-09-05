@@ -3,6 +3,8 @@ http = require('http');
 path = require('path');
 crypto = require('crypto');
 cronJob = require("cron").CronJob
+cloudinary = require('cloudinary')
+fs = require('fs')
 
 passport = require('passport');
 LocalStrategy = require('passport-local').Strategy
@@ -24,6 +26,12 @@ app = express();
 
 # global modules: config, db manager
 global.config = require('yaml-config').readConfig('./config/config.yaml', app.settings.env)
+
+# config cloudinary
+cloudinary.config({ cloud_name: 'ddsoyfjll', api_key: '635173958253643', api_secret: 'kc8bGmuk3HgDJCqQxMjuTbgTwJ0' });
+app.locals.api_key = cloudinary.config().api_key;
+app.locals.cloud_name = cloudinary.config().cloud_name;
+
 
 # global.manager = require("./logic/manager")
 db_model = require("./logic/model")
@@ -105,6 +113,15 @@ app.locals.moment_tz = "Europe/Kiev"
 #--------------------------------------------------------------------------------
 # utils
 #--------------------------------------------------------------------------------
+validate_venue = (req, res, next)->
+  db_model.Venue.findById(req.params.venue_id).exec (err, venue)->
+    if venue
+      console.log "Venue page:", req.params.venue_id
+      req.params.venue = venue
+      next()
+    else
+      console.log "ERROR: wrong venue_id"
+      res.redirect "/"
 
 require_role = (role)->
   (req, res, next)->
@@ -161,7 +178,7 @@ app.post '/login', (req, res, next)->
     else
       req.logIn user, (err) ->
         if err then return next(err)
-        res.redirect "/"
+        res.redirect "/home"
 
   ) req, res, next
 
@@ -173,8 +190,21 @@ app.get '/terms', controller.terms
 app.get '/privacy', controller.privacy
 app.get '/reset_pass', controller.reset_pass
 app.post '/reset_pass', controller.reset_pass_action
+app.post '/cloudinary_upload', controller.cloudinary_upload
 
-app.get '/home', controller.home
+app.get '/home', require_role("user"), local_user, controller.home
+app.get '/venue/:venue_id/clubs', require_role("user"), local_user, validate_venue, controller.clubs
+app.get '/venue/:venue_id/club_create', require_role("user"), local_user, validate_venue, controller.club_create
+app.post '/venue/:venue_id/club_create', require_role("user"), local_user, validate_venue, controller.club_create_action
+app.get '/venue/:venue_id/club_edit/:id', require_role("user"), local_user, validate_venue, controller.club_edit
+app.post '/venue/:venue_id/club_edit/:id', require_role("user"), local_user, validate_venue, controller.club_edit_action
+
+app.get '/venue/:venue_id/news', require_role("user"), local_user, validate_venue, controller.news
+app.get '/venue/:venue_id/news_create', require_role("user"), local_user, validate_venue, controller.news_create
+app.post '/venue/:venue_id/news_create', require_role("user"), local_user, validate_venue, controller.news_create_action
+app.get '/venue/:venue_id/news_edit/:id', require_role("user"), local_user, validate_venue, controller.news_edit
+app.post '/venue/:venue_id/news_edit/:id', require_role("user"), local_user, validate_venue, controller.news_edit_action
+
 
 #--------------------------------------------------------------------------------
 # Mobile API

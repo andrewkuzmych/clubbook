@@ -141,3 +141,7 @@
 "logOut" = "Log Out";
 "clubProfile" = "Club Profile";
 "userProfile" = "User Profile";
+"forgotPass" = "forgot password?";
+"resetPassUrl" = "http://clubbookapp.herokuapp.com/reset_pass";
+"ageLimit" = "You must be 18+ age to use Clubbook";
+

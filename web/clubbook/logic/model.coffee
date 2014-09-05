@@ -124,6 +124,25 @@ exports.User.schema.path('name').validate (value, respond)->
 
 exports.USER_PUBLIC_INFO = '_id photos name gender dob'
 
+
+#-------------------------------------------------------------------------------------
+#  News
+#-------------------------------------------------------------------------------------
+NewsSchema = new mongoose.Schema
+  created_on: { type: Date, 'default': Date.now }
+  updated_on: { type: Date, 'default': Date.now }
+  venue: {type: mongoose.Schema.ObjectId, ref: 'Venue', required: true}
+  image: {type: String, trim: true}
+  title: {type: String, trim: true}
+  description: {type: String, trim: true}
+
+NewsSchema.pre 'save', (next, done) ->
+  this.updated_on = new Date().toISOString()
+  next()
+
+NewsSchema.set('toJSON', { getters: true, virtuals: true })
+exports.News = mongoose.model 'News', NewsSchema
+
 #-------------------------------------------------------------------------------------
 #  Venue
 #-------------------------------------------------------------------------------------

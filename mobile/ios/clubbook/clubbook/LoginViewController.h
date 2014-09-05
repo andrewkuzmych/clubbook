@@ -13,6 +13,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *emailText;
 @property (weak, nonatomic) IBOutlet UITextField *passText;
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
+@property (weak, nonatomic) IBOutlet UIButton *forgotPassButton;
+- (IBAction)forgotPassAction:(id)sender;
 - (IBAction)loginAction:(id)sender;
 
 

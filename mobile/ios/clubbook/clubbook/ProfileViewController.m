@@ -439,6 +439,23 @@
         return;
     }
     
+    NSString *ageLimit = [NSString stringWithFormat:NSLocalizedString(@"ageLimit", nil)];
+    NSDate* birthday = [_datePicker date];
+    NSDate* now = [NSDate date];
+    NSDateComponents* ageComponents = [[NSCalendar currentCalendar]
+                                       components:NSYearCalendarUnit
+                                       fromDate:birthday
+                                       toDate:now
+                                       options:0];
+    NSInteger age = [ageComponents year];
+    
+    if (age < 18) {
+        [CSNotificationView showInViewController:self
+                                           style:CSNotificationViewStyleError
+                                         message:ageLimit];
+        return;
+    }
+    
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];

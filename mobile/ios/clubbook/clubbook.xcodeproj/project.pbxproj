@@ -2489,8 +2489,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Bjorn Klaver (7UEP6N23JY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bjorn Klaver (7UEP6N23JY)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Bjorn Klaver (N248H23BGD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Bjorn Klaver (N248H23BGD)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/FacebookSDK",
@@ -2508,8 +2508,8 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Clubbook;
-				PROVISIONING_PROFILE = "9215ae6a-bdab-42ae-90e6-7aca2773f403";
-				VALID_ARCHS = "arm64 armv7 armv7s i386";
+				PROVISIONING_PROFILE = "0a894459-007e-4859-98b0-258c1358a615";
+				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2519,8 +2519,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Bjorn Klaver (7UEP6N23JY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bjorn Klaver (7UEP6N23JY)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Bjorn Klaver (N248H23BGD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Bjorn Klaver (N248H23BGD)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/FacebookSDK",
@@ -2537,8 +2537,8 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Clubbook;
-				PROVISIONING_PROFILE = "9215ae6a-bdab-42ae-90e6-7aca2773f403";
-				VALID_ARCHS = "arm64 armv7 armv7s i386";
+				PROVISIONING_PROFILE = "0a894459-007e-4859-98b0-258c1358a615";
+				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

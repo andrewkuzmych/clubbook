@@ -1,0 +1,204 @@
+extends ../layout
+
+block content
+  h3.page-title
+    | Clubs
+  .page-bar
+    ul.page-breadcrumb
+      li
+        i.fa.fa-home
+        a(href='/venue/#{current_venue._id}/clubs') Clubs
+  .row
+    .col-md-12
+      div.portlet-body.form
+       form#form_update_club.form-horizontal(method="post")
+          .form-actions.top.right
+            .row
+              .col-md-offset-3.col-md-9
+                button.btn.green(type='submit') Submit
+                a.btn.default(href="/venue/#{current_venue._id}/clubs", style="margin-left:5px;") Cancel
+
+          .form-body
+              .alert.alert-danger.display-hide
+                button.close(data-close='alert')
+                | You have some form errors. Please check below.
+              .alert.alert-success.display-hide
+                button.close(data-close='alert')
+                | Your form validation is successful!
+
+              if has_error
+                div.alert.alert-danger.display-hide(style="display: block;")
+                  button.close(data-close="alert")
+                  | Incorrect data!!!
+              .form-group
+                  label.col-md-3.control-label Logo
+                    span.required *
+                  .col-md-4
+                    .input-icon.right
+                    i.fa
+                    .preview
+                        if club.club_logo
+                          img(border='0', src='#{club.club_logo}', height='100')
+
+                    div.fileUpload.btn.btn-default
+                      span Upload
+                      !=cloudinary.uploader.image_upload_tag('image', {html: { class: "upload", tag:"upload_avatar" }})
+                    div#upload_avatar_progress
+                      div.bar(style="width:0%;height:18px;background: green;")
+
+                    input.form-control(type="hidden", name="club_logo", value="#{club.club_logo?club.club_logo:''}")     
+
+              .form-group
+                label.control-label.col-md-3 Name
+                  span.required *
+                .col-md-4
+                  .input-icon.right
+                    i.fa
+                    input.form-control(type='text', placeholder='Enter club name', name="club_name", value="#{club.club_name?club.club_name:''}")
+
+              .form-group
+                label.control-label.col-md-3 Email
+                  span.required *
+                .col-md-4
+                  .input-icon.right
+                    i.fa
+                    input.form-control(type='text', placeholder='Enter club email', name="club_email", value="#{club.club_email?club.club_email:''}")
+
+            .form-group
+                label.control-label.col-md-3 Site
+                  span.required *
+                .col-md-4
+                  .input-icon.right
+                    i.fa
+                    input.form-control(type='text', placeholder='Enter club site', name="club_site", value="#{club.club_site?club.club_site:''}")
+
+            .form-group
+                label.control-label.col-md-3 Phone
+                  span.required *
+                .col-md-4
+                  .input-icon.right
+                    i.fa
+                    input.form-control(type='text', placeholder='Enter club phone', name="club_phone", value="#{club.club_site?club.club_phone:''}")
+            
+            .form-group
+              label.col-md-3.control-label Address
+                span.required *
+              .col-md-4
+                .input-icon.right
+                  i.fa
+                  input.form-control#select_address(type="text", placeholder="address", name="club_address", value="#{club.club_address?club.club_address:''}")
+                  input(type="hidden", name="lat", value="#{club.club_loc?club.club_loc.lat:''}")
+                  input(type="hidden", name="lng", value="#{club.club_loc?club.club_loc.lon:''}")
+                  div#location_image.map_image(style="height:150px;")
+            
+            .form-group
+                label.control-label.col-md-3 Info
+                  span.required *
+                .col-md-4
+                  .input-icon.right
+                    i.fa
+                    textarea.form-control(type='text', placeholder='Enter club info', name="club_info") #{club.club_info?club.club_info:''}
+         
+            .form-group.last
+                    label.col-md-3.control-label Cover Images
+                        span.required *
+                    .col-md-4
+                      table.table
+                        if club.club_photos
+                          for photo in club.club_photos
+                            tr
+                              td(style="vertical-align: middle;")
+                                img.club_image(border='0', src='#{photo}', height='200')
+                              td(style="vertical-align: middle;")
+                                a.btn.red.delete delete
+
+                      div.fileUpload.btn.btn-default
+                        span Add Club Image
+                        !=cloudinary.uploader.image_upload_tag('image', {html: { class: "upload", tag:"upload_images" }})
+                      div#upload_images_progress
+                        div.bar(style="width:0%;height:18px;background: green;")
+
+                      input(type="hidden", name="club_images", value="#{club.club_photos?club.club_photos.join():''}")
+
+            .form-actions.right
+              .row
+                .col-md-offset-3.col-md-9
+                  button.btn.green(type='submit') Submit
+                  a.btn.default(href="/venue/#{current_venue._id}/clubs", style="margin-left:5px;") Cancel
+
+block scripts
+  script(type="text/javascript", src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDWlaBHVehLQeKiXQXbguAFIg6k-2Jk3Vw&sensor=false&libraries=places&language=#{locale}")
+  script(type="text/javascript", src="/assets/javascripts/jquery.geocomplete.min.js")
+  script(src="/assets/admin/pages/scripts/update_clubs.js", type='text/javascript')
+  script(type="text/javascript")
+    // Configure Cloudinary
+    $.cloudinary.config({ api_key: '!{api_key}', cloud_name: '!{cloud_name}' });
+
+    $('[tag=upload_images].cloudinary-fileupload').bind('fileuploadstart', function(e){
+      //$('.preview').html('Upload started...');
+      $('#upload_images_progress .bar').css('width', '0%');
+    });
+
+    $('[tag=upload_images].cloudinary-fileupload').bind('fileuploadprogress', function(e, data) { 
+      $('#upload_images_progress .bar').css('width', Math.round((data.loaded * 100.0) / data.total) + '%'); 
+    });
+    // Upload finished
+    $('[tag=upload_images].cloudinary-fileupload').bind('cloudinarydone', function(e, data){
+      $( "table.table" ).prepend( "<tr><td style='vertical-align: middle;'><img class='club_image' src='" + $.cloudinary.url(data.result.public_id) + "' height='200'></td><td style='vertical-align: middle;'><a class='btn red delete'>delete</a></td></tr>");
+      $('#upload_images_progress .bar').css('width', '0%');
+      updateClubImages()
+      return true;
+    });
+
+    $('[tag=upload_avatar].cloudinary-fileupload').bind('fileuploadstart', function(e){
+      //$('.preview').html('Upload started...');
+      $('#upload_avatar_progress .bar').css('width', '0%');
+    });
+
+    $('[tag=upload_avatar].cloudinary-fileupload').bind('fileuploadprogress', function(e, data) { 
+      $('#upload_avatar_progress .bar').css('width', Math.round((data.loaded * 100.0) / data.total) + '%'); 
+    });
+
+    $('[tag=upload_avatar].cloudinary-fileupload').bind('cloudinarydone', function(e, data){
+      $('[name=club_logo]').val($.cloudinary.url(data.result.public_id));
+      $('.preview').html(
+        $.cloudinary.image(data.result.public_id, { format: data.result.format, version: data.result.version,  height: 100 })
+      );
+      $('#upload_avatar_progress .bar').css('width', '0%');
+      return true;
+    });
+
+    $(".delete").live("click", function(){
+      $(this).closest('tr').remove();  
+      updateClubImages();
+    });
+
+    function updateClubImages() {
+      $('[name=club_images]').val($('img.club_image').map(function() { return this.src; }).get().join());
+    }
+
+    var geocomplete_options;
+
+    if ($("#select_address").length > 0) {
+      geocomplete_options = {
+        map: "#location_image",
+        markerOptions: {
+          draggable: true
+        },
+        details: "form"
+      };
+
+      console.log(geocomplete_options);
+      if ($("input[name=lat]").val() && $("input[name=lng]").val()) {
+        geocomplete_options["location"] = [$("input[name=lat]").val(), $("input[name=lng]").val()];
+      }
+      $("#select_address").geocomplete(geocomplete_options);
+      $("#select_address").bind("geocode:dragged", function(event, latLng) {
+        console.log(latLng);
+        
+        $("input[name=lat]").val(latLng.lat());
+        return $("input[name=lng]").val(latLng.lng());
+      });
+    }
+
+    FormValidation.init();

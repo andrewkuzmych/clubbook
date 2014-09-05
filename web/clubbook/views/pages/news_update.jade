@@ -1,0 +1,94 @@
+extends ../layout
+
+block content
+  h3.page-title
+    | News
+  .page-bar
+    ul.page-breadcrumb
+      li
+        i.fa.fa-home
+        a(href='/venue/#{current_venue._id}/news_create') News
+  .row
+    .col-md-12
+      div.portlet-body.form
+        form#form_update_news.form-horizontal(method="post", role="form")
+          .form-actions.top.right
+            .row
+              .col-md-offset-3.col-md-9
+                button.btn.green(type='submit') Submit
+                a.btn.default(href="/venue/#{current_venue._id}/news", style="margin-left:5px;") Cancel
+          .form-body
+              .alert.alert-danger.display-hide
+                button.close(data-close='alert')
+                | You have some form errors. Please check below.
+              .alert.alert-success.display-hide
+                button.close(data-close='alert')
+                | Your form validation is successful!
+              
+              if has_error
+                div.alert.alert-danger.display-hide(style="display: block;")
+                  button.close(data-close="alert")
+                  | Incorrect data!!!
+              .form-group
+                  label.col-md-3.control-label Cover Image
+                    span.required *
+                  .col-md-4
+                    .preview
+                      if news.image
+                        img(border='0', src='#{news.image}', height='200')
+
+                    div.fileUpload.btn.btn-default
+                      span Upload
+                      !=cloudinary.uploader.image_upload_tag('image', {html: { class: "upload" }})
+                    div#progress
+                      div.bar(style="width:0%;height:18px;background: green;")
+
+                    input(type="hidden", name="news_image", value="#{news.image?news.image:''}")
+              .form-group
+                label.control-label.col-md-3 Name
+                  span.required *
+                .col-md-4
+                  .input-icon.right
+                    i.fa
+                    input.form-control(type='text', placeholder='Enter news title', name="title", value="#{news.title?news.title:''}")
+
+              .form-group.last
+                label.col-md-3.control-label Description
+                  span.required *
+                .col-md-4
+                  .input-icon.right
+                    i.fa
+                    textarea.form-control(rows="5", placeholder="Enter news description", name="description") #{news.description?news.description:''}
+
+            .form-actions.right
+              .row
+                .col-md-offset-3.col-md-9
+                  button.btn.green(type='submit') Submit
+                  a.btn.default(href="/venue/#{current_venue._id}/news", style="margin-left:5px;") Cancel
+
+block scripts
+  script(src="/assets/admin/pages/scripts/update_news.js", type='text/javascript')
+  script(type="text/javascript")
+    // Configure Cloudinary
+    $.cloudinary.config({ api_key: '!{api_key}', cloud_name: '!{cloud_name}' });
+
+    $('.cloudinary-fileupload').bind('fileuploadstart', function(e){
+      $('#progress .bar').css('width', '0%');
+    });
+
+    $('.cloudinary-fileupload').bind('fileuploadprogress', function(e, data) { 
+      $('#progress .bar').css('width', Math.round((data.loaded * 100.0) / data.total) + '%'); 
+    });
+    // Upload finished
+    $('.cloudinary-fileupload').bind('cloudinarydone', function(e, data){
+      $('[name=news_image]').val($.cloudinary.url(data.result.public_id));
+      $('.preview').html(
+        $.cloudinary.image(data.result.public_id, { format: data.result.format, version: data.result.version,  height: 200 })
+      );
+      $('#progress .bar').css('width', '0%');
+      return true;
+    });
+
+    FormValidation.init();
+
+

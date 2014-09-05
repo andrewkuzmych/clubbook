@@ -179,7 +179,7 @@
 }
 
 -(void)dboChanged:(id)sender{
-    NSDate *dateToTExtField=[_datePicker date];
+    NSDate *dateToTExtField = [_datePicker date];
     NSDateFormatter *format = [[NSDateFormatter alloc] init];
     [format setDateFormat:@"dd MMM yyyy"];
     NSString* finalDateString = [format stringFromDate:dateToTExtField];
@@ -224,6 +224,7 @@
     NSString *wrongCountry = [NSString stringWithFormat:NSLocalizedString(@"wrongCountry", nil)];
     NSString *wrongAvatar = [NSString stringWithFormat:NSLocalizedString(@"wrongAvatar", nil)];
     NSString *error = [NSString stringWithFormat:NSLocalizedString(@"error", nil)];
+    NSString *ageLimit = [NSString stringWithFormat:NSLocalizedString(@"ageLimit", nil)];
     
     BOOL isValidName = [Validator NSStringLength:self.nameText.text:2];
     if(isValidName == NO)
@@ -260,7 +261,23 @@
                                          message:wrongDob];
         return;
     }
-     
+    
+    NSDate* birthday = [_datePicker date];
+    NSDate* now = [NSDate date];
+    NSDateComponents* ageComponents = [[NSCalendar currentCalendar]
+                                       components:NSYearCalendarUnit
+                                       fromDate:birthday
+                                       toDate:now
+                                       options:0];
+    NSInteger age = [ageComponents year];
+    
+    if (age < 18) {
+        [CSNotificationView showInViewController:self
+                                           style:CSNotificationViewStyleError
+                                         message:ageLimit];
+        return;
+    }
+    
     BOOL isValidEmail = [Validator NSStringIsValidEmail:self.emailText.text];
     if(isValidEmail == NO)
     {

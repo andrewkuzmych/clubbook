@@ -143,9 +143,8 @@
             place.distance = distance;
         }
         
-        self.title = [NSString stringWithFormat:@"%@ (%lu)", NSLocalizedString(@"clubs", nil), (unsigned long)places.count];
+        self.title = [NSString stringWithFormat:@"%@", NSLocalizedString(@"clubs", nil)];
         
-       
         self.clubTable.hidden = NO;
         self.clubTable.dataSource = self;
         self.clubTable.delegate = self;

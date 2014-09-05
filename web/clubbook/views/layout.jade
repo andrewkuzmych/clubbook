@@ -11,33 +11,33 @@ html(lang='en')
     //
        BEGIN GLOBAL MANDATORY STYLES 
     link(href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all', rel='stylesheet', type='text/css')
-    link(href='assets/global/plugins/font-awesome/css/font-awesome.min.css', rel='stylesheet', type='text/css')
-    link(href='assets/global/plugins/simple-line-icons/simple-line-icons.min.css', rel='stylesheet', type='text/css')
-    link(href='assets/global/plugins/bootstrap/css/bootstrap.min.css', rel='stylesheet', type='text/css')
-    link(href='assets/global/plugins/uniform/css/uniform.default.css', rel='stylesheet', type='text/css')
-    link(href='assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css', rel='stylesheet', type='text/css')
+    link(href='/assets/global/plugins/font-awesome/css/font-awesome.min.css', rel='stylesheet', type='text/css')
+    link(href='/assets/global/plugins/simple-line-icons/simple-line-icons.min.css', rel='stylesheet', type='text/css')
+    link(href='/assets/global/plugins/bootstrap/css/bootstrap.min.css', rel='stylesheet', type='text/css')
+    link(href='/assets/global/plugins/uniform/css/uniform.default.css', rel='stylesheet', type='text/css')
+    link(href='/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css', rel='stylesheet', type='text/css')
     //
        END GLOBAL MANDATORY STYLES 
     //
        BEGIN PAGE LEVEL PLUGIN STYLES 
-    link(href='assets/global/plugins/gritter/css/jquery.gritter.css', rel='stylesheet', type='text/css')
-    link(href='assets/global/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css', rel='stylesheet', type='text/css')
-    link(href='assets/global/plugins/fullcalendar/fullcalendar/fullcalendar.css', rel='stylesheet', type='text/css')
-    link(href='assets/global/plugins/jqvmap/jqvmap/jqvmap.css', rel='stylesheet', type='text/css')
+    //link(href='/assets/global/plugins/gritter/css/jquery.gritter.css', rel='stylesheet', type='text/css')
+    //link(href='/assets/global/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css', rel='stylesheet', type='text/css')
+    //link(href='/assets/global/plugins/fullcalendar/fullcalendar/fullcalendar.css', rel='stylesheet', type='text/css')
+    //link(href='/assets/global/plugins/jqvmap/jqvmap/jqvmap.css', rel='stylesheet', type='text/css')
     //
        END PAGE LEVEL PLUGIN STYLES 
     //
        BEGIN PAGE STYLES 
-    link(href='assets/admin/pages/css/tasks.css', rel='stylesheet', type='text/css')
+    link(href='/assets/admin/pages/css/tasks.css', rel='stylesheet', type='text/css')
     //
        END PAGE STYLES 
     //
        BEGIN THEME STYLES 
-    link(href='assets/global/css/components.css', rel='stylesheet', type='text/css')
-    link(href='assets/global/css/plugins.css', rel='stylesheet', type='text/css')
-    link(href='assets/admin/layout/css/layout.css', rel='stylesheet', type='text/css')
-    link#style_color(href='../../assets/admin/layout/css/themes/default.css', rel='stylesheet', type='text/css')
-    link(href='assets/admin/layout/css/custom.css', rel='stylesheet', type='text/css')
+    link(href='/assets/global/css/components.css', rel='stylesheet', type='text/css')
+    link(href='/assets/global/css/plugins.css', rel='stylesheet', type='text/css')
+    link(href='/assets/admin/layout/css/layout.css', rel='stylesheet', type='text/css')
+    link#style_color(href='/assets/admin/layout/css/themes/default.css', rel='stylesheet', type='text/css')
+    link(href='/assets/admin/layout/css/custom.css', rel='stylesheet', type='text/css')
     //
        END THEME STYLES 
     link(rel='shortcut icon', href='favicon.ico')
@@ -54,8 +54,8 @@ html(lang='en')
         //
            BEGIN LOGO 
         .page-logo
-          a(href='index.html')
-            img.logo-default(src='assets/admin/layout/img/logo.png', alt='logo')
+          a(href='#')
+            img(src='/assets/img/logo.png', alt='logo', style="width: 130px;margin-top: 10px;")
           .menu-toggler.sidebar-toggler.hide
             //
                DOC: Remove the above "hide" to enable the sidebar toggler button on header 
@@ -63,312 +63,46 @@ html(lang='en')
            END LOGO 
         //
            BEGIN RESPONSIVE MENU TOGGLER 
+
+        //
+             BEGIN HORIZANTAL MENU 
+        .hor-menu.hidden-sm.hidden-xs
+              ul.nav.navbar-nav
+                li.classic-menu-dropdown.active
+                  a(data-hover='dropdown', data-close-others='true', data-toggle='dropdown', href='/venue/#{active_venue._id}/news')
+                    | #{active_venue.club_name}
+                    i.fa.fa-angle-down
+                  ul.dropdown-menu.pull-left
+                    for venue in my_venues
+                      li
+                        a(href="/venue/#{venue._id}/news") #{venue.club_name}
+                
+            //
+               END HORIZANTAL MENU 
+
         a.menu-toggler.responsive-toggler(href='javascript:;', data-toggle='collapse', data-target='.navbar-collapse')
         //
            END RESPONSIVE MENU TOGGLER 
         //
            BEGIN TOP NAVIGATION MENU 
+
         .top-menu
+
           ul.nav.navbar-nav.pull-right
-            //
-               BEGIN NOTIFICATION DROPDOWN 
-            li#header_notification_bar.dropdown.dropdown-extended.dropdown-notification
-              a.dropdown-toggle(href='#', data-toggle='dropdown', data-hover='dropdown', data-close-others='true')
-                i.icon-bell
-                span.badge.badge-default
-                  | 7
-              ul.dropdown-menu
-                li
-                  p
-                    | You have 14 new notifications
-                li
-                  ul.dropdown-menu-list.scroller(style='height: 250px;')
-                    li
-                      a(href='#')
-                        span.label.label-sm.label-icon.label-success
-                          i.fa.fa-plus
-                        | New user registered.
-                        span.time
-                          | Just now
-                    li
-                      a(href='#')
-                        span.label.label-sm.label-icon.label-danger
-                          i.fa.fa-bolt
-                        | Server #12 overloaded.
-                        span.time
-                          | 15 mins
-                    li
-                      a(href='#')
-                        span.label.label-sm.label-icon.label-warning
-                          i.fa.fa-bell-o
-                        | Server #2 not responding.
-                        span.time
-                          | 22 mins
-                    li
-                      a(href='#')
-                        span.label.label-sm.label-icon.label-info
-                          i.fa.fa-bullhorn
-                        | Application error.
-                        span.time
-                          | 40 mins
-                    li
-                      a(href='#')
-                        span.label.label-sm.label-icon.label-danger
-                          i.fa.fa-bolt
-                        | Database overloaded 68%.
-                        span.time
-                          | 2 hrs
-                    li
-                      a(href='#')
-                        span.label.label-sm.label-icon.label-danger
-                          i.fa.fa-bolt
-                        | 2 user IP blocked.
-                        span.time
-                          | 5 hrs
-                    li
-                      a(href='#')
-                        span.label.label-sm.label-icon.label-warning
-                          i.fa.fa-bell-o
-                        | Storage Server #4 not responding.
-                        span.time
-                          | 45 mins
-                    li
-                      a(href='#')
-                        span.label.label-sm.label-icon.label-info
-                          i.fa.fa-bullhorn
-                        | System Error.
-                        span.time
-                          | 55 mins
-                    li
-                      a(href='#')
-                        span.label.label-sm.label-icon.label-danger
-                          i.fa.fa-bolt
-                        | Database overloaded 68%.
-                        span.time
-                          | 2 hrs
-                li.external
-                  a(href='#')
-                    | See all notifications
-                    i.m-icon-swapright
-            //
-               END NOTIFICATION DROPDOWN 
-            //
-               BEGIN INBOX DROPDOWN 
-            li#header_inbox_bar.dropdown.dropdown-extended.dropdown-inbox
-              a.dropdown-toggle(href='#', data-toggle='dropdown', data-hover='dropdown', data-close-others='true')
-                i.icon-envelope-open
-                span.badge.badge-default
-                  | 4
-              ul.dropdown-menu
-                li
-                  p
-                    | You have 12 new messages
-                li
-                  ul.dropdown-menu-list.scroller(style='height: 250px;')
-                    li
-                      a(href='inbox.html?a=view')
-                        span.photo
-                          img(src='../../assets/admin/layout/img/avatar2.jpg', alt='')
-                        span.subject
-                          span.from
-                            | Lisa Wong
-                          span.time
-                            | Just Now
-                        span.message
-                          | Vivamus sed auctor nibh congue nibh. auctor nibh auctor nibh...
-                    li
-                      a(href='inbox.html?a=view')
-                        span.photo
-                          img(src='../../assets/admin/layout/img/avatar3.jpg', alt='')
-                        span.subject
-                          span.from
-                            | Richard Doe
-                          span.time
-                            | 16 mins
-                        span.message
-                          | Vivamus sed congue nibh auctor nibh congue nibh. auctor nibh auctor nibh...
-                    li
-                      a(href='inbox.html?a=view')
-                        span.photo
-                          img(src='../../assets/admin/layout/img/avatar1.jpg', alt='')
-                        span.subject
-                          span.from
-                            | Bob Nilson
-                          span.time
-                            | 2 hrs
-                        span.message
-                          | Vivamus sed nibh auctor nibh congue nibh. auctor nibh auctor nibh...
-                    li
-                      a(href='inbox.html?a=view')
-                        span.photo
-                          img(src='../../assets/admin/layout/img/avatar2.jpg', alt='')
-                        span.subject
-                          span.from
-                            | Lisa Wong
-                          span.time
-                            | 40 mins
-                        span.message
-                          | Vivamus sed auctor 40% nibh congue nibh...
-                    li
-                      a(href='inbox.html?a=view')
-                        span.photo
-                          img(src='../../assets/admin/layout/img/avatar3.jpg', alt='')
-                        span.subject
-                          span.from
-                            | Richard Doe
-                          span.time
-                            | 46 mins
-                        span.message
-                          | Vivamus sed congue nibh auctor nibh congue nibh. auctor nibh auctor nibh...
-                li.external
-                  a(href='inbox.html')
-                    | See all messages
-                    i.m-icon-swapright
-            //
-               END INBOX DROPDOWN 
-            //
-               BEGIN TODO DROPDOWN 
-            li#header_task_bar.dropdown.dropdown-extended.dropdown-tasks
-              a.dropdown-toggle(href='#', data-toggle='dropdown', data-hover='dropdown', data-close-others='true')
-                i.icon-calendar
-                span.badge.badge-default
-                  | 3
-              ul.dropdown-menu.extended.tasks
-                li
-                  p
-                    | You have 12 pending tasks
-                li
-                  ul.dropdown-menu-list.scroller(style='height: 250px;')
-                    li
-                      a(href='#')
-                        span.task
-                          span.desc
-                            | New release v1.2
-                          span.percent
-                            | 30%
-                        span.progress
-                          span.progress-bar.progress-bar-success(style='width: 40%;', aria-valuenow='40', aria-valuemin='0', aria-valuemax='100')
-                            span.sr-only
-                              | 40% Complete
-                    li
-                      a(href='#')
-                        span.task
-                          span.desc
-                            | Application deployment
-                          span.percent
-                            | 65%
-                        span.progress.progress-striped
-                          span.progress-bar.progress-bar-danger(style='width: 65%;', aria-valuenow='65', aria-valuemin='0', aria-valuemax='100')
-                            span.sr-only
-                              | 65% Complete
-                    li
-                      a(href='#')
-                        span.task
-                          span.desc
-                            | Mobile app release
-                          span.percent
-                            | 98%
-                        span.progress
-                          span.progress-bar.progress-bar-success(style='width: 98%;', aria-valuenow='98', aria-valuemin='0', aria-valuemax='100')
-                            span.sr-only
-                              | 98% Complete
-                    li
-                      a(href='#')
-                        span.task
-                          span.desc
-                            | Database migration
-                          span.percent
-                            | 10%
-                        span.progress.progress-striped
-                          span.progress-bar.progress-bar-warning(style='width: 10%;', aria-valuenow='10', aria-valuemin='0', aria-valuemax='100')
-                            span.sr-only
-                              | 10% Complete
-                    li
-                      a(href='#')
-                        span.task
-                          span.desc
-                            | Web server upgrade
-                          span.percent
-                            | 58%
-                        span.progress.progress-striped
-                          span.progress-bar.progress-bar-info(style='width: 58%;', aria-valuenow='58', aria-valuemin='0', aria-valuemax='100')
-                            span.sr-only
-                              | 58% Complete
-                    li
-                      a(href='#')
-                        span.task
-                          span.desc
-                            | Mobile development
-                          span.percent
-                            | 85%
-                        span.progress.progress-striped
-                          span.progress-bar.progress-bar-success(style='width: 85%;', aria-valuenow='85', aria-valuemin='0', aria-valuemax='100')
-                            span.sr-only
-                              | 85% Complete
-                    li
-                      a(href='#')
-                        span.task
-                          span.desc
-                            | New UI release
-                          span.percent
-                            | 18%
-                        span.progress.progress-striped
-                          span.progress-bar.progress-bar-important(style='width: 18%;', aria-valuenow='18', aria-valuemin='0', aria-valuemax='100')
-                            span.sr-only
-                              | 18% Complete
-                li.external
-                  a(href='#')
-                    | See all tasks
-                    i.m-icon-swapright
-            //
-               END TODO DROPDOWN 
-            //
-               BEGIN USER LOGIN DROPDOWN 
+            // BEGIN USER LOGIN DROPDOWN 
             li.dropdown.dropdown-user
               a.dropdown-toggle(href='#', data-toggle='dropdown', data-hover='dropdown', data-close-others='true')
-                img.img-circle(alt='', src='../../assets/admin/layout/img/avatar3_small.jpg')
+                //img.img-circle(alt='', src='/assets/admin/layout/img/avatar3_small.jpg')
                 span.username
-                  | Bob
+                  | #{current_user.login}
                 i.fa.fa-angle-down
               ul.dropdown-menu
                 li
-                  a(href='extra_profile.html')
-                    i.icon-user
-                    | My Profile
-                li
-                  a(href='page_calendar.html')
-                    i.icon-calendar
-                    | My Calendar
-                li
-                  a(href='inbox.html')
-                    i.icon-envelope-open
-                    | My Inbox
-                    span.badge.badge-danger
-                      | 3
-                li
-                  a(href='#')
-                    i.icon-rocket
-                    | My Tasks
-                    span.badge.badge-success
-                      | 7
-                li.divider
-                li
-                  a(href='extra_lock.html')
-                    i.icon-lock
-                    | Lock Screen
-                li
-                  a(href='login.html')
+                  a(href='/logout')
                     i.icon-key
                     | Log Out
             //
                END USER LOGIN DROPDOWN 
-            //
-               BEGIN QUICK SIDEBAR TOGGLER 
-            li.dropdown.dropdown-quick-sidebar-toggler
-              a.dropdown-toggle(href='javascript:;')
-                i.icon-logout
-            //
-               END QUICK SIDEBAR TOGGLER 
         //
            END TOP NAVIGATION MENU 
       //
@@ -391,546 +125,40 @@ html(lang='en')
               ul.page-sidebar-menu(data-auto-scroll='true', data-slide-speed='200')
                 //
                    DOC: To remove the sidebar toggler from the sidebar you just need to completely remove the below "sidebar-toggler-wrapper" LI element 
-                li.sidebar-toggler-wrapper
+                li.sidebar-toggler-wrapper(style="margin-bottom: 15px;")
                   //
                      BEGIN SIDEBAR TOGGLER BUTTON 
                   .sidebar-toggler
                   //
                      END SIDEBAR TOGGLER BUTTON 
-                //
-                   DOC: To remove the search box from the sidebar you just need to completely remove the below "sidebar-search-wrapper" LI element 
-                li.sidebar-search-wrapper.hidden-xs
-                  //
-                     BEGIN RESPONSIVE QUICK SEARCH FORM 
-                  //
-                     DOC: Apply "sidebar-search-bordered" class the below search form to have bordered search box 
-                  //
-                     DOC: Apply "sidebar-search-bordered sidebar-search-solid" class the below search form to have bordered & solid search box 
-                  form.sidebar-search(action='extra_search.html', method='POST')
-                    a.remove(href='javascript:;')
-                      i.icon-close
-                    .input-group
-                      input.form-control(type='text', placeholder='Search...')
-                      span.input-group-btn
-                        a.btn.submit(href='javascript:;')
-                          i.icon-magnifier
-                  //
-                     END RESPONSIVE QUICK SEARCH FORM 
-                li.start.active
-                  a(href='index.html')
-                    i.icon-home
-                    span.title Dashboard
-                    span.selected
-                li
-                  a(href='javascript:;')
-                    i.icon-basket
-                    span.title eCommerce
-                    span.arrow
-                  ul.sub-menu
-                    li
-                      a(href='ecommerce_index.html')
-                        i.icon-home
-                        | Dashboard
-                    li
-                      a(href='ecommerce_orders.html')
-                        i.icon-basket
-                        | Orders
-                    li
-                      a(href='ecommerce_orders_view.html')
-                        i.icon-tag
-                        | Order View
-                    li
-                      a(href='ecommerce_products.html')
-                        i.icon-handbag
-                        | Products
-                    li
-                      a(href='ecommerce_products_edit.html')
-                        i.icon-pencil
-                        | Product Edit
-                li
-                  a(href='javascript:;')
-                    i.icon-rocket
-                    span.title Page Layouts
-                    span.arrow
-                  ul.sub-menu
-                    li
-                      a(href='layout_horizontal_sidebar_menu.html')
-                        | Horizontal & Sidebar Menu
-                    li
-                      a(href='index_horizontal_menu.html')
-                        | Dashboard & Mega Menu
-                    li
-                      a(href='layout_horizontal_menu1.html')
-                        | Horizontal Mega Menu 1
-                    li
-                      a(href='layout_horizontal_menu2.html')
-                        | Horizontal Mega Menu 2
-                    li
-                      a(href='layout_fontawesome_icons.html')
-                        span.badge.badge-roundless.badge-danger new
-                        | Layout with Fontawesome Icons
-                    li
-                      a(href='layout_glyphicons.html')
-                        | Layout with Glyphicon
-                    li
-                      a(href='layout_full_height_portlet.html')
-                        span.badge.badge-roundless.badge-success new
-                        | Full Height Portlet
-                    li
-                      a(href='layout_full_height_content.html')
-                        span.badge.badge-roundless.badge-warning new
-                        | Full Height Content
-                    li
-                      a(href='layout_search_on_header1.html')
-                        | Search Box On Header 1
-                    li
-                      a(href='layout_search_on_header2.html')
-                        | Search Box On Header 2
-                    li
-                      a(href='layout_sidebar_search_option1.html')
-                        | Sidebar Search Option 1
-                    li
-                      a(href='layout_sidebar_search_option2.html')
-                        | Sidebar Search Option 2
-                    li
-                      a(href='layout_sidebar_reversed.html')
-                        span.badge.badge-roundless.badge-warning new
-                        | Right Sidebar Page
-                    li
-                      a(href='layout_sidebar_fixed.html')
-                        | Sidebar Fixed Page
-                    li
-                      a(href='layout_sidebar_closed.html')
-                        | Sidebar Closed Page
-                    li
-                      a(href='layout_ajax.html')
-                        | Content Loading via Ajax
-                    li
-                      a(href='layout_disabled_menu.html')
-                        | Disabled Menu Links
-                    li
-                      a(href='layout_blank_page.html')
-                        | Blank Page
-                    li
-                      a(href='layout_boxed_page.html')
-                        | Boxed Page
-                    li
-                      a(href='layout_language_bar.html')
-                        | Language Switch Bar
-                //
-                   BEGIN FRONTEND THEME LINKS 
-                li
-                  a(href='javascript:;')
-                    i.icon-star
-                    span.title
-                      | Frontend Themes
-                    span.arrow
-                  ul.sub-menu
-                    li.tooltips(data-container='body', data-placement='right', data-html='true', data-original-title='Complete eCommerce Frontend Theme For Metronic Admin')
-                      a(href='http://keenthemes.com/preview/index.php?theme=metronic_frontend&page=shop-index.html', target='_blank')
-                        span.title
-                          | eCommerce Frontend
-                    li.tooltips(data-container='body', data-placement='right', data-html='true', data-original-title='Complete Corporate Frontend Theme For Metronic Admin')
-                      a(href='http://keenthemes.com/preview/index.php?theme=metronic_frontend', target='_blank')
-                        span.title
-                          | Corporate Frontend
-                    li.tooltips(data-container='body', data-placement='right', data-html='true', data-original-title='Complete One Page Parallax Frontend Theme For Metronic Admin')
-                      a(href='http://keenthemes.com/preview/index.php?theme=metronic_frontend&page=onepage-index.html', target='_blank')
-                        span.title
-                          | One Page Parallax Frontend
+
                 //
                    END FRONTEND THEME LINKS 
+                li.start(class=req_path.indexOf("/clubs") != -1 ? "active":"")
+                  a(href='/venue/#{current_venue._id}/clubs')
+                    i.icon-home
+                    span.title My Clubs
+                    span.selected
+                li(class=req_path.indexOf("/news") != -1 ? "active":"")
+                  a(href='/venue/#{current_venue._id}/news')
+                    i.icon-bubble
+                    span.title News
+                    span.selected
                 li
-                  a(href='javascript:;')
-                    i.icon-diamond
-                    span.title UI Features
-                    span.arrow
-                  ul.sub-menu
-                    li
-                      a(href='ui_general.html')
-                        | General Components
-                    li
-                      a(href='ui_buttons.html')
-                        | Buttons
-                    li
-                      a(href='ui_icons.html')
-                        span.badge.badge-roundless.badge-danger new
-                        | Font Icons
-                    li
-                      a(href='ui_colors.html')
-                        | Flat UI Colors
-                    li
-                      a(href='ui_typography.html')
-                        | Typography
-                    li
-                      a(href='ui_tabs_accordions_navs.html')
-                        | Tabs, Accordions & Navs
-                    li
-                      a(href='ui_tree.html')
-                        span.badge.badge-roundless.badge-danger new
-                        | Tree View
-                    li
-                      a(href='ui_page_progress_style_1.html')
-                        span.badge.badge-roundless.badge-warning new
-                        | Page Progress Bar
-                    li
-                      a(href='ui_blockui.html')
-                        | Block UI
-                    li
-                      a(href='ui_notific8.html')
-                        | Notific8 Notifications
-                    li
-                      a(href='ui_toastr.html')
-                        | Toastr Notifications
-                    li
-                      a(href='ui_alert_dialog_api.html')
-                        span.badge.badge-roundless.badge-danger new
-                        | Alerts & Dialogs API
-                    li
-                      a(href='ui_session_timeout.html')
-                        | Session Timeout
-                    li
-                      a(href='ui_idle_timeout.html')
-                        | User Idle Timeout
-                    li
-                      a(href='ui_modals.html')
-                        | Modals
-                    li
-                      a(href='ui_extended_modals.html')
-                        | Extended Modals
-                    li
-                      a(href='ui_tiles.html')
-                        | Tiles
-                    li
-                      a(href='ui_datepaginator.html')
-                        span.badge.badge-roundless.badge-success new
-                        | Date Paginator
-                    li
-                      a(href='ui_nestable.html')
-                        | Nestable List
+                  a(href='#')
+                    i.icon-users
+                    span.title Users
+                    span.selected
                 li
-                  a(href='javascript:;')
-                    i.icon-puzzle
-                    span.title UI Components
-                    span.arrow
-                  ul.sub-menu
-                    li
-                      a(href='components_pickers.html')
-                        | Pickers
-                    li
-                      a(href='components_dropdowns.html')
-                        | Custom Dropdowns
-                    li
-                      a(href='components_form_tools.html')
-                        | Form Tools
-                    li
-                      a(href='components_editors.html')
-                        | Markdown & WYSIWYG Editors
-                    li
-                      a(href='components_ion_sliders.html')
-                        | Ion Range Sliders
-                    li
-                      a(href='components_noui_sliders.html')
-                        | NoUI Range Sliders
-                    li
-                      a(href='components_jqueryui_sliders.html')
-                        | jQuery UI Sliders
-                    li
-                      a(href='components_knob_dials.html')
-                        | Knob Circle Dials
-                li
-                  a(href='javascript:;')
-                    i.icon-settings
-                    span.title Form Stuff
-                    span.arrow
-                  ul.sub-menu
-                    li
-                      a(href='form_controls.html')
-                        | Form Controls
-                    li
-                      a(href='form_layouts.html')
-                        | Form Layouts
-                    li
-                      a(href='form_editable.html')
-                        span.badge.badge-roundless.badge-warning new
-                        | Form X-editable
-                    li
-                      a(href='form_wizard.html')
-                        | Form Wizard
-                    li
-                      a(href='form_validation.html')
-                        | Form Validation
-                    li
-                      a(href='form_image_crop.html')
-                        span.badge.badge-roundless.badge-danger new
-                        | Image Cropping
-                    li
-                      a(href='form_fileupload.html')
-                        | Multiple File Upload
-                    li
-                      a(href='form_dropzone.html')
-                        | Dropzone File Upload
-                li
-                  a(href='javascript:;')
-                    i.icon-logout
-                    span.title Quick Sidebar
-                    span.arrow
-                  ul.sub-menu
-                    li
-                      a(href='quick_sidebar_push_page.html')
-                        | Push Page
-                    li
-                      a(href='quick_sidebar_push_content.html')
-                        | Push Content
-                    li
-                      a(href='quick_sidebar_over_content.html')
-                        | Over Content
-                    li
-                      a(href='quick_sidebar_over_content_transparent.html')
-                        | Over Content & Transparent
-                    li
-                      a(href='quick_sidebar_on_boxed_layout.html')
-                        | Boxed Layout
-                li
-                  a(href='javascript:;')
-                    i.icon-envelope-open
-                    span.title Email Templates
-                    span.arrow
-                  ul.sub-menu
-                    li
-                      a(href='email_newsletter.html')
-                        | Responsive Newsletter
-                        br
-                        | Email Template
-                    li
-                      a(href='email_system.html')
-                        | Responsive System
-                        br
-                        | Email Template
-                li
-                  a(href='javascript:;')
-                    i.icon-docs
-                    span.title Pages
-                    span.arrow
-                  ul.sub-menu
-                    li
-                      a(href='page_portfolio.html')
-                        i.icon-feed
-                        span.badge.badge-warning.badge-roundless new
-                        | Portfolio
-                    li
-                      a(href='page_timeline.html')
-                        i.icon-clock
-                        span.badge.badge-info 4
-                        | Timeline
-                    li
-                      a(href='page_coming_soon.html')
-                        i.icon-flag
-                        | Coming Soon
-                    li
-                      a(href='page_blog.html')
-                        i.icon-speech
-                        | Blog
-                    li
-                      a(href='page_blog_item.html')
-                        i.icon-link
-                        | Blog Post
-                    li
-                      a(href='page_news.html')
-                        i.icon-eye
-                        span.badge.badge-success 9
-                        | News
-                    li
-                      a(href='page_news_item.html')
-                        i.icon-bell
-                        | News View
-                    li
-                      a(href='page_about.html')
-                        i.icon-users
-                        | About Us
-                    li
-                      a(href='page_contact.html')
-                        i.icon-envelope-open
-                        | Contact Us
-                    li
-                      a(href='page_calendar.html')
-                        i.icon-calendar
-                        span.badge.badge-danger 14
-                        | Calendar
-                li
-                  a(href='javascript:;')
-                    i.icon-present
-                    span.title Extra
-                    span.arrow
-                  ul.sub-menu
-                    li
-                      a(href='extra_profile.html')
-                        | User Profile
-                    li
-                      a(href='extra_lock.html')
-                        | Lock Screen
-                    li
-                      a(href='extra_faq.html')
-                        | FAQ
-                    li
-                      a(href='inbox.html')
-                        span.badge.badge-danger 4
-                        | Inbox
-                    li
-                      a(href='extra_search.html')
-                        | Search Results
-                    li
-                      a(href='extra_invoice.html')
-                        | Invoice
-                    li
-                      a(href='extra_pricing_table.html')
-                        | Pricing Tables
-                    li
-                      a(href='extra_404_option1.html')
-                        | 404 Page Option 1
-                    li
-                      a(href='extra_404_option2.html')
-                        | 404 Page Option 2
-                    li
-                      a(href='extra_404_option3.html')
-                        | 404 Page Option 3
-                    li
-                      a(href='extra_500_option1.html')
-                        | 500 Page Option 1
-                    li
-                      a(href='extra_500_option2.html')
-                        | 500 Page Option 2
-                li
-                  a(href='javascript:;')
-                    i.icon-folder
-                    span.title Multi Level Menu
-                    span.arrow
-                  ul.sub-menu
-                    li
-                      a(href='javascript:;')
-                        i.icon-settings
-                        | Item 1
-                        span.arrow
-                      ul.sub-menu
-                        li
-                          a(href='javascript:;')
-                            i.icon-user
-                            | Sample Link 1
-                            span.arrow
-                          ul.sub-menu
-                            li
-                              a(href='#')
-                                i.icon-power
-                                | Sample Link 1
-                            li
-                              a(href='#')
-                                i.icon-paper-plane
-                                | Sample Link 1
-                            li
-                              a(href='#')
-                                i.icon-star
-                                | Sample Link 1
-                        li
-                          a(href='#')
-                            i.icon-camera
-                            | Sample Link 1
-                        li
-                          a(href='#')
-                            i.icon-link
-                            | Sample Link 2
-                        li
-                          a(href='#')
-                            i.icon-pointer
-                            | Sample Link 3
-                    li
-                      a(href='javascript:;')
-                        i.icon-globe
-                        | Item 2
-                        span.arrow
-                      ul.sub-menu
-                        li
-                          a(href='#')
-                            i.icon-tag
-                            | Sample Link 1
-                        li
-                          a(href='#')
-                            i.icon-pencil
-                            | Sample Link 1
-                        li
-                          a(href='#')
-                            i.icon-graph
-                            | Sample Link 1
-                    li
-                      a(href='#')
-                        i.icon-bar-chart
-                        | Item 3
-                li
-                  a(href='javascript:;')
-                    i.icon-user
-                    span.title Login Options
-                    span.arrow
-                  ul.sub-menu
-                    li
-                      a(href='login.html')
-                        | Login Form 1
-                    li
-                      a(href='login_soft.html')
-                        | Login Form 2
-                li
-                  a(href='javascript:;')
-                    i.icon-briefcase
-                    span.title Data Tables
-                    span.arrow
-                  ul.sub-menu
-                    li
-                      a(href='table_basic.html')
-                        | Basic Datatables
-                    li
-                      a(href='table_responsive.html')
-                        | Responsive Datatables
-                    li
-                      a(href='table_managed.html')
-                        | Managed Datatables
-                    li
-                      a(href='table_editable.html')
-                        | Editable Datatables
-                    li
-                      a(href='table_advanced.html')
-                        | Advanced Datatables
-                    li
-                      a(href='table_ajax.html')
-                        | Ajax Datatables
-                li
-                  a(href='javascript:;')
-                    i.icon-wallet
-                    span.title Portlets
-                    span.arrow
-                  ul.sub-menu
-                    li
-                      a(href='portlet_general.html')
-                        | General Portlets
-                    li
-                      a(href='portlet_ajax.html')
-                        | Ajax Portlets
-                    li
-                      a(href='portlet_draggable.html')
-                        | Draggable Portlets
-                li
-                  a(href='javascript:;')
-                    i.icon-pointer
-                    span.title Maps
-                    span.arrow
-                  ul.sub-menu
-                    li
-                      a(href='maps_google.html')
-                        | Google Maps
-                    li
-                      a(href='maps_vector.html')
-                        | Vector Maps
-                li.last
-                  a(href='charts.html')
+                  a(href='#')
                     i.icon-bar-chart
-                    span.title Visual Charts
+                    span.title Statistic
+                    span.selected
+ 
+                li.last
+                  a(href='#')
+                    i.icon-settings
+                    span.title Settings
               //
                  END SIDEBAR MENU 
           //
@@ -939,129 +167,7 @@ html(lang='en')
            BEGIN CONTENT 
       .page-content-wrapper
             .page-content
-              //
-                 BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM
-              #portlet-config.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
-                .modal-dialog
-                  .modal-content
-                    .modal-header
-                      button.close(type='button', data-dismiss='modal', aria-hidden='true')
-                      h4.modal-title Modal title
-                    .modal-body
-                      | Widget settings form goes here
-                    .modal-footer
-                      button.btn.blue(type='button') Save changes
-                      button.btn.default(type='button', data-dismiss='modal') Close
-                  //
-                     /.modal-content 
-                //
-                   /.modal-dialog 
-              //
-                 /.modal 
-              //
-                 END SAMPLE PORTLET CONFIGURATION MODAL FORM
-              //
-                 BEGIN STYLE CUSTOMIZER 
-              .theme-panel.hidden-xs.hidden-sm
-                .toggler
-                .toggler-close
-                .theme-options
-                  .theme-option.theme-colors.clearfix
-                    span
-                      | THEME COLOR
-                    ul
-                      li.color-default.current.tooltips(data-style='default', data-container='body', data-original-title='Default')
-                      li.color-darkblue.tooltips(data-style='darkblue', data-container='body', data-original-title='Dark Blue')
-                      li.color-blue.tooltips(data-style='blue', data-container='body', data-original-title='Blue')
-                      li.color-grey.tooltips(data-style='grey', data-container='body', data-original-title='Grey')
-                      li.color-light.tooltips(data-style='light', data-container='body', data-original-title='Light')
-                      li.color-light2.tooltips(data-style='light2', data-container='body', data-html='true', data-original-title='Light 2')
-                  .theme-option
-                    span
-                      | Layout
-                    select.layout-option.form-control.input-small
-                      option(value='fluid', selected='selected') Fluid
-                      option(value='boxed') Boxed
-                  .theme-option
-                    span
-                      | Header
-                    select.page-header-option.form-control.input-small
-                      option(value='fixed', selected='selected') Fixed
-                      option(value='default') Default
-                  .theme-option
-                    span
-                      | Sidebar Mode
-                    select.sidebar-option.form-control.input-small
-                      option(value='fixed') Fixed
-                      option(value='default', selected='selected') Default
-                  .theme-option
-                    span
-                      | Sidebar Menu
-                    select.sidebar-menu-option.form-control.input-small
-                      option(value='accordion', selected='selected') Accordion
-                      option(value='hover') Hover
-                  .theme-option
-                    span
-                      | Sidebar Style
-                    select.sidebar-style-option.form-control.input-small
-                      option(value='default', selected='selected') Default
-                      option(value='light') Light
-                  .theme-option
-                    span
-                      | Sidebar Position
-                    select.sidebar-pos-option.form-control.input-small
-                      option(value='left', selected='selected') Left
-                      option(value='right') Right
-                  .theme-option
-                    span
-                      | Footer
-                    select.page-footer-option.form-control.input-small
-                      option(value='fixed') Fixed
-                      option(value='default', selected='selected') Default
-              //
-                 END STYLE CUSTOMIZER 
-              //
-                 BEGIN PAGE HEADER
-              h3.page-title
-                | Blank Page
-                small blank page
-              .page-bar
-                ul.page-breadcrumb
-                  li
-                    i.fa.fa-home
-                    a(href='index.html') Home
-                    i.fa.fa-angle-right
-                  li
-                    a(href='#') Page Layouts
-                    i.fa.fa-angle-right
-                  li
-                    a(href='#') Blank Page
-                .page-toolbar
-                  .btn-group.pull-right
-                    button.btn.btn-fit-height.grey-salt.dropdown-toggle(type='button', data-toggle='dropdown', data-hover='dropdown', data-delay='1000', data-close-others='true')
-                      | Actions
-                      i.fa.fa-angle-down
-                    ul.dropdown-menu.pull-right(role='menu')
-                      li
-                        a(href='#') Action
-                      li
-                        a(href='#') Another action
-                      li
-                        a(href='#') Something else here
-                      li.divider
-                      li
-                        a(href='#') Separated link
-              //
-                 END PAGE HEADER
-              //
-                 BEGIN PAGE CONTENT
-              .row
-                .col-md-12
-                  | Page content goes here
-              //
-                 END PAGE CONTENT
-          //
-             END CONTENT 
+              block content
 
 
     //
@@ -1081,52 +187,61 @@ html(lang='en')
     //
            BEGIN CORE PLUGINS 
     //if lt IE 9
-    script(src='assets/global/plugins/respond.min.js')
-    script(src='assets/global/plugins/excanvas.min.js')
-    script(src='assets/global/plugins/jquery-1.11.0.min.js', type='text/javascript')
-    script(src='assets/global/plugins/jquery-migrate-1.2.1.min.js', type='text/javascript')
+    script(src='/assets/global/plugins/respond.min.js')
+    script(src='/assets/global/plugins/excanvas.min.js')
+    script(src='/assets/global/plugins/jquery-1.11.0.min.js', type='text/javascript')
+    script(src='/assets/global/plugins/jquery-migrate-1.2.1.min.js', type='text/javascript')
     //
        IMPORTANT! Load jquery-ui-1.10.3.custom.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip 
-    script(src='assets/global/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js', type='text/javascript')
-    script(src='assets/global/plugins/bootstrap/js/bootstrap.min.js', type='text/javascript')
-    script(src='assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js', type='text/javascript')
-    script(src='assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js', type='text/javascript')
-    script(src='assets/global/plugins/jquery.blockui.min.js', type='text/javascript')
-    script(src='assets/global/plugins/jquery.cokie.min.js', type='text/javascript')
-    script(src='assets/global/plugins/uniform/jquery.uniform.min.js', type='text/javascript')
-    script(src='assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js', type='text/javascript')
+    script(src='/assets/global/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js', type='text/javascript')
+    script(src='/assets/global/plugins/bootstrap/js/bootstrap.min.js', type='text/javascript')
+    script(src='/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js', type='text/javascript')
+    script(src='/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js', type='text/javascript')
+    script(src='/assets/global/plugins/jquery.blockui.min.js', type='text/javascript')
+    script(src='/assets/global/plugins/jquery.cokie.min.js', type='text/javascript')
+    script(src='/assets/global/plugins/uniform/jquery.uniform.min.js', type='text/javascript')
+    script(src='/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js', type='text/javascript')
     //
        END CORE PLUGINS 
     //
        BEGIN PAGE LEVEL PLUGINS 
-    script(src='assets/global/plugins/jqvmap/jqvmap/jquery.vmap.js', type='text/javascript')
-    script(src='assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.russia.js', type='text/javascript')
-    script(src='assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.world.js', type='text/javascript')
-    script(src='assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.europe.js', type='text/javascript')
-    script(src='assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.germany.js', type='text/javascript')
-    script(src='assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.usa.js', type='text/javascript')
-    script(src='assets/global/plugins/jqvmap/jqvmap/data/jquery.vmap.sampledata.js', type='text/javascript')
-    script(src='assets/global/plugins/flot/jquery.flot.min.js', type='text/javascript')
-    script(src='assets/global/plugins/flot/jquery.flot.resize.min.js', type='text/javascript')
-    script(src='assets/global/plugins/flot/jquery.flot.categories.min.js', type='text/javascript')
-    script(src='assets/global/plugins/jquery.pulsate.min.js', type='text/javascript')
-    script(src='assets/global/plugins/bootstrap-daterangepicker/moment.min.js', type='text/javascript')
-    script(src='assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js', type='text/javascript')
+    //script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js')
+    script(src='/assets/global/plugins/jquery.ui.widget.js')
+    script(src='/assets/global/plugins/jquery.iframe-transport.js')
+    script(src='/assets/global/plugins/jquery.fileupload.js')
+    script(src='/assets/global/plugins/jquery.cloudinary.js')
+    //script(src='/assets/global/plugins/jqvmap/jqvmap/jquery.vmap.js', type='text/javascript')
+    //script(src='/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.russia.js', type='text/javascript')
+    //script(src='/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.world.js', type='text/javascript')
+    //script(src='/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.europe.js', type='text/javascript')
+    //script(src='/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.germany.js', type='text/javascript')
+    //script(src='/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.usa.js', type='text/javascript')
+    //script(src='/assets/global/plugins/jqvmap/jqvmap/data/jquery.vmap.sampledata.js', type='text/javascript')
+    script(src='/assets/global/plugins/flot/jquery.flot.min.js', type='text/javascript')
+    script(src='/assets/global/plugins/flot/jquery.flot.resize.min.js', type='text/javascript')
+    script(src='/assets/global/plugins/flot/jquery.flot.categories.min.js', type='text/javascript')
+    script(src='/assets/global/plugins/jquery.pulsate.min.js', type='text/javascript')
+    script(src='/assets/global/plugins/bootstrap-daterangepicker/moment.min.js', type='text/javascript')
+    script(src='/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js', type='text/javascript')
+    script(src="/assets/global/plugins/jquery-validation/js/jquery.validate.min.js", type='text/javascript')
+    script(src="/assets/global/plugins/jquery-validation/js/additional-methods.min.js", type='text/javascript')
+
     //
        IMPORTANT! fullcalendar depends on jquery-ui-1.10.3.custom.min.js for drag & drop support 
-    script(src='assets/global/plugins/fullcalendar/fullcalendar/fullcalendar.min.js', type='text/javascript')
-    script(src='assets/global/plugins/jquery-easypiechart/jquery.easypiechart.min.js', type='text/javascript')
-    script(src='assets/global/plugins/jquery.sparkline.min.js', type='text/javascript')
-    script(src='assets/global/plugins/gritter/js/jquery.gritter.js', type='text/javascript')
+    script(src='/assets/global/plugins/fullcalendar/fullcalendar/fullcalendar.min.js', type='text/javascript')
+    script(src='/assets/global/plugins/jquery-easypiechart/jquery.easypiechart.min.js', type='text/javascript')
+    script(src='/assets/global/plugins/jquery.sparkline.min.js', type='text/javascript')
+    script(src='/assets/global/plugins/gritter/js/jquery.gritter.js', type='text/javascript')
     //
        END PAGE LEVEL PLUGINS 
     //
        BEGIN PAGE LEVEL SCRIPTS 
-    script(src='assets/global/scripts/metronic.js', type='text/javascript')
-    script(src='assets/admin/layout/scripts/layout.js', type='text/javascript')
-    script(src='assets/admin/layout/scripts/quick-sidebar.js', type='text/javascript')
-    script(src='assets/admin/pages/scripts/index.js', type='text/javascript')
-    script(src='assets/admin/pages/scripts/tasks.js', type='text/javascript')
+    script(src='/assets/global/scripts/metronic.js', type='text/javascript')
+    script(src='/assets/admin/layout/scripts/layout.js', type='text/javascript')
+    script(src='/assets/admin/layout/scripts/quick-sidebar.js', type='text/javascript')
+    script(src='/assets/admin/pages/scripts/index.js', type='text/javascript')
+    script(src='/assets/admin/pages/scripts/tasks.js', type='text/javascript')
+
     //
        END PAGE LEVEL SCRIPTS 
     script
@@ -1136,14 +251,17 @@ html(lang='en')
       QuickSidebar.init() // init quick sidebar
       Index.init();
       Index.initDashboardDaterange();
-      Index.initJQVMAP(); // init index page's custom scripts
+      //Index.initJQVMAP(); // init index page's custom scripts
       Index.initCalendar(); // init index page's custom scripts
       Index.initCharts(); // init index page's custom scripts
       Index.initChat();
       Index.initMiniCharts();
       Index.initIntro();
       Tasks.initDashboardWidget();
+
       });
+
+    block scripts
     //
        END JAVASCRIPTS 
 

@@ -17,3 +17,45 @@ Rounded Portlets
 	border-radius: 0px 0px 4px 4px !important;
 }
 */
+
+.fileUpload {
+  position: relative;
+  overflow: hidden;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.fileUpload input.upload {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+
+ul.images {
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  width: 500px;
+  overflow-x: auto;
+  background-color: #ddd;
+}
+ul.images li {
+  display: inline;
+  width: 150px;
+  height: 150px;
+}
+
+button.delete
+{
+    background-color: #EEE;
+    margin: 62px 258px;
+    padding: 5px;
+    width: 200px;
+    float:left;
+    position: relative;   
+}
