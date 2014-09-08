@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.L;
 
 import org.apache.http.Header;
@@ -1174,6 +1175,47 @@ public class DataStore {
                 }
 
                 onResultReady.onReady(count, failed);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+    }
+
+    public static void getConfig(final OnResultReady onResultReady) {
+        ClubbookRestClient.getConfig(new JsonHttpResponseHandler() {
+            private boolean failed = true;
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
+                    failed = false;
+
+                    JSONObject jsonResult = responseJson.optJSONObject("result");
+                    if(jsonResult != null) {
+                        SessionManager sessionManager = SessionManager.getInstance();
+                        sessionManager.setUpdateCheckInStatusInterval(jsonResult.optInt("update_checkin_status_interval"));
+                        sessionManager.setMaxFailedCheckInCount(jsonResult.optInt("max_failed_checkin_count"));
+                        sessionManager.setCheckInMaxDistance(jsonResult.optInt("chekin_max_distance"));
+                    }
+
+                } else {
+                    failed = true;
+                }
+
+                onResultReady.onReady(null, failed);
             }
 
             @Override

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +20,13 @@ import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.FriendDto;
 import com.nl.clubbook.datasource.UserPhotoDto;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
+import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.ui.view.HorizontalListView;
 import com.nl.clubbook.ui.view.ViewPagerBulletIndicatorView;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
+import com.nl.clubbook.utils.UIUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
@@ -50,6 +53,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
     private String mProfileId;
     private String mUsername;
+    private String mUserAvatarUrl;
     private List<CheckInUserDto> mCheckInUsers;
     private UserAvatarPagerAdapter mPhotoAdapter;
 
@@ -83,6 +87,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        UIUtils.displayEmptyIconInActionBar((ActionBarActivity)getActivity());
         initActionBarTitle(getString(R.string.user_profile));
         handleExtras();
         initLoader();
@@ -262,7 +267,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         }
 
         List<UserPhotoDto> userPhotos = profile.getPhotos();
-        if(userPhotos != null) {
+        if(userPhotos != null && !userPhotos.isEmpty()) {
             initViewPager(view, userPhotos);
         }
 
@@ -332,6 +337,8 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             mBulletIndicator.setVisibility(View.INVISIBLE);
         }
 
+        mUserAvatarUrl = ImageHelper.getUserListAvatar(userPhotoList.get(0).getUrl());
+
         ViewPager pagerImage = (ViewPager) view.findViewById(R.id.pagerAvatars);
         if(mPhotoAdapter == null) {
             mPhotoAdapter = new UserAvatarPagerAdapter(getChildFragmentManager(), userPhotoList, mImageLoader, mOptions, animateFirstListener);
@@ -345,10 +352,14 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             if(userPhoto.getIsAvatar()) {
                 pagerImage.setCurrentItem(i, false);
                 mBulletIndicator.setSelectedView(i);
+
+                mUserAvatarUrl = ImageHelper.getUserListAvatar(userPhoto.getUrl());
             }
         }
 
         pagerImage.setOnPageChangeListener(this);
+
+        UIUtils.loadPhotoToActionBar((ActionBarActivity)getActivity(), mUserAvatarUrl);
     }
 
     private void setRefreshing(View view, boolean isRefreshing) {
@@ -442,7 +453,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         if(mOpenMode == OPEN_FROM_CHAT) {
             closeFragment();
         } else {
-            Fragment chatFragment = ChatFragment.newInstance(ProfileFragment.this, mProfileId, mUsername);
+            Fragment chatFragment = ChatFragment.newInstance(ProfileFragment.this, mProfileId, mUsername, mUserAvatarUrl);
             openFragment(chatFragment, ChatFragment.class);
         }
     }

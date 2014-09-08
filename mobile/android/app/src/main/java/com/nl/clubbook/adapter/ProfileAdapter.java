@@ -10,15 +10,12 @@ import android.widget.TextView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.CheckInUserDto;
-import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.ImageHelper;
-import com.nl.clubbook.utils.L;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -117,6 +117,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         initNavDrawer();
 
         loadData();
+        loadConfig();
     }
 
     @Override
@@ -443,6 +444,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
 
         initActionBar("");
+    }
+
+    private void loadConfig() {
+        if(!NetworkUtils.isOn(MainActivity.this)) {
+            return;
+        }
+
+        DataStore.getConfig(new DataStore.OnResultReady() {
+            @Override
+            public void onReady(Object result, boolean failed) {
+            }
+        });
     }
 
     private void updateNavDrawerHeader() {

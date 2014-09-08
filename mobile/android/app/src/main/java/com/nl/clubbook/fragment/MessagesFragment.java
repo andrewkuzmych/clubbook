@@ -1,10 +1,13 @@
 package com.nl.clubbook.fragment;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.nl.clubbook.R;
@@ -42,17 +45,21 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
         super.onHiddenChanged(hidden);
 
         if(!hidden) {
-            initActionBarTitle(getString(R.string.messages));
+            ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+            actionBar.setIcon(R.drawable.icon_play);
+            actionBar.setTitle(R.string.messages);
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         TextView txtUsername = (TextView) view.findViewById(R.id.txtUsername);
+        ImageView imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
         String userId = txtUsername.getTag().toString();
         String userName = txtUsername.getText().toString();
+        String userPhotoUrl = (String)imgAvatar.getTag();
 
-        mChatFragment = (ChatFragment)ChatFragment.newInstance(MessagesFragment.this, userId, userName);
+        mChatFragment = (ChatFragment)ChatFragment.newInstance(MessagesFragment.this, userId, userName, userPhotoUrl);
         openFragment(mChatFragment, ChatFragment.class);
     }
 

@@ -52,7 +52,7 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String userId = view.findViewById(R.id.txtUsername).getTag().toString();
         Fragment fragment = ProfileFragment.newInstance(getTargetFragment(), userId, null, ProfileFragment.OPEN_MODE_DEFAULT);
-        openFragment(fragment, ProfileFragment.class);
+        openFromInnerFragment(fragment, ProfileFragment.class);
     }
 
     @Override

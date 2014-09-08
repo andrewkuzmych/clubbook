@@ -26,11 +26,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class LocationCheckinHelper {
 
-    public static final int MAX_RADIUS = 5500;
     private ScheduledExecutorService scheduleTaskExecutor;
     private int failedCheckInCount = 0;
-    private int maxFailedCheckInCount = 3;
-    private int updateCheckInStatusInterval = 10 * 60; // every 10min.
 
     // current user location, updated every 10sec
     private Location currentLocation;
@@ -103,18 +100,21 @@ public class LocationCheckinHelper {
         }
 
         Double distance = distanceBwPoints(currentLocation.getLatitude(), currentLocation.getLongitude(), club.getLat(), club.getLon());
+        int maxCheckInDistance = SessionManager.getInstance().getCheckInMaxDistance();
 
-        return distance < MAX_RADIUS;
+        return distance < maxCheckInDistance;
     }
 
     /**
      * Set current club
      */
     public void checkIn(final Context context, final ClubDto club, final CheckInOutCallbackInterface callback) {
+        int maxCheckInDistance = SessionManager.getInstance().getCheckInMaxDistance();
+
         // location validation
         final Location current_location = getCurrentLocation();
         double distance = distanceBwPoints(current_location.getLatitude(), current_location.getLongitude(), club.getLat(), club.getLon());
-        if (distance > MAX_RADIUS) {
+        if (distance > maxCheckInDistance) {
             callback.onCheckInOutFinished(false);
             return;
         }
@@ -193,6 +193,7 @@ public class LocationCheckinHelper {
      */
     public void startLocationUpdate(final Context context) {
         final SessionManager sessionManager = SessionManager.getInstance();
+        int updateCheckInStatusInterval = sessionManager.getUpdateCheckInStatusInterval();
 
         scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
         scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
@@ -201,9 +202,12 @@ public class LocationCheckinHelper {
                 final double distance = distanceBwPoints(current_location.getLatitude(), current_location.getLongitude(),
                         getCurrentClub().getLat(), getCurrentClub().getLon());
 
+                final int maxCheckInDistance = sessionManager.getCheckInMaxDistance();
+                final int maxFailedCheckInCount = sessionManager.getMaxFailedCheckInCount();
+
                 ((BaseActivity) context).runOnUiThread(new Runnable() {
                     public void run() {
-                        if (distance > MAX_RADIUS) {
+                        if (distance > maxCheckInDistance) {
                             // checkout user
                             checkOut(context, new CheckInOutCallbackInterface() {
                                 @Override

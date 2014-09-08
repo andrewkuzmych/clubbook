@@ -11,6 +11,7 @@ import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.JSONConverter;
 import com.nl.clubbook.fragment.ClubInfoFragment;
 import com.nl.clubbook.utils.L;
+import com.nl.clubbook.utils.UIUtils;
 
 /**
  * Created by Volodymyr on 15.08.2014.
@@ -25,6 +26,7 @@ public class ClubInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_club_info);
 
+        UIUtils.displayEmptyIconInActionBar(this);
         initView();
     }
 

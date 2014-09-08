@@ -14,7 +14,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:contentDescription="@string/club_avatar_content_description"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
         android:layout_gravity="center_vertical"/>
 
     <RelativeLayout

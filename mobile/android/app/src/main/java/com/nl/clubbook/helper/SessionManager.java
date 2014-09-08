@@ -227,6 +227,36 @@ public class SessionManager {
         editor.commit();
     }
 
+    public int getUpdateCheckInStatusInterval() {
+        return mPreferences.getInt(KEY_UPDATE_CHECK_IN_STATUS_INTERVAL, 600);
+    }
+
+    public void setUpdateCheckInStatusInterval(int updateCheckInStatusInterval) {
+        Editor editor = mPreferences.edit();
+        editor.putInt(KEY_UPDATE_CHECK_IN_STATUS_INTERVAL, updateCheckInStatusInterval);
+        editor.commit();
+    }
+
+    public int getMaxFailedCheckInCount() {
+        return mPreferences.getInt(KEY_MAX_FAILED_CHECK_IN_COUNT, 3);
+    }
+
+    public void setMaxFailedCheckInCount(int maxFailedCheckInCount) {
+        Editor editor = mPreferences.edit();
+        editor.putInt(KEY_MAX_FAILED_CHECK_IN_COUNT, maxFailedCheckInCount);
+        editor.commit();
+    }
+
+    public int getCheckInMaxDistance() {
+        return mPreferences.getInt(KEY_CHECK_IN_MAX_DISTANCE, 5000);
+    }
+
+    public void setCheckInMaxDistance(int checkInMaxDistance) {
+        Editor editor = mPreferences.edit();
+        editor.putInt(KEY_CHECK_IN_MAX_DISTANCE, checkInMaxDistance);
+        editor.commit();
+    }
+
     public boolean isLoggedIn() {
         return mPreferences.getBoolean(KEY_IS_LOGIN, false);
     }
@@ -259,6 +289,11 @@ public class SessionManager {
 
     private static final String KEY_IS_LOGIN = "IsLoggedIn";
     private static final String KEY_IS_NOTIFICATION_ENABLE = "KEY_IS_NOTIFICATION_ENABLE";
+
+    private static final String KEY_UPDATE_CHECK_IN_STATUS_INTERVAL = "KEY_UPDATE_CHECK_IN_STATUS_INTERVAL";
+    private static final String KEY_MAX_FAILED_CHECK_IN_COUNT = "KEY_MAX_FAILED_CHECK_IN_COUNT";
+    private static final String KEY_CHECK_IN_MAX_DISTANCE = "KEY_CHECK_IN_MAX_DISTANCE";
+
 }
 
 

@@ -28,6 +28,7 @@ import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.*;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
+import com.nl.clubbook.utils.UIUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
@@ -79,6 +80,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        UIUtils.displayEmptyIconInActionBar((ActionBarActivity)getActivity());
         initActionBarTitle(getString(R.string.club_page));
         handleArgs();
         initImageLoader();
@@ -92,6 +94,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
         if(!hidden) {
             initActionBarTitle(getString(R.string.club_page));
+            UIUtils.loadPhotoToActionBar((ActionBarActivity)getActivity(), ImageHelper.getUserListAvatar(mClub.getAvatar()));
         }
     }
 
@@ -262,6 +265,8 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         String avatarUrl = mClub.getAvatar();
         if(avatarUrl != null && avatarUrl.length() > 0) {
             mImageLoader.displayImage(avatarUrl, imgAvatar, mOptions, mAnimateFirstListener);
+
+            UIUtils.loadPhotoToActionBar((ActionBarActivity)getActivity(), ImageHelper.getUserListAvatar(avatarUrl));
         }
     }
 

@@ -61,6 +61,23 @@ public class BaseFragment extends Fragment {
         }
     }
 
+    protected void openFromInnerFragment(Fragment fragment, Class fragmentClass) {
+        ActionBarActivity activity = (ActionBarActivity)getActivity();
+
+        FragmentTransaction fTransaction = activity.getSupportFragmentManager().beginTransaction();
+        fTransaction.add(R.id.frame_container, fragment);
+        if(getTargetFragment() != null) {
+            fTransaction.hide(getTargetFragment());
+        }
+        fTransaction.addToBackStack(fragmentClass.getSimpleName());
+        fTransaction.commitAllowingStateLoss();
+
+        if(activity instanceof OnInnerFragmentOpenedListener) {
+            OnInnerFragmentOpenedListener listener = (OnInnerFragmentOpenedListener)activity;
+            listener.onInnerFragmentOpened();
+        }
+    }
+
     protected void initActionBarTitle(String title) {
         ActionBarActivity activity = (ActionBarActivity) getActivity();
         if(activity == null) {

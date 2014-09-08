@@ -3,6 +3,8 @@ package com.nl.clubbook.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +39,9 @@ public class FriendsFragment extends BaseFragment implements ViewPager.OnPageCha
         super.onHiddenChanged(hidden);
 
         if(!hidden) {
-            initActionBarTitle(getString(R.string.friend_list));
+            ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+            actionBar.setIcon(R.drawable.icon_play);
+            actionBar.setTitle(R.string.friend_list);
         }
     }
 

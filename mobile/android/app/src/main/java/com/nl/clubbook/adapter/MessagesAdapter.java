@@ -120,6 +120,9 @@ public class MessagesAdapter extends BaseAdapter {
         if(avatarUrl != null && avatarUrl.length() != 0) {
             String imageUrl = ImageHelper.getUserListAvatar(avatarUrl);
             imageLoader.displayImage(imageUrl, holder.imgAvatar, options, animateFirstListener);
+            holder.imgAvatar.setTag(imageUrl);
+        } else {
+            holder.imgAvatar.setTag("");
         }
     }
 

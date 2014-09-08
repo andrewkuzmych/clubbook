@@ -62,7 +62,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String userId = view.findViewById(R.id.txtName).getTag().toString();
         Fragment fragment = ProfileFragment.newInstance(getTargetFragment(), userId, null, ProfileFragment.OPEN_MODE_DEFAULT);
-        openFragment(fragment, ProfileFragment.class);
+        openFromInnerFragment(fragment, ProfileFragment.class);
     }
 
     @Override

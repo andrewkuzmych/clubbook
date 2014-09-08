@@ -38,9 +38,9 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
     private List<BaseChatMessage> mMessages;
 
     private ImageLoader mImageLoader;
-    private View.OnClickListener mUserProfileClickListener;
-
     private DisplayImageOptions mOptions;
+
+    private View.OnClickListener mUserProfileClickListener;
     private long mCurrentTimeWithoutHours;
     private long mDayTimeInMilliseconds;
     private String mToday;

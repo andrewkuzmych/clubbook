@@ -3,6 +3,7 @@ package com.nl.clubbook.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.nl.clubbook.utils.CalendarUtils;
 import com.nl.clubbook.utils.KeyboardUtils;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
+import com.nl.clubbook.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +40,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
     private static final String ARG_USER_ID = "ARG_USER_ID";
     private static final String ARG_USER_NAME = "ARG_USER_NAME";
+    private static final String ARG_USER_PHOTO_URL = "ARG_USER_PHOTO_URL";
 
     private ChatAdapter mAdapter;
     private EditText inputText;
@@ -46,13 +49,14 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     private String mAccessToken;
     private ChatDto chatDto;
 
-    public static Fragment newInstance(Fragment targetFragment, String userId, String userName) {
+    public static Fragment newInstance(Fragment targetFragment, String userId, String userName, String userPhotoUrl) {
         Fragment fragment = new ChatFragment();
         fragment.setTargetFragment(targetFragment, 0);
 
         Bundle args = new Bundle();
         args.putString(ARG_USER_ID, userId);
         args.putString(ARG_USER_NAME, userName);
+        args.putString(ARG_USER_PHOTO_URL, userPhotoUrl);
         fragment.setArguments(args);
 
         return fragment;
@@ -67,6 +71,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        UIUtils.displayEmptyIconInActionBar((ActionBarActivity)getActivity());
         handleArgs();
         initView();
         loadConversation();
@@ -133,8 +138,13 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
         mUserToId = args.getString(ARG_USER_ID);
         String userName = args.getString(ARG_USER_NAME);
+        String userPhotoUrl = args.getString(ARG_USER_PHOTO_URL);
 
         initActionBarTitle(userName != null ? userName : "");
+
+        if(userPhotoUrl != null && !userPhotoUrl.isEmpty()) {
+            UIUtils.loadPhotoToActionBar((ActionBarActivity)getActivity(), userPhotoUrl);
+        }
     }
 
     private void initView() {

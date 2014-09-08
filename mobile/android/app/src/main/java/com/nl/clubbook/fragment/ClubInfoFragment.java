@@ -3,6 +3,7 @@ package com.nl.clubbook.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +16,10 @@ import com.nl.clubbook.adapter.PhotoPagerAdapter;
 import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.ClubWorkingHoursDto;
 import com.nl.clubbook.datasource.JSONConverter;
+import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.ui.view.ViewPagerBulletIndicatorView;
 import com.nl.clubbook.utils.L;
+import com.nl.clubbook.utils.UIUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
@@ -117,6 +120,11 @@ public class ClubInfoFragment extends Fragment implements ViewPager.OnPageChange
         fillClubRequirementsHolder(view, club);
         fillContactHolder(view, club);
         fillWorkingHoursHolder(view, club);
+
+        String avatarUrl = club.getAvatar();
+        if(avatarUrl != null && !avatarUrl.isEmpty()) {
+            UIUtils.loadPhotoToActionBar((ActionBarActivity)getActivity(), ImageHelper.getUserListAvatar(avatarUrl));
+        }
     }
 
     private void fillContactHolder(View view, ClubDto club) {

@@ -130,4 +130,8 @@ public class ClubbookRestClient {
     public static void getNotifications(RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getBcAbsoluteUrl("obj/user/me/notifications"), params, responseHandler);
     }
+
+    public static void getConfig(AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/config"), null, responseHandler);
+    }
 }

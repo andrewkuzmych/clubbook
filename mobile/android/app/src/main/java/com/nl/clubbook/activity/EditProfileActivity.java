@@ -53,6 +53,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_edit_profile);
 
+        UIUtils.displayEmptyIconInActionBar(this);
         initImageHelpers();
         initView();
 
@@ -227,7 +228,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                 }
 
                 if (failed) {
-                    showToast(R.string.no_connection);
+                    showToast(R.string.something_went_wrong_please_try_again);
                     return;
                 }
 
@@ -264,6 +265,8 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
             displayImageSmallPreview(holderUsersPhotos, userPhotoDto);
             if(userPhotoDto.getIsAvatar()) {
                 displayImageBigPreview(userPhotoDto);
+
+                UIUtils.loadPhotoToActionBar(EditProfileActivity.this, ImageHelper.getUserListAvatar(userPhotoDto.getUrl()));
             }
         }
     }
@@ -367,6 +370,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
     private void setImageAsAvatar() {
         showProgressDialog(getString(R.string.loading));
+
         HashMap<String, String> userDetails = getSession().getUserDetails();
         String userId = userDetails.get(SessionManager.KEY_ID);
         String accessToken = userDetails.get(SessionManager.KEY_ACCESS_TOCKEN);
@@ -385,7 +389,11 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
                 drawImageManager(profile.getPhotos());
 
-                getSession().updateValue(SessionManager.KEY_AVATAR, selectedImageDto.getUrl());
+                String url = selectedImageDto.getUrl();
+                getSession().updateValue(SessionManager.KEY_AVATAR, url);
+
+                UIUtils.loadPhotoToActionBar(EditProfileActivity.this, ImageHelper.getUserListAvatar(url));
+
                 setResult(RESULT_OK);
             }
         });
