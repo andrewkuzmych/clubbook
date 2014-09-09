@@ -2,6 +2,8 @@ package com.nl.clubbook;
 
 import android.app.Application;
 import com.facebook.SessionLoginBehavior;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 import com.nl.clubbook.helper.FontHelper;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.helper.SessionManager;
@@ -20,6 +22,8 @@ import com.sromku.simple.fb.SimpleFacebookConfiguration;
  * To change this template use File | Settings | File Templates.
  */
 public class ClubbookApplication extends Application {
+
+    private Tracker mTracker;
 
     @SuppressWarnings("unused")
     @Override
@@ -52,5 +56,14 @@ public class ClubbookApplication extends Application {
 
         SessionManager.init(getApplicationContext());
         LocationCheckinHelper.init();
+    }
+
+    public synchronized Tracker getTracker() {
+        if (mTracker == null) {
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            mTracker = analytics.newTracker(R.xml.google_analitycs);
+        }
+
+        return mTracker;
     }
 }

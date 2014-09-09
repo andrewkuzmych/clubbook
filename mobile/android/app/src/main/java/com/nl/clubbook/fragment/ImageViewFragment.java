@@ -55,7 +55,7 @@ public class ImageViewFragment extends Fragment {
         ImageView imgAvatar = (ImageView) view.findViewById(R.id.imgView);
 
         String url = getArguments().getString(ARG_IMAGE_URL);
-        if(url != null) {
+        if(url != null && mImageLoader != null) {
             mImageLoader.displayImage(url, imgAvatar, mOptions, animateFirstListener);
         }
     }

@@ -8,6 +8,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
+import com.nl.clubbook.ClubbookApplication;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.SessionManager;
@@ -21,6 +23,7 @@ import com.nl.clubbook.helper.SessionManager;
  */
 public class BaseActivity extends ActionBarActivity {
     private SessionManager mSession;
+    protected Tracker mTracker;
 
     private boolean isProgressShow = false;
 
@@ -29,6 +32,7 @@ public class BaseActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         mSession = SessionManager.getInstance();
+        mTracker = ((ClubbookApplication)getApplicationContext()).getTracker();
     }
 
     @Override

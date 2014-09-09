@@ -463,6 +463,10 @@ public class LocationCheckinHelper {
     }
 
     public boolean isLocationProvidersEnabled(LocationManager locationManager) {
+        if(locationManager == null) {
+            return false;
+        }
+
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 }
