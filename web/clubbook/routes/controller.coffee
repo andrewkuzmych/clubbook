@@ -163,10 +163,11 @@ exports.news_create_action = (req, res)->
     else
       news = new db_model.News
         venue: mongoose.Types.ObjectId(req.params.venue_id)
-        image: req.body.news_image
         title: req.body.title
         description: req.body.description
 
+      if req.body.news_image
+        news.image = req.body.news_image
       news.save (err)->
         console.log 'SAVE'
         res.redirect "/venue/#{req.params.venue_id}/news" 

@@ -169,7 +169,6 @@ exports.user_image_delete = (req, res)->
           result:
             user: user
 
-
 exports.signup = (req, res)->
   console.log "----- sign up by email"
   console.log req.body
@@ -292,26 +291,14 @@ exports.friends_request = (req, res)->
       user.friends.push req.params.friendId
       db_model.save_or_update_user user, ()->
 
-        #send push
-        Parse = require("parse").Parse
-        Parse.initialize config.parse_app_id, config.parse_js_key
-
-        queryIOS = new Parse.Query(Parse.Installation)
-        queryIOS.equalTo "channels", 'user_' + req.params.friendId
-        queryIOS.equalTo "deviceType", "ios"      
-        Parse.Push.send
-          where: queryIOS 
-          data:
-            badge: "Increment"
-            alert: user.name + ' sent you friend request'
-
-
+        if user.push
+          send_push 'user_' + req.params.friendId, 'sent you friend request', req.params.friendId, user.name, "chat", user.name + ' sent you friend request'
+        
         res.json
           status: "ok"
           result:
             message: "friend request"
             _temp_user: user
-
 
 exports.friends_confirm = (req, res)->
   # user.friends.push friend_id
@@ -326,17 +313,10 @@ exports.friends_confirm = (req, res)->
     db_model.User.findById(req.params.objectId).exec (err, user)->
       user.friends.push req.params.friendId
       db_model.save_or_update_user user, ()->
-        #send push
-        Parse = require("parse").Parse
-        Parse.initialize config.parse_app_id, config.parse_js_key
-        queryIOS = new Parse.Query(Parse.Installation)
-        queryIOS.equalTo "channels", 'user_' + req.params.friendId
-        queryIOS.equalTo "deviceType", "ios"      
-        Parse.Push.send
-          where: queryIOS 
-          data:
-            badge: "Increment"
-            alert: user.name + ' confirmed your friend request'
+        
+        if user.push
+          #send push
+          send_push 'user_' + req.params.friendId, 'confirmed your friend request', req.params.friendId, user.name, "chat", user.name + ' confirmed your friend request'
 
         res.json
           status: "ok"
@@ -443,7 +423,6 @@ exports.create_club = (req, res)->
         club: club
         status: "Added OK"
 
-
 exports.find_club = (req, res)->
   manager.find_club req.params.objectId, req.params.me._id.toString(), (err, club, users, friends_count)->
     if err
@@ -456,7 +435,6 @@ exports.find_club = (req, res)->
         users: users
         friends_count: friends_count
         status: "Found Club OK!"
-
 
 exports.list_club = (req, res)->
   console.log req.params
@@ -476,7 +454,6 @@ exports.list_club = (req, res)->
       res.json
         status: 'ok'
         clubs: clubs
-
 
 exports.checkin = (req, res)->
   params =
@@ -528,48 +505,9 @@ exports.chat = (req, res)->
   manager.get_user_by_id req.body.user_from, (err, user_from)->
     manager.chat params, (err, chat)->
       message = req.body.msg
-      
-      Parse = require("parse").Parse
-      Parse.initialize config.parse_app_id, config.parse_js_key
-      
-      # send message to Parse (android)
-      queryAndroid = new Parse.Query(Parse.Installation)
-      queryAndroid.equalTo "channels", 'user_' + req.body.user_to
-      queryAndroid.equalTo "deviceType", "android"
-      Parse.Push.send
-        where: queryAndroid 
-        data:
-          action: "com.nl.clubbook.UPDATE_STATUS"
-          msg: message
-          unique_id: req.body.user_from + "_" + req.body.user_to
-          header: user_from.name
-          type: "chat"
-      ,
-        success: ->
-          console.log "push sent"
 
-      # Push was successful
-        error: (error) ->
-          console.log "push error: "
-          console.log error
-
-      # send message to Parse (ios)
-      queryIOS = new Parse.Query(Parse.Installation)
-      queryIOS.equalTo "channels", 'user_' + req.body.user_to
-      queryIOS.equalTo "deviceType", "ios"      
-      Parse.Push.send
-        where: queryIOS 
-        data:
-          badge: "Increment"
-          alert: user_from.name + ': "' + message + '"'
-      ,
-        success: ->
-          console.log "push sent"
-
-      # Push was successful
-        error: (error) ->
-          console.log "push error: "
-          console.log error
+      if user.push
+        send_push 'user_' + req.body.user_to, message, req.body.user_from + "_" + req.body.user_to, user_from.name, "chat", user_from.name + ': "' + message + '"'
 
       # send message to pubnub
       pubnub = require("pubnub").init({ publish_key: config.pub_publish_key, subscribe_key: config.pub_subscribe_key})
@@ -593,7 +531,6 @@ exports.chat = (req, res)->
       res.json
         status: 'ok'
         chat: chat
-
 
 prepare_chat_messages = (chat, current_user)->
   if chat is null then return;
@@ -619,7 +556,6 @@ prepare_chat_messages = (chat, current_user)->
       is_my_message: current_user._id.toString() is conversation.from_who.toString()
 
   return [messages, current_user, receiver]
-
 
 exports.get_conversations = (req, res)->
   params =
@@ -705,3 +641,38 @@ exports.checkin_clean =(req, res)->
 
   res.json
     status: 'ok'
+
+send_push = (channel, msg, unique_id, header, type, alert)->
+    #send push
+    Parse = require("parse").Parse
+    Parse.initialize config.parse_app_id, config.parse_js_key
+    
+    # send message to Parse (android)
+    queryAndroid = new Parse.Query(Parse.Installation)
+    queryAndroid.equalTo "channels", channel
+    queryAndroid.equalTo "deviceType", "android"
+    Parse.Push.send
+      where: queryAndroid 
+      data:
+        action: "com.nl.clubbook.UPDATE_STATUS"
+        msg: msg
+        unique_id: unique_id
+        header: header
+        type: type
+    ,
+      success: ->
+        console.log "push sent"
+
+    # Push was successful
+      error: (error) ->
+        console.log "push error: "
+        console.log error
+
+    queryIOS = new Parse.Query(Parse.Installation)
+    queryIOS.equalTo "channels", channel
+    queryIOS.equalTo "deviceType", "ios"      
+    Parse.Push.send
+      where: queryIOS 
+      data:
+        badge: "Increment"
+        alert: alert

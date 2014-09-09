@@ -33,7 +33,7 @@ block content
               .form-group
                   label.col-md-3.control-label Logo
                     span.required *
-                  .col-md-4
+                  .col-md-5
                     .input-icon.right
                     i.fa
                     .preview
@@ -51,7 +51,7 @@ block content
               .form-group
                 label.control-label.col-md-3 Name
                   span.required *
-                .col-md-4
+                .col-md-5
                   .input-icon.right
                     i.fa
                     input.form-control(type='text', placeholder='Enter club name', name="club_name", value="#{club.club_name?club.club_name:''}")
@@ -59,7 +59,7 @@ block content
               .form-group
                 label.control-label.col-md-3 Email
                   span.required *
-                .col-md-4
+                .col-md-5
                   .input-icon.right
                     i.fa
                     input.form-control(type='text', placeholder='Enter club email', name="club_email", value="#{club.club_email?club.club_email:''}")
@@ -67,7 +67,7 @@ block content
             .form-group
                 label.control-label.col-md-3 Site
                   span.required *
-                .col-md-4
+                .col-md-5
                   .input-icon.right
                     i.fa
                     input.form-control(type='text', placeholder='Enter club site', name="club_site", value="#{club.club_site?club.club_site:''}")
@@ -75,7 +75,7 @@ block content
             .form-group
                 label.control-label.col-md-3 Phone
                   span.required *
-                .col-md-4
+                .col-md-5
                   .input-icon.right
                     i.fa
                     input.form-control(type='text', placeholder='Enter club phone', name="club_phone", value="#{club.club_site?club.club_phone:''}")
@@ -83,7 +83,7 @@ block content
             .form-group
               label.col-md-3.control-label Address
                 span.required *
-              .col-md-4
+              .col-md-5
                 .input-icon.right
                   i.fa
                   input.form-control#select_address(type="text", placeholder="address", name="club_address", value="#{club.club_address?club.club_address:''}")
@@ -94,11 +94,42 @@ block content
             .form-group
                 label.control-label.col-md-3 Info
                   span.required *
-                .col-md-4
+                .col-md-5
                   .input-icon.right
                     i.fa
                     textarea.form-control(type='text', placeholder='Enter club info', name="club_info") #{club.club_info?club.club_info:''}
          
+
+            for wh in club.club_working_hours
+              .form-group
+                label.control-label.col-md-3 
+                  if wh.day == 1
+                    | Working Hours (Monday)
+                  if wh.day == 2
+                    | Working Hours (Tuesday)
+                  if wh.day == 3
+                    | Working Hours (Wednesday)
+                  if wh.day == 4
+                    | Working Hours (Thursday)
+                  if wh.day == 5
+                    | Working Hours (Friday)
+                  if wh.day == 6
+                    | Working Hours (Saturday)
+                  if wh.day == 0
+                    | Working Hours (Sunday)
+                  span.required *
+                .col-md-5
+                  .input-group
+                      input.form-control.timepicker.timepicker-no-seconds(type='text', data-default-time="#{wh.start_time}")
+                      span.input-group-btn
+                        button.btn.default(type='button')
+                          i.fa.fa-clock-o
+                  .input-group
+                    input.form-control.timepicker.timepicker-no-seconds(type='text', data-default-time="#{wh.end_time}") 
+                    span.input-group-btn
+                      button.btn.default(type='button')
+                        i.fa.fa-clock-o
+          
             .form-group.last
                     label.col-md-3.control-label Cover Images
                         span.required *
@@ -188,7 +219,6 @@ block scripts
         details: "form"
       };
 
-      console.log(geocomplete_options);
       if ($("input[name=lat]").val() && $("input[name=lng]").val()) {
         geocomplete_options["location"] = [$("input[name=lat]").val(), $("input[name=lng]").val()];
       }
@@ -202,3 +232,4 @@ block scripts
     }
 
     FormValidation.init();
+    ComponentsPickers.init();

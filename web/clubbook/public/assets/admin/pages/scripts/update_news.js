@@ -23,9 +23,6 @@ var FormValidation = function () {
                     },
                     description: {
                       required: true,
-                    },
-                    news_image: {
-                      required: true,
                     }
 
                     //club_address: {
