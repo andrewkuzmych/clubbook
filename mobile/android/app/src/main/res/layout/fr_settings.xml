@@ -11,7 +11,7 @@
         android:orientation="horizontal"
         android:background="@android:color/white">
 
-        <com.nl.clubbook.ui.view.TitilliumRegularTextView
+        <com.nl.clubbook.ui.view.HelveticaRegularTextView
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_weight="1"
@@ -37,7 +37,7 @@
         android:layout_height="1dp"
         android:background="@color/divider_color" />
 
-    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+    <com.nl.clubbook.ui.view.HelveticaRegularTextView
         android:id="@+id/txtPrivacyPolicy"
         android:layout_width="fill_parent"
         android:layout_height="56dp"
@@ -55,7 +55,7 @@
         android:layout_height="1dp"
         android:background="@color/divider_color" />
 
-    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+    <com.nl.clubbook.ui.view.HelveticaRegularTextView
         android:id="@+id/txtTermsOfservice"
         android:layout_width="fill_parent"
         android:layout_height="56dp"
@@ -73,7 +73,7 @@
         android:layout_height="1dp"
         android:background="@color/divider_color" />
 
-    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+    <com.nl.clubbook.ui.view.HelveticaRegularTextView
         android:id="@+id/txtDeleteAccount"
         android:layout_width="fill_parent"
         android:layout_height="56dp"
@@ -91,7 +91,7 @@
         android:layout_height="1dp"
         android:background="@color/divider_color" />
 
-    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+    <com.nl.clubbook.ui.view.HelveticaRegularTextView
         android:id="@+id/txtContact"
         android:layout_width="fill_parent"
         android:layout_height="56dp"
@@ -109,7 +109,7 @@
         android:layout_height="1dp"
         android:background="@color/divider_color" />
 
-    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+    <com.nl.clubbook.ui.view.HelveticaRegularTextView
         android:id="@+id/txtLogOut"
         android:layout_width="fill_parent"
         android:layout_height="56dp"

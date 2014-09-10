@@ -25,7 +25,7 @@
         android:background="@color/main_background_color"
         android:visibility="gone" >
 
-        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+        <com.nl.clubbook.ui.view.HelveticaBoldTextView
             android:id="@+id/txtLike"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
@@ -44,7 +44,7 @@
             android:layout_marginRight="4dp"
             android:layout_marginLeft="4dp"/>
 
-        <com.nl.clubbook.ui.view.TitilliumRegularEditText
+        <com.nl.clubbook.ui.view.HelveticaRegularEditText
             style="@style/EditTextAppThemeWhite"
             android:id="@+id/messageInput"
             android:layout_width="0dp"
@@ -58,7 +58,7 @@
             android:layout_marginRight="8dp"
             android:gravity="center_vertical"/>
 
-        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+        <com.nl.clubbook.ui.view.HelveticaBoldTextView
             android:id="@+id/txtSend"
             android:layout_width="wrap_content"
             android:layout_height="48dp"

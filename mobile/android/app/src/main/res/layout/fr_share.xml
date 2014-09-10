@@ -11,7 +11,7 @@
         android:paddingRight="32dp"
         android:paddingLeft="32dp">
 
-        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+        <com.nl.clubbook.ui.view.HelveticaBoldTextView
             android:id="@+id/txtShareOnFacebook"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
             android:paddingRight="12dp"
             android:singleLine="true"/>
 
-        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+        <com.nl.clubbook.ui.view.HelveticaBoldTextView
             android:id="@+id/txtTweetAboutUs"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
             android:paddingRight="12dp"
             android:singleLine="true"/>
 
-        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+        <com.nl.clubbook.ui.view.HelveticaBoldTextView
             android:id="@+id/txtLikeUsOnFacebook"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
             android:paddingRight="12dp"
             android:singleLine="true" />
 
-        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+        <com.nl.clubbook.ui.view.HelveticaBoldTextView
             android:id="@+id/txtFollowOurTweets"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

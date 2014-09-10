@@ -31,7 +31,7 @@
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_avatar_missing" />
 
-                <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                <com.nl.clubbook.ui.view.HelveticaRegularTextView
                     android:id="@+id/txtSetAsDefault"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
                     android:textColor="@android:color/white"
                     android:visibility="gone"/>
 
-                <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                <com.nl.clubbook.ui.view.HelveticaRegularTextView
                     android:id="@+id/txtDeleteImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
 
             </LinearLayout>
 
-            <com.nl.clubbook.ui.view.TitilliumRegularEditText
+            <com.nl.clubbook.ui.view.HelveticaRegularEditText
                 android:id="@+id/editName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
                 android:minHeight="48dp"
                 android:textColor="@color/grey" />
 
-            <com.nl.clubbook.ui.view.TitilliumRegularEditText
+            <com.nl.clubbook.ui.view.HelveticaRegularEditText
                 android:id="@+id/editBirthDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -138,7 +138,7 @@
                 android:inputType="textPersonName"
                 android:minHeight="48dp" />
 
-            <com.nl.clubbook.ui.view.TitilliumRegularEditText
+            <com.nl.clubbook.ui.view.HelveticaRegularEditText
                 android:id="@+id/editAboutMe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -153,7 +153,7 @@
                 android:gravity="center_vertical"
                 android:textColor="@color/grey"/>
 
-            <com.nl.clubbook.ui.view.TitilliumBoldTextView
+            <com.nl.clubbook.ui.view.HelveticaBoldTextView
                 android:id="@+id/txtSave"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

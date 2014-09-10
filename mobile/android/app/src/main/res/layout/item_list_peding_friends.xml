@@ -17,7 +17,7 @@
         android:scaleType="centerCrop" />
 
 
-    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+    <com.nl.clubbook.ui.view.HelveticaRegularTextView
         android:id="@+id/txtName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
         android:textSize="@dimen/text_size_medium"
         android:layout_marginLeft="8dp"/>
 
-    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+    <com.nl.clubbook.ui.view.HelveticaRegularTextView
         android:id="@+id/txtAccept"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
         android:background="@drawable/bg_btn_accept"
         android:textColor="@android:color/white"/>
 
-    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+    <com.nl.clubbook.ui.view.HelveticaRegularTextView
         android:id="@+id/txtDecline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

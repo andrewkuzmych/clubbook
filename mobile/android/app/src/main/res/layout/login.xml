@@ -18,7 +18,7 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp">
 
-            <com.nl.clubbook.ui.view.TitilliumRegularEditText
+            <com.nl.clubbook.ui.view.HelveticaRegularEditText
                 android:id="@+id/txtUsername"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
@@ -28,7 +28,7 @@
                 android:singleLine="true"
                 android:textColor="@color/grey" />
 
-            <com.nl.clubbook.ui.view.TitilliumRegularEditText
+            <com.nl.clubbook.ui.view.HelveticaRegularEditText
                 android:id="@+id/txtPassword"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
@@ -40,7 +40,7 @@
                 android:textColor="@color/grey"/>
         </LinearLayout>
 
-        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+        <com.nl.clubbook.ui.view.HelveticaBoldTextView
             android:id="@+id/btnLogin"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

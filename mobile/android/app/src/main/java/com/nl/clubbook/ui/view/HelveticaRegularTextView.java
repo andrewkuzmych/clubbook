@@ -10,24 +10,24 @@ import com.nl.clubbook.helper.FontHelper;
 /**
  * Created by Volodymyr on 11.08.2014.
  */
-public class TitilliumRegularTextView extends TextView {
+public class HelveticaRegularTextView extends TextView {
 
-    public TitilliumRegularTextView(Context context) {
+    public HelveticaRegularTextView(Context context) {
         super(context);
         setTypeface(getFont(context));
     }
 
-    public TitilliumRegularTextView(Context context, AttributeSet attrs) {
+    public HelveticaRegularTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setTypeface(getFont(context));
     }
 
-    public TitilliumRegularTextView(Context context, AttributeSet attrs, int defStyle) {
+    public HelveticaRegularTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setTypeface(getFont(context));
     }
 
     private Typeface getFont(Context context) {
-        return FontHelper.getInstance(context).getTitilliumWebRegular();
+        return FontHelper.getInstance(context).getHelveticaRegular();
     }
 }

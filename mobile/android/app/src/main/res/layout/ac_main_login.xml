@@ -10,7 +10,7 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <com.nl.clubbook.ui.view.TitilliumRegularTextView
+        <com.nl.clubbook.ui.view.HelveticaRegularTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -29,7 +29,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+        <com.nl.clubbook.ui.view.HelveticaBoldTextView
             android:id="@+id/txtLoginFacebook"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
             android:paddingLeft="4dp"
             android:paddingRight="48dp"/>
 
-        <com.nl.clubbook.ui.view.TitilliumRegularTextView
+        <com.nl.clubbook.ui.view.HelveticaRegularTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/we_dont_post_anything_to_facebook"
@@ -52,7 +52,7 @@
             android:textColor="@android:color/white"
             android:layout_marginBottom="12dp"/>
 
-        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+        <com.nl.clubbook.ui.view.HelveticaBoldTextView
             android:id="@+id/txtRegWithEmail"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
             android:paddingLeft="4dp"
             android:paddingRight="4dp" />
 
-        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+        <com.nl.clubbook.ui.view.HelveticaBoldTextView
             android:id="@+id/txtLogin"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
             android:paddingRight="4dp"
             android:layout_marginBottom="24dp"/>
 
-        <com.nl.clubbook.ui.view.TitilliumRegularTextView
+        <com.nl.clubbook.ui.view.HelveticaRegularTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/by_signing_into_clubook_you_agree_with_the"
@@ -86,7 +86,7 @@
             android:textSize="@dimen/text_size_small"
             android:textColor="@android:color/white"/>
 
-        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+        <com.nl.clubbook.ui.view.HelveticaBoldTextView
             android:id="@+id/txtTermsOfService"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

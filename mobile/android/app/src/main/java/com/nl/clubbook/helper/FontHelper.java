@@ -10,8 +10,8 @@ import android.os.AsyncTask;
 public class FontHelper {
     private static FontHelper instance = null;
 
-    private Typeface titilliumWebBold;
-    private Typeface titilliumWebRegular;
+    private Typeface helveticaBold;
+    private Typeface helveticaRegular;
 
     private FontHelper() {
     }
@@ -34,20 +34,20 @@ public class FontHelper {
         }
     }
 
-    public Typeface getTitilliumWebBold() {
-        return titilliumWebBold;
+    public Typeface getHelveticaBold() {
+        return helveticaBold;
     }
 
-    public void setTitilliumWebBold(Typeface titilliumWebBold) {
-        this.titilliumWebBold = titilliumWebBold;
+    public void setHelveticaBold(Typeface helveticaBold) {
+        this.helveticaBold = helveticaBold;
     }
 
-    public Typeface getTitilliumWebRegular() {
-        return titilliumWebRegular;
+    public Typeface getHelveticaRegular() {
+        return helveticaRegular;
     }
 
-    public void setTitilliumWebRegular(Typeface titilliumWebRegular) {
-        this.titilliumWebRegular = titilliumWebRegular;
+    public void setHelveticaRegular(Typeface helveticaRegular) {
+        this.helveticaRegular = helveticaRegular;
     }
 
     public void loadFont(final Context context) {
@@ -55,8 +55,8 @@ public class FontHelper {
 
             @Override
             protected Void doInBackground(Void... params) {
-                instance.setTitilliumWebBold(Typeface.createFromAsset(context.getAssets(), "fonts/TITILLIUMWEB-BOLD.TTF"));
-                instance.setTitilliumWebRegular(Typeface.createFromAsset(context.getAssets(), "fonts/TITILLIUMWEB-REGULAR.TTF"));
+                instance.setHelveticaBold(Typeface.createFromAsset(context.getAssets(), "fonts/Helvetica_Bold.ttf"));
+                instance.setHelveticaRegular(Typeface.createFromAsset(context.getAssets(), "fonts/Helvetica_S_Regular.ttf"));
 
                 return null;
             }

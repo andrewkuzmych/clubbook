@@ -47,7 +47,7 @@
 
                 </RelativeLayout>
 
-                <com.nl.clubbook.ui.view.TitilliumRegularEditText
+                <com.nl.clubbook.ui.view.HelveticaRegularEditText
                     android:id="@+id/editName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
                     android:layout_marginLeft="16dp"/>
             </LinearLayout>
 
-            <com.nl.clubbook.ui.view.TitilliumRegularEditText
+            <com.nl.clubbook.ui.view.HelveticaRegularEditText
                 android:id="@+id/editEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
                 android:hint="@string/email"
                 android:inputType="textEmailAddress" />
 
-            <com.nl.clubbook.ui.view.TitilliumRegularEditText
+            <com.nl.clubbook.ui.view.HelveticaRegularEditText
                 android:id="@+id/editPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
                 android:hint="@string/password_min_six_characters"
                 android:inputType="textPassword"/>
 
-            <com.nl.clubbook.ui.view.TitilliumRegularEditText
+            <com.nl.clubbook.ui.view.HelveticaRegularEditText
                 android:id="@+id/editBirthDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <com.nl.clubbook.ui.view.TitilliumBoldTextView
+        <com.nl.clubbook.ui.view.HelveticaBoldTextView
             android:id="@+id/btnRegister"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

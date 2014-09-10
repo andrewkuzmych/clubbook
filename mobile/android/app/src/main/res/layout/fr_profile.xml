@@ -62,7 +62,7 @@
                         android:paddingBottom="8dp"
                         android:paddingTop="8dp">
 
-                        <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                        <com.nl.clubbook.ui.view.HelveticaRegularTextView
                             android:id="@+id/txtUsername"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
                             android:textStyle="bold"
                             android:textColor="@color/grey"/>
 
-                        <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                        <com.nl.clubbook.ui.view.HelveticaRegularTextView
                             android:id="@+id/txtUserInfo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                             android:textColor="@color/grey" />
                     </LinearLayout>
 
-                    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                    <com.nl.clubbook.ui.view.HelveticaRegularTextView
                         android:id="@+id/txtAddFriend"
                         style="@style/add_friend_button"
                         android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
                     android:layout_height="1dp"
                     android:background="@color/divider_color" />
 
-                <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                <com.nl.clubbook.ui.view.HelveticaRegularTextView
                     android:id="@+id/txtCountry"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -120,7 +120,7 @@
                     android:layout_height="1dp"
                     android:background="@color/divider_color" />
 
-                <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                <com.nl.clubbook.ui.view.HelveticaRegularTextView
                     android:id="@+id/txtAboutMeLabel"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -133,7 +133,7 @@
                     android:text="@string/about_me"
                     android:textSize="@dimen/text_size_medium" />
 
-                <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                <com.nl.clubbook.ui.view.HelveticaRegularTextView
                     android:id="@+id/txtAboutMe"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -160,7 +160,7 @@
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp">
 
-                    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                    <com.nl.clubbook.ui.view.HelveticaRegularTextView
                         android:id="@+id/txtBlockUser"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -180,7 +180,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
 
-                    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                    <com.nl.clubbook.ui.view.HelveticaRegularTextView
                         android:id="@+id/txtRemoveFriend"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -198,7 +198,7 @@
 
             </LinearLayout>
 
-            <com.nl.clubbook.ui.view.TitilliumRegularTextView
+            <com.nl.clubbook.ui.view.HelveticaRegularTextView
                 android:id="@+id/btnChat"
                 android:layout_width="75dp"
                 android:layout_height="75dp"

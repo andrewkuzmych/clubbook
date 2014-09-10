@@ -43,7 +43,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                    <com.nl.clubbook.ui.view.HelveticaRegularTextView
                         android:id="@+id/txtClubName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
                         android:textColor="@color/grey_club_title_text_color"
                         android:textSize="@dimen/text_size_medium" />
 
-                    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                    <com.nl.clubbook.ui.view.HelveticaRegularTextView
                         android:id="@+id/txtOpenToday"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                         android:textColor="@color/grey_club_title_text_color"
                         android:textSize="@dimen/text_size_micro" />
 
-                    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+                    <com.nl.clubbook.ui.view.HelveticaRegularTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawablePadding="4dp"
@@ -75,7 +75,7 @@
 
             </LinearLayout>
 
-            <com.nl.clubbook.ui.view.TitilliumRegularTextView
+            <com.nl.clubbook.ui.view.HelveticaRegularTextView
                 android:id="@+id/txtDistance"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -104,7 +104,7 @@
             android:paddingRight="16dp"
             android:paddingTop="8dp">
 
-            <com.nl.clubbook.ui.view.TitilliumRegularTextView
+            <com.nl.clubbook.ui.view.HelveticaRegularTextView
                 android:id="@+id/txtCheckInCount"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -119,7 +119,7 @@
                 android:textColor="@color/grey_light"
                 android:textSize="@dimen/text_size_small" />
 
-            <com.nl.clubbook.ui.view.TitilliumRegularTextView
+            <com.nl.clubbook.ui.view.HelveticaRegularTextView
                 android:id="@+id/txtFriendsCount"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -134,7 +134,7 @@
                 android:textColor="@color/grey_light"
                 android:textSize="@dimen/text_size_small" />
 
-            <com.nl.clubbook.ui.view.TitilliumRegularTextView
+            <com.nl.clubbook.ui.view.HelveticaRegularTextView
                 android:id="@+id/txtCheckIn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -175,7 +175,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <com.nl.clubbook.ui.view.TitilliumRegularTextView
+            <com.nl.clubbook.ui.view.HelveticaRegularTextView
                 android:id="@+id/txtUsers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -185,7 +185,7 @@
                 android:textColor="@color/grey"
                 android:textSize="@dimen/text_size_medium" />
 
-            <com.nl.clubbook.ui.view.TitilliumBoldTextView
+            <com.nl.clubbook.ui.view.HelveticaBoldTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
@@ -194,7 +194,7 @@
                 android:textColor="@color/grey"
                 android:textSize="@dimen/text_size_medium" />
 
-            <com.nl.clubbook.ui.view.TitilliumRegularTextView
+            <com.nl.clubbook.ui.view.HelveticaRegularTextView
                 android:id="@+id/txtRequiredUsersNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

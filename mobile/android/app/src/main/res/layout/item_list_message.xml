@@ -25,7 +25,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp">
 
-        <com.nl.clubbook.ui.view.TitilliumRegularTextView
+        <com.nl.clubbook.ui.view.HelveticaRegularTextView
             android:id="@+id/txtUsername"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
             android:textColor="@color/grey"
             android:textSize="@dimen/text_size_medium"/>
 
-        <com.nl.clubbook.ui.view.TitilliumRegularTextView
+        <com.nl.clubbook.ui.view.HelveticaRegularTextView
             android:id="@+id/txtLastMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
             android:textSize="@dimen/text_size_small"/>
     </LinearLayout>
 
-    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+    <com.nl.clubbook.ui.view.HelveticaRegularTextView
         android:id="@+id/txtUnreadMessagesCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

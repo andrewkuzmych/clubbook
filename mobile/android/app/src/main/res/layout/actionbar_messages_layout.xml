@@ -14,7 +14,7 @@
         android:src="@drawable/bg_btn_green_small"/>
 
 
-    <com.nl.clubbook.ui.view.TitilliumRegularTextView
+    <com.nl.clubbook.ui.view.HelveticaRegularTextView
         android:id="@+id/actionbarChatCount"
         android:layout_width="48dp"
         android:layout_height="48dp"
