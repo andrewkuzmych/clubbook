@@ -82,7 +82,7 @@
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/selector_bg_btn_white"
                 android:drawablePadding="4dp"
-                android:drawableTop="@drawable/ic_distance_club_details"
+                android:drawableTop="@drawable/ic_navigation"
                 android:gravity="center"
                 android:padding="16dp"
                 android:textColor="@color/green"
