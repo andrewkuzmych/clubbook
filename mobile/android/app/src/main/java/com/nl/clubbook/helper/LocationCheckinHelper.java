@@ -58,6 +58,10 @@ public class LocationCheckinHelper {
         return mCheckInHelper;
     }
 
+    public static void clear() {
+        mCheckInHelper.clearCheckedInClubInfo();
+    }
+
     private LocationCheckinHelper() {
     }
 

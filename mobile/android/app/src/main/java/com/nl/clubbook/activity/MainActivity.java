@@ -293,6 +293,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         unsubscribePubnup();
         getSession().logoutUser();
 
+        LocationCheckinHelper.clear();
+
         Intent intent = new Intent(MainActivity.this, MainLoginActivity.class);
         startActivity(intent);
         finish();

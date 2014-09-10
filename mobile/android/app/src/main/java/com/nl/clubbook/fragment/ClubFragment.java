@@ -427,6 +427,8 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
             while(users.size() < MIN_CHECKED_IN_USERS) {
                 users.add(new CheckInUserDto());
             }
+        } else {
+            view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.GONE);
         }
 
         String currentUserId = getSession().getUserDetails().get(SessionManager.KEY_ID);

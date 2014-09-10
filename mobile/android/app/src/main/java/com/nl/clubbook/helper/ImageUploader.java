@@ -70,6 +70,10 @@ public abstract class ImageUploader {
 
     public abstract void onImageUploaded(@Nullable JSONObject imageObj);
 
+    public boolean isImageSelected() {
+        return mImageData.imgIntent != null;
+    }
+
     public AlertDialog selectPhoto() {
         final String[] items = new String[] {
                 mActivity.getString(R.string.take_from_camera),

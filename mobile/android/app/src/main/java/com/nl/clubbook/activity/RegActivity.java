@@ -132,6 +132,11 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
             return;
         }
 
+        if(!imageUploader.isImageSelected()) {
+            showMessageDialog(getString(R.string.app_name), getString(R.string.avatar_incorrect));
+            return;
+        }
+
         imageUploader.uploadImage();
     }
 
@@ -185,6 +190,8 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
 
                 UserDto user = (UserDto) result;
                 getSession().createLoginSession(user);
+
+                sendBroadcast(new Intent(MainLoginActivity.ACTION_CLOSE_ACTIVITY));
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);

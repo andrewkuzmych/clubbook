@@ -54,7 +54,7 @@
                     android:minHeight="48dp"
                     android:textColor="@color/grey"
                     android:hint="@string/first_name"
-                    android:inputType="textPersonName"
+                    android:inputType="textPersonName|textCapWords"
                     android:layout_marginLeft="16dp"/>
             </LinearLayout>
 
