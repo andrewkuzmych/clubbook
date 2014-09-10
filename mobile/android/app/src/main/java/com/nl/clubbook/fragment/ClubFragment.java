@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.ClubInfoActivity;
+import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.adapter.ProfileAdapter;
 import com.nl.clubbook.datasource.CheckInUserDto;
 import com.nl.clubbook.datasource.ClubDto;
@@ -231,6 +232,9 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         TextView txtFriendsCount = (TextView) view.findViewById(R.id.txtFriendsCount);
         ImageView imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
 
+        // Load profiles
+        initGridView(view, mClub.getUsers());
+
         // if we checked in this this club set related style
         if (LocationCheckinHelper.getInstance().isCheckInHere(mClub)) {
             UiHelper.changeCheckInState(getActivity(), txtCheckIn, true);
@@ -243,9 +247,6 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         } else {
             txtCheckIn.setEnabled(false);
         }
-
-        // Load profiles
-        initGridView(view, mClub.getUsers());
 
         txtClubName.setText(mClub.getTitle());
         txtCheckInCount.setText(mClub.getActiveCheckIns() + "\n" + getString(R.string.checked_in));
@@ -420,9 +421,9 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
                 }
             }
 
-            int requeredUsersNumber = MIN_CHECKED_IN_USERS - users.size();
+            int requiredUsersNumber = MIN_CHECKED_IN_USERS - users.size();
             TextView txtRequiredUsersNumber = (TextView) view.findViewById(R.id.txtRequiredUsersNumber);
-            txtRequiredUsersNumber.setText(String.format(getString(R.string.profile_pictures_will_be_visible), requeredUsersNumber));
+            txtRequiredUsersNumber.setText(String.format(getString(R.string.profile_pictures_will_be_visible), requiredUsersNumber));
 
             while(users.size() < MIN_CHECKED_IN_USERS) {
                 users.add(new CheckInUserDto());
@@ -432,6 +433,18 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         }
 
         String currentUserId = getSession().getUserDetails().get(SessionManager.KEY_ID);
+        if(!LocationCheckinHelper.getInstance().isCheckIn()) {
+            for(CheckInUserDto user : users) {
+                if(user != null && currentUserId.equalsIgnoreCase(user.getId())) {
+                    LocationCheckinHelper.getInstance().setCurrentClub(mClub);
+
+                    Intent intent = new Intent();
+                    intent.setAction(MainActivity.ACTION_CHECK_IN_CHECK_OUT);
+                    getActivity().sendBroadcast(intent);
+                }
+            }
+        }
+
         GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
         ProfileAdapter profileAdapter = new ProfileAdapter(getActivity(), users, currentUserId, ProfileAdapter.MODE_GRID, isLoadingEnabled);
         gridUsers.setAdapter(profileAdapter);

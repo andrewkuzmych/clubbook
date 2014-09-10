@@ -63,7 +63,7 @@
             android:textColor="@android:color/white"
             android:gravity="center"
             android:paddingLeft="4dp"
-            android:paddingRight="4dp" />
+            android:paddingRight="4dp"/>
 
         <com.nl.clubbook.ui.view.HelveticaBoldTextView
             android:id="@+id/txtLogin"

@@ -354,10 +354,15 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                         new DataStore.OnResultReady() {
                             @Override
                             public void onReady(Object result, boolean failed) {
+                                if(isDetached() || getActivity() == null) {
+                                    return;
+                                }
+
                                 if (failed) {
                                     L.i("readMessages failed");
                                     return;
                                 }
+
                                 ((MainActivity) getActivity()).updateMessagesCount();
                             }
                         });

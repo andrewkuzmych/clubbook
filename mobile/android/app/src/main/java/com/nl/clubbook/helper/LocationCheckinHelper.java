@@ -95,6 +95,10 @@ public class LocationCheckinHelper {
         return false;
     }
 
+    public boolean isCheckIn() {
+        return (mCurrentClub != null && mCurrentClub.getId() != null);
+    }
+
     /**
      * Check location and distance to club to allow check in
      */
