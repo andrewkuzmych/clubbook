@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
-import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,7 +30,6 @@ import org.json.JSONObject;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -203,9 +201,7 @@ public abstract class ImageUploader {
         }
     }
 
-    private void pickFromFile(Intent imageReturnedIntent) {
-        final Uri selectedImage = imageReturnedIntent.getData();
-
+    private void pickFromFile(final Intent imageReturnedIntent) {
         new AsyncTask<Void, Void, JSONObject>() {
             @Override
             protected void onPreExecute() {
@@ -219,14 +215,12 @@ public abstract class ImageUploader {
                 JSONObject imageObj = null;
 
                 try {
-                    // TODO: rotate image
-                    // http://stackoverflow.com/questions/3647993/android-bitmaps-loaded-from-gallery-are-rotated-in-imageview
-
-                    Bitmap mBitmap = readBitmap(selectedImage);
-                    Bitmap scaled = getResizedBitmap(mBitmap, 800);
+                    Bitmap scaledBitmap = decodeSampledBitmapFromFile(getFilePath(imageReturnedIntent),
+                            mActivity.getResources().getDisplayMetrics().widthPixels,
+                            (int)(mActivity.getResources().getDimension(R.dimen.avatar_height)));
 
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                     InputStream is = new ByteArrayInputStream(stream.toByteArray());
                     imageObj = cloudinary.uploader().upload(is, Cloudinary.asMap("format", "jpg"));
 
@@ -299,28 +293,6 @@ public abstract class ImageUploader {
             width = (int) (height * bitmapRatio);
         }
         return Bitmap.createScaledBitmap(image, width, height, true);
-    }
-
-    private Bitmap readBitmap(Uri selectedImage) {
-        Bitmap bm = null;
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 5;
-        AssetFileDescriptor fileDescriptor = null;
-        try {
-            fileDescriptor = mActivity.getContentResolver().openAssetFileDescriptor(selectedImage, "r");
-        } catch (FileNotFoundException e) {
-            L.i("" + e);
-        } finally {
-            if(fileDescriptor != null) {
-                try {
-                    bm = BitmapFactory.decodeFileDescriptor(fileDescriptor.getFileDescriptor(), null, options);
-                    fileDescriptor.close();
-                } catch (IOException e) {
-                    L.i("" + e);
-                }
-            }
-        }
-        return bm;
     }
 
     private void decodeStream(final int requestCode, final Intent data) {

@@ -20,7 +20,7 @@
             <RelativeLayout
                 android:id="@+id/holderPagerAvatars"
                 android:layout_width="match_parent"
-                android:layout_height="230dp">
+                android:layout_height="@dimen/avatar_height">
 
                 <com.nl.clubbook.ui.view.CustomViewPager
                     android:id="@+id/pagerAvatars"
