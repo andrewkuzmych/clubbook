@@ -63,7 +63,8 @@
             android:textColor="@android:color/white"
             android:gravity="center"
             android:paddingLeft="4dp"
-            android:paddingRight="4dp"/>
+            android:paddingRight="4dp"
+            android:visibility="gone"/>
 
         <com.nl.clubbook.ui.view.HelveticaBoldTextView
             android:id="@+id/txtLogin"
@@ -76,7 +77,8 @@
             android:textColor="@android:color/white"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginBottom="24dp"
+            android:visibility="gone"/>
 
         <com.nl.clubbook.ui.view.HelveticaRegularTextView
             android:layout_width="match_parent"
