@@ -3,7 +3,8 @@
 
     <style name="add_friend_button">
         <item name="android:text">@string/add_friend</item>
-        <item name="android:layout_width">@dimen/btn_add_friend_width</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:minWidth">@dimen/btn_add_friend_width</item>
     </style>
 
 </resources>

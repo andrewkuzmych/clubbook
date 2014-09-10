@@ -2,5 +2,6 @@
 <resources>
 
     <dimen name="btn_add_friend_width">110dp</dimen>
+    <dimen name="btn_chat_margin_bottom">-48dp</dimen>
 
 </resources>

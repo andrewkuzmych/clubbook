@@ -111,7 +111,8 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="16dp"
                     android:textSize="@dimen/text_size_medium"
-                    android:textColor="@color/grey" />
+                    android:textColor="@color/grey"
+                    android:text="test"/>
 
                 <View
                     android:id="@+id/dividerCoutnry"
