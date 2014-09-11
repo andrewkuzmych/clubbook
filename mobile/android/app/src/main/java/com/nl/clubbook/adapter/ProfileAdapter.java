@@ -105,11 +105,9 @@ public class ProfileAdapter extends BaseAdapter {
             imageLoader.displayImage(imageUrl, holder.imgAvatar, options, animateFirstListener);
 
             if(item.isFriend()) {
-                holder.txtFriendIndicator.setVisibility(View.GONE);
-            } else if(mCurrentUserId.equals(item.getId())) {
-                holder.txtFriendIndicator.setVisibility(View.GONE);
-            } else {
                 holder.txtFriendIndicator.setVisibility(View.VISIBLE);
+            } else {
+                holder.txtFriendIndicator.setVisibility(View.GONE);
             }
 
             holder.userId.setTag(item.getId());

@@ -255,12 +255,17 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
         ClubWorkingHoursDto workingHours = mClub.getTodayWorkingHours();
         if(workingHours != null) {
-            String startTime = workingHours.getStartTime();
-            String endTime = workingHours.getEndTime();
+            if(ClubWorkingHoursDto.STATUS_OPENED.equalsIgnoreCase(workingHours.getStatus())) {
+                String startTime = workingHours.getStartTime();
+                String endTime = workingHours.getEndTime();
 
-            txtOpenToday.append("  ");
-            txtOpenToday.append(startTime != null ? startTime + " - " : "");
-            txtOpenToday.append(endTime != null ? endTime : "");
+                txtOpenToday.append("  ");
+                txtOpenToday.append(startTime != null ? startTime + " - " : "");
+                txtOpenToday.append(endTime != null ? endTime : "");
+            } else {
+                txtOpenToday.append("  ");
+                txtOpenToday.append(ClubWorkingHoursDto.STATUS_CLOSED);
+            }
         }
 
         String avatarUrl = mClub.getAvatar();

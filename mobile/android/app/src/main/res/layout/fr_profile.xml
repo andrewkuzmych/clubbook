@@ -51,7 +51,7 @@
                     android:background="@android:color/white"
                     android:orientation="horizontal"
                     android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
+                    android:paddingRight="12dp">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -86,11 +86,12 @@
                         android:gravity="center|left"
                         android:textSize="@dimen/text_size_small"
                         android:textColor="@android:color/white"
+                        android:drawablePadding="-4dp"
                         android:drawableLeft="@drawable/ic_add_friend_profile"
                         android:background="@drawable/bg_btn_violet_dark"
                         android:layout_gravity="center_vertical"
-                        android:paddingRight="16dp"
-                        android:paddingLeft="8dp"/>
+                        android:paddingRight="12dp"
+                        android:paddingLeft="4dp"/>
 
                 </LinearLayout>
 
@@ -204,7 +205,7 @@
                 android:layout_height="75dp"
                 android:layout_below="@+id/holderPagerAvatars"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="-40dp"
+                android:layout_marginTop="@dimen/btn_chat_margin_bottom"
                 android:background="@drawable/ic_chat_profile"
                 android:gravity="bottom|center_horizontal"
                 android:text="@string/chat"

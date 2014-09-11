@@ -107,8 +107,8 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
 
     private void initView() {
         findViewById(R.id.txtLoginFacebook).setOnClickListener(MainLoginActivity.this);
-//        findViewById(R.id.txtRegWithEmail).setOnClickListener(MainLoginActivity.this);
-//        findViewById(R.id.txtLogin).setOnClickListener(MainLoginActivity.this);
+        findViewById(R.id.txtRegWithEmail).setOnClickListener(MainLoginActivity.this);
+        findViewById(R.id.txtLogin).setOnClickListener(MainLoginActivity.this);
         findViewById(R.id.txtTermsOfService).setOnClickListener(MainLoginActivity.this);
     }
 

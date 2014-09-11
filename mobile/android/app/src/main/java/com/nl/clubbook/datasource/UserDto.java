@@ -136,7 +136,7 @@ public class UserDto {
     }
 
     public String getCountry() {
-        if(country != null) {
+        if(country != null && country.length() > 0) {
             char firstSymbol = country.charAt(0);
             country = country.replaceFirst(String.valueOf(firstSymbol), String.valueOf(firstSymbol).toUpperCase());
 
