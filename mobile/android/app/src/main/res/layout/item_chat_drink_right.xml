@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical|right"
-    android:orientation="horizontal"
     android:paddingBottom="8dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="8dp"
     android:background="@android:color/transparent">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginRight="8dp"
-        android:background="@drawable/ic_chat_bubble_grey_right">
+        android:background="@drawable/ic_chat_bubble_grey_right"
+        android:layout_toLeftOf="@+id/imgAvatar">
 
         <ImageView
             android:id="@+id/imgDrink"
@@ -32,14 +31,18 @@
             android:textColor="@android:color/white"
             android:layout_marginLeft="8dp"
             android:textSize="@dimen/text_size_small"
-            android:layout_gravity="center_vertical"
-            android:paddingRight="16dp"/>
-    </LinearLayout>
+            android:layout_centerVertical="true"
+            android:paddingRight="16dp"
+            android:layout_toRightOf="@+id/imgDrink"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"/>
+    </RelativeLayout>
 
     <com.nl.clubbook.ui.view.CircleImageView
         android:id="@+id/imgAvatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:layout_alignParentRight="true"/>
 
-</LinearLayout>
+</RelativeLayout>
