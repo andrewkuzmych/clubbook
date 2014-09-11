@@ -17,6 +17,7 @@ import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.utils.L;
 
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -327,7 +328,7 @@ public class LocationCheckinHelper {
                         currentLocation = location;
                     }
 
-                    if(mShouldHideLocationErrorView) {
+                    if (mShouldHideLocationErrorView) {
                         hideLocationErrorView(context);
                     }
 
@@ -351,8 +352,21 @@ public class LocationCheckinHelper {
             };
 
             // Register the listener with the Location Manager to receive location updates
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, updateLocationInterval, 200, mLocationListener);
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, updateLocationInterval, 200, mLocationListener);
+            List<String> providers = mLocationManager.getAllProviders();
+            if(providers == null || providers.size() == 0) {
+                return;
+            }
+
+
+            for(String provider : providers) {
+                if (LocationManager.NETWORK_PROVIDER.equalsIgnoreCase(provider)) {
+                    mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, updateLocationInterval, 200, mLocationListener);
+                }
+
+                if (LocationManager.GPS_PROVIDER.equalsIgnoreCase(provider)) {
+                    mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, updateLocationInterval, 200, mLocationListener);
+                }
+            }
         }
     }
 
