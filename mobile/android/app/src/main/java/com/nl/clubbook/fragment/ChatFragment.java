@@ -71,6 +71,8 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        sendScreenStatistic(R.string.chat_screen_android);
+
         UIUtils.displayEmptyIconInActionBar((ActionBarActivity)getActivity());
         handleArgs();
         initView();

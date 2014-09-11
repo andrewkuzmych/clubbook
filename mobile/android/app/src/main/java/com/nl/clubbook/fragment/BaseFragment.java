@@ -1,5 +1,6 @@
 package com.nl.clubbook.fragment;
 
+import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -7,8 +8,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.nl.clubbook.ClubbookApplication;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
+import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.SessionManager;
@@ -19,6 +24,15 @@ import java.lang.reflect.Field;
  * Created by Andrew on 6/8/2014.
  */
 public class BaseFragment extends Fragment {
+
+    protected Tracker mTracker;
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mTracker = ((ClubbookApplication)getActivity().getApplicationContext()).getTracker();
+    }
 
     @Override
     public void onDetach() {
@@ -36,6 +50,15 @@ public class BaseFragment extends Fragment {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void sendScreenStatistic(int stringResourceId) {
+        sendScreenStatistic(getString(stringResourceId));
+    }
+
+    public void sendScreenStatistic(String stringName) {
+        mTracker.setScreenName(MainActivity.class.getSimpleName());
+        mTracker.send(new HitBuilders.AppViewBuilder().build());
     }
 
     protected SessionManager getSession() {

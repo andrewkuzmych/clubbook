@@ -40,6 +40,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        sendScreenStatistic(R.string.settings_screen_android);
+
         initActionBarTitle(getString(R.string.settings));
         initView();
     }

@@ -81,6 +81,8 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        sendScreenStatistic(R.string.club_users_screen_android);
+
         UIUtils.displayEmptyIconInActionBar((ActionBarActivity)getActivity());
         initActionBarTitle(getString(R.string.club_page));
         handleArgs();
@@ -120,6 +122,11 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         if(viewUserId.getTag() == null) {
             TextView txtRequiredUsersNumber = (TextView) getView().findViewById(R.id.txtRequiredUsersNumber);
             showToast(txtRequiredUsersNumber.getText().toString().trim());
+            return;
+        }
+
+        if(!LocationCheckinHelper.getInstance().isCheckInHere(mClub)) {
+            showToast(R.string.need_to_check_in_first);
             return;
         }
 

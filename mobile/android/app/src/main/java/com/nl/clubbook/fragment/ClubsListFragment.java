@@ -40,6 +40,8 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        sendScreenStatistic(R.string.main_screen_android);
+
         initActionBarTitle(getString(R.string.clubs));
         initView();
     }

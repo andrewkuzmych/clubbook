@@ -53,6 +53,8 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_edit_profile);
 
+        sendScreenStatistic(R.string.profile_screen_android);
+
         UIUtils.displayEmptyIconInActionBar(this);
         initImageHelpers();
         initView();

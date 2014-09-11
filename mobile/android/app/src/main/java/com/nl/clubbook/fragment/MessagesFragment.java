@@ -35,6 +35,8 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        sendScreenStatistic(R.string.messages_screen_android);
+
         initActionBarTitle(getString(R.string.messages));
         initView();
         loadData();

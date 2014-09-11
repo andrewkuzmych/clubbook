@@ -26,7 +26,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.HitBuilders;
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.NavDrawerItem;
 import com.nl.clubbook.datasource.ChatMessageDto;
@@ -100,8 +99,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_main);
 
-        mTracker.setScreenName(MainActivity.class.getSimpleName());
-        mTracker.send(new HitBuilders.AppViewBuilder().build());
 
         initReceivers();
 
@@ -320,6 +317,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             }
 
             public void onDrawerOpened(View drawerView) {
+                sendScreenStatistic(R.string.sidebar_screen_android);
             }
         };
         navDrawerItems = NavDrawerData.getNavDrawerItems(MainActivity.this);

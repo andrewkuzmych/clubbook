@@ -34,6 +34,8 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_reg);
 
+        sendScreenStatistic(R.string.registration_screen_android);
+
         initImageUploader();
         initActionBar(R.string.sing_up);
         initView();

@@ -87,6 +87,8 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        sendScreenStatistic(R.string.user_screen_android);
+
         UIUtils.displayEmptyIconInActionBar((ActionBarActivity)getActivity());
         initActionBarTitle(getString(R.string.user_profile));
         handleExtras();

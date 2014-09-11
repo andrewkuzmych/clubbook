@@ -46,6 +46,8 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
         this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.ac_main_login);
 
+        sendScreenStatistic(R.string.main_login_screen_android);
+
         registerReceiver(mCloseActivityReceiver, new IntentFilter(ACTION_CLOSE_ACTIVITY));
 
         // start to track user location

@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Created by Volodymyr on 15.08.2014.
  */
-public class ClubInfoFragment extends Fragment implements ViewPager.OnPageChangeListener {
+public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
 
     private static final String ARG_JSON_CLUB = "ARG_JSON_CLUB";
 
@@ -59,6 +59,8 @@ public class ClubInfoFragment extends Fragment implements ViewPager.OnPageChange
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        sendScreenStatistic(R.string.club_screen_android);
 
         initLoader();
         initView();

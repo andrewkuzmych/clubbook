@@ -140,5 +140,21 @@
     <string name="open_settings">Open Settings</string>
     <string name="wait_until_clubbook_will_determine_your_current_location">Wait until Clubbook will determine your current location&#8230;</string>
     <string name="in_order_for_you_to_see_clubs_and_profile">In order for you to see Clubs and Profiles nearby, we need to know your current location</string>
+    <string name="need_to_check_in_first">To interact with this user, you need to Check-in to this Club first</string>
+
+    <!--For Google Analytics-->
+    <string name="sidebar_screen_android">Sidebar Screen Android</string>
+    <string name="main_screen_android">Main Screen Android</string>
+    <string name="club_users_screen_android">Club Users Screen Android</string>
+    <string name="messages_screen_android">Messages Screen Android</string>
+    <string name="chat_screen_android">Chat Screen Android</string>
+    <string name="user_screen_android">User Screen Android</string>
+    <string name="friends_screen_android">Friends Screen Android</string>
+    <string name="settings_screen_android">Settings Screen Android</string>
+    <string name="main_login_screen_android">Main Login Screen Android</string>
+    <string name="profile_screen_android">Profile Screen Android</string>
+    <string name="club_screen_android">Club Screen Android</string>
+    <string name="registration_screen_android">Registration Screen Android </string>
+    <string name="login_screen_android">Login Screen Android</string>
 
 </resources>

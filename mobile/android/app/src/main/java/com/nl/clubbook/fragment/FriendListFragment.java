@@ -44,6 +44,8 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        sendScreenStatistic(R.string.friends_screen_android);
+
         initView();
         loadData();
     }
