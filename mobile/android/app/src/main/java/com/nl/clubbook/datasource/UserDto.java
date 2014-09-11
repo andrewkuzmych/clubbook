@@ -128,6 +128,10 @@ public class UserDto {
     }
 
     public String getAge() {
+        if("null".equalsIgnoreCase(age)) {
+            age = "";
+        }
+
         return age;
     }
 
