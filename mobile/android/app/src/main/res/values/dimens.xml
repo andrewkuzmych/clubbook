@@ -3,7 +3,7 @@
     
     <dimen name="text_size_micro">12sp</dimen>
     <dimen name="text_size_small">14sp</dimen>
-    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_intermediate">16sp</dimen>
     <dimen name="text_size_medium">18sp</dimen>
     <dimen name="text_size_large">22sp</dimen>
 
@@ -18,5 +18,6 @@
 
     <dimen name="btn_chat_margin_bottom">-40dp</dimen>
     <dimen name="txt_check_in_users_size">@dimen/text_size_small</dimen>
+    <dimen name="txt_btn_main_login_screen">@dimen/text_size_medium</dimen>
 
 </resources>

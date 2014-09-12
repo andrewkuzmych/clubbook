@@ -6,13 +6,14 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.Spinner;
 
 import com.nl.clubbook.R;
+import com.nl.clubbook.adapter.UserPhotosAdapter;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.datasource.UserPhotoDto;
@@ -21,6 +22,7 @@ import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.ImageUploader;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.helper.UiHelper;
+import com.nl.clubbook.ui.view.HorizontalListView;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.nl.clubbook.utils.ParseUtils;
 import com.nl.clubbook.utils.UIUtils;
@@ -29,6 +31,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
@@ -36,7 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class EditProfileActivity extends BaseDateActivity implements View.OnClickListener,
-        MessageDialog.MessageDialogListener {
+        MessageDialog.MessageDialogListener, AdapterView.OnItemClickListener {
 
     public static final int REQUEST_CODE = 6364;
 
@@ -47,6 +50,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
     private ImageLoader mImageLoader;
     private DisplayImageOptions mOptions;
     private ImageLoadingListener mAnimateFirstListener = new SimpleImageLoadingListener();
+    private UserPhotosAdapter mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +103,15 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
     }
 
     @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if(mAdapter == null) {
+            return;
+        }
+
+        displayImageBigPreview(mAdapter.getItem(position));
+    }
+
+    @Override
     public void onPositiveButtonClick(MessageDialog dialogFragment) {
         removeImage();
     }
@@ -116,6 +129,9 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         findViewById(R.id.txtSetAsDefault).setOnClickListener(this);
         findViewById(R.id.txtDeleteImage).setOnClickListener(this);
         findViewById(R.id.txtSave).setOnClickListener(this);
+
+        HorizontalListView listView = (HorizontalListView)findViewById(R.id.listUserPhotos);
+        listView.setOnItemClickListener(this);
     }
 
     private void onSaveClicked() {
@@ -260,37 +276,22 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         });
     }
 
-    private void drawImageManager(List<UserPhotoDto> userPhotoDtoList) {
-        LinearLayout holderUsersPhotos = (LinearLayout) findViewById(R.id.holderUserPhotos);
-        holderUsersPhotos.removeAllViews();
+    private void drawImageManager(@Nullable List<UserPhotoDto> userPhotoDtoList) {
+        if(userPhotoDtoList == null) {
+            return;
+        }
+
+        HorizontalListView listUserPhotos = (HorizontalListView)findViewById(R.id.listUserPhotos);
+        mAdapter = new UserPhotosAdapter(EditProfileActivity.this, userPhotoDtoList, mImageLoader, mOptions);
+        listUserPhotos.setAdapter(mAdapter);
+
         for (UserPhotoDto userPhotoDto : userPhotoDtoList) {
-            displayImageSmallPreview(holderUsersPhotos, userPhotoDto);
             if(userPhotoDto.getIsAvatar()) {
                 displayImageBigPreview(userPhotoDto);
-
                 UIUtils.loadPhotoToActionBar(EditProfileActivity.this, ImageHelper.getUserListAvatar(userPhotoDto.getUrl()));
+                break;
             }
         }
-    }
-
-    private void displayImageSmallPreview(LinearLayout holderUserPhotos, final UserPhotoDto imageDto) {
-        int widthAndHeightInPixels = (int) UIUtils.dipToPixels(EditProfileActivity.this, 75f);
-        LayoutParams layoutParams = new LayoutParams(widthAndHeightInPixels, widthAndHeightInPixels);
-
-        ImageView image = new ImageView(EditProfileActivity.this);
-        image.setLayoutParams(layoutParams);
-        image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        holderUserPhotos.addView(image, 0);
-
-        mImageLoader.displayImage(ImageHelper.getUserPhotoSmallPreview(imageDto.getUrl()), image, mOptions, mAnimateFirstListener);
-        image.setTag(imageDto);
-
-        image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                displayImageBigPreview(imageDto);
-            }
-        });
     }
 
     private void displayImageBigPreview(UserPhotoDto imageDto) {
@@ -329,8 +330,9 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                 UserPhotoDto imageDto = (UserPhotoDto) result;
 
                 // add to small preview
-                LinearLayout holderUsersPhotos = (LinearLayout) findViewById(R.id.holderUserPhotos);
-                displayImageSmallPreview(holderUsersPhotos, imageDto);
+                if(mAdapter != null) {
+                    mAdapter.addNewImage(imageDto, mAdapter.getCount());
+                }
                 displayImageBigPreview(imageDto);
             }
         });
@@ -353,9 +355,9 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                 }
 
                 // remove from small preview
-                LinearLayout holderUserPhotos = (LinearLayout) findViewById(R.id.holderUserPhotos);
-                ImageView imageView = (ImageView) holderUserPhotos.findViewWithTag(selectedImageDto);
-                holderUserPhotos.removeView(imageView);
+                if(mAdapter != null) {
+                    mAdapter.removePhoto(selectedImageDto);
+                }
 
                 for (UserPhotoDto userPhotoDto : profile.getPhotos()) {
                     if (userPhotoDto.getIsAvatar()) {

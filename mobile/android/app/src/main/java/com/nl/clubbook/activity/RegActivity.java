@@ -139,14 +139,14 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
             return;
         }
 
-        imageUploader.uploadImage();
-    }
-
-    private void doRegistration() {
         if(!isDataValid()) {
             return;
         }
 
+        imageUploader.uploadImage();
+    }
+
+    private void doRegistration() {
         if(!NetworkUtils.isOn(RegActivity.this)) {
             showToast(R.string.no_connection);
             return;

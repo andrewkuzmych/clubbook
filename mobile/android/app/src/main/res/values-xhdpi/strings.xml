@@ -2,5 +2,6 @@
 <resources>
 
     <string name="add_friend">Add Friend</string>
+    <dimen name="txt_btn_main_login_screen">@dimen/text_size_medium</dimen>
 
 </resources>

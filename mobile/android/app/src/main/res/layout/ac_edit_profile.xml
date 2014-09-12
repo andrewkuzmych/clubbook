@@ -79,19 +79,26 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_add_photo" />
 
-                <HorizontalScrollView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                <com.nl.clubbook.ui.view.HorizontalListView
+                    android:id="@+id/listUserPhotos"
+                    android:layout_width="match_parent"
+                    android:layout_height="75dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@android:color/white"/>
 
-                    <LinearLayout
-                        android:id="@+id/holderUserPhotos"
-                        android:layout_width="wrap_content"
-                        android:layout_height="75dp"
-                        android:orientation="horizontal">
+                <!--<HorizontalScrollView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content">-->
 
-                    </LinearLayout>
+                    <!--<LinearLayout-->
+                        <!--android:id="@+id/holderUserPhotos"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="75dp"-->
+                        <!--android:orientation="horizontal">-->
 
-                </HorizontalScrollView>
+                    <!--</LinearLayout>-->
+
+                <!--</HorizontalScrollView>-->
 
             </LinearLayout>
 

@@ -546,6 +546,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void onNavDrawerHeaderClicked() {
+        mDrawerLayout.closeDrawer(mDrawerList);
+
         Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
         startActivityForResult(intent, EditProfileActivity.REQUEST_CODE);
     }
