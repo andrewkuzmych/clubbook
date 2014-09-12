@@ -31,7 +31,7 @@ public class ChatMessageDto extends BaseChatMessage {
             result = userFromName + " " + context.getString(R.string.likes_you);
 
         } else if(TYPE_DRINK.equalsIgnoreCase(type)) {
-            result = userFromName + " " + context.getString(R.string.invite_you_for_a_drink);
+            result = userFromName + " " + context.getString(R.string.invites_you_for_a_drink);
 
         } else {
             result = "";

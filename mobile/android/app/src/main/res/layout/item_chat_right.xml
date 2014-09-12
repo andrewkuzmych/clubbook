@@ -20,7 +20,7 @@
         android:paddingLeft="16dp"
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:layout_toLeftOf="@+id/imgAvatar"
         android:layout_centerVertical="true"/>
 

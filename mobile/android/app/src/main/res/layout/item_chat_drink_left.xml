@@ -29,7 +29,7 @@
             android:layout_height="48dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_drink"
-            android:layout_marginLeft="8dp"/>
+            android:layout_marginLeft="4dp"/>
 
         <com.nl.clubbook.ui.view.HelveticaRegularTextView
             android:id="@+id/txtChatMessage"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_small"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:layout_gravity="center_vertical"
             android:paddingRight="16dp"
             android:paddingBottom="4dp"

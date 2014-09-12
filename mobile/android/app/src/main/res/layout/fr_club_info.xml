@@ -161,7 +161,8 @@
                 android:drawablePadding="16dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                android:autoLink="map"/>
+                android:autoLink="map"
+                android:gravity="center_vertical"/>
 
             <com.nl.clubbook.ui.view.HelveticaRegularTextView
                 android:id="@+id/txtPhone"
@@ -173,7 +174,8 @@
                 android:drawablePadding="16dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                android:autoLink="phone"/>
+                android:autoLink="phone"
+                android:gravity="center_vertical"/>
 
             <com.nl.clubbook.ui.view.HelveticaRegularTextView
                 android:id="@+id/txtWebsite"
@@ -185,7 +187,8 @@
                 android:drawablePadding="16dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                android:autoLink="web"/>
+                android:autoLink="web"
+                android:gravity="center_vertical"/>
 
             <com.nl.clubbook.ui.view.HelveticaRegularTextView
                 android:id="@+id/txtEmail"
@@ -197,7 +200,8 @@
                 android:drawablePadding="16dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                android:autoLink="email"/>
+                android:autoLink="email"
+                android:gravity="center_vertical"/>
 
         </LinearLayout>
 

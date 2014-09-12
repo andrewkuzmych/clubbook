@@ -67,7 +67,6 @@
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_checked_in_club_list"
                 android:gravity="center_vertical"
-                android:lineSpacingExtra="-4dp"
                 android:textColor="@color/grey"
                 android:textSize="@dimen/text_size_micro" />
 
@@ -79,7 +78,6 @@
                 android:layout_marginLeft="8dp"
                 android:drawableLeft="@drawable/ic_friends_club_list"
                 android:gravity="center_vertical"
-                android:lineSpacingExtra="-4dp"
                 android:textColor="@color/grey"
                 android:textSize="@dimen/text_size_micro" />
         </LinearLayout>

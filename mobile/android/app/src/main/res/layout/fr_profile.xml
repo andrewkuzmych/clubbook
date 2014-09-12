@@ -141,10 +141,10 @@
                     android:background="@android:color/white"
                     android:gravity="center_vertical"
                     android:paddingBottom="8dp"
-                    android:paddingLeft="28dp"
+                    android:paddingLeft="16dp"
                     android:paddingRight="16dp"
                     android:textSize="@dimen/text_size_small"
-                    android:textColor="@color/grey" />
+                    android:textColor="@color/grey"/>
 
                 <View
                     android:id="@+id/dividerAboutMe"

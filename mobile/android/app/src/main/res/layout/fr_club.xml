@@ -119,7 +119,6 @@
                 android:drawableLeft="@drawable/ic_checked_in_club_details"
                 android:drawablePadding="-4dp"
                 android:gravity="center_vertical"
-                android:lineSpacingExtra="0dp"
                 android:text="@string/checked_in"
                 android:textColor="@color/grey_light"
                 android:textSize="@dimen/txt_check_in_users_size" />
@@ -134,7 +133,6 @@
                 android:drawableLeft="@drawable/ic_friends_club_details"
                 android:drawablePadding="4dp"
                 android:gravity="center_vertical"
-                android:lineSpacingExtra="-4dp"
                 android:text="@string/friends"
                 android:textColor="@color/grey_light"
                 android:textSize="@dimen/txt_check_in_users_size" />

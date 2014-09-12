@@ -56,7 +56,7 @@ public class FontHelper {
             @Override
             protected Void doInBackground(Void... params) {
                 instance.setHelveticaBold(Typeface.createFromAsset(context.getAssets(), "fonts/Helvetica_Bold.ttf"));
-                instance.setHelveticaRegular(Typeface.createFromAsset(context.getAssets(), "fonts/Helvetica_S_Regular.ttf"));
+                instance.setHelveticaRegular(Typeface.createFromAsset(context.getAssets(), "fonts/Helvetica_Normal.ttf"));
 
                 return null;
             }
