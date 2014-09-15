@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
+import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.listeners.OnLogoutListener;
@@ -61,7 +62,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
             case R.id.txtPrivacyPolicy:
                 onTxtPrivacyPolicyClicked();
                 break;
-            case R.id.txtTermsOfservice:
+            case R.id.txtTermsOfService:
                 onTxtTermsOfServiceClicked();
                 break;
             case R.id.txtDeleteAccount:
@@ -78,8 +79,13 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if(buttonView.getId() == R.id.cbPushNotifications) {
-            onPushEnablingChanged((CheckBox) buttonView, isChecked);
+        switch (buttonView.getId()) {
+            case R.id.cbPushNotifications:
+                onPushEnablingChanged((CheckBox) buttonView, isChecked);
+                break;
+            case R.id.cbPushVibrations:
+                onPushVibrationCheckedChanged(isChecked);
+                break;
         }
     }
 
@@ -106,12 +112,23 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
             return;
         }
 
+        SessionManager session = getSession();
+
         CheckBox cbPushNotifications = (CheckBox) view.findViewById(R.id.cbPushNotifications);
-        cbPushNotifications.setChecked(getSession().isNotificationEnabled());
+        cbPushNotifications.setChecked(session.isNotificationEnabled());
         cbPushNotifications.setOnCheckedChangeListener(this);
 
+        CheckBox cbPushVibrations = (CheckBox) view.findViewById(R.id.cbPushVibrations);
+        cbPushVibrations.setChecked(session.isNotificationVibtraionEnabled());
+        cbPushVibrations.setOnCheckedChangeListener(this);
+
+        if(!getSession().isNotificationEnabled()) {
+            view.findViewById(R.id.holderNotificationVibration).setEnabled(false);
+            view.findViewById(R.id.cbPushVibrations).setEnabled(false);
+        }
+
         view.findViewById(R.id.txtPrivacyPolicy).setOnClickListener(this);
-        view.findViewById(R.id.txtTermsOfservice).setOnClickListener(this);
+        view.findViewById(R.id.txtTermsOfService).setOnClickListener(this);
         view.findViewById(R.id.txtDeleteAccount).setOnClickListener(this);
         view.findViewById(R.id.txtContact).setOnClickListener(this);
         view.findViewById(R.id.txtLogOut).setOnClickListener(this);
@@ -133,16 +150,29 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         DataStore.updateNotificationEnabling(accessToken, String.valueOf(isEnable), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
-                hideProgress();
-                if(failed) {
-                    showToast(R.string.something_went_wrong_please_try_again);
-                    checkBox.setChecked(!isEnable);
+                View view = getView();
+                if(view == null) {
                     return;
                 }
 
+                hideProgress();
+                if(failed) {
+                    showToast(R.string.something_went_wrong_please_try_again);
+                    checkBox.setOnCheckedChangeListener(null);
+                    checkBox.setChecked(!isEnable);
+                    checkBox.setOnCheckedChangeListener(SettingsFragment.this);
+                    return;
+                }
+
+                view.findViewById(R.id.holderNotificationVibration).setEnabled(isEnable);
+                view.findViewById(R.id.cbPushVibrations).setEnabled(isEnable);
                 getSession().setNotificationEnabled(isEnable);
             }
         });
+    }
+
+    private void onPushVibrationCheckedChanged(boolean isEnabled) {
+        getSession().setNotificationVibtrationEnabled(isEnabled);
     }
 
     private void onTxtPrivacyPolicyClicked() {

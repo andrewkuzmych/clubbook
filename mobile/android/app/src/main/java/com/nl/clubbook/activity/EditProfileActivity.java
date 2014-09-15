@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.nl.clubbook.R;
@@ -31,7 +30,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
@@ -192,6 +190,8 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                         sessionManager.updateValue(SessionManager.KEY_GENDER, gender);
                         sessionManager.updateValue(SessionManager.KEY_AGE, strAge);
                         sessionManager.updateValue(SessionManager.KEY_COUNTRY, country);
+
+                        showToast(R.string.user_information_saved);
 
                         setResult(RESULT_OK);
                         finish();

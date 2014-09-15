@@ -22,13 +22,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:background="@color/main_background_color"
-        android:visibility="gone" >
+        android:background="@color/main_background_color" >
 
         <com.nl.clubbook.ui.view.HelveticaBoldTextView
             android:id="@+id/txtLike"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:text="@string/like"
             android:textColor="@color/white_semitransparent"
             android:textSize="@dimen/text_size_medium"
@@ -50,13 +49,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:inputType="textShortMessage"
-            android:singleLine="true"
+            android:inputType="textMultiLine"
             android:minHeight="48dp"
             android:textColor="@android:color/white"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:gravity="center_vertical"/>
+            android:gravity="center_vertical"
+            android:maxLines="4"/>
 
         <com.nl.clubbook.ui.view.HelveticaBoldTextView
             android:id="@+id/txtSend"

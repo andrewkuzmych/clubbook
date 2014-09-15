@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/swipeRefreshLayout"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_above="@+id/linearLayout"
-    android:layout_below="@android:id/tabhost">
+    android:layout_height="fill_parent">
 
-    <ListView
-        android:id="@+id/listFriends"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:dividerHeight="1dp" />
+        android:layout_height="fill_parent" >
 
-</android.support.v4.widget.SwipeRefreshLayout>
+        <ListView
+            android:id="@+id/listFriends"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:dividerHeight="1dp" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/txtNoFriendsAdded"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_friends_added"
+        android:textSize="@dimen/text_size_medium"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
+</RelativeLayout>

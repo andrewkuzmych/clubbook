@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.ClubDto;
+import com.nl.clubbook.datasource.ClubWorkingHoursDto;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -80,6 +81,7 @@ public class ClubsAdapter extends BaseAdapter {
             holder.txtDistance = (TextView) row.findViewById(R.id.txtDistance);
             holder.txtCheckedInCount = (TextView) row.findViewById(R.id.txtCheckedInCount);
             holder.txtFriendsCount = (TextView) row.findViewById(R.id.txtFriendsCount);
+            holder.txtStatus = (TextView) row.findViewById(R.id.txtStatus);
 
             row.setTag(holder);
         } else {
@@ -111,6 +113,15 @@ public class ClubsAdapter extends BaseAdapter {
         holder.txtClubName.setText(club.getTitle());
         holder.txtClubName.setTag(club.getId());
 
+        ClubWorkingHoursDto todayWorkingHours = club.getTodayWorkingHours();
+        if(todayWorkingHours != null && ClubWorkingHoursDto.STATUS_OPENED.equalsIgnoreCase(todayWorkingHours.getStatus())) {
+            holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.green));
+            holder.txtStatus.setText(R.string.open);
+        } else {
+            holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.red_light));
+            holder.txtStatus.setText(R.string.closed_display);
+        }
+
         //load image
         String imageUrl = ImageHelper.getClubListAvatar(club.getAvatar());
         holder.imgAvatar.setTag(imageUrl);
@@ -123,6 +134,7 @@ public class ClubsAdapter extends BaseAdapter {
         TextView txtDistance;
         TextView txtCheckedInCount;
         TextView txtFriendsCount;
+        TextView txtStatus;
     }
 
 }

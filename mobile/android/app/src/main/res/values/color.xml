@@ -15,6 +15,7 @@
     <color name="main_background_light_color_2">#331635</color>
     <color name="main_font_color">#FFFFFF</color>
 
+    <color name="grey_disabled">#ced0d0</color>
     <color name="grey_light">#6D6D6D</color>
     <color name="grey_club_title_text_color">#959595</color>
     <color name="grey">#515151</color>

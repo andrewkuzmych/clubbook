@@ -35,7 +35,6 @@
     <string name="check_out">Check-out</string>
     <string name="club_avatar_content_description">club avatar</string>
 
-    <!--New-->
     <string name="add_friend">Add Friend</string>
     <string name="chat">Chat</string>
     <string name="about_me">About Me</string>
@@ -95,7 +94,7 @@
     <string name="follow_our_tweets">Follow Our Tweets</string>
     <string name="like">Like</string>
     <string name="send">Send</string>
-    <string name="invites_you_for_a_drink">Invites you for a Drink</string>
+    <string name="invites_you_for_a_drink">invites you for a Drink</string>
     <string name="likes_you">likes your Profile</string>
     <string name="checking_in">Checking-in&#8230;</string>
     <string name="checking_out">Checking-out&#8230;</string>
@@ -141,6 +140,15 @@
     <string name="wait_until_clubbook_will_determine_your_current_location">Wait until Clubbook will determine your current location&#8230;</string>
     <string name="in_order_for_you_to_see_clubs_and_profile">In order for you to see Clubs and Profiles nearby, we need to know your current location</string>
     <string name="need_to_check_in_first">To interact with this user, you need to Check-in to this Club first</string>
+
+    <!--<New-->
+    <string name="enable_notification_vibration">Enable Notification Vibration</string>
+    <string name="user_information_saved">User information saved</string>
+    <string name="no_messages">No messages</string>
+    <string name="no_friends_added">No friends added</string>
+    <string name="open">Open</string>
+    <string name="closed_display">Closed</string>
+    <!--/>-->
 
     <!--For Google Analytics-->
     <string name="sidebar_screen_android">Sidebar Screen Android</string>

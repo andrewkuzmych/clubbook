@@ -227,6 +227,16 @@ public class SessionManager {
         editor.commit();
     }
 
+    public void setNotificationVibtrationEnabled(boolean isVibrationEnabled) {
+        Editor editor = mPreferences.edit();
+        editor.putBoolean(KEY_IS_NOTIFICATION_VIBRATION_ENABLE, isVibrationEnabled);
+        editor.commit();
+    }
+
+    public boolean isNotificationVibtraionEnabled() {
+        return mPreferences.getBoolean(KEY_IS_NOTIFICATION_VIBRATION_ENABLE, true);
+    }
+
     public int getUpdateCheckInStatusInterval() {
         return mPreferences.getInt(KEY_UPDATE_CHECK_IN_STATUS_INTERVAL, 600);
     }
@@ -289,6 +299,7 @@ public class SessionManager {
 
     private static final String KEY_IS_LOGIN = "IsLoggedIn";
     private static final String KEY_IS_NOTIFICATION_ENABLE = "KEY_IS_NOTIFICATION_ENABLE";
+    private static final String KEY_IS_NOTIFICATION_VIBRATION_ENABLE = "KEY_IS_NOTIFICATION_VIBRATION_ENABLE";
 
     private static final String KEY_UPDATE_CHECK_IN_STATUS_INTERVAL = "KEY_UPDATE_CHECK_IN_STATUS_INTERVAL";
     private static final String KEY_MAX_FAILED_CHECK_IN_COUNT = "KEY_MAX_FAILED_CHECK_IN_COUNT";

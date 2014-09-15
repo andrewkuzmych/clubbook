@@ -65,6 +65,9 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
         }
 
         if(!NetworkUtils.isOn(getActivity())) {
+            if(mAdapter.getCount() == 0) {
+                view.findViewById(R.id.txtNoFriendsAdded).setVisibility(View.VISIBLE);
+            }
             showToast(R.string.no_connection);
             return;
         }
@@ -91,7 +94,14 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
                             return;
                         }
 
-                        mAdapter.updateData((List<UserDto>) result);
+                        List<UserDto> userDtoList = (List<UserDto>)result;
+                        if(userDtoList.size() > 0) {
+                            view.findViewById(R.id.txtNoFriendsAdded).setVisibility(View.GONE);
+                        } else {
+                            view.findViewById(R.id.txtNoFriendsAdded).setVisibility(View.VISIBLE);
+                        }
+
+                        mAdapter.updateData(userDtoList);
                     }
                 });
     }
