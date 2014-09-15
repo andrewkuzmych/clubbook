@@ -10,6 +10,7 @@ import android.provider.Settings;
 import android.view.View;
 
 import com.nl.clubbook.R;
+import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.utils.L;
 
 /**
@@ -26,6 +27,13 @@ public class NoLocationActivity extends BaseActivity implements View.OnClickList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.no_location);
+
+        if(!LocationCheckinHelper.getInstance().isLocationTrackerStarted()) {
+            Intent intent = new Intent(NoLocationActivity.this, MainLoginActivity.class);
+            startActivity(intent);
+
+            return;
+        }
 
         registerReceiver(mCloseActivityReceiver, new IntentFilter(ACTION_CLOSE));
         registerReceiver(mLocationProviderEnabledReceiver, new IntentFilter(ACTION_LOCATION_PROVIDER_ENABLED));
@@ -68,7 +76,9 @@ public class NoLocationActivity extends BaseActivity implements View.OnClickList
 
     private void handleExtras() {
         boolean showProgress = getIntent().getBooleanExtra(EXTRA_IS_PROGRESS_ENABLED, false);
-        setProgressViewVisibility(showProgress);
+        if(!showProgress) {
+            setProgressViewVisibility(LocationCheckinHelper.getInstance().isLocationProvidersEnabled());
+        }
     }
 
     private void onOpenSettingsClicked() {

@@ -51,7 +51,10 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
         registerReceiver(mCloseActivityReceiver, new IntentFilter(ACTION_CLOSE_ACTIVITY));
 
         // start to track user location
-        LocationCheckinHelper.getInstance().startSmartLocationTracker(this);
+        if(!LocationCheckinHelper.getInstance().isLocationTrackerStarted()) {
+            LocationCheckinHelper.getInstance().startSmartLocationTracker(this);
+        }
+
         if (!LocationCheckinHelper.getInstance().isLocationEnabled(this)) {
             Intent i = new Intent(getApplicationContext(), NoLocationActivity.class);
             startActivity(i);

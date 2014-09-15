@@ -33,7 +33,7 @@ public class LocationCheckinHelper {
     // current user location, updated every 10sec
     private Location currentLocation;
     private final int updateLocationInterval = 0;
-    private Boolean isLocationTrackerStarted = false;
+    private boolean isLocationTrackerStarted = false;
     private boolean mIsListenerRemoved = false;
     private LocationManager mLocationManager;
 
@@ -43,10 +43,11 @@ public class LocationCheckinHelper {
 
     private static LocationCheckinHelper mCheckInHelper;
 
+    /*
+     * Call this method in Application.onCreate()
+     */
     public static void init() {
-        if(mCheckInHelper == null) {
-            mCheckInHelper = new LocationCheckinHelper();
-        }
+        mCheckInHelper = new LocationCheckinHelper();
 
         mCheckInHelper.setCurrentClub(SessionManager.getInstance().getCheckedInClubInfo());
     }
@@ -368,6 +369,10 @@ public class LocationCheckinHelper {
                 }
             }
         }
+    }
+
+    public boolean isLocationTrackerStarted() {
+        return isLocationTrackerStarted;
     }
 
     public void cancelLocationUpdates(Context context) {
