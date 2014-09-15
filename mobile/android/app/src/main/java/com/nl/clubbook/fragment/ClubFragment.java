@@ -226,7 +226,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     }
 
     private void fillView(View view) {
-        if(mClub == null) {
+        if (mClub == null) {
             view.findViewById(R.id.progressBar).setVisibility(View.GONE);
             return;
         }
@@ -261,8 +261,8 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         txtDistance.setText(LocationCheckinHelper.formatDistance(getActivity().getApplicationContext(), mClub.getDistance()));
 
         ClubWorkingHoursDto workingHours = mClub.getTodayWorkingHours();
-        if(workingHours != null) {
-            if(ClubWorkingHoursDto.STATUS_OPENED.equalsIgnoreCase(workingHours.getStatus())) {
+        if (workingHours != null) {
+            if (ClubWorkingHoursDto.STATUS_OPENED.equalsIgnoreCase(workingHours.getStatus())) {
                 String startTime = workingHours.getStartTime();
                 String endTime = workingHours.getEndTime();
 
@@ -276,10 +276,20 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         }
 
         String avatarUrl = mClub.getAvatar();
-        if(avatarUrl != null && avatarUrl.length() > 0) {
+        if (avatarUrl != null && avatarUrl.length() > 0) {
             mImageLoader.displayImage(avatarUrl, imgAvatar, mOptions, mAnimateFirstListener);
 
-            UIUtils.loadPhotoToActionBar((ActionBarActivity)getActivity(), ImageHelper.getUserListAvatar(avatarUrl));
+            UIUtils.loadPhotoToActionBar((ActionBarActivity) getActivity(), ImageHelper.getUserListAvatar(avatarUrl));
+        }
+
+        TextView txtStatus = (TextView) view.findViewById(R.id.txtStatus);
+        ClubWorkingHoursDto todayWorkingHours = mClub.getTodayWorkingHours();
+        if (todayWorkingHours != null && ClubWorkingHoursDto.STATUS_OPENED.equalsIgnoreCase(todayWorkingHours.getStatus())) {
+            txtStatus.setTextColor(getResources().getColor(R.color.green));
+            txtStatus.setText(R.string.open);
+        } else {
+            txtStatus.setTextColor(getResources().getColor(R.color.red_light));
+            txtStatus.setText(R.string.closed_display);
         }
     }
 
