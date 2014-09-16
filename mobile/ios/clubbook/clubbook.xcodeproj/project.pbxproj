@@ -146,7 +146,6 @@
 		498A6912196C4D3600BC2859 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 498A6911196C4D3600BC2859 /* CFNetwork.framework */; };
 		49908ED5196ED92700DA68F2 /* JSQMessagesCollectionViewCellIncoming.xib in Resources */ = {isa = PBXBuildFile; fileRef = 49908ED4196ED92700DA68F2 /* JSQMessagesCollectionViewCellIncoming.xib */; };
 		49908EDB1970543500DA68F2 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49908EDA1970543500DA68F2 /* Parse.framework */; };
-		49908EDD1970546400DA68F2 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49908EDC1970546400DA68F2 /* StoreKit.framework */; };
 		49908EE1197054A800DA68F2 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49908EE0197054A800DA68F2 /* MobileCoreServices.framework */; };
 		49908EE2197056AD00DA68F2 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 49E8314F1951DE4500D4A26C /* libz.dylib */; };
 		49908EE41970572700DA68F2 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49908EE31970572700DA68F2 /* Social.framework */; };
@@ -179,6 +178,7 @@
 		4996E0BF19631C90000C721F /* LocationHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4996E0BE19631C90000C721F /* LocationHelper.m */; };
 		4996E0C219643B94000C721F /* UserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4996E0C119643B94000C721F /* UserViewController.m */; };
 		4996E0C519669ED0000C721F /* CbButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4996E0C419669ED0000C721F /* CbButton.m */; };
+		499C8B4919C0B26100ABEE5D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 499C8B4819C0B26100ABEE5D /* StoreKit.framework */; };
 		49ABA126198922EE00B060D0 /* WorkingHour.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA125198922EE00B060D0 /* WorkingHour.m */; };
 		49ABA129198A188200B060D0 /* AddFriendButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA128198A188200B060D0 /* AddFriendButton.m */; };
 		49ABA12C198A919C00B060D0 /* FriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA12B198A919C00B060D0 /* FriendCell.m */; };
@@ -660,7 +660,6 @@
 		498A6911196C4D3600BC2859 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		49908ED4196ED92700DA68F2 /* JSQMessagesCollectionViewCellIncoming.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JSQMessagesCollectionViewCellIncoming.xib; sourceTree = "<group>"; };
 		49908EDA1970543500DA68F2 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
-		49908EDC1970546400DA68F2 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		49908EDE1970548200DA68F2 /* libz.1.1.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.1.3.dylib; path = usr/lib/libz.1.1.3.dylib; sourceTree = SDKROOT; };
 		49908EE0197054A800DA68F2 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		49908EE31970572700DA68F2 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
@@ -721,6 +720,7 @@
 		4996E0C119643B94000C721F /* UserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserViewController.m; sourceTree = "<group>"; };
 		4996E0C319669ED0000C721F /* CbButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CbButton.h; path = Controls/CbButton.h; sourceTree = "<group>"; };
 		4996E0C419669ED0000C721F /* CbButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CbButton.m; path = Controls/CbButton.m; sourceTree = "<group>"; };
+		499C8B4819C0B26100ABEE5D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		49ABA124198922EE00B060D0 /* WorkingHour.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkingHour.h; path = DTO/WorkingHour.h; sourceTree = "<group>"; };
 		49ABA125198922EE00B060D0 /* WorkingHour.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WorkingHour.m; path = DTO/WorkingHour.m; sourceTree = "<group>"; };
 		49ABA127198A188200B060D0 /* AddFriendButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddFriendButton.h; path = Controls/AddFriendButton.h; sourceTree = "<group>"; };
@@ -975,6 +975,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				499C8B4919C0B26100ABEE5D /* StoreKit.framework in Frameworks */,
 				49DDE91B19A26B1200B1DEB1 /* libsqlite3.0.dylib in Frameworks */,
 				49DDE91919A26AF100B1DEB1 /* libGoogleAnalyticsServices.a in Frameworks */,
 				49DDE91819A269CC00B1DEB1 /* AdSupport.framework in Frameworks */,
@@ -983,7 +984,6 @@
 				49908EE2197056AD00DA68F2 /* libz.dylib in Frameworks */,
 				49908EE1197054A800DA68F2 /* MobileCoreServices.framework in Frameworks */,
 				49E8314E1951DE1F00D4A26C /* Security.framework in Frameworks */,
-				49908EDD1970546400DA68F2 /* StoreKit.framework in Frameworks */,
 				49908EDB1970543500DA68F2 /* Parse.framework in Frameworks */,
 				498A6912196C4D3600BC2859 /* CFNetwork.framework in Frameworks */,
 				498A1B11196ACBAA00824E64 /* AudioToolbox.framework in Frameworks */,
@@ -1808,6 +1808,7 @@
 		F4EECF10177C99F400778578 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				499C8B4819C0B26100ABEE5D /* StoreKit.framework */,
 				49DDE91A19A26B1200B1DEB1 /* libsqlite3.0.dylib */,
 				49DDE91719A269CC00B1DEB1 /* AdSupport.framework */,
 				49DDE91519A268A700B1DEB1 /* libGoogleAnalyticsServices.a */,
@@ -1815,7 +1816,6 @@
 				49908EE31970572700DA68F2 /* Social.framework */,
 				49908EE0197054A800DA68F2 /* MobileCoreServices.framework */,
 				49908EDE1970548200DA68F2 /* libz.1.1.3.dylib */,
-				49908EDC1970546400DA68F2 /* StoreKit.framework */,
 				49908EDA1970543500DA68F2 /* Parse.framework */,
 				498A6911196C4D3600BC2859 /* CFNetwork.framework */,
 				498A1B10196ACBAA00824E64 /* AudioToolbox.framework */,
@@ -2035,7 +2035,10 @@
 						DevelopmentTeam = N248H23BGD;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
-								enabled = 1;
+								enabled = 0;
+							};
+							com.apple.InAppPurchase = {
+								enabled = 0;
 							};
 						};
 					};
@@ -2489,8 +2492,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Bjorn Klaver (N248H23BGD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Bjorn Klaver (N248H23BGD)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/FacebookSDK",
@@ -2508,7 +2511,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Clubbook;
-				PROVISIONING_PROFILE = "0a894459-007e-4859-98b0-258c1358a615";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2519,8 +2522,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Bjorn Klaver (N248H23BGD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Bjorn Klaver (N248H23BGD)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/FacebookSDK",
@@ -2537,7 +2540,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Clubbook;
-				PROVISIONING_PROFILE = "0a894459-007e-4859-98b0-258c1358a615";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

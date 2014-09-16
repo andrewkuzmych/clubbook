@@ -195,15 +195,15 @@
     
     self.capacityLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15.0];
     
-    self.addressButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
+    self.addressButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
     
-    self.siteButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
+    self.siteButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
     
-    self.emailButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
+    self.emailButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
     
-    self.phoneButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
+    self.phoneButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
     
-    UIFont *workingHoursFont = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:17.0];
+    UIFont *workingHoursFont = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:15.0];
     self.monTitleLabel.font = workingHoursFont;
     self.monHoursLabel.font = workingHoursFont;
     self.tueTitleLabel.font = workingHoursFont;

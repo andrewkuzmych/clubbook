@@ -11,7 +11,6 @@ gcm = require('node-gcm')
 
 
 exports.fb_signin = (req, res)->
-  console.log "FB login", req.body
   errors = {}
   # validate empty fields
   if __.isEmpty req.body.fb_id?.trim()
@@ -116,7 +115,6 @@ exports.update_user = (req, res)->
             user: user
             params: req.body
 
-
 exports.user_image_add = (req, res)->
   db_model.User.findById(req.params.userId).exec (err, user)->
     if not user
@@ -205,8 +203,13 @@ exports.get_user_me = (req, res)->
           user: user
 
 exports.delete_user_me = (req, res)->
-  res.json
-    status: "ok"
+  access_token = req.param("access_token")
+  db_model.User.findOne({access_token: access_token}).exec (err, user)->
+    db_model.User.remove {"_id": user._id}, (err)->
+      db_model.Chat.remove {"user1": user._id}, (err)->
+        db_model.Chat.remove {"user2": user._id}, (err)->
+          res.json
+            status: 'ok'
 
 exports.get_user_by_id = (req, res)->
   manager.get_friend req.params.objectId, req.params.me._id.toString(), (err, user)->
@@ -290,15 +293,15 @@ exports.friends_request = (req, res)->
     db_model.User.findById(req.params.objectId).exec (err, user)->
       user.friends.push req.params.friendId
       db_model.save_or_update_user user, ()->
-
-        if user.push
-          send_push 'user_' + req.params.friendId, 'sent you friend request', req.params.friendId, user.name, "chat", user.name + ' sent you friend request'
-        
-        res.json
-          status: "ok"
-          result:
-            message: "friend request"
-            _temp_user: user
+        db_model.User.findById(req.params.friendId).select(db_model.USER_PUBLIC_INFO).exec (err, friend)->
+          if friend.push
+            send_push 'user_' + req.params.friendId, 'sent you friend request', req.params.friendId, user.name, "chat", user.name + ' sent you friend request'
+          
+          res.json
+            status: "ok"
+            result:
+              message: "friend request"
+              _temp_user: user
 
 exports.friends_confirm = (req, res)->
   # user.friends.push friend_id
@@ -313,16 +316,17 @@ exports.friends_confirm = (req, res)->
     db_model.User.findById(req.params.objectId).exec (err, user)->
       user.friends.push req.params.friendId
       db_model.save_or_update_user user, ()->
-        
-        if user.push
-          #send push
-          send_push 'user_' + req.params.friendId, 'confirmed your friend request', req.params.friendId, user.name, "chat", user.name + ' confirmed your friend request'
+        db_model.User.findById(req.params.friendId).select(db_model.USER_PUBLIC_INFO).exec (err, friend)->
+          console.log friend
+          if friend.push
+            #send push
+            send_push 'user_' + req.params.friendId, 'confirmed your friend request', req.params.friendId, user.name, "chat", user.name + ' confirmed your friend request'
 
-        res.json
-          status: "ok"
-          result:
-            message: "friend request"
-            _temp_user: user
+          res.json
+            status: "ok"
+            result:
+              message: "friend request"
+              _temp_user: user
 
 
 exports.friends_unfriend = (req, res)->
@@ -506,7 +510,8 @@ exports.chat = (req, res)->
     manager.chat params, (err, chat)->
       message = req.body.msg
 
-      if user.push
+      # check if we have push
+      if chat.user2.push
         send_push 'user_' + req.body.user_to, message, req.body.user_from + "_" + req.body.user_to, user_from.name, "chat", user_from.name + ': "' + message + '"'
 
       # send message to pubnub
