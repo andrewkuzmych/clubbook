@@ -150,6 +150,8 @@
     <string name="closed_display">Closed</string>
     <string name="you_need_to_be_within_m_in_order_to_check_in">You need to be within %sm in order to Check-in</string>
     <string name="no_users_checked_in_yet">No users Checked-in yet</string>
+    <string name="about">About</string>
+    <string name="hours">Hours</string>
     <!--/>-->
 
     <!--For Google Analytics-->

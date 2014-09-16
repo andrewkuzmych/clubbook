@@ -17,6 +17,7 @@ import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.ClubWorkingHoursDto;
 import com.nl.clubbook.datasource.JSONConverter;
 import com.nl.clubbook.helper.ImageHelper;
+import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.ui.view.ViewPagerBulletIndicatorView;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.UIUtils;
@@ -24,6 +25,8 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 import java.util.List;
@@ -111,14 +114,16 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
                 .build();
     }
 
-    private void fillView(View view, ClubDto club) {
+    private void fillView(@NotNull View view, @NotNull ClubDto club) {
         initViewPager(view, club.getPhotos());
 
         String info = club.getInfo();
-        if(!setTextToTextView(view, info, R.id.txtInfo)) {
+        if(!setTextToTextView(view, info, R.id.txtAbout)) {
             view.findViewById(R.id.dividerInfo).setVisibility(View.GONE);
+            view.findViewById(R.id.txtLabelAbout).setVisibility(View.GONE);
         }
 
+        fillLocationHolder(view, club);
         fillClubRequirementsHolder(view, club);
         fillContactHolder(view, club);
         fillWorkingHoursHolder(view, club);
@@ -131,10 +136,6 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
 
     private void fillContactHolder(View view, ClubDto club) {
         boolean result = false;
-
-        if(fillTextViewHolder(view, club.getAddress(), R.id.txtLocation, R.id.txtLocation)) {
-            result = true;
-        }
 
         if(fillTextViewHolder(view, club.getPhone(), R.id.txtPhone, R.id.txtPhone)) {
             result = true;
@@ -154,14 +155,37 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
         }
     }
 
+    private void fillLocationHolder(View view, ClubDto club) {
+        boolean result = false;
+
+        TextView txtLocation = (TextView) view.findViewById(R.id.txtLocation);
+        String address = club.getAddress();
+        if(address != null && address.length() > 0) {
+            result = true;
+            txtLocation.setText(address != null ? address : "");
+        } else {
+            txtLocation.setVisibility(View.INVISIBLE);
+        }
+
+        String distance = LocationCheckinHelper.formatDistance(getActivity().getApplicationContext(), club.getDistance());
+        TextView txtDistance = (TextView) view.findViewById(R.id.txtDistance);
+        if(distance != null && distance.length() > 0) {
+            result = true;
+            txtDistance.setText(distance);
+        } else {
+            txtDistance.setVisibility(View.GONE);
+        }
+
+        if(!result) {
+            view.findViewById(R.id.holderLocation).setVisibility(View.GONE);
+            view.findViewById(R.id.dividerLocation).setVisibility(View.GONE);
+        }
+    }
+
     private void fillClubRequirementsHolder(View view, ClubDto club) {
         boolean result = false;
 
         if(fillTextViewHolder(view, club.getAgeRestriction(), R.id.txtAgeRestriction, R.id.holderAgeRestriction)) {
-            result = true;
-        }
-
-        if(fillTextViewHolder(view, club.getDressCode(), R.id.txtDressCode, R.id.holderDressCode)) {
             result = true;
         }
 
@@ -171,11 +195,49 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
 
         if(!result) {
             view.findViewById(R.id.holderRequirements).setVisibility(View.GONE);
-            view.findViewById(R.id.dividerContacts).setVisibility(View.GONE);
+            view.findViewById(R.id.holderClubRequirements).setVisibility(View.GONE);
         }
     }
 
     private void fillWorkingHoursHolder(View view, ClubDto club) {
+        boolean result = false;
+
+        //fill today working hours
+        TextView txtHours = (TextView) view.findViewById(R.id.txtHours);
+        ClubWorkingHoursDto workHours = club.getTodayWorkingHours();
+        if(workHours != null) {
+            result = true;
+
+            boolean isClosed = false;
+
+            TextView txtOpenStatus = (TextView) view.findViewById(R.id.txtOpenStatus);
+            String status = workHours.getStatus();
+            if(ClubWorkingHoursDto.STATUS_OPENED.equalsIgnoreCase(status)) {
+                txtOpenStatus.setText(R.string.open);
+            } else {
+                isClosed = true;
+                txtOpenStatus.setText(R.string.closed_display);
+            }
+
+            String startTime = workHours.getStartTime();
+            String endTime = workHours.getEndTime();
+
+            if(!isClosed && startTime != null && endTime != null) {
+                StringBuilder todayHoursToDisplay = new StringBuilder();
+                todayHoursToDisplay.append(getString(R.string.hours));
+                todayHoursToDisplay.append(" ");
+                todayHoursToDisplay.append(!startTime.isEmpty() ? startTime + " - " : "");
+                todayHoursToDisplay.append(endTime);
+
+                txtHours.setText(todayHoursToDisplay.toString());
+            } else {
+                txtHours.setVisibility(View.INVISIBLE);
+            }
+        } else {
+            txtHours.setVisibility(View.INVISIBLE);
+        }
+
+        //fill week working hours
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
 
@@ -184,6 +246,7 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
         LinearLayout holderWorkingHours = (LinearLayout)view.findViewById(R.id.holderWorkingHours);
         List<ClubWorkingHoursDto> workingHours = club.getWorkingHours();
         if(workingHours != null && !workingHours.isEmpty()) {
+            result = true;
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             for (ClubWorkingHoursDto clubWorkHours : workingHours) {
                 View row;
@@ -210,8 +273,11 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
 
                 holderWorkingHours.addView(row);
             }
-        } else {
+        }
+
+        if(!result) {
             holderWorkingHours.setVisibility(View.GONE);
+            view.findViewById(R.id.dividerHours).setVisibility(View.GONE);
         }
     }
 
