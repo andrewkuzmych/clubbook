@@ -120,12 +120,12 @@ block content
                   span.required *
                 .col-md-5
                   .input-group
-                      input.form-control.timepicker.timepicker-no-seconds(type='text', data-default-time="#{wh.start_time}")
+                      input.form-control.timepicker.timepicker-no-seconds(type='text', name='start_date_#{wh.day}', data-default-time="#{wh.status=='opened'?wh.start_time:''}")
                       span.input-group-btn
                         button.btn.default(type='button')
                           i.fa.fa-clock-o
                   .input-group
-                    input.form-control.timepicker.timepicker-no-seconds(type='text', data-default-time="#{wh.end_time}") 
+                    input.form-control.timepicker.timepicker-no-seconds(type='text',  name='end_date_#{wh.day}', data-default-time="#{wh.status=='opened'?wh.end_time:''}")
                     span.input-group-btn
                       button.btn.default(type='button')
                         i.fa.fa-clock-o

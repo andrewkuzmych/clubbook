@@ -8,6 +8,7 @@ async = require("async")
 CHECKIN_LIVE_TIME =  1000 * 60 * 30;
 
 exports.get_user_by_id = (user_id, callback)->
+  console.log "METHOD - Manager get_user_by_id"
   db_model.User.findById(user_id).exec (err, user)->
     if err
       callback err, null
@@ -15,7 +16,7 @@ exports.get_user_by_id = (user_id, callback)->
       callback null, user
 
 exports.findUserByEmail = (email, callback)->
-  console.log email
+  console.log "METHOD - Manager findUserByEmail"
   query = {"$and": [{"email": email},{"email": {"$exists": true}},{"password": {"$exists": true}}]}
 
   db_model.User.findOne(query).exec (err, user)->
@@ -24,6 +25,7 @@ exports.findUserByEmail = (email, callback)->
 
 
 exports.get_friend = (friend_id, current_user_id, callback)->
+  console.log "METHOD - Manager get_friend"
   db_model.User.findById(friend_id).select('-checkin').exec (err, user)->
     db_model.User.findById(current_user_id).select('-checkin').exec (err, current_user)->
       is_current_user_friend_to_user = __.find(user.friends, (f) ->
@@ -52,9 +54,11 @@ exports.get_friend = (friend_id, current_user_id, callback)->
         callback null, user_object
 
 exports.get_user_friends = (user_id, callback)->
+  console.log "METHOD - Manager get_user_friends"
   db_model.User.find({"_id": {"$ne": mongoose.Types.ObjectId(user_id)}}).select(db_model.USER_PUBLIC_INFO).sort("name").exec callback
 
 exports.signinmail = (params, callback)->
+  console.log "METHOD - Manager signinmail"
   if __.isEmpty params.email?.trim()
       callback 'email is empty', null
   else if __.isEmpty params.password?.trim()
@@ -67,6 +71,7 @@ exports.signinmail = (params, callback)->
         callback "Wrong User or password " ,user
 
 exports.list_club = (params, callback)->
+  console.log "METHOD - Manager list_club"
   query = { 'club_loc':{ '$near' : [ params.lat,params.lon] }}
   db_model.Venue.find(query).exec (err, clubs)->
     callback err, clubs
@@ -79,9 +84,11 @@ exports.list_club = (params, callback)->
   #    callback err, clubs
 
 exports.get_people_count_in_club = (club, callback)->
+  console.log "METHOD - Manager get_people_count_in_club"
   db_model.User.count({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}}).exec callback
 
 exports.find_club = (club_id, user_id, callback)->
+  console.log "METHOD - Manager find_club"
   db_model.Venue.findById(club_id).exec (err, club)->
     if err
       callback err, null
@@ -100,14 +107,13 @@ exports.find_club = (club_id, user_id, callback)->
                 user_object.is_friend = true
               else
                 user_object.is_friend = false
-
               user_objects.push user_object
-
 
             callback null, club, user_objects, friends.length
 
 
 exports.create_club = (params, callback)->
+  console.log "METHOD - Manager create_club"
   if __.isEmpty params.club_name?.trim()
       callback 'club name is empty', null
   else if __.isEmpty params.club_houres?.trim()
@@ -142,6 +148,7 @@ exports.create_club = (params, callback)->
 ##################################################################################################################
 
 exports.checkin = (params, callback)->
+  console.log "METHOD - Manager checkin"
   console.log "Checkin user", params
   db_model.User.count({'_id': params.user_id, checkin: { '$elemMatch': { 'active': true, 'club': params.club_id }} }).exec (err, count_of_active_checkins)->
     if count_of_active_checkins > 0
@@ -167,7 +174,9 @@ exports.checkin = (params, callback)->
                   db_model.save_or_update_user user, (err)-> callback err, user
 
 exports.update_checkin = (params, callback)->
-  console.log "Upadete checkin state", params
+  console.log "METHOD - Manager update_checkin"
+  console.log "params: "
+  console.log params
   db_model.Venue.findById(params.club_id).exec (err, club)->
     if not club
       callback 'club does not exist', null
@@ -184,6 +193,7 @@ exports.update_checkin = (params, callback)->
           db_model.save_or_update_user user, (err)-> callback err, user
 
 exports.checkout_from_all_clubs = (user, callback)->
+  console.log "METHOD - Manager checkout_from_all_clubs"
   async.each user.checkin, (checkin, next_checkin) ->
     if checkin.active
       exports.checkout {user_id: user._id, club_id: checkin.club}, ()->
@@ -196,6 +206,7 @@ exports.checkout_from_all_clubs = (user, callback)->
 
 # analyze user checkins and if is older them 30 min make checkout
 exports.update_checkout_states = (user, callback)->
+  console.log "METHOD - Manager update_checkout_states"
   async.each user.checkin, (checkin, next_checkin) ->
     if checkin.active and checkin.time < new Date().getTime() - CHECKIN_LIVE_TIME
       exports.checkout {user_id: user._id, club_id: checkin.club}, ()->
@@ -208,6 +219,7 @@ exports.update_checkout_states = (user, callback)->
 
 
 exports.checkout = (params, callback)->
+  console.log "METHOD - Manager checkout"
   console.log "checkout user", params
   db_model.Venue.findById(params.club_id).exec (err, club)->
     if not club
@@ -228,6 +240,7 @@ exports.checkout = (params, callback)->
             db_model.save_or_update_user user, (err)-> callback err, user
 
 exports.cron_checkout = ()->
+  console.log "METHOD - Manager cron_checkout"
   db_model.User.find({'checkin': { '$elemMatch': { 'active': true, 'time': {'$lte': new Date().getTime() - CHECKIN_LIVE_TIME } }} }).exec (err, users)->
     console.log "checkout ", users.length
     async.eachSeries users, (user, callback) ->
@@ -239,6 +252,7 @@ exports.cron_checkout = ()->
 #-----------------------------------------------------------------------------------------------------------------------
 
 exports.save_user = (params, callback)->
+  console.log "METHOD - Manager save_user"
   db_model.User.findOne({"email":params.email}).exec (err, user)->
     if user
       console.log 'user exists', params.email
@@ -268,6 +282,7 @@ exports.save_user = (params, callback)->
       db_model.save_or_update_user user, (err)-> callback err, user
 
 exports.uploadphoto = (params, callback)->
+  console.log "METHOD - Manager uploadphoto"
   if __.isEmpty params.userid?.trim()
       callback 'no user id', null
   else if __.isEmpty params.photos?.trim()
@@ -284,6 +299,7 @@ exports.uploadphoto = (params, callback)->
       db_model.save_or_update_user user, (err)-> callback err, user
 
 exports.save_or_update_fb_user = (params, callback)->
+    console.log "METHOD - Manager save_or_update_fb_user"
     console.log "save or update user", params
 
     db_model.User.findOne({"fb_id":params.fb_id}).exec (err, user)->
@@ -366,6 +382,7 @@ exports.save_or_update_fb_user = (params, callback)->
               db_model.save_or_update_user user, (err)-> callback err, user
 
 exports.chat = (params, callback)->
+  console.log "METHOD - Manager chat"
   query = { '$or': [{ 'user1': mongoose.Types.ObjectId(params.user_from), 'user2': mongoose.Types.ObjectId(params.user_to) },
     { 'user1': mongoose.Types.ObjectId(params.user_to), 'user2': mongoose.Types.ObjectId(params.user_from) }] }
 
@@ -389,6 +406,7 @@ exports.chat = (params, callback)->
 
 
 exports.get_conversation = (params, callback)->
+  console.log "METHOD - Manager get_conversation"
   query = { '$or': [{ 'user1': mongoose.Types.ObjectId(params.user1), 'user2': mongoose.Types.ObjectId(params.user2) }, { 'user1': mongoose.Types.ObjectId(params.user2), 'user2': mongoose.Types.ObjectId(params.user1) }] }
 
   db_model.Chat.findOne(query).populate("user1", db_model.USER_PUBLIC_INFO).populate("user2", db_model.USER_PUBLIC_INFO).exec (err, chat)->
@@ -405,6 +423,7 @@ exports.get_conversation = (params, callback)->
       callback err, chat
 
 exports.get_conversations = (params, callback)->
+  console.log "METHOD - Manager get_conversations"
   db_model.Chat.find({'$or':[{'user1': mongoose.Types.ObjectId(params.user_id)}, {'user2': mongoose.Types.ObjectId(params.user_id)}]}, { 'conversation': { '$slice': -1 } }).populate("user1", db_model.USER_PUBLIC_INFO).populate("user2", db_model.USER_PUBLIC_INFO).exec (err, chats)->
     if not chats
       callback err, []
@@ -419,6 +438,7 @@ exports.get_conversations = (params, callback)->
       callback err, sorted_chats
 
 exports.readchat = (params, callback)->
+  console.log "METHOD - Manager readchat"
   query = { '$or': [{ 'user1': mongoose.Types.ObjectId(params.current_user), 'user2': mongoose.Types.ObjectId(params.receiver) }, { 'user1': mongoose.Types.ObjectId(params.receiver), 'user2': mongoose.Types.ObjectId(params.current_user) }] }
   
   db_model.Chat.findOne(query).exec (err, chat)->
@@ -440,6 +460,7 @@ exports.readchat = (params, callback)->
 
 
 exports.unread_messages_count = (user_id, callback)->
+  console.log "METHOD - Manager unread_messages_count"
   db_model.Chat.find({'unread.user':  mongoose.Types.ObjectId(user_id)}, {'conversation':0}).exec (err, chats)->
     unread_chat_count = 0
     for chat in chats
@@ -451,6 +472,7 @@ exports.unread_messages_count = (user_id, callback)->
 
 # convert the radius value to km
 exports.radius_to_km = (distance)->
+  console.log "METHOD - Manager radius_to_km"
   # http://stackoverflow.com/questions/7837731/units-to-use-for-maxdistance-and-mongodb
   #one degree is approximately 111.12 kilometers
   #degree = Math.PI * 6378.137/180 

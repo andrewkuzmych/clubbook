@@ -57,6 +57,18 @@ exports.club_create = (req, res)->
     console.log 'CLUB'
     model.cloudinary = cloudinary
     model.club = {}
+
+    club_working_hours =  [ {"day" : 1, "status" : "closed"},
+                          {"day" : 2, "status" : "closed"},
+                          {"day" : 3, "status" : "closed"},
+                          {"day" : 4, "status" : "closed"},
+                          {"day" : 5, "status" : "closed"},
+                          {"day" : 6, "status" : "closed"},
+                          {"day" : 0, "status" : "closed"}
+                      ]
+
+    model.club.club_working_hours = club_working_hours
+
     res.render "pages/club_update", model
 
 
@@ -75,7 +87,20 @@ exports.club_create_action = (req, res)->
         club_address : req.body.club_address
         
       venue.club_loc.lat = req.body.lat
-      venue.club_loc.lon = req.body.lon
+      venue.club_loc.lon = req.body.lng
+      venue.club_working_hours = []
+      for day in [0..6]
+        wh =
+          day: day
+        if req.body["start_date_" + day] && req.body["end_date_" + day]
+          wh.start_time = req.body["start_date_" + day]
+          wh.end_time = req.body["end_date_" + day]
+          wh.status = 'opened'
+        else
+          wh.status = 'closed'
+
+        venue.club_working_hours.push wh
+
 
       venue.club_photos = [];
 
@@ -114,6 +139,19 @@ exports.club_edit_action = (req, res)->
         venue.club_loc.lon = req.body.lng
 
         console.log req.body
+
+        for wh in venue.club_working_hours
+            console.log "start_date_" + wh.day
+            console.log  req.body["start_date_" + wh.day]
+            if req.body["start_date_" + wh.day] && req.body["end_date_" + wh.day]
+              wh.status = 'opened'
+              wh.start_time = req.body["start_date_" + wh.day]
+              wh.end_time = req.body["end_date_" + wh.day]
+            else
+              wh.status = 'closed'
+
+
+        console.log venue.club_working_hours
 
         venue.club_photos = [];
 
