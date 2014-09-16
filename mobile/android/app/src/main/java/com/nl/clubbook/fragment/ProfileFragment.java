@@ -211,9 +211,8 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             return;
         }
 
-        String currentUserId = getSession().getUserDetails().get(SessionManager.KEY_ID);
         HorizontalListView listCheckInUser = (HorizontalListView) view.findViewById(R.id.listCheckInUsers);
-        ProfileAdapter adapter = new ProfileAdapter(getActivity(), mCheckInUsers, currentUserId, ProfileAdapter.MODE_LIST, true);
+        ProfileAdapter adapter = new ProfileAdapter(getActivity(), mCheckInUsers, ProfileAdapter.MODE_LIST);
         listCheckInUser.setAdapter(adapter);
         listCheckInUser.setVisibility(View.VISIBLE);
         listCheckInUser.setOnItemClickListener(this);

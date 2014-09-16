@@ -25,6 +25,7 @@ import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.ClubWorkingHoursDto;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.JSONConverter;
+import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.*;
 import com.nl.clubbook.utils.L;
@@ -35,6 +36,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,7 +46,7 @@ import java.util.List;
  * Created by Andrew on 6/8/2014.
  */
 public class ClubFragment extends BaseInnerFragment implements View.OnClickListener, AdapterView.OnItemClickListener,
-        ProgressDialog.OnDialogCanceledListener {
+        ProgressDialog.OnDialogCanceledListener, MessageDialog.MessageDialogListener {
 
     public static final String TAG = ClubFragment.class.getSimpleName();
 
@@ -51,7 +55,6 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     public static final int LOAD_MODE_INIT = 1111;
     public static final int LOAD_MODE_CHECK_IN = 9999;
 
-    private final int MIN_CHECKED_IN_USERS = 10;
     private ClubDto mClub;
 
     private ImageLoader mImageLoader;
@@ -60,6 +63,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     private String mClubId;
 
     private boolean mIsLoading = false;
+    private boolean mCanCheckInHere = false;
 
     public static Fragment newInstance(Fragment targetFragment, String clubId) {
         Fragment fragment = new ClubFragment();
@@ -84,7 +88,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         sendScreenStatistic(R.string.club_users_screen_android);
 
         UIUtils.displayEmptyIconInActionBar((ActionBarActivity)getActivity());
-        initActionBarTitle(getString(R.string.club_page));
+        initActionBarTitle(getString(R.string.checked_in));
         handleArgs();
         initImageLoader();
         initView();
@@ -119,11 +123,6 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         View viewUserId = view.findViewById(R.id.userId);
-        if(viewUserId.getTag() == null) {
-            TextView txtRequiredUsersNumber = (TextView) getView().findViewById(R.id.txtRequiredUsersNumber);
-            showToast(txtRequiredUsersNumber.getText().toString().trim());
-            return;
-        }
 
         if(!LocationCheckinHelper.getInstance().isCheckInHere(mClub)) {
             showToast(R.string.need_to_check_in_first);
@@ -146,6 +145,16 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
                 activity.getSupportFragmentManager().beginTransaction().show(targetFragment).commitAllowingStateLoss();
             }
         }
+    }
+
+    @Override
+    public void onPositiveButtonClick(MessageDialog dialogFragment) {
+        dialogFragment.dismissAllowingStateLoss();
+    }
+
+    @Override
+    public void onNegativeButtonClick(MessageDialog dialogFragment) {
+        dialogFragment.dismissAllowingStateLoss();
     }
 
     private void handleArgs() {
@@ -243,16 +252,22 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         initGridView(view, mClub.getUsers());
 
         // if we checked in this this club set related style
-        if (LocationCheckinHelper.getInstance().isCheckInHere(mClub)) {
+        boolean isCheckedInHere = LocationCheckinHelper.getInstance().isCheckInHere(mClub);
+        if (isCheckedInHere) {
             UiHelper.changeCheckInState(getActivity(), txtCheckIn, true);
         } else {
             UiHelper.changeCheckInState(getActivity(), txtCheckIn, false);
         }
+
         // can we check in this club
-        if (LocationCheckinHelper.getInstance().canCheckInHere(mClub)) {
-            txtCheckIn.setEnabled(true);
-        } else {
-            txtCheckIn.setEnabled(false);
+        if(!isCheckedInHere) {
+            if (LocationCheckinHelper.getInstance().canCheckInHere(mClub)) {
+                txtCheckIn.setBackgroundResource(R.drawable.bg_btn_green);
+                mCanCheckInHere = true;
+            } else {
+                txtCheckIn.setBackgroundResource(R.drawable.bg_btn_green_transparent);
+                mCanCheckInHere = false;
+            }
         }
 
         txtClubName.setText(mClub.getTitle());
@@ -346,6 +361,22 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     }
 
     private void onCheckInBtnClicked(final View view) {
+        if(!mCanCheckInHere) {
+            String messageTemplate = getString(R.string.you_need_to_be_within_m_in_order_to_check_in);
+            String dialogMessage = String.format(messageTemplate, SessionManager.getInstance().getCheckInMaxDistance());
+
+            DialogFragment messageDialog = MessageDialog.newInstance(
+                    ClubFragment.this,
+                    getString(R.string.app_name),
+                    dialogMessage,
+                    getString(R.string.ok),
+                    null
+            );
+
+            getFragmentManager().beginTransaction().add(messageDialog, MessageDialog.TAG).commitAllowingStateLoss();
+            return;
+        }
+
         if(!NetworkUtils.isOn(getActivity())) {
             showToast(R.string.no_connection);
             return;
@@ -413,45 +444,10 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         }
     }
 
-    private void initGridView(View view, List<CheckInUserDto> users) {
+    private void initGridView(@NotNull View view, @Nullable List<CheckInUserDto> users) {
         if(users == null) {
             view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.VISIBLE);
             return;
-        }
-
-        boolean isLoadingEnabled = true;
-
-        //check checked-in users count
-        if(users.size() < MIN_CHECKED_IN_USERS) {
-            isLoadingEnabled = false;
-            view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.VISIBLE);
-
-            if(!users.isEmpty()) {
-                String noName = getString(R.string.no_name);
-                TextView txtUsers = (TextView) view.findViewById(R.id.txtUsers);
-                txtUsers.setText("");
-
-                for(int i = 0; i < users.size(); i++) {
-                    CheckInUserDto checkInUserDto = users.get(i);
-                    String name = checkInUserDto.getName();
-
-                    txtUsers.append(name != null ? name : noName);
-
-                    if(i < (users.size() - 1)) {
-                        txtUsers.append(", ");
-                    }
-                }
-            }
-
-            int requiredUsersNumber = MIN_CHECKED_IN_USERS - users.size();
-            TextView txtRequiredUsersNumber = (TextView) view.findViewById(R.id.txtRequiredUsersNumber);
-            txtRequiredUsersNumber.setText(String.format(getString(R.string.profile_pictures_will_be_visible), requiredUsersNumber));
-
-            while(users.size() < MIN_CHECKED_IN_USERS) {
-                users.add(new CheckInUserDto());
-            }
-        } else {
-            view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.GONE);
         }
 
         String currentUserId = getSession().getUserDetails().get(SessionManager.KEY_ID);
@@ -468,7 +464,13 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         }
 
         GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
-        ProfileAdapter profileAdapter = new ProfileAdapter(getActivity(), users, currentUserId, ProfileAdapter.MODE_GRID, isLoadingEnabled);
+        ProfileAdapter profileAdapter = new ProfileAdapter(getActivity(), users, ProfileAdapter.MODE_GRID);
         gridUsers.setAdapter(profileAdapter);
+
+        if(users.size() == 0) {
+            view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.VISIBLE);
+        } else {
+            view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.GONE);
+        }
     }
 }

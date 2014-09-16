@@ -26,19 +26,16 @@ public class ProfileAdapter extends BaseAdapter {
     public static final int MODE_LIST = 8888;
 
     private List<CheckInUserDto> mUsers;
-    private String mCurrentUserId;
 
     private ImageLoader imageLoader;
     private DisplayImageOptions options;
     private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
     private LayoutInflater mInflater;
     private int mMode = MODE_GRID;
-    private boolean mIsLoadingEnabled;
 
 
-    public ProfileAdapter(Context context, List<CheckInUserDto> users, String currentUserId, int mode, boolean isLoadingEnabled) {
+    public ProfileAdapter(Context context, List<CheckInUserDto> users, int mode) {
         mInflater = LayoutInflater.from(context);
-        mCurrentUserId = currentUserId;
 
         mUsers = users;
         mMode = mode;
@@ -51,8 +48,6 @@ public class ProfileAdapter extends BaseAdapter {
                 .cacheInMemory()
                 .cacheOnDisc()
                 .build();
-
-        mIsLoadingEnabled = isLoadingEnabled;
 
     }
 
@@ -99,21 +94,16 @@ public class ProfileAdapter extends BaseAdapter {
     }
 
     private void fillView(ViewHolder holder, CheckInUserDto item) {
-        if((mMode == MODE_GRID && mIsLoadingEnabled) || mMode == MODE_LIST) {
-            String imageUrl = ImageHelper.getUserListAvatar(item.getAvatarUrl());
-            holder.imgAvatar.setTag(imageUrl);
-            imageLoader.displayImage(imageUrl, holder.imgAvatar, options, animateFirstListener);
-
-            if(item.isFriend()) {
-                holder.txtFriendIndicator.setVisibility(View.VISIBLE);
-            } else {
-                holder.txtFriendIndicator.setVisibility(View.GONE);
-            }
-
-            holder.userId.setTag(item.getId());
-        } else if(CheckInUserDto.DEFAULT_ID.equalsIgnoreCase(item.getId())) {
-            holder.imgAvatar.setImageResource(R.drawable.ic_avatar_missing);
+        String imageUrl = ImageHelper.getUserListAvatar(item.getAvatarUrl());
+        holder.imgAvatar.setTag(imageUrl);
+        imageLoader.displayImage(imageUrl, holder.imgAvatar, options, animateFirstListener);
+        if(item.isFriend()) {
+            holder.txtFriendIndicator.setVisibility(View.VISIBLE);
+        } else {
+            holder.txtFriendIndicator.setVisibility(View.GONE);
         }
+
+        holder.userId.setTag(item.getId());
     }
 
     static class ViewHolder {

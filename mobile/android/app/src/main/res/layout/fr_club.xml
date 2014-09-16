@@ -69,7 +69,7 @@
                         android:drawableRight="@drawable/ic_club_arrow_right"
                         android:gravity="center_vertical"
                         android:singleLine="true"
-                        android:text="@string/club_info_and_wall"
+                        android:text="@string/info_and_wall"
                         android:textColor="@color/grey_club_title_text_color"
                         android:textSize="@dimen/text_size_micro" />
 
@@ -177,7 +177,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:background="@drawable/selector_btn_check_in"
+                android:background="@drawable/bg_btn_green"
                 android:gravity="center"
                 android:paddingBottom="4dp"
                 android:paddingLeft="16dp"
@@ -196,57 +196,25 @@
             android:numColumns="@integer/grid_users_column_count"
             android:scrollbars="none"/>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/holderCheckInExplanation"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:visibility="gone">
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <com.nl.clubbook.ui.view.HelveticaRegularTextView
-                android:id="@+id/txtUsers"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingTop="8dp"
-                android:text="@string/no_users"
-                android:textColor="@color/grey"
-                android:textSize="@dimen/text_size_medium" />
+            android:paddingRight="16dp">
 
             <com.nl.clubbook.ui.view.HelveticaBoldTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
-                android:text="@string/checked_in"
+                android:text="@string/no_users_checked_in_yet"
                 android:textColor="@color/grey"
-                android:textSize="@dimen/text_size_medium" />
+                android:textSize="@dimen/text_size_medium"
+                android:layout_centerInParent="true"/>
 
-            <com.nl.clubbook.ui.view.HelveticaRegularTextView
-                android:id="@+id/txtRequiredUsersNumber"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingBottom="8dp"
-                android:text="@string/profile_pictures_will_be_visible"
-                android:textColor="@color/grey"
-                android:textSize="@dimen/text_size_medium" />
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 

@@ -43,7 +43,7 @@
     <string name="remove">Remove</string>
     <string name="sing_up">Sign Up</string>
     <string name="open_today">Open Today:</string>
-    <string name="club_info_and_wall">Club Info &amp; Wall</string>
+    <string name="info_and_wall">Info &amp; Wall</string>
     <string name="checked_in">Checked-in</string>
     <string name="checked_in_double_dots">Checked-in:</string>
     <string name="not_checked_in">Not Checked-in</string>
@@ -148,6 +148,8 @@
     <string name="no_friends_added">No friends added</string>
     <string name="open">Open</string>
     <string name="closed_display">Closed</string>
+    <string name="you_need_to_be_within_m_in_order_to_check_in">You need to be within %sm in order to Check-in</string>
+    <string name="no_users_checked_in_yet">No users Checked-in yet</string>
     <!--/>-->
 
     <!--For Google Analytics-->
