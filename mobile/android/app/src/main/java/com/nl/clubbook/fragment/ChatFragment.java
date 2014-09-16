@@ -266,6 +266,8 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
             mAdapter.add(myNewMessage);
             inputText.setText("");
+
+            getView().findViewById(R.id.txtNoMessages).setVisibility(View.GONE);
         }
     }
 
@@ -331,6 +333,10 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                 }
 
                 if (failed) {
+                    if(mAdapter == null || mAdapter.getCount() == 0) {
+                        view.findViewById(R.id.txtNoMessages).setVisibility(View.VISIBLE);
+                    }
+
                     showToast(R.string.something_went_wrong_please_try_again);
                     view.findViewById(R.id.progressBar).setVisibility(View.GONE);
                     return;
@@ -344,6 +350,12 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                 ListView listChat = (ListView) view.findViewById(R.id.listChat);
                 listChat.setAdapter(mAdapter);
                 listChat.setSelection(chatDto.getConversation().size());
+
+                if(baseChatMessages.isEmpty()) {
+                    view.findViewById(R.id.txtNoMessages).setVisibility(View.VISIBLE);
+                } else {
+                    view.findViewById(R.id.txtNoMessages).setVisibility(View.GONE);
+                }
 
                 inputText.requestFocus();
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
