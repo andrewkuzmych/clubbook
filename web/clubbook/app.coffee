@@ -256,7 +256,7 @@ app.get '/_s/obj/user/:objectId/friends/:friendId/unfriend', handle_access_token
 # remove friend request
 app.get '/_s/obj/user/:objectId/friends/:friendId/remove', handle_access_token, services.friends_remove_request
 # cencel friend request
-app.get '/_s/obj/user/:objectId/friends/:friendId/cencel', handle_access_token, services.friends_cencel_request
+app.get '/_s/obj/user/:objectId/friends/:friendId/cancel', handle_access_token, services.friends_cencel_request
 # block user 
 app.get '/_s/obj/user/:objectId/block/:userId', handle_access_token, services.block_user
 
