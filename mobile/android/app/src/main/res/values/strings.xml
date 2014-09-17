@@ -152,6 +152,10 @@
     <string name="no_users_checked_in_yet">No users Checked-in yet</string>
     <string name="about">About</string>
     <string name="hours">Hours</string>
+    <string name="info">Info</string>
+    <string name="wall">Wall</string>
+    <string name="this_page_is_soon_to_be_loaded_with">This page is soon to be loaded with</string>
+    <string name="interesting_stuff">Interesting Stuff!</string>
     <!--/>-->
 
     <!--For Google Analytics-->

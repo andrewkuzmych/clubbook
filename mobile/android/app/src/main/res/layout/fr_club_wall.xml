@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.nl.clubbook.ui.view.HelveticaRegularTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="48dp"
+        android:textSize="@dimen/text_size_small"
+        android:textColor="@color/grey"
+        android:text="@string/this_page_is_soon_to_be_loaded_with"
+        android:layout_gravity="center"/>
+
+    <com.nl.clubbook.ui.view.HelveticaBoldTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:textSize="@dimen/text_size_large"
+        android:textColor="@color/grey"
+        android:text="@string/interesting_stuff"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

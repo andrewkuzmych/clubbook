@@ -47,9 +47,9 @@ public class FriendsFragment extends BaseFragment implements ViewPager.OnPageCha
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
-
         mFriendsPagerAdapter.clearFragments();
+
+        super.onDestroyView();
     }
 
     @Override
