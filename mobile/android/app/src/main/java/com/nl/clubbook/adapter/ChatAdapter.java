@@ -153,9 +153,9 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         View row;
 
         if(message.getIsMyMessage()) {
-            row = mInflater.inflate(R.layout.item_chat_left, null);
-        } else {
             row = mInflater.inflate(R.layout.item_chat_right, null);
+        } else {
+            row = mInflater.inflate(R.layout.item_chat_left, null);
         }
 
         fillRow(row, message);
@@ -167,9 +167,9 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         View row;
 
         if(message.getIsMyMessage()) {
-            row = mInflater.inflate(R.layout.item_chat_drink_left, null);
-        } else {
             row = mInflater.inflate(R.layout.item_chat_drink_right, null);
+        } else {
+            row = mInflater.inflate(R.layout.item_chat_drink_left, null);
         }
 
         fillRow(row, message);

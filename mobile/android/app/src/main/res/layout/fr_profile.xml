@@ -174,7 +174,7 @@
                         android:text="@string/block_user"
                         android:textSize="@dimen/text_size_small"
                         android:textColor="@color/grey"
-                        android:visibility="gone"/>
+                        android:background="@drawable/selector_bg_btn_transparent"/>
 
                     <View
                         android:layout_width="0dp"
@@ -193,7 +193,8 @@
                         android:text="@string/remove_friend"
                         android:textSize="@dimen/text_size_small"
                         android:textColor="@color/grey"
-                        android:visibility="gone"/>
+                        android:visibility="gone"
+                        android:background="@drawable/selector_bg_btn_transparent"/>
 
                 </LinearLayout>
 

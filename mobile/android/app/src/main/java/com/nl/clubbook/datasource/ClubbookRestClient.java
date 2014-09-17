@@ -83,6 +83,10 @@ public class ClubbookRestClient {
         client.get(getBcAbsoluteUrl("obj/user/" + userId + "/friends/" + friendId + "/cancel"), params, responseHandler);
     }
 
+    public static void blockUserFriend(String userId, String friendId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/user/" + userId + "/block/" + friendId), params, responseHandler);
+    }
+
     public static void declineFriendRequest(String userId, String friendId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getBcAbsoluteUrl("obj/user/" + userId + "/friends/" + friendId + "/remove"), params, responseHandler);
     }

@@ -99,6 +99,8 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
 
                         if(chats.size() == 0) {
                             view.findViewById(R.id.txtNoMessages).setVisibility(View.VISIBLE);
+                        } else {
+                            view.findViewById(R.id.txtNoMessages).setVisibility(View.GONE);
                         }
                     }
                 });

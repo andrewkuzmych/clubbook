@@ -190,13 +190,15 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         }
 
         View btnChat = view.findViewById(R.id.btnChat);
+        View btnBlockUser = view.findViewById(R.id.txtBlockUser);
         if(mProfileId != null && mProfileId.equalsIgnoreCase(getSession().getUserDetails().get(SessionManager.KEY_ID))) {
             btnChat.setVisibility(View.GONE);
+            btnBlockUser.setVisibility(View.GONE);
         } else {
             btnChat.setOnClickListener(this);
+            btnBlockUser.setOnClickListener(this);
         }
 
-        view.findViewById(R.id.txtBlockUser).setOnClickListener(this);
         view.findViewById(R.id.txtAddFriend).setOnClickListener(this);
         view.findViewById(R.id.txtRemoveFriend).setOnClickListener(this);
     }
@@ -497,7 +499,34 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     }
 
     private void onBlockUserClicked() {
-        //TODO
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
+        final SessionManager session = SessionManager.getInstance();
+        final HashMap<String, String> user = session.getUserDetails();
+
+        showProgress(getString(R.string.canceling));
+
+        DataStore.blockUserRequest(user.get(SessionManager.KEY_ID), mProfileId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
+                new DataStore.OnResultReady() {
+
+                    @Override
+                    public void onReady(Object result, boolean failed) {
+                        View view = getView();
+                        if (view == null || isDetached()) {
+                            return;
+                        }
+
+                        hideProgress();
+                        if (failed) {
+                            showToast(R.string.something_went_wrong_please_try_again);
+                        } else {
+                            view.findViewById(R.id.txtBlockUser).setVisibility(View.GONE);
+                        }
+                    }
+                });
     }
 
     private void onRemoveFriendClicked() {

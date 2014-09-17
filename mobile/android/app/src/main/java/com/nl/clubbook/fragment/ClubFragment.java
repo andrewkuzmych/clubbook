@@ -254,6 +254,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         // if we checked in this this club set related style
         boolean isCheckedInHere = LocationCheckinHelper.getInstance().isCheckInHere(mClub);
         if (isCheckedInHere) {
+            mCanCheckInHere = true;
             UiHelper.changeCheckInState(getActivity(), txtCheckIn, true);
         } else {
             UiHelper.changeCheckInState(getActivity(), txtCheckIn, false);

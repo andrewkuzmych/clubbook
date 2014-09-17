@@ -28,15 +28,14 @@ public class NoLocationActivity extends BaseActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.no_location);
 
+        registerReceiver(mCloseActivityReceiver, new IntentFilter(ACTION_CLOSE));
+        registerReceiver(mLocationProviderEnabledReceiver, new IntentFilter(ACTION_LOCATION_PROVIDER_ENABLED));
+
         if(!LocationCheckinHelper.getInstance().isLocationTrackerStarted()) {
             Intent intent = new Intent(NoLocationActivity.this, MainLoginActivity.class);
             startActivity(intent);
-
             return;
         }
-
-        registerReceiver(mCloseActivityReceiver, new IntentFilter(ACTION_CLOSE));
-        registerReceiver(mLocationProviderEnabledReceiver, new IntentFilter(ACTION_LOCATION_PROVIDER_ENABLED));
 
         initView();
     }
