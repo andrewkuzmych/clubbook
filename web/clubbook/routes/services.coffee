@@ -368,6 +368,37 @@ exports.friends_remove_request = (req, res)->
             message: "remove friend request"
             _temp_user: friend
 
+exports.friends_cencel_request = (req, res)->
+  if req.params.objectId is req.params.friendId
+    res.json
+      status: "error"
+      message: "users are the same"
+
+  else
+    db_model.User.findById(req.params.objectId).exec (err, user)->
+      user.friends = __.filter user.friends, (user_friend)-> user_friend.toString() isnt req.params.friendId
+      user.save ()->
+        res.json
+          status: "ok"
+          result:
+            message: "cencel friend request"
+            _temp_user: user 
+
+exports.block_user = (req, res)->
+  if req.params.objectId is req.params.userId
+    res.json
+      status: "error"
+      message: "users are the same"
+
+  else
+    db_model.User.findById(req.params.objectId).exec (err, user)->
+      user.bloked_users.push req.params.userId
+      db_model.save_or_update_user user, ()->
+        res.json
+          status: "ok"
+          result:
+            message: "friend request"
+            _temp_user: user
 ##################################################################################################
 
 exports.get_config = (req, res)->

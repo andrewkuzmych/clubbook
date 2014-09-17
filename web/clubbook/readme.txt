@@ -1,4 +1,4 @@
-﻿
+
 
 # ------------------------------------------------------------------------------------------
 # create project
@@ -14,6 +14,9 @@ check c:\Users\odats\.ssh\id_rsa
 # ------------------------------------------------------------------------------------------
 http://stackoverflow.com/questions/1402776/how-do-i-commit-all-deleted-files-in-git
 
+Heroku
+andrew@happyscan.me
+clubbook
 
 MongoLab
 akuzmych

@@ -52,6 +52,8 @@ UserSchema = new mongoose.Schema
 
   friends: [type: mongoose.Schema.ObjectId, ref: 'User']
 
+  bloked_users: [type: mongoose.Schema.ObjectId, ref: 'User']
+  
   ios_tokens: [
     { type: String }
   ]

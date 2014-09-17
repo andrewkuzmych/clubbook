@@ -93,9 +93,10 @@ exports.find_club = (club_id, user_id, callback)->
     if err
       callback err, null
     else
-      db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}}, { checkin: 0 }).exec (err, users)->
+
+      db_model.User.findById(user_id).exec (err, user)->
+        db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}, '_id': {'$nin': user.bloked_users}}, { checkin: 0 }).exec (err, users)->
         #get friends count
-        db_model.User.findById(user_id).exec (err, user)->
           db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}, "_id": {'$in': user.friends}, 'friends': user._id}).exec (err, friends)->
             user_objects = []
             for user in users
@@ -424,18 +425,19 @@ exports.get_conversation = (params, callback)->
 
 exports.get_conversations = (params, callback)->
   console.log "METHOD - Manager get_conversations"
-  db_model.Chat.find({'$or':[{'user1': mongoose.Types.ObjectId(params.user_id)}, {'user2': mongoose.Types.ObjectId(params.user_id)}]}, { 'conversation': { '$slice': -1 } }).populate("user1", db_model.USER_PUBLIC_INFO).populate("user2", db_model.USER_PUBLIC_INFO).exec (err, chats)->
-    if not chats
-      callback err, []
-    else
-      sorted_chats = __.sortBy(chats, (chat) ->
-        if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
-           return chat.unread.count
-        else
-          return 0
-      ).reverse()
+  db_model.User.findById(params.user_id).exec (err, user)->    
+    db_model.Chat.find({'$or':[{'user1': mongoose.Types.ObjectId(params.user_id), 'user2': {'$nin': user.bloked_users}}, {'user2': mongoose.Types.ObjectId(params.user_id), 'user1':{'$nin': user.bloked_users}}]}, { 'conversation': { '$slice': -1 } }).populate("user1", db_model.USER_PUBLIC_INFO).populate("user2", db_model.USER_PUBLIC_INFO).exec (err, chats)->
+      if not chats
+        callback err, []
+      else
+        sorted_chats = __.sortBy(chats, (chat) ->
+          if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
+             return chat.unread.count
+          else
+            return 0
+        ).reverse()
 
-      callback err, sorted_chats
+        callback err, sorted_chats
 
 exports.readchat = (params, callback)->
   console.log "METHOD - Manager readchat"
