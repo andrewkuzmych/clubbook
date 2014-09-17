@@ -285,9 +285,10 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
                 txtOpenToday.append(startTime != null ? startTime + " - " : "");
                 txtOpenToday.append(endTime != null ? endTime : "");
             } else {
-                txtOpenToday.append("  ");
-                txtOpenToday.append(ClubWorkingHoursDto.STATUS_CLOSED);
+                txtOpenToday.setVisibility(View.GONE);
             }
+        } else {
+            txtOpenToday.setVisibility(View.GONE);
         }
 
         String avatarUrl = mClub.getAvatar();

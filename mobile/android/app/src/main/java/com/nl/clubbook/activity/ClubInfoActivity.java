@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.ClubInfoPagerAdapter;
-import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.UIUtils;
 
 /**

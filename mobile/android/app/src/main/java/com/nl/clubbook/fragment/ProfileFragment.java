@@ -50,6 +50,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
     private final int MODE_ADD = 33;
     private final int MODE_ACCEPT = 55;
+    private final int MODE_CANCEL = 77;
 
     private String mProfileId;
     private String mUsername;
@@ -316,7 +317,8 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             txtAddFriends.setText(getString(R.string.accept_request));
             mBtnAddFriendMode = MODE_ACCEPT;
         } else if(FriendDto.STATUS_SENT_REQUEST.equalsIgnoreCase(friendStatus)) {
-            initRequestPendingView(txtAddFriends);
+            mBtnAddFriendMode = MODE_CANCEL;
+            txtAddFriends.setText(R.string.cancel_request);
             view.findViewById(R.id.txtRemoveFriend).setVisibility(View.GONE);
         } else {
             mBtnAddFriendMode = MODE_ADD;
@@ -381,6 +383,8 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     private void onBtnAddFriendsClicked() {
         if(mBtnAddFriendMode == MODE_ADD) {
             onAddFriendsClicked();
+        } else if(mBtnAddFriendMode == MODE_CANCEL){
+            onCancelFriendRequestClicked();
         } else {
             onAcceptFriendsRequestClicked();
         }
@@ -411,8 +415,8 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                 if (failed) {
                     showToast(R.string.something_went_wrong_please_try_again);
                 } else {
-                    TextView txtView = (TextView) view.findViewById(R.id.txtAddFriend);
-                    initRequestPendingView(txtView);
+                    TextView txtAddFriends = (TextView) view.findViewById(R.id.txtAddFriend);
+                    txtAddFriends.setText(R.string.cancel_request);
                 }
             }
         });
@@ -445,6 +449,39 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                         } else {
                             view.findViewById(R.id.txtAddFriend).setVisibility(View.GONE);
                             view.findViewById(R.id.txtRemoveFriend).setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+    }
+
+    private void onCancelFriendRequestClicked() {
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
+        final SessionManager session = SessionManager.getInstance();
+        final HashMap<String, String> user = session.getUserDetails();
+
+        showProgress(getString(R.string.canceling));
+
+        DataStore.cancelFriendRequest(user.get(SessionManager.KEY_ID), mProfileId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
+                new DataStore.OnResultReady() {
+
+                    @Override
+                    public void onReady(Object result, boolean failed) {
+                        View view = getView();
+                        if (view == null || isDetached()) {
+                            return;
+                        }
+
+                        hideProgress();
+                        if (failed) {
+                            showToast(R.string.something_went_wrong_please_try_again);
+                        } else {
+                            mBtnAddFriendMode = MODE_ADD;
+                            TextView txtAddFriend = (TextView) view.findViewById(R.id.txtAddFriend);
+                            txtAddFriend.setText(R.string.add_friend);
                         }
                     }
                 });
@@ -500,6 +537,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                 if (failed) {
                     showToast(R.string.something_went_wrong_please_try_again);
                 } else {
+                    mBtnAddFriendMode = MODE_ADD;
                     TextView txtAddFriend = (TextView) view.findViewById(R.id.txtAddFriend);
                     txtAddFriend.setVisibility(View.VISIBLE);
                     txtAddFriend.setText(getString(R.string.add_friend));
@@ -508,16 +546,6 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                 }
             }
         });
-    }
-
-    private void initRequestPendingView(TextView txtAddFriend) {
-        int leftPadding = txtAddFriend.getPaddingLeft();
-        int rightPadding = txtAddFriend.getPaddingRight();
-
-        txtAddFriend.setBackgroundResource(R.drawable.bg_btn_grey);
-        txtAddFriend.setText(getString(R.string.request_pending));
-        txtAddFriend.setOnClickListener(null);
-        txtAddFriend.setPadding(leftPadding, 0, rightPadding, 0);
     }
 
     private void closeFragment() {

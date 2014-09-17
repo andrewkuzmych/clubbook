@@ -156,6 +156,8 @@
     <string name="wall">Wall</string>
     <string name="this_page_is_soon_to_be_loaded_with">This page is soon to be loaded with</string>
     <string name="interesting_stuff">Interesting Stuff!</string>
+    <string name="cancel_request">Cancel\nRequest</string>
+    <string name="canceling">Canceling</string>
     <!--/>-->
 
     <!--For Google Analytics-->

@@ -51,22 +51,27 @@
                         android:layout_height="wrap_content"
                         android:singleLine="true"
                         android:textColor="@color/grey_club_title_text_color"
-                        android:textSize="@dimen/text_size_medium" />
+                        android:textSize="@dimen/text_size_medium"
+                        android:paddingBottom="8dp" />
 
                     <com.nl.clubbook.ui.view.HelveticaRegularTextView
                         android:id="@+id/txtOpenToday"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:text="@string/open_today"
+                        android:text="@string/hours"
                         android:textColor="@color/grey_club_title_text_color"
-                        android:textSize="@dimen/text_size_micro" />
+                        android:drawablePadding="4dp"
+                        android:drawableLeft="@drawable/ic_hours_small"
+                        android:textSize="@dimen/text_size_micro"
+                        android:paddingBottom="4dp"
+                        android:gravity="center_vertical"/>
 
                     <com.nl.clubbook.ui.view.HelveticaRegularTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawablePadding="4dp"
-                        android:drawableRight="@drawable/ic_club_arrow_right"
+                        android:drawableLeft="@drawable/ic_info"
                         android:gravity="center_vertical"
                         android:singleLine="true"
                         android:text="@string/info_and_wall"
@@ -76,22 +81,6 @@
                 </LinearLayout>
 
             </LinearLayout>
-
-            <!--<com.nl.clubbook.ui.view.HelveticaRegularTextView-->
-                <!--android:id="@+id/txtDistance"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_gravity="center_vertical"-->
-                <!--android:background="@drawable/selector_bg_btn_white"-->
-                <!--android:drawablePadding="4dp"-->
-                <!--android:drawableTop="@drawable/ic_navigation"-->
-                <!--android:gravity="center"-->
-                <!--android:paddingLeft="8dp"-->
-                <!--android:paddingRight="16dp"-->
-                <!--android:paddingBottom="16dp"-->
-                <!--android:paddingTop="16dp"-->
-                <!--android:textColor="@color/green"-->
-                <!--android:textSize="@dimen/text_size_small" />-->
 
             <LinearLayout
                 android:layout_width="wrap_content"
