@@ -1,6 +1,5 @@
 package com.nl.clubbook.helper;
 
-import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -52,7 +51,11 @@ public class MyCustomReceiver extends BroadcastReceiver {
                         .setSmallIcon(icon)
                         .setContentTitle(title)
                         .setContentText(message)
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+
+        if(SessionManager.getInstance().isNotificationVibtraionEnabled()) {
+            mBuilder.setVibrate(new long[] {1000, 1000, 1000});
+        }
 
         mBuilder.setAutoCancel(true);
         Intent viewIntent = new Intent(context, MainActivity.class);
@@ -69,10 +72,6 @@ public class MyCustomReceiver extends BroadcastReceiver {
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
-
-//        Notification notification = mBuilder.build();
-//        notification.defaults |= Notification.DEFAULT_SOUND;
-//        notification.defaults |= Notification.DEFAULT_VIBRATE;
 
         mNotificationManager.notify(notificationId, mBuilder.build());
     }
