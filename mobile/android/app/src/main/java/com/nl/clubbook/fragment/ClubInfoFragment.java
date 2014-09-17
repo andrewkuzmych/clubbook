@@ -213,9 +213,11 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
             TextView txtOpenStatus = (TextView) view.findViewById(R.id.txtOpenStatus);
             String status = workHours.getStatus();
             if(ClubWorkingHoursDto.STATUS_OPENED.equalsIgnoreCase(status)) {
+                txtOpenStatus.setTextColor(getResources().getColor(R.color.green));
                 txtOpenStatus.setText(R.string.open);
             } else {
                 isClosed = true;
+                txtOpenStatus.setTextColor(getResources().getColor(R.color.red_light));
                 txtOpenStatus.setText(R.string.closed_display);
             }
 

@@ -136,7 +136,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="4dp"
-            android:paddingLeft="8dp"
+            android:paddingLeft="16dp"
             android:paddingRight="8dp"
             android:paddingTop="4dp"
             android:orientation="horizontal"
@@ -185,7 +185,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="16dp"
-            android:paddingLeft="8dp"
+            android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="4dp">
 
@@ -201,11 +201,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:autoLink="map"
+                    android:drawableLeft="@drawable/ic_hours"
                     android:drawablePadding="16dp"
-                    android:paddingBottom="4dp"
+                    android:paddingBottom="8dp"
+                    android:gravity="center_vertical"
                     android:paddingTop="4dp"
                     android:textColor="@color/grey_light"
-                    android:textSize="@dimen/text_size_medium" />
+                    android:textSize="@dimen/text_size_small"/>
 
                 <com.nl.clubbook.ui.view.HelveticaRegularTextView
                     android:id="@+id/txtOpenStatus"
@@ -213,11 +215,10 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="4dp"
                     android:gravity="center"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_small"
                     android:paddingBottom="4dp"
-                    android:paddingRight="8dp"
-                    android:paddingLeft="8dp"
                     android:paddingTop="4dp"
+                    android:layout_marginLeft="8dp"
                     android:textColor="@color/green"/>
 
             </LinearLayout>
@@ -236,7 +237,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="12dp"
-            android:paddingLeft="8dp"
+            android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="12dp">
 
