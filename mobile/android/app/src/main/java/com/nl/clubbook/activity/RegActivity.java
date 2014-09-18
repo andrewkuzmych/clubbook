@@ -26,6 +26,8 @@ import java.util.Calendar;
  */
 public class RegActivity extends BaseDateActivity implements View.OnClickListener {
 
+    public static final int MIN_PASSWORD_LENGTH = 6;
+
     private ImageUploader imageUploader;
     private JSONObject avatar;
 
@@ -219,7 +221,7 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
 
         EditText editPassword = (EditText) findViewById(R.id.editPassword);
         String password = editPassword.getText().toString().trim();
-        if (password.trim().length() < 6) {
+        if (password.trim().length() < MIN_PASSWORD_LENGTH) {
             showMessageDialog(getString(R.string.app_name), getString(R.string.pass_incorrect));
             return false;
         }

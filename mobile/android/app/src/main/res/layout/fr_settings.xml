@@ -142,6 +142,25 @@
         android:background="@drawable/selector_bg_btn_white"/>
 
     <View
+        android:id="@+id/dividerResetPassword"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color" />
+
+    <com.nl.clubbook.ui.view.HelveticaRegularTextView
+        android:id="@+id/txtResetPassword"
+        android:layout_width="fill_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textSize="@dimen/text_size_medium"
+        android:textColor="@color/grey"
+        android:text="@string/reset_password"
+        android:drawableRight="@drawable/ic_arrow_right"
+        android:background="@drawable/selector_bg_btn_white"/>
+
+    <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:background="@color/divider_color" />

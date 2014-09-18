@@ -845,6 +845,40 @@ public class DataStore {
         });
     }
 
+    public static void resetPassword(String currentPassword, String newPassword, String accessToken, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("old_password", currentPassword);
+        params.put("new_password", newPassword);
+        params.put("access_token", accessToken);
+
+        ClubbookRestClient.resetPassword(params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
+                    onResultReady.onReady(null, false);
+                } else {
+                    onResultReady.onReady(null, true);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+    }
+
     public static void checkin(String placeId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);

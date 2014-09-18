@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.nl.clubbook.R;
+import com.nl.clubbook.activity.ResetPasswordActivity;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.SessionManager;
@@ -24,7 +25,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
     public static final String URL_TEMPS_OF_SERVICE = "http://clubbookapp.herokuapp.com/terms";
 
-    private final String FEEDBACK_EMAIL = "feedback@clubbook.com";
+    private final String FEEDBACK_EMAIL = "support@clubbook.com";
     private final String URL_PRIVACY_POLICY = "http://clubbookapp.herokuapp.com/privacy";
 
     private SimpleFacebook mSimpleFacebook;
@@ -70,6 +71,9 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.txtContact:
                 onTxtContactClicked();
+                break;
+            case R.id.txtResetPassword:
+                onTxtResetPasswordClicked();
                 break;
             case R.id.txtLogOut:
                 onTxtLogOutClicked();
@@ -131,6 +135,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         view.findViewById(R.id.txtTermsOfService).setOnClickListener(this);
         view.findViewById(R.id.txtDeleteAccount).setOnClickListener(this);
         view.findViewById(R.id.txtContact).setOnClickListener(this);
+        view.findViewById(R.id.txtResetPassword).setOnClickListener(this);
         view.findViewById(R.id.txtLogOut).setOnClickListener(this);
 
         mSimpleFacebook = SimpleFacebook.getInstance(getActivity());
@@ -193,6 +198,11 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         intentEmail.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.question_about_clubbook));
         intentEmail.setType("message/rfc822");
         startActivity(Intent.createChooser(intentEmail, getString(R.string.choose_an_email_provider)));
+    }
+
+    private void onTxtResetPasswordClicked() {
+        Intent intent = new Intent(getActivity(), ResetPasswordActivity.class);
+        startActivity(intent);
     }
 
     private void onTxtDeleteAccountClicked() {

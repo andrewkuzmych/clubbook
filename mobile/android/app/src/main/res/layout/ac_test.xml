@@ -5,17 +5,4 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/txtShare"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/bg_btn_green"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/text_size_medium"
-        android:text="@string/share"
-        android:gravity="center"
-        android:paddingRight="32dp"
-        android:paddingLeft="32dp"/>
-
 </RelativeLayout>

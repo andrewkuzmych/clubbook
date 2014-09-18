@@ -36,8 +36,21 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:singleLine="true"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="4dp"
                 android:textColor="@color/grey"/>
+
+            <com.nl.clubbook.ui.view.HelveticaRegularTextView
+                android:id="@+id/txtForgotPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/forgot_password"
+                android:paddingTop="8dp"
+                android:paddingBottom="16dp"
+                android:textColor="@color/main_background_color"
+                android:textSize="@dimen/text_size_medium"
+                android:layout_gravity="right"/>
+
         </LinearLayout>
 
         <com.nl.clubbook.ui.view.HelveticaBoldTextView

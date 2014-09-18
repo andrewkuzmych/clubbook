@@ -158,6 +158,16 @@
     <string name="interesting_stuff">Interesting Stuff!</string>
     <string name="cancel_request">Cancel\nRequest</string>
     <string name="canceling">Canceling</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_new_password">Confirm new password</string>
+    <string name="current_password_is_too_short">Current password is too short (minimum 6 characters)</string>
+    <string name="new_password_is_too_short">New password is too short (minimum 6 characters)</string>
+    <string name="you_must_enter_the_same_password_twice">You must enter the same password twice in order to confirm it</string>
+    <string name="password_changed">Password changed</string>
+    <string name="changing_password">Changing password&#8230;</string>
     <!--/>-->
 
     <!--For Google Analytics-->
