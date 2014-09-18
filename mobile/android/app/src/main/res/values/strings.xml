@@ -169,6 +169,10 @@
     <string name="password_changed">Password changed</string>
     <string name="changing_password">Changing password&#8230;</string>
     <string name="password_is_too_short">Password is too short (minimum 6 characters)</string>
+    <string name="unblock_user">Unblock\nUser</string>
+    <string name="block_user_process">Block user&#8230;</string>
+    <string name="unblock_user_process">Unblock user&#8230;</string>
+    <string name="you_cannot_add_remove_friend_when_user_is_blocked">You can\'t add, remove friend when user is blocked</string>
     <!--/>-->
 
     <!--For Google Analytics-->

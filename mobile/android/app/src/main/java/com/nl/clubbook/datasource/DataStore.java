@@ -737,6 +737,38 @@ public class DataStore {
         });
     }
 
+    public static void unblockUserRequest(String userId, String friendId, String accessToken, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
+
+        ClubbookRestClient.unblockUserFriend(userId, friendId, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
+                    onResultReady.onReady(null, false);
+                } else {
+                    onResultReady.onReady(null, true);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+    }
+
     public static void unfriendRequest(String accessToken, String userId, String friendId, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);

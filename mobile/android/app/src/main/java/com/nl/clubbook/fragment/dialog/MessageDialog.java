@@ -22,6 +22,7 @@ public class MessageDialog extends DialogFragment {
     private static final String ARG_MESSAGE = "arg_message";
     private static final String ARG_POSITIVE_BTN_TEXT = "arg_positive_btn_text";
     private static final String ARG_NEGATIVE_BTN_TEXT = "arg_negative_btn_text";
+    private static final String ARG_IS_LISTENER_ENABLED = "ARG_IS_LISTENER_ENABLED";
 
     private final int POSITIVE_LISTENER_TYPE = 1;
     private final int NEGATIVE_LISTENER_TYPE = 2;
@@ -44,6 +45,7 @@ public class MessageDialog extends DialogFragment {
         args.putString(ARG_MESSAGE, message);
         args.putString(ARG_POSITIVE_BTN_TEXT, posBtnText);
         args.putString(ARG_NEGATIVE_BTN_TEXT, negBtnText);
+        args.putBoolean(ARG_IS_LISTENER_ENABLED, true);
         fragment.setArguments(args);
 
         return fragment;
@@ -62,6 +64,7 @@ public class MessageDialog extends DialogFragment {
         args.putString(ARG_MESSAGE, message);
         args.putString(ARG_POSITIVE_BTN_TEXT, posBtnText);
         args.putString(ARG_NEGATIVE_BTN_TEXT, negBtnText);
+        args.putBoolean(ARG_IS_LISTENER_ENABLED, true);
         fragment.setArguments(args);
 
         return fragment;
@@ -81,6 +84,19 @@ public class MessageDialog extends DialogFragment {
         args.putString(ARG_MESSAGE, message);
         args.putString(ARG_POSITIVE_BTN_TEXT, posBtnText);
         args.putString(ARG_NEGATIVE_BTN_TEXT, negBtnText);
+        args.putBoolean(ARG_IS_LISTENER_ENABLED, true);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
+    public static DialogFragment newSimpleMessageDialog(String title, String message) {
+        MessageDialog fragment = new MessageDialog();
+
+        Bundle args = new Bundle();
+        args.putString(ARG_TITLE, title);
+        args.putString(ARG_MESSAGE, message);
+        args.putBoolean(ARG_IS_LISTENER_ENABLED, false);
         fragment.setArguments(args);
 
         return fragment;
@@ -94,11 +110,17 @@ public class MessageDialog extends DialogFragment {
         String message = args.getString(ARG_MESSAGE);
         String posBtnText = args.getString(ARG_POSITIVE_BTN_TEXT);
         String negBtnText = args.getString(ARG_NEGATIVE_BTN_TEXT);
+        boolean isListenerEnabled = args.getBoolean(ARG_IS_LISTENER_ENABLED, true);
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setTitle(title != null ? title : "");
         dialog.setMessage(message != null ? message : "");
-        dialog.setPositiveButton(posBtnText != null ? posBtnText : getString(R.string.ok), positiveListener);
+
+        if(isListenerEnabled) {
+            dialog.setPositiveButton(posBtnText != null ? posBtnText : getString(R.string.ok), positiveListener);
+        } else {
+            dialog.setPositiveButton(posBtnText != null ? posBtnText : getString(R.string.ok), simpleListener);
+        }
 
         if(negBtnText != null && !negBtnText.isEmpty()) {
             dialog.setNegativeButton(negBtnText, negativeListener);
@@ -127,6 +149,14 @@ public class MessageDialog extends DialogFragment {
         }
     };
 
+    private DialogInterface.OnClickListener simpleListener
+            = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            dismissAllowingStateLoss();
+        }
+    };
+
     private void handleListener(int listenerType) {
         MessageDialogListener listener = null;
 
@@ -135,7 +165,6 @@ public class MessageDialog extends DialogFragment {
             listener = (MessageDialogListener) targetFragment;
 
         } else {
-
             Activity activity = getActivity();
             if(activity != null && activity instanceof MessageDialogListener) {
                 listener = (MessageDialogListener) activity;

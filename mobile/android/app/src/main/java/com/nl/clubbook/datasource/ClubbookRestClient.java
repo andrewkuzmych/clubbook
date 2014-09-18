@@ -87,6 +87,10 @@ public class ClubbookRestClient {
         client.get(getBcAbsoluteUrl("obj/user/" + userId + "/block/" + friendId), params, responseHandler);
     }
 
+    public static void unblockUserFriend(String userId, String friendId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/user/" + userId + "/unblock/" + friendId), params, responseHandler);
+    }
+
     public static void resetPassword(RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.put(getBcAbsoluteUrl("obj/user/update_pass"), params, responseHandler);
     }

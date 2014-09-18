@@ -141,6 +141,14 @@ public class BaseFragment extends Fragment {
         fTransaction.commitAllowingStateLoss();
     }
 
+    protected void showMessageDialog(String title, String message) {
+        DialogFragment messageDialog = MessageDialog.newSimpleMessageDialog(title, message);
+
+        FragmentTransaction fTransaction = getChildFragmentManager().beginTransaction();
+        fTransaction.add(messageDialog, MessageDialog.TAG);
+        fTransaction.commitAllowingStateLoss();
+    }
+
     protected void showToast(int messageResourceId) {
         showToast(getString(messageResourceId));
     }

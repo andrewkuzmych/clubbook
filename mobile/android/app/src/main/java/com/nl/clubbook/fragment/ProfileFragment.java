@@ -48,10 +48,6 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
     private static final String ARG_PROFILE_ID = "ARG_PROFILE_ID";
 
-    private final int MODE_ADD = 33;
-    private final int MODE_ACCEPT = 55;
-    private final int MODE_CANCEL = 77;
-
     private String mProfileId;
     private String mUsername;
     private String mUserAvatarUrl;
@@ -63,8 +59,12 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
 
     private ViewPagerBulletIndicatorView mBulletIndicator;
-    private int mBtnAddFriendMode = MODE_ADD;
+
+    private boolean mIsBlocked = false;
+
     private int mOpenMode = OPEN_MODE_DEFAULT;
+    private int mBtnAddFriendMode = BtnAddFriendModes.MODE_ADD;
+    private int mBtnBlockUserMode = BtnBlockModes.MODE_BLOCK;
 
     public static Fragment newInstance(Fragment targetFragment, String profileId, List<CheckInUserDto> checkedInUsers, int openMode) {
         ProfileFragment fragment = new ProfileFragment();
@@ -270,6 +270,17 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             return;
         }
 
+        TextView txtBlockUser = (TextView) view.findViewById(R.id.txtBlockUser);
+        if(profile.isBlocked()) {
+            mIsBlocked = true;
+            mBtnBlockUserMode = BtnBlockModes.MODE_UNBLOCK;
+            txtBlockUser.setText(R.string.unblock_user);
+        } else {
+            mIsBlocked = false;
+            mBtnBlockUserMode = BtnBlockModes.MODE_BLOCK;
+            txtBlockUser.setText(R.string.block_user);
+        }
+
         List<UserPhotoDto> userPhotos = profile.getPhotos();
         if(userPhotos != null && !userPhotos.isEmpty()) {
             initViewPager(view, userPhotos);
@@ -317,13 +328,13 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             mBtnAddFriendMode = -1;
         } else if(FriendDto.STATUS_RECEIVE_REQUEST.equalsIgnoreCase(friendStatus)) {
             txtAddFriends.setText(getString(R.string.accept_request));
-            mBtnAddFriendMode = MODE_ACCEPT;
+            mBtnAddFriendMode = BtnAddFriendModes.MODE_ACCEPT;
         } else if(FriendDto.STATUS_SENT_REQUEST.equalsIgnoreCase(friendStatus)) {
-            mBtnAddFriendMode = MODE_CANCEL;
+            mBtnAddFriendMode = BtnAddFriendModes.MODE_CANCEL;
             txtAddFriends.setText(R.string.cancel_request);
             view.findViewById(R.id.txtRemoveFriend).setVisibility(View.GONE);
         } else {
-            mBtnAddFriendMode = MODE_ADD;
+            mBtnAddFriendMode = BtnAddFriendModes.MODE_ADD;
         }
 
         final HashMap<String, String> user = getSession().getUserDetails();
@@ -383,9 +394,14 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     }
 
     private void onBtnAddFriendsClicked() {
-        if(mBtnAddFriendMode == MODE_ADD) {
+        if(mIsBlocked) {
+            showMessageDialog(getString(R.string.app_name), getString(R.string.you_cannot_add_remove_friend_when_user_is_blocked));
+            return;
+        }
+
+        if(mBtnAddFriendMode == BtnAddFriendModes.MODE_ADD) {
             onAddFriendsClicked();
-        } else if(mBtnAddFriendMode == MODE_CANCEL){
+        } else if(mBtnAddFriendMode == BtnAddFriendModes.MODE_CANCEL){
             onCancelFriendRequestClicked();
         } else {
             onAcceptFriendsRequestClicked();
@@ -481,7 +497,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                         if (failed) {
                             showToast(R.string.something_went_wrong_please_try_again);
                         } else {
-                            mBtnAddFriendMode = MODE_ADD;
+                            mBtnAddFriendMode = BtnAddFriendModes.MODE_ADD;
                             TextView txtAddFriend = (TextView) view.findViewById(R.id.txtAddFriend);
                             txtAddFriend.setText(R.string.add_friend);
                         }
@@ -490,6 +506,11 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     }
 
     private void onBtnChatClicked() {
+        if(mIsBlocked) {
+            showMessageDialog(getString(R.string.app_name), getString(R.string.you_cannot_add_remove_friend_when_user_is_blocked));
+            return;
+        }
+
         if(mOpenMode == OPEN_FROM_CHAT) {
             closeFragment();
         } else {
@@ -504,12 +525,18 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             return;
         }
 
-        final SessionManager session = SessionManager.getInstance();
-        final HashMap<String, String> user = session.getUserDetails();
+        if(mBtnBlockUserMode == BtnBlockModes.MODE_BLOCK) {
+            blockUser();
+        } else {
+            unblockUser();
+        }
+    }
 
-        showProgress(getString(R.string.canceling));
+    private void blockUser() {
+        SessionManager sessionManager = getSession();
 
-        DataStore.blockUserRequest(user.get(SessionManager.KEY_ID), mProfileId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
+        showProgress(getString(R.string.block_user_process));
+        DataStore.blockUserRequest(sessionManager.getUserId(), mProfileId, sessionManager.getAccessToken(),
                 new DataStore.OnResultReady() {
 
                     @Override
@@ -523,13 +550,49 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                         if (failed) {
                             showToast(R.string.something_went_wrong_please_try_again);
                         } else {
-                            view.findViewById(R.id.txtBlockUser).setVisibility(View.GONE);
+                            mIsBlocked = true;
+                            mBtnBlockUserMode = BtnBlockModes.MODE_UNBLOCK;
+                            TextView txtBlockUser = (TextView)view.findViewById(R.id.txtBlockUser);
+                            txtBlockUser.setText(R.string.unblock_user);
                         }
                     }
                 });
     }
 
+    private void unblockUser() {
+        SessionManager sessionManager = getSession();
+
+        showProgress(getString(R.string.unblock_user_process));
+        DataStore.unblockUserRequest(sessionManager.getUserId(), mProfileId, sessionManager.getAccessToken(),
+                new DataStore.OnResultReady() {
+
+                    @Override
+                    public void onReady(Object result, boolean failed) {
+                        View view = getView();
+                        if (view == null || isDetached()) {
+                            return;
+                        }
+
+                        hideProgress();
+                        if (failed) {
+                            showToast(R.string.something_went_wrong_please_try_again);
+                        } else {
+                            mIsBlocked = false;
+                            mBtnBlockUserMode = BtnBlockModes.MODE_BLOCK;
+                            TextView txtBlockUser = (TextView)view.findViewById(R.id.txtBlockUser);
+                            txtBlockUser.setText(R.string.block_user);
+                        }
+                    }
+                });
+    }
+
+
     private void onRemoveFriendClicked() {
+        if(mIsBlocked) {
+            showMessageDialog(getString(R.string.app_name), getString(R.string.you_cannot_add_remove_friend_when_user_is_blocked));
+            return;
+        }
+
         showMessageDialog(
                 ProfileFragment.this,
                 getString(R.string.remove_friend),
@@ -566,7 +629,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                 if (failed) {
                     showToast(R.string.something_went_wrong_please_try_again);
                 } else {
-                    mBtnAddFriendMode = MODE_ADD;
+                    mBtnAddFriendMode = BtnAddFriendModes.MODE_ADD;
                     TextView txtAddFriend = (TextView) view.findViewById(R.id.txtAddFriend);
                     txtAddFriend.setVisibility(View.VISIBLE);
                     txtAddFriend.setText(getString(R.string.add_friend));
@@ -587,5 +650,16 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
     public void setCheckInUsers(List<CheckInUserDto> mCheckInUsers) {
         this.mCheckInUsers = mCheckInUsers;
+    }
+
+    private interface BtnBlockModes {
+        final int MODE_BLOCK = 874;
+        final int MODE_UNBLOCK = 478;
+    }
+
+    private interface BtnAddFriendModes {
+        final int MODE_ADD = 33;
+        final int MODE_ACCEPT = 55;
+        final int MODE_CANCEL = 77;
     }
 }
