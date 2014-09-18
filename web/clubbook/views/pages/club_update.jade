@@ -90,7 +90,26 @@ block content
                   input(type="hidden", name="lat", value="#{club.club_loc?club.club_loc.lat:''}")
                   input(type="hidden", name="lng", value="#{club.club_loc?club.club_loc.lon:''}")
                   div#location_image.map_image(style="height:150px;")
+
+            .form-group
+              label.col-md-3.control-label Age Restriction
+                span.required *
+              .col-md-5
+                select.form-control(name="club_age_restriction")
+                  for ar in age_restrictions
+                    if ar && club.club_age_restriction && club.club_age_restriction == ar
+                      option(value="#{ar}", selected=true) #{ar}
+                    else
+                      option(value="#{ar}") #{ar}
             
+            .form-group
+              label.control-label.col-md-3 Capacity
+                span.required *
+              .col-md-5
+                .input-icon.right
+                  i.fa
+                  input.form-control(type='text', placeholder='Enter club capacity', name="club_capacity", value="#{club.club_capacity?club.club_capacity:''}")
+
             .form-group
                 label.control-label.col-md-3 Info
                   span.required *

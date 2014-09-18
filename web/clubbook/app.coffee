@@ -236,6 +236,7 @@ app.put '/_s/obj/user/me', handle_access_token, services.update_user
 app.delete '/_s/obj/user/me', handle_access_token, services.delete_user_me
 app.get '/_s/obj/user/:objectId', handle_access_token, services.get_user_by_id
 app.get '/_s/obj/user/me/notifications', handle_access_token, services.unread_notifications_count
+app.put '/_s/obj/user/update_pass', handle_access_token, services.update_pass
 
 # crud user images
 app.post '/_s/obj/user/:userId/image', handle_access_token, services.user_image_add
@@ -259,6 +260,8 @@ app.get '/_s/obj/user/:objectId/friends/:friendId/remove', handle_access_token, 
 app.get '/_s/obj/user/:objectId/friends/:friendId/cancel', handle_access_token, services.friends_cencel_request
 # block user 
 app.get '/_s/obj/user/:objectId/block/:userId', handle_access_token, services.block_user
+# unblock
+app.get '/_s/obj/user/:objectId/unblock/:userId', handle_access_token, services.unblock_user
 
 #
 

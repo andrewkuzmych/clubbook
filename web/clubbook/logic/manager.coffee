@@ -44,8 +44,17 @@ exports.get_friend = (friend_id, current_user_id, callback)->
       if is_user_friend_to_current_user and is_current_user_friend_to_user
         friend_status = "friend"
 
+      is_blocked = __.find(current_user.bloked_users, (u) ->
+              u.toString() is user._id.toString()
+            )
+
       user_object = user.toObject();
       user_object.friend_status = friend_status;
+
+      if is_blocked
+        user_object.is_blocked = true
+      else
+        user_object.is_blocked = false
 
 
       if err

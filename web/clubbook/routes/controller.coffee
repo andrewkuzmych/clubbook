@@ -64,11 +64,10 @@ exports.club_create = (req, res)->
                           {"day" : 4, "status" : "closed"},
                           {"day" : 5, "status" : "closed"},
                           {"day" : 6, "status" : "closed"},
-                          {"day" : 0, "status" : "closed"}
-                      ]
+                          {"day" : 0, "status" : "closed"}  ]
 
     model.club.club_working_hours = club_working_hours
-
+    model.age_restrictions = ["n/a", "18+", "21+", "23+", "25+"]
     res.render "pages/club_update", model
 
 
@@ -85,6 +84,8 @@ exports.club_create_action = (req, res)->
         club_site : req.body.club_site
         club_info : req.body.club_info
         club_address : req.body.club_address
+        club_age_restriction : req.body.club_age_restriction
+        club_capacity : req.body.club_capacity
         
       venue.club_loc.lat = req.body.lat
       venue.club_loc.lon = req.body.lng
@@ -120,6 +121,7 @@ exports.club_edit = (req, res)->
     db_model.Venue.findById(req.params.id).exec (err, venue)->
       model.cloudinary = cloudinary
       model.club = venue
+      model.age_restrictions = ["n/a", "18+", "21+", "23+", "25+"]
       console.log model.club
       res.render "pages/club_update", model
 
@@ -137,8 +139,8 @@ exports.club_edit_action = (req, res)->
         venue.club_address = req.body.club_address
         venue.club_loc.lat = req.body.lat
         venue.club_loc.lon = req.body.lng
-
-        console.log req.body
+        venue.club_age_restriction = req.body.club_age_restriction
+        venue.club_capacity = req.body.club_capacity
 
         for wh in venue.club_working_hours
             console.log "start_date_" + wh.day
