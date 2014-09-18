@@ -63,8 +63,7 @@ var FormValidation = function () {
                       url: true
                     },
                     club_phone: {
-                      required: true,
-                      digits: true
+                      required: true
                     },
                     club_info: {
                       required: true, 
@@ -75,9 +74,10 @@ var FormValidation = function () {
                     club_images: {
                       required: true,  
                     },
-                    //club_address: {
-                    //  required: true,  
-                   // }
+                    club_capacity: {
+                      required: true,
+                      digits: true  
+                    }
 
                 },
 

@@ -202,6 +202,23 @@ exports.get_user_me = (req, res)->
         result:
           user: user
 
+exports.update_pass = (req, res)->
+  access_token = req.param("access_token")
+  db_model.User.findOne({access_token: access_token}).exec (err, user)->
+    if user.password == req.body.old_password
+      user.password = req.body.new_password
+      db_model.save_or_update_user user, (err)->
+        if err then console.log err
+        res.json
+          status: "ok"
+          result:
+            user: user
+    else
+        res.json
+          status: "error"
+          result:
+            msg: "wrong password"
+
 exports.delete_user_me = (req, res)->
   access_token = req.param("access_token")
   db_model.User.findOne({access_token: access_token}).exec (err, user)->
@@ -397,8 +414,25 @@ exports.block_user = (req, res)->
         res.json
           status: "ok"
           result:
-            message: "friend request"
+            message: "block user"
             _temp_user: user
+
+exports.unblock_user = (req, res)->
+  if req.params.objectId is req.params.userId
+    res.json
+      status: "error"
+      message: "users are the same"
+
+  else
+    db_model.User.findById(req.params.objectId).exec (err, user)->
+      user.bloked_users = __.filter user.bloked_users, (user_bloked_user)-> user_bloked_user.toString() isnt req.params.userId
+      db_model.save_or_update_user user, ()->
+        res.json
+          status: "ok"
+          result:
+            message: "unblock user"
+            _temp_user: user
+ 
 ##################################################################################################
 
 exports.get_config = (req, res)->
