@@ -18,6 +18,7 @@ import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.fragment.SettingsFragment;
 import com.nl.clubbook.helper.LocationCheckinHelper;
+import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
@@ -188,7 +189,10 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
                     showMessageDialog(getString(R.string.app_name), getString(R.string.incorrect_credentials));
                 } else {
                     UserDto user = (UserDto) result;
-                    getSession().createLoginSession(user);
+
+                    SessionManager sessionManager = getSession();
+                    sessionManager.createLoginSession(user);
+                    sessionManager.setLoggedInByFacebook(true);
 
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);

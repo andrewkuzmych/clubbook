@@ -275,6 +275,16 @@ public class SessionManager {
         return mPreferences.getString(key, "");
     }
 
+    public void setLoggedInByFacebook(boolean isLoggedInByFacebook) {
+        Editor editor = mPreferences.edit();
+        editor.putBoolean(KEY_IS_LOGGED_IN_BY_FACEBOOK, isLoggedInByFacebook);
+        editor.commit();
+    }
+
+    public boolean isLoggedInByFacebook() {
+        return mPreferences.getBoolean(KEY_IS_LOGGED_IN_BY_FACEBOOK, false);
+    }
+
     /*
      * Constants
      */
@@ -304,6 +314,7 @@ public class SessionManager {
     private static final String KEY_UPDATE_CHECK_IN_STATUS_INTERVAL = "KEY_UPDATE_CHECK_IN_STATUS_INTERVAL";
     private static final String KEY_MAX_FAILED_CHECK_IN_COUNT = "KEY_MAX_FAILED_CHECK_IN_COUNT";
     private static final String KEY_CHECK_IN_MAX_DISTANCE = "KEY_CHECK_IN_MAX_DISTANCE";
+    private static final String KEY_IS_LOGGED_IN_BY_FACEBOOK = "KEY_IS_LOGED_IN_BY_FACEBOOK";
 
 }
 

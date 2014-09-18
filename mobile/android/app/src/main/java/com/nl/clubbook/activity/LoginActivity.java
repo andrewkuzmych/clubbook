@@ -3,8 +3,11 @@ package com.nl.clubbook.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
@@ -55,22 +58,28 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private void initView() {
         findViewById(R.id.btnLogin).setOnClickListener(this);
         findViewById(R.id.txtForgotPassword).setOnClickListener(this);
+
+        EditText editEmail = (EditText) findViewById(R.id.editEmail);
+        EditText editPassword = (EditText) findViewById(R.id.editPassword);
+
+        editEmail.addTextChangedListener(getTextWatcher(editEmail));
+        editPassword.addTextChangedListener(getTextWatcher(editPassword));
     }
 
     private void onBtnLoginClicked() {
-        TextView txtUserName = (TextView) findViewById(R.id.txtUsername);
-        TextView txtPassword = (TextView) findViewById(R.id.txtPassword);
+        EditText editEmail = (EditText) findViewById(R.id.editEmail);
+        EditText editPassword = (EditText) findViewById(R.id.editPassword);
 
-        String email = txtUserName.getText().toString().trim();
-        String password = txtPassword.getText().toString().trim();
+        String email = editEmail.getText().toString().trim();
+        String password = editPassword.getText().toString().trim();
 
         if (!Validator.isEmailValid(email)) {
-            showMessageDialog(getString(R.string.app_name), getString(R.string.email_incorrect));
+            editEmail.setError(getString(R.string.email_incorrect));
             return;
         }
 
-        if (password.trim().length() < 6) {
-            showMessageDialog(getString(R.string.app_name), getString(R.string.pass_incorrect));
+        if (password.trim().length() < RegActivity.MIN_PASSWORD_LENGTH) {
+            editPassword.setError(getString(R.string.password_is_too_short));
             return;
         }
 
@@ -94,24 +103,41 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             public void onReady(Object result, boolean failed) {
                 hideProgressDialog();
                 if (failed) {
-                    showToast(R.string.something_went_wrong_please_try_again);
+                    if (result == null) {
+                        showMessageDialog(getString(R.string.login_failed), getString(R.string.incorrect_credentials));
+                    } else {
+                        showToast(R.string.something_went_wrong_please_try_again);
+                    }
                     return;
                 }
 
-                if (result == null) {
-                    showMessageDialog(getString(R.string.login_failed), getString(R.string.incorrect_credentials));
-                } else {
-                    UserDto user = (UserDto) result;
-                    getSession().createLoginSession(user);
+                UserDto user = (UserDto) result;
+                getSession().createLoginSession(user);
 
-                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(i);
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(i);
 
-                    sendBroadcast(new Intent(MainLoginActivity.ACTION_CLOSE_ACTIVITY));
+                sendBroadcast(new Intent(MainLoginActivity.ACTION_CLOSE_ACTIVITY));
 
-                    finish();
-                }
+                finish();
             }
         });
+    }
+
+    public TextWatcher getTextWatcher(final EditText editText) {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                editText.setError(null);
+            }
+        };
     }
 }

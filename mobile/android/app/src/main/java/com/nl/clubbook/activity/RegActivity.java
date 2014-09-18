@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
@@ -85,7 +87,8 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
     }
 
     private void initView() {
-        findViewById(R.id.editBirthDate).setOnClickListener(this);
+        EditText editBirthDate = (EditText)findViewById(R.id.editBirthDate);
+        editBirthDate.setOnClickListener(this);
         findViewById(R.id.imgAvatar).setOnClickListener(this);
         findViewById(R.id.btnRegister).setOnClickListener(this);
 
@@ -94,6 +97,14 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
 
         UiHelper.createGenderSpinner((Spinner) findViewById(R.id.spinGender), this, getString(R.string.male));
         UiHelper.createCountrySpinner((Spinner) findViewById(R.id.spinCountry), this, getString(R.string.Netherlands));
+
+        EditText editName = (EditText)findViewById(R.id.editName);
+        EditText editPassword = (EditText)findViewById(R.id.editPassword);
+
+        editName.addTextChangedListener(getTextWatcher(editName));
+        editEmail.addTextChangedListener(getTextWatcher(editEmail));
+        editPassword.addTextChangedListener(getTextWatcher(editPassword));
+        editBirthDate.addTextChangedListener(getTextWatcher(editBirthDate));
     }
 
     private void initImageUploader() {
@@ -208,28 +219,28 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
         EditText editName = (EditText) findViewById(R.id.editName);
         String userName = editName.getText().toString().trim();
         if (userName.trim().length() < 2) {
-            showMessageDialog(getString(R.string.app_name), getString(R.string.name_incorrect));
+            editName.setError(getString(R.string.name_incorrect));
             return false;
         }
 
         EditText editEmail = (EditText) findViewById(R.id.editEmail);
         String email = editEmail.getText().toString().trim();
         if (!Validator.isEmailValid(email)) {
-            showMessageDialog(getString(R.string.app_name), getString(R.string.email_incorrect));
+            editEmail.setError(getString(R.string.email_incorrect));
             return false;
         }
 
         EditText editPassword = (EditText) findViewById(R.id.editPassword);
         String password = editPassword.getText().toString().trim();
         if (password.trim().length() < MIN_PASSWORD_LENGTH) {
-            showMessageDialog(getString(R.string.app_name), getString(R.string.pass_incorrect));
+            editPassword.setError(getString(R.string.password_is_too_short));
             return false;
         }
 
         EditText editBirthDate = (EditText) findViewById(R.id.editBirthDate);
         String dob = editBirthDate.getText().toString().trim();
         if (dob.trim().length() < 6) {
-            showMessageDialog(getString(R.string.app_name), getString(R.string.dob_incorrect));
+            editBirthDate.setError(getString(R.string.dob_incorrect));
             return false;
         } else {
             String strAge = getAge(dob);
@@ -246,5 +257,22 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
         }
 
         return true;
+    }
+
+    public TextWatcher getTextWatcher(final EditText editText) {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                editText.setError(null);
+            }
+        };
     }
 }

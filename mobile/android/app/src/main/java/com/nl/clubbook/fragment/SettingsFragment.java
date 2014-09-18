@@ -139,6 +139,12 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         view.findViewById(R.id.txtLogOut).setOnClickListener(this);
 
         mSimpleFacebook = SimpleFacebook.getInstance(getActivity());
+
+        if(getSession().isLoggedInByFacebook()) {
+            view.findViewById(R.id.txtResetPassword).setOnClickListener(null);
+            view.findViewById(R.id.txtResetPassword).setVisibility(View.GONE);
+            view.findViewById(R.id.dividerResetPassword).setVisibility(View.GONE);
+        }
     }
 
     private void onPushEnablingChanged(final CheckBox checkBox, final boolean isEnable) {

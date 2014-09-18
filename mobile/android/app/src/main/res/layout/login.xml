@@ -19,7 +19,7 @@
             android:paddingRight="16dp">
 
             <com.nl.clubbook.ui.view.HelveticaRegularEditText
-                android:id="@+id/txtUsername"
+                android:id="@+id/editEmail"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
@@ -29,7 +29,7 @@
                 android:textColor="@color/grey" />
 
             <com.nl.clubbook.ui.view.HelveticaRegularEditText
-                android:id="@+id/txtPassword"
+                android:id="@+id/editPassword"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"

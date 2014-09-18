@@ -168,6 +168,7 @@
     <string name="you_must_enter_the_same_password_twice">You must enter the same password twice in order to confirm it</string>
     <string name="password_changed">Password changed</string>
     <string name="changing_password">Changing password&#8230;</string>
+    <string name="password_is_too_short">Password is too short (minimum 6 characters)</string>
     <!--/>-->
 
     <!--For Google Analytics-->
