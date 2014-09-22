@@ -59,8 +59,7 @@ var FormValidation = function () {
                       email: true
                     },
                     club_site: {
-                      required: true,
-                      url: true
+                      required: true
                     },
                     club_phone: {
                       required: true

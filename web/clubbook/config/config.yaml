@@ -21,7 +21,7 @@ default:
 
 production:
   db:
-    connection: "mongodb://root:root@ds035037.mongolab.com:35037/clubbook"
+    connection: "mongodb://root:root@ds035300.mongolab.com:35300/clubbook_prod"
   use_analitics: "true"
   is_test_server: "false"
   pub_publish_key: "pub-c-b0a0ffb6-6a0f-4907-8d4f-642e500c707a"

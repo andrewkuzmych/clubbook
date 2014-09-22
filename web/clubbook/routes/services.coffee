@@ -264,7 +264,7 @@ exports.friends_my = (req, res)->
 
   db_model.User.findById(req.params.objectId).exec (err, user)->
 
-    db_model.User.find({"_id": {'$in': user.friends}, 'friends': user._id}, { checkin: {$slice: -1} }).select(db_model.USER_PUBLIC_INFO).populate('checkin.club').sort("name").exec (err, users)->
+    db_model.User.find({"_id": {'$in': user.friends}, 'bloked_users': {'$ne': user._id}, 'friends': user._id}, { checkin: {$slice: -1} }).select(db_model.USER_PUBLIC_INFO).populate('checkin.club').sort("name").exec (err, users)->
       if err
         console.log err
         res.json
