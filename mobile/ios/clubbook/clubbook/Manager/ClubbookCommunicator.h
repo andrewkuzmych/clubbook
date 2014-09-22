@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define baseURL @"http://clubbookapp.herokuapp.com/_s/"
+#define baseURL @"http://clubbooktest.herokuapp.com/_s/"
 //#define baseURL @"http://192.168.2.113:3000/_s/"
 
 
