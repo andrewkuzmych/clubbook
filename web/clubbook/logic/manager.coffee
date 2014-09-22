@@ -104,7 +104,7 @@ exports.find_club = (club_id, user_id, callback)->
     else
 
       db_model.User.findById(user_id).exec (err, user)->
-        db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}, 'bloked_users': {'$ne': user._id}, { checkin: 0 }).exec (err, users)->
+        db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}, 'bloked_users': {'$ne': user._id}}, { checkin: 0 }).exec (err, users)->
         #get friends count
           db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}, "_id": {'$in': user.friends}, 'friends': user._id}).exec (err, friends)->
             user_objects = []
@@ -435,7 +435,7 @@ exports.get_conversation = (params, callback)->
 exports.get_conversations = (params, callback)->
   console.log "METHOD - Manager get_conversations"
   db_model.User.findById(params.user_id).exec (err, user)->     
-    db_model.Chat.find({'$or':[{'user1': mongoose.Types.ObjectId(params.user_id), 'user2.bloked_users': {'$ne': user._id}, {'user2': mongoose.Types.ObjectId(params.user_id), 'user1.bloked_users': {'$ne': user._id}]}, { 'conversation': { '$slice': -1 } }).populate("user1", db_model.USER_PUBLIC_INFO).populate("user2", db_model.USER_PUBLIC_INFO).exec (err, chats)->
+    db_model.Chat.find({'$or':[{'user1': mongoose.Types.ObjectId(params.user_id), 'user2.bloked_users': {'$ne': user._id}}, {'user2': mongoose.Types.ObjectId(params.user_id), 'user1.bloked_users': {'$ne': user._id}}],  'conversation': { '$slice': -1 } }).populate("user1", db_model.USER_PUBLIC_INFO).populate("user2", db_model.USER_PUBLIC_INFO).exec (err, chats)->
       if not chats
         callback err, []
       else
