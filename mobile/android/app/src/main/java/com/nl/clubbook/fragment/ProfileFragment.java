@@ -433,6 +433,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                 if (failed) {
                     showToast(R.string.something_went_wrong_please_try_again);
                 } else {
+                    mBtnAddFriendMode = BtnAddFriendModes.MODE_CANCEL;
                     TextView txtAddFriends = (TextView) view.findViewById(R.id.txtAddFriend);
                     txtAddFriends.setText(R.string.cancel_request);
                 }

@@ -43,6 +43,7 @@ import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.CheckInOutCallbackInterface;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.LocationCheckinHelper;
+import com.nl.clubbook.helper.MyCustomReceiver;
 import com.nl.clubbook.helper.NotificationHelper;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.ui.drawer.NavDrawerData;
@@ -72,10 +73,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         MessageDialog.MessageDialogListener, SettingsFragment.OnLogOutListener {
 
     public static final String ACTION_CHECK_IN_CHECK_OUT = "ACTION_CHECK_IN_CHECK_OUT";
-
-    public static final String EXTRA_TYPE = "EXTRA_TYPE";
-
-    public static final String TYPE_CHAT = "chat";
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -378,7 +375,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             MessagesFragment messagesFragment = (MessagesFragment) mCurrentFragment;
             ChatFragment chatFragment = messagesFragment.getChatFragment();
 
-            if (chatFragment != null && TYPE_CHAT.equalsIgnoreCase(messageJson.optString("type"))) {
+            if (chatFragment != null && MyCustomReceiver.TYPE_CHAT.equalsIgnoreCase(messageJson.optString("type"))) {
                 JSONObject data = messageJson.optJSONObject("data");
                 String userTo = data.optString("user_to");
                 String userFrom = data.optString("user_from");
@@ -416,8 +413,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         Intent intent = getIntent();
 
         int displayView = NavDrawerData.DEFAULT_FRAGMENT_NUMBER;
-        if (intent.hasExtra(EXTRA_TYPE)) {
-            if (TYPE_CHAT.equalsIgnoreCase(intent.getStringExtra(EXTRA_TYPE))) {
+        if (intent.hasExtra(MyCustomReceiver.EXTRA_TYPE)) {
+            String type = intent.getStringExtra(MyCustomReceiver.EXTRA_TYPE);
+
+            if(MyCustomReceiver.TYPE_FRIENDS.equalsIgnoreCase(type)) {
+                displayView = NavDrawerData.FRIENDS_POSITION;
+            } else {
                 displayView = NavDrawerData.MESSAGES_POSITION;
             }
         }

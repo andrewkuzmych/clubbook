@@ -22,10 +22,15 @@ import org.json.JSONObject;
 public class MyCustomReceiver extends BroadcastReceiver {
     private static final String TAG = "MyCustomReceiver";
 
+    public static final String EXTRA_TYPE = "EXTRA_TYPE";
+
+    public static final String TYPE_CHAT = "chat";
+    public static final String TYPE_FRIENDS = "friends";
+
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
-            String action = intent.getAction();
+             String action = intent.getAction();
             String channel = intent.getExtras().getString("com.parse.Channel");
             JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
             String type = json.getString("type");
@@ -59,7 +64,7 @@ public class MyCustomReceiver extends BroadcastReceiver {
 
         mBuilder.setAutoCancel(true);
         Intent viewIntent = new Intent(context, MainActivity.class);
-        viewIntent.putExtra(MainActivity.EXTRA_TYPE, type);
+        viewIntent.putExtra(EXTRA_TYPE, type);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(MainActivity.class);
