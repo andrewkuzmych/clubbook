@@ -43,7 +43,7 @@ import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.CheckInOutCallbackInterface;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.LocationCheckinHelper;
-import com.nl.clubbook.helper.MyCustomReceiver;
+import com.nl.clubbook.helper.NotificationReceiver;
 import com.nl.clubbook.helper.NotificationHelper;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.ui.drawer.NavDrawerData;
@@ -375,7 +375,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             MessagesFragment messagesFragment = (MessagesFragment) mCurrentFragment;
             ChatFragment chatFragment = messagesFragment.getChatFragment();
 
-            if (chatFragment != null && MyCustomReceiver.TYPE_CHAT.equalsIgnoreCase(messageJson.optString("type"))) {
+            if (chatFragment != null && NotificationReceiver.TYPE_CHAT.equalsIgnoreCase(messageJson.optString("type"))) {
                 JSONObject data = messageJson.optJSONObject("data");
                 String userTo = data.optString("user_to");
                 String userFrom = data.optString("user_from");
@@ -413,10 +413,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         Intent intent = getIntent();
 
         int displayView = NavDrawerData.DEFAULT_FRAGMENT_NUMBER;
-        if (intent.hasExtra(MyCustomReceiver.EXTRA_TYPE)) {
-            String type = intent.getStringExtra(MyCustomReceiver.EXTRA_TYPE);
+        if (intent.hasExtra(NotificationReceiver.EXTRA_TYPE)) {
+            String type = intent.getStringExtra(NotificationReceiver.EXTRA_TYPE);
 
-            if(MyCustomReceiver.TYPE_FRIENDS.equalsIgnoreCase(type)) {
+            if(NotificationReceiver.TYPE_FRIENDS.equalsIgnoreCase(type)) {
                 displayView = NavDrawerData.FRIENDS_POSITION;
             } else {
                 displayView = NavDrawerData.MESSAGES_POSITION;

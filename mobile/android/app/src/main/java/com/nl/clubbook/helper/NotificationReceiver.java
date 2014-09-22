@@ -19,7 +19,7 @@ import org.json.JSONObject;
 /**
  * Created by Andrew on 6/13/2014.
  */
-public class MyCustomReceiver extends BroadcastReceiver {
+public class NotificationReceiver extends BroadcastReceiver {
     private static final String TAG = "MyCustomReceiver";
 
     public static final String EXTRA_TYPE = "EXTRA_TYPE";

@@ -103,7 +103,7 @@
         </receiver>
 
         <receiver
-            android:name="com.nl.clubbook.helper.MyCustomReceiver"
+            android:name=".helper.NotificationReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.nl.clubbook.UPDATE_STATUS" />
