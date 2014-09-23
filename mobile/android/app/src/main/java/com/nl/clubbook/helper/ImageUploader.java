@@ -249,6 +249,13 @@ public abstract class ImageUploader {
 
             new AsyncTask<Void, Void, JSONObject>() {
                 @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+
+                    mActivity.showProgressDialog(mActivity.getString(R.string.upload_new_image));
+                }
+
+                @Override
                 protected JSONObject doInBackground(Void... params) {
                     Bitmap photo = extras.getParcelable("data");
 

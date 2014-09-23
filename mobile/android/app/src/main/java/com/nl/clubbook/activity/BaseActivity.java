@@ -70,6 +70,10 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     public void showProgressDialog(String message) {
+        if(isFinishing()) {
+            return;
+        }
+
         isProgressShow = true;
 
         Fragment progressDialog = ProgressDialog.newInstance(null, message);
@@ -79,6 +83,10 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     protected void hideProgressDialog() {
+        if(isFinishing()) {
+            return;
+        }
+
         DialogFragment progressDialog = (DialogFragment) getSupportFragmentManager().findFragmentByTag(ProgressDialog.TAG);
         if(progressDialog != null) {
             progressDialog.dismissAllowingStateLoss();
