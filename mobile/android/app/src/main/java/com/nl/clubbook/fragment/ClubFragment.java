@@ -282,7 +282,6 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
                 String startTime = workingHours.getStartTime();
                 String endTime = workingHours.getEndTime();
 
-                txtOpenToday.append("  ");
                 txtOpenToday.append(startTime != null ? startTime + " - " : "");
                 txtOpenToday.append(endTime != null ? endTime : "");
             } else {

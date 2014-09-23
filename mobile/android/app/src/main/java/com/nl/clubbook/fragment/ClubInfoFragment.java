@@ -304,12 +304,16 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
     }
 
     private void initViewPager(View view, List<String> photos) {
+        mBulletIndicator = (ViewPagerBulletIndicatorView)view.findViewById(R.id.indicatorPhotos);
         if(photos == null) {
             L.i("photos == null");
+            mBulletIndicator.setVisibility(View.GONE);
             return;
         }
-        mBulletIndicator = (ViewPagerBulletIndicatorView)view.findViewById(R.id.indicatorPhotos);
         mBulletIndicator.setBulletViewCount(photos.size());
+        if(photos.size() <= 1) {
+            mBulletIndicator.setVisibility(View.GONE);
+        }
 
         ViewPager pagerImage = (ViewPager) view.findViewById(R.id.pagerPhoto);
         PhotoPagerAdapter adapter = new PhotoPagerAdapter(getChildFragmentManager(), photos, mImageLoader, mOptions, animateFirstListener);

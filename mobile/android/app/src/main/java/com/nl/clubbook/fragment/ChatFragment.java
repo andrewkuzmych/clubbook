@@ -232,6 +232,8 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         chatMessageDto.setMsg(formatMessage);
 
         mAdapter.add(chatMessageDto);
+
+        getView().findViewById(R.id.txtNoMessages).setVisibility(View.GONE);
     }
 
     private void sendMessage() {

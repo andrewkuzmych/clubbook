@@ -251,11 +251,6 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
             }
         }
 
-        if(avatar == null) {
-            showMessageDialog(getString(R.string.app_name), getString(R.string.avatar_incorrect));
-            return false;
-        }
-
         return true;
     }
 

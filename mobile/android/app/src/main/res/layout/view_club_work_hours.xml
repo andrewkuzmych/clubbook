@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:paddingLeft="40dp"
-    android:paddingRight="40dp">
+    android:paddingRight="16dp">
 
     <com.nl.clubbook.ui.view.HelveticaRegularTextView
         android:id="@+id/txtDayName"

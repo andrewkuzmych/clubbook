@@ -21,7 +21,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="8dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -34,19 +33,21 @@
             android:singleLine="true"
             android:textColor="@color/grey"
             android:textSize="@dimen/text_size_medium"
-            android:text="Test"/>
+            android:text="Test"
+            android:layout_marginLeft="10dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginLeft="4dp">
 
             <com.nl.clubbook.ui.view.HelveticaRegularTextView
                 android:id="@+id/txtCheckedInCount"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.55"
                 android:drawableLeft="@drawable/ic_checked_in_club_list"
                 android:gravity="center_vertical"
                 android:textColor="@color/grey"
@@ -57,8 +58,8 @@
                 android:id="@+id/txtFriendsCount"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginLeft="8dp"
+                android:layout_weight="0.45"
+                android:layout_marginLeft="4dp"
                 android:drawableLeft="@drawable/ic_friends_club_list"
                 android:gravity="center_vertical"
                 android:textColor="@color/grey"
