@@ -128,6 +128,8 @@ exports.find_club = (club_id, user_id, callback)->
                 user_object.is_friend = false
               user_objects.push user_object
 
+            club.active_friends_checkins = friends.length
+
             callback null, club, user_objects, friends.length
 
 
