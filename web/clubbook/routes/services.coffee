@@ -312,7 +312,7 @@ exports.friends_request = (req, res)->
       db_model.save_or_update_user user, ()->
         db_model.User.findById(req.params.friendId).select(db_model.USER_PUBLIC_INFO).exec (err, friend)->
           if friend.push
-            send_push 'user_' + req.params.friendId, 'sent you friend request', req.params.friendId, user.name, "chat", user.name + ' sent you friend request'
+            send_push 'user_' + req.params.friendId, 'sent you friend request', req.params.friendId, user.name, "friends", user.name + ' sent you friend request'
           
           res.json
             status: "ok"
@@ -337,7 +337,7 @@ exports.friends_confirm = (req, res)->
           console.log friend
           if friend.push
             #send push
-            send_push 'user_' + req.params.friendId, 'confirmed your friend request', req.params.friendId, user.name, "chat", user.name + ' confirmed your friend request'
+            send_push 'user_' + req.params.friendId, 'confirmed your friend request', req.params.friendId, user.name, "friends", user.name + ' confirmed your friend request'
 
           res.json
             status: "ok"
@@ -512,6 +512,7 @@ exports.list_club = (req, res)->
     #distance: req.query.distance
     lat: req.query.user_lat
     lon: req.query.user_lon
+    user_id: req.params.me._id.toString()
 
   manager.list_club params, (err, clubs)->
     if err

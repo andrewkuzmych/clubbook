@@ -83,15 +83,24 @@ exports.list_club = (params, callback)->
   console.log "METHOD - Manager list_club"
   query = { 'club_loc':{ '$near' : [ params.lat,params.lon] }}
   db_model.Venue.find(query).exec (err, clubs)->
-    callback err, clubs
-  
-  #if params.sort_by is 'dist'
-  #  db_model.Venue.find(query).exec (err, clubs)->
-  #    callback err, clubs
-  #else
-  #  db_model.Venue.find(query).sort("club_name").exec (err, clubs)->
-  #    callback err, clubs
+    db_model.User.findById(params.user_id).exec (err, user)->
+      match_pre =  {"_id": {'$in': user.friends}, 'bloked_users': {'$ne': user._id}, 'friends': user._id, 'checkin.active': true }
+      match_post =  {'checkin.active': true}
+      group = { _id: "$checkin.club", count: { $sum: 1 }}
 
+      query = [ { '$match': match_pre}, { '$unwind': "$checkin" }, { '$match': match_post }, {'$group': group} ]
+
+      console.log 'result1'
+      db_model.User.aggregate query, {}, (err, result)->
+        for c in result
+          res = __.find(clubs, (c_res)->
+                  c_res._id.toString() == c._id.toString()
+            )
+          if res
+            res.active_friends_checkins = c.count
+
+        callback err, clubs
+  
 exports.get_people_count_in_club = (club, callback)->
   console.log "METHOD - Manager get_people_count_in_club"
   db_model.User.count({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}}).exec callback
@@ -104,7 +113,7 @@ exports.find_club = (club_id, user_id, callback)->
     else
 
       db_model.User.findById(user_id).exec (err, user)->
-        db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}, 'bloked_users': {'$ne': user._id}, { checkin: 0 }).exec (err, users)->
+        db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}, 'bloked_users': {'$ne': user._id}}, { checkin: 0 }).exec (err, users)->
         #get friends count
           db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}, "_id": {'$in': user.friends}, 'friends': user._id}).exec (err, friends)->
             user_objects = []
@@ -434,19 +443,20 @@ exports.get_conversation = (params, callback)->
 
 exports.get_conversations = (params, callback)->
   console.log "METHOD - Manager get_conversations"
-  db_model.User.findById(params.user_id).exec (err, user)->     
-    db_model.Chat.find({'$or':[{'user1': mongoose.Types.ObjectId(params.user_id), 'user2.bloked_users': {'$ne': user._id}}, {'user2': mongoose.Types.ObjectId(params.user_id), 'user1.bloked_users': {'$ne': user._id}}]}, { 'conversation': { '$slice': -1 }}).populate("user1", db_model.USER_PUBLIC_INFO).populate("user2", db_model.USER_PUBLIC_INFO).exec (err, chats)->
-      if not chats
-        callback err, []
-      else
-        sorted_chats = __.sortBy(chats, (chat) ->
-          if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
-             return chat.unread.count
-          else
-            return 0
-        ).reverse()
+  db_model.User.findById(params.user_id).exec (err, user)->  
+    db_model.User.find({'bloked_users': user}).exec (err, bloked_users)->
+      db_model.Chat.find({'$or':[{'user1': mongoose.Types.ObjectId(params.user_id), 'user2': {'$nin': bloked_users}}, {'user2': mongoose.Types.ObjectId(params.user_id), 'user1': {'$nin': bloked_users}}]}, { 'conversation': { '$slice': -1 }}).populate("user1", db_model.USER_PUBLIC_INFO).populate("user2", db_model.USER_PUBLIC_INFO).exec (err, chats)->
+        if not chats
+          callback err, []
+        else
+          sorted_chats = __.sortBy(chats, (chat) ->
+            if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
+               return chat.unread.count
+            else
+              return 0
+          ).reverse()
 
-        callback err, sorted_chats
+          callback err, sorted_chats
 
 exports.readchat = (params, callback)->
   console.log "METHOD - Manager readchat"

@@ -72,7 +72,7 @@
     
     self.inputToolbar.contentView.leftBarButtonItem = smileButton;
     
-    self.inputToolbar.contentView.middleBarButtonItem = drinkButton;
+    //self.inputToolbar.contentView.middleBarButtonItem = drinkButton;
 }
 
 - (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message {
@@ -134,8 +134,11 @@
         for(Conversation * conf in chat.conversations)
         {
             
-            JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:conf.msg sender:conf.user_from date:conf.time type:conf.type];
+            JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:conf.msg sender:conf.user_from date:conf.time];
         
+            
+           // JSQMessage *jsqmessage1 = [[JSQMessage alloc] initWithText:@"Welcome to JSQMessages: A messaging UI framework for iOS." sender:self.sender date:[NSDate distantPast]];
+            
             [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
             [self.messages addObject:jsqmessage];
         }
@@ -274,15 +277,15 @@
 
 - (void)putMessage:(NSString *)message type:(NSString *)type sender:(NSString *) sender
 {
-    JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
+   /* JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
     if ([type isEqualToString:@"drink"]) {
         jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
     } else if ([type isEqualToString:@"smile"]) {
         jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
-    }
+    }*/
     
     [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
-    [self.messages addObject:jsqmessage];
+  //  [self.messages addObject:jsqmessage];
     [self setCanChat];
     [self finishReceivingMessage];
 }

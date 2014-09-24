@@ -42,14 +42,13 @@
 {
     [super viewDidLoad];
     
-    //self.title = NSLocalizedString(@"clubs", nil);
+    self.title = NSLocalizedString(@"clubs", nil);
     alert = [[OBAlert alloc] initInViewController:self];
     
     distanceKm = 5;
     
     self.distance.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14];
     [self.distance setText:[NSString stringWithFormat:@"%d%@", distanceKm, NSLocalizedString(@"kilometers", nil)]];
-    
     
     [LocationManagerSingleton sharedSingleton].delegate = self;
     [[LocationManagerSingleton sharedSingleton] startLocating];

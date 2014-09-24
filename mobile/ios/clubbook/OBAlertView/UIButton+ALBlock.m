@@ -12,7 +12,7 @@
 // See UIButton+Block.m
 
 #import <UIKit/UIKit.h>
-#import "/usr/include/objc/runtime.h"
+//#import "/usr/include/objc/runtime.h"
 
 #define kUIButtonBlockTouchUpInside @"TouchInside"
 
@@ -45,11 +45,11 @@ static char overviewKey;
 }
 
 - (void)setActions:(NSMutableDictionary*)actions {
-    objc_setAssociatedObject (self, &overviewKey,actions,OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    //objc_setAssociatedObject (self, &overviewKey,actions,OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (NSMutableDictionary*)actions {
-    return objc_getAssociatedObject(self, &overviewKey);
+    return nil;// objc_getAssociatedObject(self, &overviewKey);
 }
 
 - (void)doTouchUpInside:(id)sender {

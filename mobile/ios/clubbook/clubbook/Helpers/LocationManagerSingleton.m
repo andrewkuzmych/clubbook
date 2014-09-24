@@ -21,6 +21,9 @@
         [self.locationManager setDelegate:self];
         [self.locationManager setDistanceFilter:200];
         [self.locationManager setHeadingFilter:kCLHeadingFilterNone];
+        if ([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]){
+            [self.locationManager requestAlwaysAuthorization];
+        }
         //[self.locationManager startUpdatingLocation];
         //do any more customization to your location manager
     }
@@ -31,6 +34,7 @@
 -(void) startLocating;
 {
     if ([CLLocationManager locationServicesEnabled]) {
+        [self.locationManager stopUpdatingLocation];
         [self.locationManager startUpdatingLocation];
     } else {
         [self.delegate didFailUpdateLocation];
