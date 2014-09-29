@@ -118,10 +118,10 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.txtLike:
-                sendMessageTemp(ChatMessageDto.TYPE_SMILE, getString(R.string.likes_you));
+                sendMessageTemp(ChatMessageDto.TYPE_SMILE, getString(R.string.likes_the_profile));
                 break;
             case R.id.imgSendDrink:
-                sendMessageTemp(ChatMessageDto.TYPE_DRINK, getString(R.string.invites_you_for_a_drink));
+                sendMessageTemp(ChatMessageDto.TYPE_DRINK, getString(R.string.invites_for_a_drink));
                 break;
             case R.id.txtSend:
                 sendMessage();

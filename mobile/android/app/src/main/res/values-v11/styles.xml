@@ -13,6 +13,14 @@
         <item name="android:background">@color/main_background_color</item>
     </style>
 
+    <style name="AppBlackTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/AppBlackActionBar</item>
+    </style>
+
+    <style name="AppBlackActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@android:color/black</item>
+    </style>
+
     <style name="SeekBarAppTheme" parent="android:Widget.Holo.Light.SeekBar">
         <item name="android:progressDrawable">@drawable/apptheme_scrubber_progress_horizontal_holo_light</item>
         <item name="android:indeterminateDrawable">@drawable/apptheme_scrubber_progress_horizontal_holo_light</item>

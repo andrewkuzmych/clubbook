@@ -94,8 +94,8 @@
     <string name="follow_our_tweets">Follow Our Tweets</string>
     <string name="like">Like</string>
     <string name="send">Send</string>
-    <string name="invites_you_for_a_drink">invites you for a Drink</string>
-    <string name="likes_you">likes your Profile</string>
+    <string name="invites_for_a_drink">invites for a Drink</string>
+    <string name="likes_the_profile">likes the Profile</string>
     <string name="checking_in">Checking-in&#8230;</string>
     <string name="checking_out">Checking-out&#8230;</string>
     <string name="yesterday">Yesterday</string>

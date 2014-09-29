@@ -1,18 +1,22 @@
 package com.nl.clubbook.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.adapter.PhotoPagerAdapter;
+import com.nl.clubbook.activity.ImageViewActivity;
+import com.nl.clubbook.adapter.ClubPhotoPagerAdapter;
 import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.ClubWorkingHoursDto;
 import com.nl.clubbook.datasource.JSONConverter;
@@ -21,10 +25,6 @@ import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.ui.view.ViewPagerBulletIndicatorView;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.UIUtils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,10 +37,6 @@ import java.util.List;
 public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
 
     private static final String ARG_JSON_CLUB = "ARG_JSON_CLUB";
-
-    private ImageLoader mImageLoader;
-    private DisplayImageOptions mOptions;
-    private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
 
     private ViewPagerBulletIndicatorView mBulletIndicator;
 
@@ -65,7 +61,6 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
 
         sendScreenStatistic(R.string.club_screen_android);
 
-        initLoader();
         initView();
     }
 
@@ -102,16 +97,6 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
         }
 
         fillView(view, club);
-    }
-
-    private void initLoader() {
-        mImageLoader = ImageLoader.getInstance();
-        mOptions = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.ic_club_avatar_default)
-                .showImageOnFail(R.drawable.ic_club_avatar_default)
-                .cacheInMemory()
-                .cacheOnDisc()
-                .build();
     }
 
     private void fillView(@NotNull View view, @NotNull ClubDto club) {
@@ -260,7 +245,7 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
 
                 String dayName = getDayNameByDayNumber(clubWorkHours.getDay());
                 TextView txtDayName = (TextView) row.findViewById(R.id.txtDayName);
-                txtDayName.setText(dayName != null ? dayName : dayName);
+                txtDayName.setText(dayName != null ? dayName : "");
 
                 TextView txtWorkHours = (TextView) row.findViewById(R.id.txtWorkHours);
                 if(ClubWorkingHoursDto.STATUS_OPENED.equals(clubWorkHours.getStatus())) {
@@ -315,11 +300,32 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
             mBulletIndicator.setVisibility(View.GONE);
         }
 
-        ViewPager pagerImage = (ViewPager) view.findViewById(R.id.pagerPhoto);
-        PhotoPagerAdapter adapter = new PhotoPagerAdapter(getChildFragmentManager(), photos, mImageLoader, mOptions, animateFirstListener);
-        pagerImage.setAdapter(adapter);
+        final String[] photosUrls = new String[photos.size()];
+        photos.toArray(photosUrls);
 
+        final ViewPager pagerImage = (ViewPager) view.findViewById(R.id.pagerPhoto);
+        ClubPhotoPagerAdapter adapter = new ClubPhotoPagerAdapter(getChildFragmentManager(), photosUrls);
+        pagerImage.setAdapter(adapter);
         pagerImage.setOnPageChangeListener(this);
+
+        final GestureDetector tapGestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                Intent intent = new Intent(getActivity(), ImageViewActivity.class);
+                intent.putExtra(ImageViewActivity.EXTRA_PHOTOS_URLS, photosUrls);
+                intent.putExtra(ImageViewActivity.EXTRA_SELECTED_PHOTO, pagerImage.getCurrentItem());
+                startActivity(intent);
+
+                return false;
+            }
+        });
+
+        pagerImage.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                tapGestureDetector.onTouchEvent(event);
+                return false;
+            }
+        });
     }
 
     private String getDayNameByDayNumber(int day) {

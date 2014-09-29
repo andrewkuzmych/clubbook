@@ -73,6 +73,10 @@
         <activity
             android:name=".activity.ResetPasswordActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ImageViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBlackTheme"/>
 
         <meta-data
             android:name="CLOUDINARY_URL"

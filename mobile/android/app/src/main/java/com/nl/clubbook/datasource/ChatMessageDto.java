@@ -28,10 +28,10 @@ public class ChatMessageDto extends BaseChatMessage {
             result = msg;
 
         } else if(TYPE_SMILE.equalsIgnoreCase(type)) {
-            result = userFromName + " " + context.getString(R.string.likes_you);
+            result = userFromName + " " + context.getString(R.string.likes_the_profile);
 
         } else if(TYPE_DRINK.equalsIgnoreCase(type)) {
-            result = userFromName + " " + context.getString(R.string.invites_you_for_a_drink);
+            result = userFromName + " " + context.getString(R.string.invites_for_a_drink);
 
         } else {
             result = "";
