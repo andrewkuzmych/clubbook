@@ -479,8 +479,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             txtClubName.setVisibility(View.VISIBLE);
 
             mNavDrawerHeaderView.findViewById(R.id.holderCheckOut).setVisibility(View.VISIBLE);
-
-            LocationCheckinHelper.getInstance().startLocationUpdate(MainActivity.this);
         } else {
             txtClubName.setText("");
             imgCheckOut.setTag(null);

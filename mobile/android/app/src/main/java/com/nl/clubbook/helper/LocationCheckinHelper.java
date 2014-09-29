@@ -18,17 +18,14 @@ import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.utils.L;
 
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Andrew on 5/27/2014.
  */
 public class LocationCheckinHelper {
 
-    private ScheduledExecutorService scheduleTaskExecutor;
-    private int failedCheckInCount = 0;
+//    private ScheduledExecutorService scheduleTaskExecutor;
+//    private int failedCheckInCount = 0;
 
     // current user location, updated every 10sec
     private Location currentLocation;
@@ -98,7 +95,7 @@ public class LocationCheckinHelper {
     }
 
     public boolean isCheckIn() {
-        return (mCurrentClub != null && mCurrentClub.getId() != null);
+        return (mCurrentClub != null && mCurrentClub.getId() != null && mCurrentClub.getId().length() != 0);
     }
 
     /**
@@ -139,7 +136,7 @@ public class LocationCheckinHelper {
                 } else {
                     setCurrentClub(club);
                     callback.onCheckInOutFinished(true);
-                    startLocationUpdate(context);
+//                    startLocationUpdate(context);
 
                     //sent broadcast
                     Intent intent = new Intent();
@@ -180,7 +177,7 @@ public class LocationCheckinHelper {
         });
 
         // stop check in task
-        scheduleTaskExecutor.shutdown();
+//        scheduleTaskExecutor.shutdown();
     }
 
     /**
@@ -201,57 +198,57 @@ public class LocationCheckinHelper {
     /**
      * Every 10min check if user is near the club. If he is more 200m from the club execute checkout.
      */
-    public void startLocationUpdate(final Context context) {
-        final SessionManager sessionManager = SessionManager.getInstance();
-        int updateCheckInStatusInterval = sessionManager.getUpdateCheckInStatusInterval();
-
-        scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
-        scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-                final Location current_location = getCurrentLocation();
-                final double distance = distanceBwPoints(current_location.getLatitude(), current_location.getLongitude(),
-                        getCurrentClub().getLat(), getCurrentClub().getLon());
-
-                final int maxCheckInDistance = sessionManager.getCheckInMaxDistance();
-                final int maxFailedCheckInCount = sessionManager.getMaxFailedCheckInCount();
-
-                ((BaseActivity) context).runOnUiThread(new Runnable() {
-                    public void run() {
-                        if (distance > maxCheckInDistance) {
-                            // checkout user
-                            checkOut(context, new CheckInOutCallbackInterface() {
-                                @Override
-                                public void onCheckInOutFinished(boolean result) {
-                                    // user was checked out
-                                }
-                            });
-                        } else {
-                            // update time of last presence of user near a club at sever side
-                            DataStore.updateCheckin(mCurrentClub.getId(), sessionManager.getAccessToken(), new DataStore.OnResultReady() {
-                                @Override
-                                public void onReady(Object result, boolean failed) {
-                                    if (failed) {
-                                        failedCheckInCount += 1;
-                                        if (failedCheckInCount >= maxFailedCheckInCount) {
-                                            // checkout user
-                                            checkOut(context, new CheckInOutCallbackInterface() {
-                                                @Override
-                                                public void onCheckInOutFinished(boolean result) {
-                                                    // user was checked out
-                                                }
-                                            });
-                                        }
-                                    } else {
-                                        failedCheckInCount = 0;
-                                    }
-                                }
-                            });
-                        }
-                    }
-                });
-            }
-        }, 0, updateCheckInStatusInterval, TimeUnit.SECONDS);
-    }
+//    public void startLocationUpdate(final Context context) {
+//        final SessionManager sessionManager = SessionManager.getInstance();
+//        int updateCheckInStatusInterval = sessionManager.getUpdateCheckInStatusInterval();
+//
+//        scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
+//        scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
+//            public void run() {
+//                final Location current_location = getCurrentLocation();
+//                final double distance = distanceBwPoints(current_location.getLatitude(), current_location.getLongitude(),
+//                        getCurrentClub().getLat(), getCurrentClub().getLon());
+//
+//                final int maxCheckInDistance = sessionManager.getCheckInMaxDistance();
+//                final int maxFailedCheckInCount = sessionManager.getMaxFailedCheckInCount();
+//
+//                ((BaseActivity) context).runOnUiThread(new Runnable() {
+//                    public void run() {
+//                        if (distance > maxCheckInDistance) {
+//                            // checkout user
+//                            checkOut(context, new CheckInOutCallbackInterface() {
+//                                @Override
+//                                public void onCheckInOutFinished(boolean result) {
+//                                    // user was checked out
+//                                }
+//                            });
+//                        } else {
+//                            // update time of last presence of user near a club at sever side
+//                            DataStore.updateCheckin(mCurrentClub.getId(), sessionManager.getAccessToken(), new DataStore.OnResultReady() {
+//                                @Override
+//                                public void onReady(Object result, boolean failed) {
+//                                    if (failed) {
+//                                        failedCheckInCount += 1;
+//                                        if (failedCheckInCount >= maxFailedCheckInCount) {
+//                                            // checkout user
+//                                            checkOut(context, new CheckInOutCallbackInterface() {
+//                                                @Override
+//                                                public void onCheckInOutFinished(boolean result) {
+//                                                    // user was checked out
+//                                                }
+//                                            });
+//                                        }
+//                                    } else {
+//                                        failedCheckInCount = 0;
+//                                    }
+//                                }
+//                            });
+//                        }
+//                    }
+//                });
+//            }
+//        }, 0, updateCheckInStatusInterval, TimeUnit.SECONDS);
+//    }
 
     /**
      * Format distance

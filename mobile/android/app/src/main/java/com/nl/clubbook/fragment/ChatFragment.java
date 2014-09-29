@@ -206,15 +206,8 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
         HashMap<String, String> userDetails = getSession().getUserDetails();
         String accessToken = userDetails.get(SessionManager.KEY_ACCESS_TOCKEN);
-//        String userName = userDetails.get(SessionManager.KEY_NAME); //TODO temporary fix for iOS version
-
-        String userName = type.equalsIgnoreCase(ChatMessageDto.TYPE_DRINK) ? "  " : "";
-        userName += userDetails.get(SessionManager.KEY_NAME);
-
-//        String formatMessage = (userName != null ? userName : "") + " " + messages;
-
-        String formatMessage = userName + " " + messages;
-
+        String userName = userDetails.get(SessionManager.KEY_NAME);
+        String formatMessage = (userName != null ? userName : "") + " " + messages;
 
         DataStore.chat(mUserFromId, mUserToId, formatMessage, type, accessToken, new DataStore.OnResultReady() {
             @Override

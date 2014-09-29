@@ -19,6 +19,8 @@ public class ResetPasswordActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_reset_password);
 
+        sendScreenStatistic(R.string.reset_password_screen_android);
+
         initActionBar(R.string.reset_password);
         initView();
     }

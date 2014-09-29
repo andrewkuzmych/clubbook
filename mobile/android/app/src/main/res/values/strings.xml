@@ -141,7 +141,6 @@
     <string name="in_order_for_you_to_see_clubs_and_profile">In order for you to see Clubs and Profiles nearby, we need to know your current location</string>
     <string name="need_to_check_in_first">To interact with this user, you need to Check-in to this Club first</string>
 
-    <!--<New-->
     <string name="enable_notification_vibration">Enable Notification Vibration</string>
     <string name="user_information_saved">User information saved</string>
     <string name="no_messages">No messages</string>
@@ -173,7 +172,11 @@
     <string name="block_user_process">Block user&#8230;</string>
     <string name="unblock_user_process">Unblock user&#8230;</string>
     <string name="you_cannot_add_remove_friend_when_user_is_blocked">You can\'t add, remove friend when user is blocked</string>
-    <!--/>-->
+
+    <!--New-->
+    <string name="you_will_be_automatically_checked_in_to_this_club">You will be automatically Checked-in to this Club for 6 hours, or until you manually Check-out or Check-in to another Club</string>
+    <string name="ok_got_it">Ok, got it</string>
+    <!---->
 
     <!--For Google Analytics-->
     <string name="sidebar_screen_android">Sidebar Screen Android</string>
@@ -189,5 +192,6 @@
     <string name="club_screen_android">Club Screen Android</string>
     <string name="registration_screen_android">Registration Screen Android </string>
     <string name="login_screen_android">Login Screen Android</string>
+    <string name="reset_password_screen_android">Reset Password Screen Android</string>
 
 </resources>

@@ -9,6 +9,7 @@ import com.nl.clubbook.datasource.UserDto;
 import com.parse.PushService;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -175,7 +176,11 @@ public class SessionManager {
         return user;
     }
 
-    public void putCheckedInClubInfo(@NotNull ClubDto clubDto) {
+    public void putCheckedInClubInfo(@Nullable ClubDto clubDto) {
+        if(clubDto == null) {
+            return;
+        }
+
         Editor editor = mPreferences.edit();
 
         editor.putString(KEY_CHECKIN_CLUB_ID, clubDto.getId());
@@ -187,9 +192,14 @@ public class SessionManager {
     }
 
     public ClubDto getCheckedInClubInfo() {
+        String clubId = mPreferences.getString(KEY_CHECKIN_CLUB_ID, null);
+        if(clubId == null) {
+            return null;
+        }
+
         ClubDto checkedInClub = new ClubDto();
 
-        checkedInClub.setId(mPreferences.getString(KEY_CHECKIN_CLUB_ID, ""));
+        checkedInClub.setId(clubId);
         checkedInClub.setLat(mPreferences.getFloat(KEY_CHECKIN_CLUB_LAT, 0f));
         checkedInClub.setLon(mPreferences.getFloat(KEY_CHECKIN_CLUB_LON, 0f));
         checkedInClub.setTitle(mPreferences.getString(KEY_CHECKIN_CLUB_NAME, ""));
@@ -285,6 +295,16 @@ public class SessionManager {
         return mPreferences.getBoolean(KEY_IS_LOGGED_IN_BY_FACEBOOK, false);
     }
 
+    public void setCheckInDialogShown(boolean isCheckInDialogShown) {
+        Editor editor = mPreferences.edit();
+        editor.putBoolean(KEY_IS_CHECK_IN_DIALOG_SHOWN, isCheckInDialogShown);
+        editor.commit();
+    }
+
+    public boolean isCheckInDialogShown() {
+        return mPreferences.getBoolean(KEY_IS_CHECK_IN_DIALOG_SHOWN, false);
+    }
+
     /*
      * Constants
      */
@@ -315,6 +335,7 @@ public class SessionManager {
     private static final String KEY_MAX_FAILED_CHECK_IN_COUNT = "KEY_MAX_FAILED_CHECK_IN_COUNT";
     private static final String KEY_CHECK_IN_MAX_DISTANCE = "KEY_CHECK_IN_MAX_DISTANCE";
     private static final String KEY_IS_LOGGED_IN_BY_FACEBOOK = "KEY_IS_LOGED_IN_BY_FACEBOOK";
+    private static final String KEY_IS_CHECK_IN_DIALOG_SHOWN = "KEY_IS_CHECK_IN_DIALOG_SHOWN";
 
 }
 

@@ -52,6 +52,9 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
     private static final String ARG_CLUB_ID = "ARG_CLUB_ID";
 
+    private final int ACTION_ID_CAN_NOT_CHECK_IN = 357;
+    private final int ACTION_ID_CHECK_IN_EXPLANATION = 753;
+
     public static final int LOAD_MODE_INIT = 1111;
     public static final int LOAD_MODE_CHECK_IN = 9999;
 
@@ -149,7 +152,14 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
     @Override
     public void onPositiveButtonClick(MessageDialog dialogFragment) {
-        dialogFragment.dismissAllowingStateLoss();
+        switch(dialogFragment.getActionId()) {
+            case ACTION_ID_CAN_NOT_CHECK_IN:
+                dialogFragment.dismissAllowingStateLoss();
+                break;
+            case ACTION_ID_CHECK_IN_EXPLANATION:
+                checkIn();
+                break;
+        }
     }
 
     @Override
@@ -366,15 +376,13 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
             String messageTemplate = getString(R.string.you_need_to_be_within_m_in_order_to_check_in);
             String dialogMessage = String.format(messageTemplate, SessionManager.getInstance().getCheckInMaxDistance());
 
-            DialogFragment messageDialog = MessageDialog.newInstance(
-                    ClubFragment.this,
+            showMessageDialog(ClubFragment.this,
+                    ACTION_ID_CAN_NOT_CHECK_IN,
                     getString(R.string.app_name),
                     dialogMessage,
                     getString(R.string.ok),
                     null
             );
-
-            getFragmentManager().beginTransaction().add(messageDialog, MessageDialog.TAG).commitAllowingStateLoss();
             return;
         }
 
@@ -395,13 +403,39 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         } else {
             showProgressDialog(getString(R.string.checking_in));
 
-            LocationCheckinHelper.getInstance().checkIn(getActivity(), mClub, new CheckInOutCallbackInterface() {
-                @Override
-                public void onCheckInOutFinished(boolean isUserCheckIn) {
-                    handleCheckInCheckOutResults(view, isUserCheckIn);
-                }
-            });
+            if(!getSession().isCheckInDialogShown()) {
+                showMessageDialog(ClubFragment.this,
+                        ACTION_ID_CHECK_IN_EXPLANATION,
+                        getString(R.string.app_name),
+                        getString(R.string.you_will_be_automatically_checked_in_to_this_club),
+                        getString(R.string.ok_got_it),
+                        null
+                );
+
+                getSession().setCheckInDialogShown(true);
+            } else {
+                checkIn(view);
+            }
         }
+    }
+
+    private void checkIn() {
+        View view = getView();
+        if(view == null) {
+            return;
+        }
+
+        View txtCheckIn = view.findViewById(R.id.txtCheckIn);
+        checkIn(txtCheckIn);
+    }
+
+    private void checkIn(final View view) {
+        LocationCheckinHelper.getInstance().checkIn(getActivity(), mClub, new CheckInOutCallbackInterface() {
+            @Override
+            public void onCheckInOutFinished(boolean isUserCheckIn) {
+                handleCheckInCheckOutResults(view, isUserCheckIn);
+            }
+        });
     }
 
     private void handleCheckInCheckOutResults(View view, boolean result) {
@@ -460,6 +494,11 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
                     Intent intent = new Intent();
                     intent.setAction(MainActivity.ACTION_CHECK_IN_CHECK_OUT);
                     getActivity().sendBroadcast(intent);
+
+                    View txtCheckIn = view.findViewById(R.id.txtCheckIn);
+                    UiHelper.changeCheckInState(getActivity(), txtCheckIn, true);
+
+                    break;
                 }
             }
         }
