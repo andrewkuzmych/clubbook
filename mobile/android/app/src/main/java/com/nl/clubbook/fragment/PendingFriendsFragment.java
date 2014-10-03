@@ -9,12 +9,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.adapter.PendingFriendsAdapter;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.SessionManager;
-import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
 
 import java.util.ArrayList;

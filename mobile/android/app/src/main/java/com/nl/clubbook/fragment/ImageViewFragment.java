@@ -8,9 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.nl.clubbook.R;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by Volodymyr on 13.08.2014.
@@ -18,22 +16,15 @@ import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 public class ImageViewFragment extends Fragment {
 
     public static final String ARG_IMAGE_URL = "ARG_IMAGE_URL";
+    public static final String ARG_DEFAULT_IMAGE_RES = "ARG_DEFAULT_IMAGE_RES";
 
-    private ImageLoader mImageLoader;
-    private DisplayImageOptions mOptions;
-    private ImageLoadingListener animateFirstListener;
-
-    public static Fragment newInstance(ImageLoader imageLoader, DisplayImageOptions displayOptions,
-                                       ImageLoadingListener animateFirstListener, String url) {
+    public static Fragment newInstance(String url, int defaultPhotoRes) {
         ImageViewFragment fragment = new ImageViewFragment();
 
         Bundle args = new Bundle();
         args.putString(ARG_IMAGE_URL, url);
+        args.putInt(ARG_DEFAULT_IMAGE_RES, defaultPhotoRes);
         fragment.setArguments(args);
-
-        fragment.setImageLoader(imageLoader);
-        fragment.setDisplayOptions(displayOptions);
-        fragment.setAnimateFirstListener(animateFirstListener);
 
         return fragment;
     }
@@ -54,21 +45,11 @@ public class ImageViewFragment extends Fragment {
 
         ImageView imgAvatar = (ImageView) view.findViewById(R.id.imgView);
 
-        String url = getArguments().getString(ARG_IMAGE_URL);
-        if(url != null && mImageLoader != null) {
-            mImageLoader.displayImage(url, imgAvatar, mOptions, animateFirstListener);
+        Bundle args = getArguments();
+        String url = args.getString(ARG_IMAGE_URL);
+        int defaultPhotoRes = args.getInt(ARG_DEFAULT_IMAGE_RES);
+        if(url != null) {
+            Picasso.with(getActivity()).load(url).error(defaultPhotoRes).into(imgAvatar);
         }
-    }
-
-    public void setImageLoader(ImageLoader mImageLoader) {
-        this.mImageLoader = mImageLoader;
-    }
-
-    public void setDisplayOptions(DisplayImageOptions mOptions) {
-        this.mOptions = mOptions;
-    }
-
-    public void setAnimateFirstListener(ImageLoadingListener animateFirstListener) {
-        this.animateFirstListener = animateFirstListener;
     }
 }

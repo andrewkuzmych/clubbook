@@ -31,10 +31,7 @@ import com.nl.clubbook.helper.*;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.nl.clubbook.utils.UIUtils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -59,10 +56,6 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     public static final int LOAD_MODE_CHECK_IN = 9999;
 
     private ClubDto mClub;
-
-    private ImageLoader mImageLoader;
-    private DisplayImageOptions mOptions;
-    private ImageLoadingListener mAnimateFirstListener = new SimpleImageLoadingListener();
     private String mClubId;
 
     private boolean mIsLoading = false;
@@ -90,10 +83,11 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
         sendScreenStatistic(R.string.club_users_screen_android);
 
+        initTarget();
+
         UIUtils.displayEmptyIconInActionBar((ActionBarActivity)getActivity());
         initActionBarTitle(getString(R.string.checked_in));
         handleArgs();
-        initImageLoader();
         initView();
         loadData(LOAD_MODE_INIT);
     }
@@ -104,7 +98,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
         if(!hidden) {
             initActionBarTitle(getString(R.string.club_page));
-            UIUtils.loadPhotoToActionBar((ActionBarActivity)getActivity(), ImageHelper.getUserListAvatar(mClub.getAvatar()));
+            UIUtils.loadPhotoToActionBar((ActionBarActivity)getActivity(), ImageHelper.getUserListAvatar(mClub.getAvatar()), mTarget);
         }
     }
 
@@ -174,17 +168,6 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         }
 
         mClubId = args.getString(ARG_CLUB_ID);
-    }
-
-    private void initImageLoader() {
-        mImageLoader = ImageLoader.getInstance();
-        mOptions = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.ic_club_avatar_default)
-                .showImageForEmptyUri(R.drawable.ic_club_avatar_default)
-                .showImageOnFail(R.drawable.ic_club_avatar_default)
-                .cacheInMemory()
-                .cacheOnDisc()
-                .build();
     }
 
     private void initView() {
@@ -303,9 +286,9 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
         String avatarUrl = mClub.getAvatar();
         if (avatarUrl != null && avatarUrl.length() > 0) {
-            mImageLoader.displayImage(avatarUrl, imgAvatar, mOptions, mAnimateFirstListener);
+            Picasso.with(getActivity()).load(avatarUrl).error(R.drawable.ic_club_avatar_default).into(imgAvatar);
 
-            UIUtils.loadPhotoToActionBar((ActionBarActivity) getActivity(), ImageHelper.getUserListAvatar(avatarUrl));
+            UIUtils.loadPhotoToActionBar((ActionBarActivity) getActivity(), ImageHelper.getUserListAvatar(avatarUrl), mTarget);
         }
 
         TextView txtStatus = (TextView) view.findViewById(R.id.txtStatus);

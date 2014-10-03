@@ -12,10 +12,7 @@ import com.nl.clubbook.datasource.ClubDto;
 import com.nl.clubbook.datasource.ClubWorkingHoursDto;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.LocationCheckinHelper;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -23,10 +20,6 @@ import java.util.List;
  * Created by Andrew on 5/27/2014.
  */
 public class ClubsAdapter extends BaseAdapter {
-
-    private ImageLoader imageLoader;
-    private DisplayImageOptions options;
-    private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
 
     private LayoutInflater mInflater;
     private Context mContext;
@@ -36,17 +29,8 @@ public class ClubsAdapter extends BaseAdapter {
 
     public ClubsAdapter(Context context, List<ClubDto> data) {
         mInflater = LayoutInflater.from(context);
-        this.mContext = context;
-        this.mClubs = data;
-
-        imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.ic_club_avatar_default)
-                .showImageForEmptyUri(R.drawable.ic_club_avatar_default)
-                .showImageOnFail(R.drawable.ic_club_avatar_default)
-                .cacheInMemory()
-                .cacheOnDisc()
-                .build();
+        mContext = context;
+        mClubs = data;
 
         mCheckedIn = context.getString(R.string.checked_in);
         mFriends = context.getString(R.string.friends);
@@ -125,7 +109,7 @@ public class ClubsAdapter extends BaseAdapter {
         //load image
         String imageUrl = ImageHelper.getClubListAvatar(club.getAvatar());
         holder.imgAvatar.setTag(imageUrl);
-        imageLoader.displayImage(imageUrl, holder.imgAvatar, options, animateFirstListener);
+        Picasso.with(mContext).load(imageUrl).error(R.drawable.ic_club_avatar_default).into(holder.imgAvatar);
     }
 
     static class ClubItemHolder {

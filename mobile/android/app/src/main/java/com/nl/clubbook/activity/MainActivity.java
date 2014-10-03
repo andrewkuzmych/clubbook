@@ -50,11 +50,10 @@ import com.nl.clubbook.ui.drawer.NavDrawerData;
 import com.nl.clubbook.ui.drawer.NavDrawerListAdapter;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.pubnub.api.Callback;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -86,9 +85,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private List<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter mAdapter;
 
-    private ImageLoader mImageLoader;
-    private DisplayImageOptions mOptions;
-
     private Fragment mCurrentFragment;
 
     @Override
@@ -110,7 +106,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         fragmentMap.put(NavDrawerData.MESSAGES_POSITION, new MessagesFragment());
         fragmentMap.put(NavDrawerData.FRIENDS_POSITION, new FriendsFragment());
 
-        initImageLoader();
         initActionBar();
         initNavDrawer();
 
@@ -294,17 +289,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         finish();
     }
 
-    private void initImageLoader() {
-        mImageLoader = ImageLoader.getInstance();
-        mOptions = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.ic_avatar_missing)
-                .showImageForEmptyUri(R.drawable.ic_avatar_missing)
-                .showImageOnFail(R.drawable.ic_avatar_unknown)
-                .cacheInMemory()
-                .cacheOnDisc()
-                .build();
-    }
-
     private void initNavDrawer() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.listDrawer);
@@ -352,7 +336,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         String userAvatarUrl = user.get(SessionManager.KEY_AVATAR);
         if (userAvatarUrl != null) {
             userAvatarUrl = ImageHelper.getUserAvatar(userAvatarUrl);
-            mImageLoader.displayImage(userAvatarUrl, imgAvatar, mOptions);
+            Picasso.with(getBaseContext()).load(userAvatarUrl).error(R.drawable.ic_avatar_unknown).into(imgAvatar);
         }
 
         String profileName = user.get(SessionManager.KEY_NAME);

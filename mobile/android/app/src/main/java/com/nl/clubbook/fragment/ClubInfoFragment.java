@@ -61,6 +61,7 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
 
         sendScreenStatistic(R.string.club_screen_android);
 
+        initTarget();
         initView();
     }
 
@@ -115,7 +116,7 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
 
         String avatarUrl = club.getAvatar();
         if(avatarUrl != null && !avatarUrl.isEmpty()) {
-            UIUtils.loadPhotoToActionBar((ActionBarActivity)getActivity(), ImageHelper.getUserListAvatar(avatarUrl));
+            UIUtils.loadPhotoToActionBar((ActionBarActivity)getActivity(), ImageHelper.getUserListAvatar(avatarUrl), mTarget);
         }
     }
 

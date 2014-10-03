@@ -13,8 +13,7 @@ import com.nl.clubbook.datasource.BaseChatMessage;
 import com.nl.clubbook.datasource.ChatMessageDto;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.utils.CalendarUtils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -37,9 +36,7 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
     private LayoutInflater mInflater;
     private List<BaseChatMessage> mMessages;
 
-    private ImageLoader mImageLoader;
-    private DisplayImageOptions mOptions;
-
+    private Context mContext;
     private View.OnClickListener mUserProfileClickListener;
     private long mCurrentTimeWithoutHours;
     private long mDayTimeInMilliseconds;
@@ -49,17 +46,9 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
     public ChatAdapter(Context context, int textViewResourceId, List<BaseChatMessage> messages, View.OnClickListener userProfileClickListener) {
         super(context, textViewResourceId);
 
+        mContext = context;
         mMessages = messages;
         mInflater = LayoutInflater.from(context);
-
-        mImageLoader = ImageLoader.getInstance();
-        mOptions = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.ic_avatar_missing)
-                .showImageForEmptyUri(R.drawable.ic_avatar_missing)
-                .showImageOnFail(R.drawable.ic_avatar_unknown)
-                .cacheInMemory()
-                .cacheOnDisc()
-                .build();
 
         mUserProfileClickListener = userProfileClickListener;
 
@@ -184,7 +173,7 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         String avatarString = message.getUserFromAvatar();
         String avatarUrl = ImageHelper.getUserListAvatar(avatarString);
         if(avatarUrl != null && avatarUrl.length() > 0) {
-            mImageLoader.displayImage(message.getUserFromAvatar(), imgAvatar, mOptions);
+            Picasso.with(mContext).load(avatarUrl).error(R.drawable.ic_avatar_unknown).into(imgAvatar);
         }
 
         String msg = message.getMsg();

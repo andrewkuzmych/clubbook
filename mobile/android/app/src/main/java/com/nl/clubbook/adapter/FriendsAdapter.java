@@ -11,10 +11,7 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.CheckInDto;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.ImageHelper;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -23,9 +20,7 @@ import java.util.List;
  */
 public class FriendsAdapter extends BaseAdapter {
 
-    private ImageLoader mImageLoader;
-    private DisplayImageOptions mOptions;
-    private ImageLoadingListener mAnimateFirstListener = new SimpleImageLoadingListener();
+    private Context mContext;
     private LayoutInflater mInflater;
     private List<UserDto> mFriends;
 
@@ -33,17 +28,9 @@ public class FriendsAdapter extends BaseAdapter {
     private String mNotCheckIn;
 
     public FriendsAdapter(Context context, List<UserDto> friends) {
+        mContext = context;
         mInflater = LayoutInflater.from(context);
         mFriends = friends;
-
-        mImageLoader = ImageLoader.getInstance();
-        mOptions = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.ic_avatar_missing)
-                .showImageForEmptyUri(R.drawable.ic_avatar_missing)
-                .showImageOnFail(R.drawable.ic_avatar_unknown)
-                .cacheInMemory()
-                .cacheOnDisc()
-                .build();
 
         mCheckIn = context.getString(R.string.checked_in_double_dots);
         mNotCheckIn = context.getString(R.string.not_checked_in);
@@ -105,7 +92,7 @@ public class FriendsAdapter extends BaseAdapter {
             String imageUrl = ImageHelper.getUserListAvatar(userDto.getAvatar());
 
             holder.imgUserAvatar.setTag(imageUrl);
-            mImageLoader.displayImage(imageUrl, holder.imgUserAvatar, mOptions, mAnimateFirstListener);
+            Picasso.with(mContext).load(imageUrl).error(R.drawable.ic_avatar_unknown).into(holder.imgUserAvatar);
         }
 
         CheckInDto checkIn = userDto.getLastCheckIn();

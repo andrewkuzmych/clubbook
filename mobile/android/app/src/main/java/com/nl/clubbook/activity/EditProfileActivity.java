@@ -3,7 +3,10 @@ package com.nl.clubbook.activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,10 +28,8 @@ import com.nl.clubbook.ui.view.HorizontalListView;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.nl.clubbook.utils.ParseUtils;
 import com.nl.clubbook.utils.UIUtils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
@@ -44,10 +45,6 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
     private UserPhotoDto selectedImageDto;
     private ImageUploader imageUploader;
     private UserDto profile;
-
-    private ImageLoader mImageLoader;
-    private DisplayImageOptions mOptions;
-    private ImageLoadingListener mAnimateFirstListener = new SimpleImageLoadingListener();
     private UserPhotosAdapter mAdapter;
 
     @Override
@@ -67,6 +64,13 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         imageUploader.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Picasso.with(this).cancelRequest(mTarget);
+
+        super.onDestroy();
     }
 
     @Override
@@ -201,16 +205,6 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
     }
 
     private void initImageHelpers() {
-        mImageLoader = ImageLoader.getInstance();
-
-        mOptions = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.ic_avatar_missing)
-                .showImageForEmptyUri(R.drawable.ic_avatar_missing)
-                .showImageOnFail(R.drawable.ic_avatar_unknown)
-                .cacheInMemory()
-                .cacheOnDisc()
-                .build();
-
         imageUploader = new ImageUploader(this) {
             @Override
             public void startActivityForResultHolder(Intent intent, int requestCode) {
@@ -282,13 +276,13 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         }
 
         HorizontalListView listUserPhotos = (HorizontalListView)findViewById(R.id.listUserPhotos);
-        mAdapter = new UserPhotosAdapter(EditProfileActivity.this, userPhotoDtoList, mImageLoader, mOptions);
+        mAdapter = new UserPhotosAdapter(EditProfileActivity.this, userPhotoDtoList);
         listUserPhotos.setAdapter(mAdapter);
 
         for (UserPhotoDto userPhotoDto : userPhotoDtoList) {
             if(userPhotoDto.getIsAvatar()) {
                 displayImageBigPreview(userPhotoDto);
-                UIUtils.loadPhotoToActionBar(EditProfileActivity.this, ImageHelper.getUserListAvatar(userPhotoDto.getUrl()));
+                UIUtils.loadPhotoToActionBar(EditProfileActivity.this, ImageHelper.getUserListAvatar(userPhotoDto.getUrl()), mTarget);
                 break;
             }
         }
@@ -298,7 +292,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         selectedImageDto = imageDto;
 
         ImageView imgAvatar = (ImageView) findViewById(R.id.imgAvatar);
-        mImageLoader.displayImage(ImageHelper.getUserPhotoBigPreview(imageDto.getUrl()), imgAvatar, mOptions, mAnimateFirstListener);
+        Picasso.with(getBaseContext()).load(imageDto.getUrl()).error(R.drawable.ic_avatar_unknown).into(imgAvatar);
 
         if (selectedImageDto.getIsAvatar()) {
             findViewById(R.id.txtSetAsDefault).setVisibility(View.GONE);
@@ -396,7 +390,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                 String url = selectedImageDto.getUrl();
                 getSession().updateValue(SessionManager.KEY_AVATAR, url);
 
-                UIUtils.loadPhotoToActionBar(EditProfileActivity.this, ImageHelper.getUserListAvatar(url));
+                UIUtils.loadPhotoToActionBar(EditProfileActivity.this, ImageHelper.getUserListAvatar(url), mTarget);
 
                 setResult(RESULT_OK);
             }
@@ -434,4 +428,23 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                 getString(R.string.cancel)
         );
     }
+
+    private Target mTarget = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setIcon(new BitmapDrawable(getResources(), bitmap));
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable drawable) {
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setIcon(R.drawable.ic_transparent);
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable drawable) {
+
+        }
+    };
 }

@@ -10,10 +10,7 @@ import com.nl.clubbook.datasource.ChatDto;
 import com.nl.clubbook.datasource.ChatMessageDto;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.ImageHelper;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -23,9 +20,6 @@ import java.util.List;
 public class MessagesAdapter extends BaseAdapter {
 
     private Context mContext;
-    private ImageLoader imageLoader;
-    private DisplayImageOptions options;
-    private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
     private List<ChatDto> mChats = null;
     private LayoutInflater mInflater;
 
@@ -33,15 +27,6 @@ public class MessagesAdapter extends BaseAdapter {
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mChats = chats;
-
-        imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.ic_avatar_missing)
-                .showImageForEmptyUri(R.drawable.ic_avatar_missing)
-                .showImageOnFail(R.drawable.ic_avatar_unknown)
-                .cacheInMemory()
-                .cacheOnDisc()
-                .build();
     }
 
     @Override
@@ -119,8 +104,7 @@ public class MessagesAdapter extends BaseAdapter {
         String avatarUrl = receiver.getAvatar();
         if(avatarUrl != null && avatarUrl.length() != 0) {
             String imageUrl = ImageHelper.getUserListAvatar(avatarUrl);
-            imageLoader.displayImage(imageUrl, holder.imgAvatar, options, animateFirstListener);
-            holder.imgAvatar.setTag(imageUrl);
+            Picasso.with(mContext).load(imageUrl).error(R.drawable.ic_avatar_unknown).into(holder.imgAvatar);
         } else {
             holder.imgAvatar.setTag("");
         }

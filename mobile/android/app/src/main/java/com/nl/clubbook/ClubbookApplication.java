@@ -7,8 +7,6 @@ import com.google.android.gms.analytics.Tracker;
 import com.nl.clubbook.helper.FontHelper;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.helper.SessionManager;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.parse.Parse;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
@@ -32,10 +30,6 @@ public class ClubbookApplication extends Application {
 
         Parse.initialize(this, "71OeWikSy4nxlGuefO2O6AFhuENP2Nqz1fjB88x3", "J5RrDFEhrHH7ns75OOWmNM4Wg52yEjkfxYAxvvDj");
         //PushService.setDefaultPushCallback(this, MainActivity.class);
-
-
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext()).build();
-        ImageLoader.getInstance().init(config);
 
         Permission[] permissions = new Permission[]{
                 Permission.PUBLIC_PROFILE,

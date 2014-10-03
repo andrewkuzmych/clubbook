@@ -5,11 +5,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
+import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.UserPhotoDto;
 import com.nl.clubbook.fragment.ImageViewFragment;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 import java.util.List;
 
@@ -20,23 +18,15 @@ public class UserAvatarPagerAdapter extends FragmentStatePagerAdapter {
 
     private List<UserPhotoDto> mUrls;
 
-    private ImageLoader mImageLoader;
-    private DisplayImageOptions mOptions;
-    private ImageLoadingListener mAnimateFirstListener;
-
-    public UserAvatarPagerAdapter(FragmentManager fm, List<UserPhotoDto> urls, ImageLoader imageLoader, DisplayImageOptions displayOptions,
-                                  ImageLoadingListener animateFirstListener) {
+    public UserAvatarPagerAdapter(FragmentManager fm, List<UserPhotoDto> urls) {
         super(fm);
 
         mUrls = urls;
-        mImageLoader = imageLoader;
-        mOptions = displayOptions;
-        mAnimateFirstListener = animateFirstListener;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return ImageViewFragment.newInstance(mImageLoader, mOptions, mAnimateFirstListener, mUrls.get(position).getUrl());
+        return ImageViewFragment.newInstance(mUrls.get(position).getUrl(), R.drawable.ic_avatar_unknown);
     }
 
     @Override

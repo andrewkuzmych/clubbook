@@ -73,6 +73,8 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
         sendScreenStatistic(R.string.chat_screen_android);
 
+        initTarget();
+
         UIUtils.displayEmptyIconInActionBar((ActionBarActivity)getActivity());
         handleArgs();
         initView();
@@ -145,7 +147,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         initActionBarTitle(userName != null ? userName : "");
 
         if(userPhotoUrl != null && !userPhotoUrl.isEmpty()) {
-            UIUtils.loadPhotoToActionBar((ActionBarActivity)getActivity(), userPhotoUrl);
+            UIUtils.loadPhotoToActionBar((ActionBarActivity)getActivity(), userPhotoUrl, mTarget);
         }
     }
 

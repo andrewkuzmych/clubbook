@@ -27,10 +27,6 @@ import com.nl.clubbook.ui.view.ViewPagerBulletIndicatorView;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.nl.clubbook.utils.UIUtils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,10 +49,6 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     private String mUserAvatarUrl;
     private List<CheckInUserDto> mCheckInUsers;
     private UserAvatarPagerAdapter mPhotoAdapter;
-
-    private ImageLoader mImageLoader;
-    private DisplayImageOptions mOptions;
-    private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
 
     private ViewPagerBulletIndicatorView mBulletIndicator;
 
@@ -90,10 +82,11 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         sendScreenStatistic(R.string.user_screen_android);
 
+        initTarget();
+
         UIUtils.displayEmptyIconInActionBar((ActionBarActivity)getActivity());
         initActionBarTitle(getString(R.string.user_profile));
         handleExtras();
-        initLoader();
         initView();
         initCheckInUserList();
         loadData(mProfileId);
@@ -161,16 +154,6 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     @Override
     public void onNegativeButtonClick(MessageDialog dialogFragment) {
         dialogFragment.dismissAllowingStateLoss();
-    }
-
-    private void initLoader() {
-        mImageLoader = ImageLoader.getInstance();
-        mOptions = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.ic_avatar_missing)
-                .showImageOnFail(R.drawable.ic_avatar_unknown)
-                .cacheInMemory()
-                .cacheOnDisc()
-                .build();
     }
 
     private void handleExtras() {
@@ -357,7 +340,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         ViewPager pagerImage = (ViewPager) view.findViewById(R.id.pagerAvatars);
         if(mPhotoAdapter == null) {
-            mPhotoAdapter = new UserAvatarPagerAdapter(getChildFragmentManager(), userPhotoList, mImageLoader, mOptions, animateFirstListener);
+            mPhotoAdapter = new UserAvatarPagerAdapter(getChildFragmentManager(), userPhotoList);
             pagerImage.setAdapter(mPhotoAdapter);
         } else {
             mPhotoAdapter.updateData(userPhotoList);
@@ -375,7 +358,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         pagerImage.setOnPageChangeListener(this);
 
-        UIUtils.loadPhotoToActionBar((ActionBarActivity)getActivity(), mUserAvatarUrl);
+        UIUtils.loadPhotoToActionBar((ActionBarActivity)getActivity(), mUserAvatarUrl, mTarget);
     }
 
     private void setRefreshing(View view, boolean isRefreshing) {

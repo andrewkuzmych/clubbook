@@ -9,8 +9,7 @@ import android.widget.ImageView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.UserPhotoDto;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -19,17 +18,14 @@ import java.util.List;
  */
 public class UserPhotosAdapter extends BaseAdapter {
 
+    private Context mContext;
     private LayoutInflater mInflater;
     private List<UserPhotoDto> mUserPhotos;
 
-    private ImageLoader mImageLoader;
-    private DisplayImageOptions mOptions;
-
-    public UserPhotosAdapter(Context context, List<UserPhotoDto> userPhotos, ImageLoader imageLoader, DisplayImageOptions options) {
+    public UserPhotosAdapter(Context context, List<UserPhotoDto> userPhotos) {
+        mContext = context;
         mInflater = LayoutInflater.from(context);
         mUserPhotos = userPhotos;
-        mImageLoader = imageLoader;
-        mOptions = options;
     }
 
     @Override
@@ -63,7 +59,7 @@ public class UserPhotosAdapter extends BaseAdapter {
             holder = (ViewHolder) row.getTag();
         }
 
-        mImageLoader.displayImage(mUserPhotos.get(position).getUrl(), holder.imgPhoto, mOptions);
+        Picasso.with(mContext).load(mUserPhotos.get(position).getUrl()).error(R.drawable.ic_avatar_unknown).into(holder.imgPhoto);
 
         return row;
     }

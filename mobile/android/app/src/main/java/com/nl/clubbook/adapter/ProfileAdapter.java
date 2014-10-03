@@ -11,10 +11,7 @@ import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.CheckInUserDto;
 import com.nl.clubbook.helper.ImageHelper;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -25,30 +22,17 @@ public class ProfileAdapter extends BaseAdapter {
     public static final int MODE_GRID = 7777;
     public static final int MODE_LIST = 8888;
 
+    private Context mContext;
     private List<CheckInUserDto> mUsers;
-
-    private ImageLoader imageLoader;
-    private DisplayImageOptions options;
-    private ImageLoadingListener animateFirstListener = new SimpleImageLoadingListener();
     private LayoutInflater mInflater;
     private int mMode = MODE_GRID;
 
 
     public ProfileAdapter(Context context, List<CheckInUserDto> users, int mode) {
+        mContext = context;
         mInflater = LayoutInflater.from(context);
-
         mUsers = users;
         mMode = mode;
-
-        imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.ic_avatar_missing)
-                .showImageForEmptyUri(R.drawable.ic_avatar_missing)
-                .showImageOnFail(R.drawable.ic_avatar_unknown)
-                .cacheInMemory()
-                .cacheOnDisc()
-                .build();
-
     }
 
     @Override
@@ -95,8 +79,8 @@ public class ProfileAdapter extends BaseAdapter {
 
     private void fillView(ViewHolder holder, CheckInUserDto item) {
         String imageUrl = ImageHelper.getUserListAvatar(item.getAvatarUrl());
-        holder.imgAvatar.setTag(imageUrl);
-        imageLoader.displayImage(imageUrl, holder.imgAvatar, options, animateFirstListener);
+        Picasso.with(mContext).load(imageUrl).error(R.drawable.ic_avatar_unknown).into(holder.imgAvatar);
+
         if(item.isFriend()) {
             holder.txtFriendIndicator.setVisibility(View.VISIBLE);
         } else {

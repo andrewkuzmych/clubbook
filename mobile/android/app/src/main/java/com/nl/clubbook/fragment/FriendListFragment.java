@@ -13,7 +13,6 @@ import com.nl.clubbook.adapter.FriendsAdapter;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.SessionManager;
-import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
 
 import java.util.ArrayList;

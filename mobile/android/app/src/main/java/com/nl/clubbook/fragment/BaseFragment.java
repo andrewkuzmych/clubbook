@@ -1,5 +1,8 @@
 package com.nl.clubbook.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -17,6 +20,8 @@ import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.SessionManager;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.lang.reflect.Field;
 
@@ -26,6 +31,7 @@ import java.lang.reflect.Field;
 public class BaseFragment extends Fragment {
 
     protected Tracker mTracker;
+    protected Target mTarget;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -50,6 +56,15 @@ public class BaseFragment extends Fragment {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        if(mTarget != null) {
+            Picasso.with(getActivity()).cancelRequest(mTarget);
+        }
+
+        super.onDestroyView();
     }
 
     public void sendScreenStatistic(int stringResourceId) {
@@ -147,6 +162,29 @@ public class BaseFragment extends Fragment {
         FragmentTransaction fTransaction = getChildFragmentManager().beginTransaction();
         fTransaction.add(messageDialog, MessageDialog.TAG);
         fTransaction.commitAllowingStateLoss();
+    }
+
+    protected void initTarget() {
+        final ActionBarActivity activity = (ActionBarActivity) getActivity();
+
+        mTarget = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+                ActionBar actionBar = activity.getSupportActionBar();
+                actionBar.setIcon(new BitmapDrawable(getResources(), bitmap));
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable drawable) {
+                ActionBar actionBar = activity.getSupportActionBar();
+                actionBar.setIcon(R.drawable.ic_transparent);
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable drawable) {
+
+            }
+        };
     }
 
     protected void showToast(int messageResourceId) {
