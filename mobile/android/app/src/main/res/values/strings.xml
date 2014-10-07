@@ -176,6 +176,12 @@
     <!--New-->
     <string name="you_will_be_automatically_checked_in_to_this_club">You will be automatically Checked-in to this Club for 6 hours, or until you manually Check-out or Check-in to another Club</string>
     <string name="ok_got_it">Ok, got it</string>
+    <string name="add_friends">Add friends</string>
+    <string name="find_friends">Find friends</string>
+    <string name="invite_friends">Invite friends</string>
+    <string name="invite_friends_to_clubbook">Invite friends to Clubbook</string>
+    <string name="your_friends_on_clubbook">Your friends on Clubbok. You can add them to your friends list</string>
+    <string name="or">or</string>
     <!---->
 
     <!--For Google Analytics-->
