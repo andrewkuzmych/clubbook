@@ -16,6 +16,7 @@ public class InviteFriends extends BaseActivity {
         setContentView(R.layout.ac_invite_friends);
 
         initActionBar(R.string.invite_friends);
+//        sendFacebookRequest();
     }
 
     @Override

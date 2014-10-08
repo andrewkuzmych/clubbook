@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.adapter.FriendsPagerAdapter;
+
+import org.jetbrains.annotations.Nullable;
 
 public class FriendsFragment extends BaseFragment implements ViewPager.OnPageChangeListener,
         TabHost.OnTabChangeListener, PendingFriendsFragment.OnFriendRequestAcceptedListener {
@@ -36,7 +39,7 @@ public class FriendsFragment extends BaseFragment implements ViewPager.OnPageCha
         if(getActivity() instanceof MainActivity) {
             mActivity = (MainActivity) getActivity();
 
-            mActivity.getMenuItemByIndex(MainActivity.MENU_ITEM_ADD_FRIEND).setVisible(true);
+            setMenuItemVisibility(MainActivity.MENU_ITEM_ADD_FRIEND, true);
         }
 
         initActionBarTitle(getString(R.string.friend_list));
@@ -52,22 +55,15 @@ public class FriendsFragment extends BaseFragment implements ViewPager.OnPageCha
             actionBar.setIcon(R.drawable.icon_play);
             actionBar.setTitle(R.string.friend_list);
 
-
-            if(mActivity != null) {
-                mActivity.getMenuItemByIndex(MainActivity.MENU_ITEM_ADD_FRIEND).setVisible(true);
-            }
+            setMenuItemVisibility(MainActivity.MENU_ITEM_ADD_FRIEND, true);
         } else {
-            if(mActivity != null) {
-                mActivity.getMenuItemByIndex(MainActivity.MENU_ITEM_ADD_FRIEND).setVisible(false);
-            }
+            setMenuItemVisibility(MainActivity.MENU_ITEM_ADD_FRIEND, false);
         }
     }
 
     @Override
     public void onDestroyView() {
-        if(mActivity != null) {
-            mActivity.getMenuItemByIndex(MainActivity.MENU_ITEM_ADD_FRIEND).setVisible(false);
-        }
+        setMenuItemVisibility(MainActivity.MENU_ITEM_ADD_FRIEND, false);
 
         //clear fragments in adapter
         mFriendsPagerAdapter.clearFragments();
@@ -133,5 +129,16 @@ public class FriendsFragment extends BaseFragment implements ViewPager.OnPageCha
         title.setText(tabIndicator);
 
         return tabHost.newTabSpec(tabIndicator).setContent(android.R.id.tabcontent).setIndicator(tabIndicatorView);
+    }
+
+    private void setMenuItemVisibility(int index, boolean isVisible) {
+        if(mActivity == null) {
+            return;
+        }
+
+        MenuItem menuItem = mActivity.getMenuItemByIndex(index);
+        if(menuItem != null) {
+            menuItem.setVisible(isVisible);
+        }
     }
 }
