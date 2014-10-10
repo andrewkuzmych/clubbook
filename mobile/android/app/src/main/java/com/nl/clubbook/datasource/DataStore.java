@@ -562,6 +562,64 @@ public class DataStore {
         });
     }
 
+    public static void getFacebookFriendsOnClubbook(String accessToken, List<String> fbIds, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
+
+        StringBuilder fbIdsParamsBuilder = new StringBuilder();
+        for(int i = 0; i < fbIds.size(); i++) {
+            String id = fbIds.get(i);
+            fbIdsParamsBuilder.append(id);
+
+            if(i < (fbIds.size() - 1)) {
+                fbIdsParamsBuilder.append(",");
+            }
+        }
+        params.put("fb_ids", fbIdsParamsBuilder.toString());
+
+        ClubbookRestClient.getFacebookFriendsOnClubbook(params, new JsonHttpResponseHandler() {
+            private boolean failed = true;
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                List<UserDto> users = new ArrayList<UserDto>();
+
+                try {
+                    if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
+                        JSONArray friendsJson = responseJson.getJSONObject("result").getJSONArray("users");
+                        users = JSONConverter.newFriendList(friendsJson, true);
+
+                        failed = false;
+                    } else {
+                        failed = true;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                onResultReady.onReady(users, failed);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                //if (failed)
+                //    onResultReady.onReady(null, true);
+            }
+        });
+    }
+
     public static void retrievePendingFriends(String userId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);

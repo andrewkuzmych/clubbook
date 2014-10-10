@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
+import com.nl.clubbook.fragment.FindFriendsFragment;
 import com.nl.clubbook.fragment.FriendListFragment;
 import com.nl.clubbook.fragment.PendingFriendsFragment;
 
@@ -18,8 +19,9 @@ public class FriendsPagerAdapter extends FragmentPagerAdapter {
 
     public static final int INDEX_FRIENDS_LIST = 0;
     public static final int INDEX_PENDING_FRIENDS = 1;
+    public static final int INDEX_ADD_INVITE_FRIENDS = 2;
 
-    public static final int FRAGMENT_COUNT = 2;
+    public static final int FRAGMENT_COUNT = 3;
 
     private HashMap<Integer, Fragment> mFragments = new LinkedHashMap<Integer, Fragment>();
     private Fragment mTargetFragment;
@@ -31,16 +33,25 @@ public class FriendsPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public Fragment getItem(int i) {
+    public Fragment getItem(int position) {
         Fragment fragment;
 
-        if(i == INDEX_FRIENDS_LIST) {
-            fragment = FriendListFragment.newInstance(mTargetFragment);
-        } else {
-            fragment = PendingFriendsFragment.newInstance(mTargetFragment);
+        switch (position) {
+            case INDEX_FRIENDS_LIST:
+                fragment = FriendListFragment.newInstance(mTargetFragment);
+                break;
+            case INDEX_PENDING_FRIENDS:
+                fragment = PendingFriendsFragment.newInstance(mTargetFragment);
+                break;
+            case INDEX_ADD_INVITE_FRIENDS:
+                fragment = new FindFriendsFragment();
+                break;
+
+            default:
+                fragment = FriendListFragment.newInstance(mTargetFragment);
         }
 
-        mFragments.put(i, fragment);
+        mFragments.put(position, fragment);
 
         return fragment;
     }

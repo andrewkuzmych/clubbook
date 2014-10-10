@@ -1,31 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:id="@+id/swipeRefreshLayout"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="fill_parent" >-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:orientation="vertical">
 
-    <TextView
+    <com.nl.clubbook.ui.view.HelveticaBoldTextView
         android:id="@+id/txtInviteFriends"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:background="@drawable/bg_btn_green"
         android:layout_marginTop="16dp"
-        android:text="@string/invite_friends_to_clubbook"
+        android:text="@string/invite_friends_by_facebook"
         android:gravity="center"
         android:textSize="@dimen/text_size_medium"
         android:textColor="@android:color/white"
-        android:paddingTop="4dp"
-        android:paddingRight="16dp"
-        android:paddingLeft="16dp"
-        android:paddingBottom="4dp"
-        android:textStyle="bold"/>
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:background="@drawable/bg_btn_blue"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,7 +33,7 @@
             android:layout_weight="1"
             android:background="@color/divider_color"/>
 
-        <TextView
+        <com.nl.clubbook.ui.view.HelveticaRegularTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingRight="8dp"
@@ -58,19 +48,32 @@
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <com.nl.clubbook.ui.view.HelveticaRegularTextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="8dp"
-        android:text="@string/your_friends_on_clubbook"
-        android:gravity="center"/>
+        android:text="@string/see_who_is_already_on_clubbook"
+        android:gravity="center"
+        android:textSize="@dimen/text_size_medium"
+        android:textColor="@color/grey"/>
+
+    <com.nl.clubbook.ui.view.HelveticaBoldTextView
+        android:id="@+id/txtConnectFacebook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/connect_facebook"
+        android:gravity="center"
+        android:textSize="@dimen/text_size_medium"
+        android:textColor="@android:color/white"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/bg_btn_blue"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:background="@color/divider_color"/>
 
@@ -85,11 +88,11 @@
             android:scrollbars="none"/>
 
         <ProgressBar
+            android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
 
     </RelativeLayout>
-
-<!--</android.support.v4.widget.SwipeRefreshLayout>-->
 </LinearLayout>

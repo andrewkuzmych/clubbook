@@ -79,9 +79,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppBlackTheme"/>
         <activity
-            android:name=".activity.FindFriendsActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.InviteFriends"
             android:screenOrientation="portrait"/>
 

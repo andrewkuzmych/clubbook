@@ -36,6 +36,7 @@ import com.nl.clubbook.fragment.BaseFragment;
 import com.nl.clubbook.fragment.ChatFragment;
 import com.nl.clubbook.fragment.ClubFragment;
 import com.nl.clubbook.fragment.ClubsListFragment;
+import com.nl.clubbook.fragment.FindFriendsFragment;
 import com.nl.clubbook.fragment.FriendsFragment;
 import com.nl.clubbook.fragment.MessagesFragment;
 import com.nl.clubbook.fragment.SettingsFragment;
@@ -72,12 +73,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         MessageDialog.MessageDialogListener, SettingsFragment.OnLogOutListener {
 
     public static final String ACTION_CHECK_IN_CHECK_OUT = "ACTION_CHECK_IN_CHECK_OUT";
-
-    public static final int MENU_ITEM_ADD_FRIEND = 0;
-    public static final int MENU_ITEM_MESSAGES_INDEX = 1;
-
-    private MenuItem mMenuMessages;
-    private MenuItem mMenuAddFriend;
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -159,13 +154,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         if(resultCode == RESULT_OK && requestCode == EditProfileActivity.REQUEST_CODE) {
             fillNavDrawerHeader();
+        } else if(mCurrentFragment != null && mCurrentFragment instanceof FriendsFragment) {
+            mCurrentFragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_add_friends, menu);
         inflater.inflate(R.menu.main_activity_actions, menu);
 
         View badgeMessages = MenuItemCompat.getActionView(menu.findItem(R.id.badgeMessages));
@@ -178,10 +174,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         // update count of messages
         updateMessagesCount();
-
-        mMenuMessages = menu.getItem(MENU_ITEM_MESSAGES_INDEX);
-        mMenuAddFriend = menu.getItem(MENU_ITEM_ADD_FRIEND);
-        mMenuAddFriend.setVisible(false);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -221,9 +213,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
-                return true;
-            case R.id.menuAdd:
-                onMenuAddClicked();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -532,7 +521,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void onMenuAddClicked() {
-        Intent intent = new Intent(MainActivity.this, FindFriendsActivity.class);
+        Intent intent = new Intent(MainActivity.this, FindFriendsFragment.class);
         startActivity(intent);
     }
 
@@ -605,14 +594,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             }
         } else {
             Toast.makeText(MainActivity.this, R.string.problem_occurred_please_try_again, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public MenuItem getMenuItemByIndex(int index) {
-        if(index == MENU_ITEM_ADD_FRIEND) {
-            return mMenuAddFriend;
-        } else {
-            return mMenuMessages;
         }
     }
 

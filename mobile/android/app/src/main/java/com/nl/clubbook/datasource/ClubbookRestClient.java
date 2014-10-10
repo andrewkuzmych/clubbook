@@ -16,8 +16,8 @@ public class ClubbookRestClient {
     }
 
     //private static final String BC_BASE_URL = "http://10.0.0.104:3000/_s/";
-//    private static final String BC_BASE_URL = "http://clubbookapp.herokuapp.com/_s/"; //Live
-    private static final String BC_BASE_URL = "http://clubbooktest.herokuapp.com/_s/"; //Test
+    private static final String BC_BASE_URL = "http://clubbookapp.herokuapp.com/_s/"; //Live
+//    private static final String BC_BASE_URL = "http://clubbooktest.herokuapp.com/_s/"; //Test
     //private static final String BC_BASE_URL = "http://192.168.1.16:3000/_s/";
 
     private static String getBcAbsoluteUrl(String relativeUrl) {
@@ -66,6 +66,10 @@ public class ClubbookRestClient {
 
     public static void retrieveFriends(String userId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getBcAbsoluteUrl("obj/user/" + userId + "/friends"), params, responseHandler);
+    }
+
+    public static void getFacebookFriendsOnClubbook(RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.post(getBcAbsoluteUrl("obj/user/fb/find"), params, responseHandler);
     }
 
     public static void retrievePendingFriends(String userId, RequestParams params, AsyncHttpResponseHandler responseHandler) {

@@ -179,9 +179,14 @@
     <string name="add_friends">Add friends</string>
     <string name="find_friends">Find friends</string>
     <string name="invite_friends">Invite friends</string>
-    <string name="invite_friends_to_clubbook">Invite friends to Clubbook</string>
-    <string name="your_friends_on_clubbook">Your friends on Clubbok. You can add them to your friends list</string>
-    <string name="or">or</string>
+    <string name="invite_friends_by_facebook">Invite friends by Facebook</string>
+    <string name="see_who_is_already_on_clubbook">See who is already on Clubbook</string>
+    <string name="or">Or</string>
+    <string name="request_sent">Request sent</string>
+    <string name="connect_facebook">Connect Facebook</string>
+    <string name="find_your_friends">Find your friends</string>
+    <string name="add_plus">Add+</string>
+    <string name="add_friend_">Add Friend</string>
     <!---->
 
     <!--For Google Analytics-->

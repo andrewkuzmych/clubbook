@@ -16,6 +16,7 @@
     <color name="main_font_color">#FFFFFF</color>
 
     <color name="grey_disabled">#ced0d0</color>
+    <color name="grey_txt_selected">#C2C2C2</color>
     <color name="grey_light">#6D6D6D</color>
     <color name="grey_club_title_text_color">#959595</color>
     <color name="grey">#515151</color>
@@ -29,7 +30,7 @@
     <color name="red_light">#F72320</color>
     <color name="selector">#55592B5C</color>
     <color name="white_semitransparent">#55FFFFFF</color>
-    <color name="blue">#0062C6</color>
+    <color name="blue">#1C73DA</color>
 
     <!--SwipeRefreshLayout colors-->
     <color name="holo_blue_bright">#ff00ddff</color>

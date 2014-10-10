@@ -35,7 +35,8 @@ public class ClubbookApplication extends Application {
                 Permission.PUBLIC_PROFILE,
                 Permission.EMAIL,
                 Permission.USER_BIRTHDAY,
-                Permission.USER_HOMETOWN
+                Permission.USER_HOMETOWN,
+                Permission.USER_FRIENDS
         };
 
         SimpleFacebookConfiguration configuration = new SimpleFacebookConfiguration.Builder()
