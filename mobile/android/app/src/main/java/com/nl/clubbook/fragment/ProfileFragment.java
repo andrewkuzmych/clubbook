@@ -17,7 +17,7 @@ import com.nl.clubbook.adapter.ProfileAdapter;
 import com.nl.clubbook.adapter.UserAvatarPagerAdapter;
 import com.nl.clubbook.datasource.CheckInUserDto;
 import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.datasource.FriendDto;
+import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.datasource.UserPhotoDto;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.ImageHelper;
@@ -58,7 +58,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     private int mBtnAddFriendMode = BtnAddFriendModes.MODE_ADD;
     private int mBtnBlockUserMode = BtnBlockModes.MODE_BLOCK;
 
-    public static Fragment newInstance(Fragment targetFragment, String profileId, List<CheckInUserDto> checkedInUsers, int openMode) {
+    public static Fragment newInstance(@NotNull Fragment targetFragment, String profileId, @Nullable List<CheckInUserDto> checkedInUsers, int openMode) {
         ProfileFragment fragment = new ProfileFragment();
         fragment.setTargetFragment(targetFragment, 0);
         fragment.setCheckInUsers(checkedInUsers);
@@ -238,12 +238,12 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                 }
 
                 setRefreshing(view, false);
-                fillProfile((FriendDto) result);
+                fillProfile((UserDto) result);
             }
         });
     }
 
-    private void fillProfile(@Nullable FriendDto profile) {
+    private void fillProfile(@Nullable UserDto profile) {
         if(profile == null) {
             return;
         }
@@ -305,14 +305,14 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         //check is this user your friend
         TextView txtAddFriends = (TextView) view.findViewById(R.id.txtAddFriend);
         String friendStatus = profile.getFriendStatus();
-        if(FriendDto.STATUS_FRIEND.equalsIgnoreCase(friendStatus)) {
+        if(UserDto.STATUS_FRIEND.equalsIgnoreCase(friendStatus)) {
             txtAddFriends.setVisibility(View.GONE);
             view.findViewById(R.id.txtRemoveFriend).setVisibility(View.VISIBLE);
             mBtnAddFriendMode = -1;
-        } else if(FriendDto.STATUS_RECEIVE_REQUEST.equalsIgnoreCase(friendStatus)) {
+        } else if(UserDto.STATUS_RECEIVE_REQUEST.equalsIgnoreCase(friendStatus)) {
             txtAddFriends.setText(getString(R.string.accept_request));
             mBtnAddFriendMode = BtnAddFriendModes.MODE_ACCEPT;
-        } else if(FriendDto.STATUS_SENT_REQUEST.equalsIgnoreCase(friendStatus)) {
+        } else if(UserDto.STATUS_SENT_REQUEST.equalsIgnoreCase(friendStatus)) {
             mBtnAddFriendMode = BtnAddFriendModes.MODE_CANCEL;
             txtAddFriends.setText(R.string.cancel_request);
             view.findViewById(R.id.txtRemoveFriend).setVisibility(View.GONE);
@@ -358,7 +358,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         pagerImage.setOnPageChangeListener(this);
 
-        UIUtils.loadPhotoToActionBar((ActionBarActivity)getActivity(), mUserAvatarUrl, mTarget);
+        UIUtils.loadPhotoToActionBar((ActionBarActivity) getActivity(), mUserAvatarUrl, mTarget);
     }
 
     private void setRefreshing(View view, boolean isRefreshing) {

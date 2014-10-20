@@ -486,7 +486,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
 
-            mFragmentTransaction.replace(R.id.frame_container, mCurrentFragment);
+            mFragmentTransaction.replace(R.id.fragmentContainer, mCurrentFragment);
             mFragmentTransaction.commit();
 
             // update selected item and title, then close the drawer
@@ -533,7 +533,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         onInnerFragmentDestroyed();
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_container, new MessagesFragment()).commit();
+        fragmentTransaction.replace(R.id.fragmentContainer, new MessagesFragment()).commit();
     }
 
     private void onNavDrawerHeaderClicked() {
@@ -574,7 +574,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         Fragment fragment = ClubFragment.newInstance(null, clubId);
 
         FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
-        fTransaction.replace(R.id.frame_container, fragment, ClubFragment.TAG);
+        fTransaction.replace(R.id.fragmentContainer, fragment, ClubFragment.TAG);
         fTransaction.commitAllowingStateLoss();
     }
 

@@ -529,7 +529,7 @@ public class DataStore {
                 try {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         JSONArray friendsJson = responseJson.getJSONObject("result").getJSONArray("friends");
-                        friends = JSONConverter.newFriendList(friendsJson, true);
+                        friends = JSONConverter.newUsersList(friendsJson, true);
 
                         failed = false;
                     } else {
@@ -584,10 +584,12 @@ public class DataStore {
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 List<UserDto> users = new ArrayList<UserDto>();
 
+                L.e("responseJson - " + responseJson);
+
                 try {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         JSONArray friendsJson = responseJson.getJSONObject("result").getJSONArray("users");
-                        users = JSONConverter.newFriendList(friendsJson, true);
+                        users = JSONConverter.newUsersList(friendsJson, true);
 
                         failed = false;
                     } else {
@@ -634,7 +636,7 @@ public class DataStore {
                 try {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         JSONArray friendsJson = responseJson.getJSONObject("result").getJSONArray("friends");
-                        friends = JSONConverter.newFriendList(friendsJson, false);
+                        friends = JSONConverter.newUsersList(friendsJson, false);
 
                         failed = false;
                     } else {
@@ -911,7 +913,7 @@ public class DataStore {
                         return;
                     }
 
-                    onResultReady.onReady(new FriendDto(jsonFriend), false);
+                    onResultReady.onReady(new UserDto(jsonFriend), false);
                 } else {
                     onResultReady.onReady(null, true); // failed.. so put true
                 }

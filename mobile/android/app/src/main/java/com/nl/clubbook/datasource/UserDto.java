@@ -11,7 +11,12 @@ import java.util.List;
  */
 public class UserDto {
 
+    public static String STATUS_FRIEND = "friend";
+    public static String STATUS_RECEIVE_REQUEST = "receive_request";
+    public static String STATUS_SENT_REQUEST = "sent_request";
+
     protected String id;
+    protected String accessToken;
     protected String fb_id;
     protected String name;
     protected String email;
@@ -22,8 +27,9 @@ public class UserDto {
     protected String avatar;
     protected String country;
     protected String bio;
-    protected String accessToken;
+    private String friendStatus;
     protected boolean isNotificationEnabled;
+    private boolean isBlocked = false;
     protected CheckInDto lastCheckIn;
     protected List<UserPhotoDto> photos;
 
@@ -53,6 +59,9 @@ public class UserDto {
 
             photos.add(new UserPhotoDto(photosJson.optJSONObject(i)));
         }
+
+        friendStatus = userJson.optString("friend_status", "");
+        isBlocked = userJson.optBoolean("is_blocked", false);
     }
 
     public String getId() {
@@ -184,5 +193,21 @@ public class UserDto {
 
     public void setNotificationEnabled(boolean isNotificationEnabled) {
         this.isNotificationEnabled = isNotificationEnabled;
+    }
+
+    public String getFriendStatus() {
+        return friendStatus;
+    }
+
+    public void setFriendStatus(String friendStatus) {
+        this.friendStatus = friendStatus;
+    }
+
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(boolean isBlocked) {
+        this.isBlocked = isBlocked;
     }
 }

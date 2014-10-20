@@ -26,7 +26,7 @@ public class JSONConverter {
     private JSONConverter() {
     }
 
-    public static List<UserDto> newFriendList(@Nullable JSONArray jsonArrUsers, boolean parseCheckin) {
+    public static List<UserDto> newUsersList(@Nullable JSONArray jsonArrUsers, boolean parseCheckin) {
         if(jsonArrUsers == null) {
             return new ArrayList<UserDto>();
         }
@@ -56,6 +56,8 @@ public class JSONConverter {
         result.setAge(jsonUser.optString("age"));
         result.setCountry(jsonUser.optString("country"));
         result.setBio(jsonUser.optString("bio"));
+        result.setFriendStatus(jsonUser.optString("friend_status", ""));
+        result.setBlocked(jsonUser.optBoolean("is_blocked", false));
 
         JSONObject jsonAvatar = jsonUser.optJSONObject("avatar");
         if(jsonAvatar != null) {

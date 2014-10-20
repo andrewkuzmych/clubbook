@@ -187,6 +187,8 @@
     <string name="find_your_friends">Find your friends</string>
     <string name="add_plus">Add+</string>
     <string name="add_friend_">Add Friend</string>
+    <string name="accept_request_">Accept Request</string>
+    <string name="cancel_request_">Cancel Request</string>
     <!---->
 
     <!--For Google Analytics-->

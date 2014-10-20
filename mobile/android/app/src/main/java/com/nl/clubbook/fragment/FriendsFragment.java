@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.FriendsPagerAdapter;
-import com.nl.clubbook.utils.L;
 
 public class FriendsFragment extends BaseFragment implements ViewPager.OnPageChangeListener,
         TabHost.OnTabChangeListener, PendingFriendsFragment.OnFriendRequestAcceptedListener {
@@ -121,6 +120,7 @@ public class FriendsFragment extends BaseFragment implements ViewPager.OnPageCha
         //init ViewPager
         mFriendsPagerAdapter = new FriendsPagerAdapter(getChildFragmentManager(), FriendsFragment.this);
         mViewPager = (ViewPager)view.findViewById(R.id.viewPager);
+        mViewPager.setOffscreenPageLimit(mFriendsPagerAdapter.getCount());
         mViewPager.setAdapter(mFriendsPagerAdapter);
         mViewPager.setOnPageChangeListener(this);
     }

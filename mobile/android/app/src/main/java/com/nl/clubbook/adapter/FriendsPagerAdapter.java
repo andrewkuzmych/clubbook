@@ -44,7 +44,7 @@ public class FriendsPagerAdapter extends FragmentPagerAdapter {
                 fragment = PendingFriendsFragment.newInstance(mTargetFragment);
                 break;
             case INDEX_ADD_INVITE_FRIENDS:
-                fragment = new FindFriendsFragment();
+                fragment = FindFriendsFragment.newInstance(mTargetFragment);
                 break;
 
             default:

@@ -88,7 +88,7 @@ public class BaseFragment extends Fragment {
         ActionBarActivity activity = (ActionBarActivity)getActivity();
 
         FragmentTransaction fTransaction = activity.getSupportFragmentManager().beginTransaction();
-        fTransaction.add(R.id.frame_container, fragment);
+        fTransaction.add(R.id.fragmentContainer, fragment);
         fTransaction.hide(this);
         fTransaction.addToBackStack(fragmentClass.getSimpleName());
         fTransaction.commitAllowingStateLoss();
@@ -103,7 +103,7 @@ public class BaseFragment extends Fragment {
         ActionBarActivity activity = (ActionBarActivity)getActivity();
 
         FragmentTransaction fTransaction = activity.getSupportFragmentManager().beginTransaction();
-        fTransaction.add(R.id.frame_container, fragment);
+        fTransaction.add(R.id.fragmentContainer, fragment);
         if(getTargetFragment() != null) {
             fTransaction.hide(getTargetFragment());
         }
