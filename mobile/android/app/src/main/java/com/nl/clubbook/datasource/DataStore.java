@@ -184,10 +184,10 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                UserPhotoDto userPhotoDto = null;
+                UserPhoto userPhoto = null;
                 try {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
-                        userPhotoDto = new UserPhotoDto(responseJson.getJSONObject("result").getJSONObject("image"));
+                        userPhoto = new UserPhoto(responseJson.getJSONObject("result").getJSONObject("image"));
                         failed = false;
                     } else {
                         failed = true;
@@ -196,7 +196,7 @@ public class DataStore {
                     e.printStackTrace();
                 }
 
-                onResultReady.onReady(userPhotoDto, failed);
+                onResultReady.onReady(userPhoto, failed);
             }
 
             @Override
@@ -403,7 +403,7 @@ public class DataStore {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 JSONArray jsonArrClubs = responseJson.optJSONArray("clubs");
-                List<ClubDto> clubs = JSONConverter.newClubList(jsonArrClubs);
+                List<Club> clubs = JSONConverter.newClubList(jsonArrClubs);
 
                 failed = false;
                 onResultReady.onReady(clubs, failed);
@@ -441,10 +441,10 @@ public class DataStore {
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 JSONObject jsonClub = responseJson.optJSONObject("club");
 
-                ClubDto club = JSONConverter.newClub(jsonClub);
+                Club club = JSONConverter.newClub(jsonClub);
                 if (jsonClub != null && club != null) {
                     JSONArray jsonArrUsers = responseJson.optJSONArray("users");
-                    List<CheckInUserDto> checkInUsers = JSONConverter.newCheckInUsersList(jsonArrUsers);
+                    List<CheckInUser> checkInUsers = JSONConverter.newCheckInUsersList(jsonArrUsers);
                     club.setUsers(checkInUsers);
                 }
 
@@ -1125,7 +1125,7 @@ public class DataStore {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        final ChatDto chat;
+                        final Chat chat;
 
                         if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
                             JSONObject jsonResult = responseJson.optJSONObject("result");
@@ -1180,7 +1180,7 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                List<ChatDto> chats = new ArrayList<ChatDto>();
+                List<Chat> chats = new ArrayList<Chat>();
                 try {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         JSONArray chatsJson = responseJson.getJSONObject("result").getJSONArray("chats");

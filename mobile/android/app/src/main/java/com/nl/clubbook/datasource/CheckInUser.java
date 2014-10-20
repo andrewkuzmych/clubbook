@@ -3,7 +3,7 @@ package com.nl.clubbook.datasource;
 /**
  * Created by Volodymyr on 23.08.2014.
  */
-public class CheckInUserDto {
+public class CheckInUser {
 
     public static String DEFAULT_ID = "-100";
 

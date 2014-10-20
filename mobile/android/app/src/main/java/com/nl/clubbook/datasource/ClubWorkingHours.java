@@ -3,7 +3,7 @@ package com.nl.clubbook.datasource;
 /**
  * Created by Volodymyr on 15.08.2014.
  */
-public class ClubWorkingHoursDto {
+public class ClubWorkingHours {
 
     public static final String STATUS_OPENED = "opened";
     public static final String STATUS_CLOSED = "closed";

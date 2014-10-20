@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.BaseChatMessage;
-import com.nl.clubbook.datasource.ChatMessageDto;
+import com.nl.clubbook.datasource.ChatMessage;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.utils.CalendarUtils;
 import com.squareup.picasso.Picasso;
@@ -73,9 +73,9 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
 
         int type = getItemViewType(position);
         if (type == TYPE_DRINK) {
-            return initDrinkRow((ChatMessageDto)message);
+            return initDrinkRow((ChatMessage)message);
         } else {
-            return initMessageRow((ChatMessageDto)message);
+            return initMessageRow((ChatMessage)message);
         }
     }
 
@@ -106,12 +106,12 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
             return TYPE_DATE;
         }
 
-        ChatMessageDto chatMessageDto = (ChatMessageDto) baseMessage;
-        String type = chatMessageDto.getType();
+        ChatMessage chatMessage = (ChatMessage) baseMessage;
+        String type = chatMessage.getType();
 
-        if (ChatMessageDto.TYPE_MESSAGE.equalsIgnoreCase(type)) {
+        if (ChatMessage.TYPE_MESSAGE.equalsIgnoreCase(type)) {
             return TYPE_MESSAGE;
-        } else if(ChatMessageDto.TYPE_DRINK.equalsIgnoreCase(type)) {
+        } else if(ChatMessage.TYPE_DRINK.equalsIgnoreCase(type)) {
             return TYPE_DRINK;
         } else {
             return TYPE_SMILE;
@@ -138,7 +138,7 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         return row;
     }
 
-    private View initMessageRow(ChatMessageDto message) {
+    private View initMessageRow(ChatMessage message) {
         View row;
 
         if(message.getIsMyMessage()) {
@@ -152,7 +152,7 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         return row;
     }
 
-    private View initDrinkRow(ChatMessageDto message) {
+    private View initDrinkRow(ChatMessage message) {
         View row;
 
         if(message.getIsMyMessage()) {
@@ -166,7 +166,7 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         return row;
     }
 
-    private void fillRow(View row, ChatMessageDto message) {
+    private void fillRow(View row, ChatMessage message) {
         ImageView imgAvatar = (ImageView) row.findViewById(R.id.imgAvatar);
         TextView txtChatMessage = (TextView) row.findViewById(R.id.txtChatMessage);
 

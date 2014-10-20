@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.CheckInDto;
+import com.nl.clubbook.datasource.CheckIn;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
@@ -92,7 +92,7 @@ public class FindFriendsAdapter extends BaseAdapter {
             Picasso.with(mContext).load(imageUrl).error(R.drawable.ic_avatar_unknown).into(holder.imgAvatar);
         }
 
-        CheckInDto checkIn = user.getLastCheckIn();
+        CheckIn checkIn = user.getLastCheckIn();
         if(checkIn != null) {
             if(!checkIn.isActive()) {
                 holder.txtCheckedInPlace.setVisibility(View.GONE);

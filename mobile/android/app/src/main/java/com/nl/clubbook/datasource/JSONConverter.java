@@ -70,7 +70,7 @@ public class JSONConverter {
             if(jsonArrCheckIn != null) {
                 for(int i = 0; i < jsonArrCheckIn.length(); i++) {
                     JSONObject jsonCheckIn = jsonArrCheckIn.optJSONObject(i);
-                    CheckInDto checkIn = newCheckIn(jsonCheckIn);
+                    CheckIn checkIn = newCheckIn(jsonCheckIn);
 
                     if(checkIn != null) {
                         result.setLastCheckIn(checkIn);
@@ -82,33 +82,33 @@ public class JSONConverter {
 
         //parse user's photos
         JSONArray photosJson = jsonUser.optJSONArray("photos");
-        List<UserPhotoDto> photos = newUserPhotoList(photosJson);
+        List<UserPhoto> photos = newUserPhotoList(photosJson);
         result.setPhotos(photos);
 
         return result;
     }
 
-    public static List<CheckInUserDto> newCheckInUsersList(@Nullable JSONArray jsonArrUsers) {
+    public static List<CheckInUser> newCheckInUsersList(@Nullable JSONArray jsonArrUsers) {
         if(jsonArrUsers == null) {
             return null;
         }
 
-        List<CheckInUserDto> checkInUsersList = new ArrayList<CheckInUserDto>();
+        List<CheckInUser> checkInUsersList = new ArrayList<CheckInUser>();
         for(int i = 0; i < jsonArrUsers.length(); i++) {
             JSONObject jsonCheckInUser = jsonArrUsers.optJSONObject(i);
-            CheckInUserDto checkInUser = newCheckInUser(jsonCheckInUser);
+            CheckInUser checkInUser = newCheckInUser(jsonCheckInUser);
             checkInUsersList.add(checkInUser);
         }
 
         return checkInUsersList;
     }
 
-    public static CheckInUserDto newCheckInUser(@Nullable JSONObject jsonCheckInUser) {
+    public static CheckInUser newCheckInUser(@Nullable JSONObject jsonCheckInUser) {
         if(jsonCheckInUser == null) {
             return null;
         }
 
-        CheckInUserDto result = new CheckInUserDto();
+        CheckInUser result = new CheckInUser();
 
         result.setId(jsonCheckInUser.optString("_id"));
         result.setName(jsonCheckInUser.optString("name"));
@@ -125,26 +125,26 @@ public class JSONConverter {
         return result;
     }
 
-    public static List<UserPhotoDto> newUserPhotoList(@Nullable JSONArray photosJson) {
+    public static List<UserPhoto> newUserPhotoList(@Nullable JSONArray photosJson) {
         if(photosJson == null) {
             return null;
         }
 
-        List<UserPhotoDto> photos = new ArrayList<UserPhotoDto>();
+        List<UserPhoto> photos = new ArrayList<UserPhoto>();
         for (int i = 0; i < photosJson.length(); i++) {
-            UserPhotoDto photo = newUserPhoto(photosJson.optJSONObject(i));
+            UserPhoto photo = newUserPhoto(photosJson.optJSONObject(i));
             photos.add(photo);
         }
 
         return photos;
     }
 
-    public static UserPhotoDto newUserPhoto(@Nullable JSONObject jsonPhoto) {
+    public static UserPhoto newUserPhoto(@Nullable JSONObject jsonPhoto) {
         if(jsonPhoto == null) {
             return null;
         }
 
-        UserPhotoDto photo = new UserPhotoDto();
+        UserPhoto photo = new UserPhoto();
         photo.setId(jsonPhoto.optString("_id"));
         photo.setUrl(jsonPhoto.optString("url"));
         photo.setIsAvatar(jsonPhoto.optBoolean("profile"));
@@ -152,12 +152,12 @@ public class JSONConverter {
         return photo;
     }
 
-    public static CheckInDto newCheckIn(@Nullable JSONObject jsonObject) {
+    public static CheckIn newCheckIn(@Nullable JSONObject jsonObject) {
         if(jsonObject == null) {
             return null;
         }
 
-        CheckInDto checkIn = new CheckInDto();
+        CheckIn checkIn = new CheckIn();
         checkIn.setId(jsonObject.optString("id", ""));
         checkIn.setActive(jsonObject.optBoolean("active"));
 
@@ -171,15 +171,15 @@ public class JSONConverter {
         return checkIn;
     }
 
-    public static List<ClubDto> newClubList(@Nullable JSONArray jsonArrClub) {
+    public static List<Club> newClubList(@Nullable JSONArray jsonArrClub) {
         if(jsonArrClub == null) {
-            return new ArrayList<ClubDto>();
+            return new ArrayList<Club>();
         }
 
-        List<ClubDto> result = new ArrayList<ClubDto>();
+        List<Club> result = new ArrayList<Club>();
         for(int i = 0; i < jsonArrClub.length(); i++) {
             JSONObject jsonClub = jsonArrClub.optJSONObject(i);
-            ClubDto club = newClub(jsonClub);
+            Club club = newClub(jsonClub);
 
             if(club != null) {
                 result.add(club);
@@ -189,12 +189,12 @@ public class JSONConverter {
         return result;
     }
 
-    public static ClubDto newClub(@Nullable String strJsonClub) {
+    public static Club newClub(@Nullable String strJsonClub) {
         if(strJsonClub == null) {
             return null;
         }
 
-        ClubDto club = null;
+        Club club = null;
 
         try {
             JSONObject jsonClub = new JSONObject(strJsonClub);
@@ -206,12 +206,12 @@ public class JSONConverter {
         return club;
     }
 
-    public static ClubDto newClub(@Nullable JSONObject jsonClub) {
+    public static Club newClub(@Nullable JSONObject jsonClub) {
         if(jsonClub == null) {
             return null;
         }
 
-        ClubDto club = new ClubDto();
+        Club club = new Club();
 
         club.setId(jsonClub.optString("id"));
         club.setTitle(jsonClub.optString("club_name"));
@@ -243,12 +243,12 @@ public class JSONConverter {
         }
         club.setPhotos(photos);
 
-        List<ClubWorkingHoursDto> workingHours = new ArrayList<ClubWorkingHoursDto>();
+        List<ClubWorkingHours> workingHours = new ArrayList<ClubWorkingHours>();
         JSONArray jsonArrHours = jsonClub.optJSONArray("club_working_hours");
         if(jsonArrHours != null) {
             for(int i = 0; i < jsonArrHours.length(); i++) {
                 JSONObject jsonWorkHours = jsonArrHours.optJSONObject(i);
-                ClubWorkingHoursDto clubWorkHours = newClubWorkingHours(jsonWorkHours);
+                ClubWorkingHours clubWorkHours = newClubWorkingHours(jsonWorkHours);
                 if(clubWorkHours != null) {
                     workingHours.add(clubWorkHours);
                 }
@@ -257,13 +257,13 @@ public class JSONConverter {
         club.setWorkingHours(workingHours);
 
         JSONObject jsonWorkingHours = jsonClub.optJSONObject("club_today_working_hours");
-        ClubWorkingHoursDto todayWorkingHours = newClubWorkingHours(jsonWorkingHours);
+        ClubWorkingHours todayWorkingHours = newClubWorkingHours(jsonWorkingHours);
         club.setTodayWorkingHours(todayWorkingHours);
 
         return club;
     }
 
-    public static JSONObject newClub(@Nullable ClubDto club) {
+    public static JSONObject newClub(@Nullable Club club) {
         if(club == null) {
             return null;
         }
@@ -302,10 +302,10 @@ public class JSONConverter {
             jsonClub.put("club_photos", jsonArrPhotos);
 
             JSONArray jsonArrHours = new JSONArray();
-            List<ClubWorkingHoursDto> workingHours = club.getWorkingHours();
+            List<ClubWorkingHours> workingHours = club.getWorkingHours();
             if(workingHours != null) {
                 for (int i = 0; i < workingHours.size(); i++) {
-                    ClubWorkingHoursDto workHours = workingHours.get(i);
+                    ClubWorkingHours workHours = workingHours.get(i);
                     jsonArrHours.put(i, newClubWorkingHours(workHours));
                 }
             }
@@ -318,12 +318,12 @@ public class JSONConverter {
         return jsonClub;
     }
 
-    public static ClubWorkingHoursDto newClubWorkingHours(@Nullable JSONObject jsonClubWorkingHours) {
+    public static ClubWorkingHours newClubWorkingHours(@Nullable JSONObject jsonClubWorkingHours) {
         if(jsonClubWorkingHours == null) {
             return null;
         }
 
-        ClubWorkingHoursDto result = new ClubWorkingHoursDto();
+        ClubWorkingHours result = new ClubWorkingHours();
         result.setId(jsonClubWorkingHours.optString("id", ""));
         result.setStatus(jsonClubWorkingHours.optString("status", ""));
         result.setStartTime(jsonClubWorkingHours.optString("start_time", ""));
@@ -333,7 +333,7 @@ public class JSONConverter {
         return result;
     }
 
-    public static JSONObject newClubWorkingHours(@Nullable ClubWorkingHoursDto workingHours) throws JSONException {
+    public static JSONObject newClubWorkingHours(@Nullable ClubWorkingHours workingHours) throws JSONException {
         if(workingHours == null) {
             return null;
         }
@@ -349,13 +349,13 @@ public class JSONConverter {
         return jsonWorkingHours;
     }
 
-    public static ChatDto newChatDto(@NotNull JSONObject jsonChatDto) {
-        ChatDto result = new ChatDto();
+    public static Chat newChatDto(@NotNull JSONObject jsonChatDto) {
+        Chat result = new Chat();
 
         result.setChatId(jsonChatDto.optString("chat_id"));
 
         JSONArray jsonConversation = jsonChatDto.optJSONArray("conversation");
-        List<ChatMessageDto> conversations = newChatMessagesList(jsonConversation);
+        List<ChatMessage> conversations = newChatMessagesList(jsonConversation);
         result.setConversation(conversations);
 
         JSONObject jsonCurrentUser = jsonChatDto.optJSONObject("current_user");
@@ -371,23 +371,23 @@ public class JSONConverter {
         return result;
     }
 
-    public static List<ChatMessageDto> newChatMessagesList(@Nullable JSONArray jsonArray) {
+    public static List<ChatMessage> newChatMessagesList(@Nullable JSONArray jsonArray) {
         if(jsonArray == null) {
             return null;
         }
 
-        List<ChatMessageDto> result = new ArrayList<ChatMessageDto>();
+        List<ChatMessage> result = new ArrayList<ChatMessage>();
         for(int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonChatMessage = jsonArray.optJSONObject(i);
-            ChatMessageDto chatMessage = newChatMessage(jsonChatMessage);
+            ChatMessage chatMessage = newChatMessage(jsonChatMessage);
             result.add(chatMessage);
         }
 
         return result;
     }
 
-    public static ChatMessageDto newChatMessage(@NotNull JSONObject jsonChatMessage) {
-        ChatMessageDto result = new ChatMessageDto();
+    public static ChatMessage newChatMessage(@NotNull JSONObject jsonChatMessage) {
+        ChatMessage result = new ChatMessage();
 
         result.setMsg(jsonChatMessage.optString("msg"));
         result.setType(jsonChatMessage.optString("type"));

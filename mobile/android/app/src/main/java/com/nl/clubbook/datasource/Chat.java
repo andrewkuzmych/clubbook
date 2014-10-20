@@ -5,10 +5,10 @@ import java.util.List;
 /**
  * Created by Andrew on 6/12/2014.
  */
-public class ChatDto {
+public class Chat {
     private String chatId;
     private int unreadMessages;
-    private List<ChatMessageDto> conversation;
+    private List<ChatMessage> conversation;
     private UserDto currentUser;
     private UserDto receiver;
 
@@ -20,11 +20,11 @@ public class ChatDto {
         this.chatId = chatId;
     }
 
-    public List<ChatMessageDto> getConversation() {
+    public List<ChatMessage> getConversation() {
         return conversation;
     }
 
-    public void setConversation(List<ChatMessageDto> conversation) {
+    public void setConversation(List<ChatMessage> conversation) {
         this.conversation = conversation;
     }
 

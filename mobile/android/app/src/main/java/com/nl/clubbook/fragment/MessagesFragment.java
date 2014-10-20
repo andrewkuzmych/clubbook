@@ -12,7 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.MessagesAdapter;
-import com.nl.clubbook.datasource.ChatDto;
+import com.nl.clubbook.datasource.Chat;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.L;
@@ -94,7 +94,7 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
                             return;
                         }
 
-                        List<ChatDto> chats = (List<ChatDto>) result;
+                        List<Chat> chats = (List<Chat>) result;
                         mAdapter.updateData(chats);
 
                         if(chats.size() == 0) {
@@ -113,7 +113,7 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
         }
 
         ListView listMessages = (ListView)view.findViewById(R.id.listMessages);
-        mAdapter = new MessagesAdapter(getActivity(), new ArrayList<ChatDto>());
+        mAdapter = new MessagesAdapter(getActivity(), new ArrayList<Chat>());
         listMessages.setAdapter(mAdapter);
         listMessages.setOnItemClickListener(this);
     }

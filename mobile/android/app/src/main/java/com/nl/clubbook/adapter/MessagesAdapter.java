@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.ChatDto;
-import com.nl.clubbook.datasource.ChatMessageDto;
+import com.nl.clubbook.datasource.Chat;
+import com.nl.clubbook.datasource.ChatMessage;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.ImageHelper;
 import com.squareup.picasso.Picasso;
@@ -20,10 +20,10 @@ import java.util.List;
 public class MessagesAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<ChatDto> mChats = null;
+    private List<Chat> mChats = null;
     private LayoutInflater mInflater;
 
-    public MessagesAdapter(Context context, List<ChatDto> chats) {
+    public MessagesAdapter(Context context, List<Chat> chats) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mChats = chats;
@@ -35,7 +35,7 @@ public class MessagesAdapter extends BaseAdapter {
     }
 
     @Override
-    public ChatDto getItem(int position) {
+    public Chat getItem(int position) {
         return mChats.get(position);
     }
 
@@ -63,13 +63,13 @@ public class MessagesAdapter extends BaseAdapter {
             holder = (MessageItemHolder) row.getTag();
         }
 
-        ChatDto messageItem = mChats.get(position);
+        Chat messageItem = mChats.get(position);
         fillView(holder, messageItem);
 
         return row;
     }
 
-    public void updateData(List<ChatDto> newChats) {
+    public void updateData(List<Chat> newChats) {
         if(newChats == null) {
             return;
         }
@@ -78,7 +78,7 @@ public class MessagesAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    private void fillView(MessageItemHolder holder, ChatDto messageItem) {
+    private void fillView(MessageItemHolder holder, Chat messageItem) {
         if(messageItem == null) {
             return;
         }
@@ -88,7 +88,7 @@ public class MessagesAdapter extends BaseAdapter {
         holder.txtUsername.setText(receiver.getName());
         holder.txtUsername.setTag(receiver.getId());
 
-        List<ChatMessageDto> conversation = messageItem.getConversation();
+        List<ChatMessage> conversation = messageItem.getConversation();
         if(conversation != null && !conversation.isEmpty()) {
             holder.txtLastMessage.setText(conversation.get(0).getFormatMessage(mContext));
         }

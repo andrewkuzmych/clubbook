@@ -28,8 +28,8 @@ import android.widget.Toast;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.NavDrawerItem;
-import com.nl.clubbook.datasource.ChatMessageDto;
-import com.nl.clubbook.datasource.ClubDto;
+import com.nl.clubbook.datasource.ChatMessage;
+import com.nl.clubbook.datasource.Club;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.JSONConverter;
 import com.nl.clubbook.fragment.BaseFragment;
@@ -369,7 +369,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
                 SessionManager session = SessionManager.getInstance();
                 if (session.getConversationListener() != null && session.getConversationListener().equalsIgnoreCase(userFrom + "_" + userTo)) {
-                    ChatMessageDto lastMessage = JSONConverter.newChatMessage(data.optJSONObject("last_message"));
+                    ChatMessage lastMessage = JSONConverter.newChatMessage(data.optJSONObject("last_message"));
                     chatFragment.receiveComment(lastMessage);
                 } else {
                     updateMessagesCount();
@@ -451,7 +451,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void updateNavDrawerHeader() {
-        ClubDto club = LocationCheckinHelper.getInstance().getCurrentClub();
+        Club club = LocationCheckinHelper.getInstance().getCurrentClub();
 
         TextView txtClubName = (TextView) mNavDrawerHeaderView.findViewById(R.id.txtClubName);
         View imgCheckOut = mNavDrawerHeaderView.findViewById(R.id.imgCheckOut);

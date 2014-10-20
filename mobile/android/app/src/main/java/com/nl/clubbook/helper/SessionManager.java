@@ -4,11 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import com.nl.clubbook.activity.MainActivity;
-import com.nl.clubbook.datasource.ClubDto;
+import com.nl.clubbook.datasource.Club;
 import com.nl.clubbook.datasource.UserDto;
 import com.parse.PushService;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -176,28 +175,28 @@ public class SessionManager {
         return user;
     }
 
-    public void putCheckedInClubInfo(@Nullable ClubDto clubDto) {
-        if(clubDto == null) {
+    public void putCheckedInClubInfo(@Nullable Club club) {
+        if(club == null) {
             return;
         }
 
         Editor editor = mPreferences.edit();
 
-        editor.putString(KEY_CHECKIN_CLUB_ID, clubDto.getId());
-        editor.putFloat(KEY_CHECKIN_CLUB_LAT, (float) clubDto.getLat());
-        editor.putFloat(KEY_CHECKIN_CLUB_LON, (float) clubDto.getLon());
-        editor.putString(KEY_CHECKIN_CLUB_NAME, clubDto.getTitle());
+        editor.putString(KEY_CHECKIN_CLUB_ID, club.getId());
+        editor.putFloat(KEY_CHECKIN_CLUB_LAT, (float) club.getLat());
+        editor.putFloat(KEY_CHECKIN_CLUB_LON, (float) club.getLon());
+        editor.putString(KEY_CHECKIN_CLUB_NAME, club.getTitle());
 
         editor.commit();
     }
 
-    public ClubDto getCheckedInClubInfo() {
+    public Club getCheckedInClubInfo() {
         String clubId = mPreferences.getString(KEY_CHECKIN_CLUB_ID, null);
         if(clubId == null) {
             return null;
         }
 
-        ClubDto checkedInClub = new ClubDto();
+        Club checkedInClub = new Club();
 
         checkedInClub.setId(clubId);
         checkedInClub.setLat(mPreferences.getFloat(KEY_CHECKIN_CLUB_LAT, 0f));

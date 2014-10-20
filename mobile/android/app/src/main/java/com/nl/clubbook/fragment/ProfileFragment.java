@@ -15,10 +15,10 @@ import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.ProfileAdapter;
 import com.nl.clubbook.adapter.UserAvatarPagerAdapter;
-import com.nl.clubbook.datasource.CheckInUserDto;
+import com.nl.clubbook.datasource.CheckInUser;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
-import com.nl.clubbook.datasource.UserPhotoDto;
+import com.nl.clubbook.datasource.UserPhoto;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.SessionManager;
@@ -47,7 +47,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     private String mProfileId;
     private String mUsername;
     private String mUserAvatarUrl;
-    private List<CheckInUserDto> mCheckInUsers;
+    private List<CheckInUser> mCheckInUsers;
     private UserAvatarPagerAdapter mPhotoAdapter;
 
     private ViewPagerBulletIndicatorView mBulletIndicator;
@@ -58,7 +58,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     private int mBtnAddFriendMode = BtnAddFriendModes.MODE_ADD;
     private int mBtnBlockUserMode = BtnBlockModes.MODE_BLOCK;
 
-    public static Fragment newInstance(@NotNull Fragment targetFragment, String profileId, @Nullable List<CheckInUserDto> checkedInUsers, int openMode) {
+    public static Fragment newInstance(@NotNull Fragment targetFragment, String profileId, @Nullable List<CheckInUser> checkedInUsers, int openMode) {
         ProfileFragment fragment = new ProfileFragment();
         fragment.setTargetFragment(targetFragment, 0);
         fragment.setCheckInUsers(checkedInUsers);
@@ -264,7 +264,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             txtBlockUser.setText(R.string.block_user);
         }
 
-        List<UserPhotoDto> userPhotos = profile.getPhotos();
+        List<UserPhoto> userPhotos = profile.getPhotos();
         if(userPhotos != null && !userPhotos.isEmpty()) {
             initViewPager(view, userPhotos);
         }
@@ -329,7 +329,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         }
     }
 
-    private void initViewPager(@NotNull View view, @NotNull List<UserPhotoDto> userPhotoList) {
+    private void initViewPager(@NotNull View view, @NotNull List<UserPhoto> userPhotoList) {
         mBulletIndicator = (ViewPagerBulletIndicatorView)view.findViewById(R.id.indicatorAvatars);
         mBulletIndicator.setBulletViewCount(userPhotoList.size());
         if(userPhotoList.size() <= 1) {
@@ -347,7 +347,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         }
 
         for(int i = 0; i < userPhotoList.size(); i++) {
-            UserPhotoDto userPhoto = userPhotoList.get(i);
+            UserPhoto userPhoto = userPhotoList.get(i);
             if(userPhoto.getIsAvatar()) {
                 pagerImage.setCurrentItem(i, false);
                 mBulletIndicator.setSelectedView(i);
@@ -632,7 +632,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         getActivity().getSupportFragmentManager().popBackStack();
     }
 
-    public void setCheckInUsers(List<CheckInUserDto> mCheckInUsers) {
+    public void setCheckInUsers(List<CheckInUser> mCheckInUsers) {
         this.mCheckInUsers = mCheckInUsers;
     }
 

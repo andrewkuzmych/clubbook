@@ -78,9 +78,6 @@
             android:name=".activity.ImageViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppBlackTheme"/>
-        <activity
-            android:name=".activity.InviteFriends"
-            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="CLOUDINARY_URL"

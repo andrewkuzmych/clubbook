@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.ClubsAdapter;
-import com.nl.clubbook.datasource.ClubDto;
+import com.nl.clubbook.datasource.Club;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.helper.SessionManager;
@@ -117,7 +117,7 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
                     return;
                 }
 
-                List<ClubDto> places = (List<ClubDto>) result;
+                List<Club> places = (List<Club>) result;
                 mClubsAdapter.updateData(places);
             }
         });
@@ -129,7 +129,7 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
             return;
         }
 
-        mClubsAdapter = new ClubsAdapter(getActivity(), new ArrayList<ClubDto>());
+        mClubsAdapter = new ClubsAdapter(getActivity(), new ArrayList<Club>());
         ListView clubList = (ListView) view.findViewById(R.id.listClub);
         clubList.setAdapter(mClubsAdapter);
         clubList.setOnItemClickListener(this);

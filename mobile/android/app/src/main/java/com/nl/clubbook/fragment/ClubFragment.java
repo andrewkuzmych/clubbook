@@ -20,9 +20,9 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.activity.ClubInfoActivity;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.adapter.ProfileAdapter;
-import com.nl.clubbook.datasource.CheckInUserDto;
-import com.nl.clubbook.datasource.ClubDto;
-import com.nl.clubbook.datasource.ClubWorkingHoursDto;
+import com.nl.clubbook.datasource.CheckInUser;
+import com.nl.clubbook.datasource.Club;
+import com.nl.clubbook.datasource.ClubWorkingHours;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.JSONConverter;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
@@ -55,7 +55,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     public static final int LOAD_MODE_INIT = 1111;
     public static final int LOAD_MODE_CHECK_IN = 9999;
 
-    private ClubDto mClub;
+    private Club mClub;
     private String mClubId;
 
     private boolean mIsLoading = false;
@@ -220,7 +220,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
                 setProgressViewState(mode, false);
 
-                mClub = (ClubDto) result;
+                mClub = (Club) result;
 
                 fillView(view);
             }
@@ -269,9 +269,9 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         txtFriendsCount.setText(mClub.getActiveFriendsCheckIns() + "\n" + getString(R.string.friends));
         txtDistance.setText(LocationCheckinHelper.formatDistance(getActivity().getApplicationContext(), mClub.getDistance()));
 
-        ClubWorkingHoursDto workingHours = mClub.getTodayWorkingHours();
+        ClubWorkingHours workingHours = mClub.getTodayWorkingHours();
         if (workingHours != null) {
-            if (ClubWorkingHoursDto.STATUS_OPENED.equalsIgnoreCase(workingHours.getStatus())) {
+            if (ClubWorkingHours.STATUS_OPENED.equalsIgnoreCase(workingHours.getStatus())) {
                 String startTime = workingHours.getStartTime();
                 String endTime = workingHours.getEndTime();
 
@@ -292,8 +292,8 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         }
 
         TextView txtStatus = (TextView) view.findViewById(R.id.txtStatus);
-        ClubWorkingHoursDto todayWorkingHours = mClub.getTodayWorkingHours();
-        if (todayWorkingHours != null && ClubWorkingHoursDto.STATUS_OPENED.equalsIgnoreCase(todayWorkingHours.getStatus())) {
+        ClubWorkingHours todayWorkingHours = mClub.getTodayWorkingHours();
+        if (todayWorkingHours != null && ClubWorkingHours.STATUS_OPENED.equalsIgnoreCase(todayWorkingHours.getStatus())) {
             txtStatus.setTextColor(getResources().getColor(R.color.green));
             txtStatus.setText(R.string.open);
         } else {
@@ -462,7 +462,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         }
     }
 
-    private void initGridView(@NotNull View view, @Nullable List<CheckInUserDto> users) {
+    private void initGridView(@NotNull View view, @Nullable List<CheckInUser> users) {
         if(users == null) {
             view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.VISIBLE);
             return;
@@ -470,7 +470,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
         String currentUserId = getSession().getUserDetails().get(SessionManager.KEY_ID);
         if(!LocationCheckinHelper.getInstance().isCheckIn()) {
-            for(CheckInUserDto user : users) {
+            for(CheckInUser user : users) {
                 if(user != null && currentUserId.equalsIgnoreCase(user.getId())) {
                     LocationCheckinHelper.getInstance().setCurrentClub(mClub);
 

@@ -5,15 +5,15 @@ import org.json.JSONObject;
 /**
  * Created by odats on 05/08/2014.
  */
-public class UserPhotoDto {
+public class UserPhoto {
     private String id;
     private String url;
     private Boolean isAvatar;
 
-    public UserPhotoDto() {
+    public UserPhoto() {
     }
 
-    UserPhotoDto(JSONObject rawData) {
+    UserPhoto(JSONObject rawData) {
         this.setId(rawData.optString("_id"));
         this.setUrl(rawData.optString("url"));
         this.setIsAvatar(rawData.optBoolean("profile"));

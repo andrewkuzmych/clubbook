@@ -13,7 +13,7 @@ import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.activity.MainLoginActivity;
 import com.nl.clubbook.activity.NoLocationActivity;
-import com.nl.clubbook.datasource.ClubDto;
+import com.nl.clubbook.datasource.Club;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.utils.L;
 
@@ -34,7 +34,7 @@ public class LocationCheckinHelper {
     private boolean mIsListenerRemoved = false;
     private LocationManager mLocationManager;
 
-    private ClubDto mCurrentClub;
+    private Club mCurrentClub;
     private LocationListener mLocationListener;
     private boolean mShouldHideLocationErrorView = false;
 
@@ -64,11 +64,11 @@ public class LocationCheckinHelper {
     private LocationCheckinHelper() {
     }
 
-    public ClubDto getCurrentClub() {
+    public Club getCurrentClub() {
         return mCurrentClub;
     }
 
-    public void setCurrentClub(ClubDto currentClub) {
+    public void setCurrentClub(Club currentClub) {
         mCurrentClub = currentClub;
         SessionManager.getInstance().putCheckedInClubInfo(currentClub);
     }
@@ -82,7 +82,7 @@ public class LocationCheckinHelper {
         return currentLocation;
     }
 
-    public boolean isCheckInHere(ClubDto club) {
+    public boolean isCheckInHere(Club club) {
         if (mCurrentClub == null || club == null) {
             return false;
         }
@@ -101,7 +101,7 @@ public class LocationCheckinHelper {
     /**
      * Check location and distance to club to allow check in
      */
-    public boolean canCheckInHere(ClubDto club) {
+    public boolean canCheckInHere(Club club) {
         if (club == null || currentLocation == null) {
             return false;
         }
@@ -115,7 +115,7 @@ public class LocationCheckinHelper {
     /**
      * Set current club
      */
-    public void checkIn(final Context context, final ClubDto club, final CheckInOutCallbackInterface callback) {
+    public void checkIn(final Context context, final Club club, final CheckInOutCallbackInterface callback) {
         int maxCheckInDistance = SessionManager.getInstance().getCheckInMaxDistance();
 
         // location validation

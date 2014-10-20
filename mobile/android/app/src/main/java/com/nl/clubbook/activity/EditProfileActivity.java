@@ -18,7 +18,7 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.UserPhotosAdapter;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.UserDto;
-import com.nl.clubbook.datasource.UserPhotoDto;
+import com.nl.clubbook.datasource.UserPhoto;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.ImageUploader;
@@ -42,7 +42,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
     public static final int REQUEST_CODE = 6364;
 
-    private UserPhotoDto selectedImageDto;
+    private UserPhoto selectedImageDto;
     private ImageUploader imageUploader;
     private UserDto profile;
     private UserPhotosAdapter mAdapter;
@@ -270,25 +270,25 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         });
     }
 
-    private void drawImageManager(@Nullable List<UserPhotoDto> userPhotoDtoList) {
-        if(userPhotoDtoList == null) {
+    private void drawImageManager(@Nullable List<UserPhoto> userPhotoList) {
+        if(userPhotoList == null) {
             return;
         }
 
         HorizontalListView listUserPhotos = (HorizontalListView)findViewById(R.id.listUserPhotos);
-        mAdapter = new UserPhotosAdapter(EditProfileActivity.this, userPhotoDtoList);
+        mAdapter = new UserPhotosAdapter(EditProfileActivity.this, userPhotoList);
         listUserPhotos.setAdapter(mAdapter);
 
-        for (UserPhotoDto userPhotoDto : userPhotoDtoList) {
-            if(userPhotoDto.getIsAvatar()) {
-                displayImageBigPreview(userPhotoDto);
-                UIUtils.loadPhotoToActionBar(EditProfileActivity.this, ImageHelper.getUserListAvatar(userPhotoDto.getUrl()), mTarget);
+        for (UserPhoto userPhoto : userPhotoList) {
+            if(userPhoto.getIsAvatar()) {
+                displayImageBigPreview(userPhoto);
+                UIUtils.loadPhotoToActionBar(EditProfileActivity.this, ImageHelper.getUserListAvatar(userPhoto.getUrl()), mTarget);
                 break;
             }
         }
     }
 
-    private void displayImageBigPreview(UserPhotoDto imageDto) {
+    private void displayImageBigPreview(UserPhoto imageDto) {
         selectedImageDto = imageDto;
 
         ImageView imgAvatar = (ImageView) findViewById(R.id.imgAvatar);
@@ -321,7 +321,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                     return;
                 }
 
-                UserPhotoDto imageDto = (UserPhotoDto) result;
+                UserPhoto imageDto = (UserPhoto) result;
 
                 // add to small preview
                 if(mAdapter != null) {
@@ -353,9 +353,9 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                     mAdapter.removePhoto(selectedImageDto);
                 }
 
-                for (UserPhotoDto userPhotoDto : profile.getPhotos()) {
-                    if (userPhotoDto.getIsAvatar()) {
-                        selectedImageDto = userPhotoDto;
+                for (UserPhoto userPhoto : profile.getPhotos()) {
+                    if (userPhoto.getIsAvatar()) {
+                        selectedImageDto = userPhoto;
                         break;
                     }
                 }

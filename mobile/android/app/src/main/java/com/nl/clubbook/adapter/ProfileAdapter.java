@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.CheckInUserDto;
+import com.nl.clubbook.datasource.CheckInUser;
 import com.nl.clubbook.helper.ImageHelper;
 import com.squareup.picasso.Picasso;
 
@@ -23,12 +23,12 @@ public class ProfileAdapter extends BaseAdapter {
     public static final int MODE_LIST = 8888;
 
     private Context mContext;
-    private List<CheckInUserDto> mUsers;
+    private List<CheckInUser> mUsers;
     private LayoutInflater mInflater;
     private int mMode = MODE_GRID;
 
 
-    public ProfileAdapter(Context context, List<CheckInUserDto> users, int mode) {
+    public ProfileAdapter(Context context, List<CheckInUser> users, int mode) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mUsers = users;
@@ -77,7 +77,7 @@ public class ProfileAdapter extends BaseAdapter {
         return row;
     }
 
-    private void fillView(ViewHolder holder, CheckInUserDto item) {
+    private void fillView(ViewHolder holder, CheckInUser item) {
         String imageUrl = ImageHelper.getUserListAvatar(item.getAvatarUrl());
         Picasso.with(mContext).load(imageUrl).error(R.drawable.ic_avatar_unknown).into(holder.imgAvatar);
 

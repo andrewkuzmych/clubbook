@@ -30,8 +30,8 @@ public class UserDto {
     private String friendStatus;
     protected boolean isNotificationEnabled;
     private boolean isBlocked = false;
-    protected CheckInDto lastCheckIn;
-    protected List<UserPhotoDto> photos;
+    protected CheckIn lastCheckIn;
+    protected List<UserPhoto> photos;
 
     protected UserDto() {
 
@@ -51,13 +51,13 @@ public class UserDto {
         isNotificationEnabled = userJson.optBoolean("push", true);
 
         JSONArray photosJson = userJson.optJSONArray("photos");
-        photos = new ArrayList<UserPhotoDto>();
+        photos = new ArrayList<UserPhoto>();
         for (int i = 0; i < photosJson.length(); i++) {
             if (photosJson.optJSONObject(i).optBoolean("profile")) {
                 avatar = photosJson.optJSONObject(i).optString("url");
             }
 
-            photos.add(new UserPhotoDto(photosJson.optJSONObject(i)));
+            photos.add(new UserPhoto(photosJson.optJSONObject(i)));
         }
 
         friendStatus = userJson.optString("friend_status", "");
@@ -72,11 +72,11 @@ public class UserDto {
         this.id = id;
     }
 
-    public List<UserPhotoDto> getPhotos() {
+    public List<UserPhoto> getPhotos() {
         return photos;
     }
 
-    public void setPhotos(List<UserPhotoDto> photos) {
+    public void setPhotos(List<UserPhoto> photos) {
         this.photos = photos;
     }
 
@@ -171,11 +171,11 @@ public class UserDto {
         this.bio = bio;
     }
 
-    public CheckInDto getLastCheckIn() {
+    public CheckIn getLastCheckIn() {
         return lastCheckIn;
     }
 
-    public void setLastCheckIn(CheckInDto lastCheckIn) {
+    public void setLastCheckIn(CheckIn lastCheckIn) {
         this.lastCheckIn = lastCheckIn;
     }
 

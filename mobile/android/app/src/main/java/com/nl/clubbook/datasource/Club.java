@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by Andrew on 5/27/2014.
  */
-public class ClubDto {
+public class Club {
     private String id;
     private String title;
     private String phone;
@@ -22,10 +22,10 @@ public class ClubDto {
     private float distance;
     private int activeCheckIns;
     private int activeFriendsCheckIns;
-    private ClubWorkingHoursDto todayWorkingHours;
-    private List<ClubWorkingHoursDto> workingHours;
+    private ClubWorkingHours todayWorkingHours;
+    private List<ClubWorkingHours> workingHours;
     private List<String> photos;
-    private List<CheckInUserDto> users;
+    private List<CheckInUser> users;
 
 
     public String getId() {
@@ -36,11 +36,11 @@ public class ClubDto {
         this.id = id;
     }
 
-    public List<CheckInUserDto> getUsers() {
+    public List<CheckInUser> getUsers() {
         return users;
     }
 
-    public void setUsers(List<CheckInUserDto> users) {
+    public void setUsers(List<CheckInUser> users) {
         this.users = users;
     }
 
@@ -124,11 +124,11 @@ public class ClubDto {
         this.activeFriendsCheckIns = activeFriendsCheckIns;
     }
 
-    public ClubWorkingHoursDto getTodayWorkingHours() {
+    public ClubWorkingHours getTodayWorkingHours() {
         return todayWorkingHours;
     }
 
-    public void setTodayWorkingHours(ClubWorkingHoursDto todayWorkingHours) {
+    public void setTodayWorkingHours(ClubWorkingHours todayWorkingHours) {
         this.todayWorkingHours = todayWorkingHours;
     }
 
@@ -180,11 +180,11 @@ public class ClubDto {
         this.email = email;
     }
 
-    public List<ClubWorkingHoursDto> getWorkingHours() {
+    public List<ClubWorkingHours> getWorkingHours() {
         return workingHours;
     }
 
-    public void setWorkingHours(List<ClubWorkingHoursDto> workingHours) {
+    public void setWorkingHours(List<ClubWorkingHours> workingHours) {
         this.workingHours = workingHours;
     }
 }

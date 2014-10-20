@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.UserPhotoDto;
+import com.nl.clubbook.datasource.UserPhoto;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -20,9 +20,9 @@ public class UserPhotosAdapter extends BaseAdapter {
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<UserPhotoDto> mUserPhotos;
+    private List<UserPhoto> mUserPhotos;
 
-    public UserPhotosAdapter(Context context, List<UserPhotoDto> userPhotos) {
+    public UserPhotosAdapter(Context context, List<UserPhoto> userPhotos) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mUserPhotos = userPhotos;
@@ -34,7 +34,7 @@ public class UserPhotosAdapter extends BaseAdapter {
     }
 
     @Override
-    public UserPhotoDto getItem(int position) {
+    public UserPhoto getItem(int position) {
         return mUserPhotos.get(position);
     }
 
@@ -64,14 +64,14 @@ public class UserPhotosAdapter extends BaseAdapter {
         return row;
     }
 
-    public void addNewImage(UserPhotoDto photo, int position) {
+    public void addNewImage(UserPhoto photo, int position) {
         if(photo != null && position >= 0) {
             mUserPhotos.add(position, photo);
             notifyDataSetChanged();
         }
     }
 
-    public void removePhoto(UserPhotoDto photo) {
+    public void removePhoto(UserPhoto photo) {
         if(photo != null) {
             mUserPhotos.remove(photo);
             notifyDataSetChanged();

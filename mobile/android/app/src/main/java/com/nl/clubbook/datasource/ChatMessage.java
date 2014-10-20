@@ -7,7 +7,7 @@ import com.nl.clubbook.R;
 /**
  * Created by Andrew on 6/6/2014.
  */
-public class ChatMessageDto extends BaseChatMessage {
+public class ChatMessage extends BaseChatMessage {
     public static final String TYPE_MESSAGE = "message";
     public static final String TYPE_DRINK = "drink";
     public static final String TYPE_SMILE = "smile";

@@ -19,8 +19,8 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.adapter.ChatAdapter;
 import com.nl.clubbook.datasource.BaseChatMessage;
-import com.nl.clubbook.datasource.ChatDto;
-import com.nl.clubbook.datasource.ChatMessageDto;
+import com.nl.clubbook.datasource.Chat;
+import com.nl.clubbook.datasource.ChatMessage;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.CalendarUtils;
@@ -47,7 +47,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     private String mUserToId;
     private String mUserFromId;
     private String mAccessToken;
-    private ChatDto chatDto;
+    private Chat chat;
 
     public static Fragment newInstance(Fragment targetFragment, String userId, String userName, String userPhotoUrl) {
         Fragment fragment = new ChatFragment();
@@ -120,10 +120,10 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.txtLike:
-                sendMessageTemp(ChatMessageDto.TYPE_SMILE, getString(R.string.likes_the_profile));
+                sendMessageTemp(ChatMessage.TYPE_SMILE, getString(R.string.likes_the_profile));
                 break;
             case R.id.imgSendDrink:
-                sendMessageTemp(ChatMessageDto.TYPE_DRINK, getString(R.string.invites_for_a_drink));
+                sendMessageTemp(ChatMessage.TYPE_DRINK, getString(R.string.invites_for_a_drink));
                 break;
             case R.id.txtSend:
                 sendMessage();
@@ -176,12 +176,12 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         view.findViewById(R.id.txtLike).setOnClickListener(ChatFragment.this);
     }
 
-    public void receiveComment(ChatMessageDto message) {
+    public void receiveComment(ChatMessage message) {
         mAdapter.add(message);
 
         DataStore.readMessages(
-                chatDto.getCurrentUser().getId(),
-                chatDto.getReceiver().getId(),
+                chat.getCurrentUser().getId(),
+                chat.getReceiver().getId(),
                 mAccessToken,
                 new DataStore.OnResultReady() {
 
@@ -218,15 +218,15 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
             }
         });
 
-        ChatMessageDto chatMessageDto = new ChatMessageDto();
-        chatMessageDto.setType(type);
-        chatMessageDto.setIsMyMessage(true);
-        chatMessageDto.setUserFrom(chatDto.getCurrentUser().getId());
-        chatMessageDto.setUserFromName(chatDto.getCurrentUser().getName());
-        chatMessageDto.setUserFromAvatar(chatDto.getCurrentUser().getAvatar());
-        chatMessageDto.setMsg(formatMessage);
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setType(type);
+        chatMessage.setIsMyMessage(true);
+        chatMessage.setUserFrom(chat.getCurrentUser().getId());
+        chatMessage.setUserFromName(chat.getCurrentUser().getName());
+        chatMessage.setUserFromAvatar(chat.getCurrentUser().getAvatar());
+        chatMessage.setMsg(formatMessage);
 
-        mAdapter.add(chatMessageDto);
+        mAdapter.add(chatMessage);
 
         getView().findViewById(R.id.txtNoMessages).setVisibility(View.GONE);
     }
@@ -246,20 +246,20 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         String input = inputText.getText().toString().trim();
 
         if (!input.equals("")) {
-            DataStore.chat(mUserFromId, mUserToId, input, ChatMessageDto.TYPE_MESSAGE, accessToken, new DataStore.OnResultReady() {
+            DataStore.chat(mUserFromId, mUserToId, input, ChatMessage.TYPE_MESSAGE, accessToken, new DataStore.OnResultReady() {
                 @Override
                 public void onReady(Object result, boolean failed) {
 
                 }
             });
 
-            ChatMessageDto myNewMessage = new ChatMessageDto();
+            ChatMessage myNewMessage = new ChatMessage();
             myNewMessage.setMsg(input);
-            myNewMessage.setType(ChatMessageDto.TYPE_MESSAGE);
+            myNewMessage.setType(ChatMessage.TYPE_MESSAGE);
             myNewMessage.setIsMyMessage(true);
-            myNewMessage.setUserFrom(chatDto.getCurrentUser().getId());
-            myNewMessage.setUserFromName(chatDto.getCurrentUser().getName());
-            myNewMessage.setUserFromAvatar(chatDto.getCurrentUser().getAvatar());
+            myNewMessage.setUserFrom(chat.getCurrentUser().getId());
+            myNewMessage.setUserFromName(chat.getCurrentUser().getName());
+            myNewMessage.setUserFromAvatar(chat.getCurrentUser().getAvatar());
 
             mAdapter.add(myNewMessage);
             inputText.setText("");
@@ -279,10 +279,10 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
         int sendMessagesCount = 0;
         for(BaseChatMessage baseMessage : messages) {
-            if(baseMessage instanceof ChatMessageDto) {
-                ChatMessageDto chatMessageDto = (ChatMessageDto) baseMessage;
+            if(baseMessage instanceof ChatMessage) {
+                ChatMessage chatMessage = (ChatMessage) baseMessage;
 
-                if(chatMessageDto.getIsMyMessage()) {
+                if(chatMessage.getIsMyMessage()) {
                     sendMessagesCount++;
 
                     if(sendMessagesCount == (maxSendMessagesCountWithoutReply + 1)) {
@@ -339,14 +339,14 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                     return;
                 }
 
-                chatDto = (ChatDto) result;
+                chat = (Chat) result;
 
-                List<BaseChatMessage> baseChatMessages = getChatsMessages(chatDto.getConversation());
+                List<BaseChatMessage> baseChatMessages = getChatsMessages(chat.getConversation());
 
                 mAdapter = new ChatAdapter(getActivity().getApplicationContext(), R.layout.item_chat_left, baseChatMessages, ChatFragment.this);
                 ListView listChat = (ListView) view.findViewById(R.id.listChat);
                 listChat.setAdapter(mAdapter);
-                listChat.setSelection(chatDto.getConversation().size());
+                listChat.setSelection(chat.getConversation().size());
 
                 if(baseChatMessages.isEmpty()) {
                     view.findViewById(R.id.txtNoMessages).setVisibility(View.VISIBLE);
@@ -359,8 +359,8 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                 imm.showSoftInput(inputText, InputMethodManager.SHOW_IMPLICIT);
 
                 DataStore.readMessages(
-                        chatDto.getCurrentUser().getId(),
-                        chatDto.getReceiver().getId(),
+                        chat.getCurrentUser().getId(),
+                        chat.getReceiver().getId(),
                         mAccessToken,
                         new DataStore.OnResultReady() {
                             @Override
@@ -384,11 +384,11 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     }
 
     //TODO move this operation to background
-    private List<BaseChatMessage> getChatsMessages(List<ChatMessageDto> chatMessages) {
+    private List<BaseChatMessage> getChatsMessages(List<ChatMessage> chatMessages) {
         long previousTime = 0;
         int dayTimeInMilliseconds = CalendarUtils.getDayTimeInMilliseconds();
         List<BaseChatMessage> baseChatMessages = new ArrayList<BaseChatMessage>();
-        for(ChatMessageDto message : chatMessages) {
+        for(ChatMessage message : chatMessages) {
             long timeWithoutHours = message.getTimeWithoutHours();
             if(timeWithoutHours > previousTime + dayTimeInMilliseconds) {
                 BaseChatMessage baseMessage = new BaseChatMessage();

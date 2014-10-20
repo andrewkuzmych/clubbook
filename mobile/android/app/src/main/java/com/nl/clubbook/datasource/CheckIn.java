@@ -3,7 +3,7 @@ package com.nl.clubbook.datasource;
 /**
  * Created by Volodymyr on 14.08.2014.
  */
-public class CheckInDto {
+public class CheckIn {
 
     private String id;
     private boolean isActive;
@@ -11,7 +11,7 @@ public class CheckInDto {
     private String clubAddress;
     private String clubName;
 
-    public CheckInDto() {
+    public CheckIn() {
     }
 
     public String getClubId() {

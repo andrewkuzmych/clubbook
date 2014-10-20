@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.CheckInDto;
+import com.nl.clubbook.datasource.CheckIn;
 import com.nl.clubbook.datasource.UserDto;
 import com.nl.clubbook.helper.ImageHelper;
 import com.squareup.picasso.Picasso;
@@ -95,7 +95,7 @@ public class FriendsAdapter extends BaseAdapter {
             Picasso.with(mContext).load(imageUrl).error(R.drawable.ic_avatar_unknown).into(holder.imgUserAvatar);
         }
 
-        CheckInDto checkIn = userDto.getLastCheckIn();
+        CheckIn checkIn = userDto.getLastCheckIn();
         if(checkIn == null) {
             return;
         }

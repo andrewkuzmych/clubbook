@@ -17,8 +17,8 @@ import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.ImageViewActivity;
 import com.nl.clubbook.adapter.ClubPhotoPagerAdapter;
-import com.nl.clubbook.datasource.ClubDto;
-import com.nl.clubbook.datasource.ClubWorkingHoursDto;
+import com.nl.clubbook.datasource.Club;
+import com.nl.clubbook.datasource.ClubWorkingHours;
 import com.nl.clubbook.datasource.JSONConverter;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.LocationCheckinHelper;
@@ -91,7 +91,7 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
         }
 
         String jsonClub = args.getString(ARG_JSON_CLUB);
-        ClubDto club = JSONConverter.newClub(jsonClub);
+        Club club = JSONConverter.newClub(jsonClub);
         if(club == null) {
             L.i("club = null");
             return;
@@ -100,7 +100,7 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
         fillView(view, club);
     }
 
-    private void fillView(@NotNull View view, @NotNull ClubDto club) {
+    private void fillView(@NotNull View view, @NotNull Club club) {
         initViewPager(view, club.getPhotos());
 
         String info = club.getInfo();
@@ -120,7 +120,7 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
         }
     }
 
-    private void fillContactHolder(View view, ClubDto club) {
+    private void fillContactHolder(View view, Club club) {
         boolean result = false;
 
         if(fillTextViewHolder(view, club.getPhone(), R.id.txtPhone, R.id.txtPhone)) {
@@ -141,7 +141,7 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
         }
     }
 
-    private void fillLocationHolder(View view, ClubDto club) {
+    private void fillLocationHolder(View view, Club club) {
         boolean result = false;
 
         TextView txtLocation = (TextView) view.findViewById(R.id.txtLocation);
@@ -168,7 +168,7 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
         }
     }
 
-    private void fillClubRequirementsHolder(View view, ClubDto club) {
+    private void fillClubRequirementsHolder(View view, Club club) {
         boolean result = false;
 
         if(fillTextViewHolder(view, club.getAgeRestriction(), R.id.txtAgeRestriction, R.id.holderAgeRestriction)) {
@@ -185,12 +185,12 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
         }
     }
 
-    private void fillWorkingHoursHolder(View view, ClubDto club) {
+    private void fillWorkingHoursHolder(View view, Club club) {
         boolean result = false;
 
         //fill today working hours
         TextView txtHours = (TextView) view.findViewById(R.id.txtHours);
-        ClubWorkingHoursDto workHours = club.getTodayWorkingHours();
+        ClubWorkingHours workHours = club.getTodayWorkingHours();
         if(workHours != null) {
             result = true;
 
@@ -198,7 +198,7 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
 
             TextView txtOpenStatus = (TextView) view.findViewById(R.id.txtOpenStatus);
             String status = workHours.getStatus();
-            if(ClubWorkingHoursDto.STATUS_OPENED.equalsIgnoreCase(status)) {
+            if(ClubWorkingHours.STATUS_OPENED.equalsIgnoreCase(status)) {
                 txtOpenStatus.setTextColor(getResources().getColor(R.color.green));
                 txtOpenStatus.setText(R.string.open);
             } else {
@@ -232,11 +232,11 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
         int calendarDayOfWeekIndex =  calendar.get(Calendar.DAY_OF_WEEK);
 
         LinearLayout holderWorkingHours = (LinearLayout)view.findViewById(R.id.holderWorkingHours);
-        List<ClubWorkingHoursDto> workingHours = club.getWorkingHours();
+        List<ClubWorkingHours> workingHours = club.getWorkingHours();
         if(workingHours != null && !workingHours.isEmpty()) {
             result = true;
             LayoutInflater inflater = LayoutInflater.from(getActivity());
-            for (ClubWorkingHoursDto clubWorkHours : workingHours) {
+            for (ClubWorkingHours clubWorkHours : workingHours) {
                 View row;
                 if(calendarDayOfWeekIndex - 1 == clubWorkHours.getDay()) {
                     row = inflater.inflate(R.layout.view_club_work_hours_bold, null);
@@ -249,7 +249,7 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
                 txtDayName.setText(dayName != null ? dayName : "");
 
                 TextView txtWorkHours = (TextView) row.findViewById(R.id.txtWorkHours);
-                if(ClubWorkingHoursDto.STATUS_OPENED.equals(clubWorkHours.getStatus())) {
+                if(ClubWorkingHours.STATUS_OPENED.equals(clubWorkHours.getStatus())) {
                     String startTime = clubWorkHours.getStartTime();
                     String endTime = clubWorkHours.getEndTime();
 

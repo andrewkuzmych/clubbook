@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.UserPhotoDto;
+import com.nl.clubbook.datasource.UserPhoto;
 import com.nl.clubbook.fragment.ImageViewFragment;
 
 import java.util.List;
@@ -16,9 +16,9 @@ import java.util.List;
  */
 public class UserAvatarPagerAdapter extends FragmentStatePagerAdapter {
 
-    private List<UserPhotoDto> mUrls;
+    private List<UserPhoto> mUrls;
 
-    public UserAvatarPagerAdapter(FragmentManager fm, List<UserPhotoDto> urls) {
+    public UserAvatarPagerAdapter(FragmentManager fm, List<UserPhoto> urls) {
         super(fm);
 
         mUrls = urls;
@@ -44,7 +44,7 @@ public class UserAvatarPagerAdapter extends FragmentStatePagerAdapter {
         return POSITION_NONE;
     }
 
-    public void updateData(List<UserPhotoDto> urls) {
+    public void updateData(List<UserPhoto> urls) {
         mUrls = urls;
         notifyDataSetChanged();
     }

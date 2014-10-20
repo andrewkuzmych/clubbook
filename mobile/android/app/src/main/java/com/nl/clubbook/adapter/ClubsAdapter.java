@@ -8,8 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.ClubDto;
-import com.nl.clubbook.datasource.ClubWorkingHoursDto;
+import com.nl.clubbook.datasource.Club;
+import com.nl.clubbook.datasource.ClubWorkingHours;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.squareup.picasso.Picasso;
@@ -23,11 +23,11 @@ public class ClubsAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private Context mContext;
-    private List<ClubDto> mClubs = null;
+    private List<Club> mClubs = null;
     private String mCheckedIn;
     private String mFriends;
 
-    public ClubsAdapter(Context context, List<ClubDto> data) {
+    public ClubsAdapter(Context context, List<Club> data) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
         mClubs = data;
@@ -77,7 +77,7 @@ public class ClubsAdapter extends BaseAdapter {
         return row;
     }
 
-    public void updateData(List<ClubDto> data) {
+    public void updateData(List<Club> data) {
         if (data == null) {
             mClubs.clear();
         } else {
@@ -87,7 +87,7 @@ public class ClubsAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    private void fillRow(ClubItemHolder holder, ClubDto club) {
+    private void fillRow(ClubItemHolder holder, Club club) {
         String distance = LocationCheckinHelper.formatDistance(mContext, club.getDistance());
         holder.txtDistance.setText(distance);
 
@@ -97,8 +97,8 @@ public class ClubsAdapter extends BaseAdapter {
         holder.txtClubName.setText(club.getTitle());
         holder.txtClubName.setTag(club.getId());
 
-        ClubWorkingHoursDto todayWorkingHours = club.getTodayWorkingHours();
-        if(todayWorkingHours != null && ClubWorkingHoursDto.STATUS_OPENED.equalsIgnoreCase(todayWorkingHours.getStatus())) {
+        ClubWorkingHours todayWorkingHours = club.getTodayWorkingHours();
+        if(todayWorkingHours != null && ClubWorkingHours.STATUS_OPENED.equalsIgnoreCase(todayWorkingHours.getStatus())) {
             holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.green));
             holder.txtStatus.setText(R.string.open);
         } else {
