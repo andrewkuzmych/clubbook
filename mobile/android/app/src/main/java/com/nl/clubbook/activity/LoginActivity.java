@@ -8,10 +8,10 @@ import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
+
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.datasource.UserDto;
+import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.Validator;
 import com.nl.clubbook.utils.NetworkUtils;
 
@@ -111,7 +111,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     return;
                 }
 
-                UserDto user = (UserDto) result;
+                User user = (User) result;
                 getSession().createLoginSession(user);
 
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);

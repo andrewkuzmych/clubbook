@@ -101,10 +101,6 @@ public class BaseActivity extends ActionBarActivity {
         Toast.makeText(BaseActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 
-    protected void showLongToast(int messageresourceId) {
-        Toast.makeText(BaseActivity.this, messageresourceId, Toast.LENGTH_LONG).show();
-    }
-
     protected void initActionBar(int stringResourceId) {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Andrew on 5/19/2014.
  */
-public class UserDto {
+public class User {
 
     public static String STATUS_FRIEND = "friend";
     public static String STATUS_RECEIVE_REQUEST = "receive_request";
@@ -33,11 +33,11 @@ public class UserDto {
     protected CheckIn lastCheckIn;
     protected List<UserPhoto> photos;
 
-    protected UserDto() {
+    protected User() {
 
     }
 
-    protected UserDto(JSONObject userJson) {
+    protected User(JSONObject userJson) {
         id = userJson.optString("_id");
         fb_id = userJson.optString("fb_id");
         name = userJson.optString("name");

@@ -72,6 +72,10 @@ public class ClubbookRestClient {
         client.post(getBcAbsoluteUrl("obj/user/fb/find"), params, responseHandler);
     }
 
+    public static void invitedFriendsToClubbookFbIds(String userId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.post(getBcAbsoluteUrl("obj/user/" + userId + "/fb/invite"), params, responseHandler);
+    }
+
     public static void retrievePendingFriends(String userId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getBcAbsoluteUrl("obj/user/" + userId + "/friends/pending"), params, responseHandler);
     }

@@ -8,7 +8,7 @@ import android.widget.*;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.Chat;
 import com.nl.clubbook.datasource.ChatMessage;
-import com.nl.clubbook.datasource.UserDto;
+import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.ImageHelper;
 import com.squareup.picasso.Picasso;
 
@@ -83,7 +83,7 @@ public class MessagesAdapter extends BaseAdapter {
             return;
         }
 
-        UserDto receiver = messageItem.getReceiver();
+        User receiver = messageItem.getReceiver();
 
         holder.txtUsername.setText(receiver.getName());
         holder.txtUsername.setTag(receiver.getId());

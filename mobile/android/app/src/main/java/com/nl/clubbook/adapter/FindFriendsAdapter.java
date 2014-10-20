@@ -15,14 +15,13 @@ import android.widget.Toast;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.CheckIn;
 import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.datasource.UserDto;
+import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -33,13 +32,17 @@ public class FindFriendsAdapter extends BaseAdapter {
     private Context mContext;
     private Fragment mFragment;
     private LayoutInflater mInflater;
-    private List<UserDto> mUsers;
+    private List<User> mUsers;
 
-    public FindFriendsAdapter(Context context, Fragment fragment, List<UserDto> users) {
+    private int mBtnAddFriendPadding;
+
+    public FindFriendsAdapter(Context context, Fragment fragment, List<User> users) {
         mContext = context;
         mFragment = fragment;
         mInflater = LayoutInflater.from(context);
         mUsers = users;
+
+        mBtnAddFriendPadding = (int) context.getResources().getDimension(R.dimen.btn_add_friend_padding);
     }
 
     @Override
@@ -48,7 +51,7 @@ public class FindFriendsAdapter extends BaseAdapter {
     }
 
     @Override
-    public UserDto getItem(int position) {
+    public User getItem(int position) {
         return mUsers.get(position);
     }
 
@@ -82,7 +85,7 @@ public class FindFriendsAdapter extends BaseAdapter {
         return row;
     }
 
-    private void fillView(ViewHolder holder, UserDto user) {
+    private void fillView(ViewHolder holder, User user) {
         holder.txtUsername.setText(user.getName());
         holder.txtUsername.setTag(user.getId());
 
@@ -107,62 +110,74 @@ public class FindFriendsAdapter extends BaseAdapter {
 
         String friendStatus = user.getFriendStatus();
         int btnMode;
-        if(UserDto.STATUS_FRIEND.equalsIgnoreCase(friendStatus)) {
+        if(User.STATUS_FRIEND.equalsIgnoreCase(friendStatus)) {
             holder.txtAddFriend.setVisibility(View.GONE);
             btnMode = -1;
-        } else if(UserDto.STATUS_RECEIVE_REQUEST.equalsIgnoreCase(friendStatus)) {
+        } else if(User.STATUS_RECEIVE_REQUEST.equalsIgnoreCase(friendStatus)) {
             holder.txtAddFriend.setVisibility(View.VISIBLE);
-            holder.txtAddFriend.setText(R.string.accept_request_);
+            initAddFriendBtn(
+                    holder.txtAddFriend,
+                    R.string.accept_request_,
+                    R.drawable.bg_btn_green
+            );
             btnMode = BtnAddFriendModes.MODE_ACCEPT;
-        } else if(UserDto.STATUS_SENT_REQUEST.equalsIgnoreCase(friendStatus)) {
-            holder.txtAddFriend.setVisibility(View.VISIBLE);
-            holder.txtAddFriend.setText(R.string.cancel_request_);
-            btnMode = BtnAddFriendModes.MODE_CANCEL;
+        } else if(User.STATUS_SENT_REQUEST.equalsIgnoreCase(friendStatus)) {
+            holder.txtAddFriend.setVisibility(View.GONE);
+            btnMode = -1;
         } else {
             holder.txtAddFriend.setVisibility(View.VISIBLE);
-            holder.txtAddFriend.setText(R.string.add_friend_);
+            initAddFriendBtn(
+                    holder.txtAddFriend,
+                    R.string.add_friend_,
+                    R.drawable.bg_btn_violet_dark
+            );
             btnMode = BtnAddFriendModes.MODE_ADD;
         }
 
-        holder.txtAddFriend.setTag(user.getId());
+        holder.txtAddFriend.setTag(user);
         holder.txtAddFriend.setOnClickListener(getOnClickListener(btnMode));
+    }
+
+    private void initAddFriendBtn(TextView txtAddFriend, int textRes, int bgRes) {
+        txtAddFriend.setText(textRes);
+        txtAddFriend.setBackgroundResource(bgRes);
+        txtAddFriend.setPadding(mBtnAddFriendPadding, 0, mBtnAddFriendPadding, 0);
     }
 
     private View.OnClickListener getOnClickListener(final int mode) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Object tagId = view.getTag();
-                if(tagId == null) {
+                Object tagUser = view.getTag();
+                if(tagUser == null) {
                     return;
                 }
 
-                String profileId = (String) tagId;
+                User user = (User) tagUser;
                 TextView txtAddFriend = (TextView) view;
 
                 if(mode == BtnAddFriendModes.MODE_ADD) {
-                    onAddFriendsClicked(txtAddFriend, profileId);
-                } else if(mode == BtnAddFriendModes.MODE_CANCEL){
-                    onCancelFriendRequestClicked(txtAddFriend, profileId);
+                    onAddFriendsClicked(txtAddFriend, user);
                 } else {
-                    onAcceptFriendsRequestClicked(txtAddFriend, profileId);
+                    onAcceptFriendsRequestClicked(txtAddFriend, user);
                 }
             }
         };
     }
 
-    private void onAddFriendsClicked(final TextView txtAddFriend, String profileId) {
+    private void onAddFriendsClicked(final TextView txtAddFriend, final User user) {
         if(!NetworkUtils.isOn(mContext)) {
             showToast(R.string.no_connection);
             return;
         }
 
-        final SessionManager session = SessionManager.getInstance();
-        final HashMap<String, String> user = session.getUserDetails();
+        SessionManager session = SessionManager.getInstance();
+        String userId = session.getUserId();
+        String accessToken = session.getAccessToken();
 
         showProgress(mContext.getString(R.string.loading));
 
-        DataStore.addFriendRequest(user.get(SessionManager.KEY_ID), profileId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
+        DataStore.addFriendRequest(userId, user.getId(), accessToken,
                 new DataStore.OnResultReady() {
 
                     @Override
@@ -171,61 +186,35 @@ public class FindFriendsAdapter extends BaseAdapter {
                         if (failed) {
                             showToast(R.string.something_went_wrong_please_try_again);
                         } else {
-                            txtAddFriend.setText(R.string.cancel_request_);
-                            txtAddFriend.setOnClickListener(getOnClickListener(BtnAddFriendModes.MODE_CANCEL));
-                        }
-                    }
-                });
-    }
-
-    private void onAcceptFriendsRequestClicked(final TextView txtAddFriend, String profileId) {
-        if(!NetworkUtils.isOn(mContext)) {
-            showToast(R.string.no_connection);
-            return;
-        }
-
-        final SessionManager session = SessionManager.getInstance();
-        final HashMap<String, String> user = session.getUserDetails();
-
-        showProgress(mContext.getString(R.string.loading));
-
-        DataStore.acceptFriendRequest(user.get(SessionManager.KEY_ID), profileId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
-                new DataStore.OnResultReady() {
-                    @Override
-                    public void onReady(Object result, boolean failed) {
-                        hideProgress();
-                        if (failed) {
-                            showToast(R.string.something_went_wrong_please_try_again);
-                        } else {
+                            user.setFriendStatus(User.STATUS_FRIEND);
                             txtAddFriend.setVisibility(View.GONE);
-                            txtAddFriend.setOnClickListener(null);
                         }
                     }
                 });
     }
 
-    private void onCancelFriendRequestClicked(final TextView txtAddFriend, String profileId) {
+    private void onAcceptFriendsRequestClicked(final TextView txtAddFriend, final User user) {
         if(!NetworkUtils.isOn(mContext)) {
             showToast(R.string.no_connection);
             return;
         }
 
-        final SessionManager session = SessionManager.getInstance();
-        final HashMap<String, String> user = session.getUserDetails();
+        SessionManager session = SessionManager.getInstance();
+        String userId = session.getUserId();
+        String accessToken = session.getAccessToken();
 
-        showProgress(mContext.getString(R.string.canceling));
+        showProgress(mContext.getString(R.string.loading));
 
-        DataStore.cancelFriendRequest(user.get(SessionManager.KEY_ID), profileId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
+        DataStore.acceptFriendRequest(userId, user.getId(), accessToken,
                 new DataStore.OnResultReady() {
-
                     @Override
                     public void onReady(Object result, boolean failed) {
                         hideProgress();
                         if (failed) {
                             showToast(R.string.something_went_wrong_please_try_again);
                         } else {
-                            txtAddFriend.setText(R.string.add_friend);
-                            txtAddFriend.setOnClickListener(getOnClickListener(BtnAddFriendModes.MODE_ADD));
+                            user.setFriendStatus(User.STATUS_FRIEND);
+                            txtAddFriend.setVisibility(View.GONE);
                         }
                     }
                 });
@@ -252,7 +241,6 @@ public class FindFriendsAdapter extends BaseAdapter {
     private interface BtnAddFriendModes {
         final int MODE_ADD = 33;
         final int MODE_ACCEPT = 55;
-        final int MODE_CANCEL = 77;
     }
 
     private class ViewHolder {

@@ -26,12 +26,12 @@ public class JSONConverter {
     private JSONConverter() {
     }
 
-    public static List<UserDto> newUsersList(@Nullable JSONArray jsonArrUsers, boolean parseCheckin) {
+    public static List<User> newUsersList(@Nullable JSONArray jsonArrUsers, boolean parseCheckin) {
         if(jsonArrUsers == null) {
-            return new ArrayList<UserDto>();
+            return new ArrayList<User>();
         }
 
-        List<UserDto> friends = new ArrayList<UserDto>();
+        List<User> friends = new ArrayList<User>();
         for (int i = 0; i < jsonArrUsers.length(); i++) {
             JSONObject jsonFriend = jsonArrUsers.optJSONObject(i);
             friends.add(newUser(jsonFriend, parseCheckin));
@@ -40,12 +40,12 @@ public class JSONConverter {
         return friends;
     }
 
-    public static UserDto newUser(@Nullable JSONObject jsonUser, boolean parseCheckIn) {
+    public static User newUser(@Nullable JSONObject jsonUser, boolean parseCheckIn) {
         if(jsonUser == null) {
             return null;
         }
 
-        UserDto result = new UserDto();
+        User result = new User();
 
         result.setId(jsonUser.optString("_id"));
         result.setFb_id(jsonUser.optString("fb_id"));
@@ -359,11 +359,11 @@ public class JSONConverter {
         result.setConversation(conversations);
 
         JSONObject jsonCurrentUser = jsonChatDto.optJSONObject("current_user");
-        UserDto currentUser = newUser(jsonCurrentUser, false);
+        User currentUser = newUser(jsonCurrentUser, false);
         result.setCurrentUser(currentUser);
 
         JSONObject jsonReceiver = jsonChatDto.optJSONObject("receiver");
-        UserDto receiverUser = newUser(jsonReceiver, false);
+        User receiverUser = newUser(jsonReceiver, false);
         result.setReceiver(receiverUser);
 
         result.setUnreadMessages(jsonChatDto.optInt("unread_messages"));

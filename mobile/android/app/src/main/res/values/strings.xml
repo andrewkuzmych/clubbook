@@ -189,6 +189,8 @@
     <string name="add_friend_">Add Friend</string>
     <string name="accept_request_">Accept Request</string>
     <string name="cancel_request_">Cancel Request</string>
+    <string name="remove_friend_">Remove Friend</string>
+    <string name="no_friends">No friends</string>
     <!---->
 
     <!--For Google Analytics-->

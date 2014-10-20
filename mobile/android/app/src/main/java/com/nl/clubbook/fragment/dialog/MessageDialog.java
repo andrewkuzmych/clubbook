@@ -52,7 +52,7 @@ public class MessageDialog extends DialogFragment {
     }
 
     /*
-     * Activity or fragment should implement MessageDialogListener to handle click in dialog's buttons
+     * Fragment should implement MessageDialogListener to handle click in dialog's buttons
      * If you use MessageDialog in Activity, put null as targetFragment parameter
      */
     public static MessageDialog newInstance(Fragment targetFragment, String title, String message, String posBtnText, String negBtnText) {
@@ -71,7 +71,7 @@ public class MessageDialog extends DialogFragment {
     }
 
     /*
-     * Activity or fragment should implement MessageDialogListener to handle click in dialog's buttons
+     * Fragment should implement MessageDialogListener to handle click in dialog's buttons
      * If you use MessageDialog in Activity, put null as targetFragment parameter
      */
     public static MessageDialog newInstance(Fragment targetFragment, int actionId, String title, String message, String posBtnText, String negBtnText) {
@@ -104,7 +104,6 @@ public class MessageDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
         Bundle args = getArguments();
         String title = args.getString(ARG_TITLE);
         String message = args.getString(ARG_MESSAGE);
@@ -163,7 +162,6 @@ public class MessageDialog extends DialogFragment {
         Fragment targetFragment = getTargetFragment();
         if(targetFragment != null && targetFragment instanceof MessageDialogListener) {
             listener = (MessageDialogListener) targetFragment;
-
         } else {
             Activity activity = getActivity();
             if(activity != null && activity instanceof MessageDialogListener) {

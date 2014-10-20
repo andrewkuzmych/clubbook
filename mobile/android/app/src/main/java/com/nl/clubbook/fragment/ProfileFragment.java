@@ -17,7 +17,7 @@ import com.nl.clubbook.adapter.ProfileAdapter;
 import com.nl.clubbook.adapter.UserAvatarPagerAdapter;
 import com.nl.clubbook.datasource.CheckInUser;
 import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.datasource.UserDto;
+import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.datasource.UserPhoto;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.ImageHelper;
@@ -238,12 +238,12 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                 }
 
                 setRefreshing(view, false);
-                fillProfile((UserDto) result);
+                fillProfile((User) result);
             }
         });
     }
 
-    private void fillProfile(@Nullable UserDto profile) {
+    private void fillProfile(@Nullable User profile) {
         if(profile == null) {
             return;
         }
@@ -305,14 +305,14 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         //check is this user your friend
         TextView txtAddFriends = (TextView) view.findViewById(R.id.txtAddFriend);
         String friendStatus = profile.getFriendStatus();
-        if(UserDto.STATUS_FRIEND.equalsIgnoreCase(friendStatus)) {
+        if(User.STATUS_FRIEND.equalsIgnoreCase(friendStatus)) {
             txtAddFriends.setVisibility(View.GONE);
             view.findViewById(R.id.txtRemoveFriend).setVisibility(View.VISIBLE);
             mBtnAddFriendMode = -1;
-        } else if(UserDto.STATUS_RECEIVE_REQUEST.equalsIgnoreCase(friendStatus)) {
+        } else if(User.STATUS_RECEIVE_REQUEST.equalsIgnoreCase(friendStatus)) {
             txtAddFriends.setText(getString(R.string.accept_request));
             mBtnAddFriendMode = BtnAddFriendModes.MODE_ACCEPT;
-        } else if(UserDto.STATUS_SENT_REQUEST.equalsIgnoreCase(friendStatus)) {
+        } else if(User.STATUS_SENT_REQUEST.equalsIgnoreCase(friendStatus)) {
             mBtnAddFriendMode = BtnAddFriendModes.MODE_CANCEL;
             txtAddFriends.setText(R.string.cancel_request);
             view.findViewById(R.id.txtRemoveFriend).setVisibility(View.GONE);

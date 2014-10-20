@@ -41,10 +41,10 @@ public class DataStore {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
-                    UserDto user = new UserDto(responseJson.optJSONObject("result").optJSONObject("user"));
+                    User user = new User(responseJson.optJSONObject("result").optJSONObject("user"));
                     onResultReady.onReady(user, false);
                 } else {
-                    onResultReady.onReady(new UserDto(), true);
+                    onResultReady.onReady(new User(), true);
                 }
             }
 
@@ -79,9 +79,9 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                UserDto user = null;
+                User user = null;
                 if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
-                    user = new UserDto(responseJson.optJSONObject("result").optJSONObject("user"));
+                    user = new User(responseJson.optJSONObject("result").optJSONObject("user"));
                     failed = false;
                 } else {
                     failed = true;
@@ -265,10 +265,10 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                UserDto user = null;
+                User user = null;
                 try {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
-                        user = new UserDto(responseJson.getJSONObject("result").getJSONObject("user"));
+                        user = new User(responseJson.getJSONObject("result").getJSONObject("user"));
                         failed = false;
                     } else {
                         failed = true;
@@ -307,10 +307,10 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                UserDto user = null;
+                User user = null;
                 try {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
-                        user = new UserDto(responseJson.getJSONObject("result").getJSONObject("user"));
+                        user = new User(responseJson.getJSONObject("result").getJSONObject("user"));
                         failed = false;
                     } else {
                         failed = true;
@@ -359,10 +359,10 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                UserDto user = null;
+                User user = null;
                 try {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
-                        user = new UserDto(responseJson.getJSONObject("result").getJSONObject("user"));
+                        user = new User(responseJson.getJSONObject("result").getJSONObject("user"));
                         failed = false;
                     } else {
                         failed = true;
@@ -479,10 +479,10 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                UserDto user = null;
+                User user = null;
                 try {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
-                        user = new UserDto(responseJson.getJSONObject("result").getJSONObject("user"));
+                        user = new User(responseJson.getJSONObject("result").getJSONObject("user"));
                         failed = false;
                     } else {
                         failed = true;
@@ -524,7 +524,7 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                List<UserDto> friends = new ArrayList<UserDto>();
+                List<User> friends = new ArrayList<User>();
 
                 try {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
@@ -582,9 +582,7 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                List<UserDto> users = new ArrayList<UserDto>();
-
-                L.e("responseJson - " + responseJson);
+                List<User> users = new ArrayList<User>();
 
                 try {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
@@ -598,6 +596,49 @@ public class DataStore {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                onResultReady.onReady(users, failed);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+    }
+
+    public static void invitedFriendsToClubbookFbIds(String profileId, String accessToken, List<String> fbIds, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
+
+        StringBuilder fbIdsParamsBuilder = new StringBuilder();
+        for(int i = 0; i < fbIds.size(); i++) {
+            String id = fbIds.get(i);
+            fbIdsParamsBuilder.append(id);
+
+            if(i < (fbIds.size() - 1)) {
+                fbIdsParamsBuilder.append(",");
+            }
+        }
+        params.put("fb_ids", fbIdsParamsBuilder.toString());
+
+        ClubbookRestClient.invitedFriendsToClubbookFbIds(profileId, params, new JsonHttpResponseHandler() {
+            private boolean failed = true;
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                List<User> users = new ArrayList<User>();
 
                 onResultReady.onReady(users, failed);
             }
@@ -631,7 +672,7 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                List<UserDto> friends = new ArrayList<UserDto>();
+                List<User> friends = new ArrayList<User>();
 
                 try {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
@@ -913,7 +954,7 @@ public class DataStore {
                         return;
                     }
 
-                    onResultReady.onReady(new UserDto(jsonFriend), false);
+                    onResultReady.onReady(new User(jsonFriend), false);
                 } else {
                     onResultReady.onReady(null, true); // failed.. so put true
                 }
@@ -980,10 +1021,10 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                UserDto user = null;
+                User user = null;
                 try {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
-                        user = new UserDto(responseJson.getJSONObject("user"));
+                        user = new User(responseJson.getJSONObject("user"));
                         failed = false;
                     } else {
                         failed = true;
@@ -1025,10 +1066,10 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                UserDto user = null;
+                User user = null;
                 try {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
-                        user = new UserDto(responseJson.getJSONObject("user"));
+                        user = new User(responseJson.getJSONObject("user"));
                         failed = false;
                     } else {
                         failed = true;
@@ -1070,10 +1111,10 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                UserDto user = null;
+                User user = null;
                 try {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
-                        user = new UserDto(responseJson.getJSONObject("user"));
+                        user = new User(responseJson.getJSONObject("user"));
                         failed = false;
                     } else {
                         failed = true;

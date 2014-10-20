@@ -64,8 +64,8 @@
         android:textSize="@dimen/text_size_small"
         android:textColor="@android:color/white"
         android:text="@string/add_friend_"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingLeft="@dimen/btn_add_friend_padding"
+        android:paddingRight="@dimen/btn_add_friend_padding"
         android:gravity="center"/>
 
 </LinearLayout>

@@ -9,8 +9,8 @@ public class Chat {
     private String chatId;
     private int unreadMessages;
     private List<ChatMessage> conversation;
-    private UserDto currentUser;
-    private UserDto receiver;
+    private User currentUser;
+    private User receiver;
 
     public String getChatId() {
         return chatId;
@@ -28,19 +28,19 @@ public class Chat {
         this.conversation = conversation;
     }
 
-    public UserDto getReceiver() {
+    public User getReceiver() {
         return receiver;
     }
 
-    public void setReceiver(UserDto receiver) {
+    public void setReceiver(User receiver) {
         this.receiver = receiver;
     }
 
-    public UserDto getCurrentUser() {
+    public User getCurrentUser() {
         return currentUser;
     }
 
-    public void setCurrentUser(UserDto currentUser) {
+    public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
 

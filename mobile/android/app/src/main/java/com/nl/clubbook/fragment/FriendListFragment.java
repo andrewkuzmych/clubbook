@@ -11,7 +11,7 @@ import android.widget.ListView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.FriendsAdapter;
 import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.datasource.UserDto;
+import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.NetworkUtils;
 
@@ -93,14 +93,14 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
                             return;
                         }
 
-                        List<UserDto> userDtoList = (List<UserDto>)result;
-                        if(userDtoList.size() > 0) {
+                        List<User> userList = (List<User>)result;
+                        if(userList.size() > 0) {
                             view.findViewById(R.id.txtNoFriendsAdded).setVisibility(View.GONE);
                         } else {
                             view.findViewById(R.id.txtNoFriendsAdded).setVisibility(View.VISIBLE);
                         }
 
-                        mAdapter.updateData(userDtoList);
+                        mAdapter.updateData(userList);
                     }
                 });
     }
@@ -111,7 +111,7 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
             return;
         }
 
-        mAdapter = new FriendsAdapter(getActivity(), new ArrayList<UserDto>());
+        mAdapter = new FriendsAdapter(getActivity(), new ArrayList<User>());
         mListFriends = (ListView) view.findViewById(R.id.listFriends);
         mListFriends.setAdapter(mAdapter);
         mListFriends.setOnItemClickListener(FriendListFragment.this);

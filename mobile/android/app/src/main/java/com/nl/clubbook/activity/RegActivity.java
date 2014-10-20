@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.*;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.datasource.UserDto;
+import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.ImageUploader;
 import com.nl.clubbook.helper.UiHelper;
 import com.nl.clubbook.helper.UserEmailFetcher;
@@ -203,7 +203,7 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
                     return;
                 }
 
-                UserDto user = (UserDto) result;
+                User user = (User) result;
                 getSession().createLoginSession(user);
 
                 sendBroadcast(new Intent(MainLoginActivity.ACTION_CLOSE_ACTIVITY));

@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.datasource.Club;
-import com.nl.clubbook.datasource.UserDto;
+import com.nl.clubbook.datasource.User;
 import com.parse.PushService;
 
 import org.jetbrains.annotations.Nullable;
@@ -108,7 +108,7 @@ public class SessionManager {
     /**
      * Create login session
      */
-    public void createLoginSession(UserDto user) {
+    public void createLoginSession(User user) {
         PushService.subscribe(mContext, "user_" + user.getId(), MainActivity.class);
         // Storing login value as TRUE
         updateLoginSession(user);
@@ -120,7 +120,7 @@ public class SessionManager {
         editor.commit();
     }
 
-    public void updateLoginSession(UserDto user) {
+    public void updateLoginSession(User user) {
         Editor editor = mPreferences.edit();
 
         editor.putBoolean(KEY_IS_LOGIN, true);

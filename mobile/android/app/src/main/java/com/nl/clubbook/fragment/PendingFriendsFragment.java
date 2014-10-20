@@ -11,7 +11,7 @@ import android.widget.ListView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.PendingFriendsAdapter;
 import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.datasource.UserDto;
+import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.NetworkUtils;
 
@@ -88,7 +88,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
             return;
         }
 
-        mAdapter = new PendingFriendsAdapter(getActivity(), new ArrayList<UserDto>(), this);
+        mAdapter = new PendingFriendsAdapter(getActivity(), new ArrayList<User>(), this);
         ListView listPendingFriends = (ListView) view.findViewById(R.id.listPendingFriends);
         listPendingFriends.setAdapter(mAdapter);
         listPendingFriends.setOnItemClickListener(this);
@@ -127,7 +127,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
                             return;
                         }
 
-                        mAdapter.updateData((List<UserDto>) result);
+                        mAdapter.updateData((List<User>) result);
                     }
                 });
     }

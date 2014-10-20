@@ -12,7 +12,7 @@ import android.widget.ListView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.FindFriendsAdapter;
 import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.datasource.UserDto;
+import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
@@ -183,12 +183,13 @@ public class FindFriendsFragment extends BaseFragment implements View.OnClickLis
                     return;
                 }
 
-                List<UserDto> users = (List<UserDto>) result;
+                List<User> users = (List<User>) result;
                 if(users.isEmpty()) {
-                    //TODO
+                    view.findViewById(R.id.txtNoFriends).setVisibility(View.VISIBLE);
                     return;
                 }
 
+                view.findViewById(R.id.txtNoFriends).setVisibility(View.GONE);
                 view.findViewById(R.id.txtConnectFacebook).setEnabled(false);
 
                 FindFriendsAdapter adapter = new FindFriendsAdapter(getActivity(),FindFriendsFragment.this, users);
@@ -202,8 +203,10 @@ public class FindFriendsFragment extends BaseFragment implements View.OnClickLis
     private void sendFacebookRequest() {
         mSimpleFacebook.invite("Test message", new OnInviteListener() {
                     @Override
-                    public void onComplete(List<String> strings, String s) {
+                    public void onComplete(List<String> ids, String s) {
                         showToast(R.string.request_sent);
+
+                        doSendInvitedFriendsIds(ids);
                     }
 
                     @Override
@@ -223,6 +226,26 @@ public class FindFriendsFragment extends BaseFragment implements View.OnClickLis
                     }
                 }, "");
 
+    }
+
+    private void doSendInvitedFriendsIds(List<String> ids) {
+        if(!NetworkUtils.isOn(getActivity())) {
+            return;
+        }
+
+        if(ids.isEmpty()) {
+            return;
+        }
+
+        SessionManager sessionManager = getSession();
+        String userId = sessionManager.getUserId();
+        String accessToken = sessionManager.getAccessToken();
+
+        DataStore.invitedFriendsToClubbookFbIds(userId, accessToken, ids, new DataStore.OnResultReady() {
+            @Override
+            public void onReady(Object result, boolean failed) {
+            }
+        });
     }
 
     private OnLoginListener mOnLoginListener = new OnLoginListener() {

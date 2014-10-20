@@ -20,4 +20,6 @@
     <dimen name="txt_check_in_users_size">@dimen/text_size_small</dimen>
     <dimen name="txt_btn_main_login_screen">@dimen/text_size_medium</dimen>
 
+    <dimen name="btn_add_friend_padding">16dp</dimen>
+
 </resources>

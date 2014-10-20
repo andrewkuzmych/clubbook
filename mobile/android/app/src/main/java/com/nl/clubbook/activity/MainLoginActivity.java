@@ -15,7 +15,7 @@ import com.cloudinary.Cloudinary;
 import com.facebook.Session;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.datasource.UserDto;
+import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.fragment.SettingsFragment;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.helper.SessionManager;
@@ -188,7 +188,7 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
                 if (failed) {
                     showMessageDialog(getString(R.string.app_name), getString(R.string.incorrect_credentials));
                 } else {
-                    UserDto user = (UserDto) result;
+                    User user = (User) result;
 
                     SessionManager sessionManager = getSession();
                     sessionManager.createLoginSession(user);

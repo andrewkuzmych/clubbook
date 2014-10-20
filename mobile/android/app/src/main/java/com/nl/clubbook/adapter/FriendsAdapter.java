@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.CheckIn;
-import com.nl.clubbook.datasource.UserDto;
+import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.ImageHelper;
 import com.squareup.picasso.Picasso;
 
@@ -22,12 +22,12 @@ public class FriendsAdapter extends BaseAdapter {
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<UserDto> mFriends;
+    private List<User> mFriends;
 
     private String mCheckIn;
     private String mNotCheckIn;
 
-    public FriendsAdapter(Context context, List<UserDto> friends) {
+    public FriendsAdapter(Context context, List<User> friends) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mFriends = friends;
@@ -42,7 +42,7 @@ public class FriendsAdapter extends BaseAdapter {
     }
 
     @Override
-    public UserDto getItem(int position) {
+    public User getItem(int position) {
         return mFriends.get(position);
     }
 
@@ -75,7 +75,7 @@ public class FriendsAdapter extends BaseAdapter {
         return row;
     }
 
-    public void updateData(List<UserDto> friends) {
+    public void updateData(List<User> friends) {
         if(friends == null) {
             return;
         }
@@ -84,18 +84,18 @@ public class FriendsAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    private void fillRow(FriendItemHolder holder, UserDto userDto) {
-        holder.txtUsername.setText(userDto.getName());
-        holder.txtUsername.setTag(userDto.getId());
+    private void fillRow(FriendItemHolder holder, User user) {
+        holder.txtUsername.setText(user.getName());
+        holder.txtUsername.setTag(user.getId());
 
-        if (userDto.getAvatar() != null) {
-            String imageUrl = ImageHelper.getUserListAvatar(userDto.getAvatar());
+        if (user.getAvatar() != null) {
+            String imageUrl = ImageHelper.getUserListAvatar(user.getAvatar());
 
             holder.imgUserAvatar.setTag(imageUrl);
             Picasso.with(mContext).load(imageUrl).error(R.drawable.ic_avatar_unknown).into(holder.imgUserAvatar);
         }
 
-        CheckIn checkIn = userDto.getLastCheckIn();
+        CheckIn checkIn = user.getLastCheckIn();
         if(checkIn == null) {
             return;
         }

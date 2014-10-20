@@ -17,7 +17,7 @@ import android.widget.Spinner;
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.UserPhotosAdapter;
 import com.nl.clubbook.datasource.DataStore;
-import com.nl.clubbook.datasource.UserDto;
+import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.datasource.UserPhoto;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.ImageHelper;
@@ -44,7 +44,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
     private UserPhoto selectedImageDto;
     private ImageUploader imageUploader;
-    private UserDto profile;
+    private User profile;
     private UserPhotosAdapter mAdapter;
 
     @Override
@@ -246,7 +246,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
                 setLoading(false);
 
-                profile = (UserDto) result;
+                profile = (User) result;
 
                 // update UI components
                 EditText editBirthDate = (EditText) findViewById(R.id.editBirthDate);
@@ -383,7 +383,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                     return;
                 }
 
-                profile = (UserDto) result;
+                profile = (User) result;
 
                 drawImageManager(profile.getPhotos());
 

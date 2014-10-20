@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.UserDto;
+import com.nl.clubbook.datasource.User;
 
 import java.util.List;
 
@@ -19,9 +19,9 @@ import java.util.List;
 public class AvailableFriendsAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
-    private List<UserDto> mAvailableFriends;
+    private List<User> mAvailableFriends;
 
-    public AvailableFriendsAdapter(Context context, List<UserDto> availableFriends) {
+    public AvailableFriendsAdapter(Context context, List<User> availableFriends) {
         mInflater = LayoutInflater.from(context);
         mAvailableFriends = availableFriends;
     }
@@ -32,7 +32,7 @@ public class AvailableFriendsAdapter extends BaseAdapter {
     }
 
     @Override
-    public UserDto getItem(int position) {
+    public User getItem(int position) {
         return mAvailableFriends.get(position);
     }
 
@@ -61,7 +61,7 @@ public class AvailableFriendsAdapter extends BaseAdapter {
         return row;
     }
 
-    private void fillRow(ViewHolder holder, UserDto user) {
+    private void fillRow(ViewHolder holder, User user) {
         //TODO
 
     }

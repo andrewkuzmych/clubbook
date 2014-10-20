@@ -94,5 +94,16 @@
             android:layout_centerInParent="true"
             android:visibility="gone"/>
 
+        <TextView
+            android:id="@+id/txtNoFriends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_friends"
+            android:textSize="@dimen/text_size_medium"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:padding="16dp"
+            android:gravity="center"/>
+
     </RelativeLayout>
 </LinearLayout>

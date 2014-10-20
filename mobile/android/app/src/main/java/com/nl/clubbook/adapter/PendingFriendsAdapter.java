@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.UserDto;
+import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.ImageHelper;
 import com.squareup.picasso.Picasso;
 
@@ -22,10 +22,10 @@ public class PendingFriendsAdapter extends BaseAdapter {
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<UserDto> mUsers;
+    private List<User> mUsers;
     private View.OnClickListener mOnClickListener;
 
-    public PendingFriendsAdapter(Context context, List<UserDto> users, View.OnClickListener onClickListener) {
+    public PendingFriendsAdapter(Context context, List<User> users, View.OnClickListener onClickListener) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mUsers = users;
@@ -66,13 +66,13 @@ public class PendingFriendsAdapter extends BaseAdapter {
             holder = (ViewHolder) row.getTag();
         }
 
-        UserDto user = mUsers.get(position);
+        User user = mUsers.get(position);
         fillRow(holder, user);
 
         return row;
     }
 
-    public void updateData(List<UserDto> newUsers) {
+    public void updateData(List<User> newUsers) {
         if(newUsers == null) {
             mUsers.clear();
         } else {
@@ -82,7 +82,7 @@ public class PendingFriendsAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    private void fillRow(ViewHolder holder, UserDto user) {
+    private void fillRow(ViewHolder holder, User user) {
         holder.txtName.setText(user.getName());
         holder.txtName.setTag(user.getId());
 
