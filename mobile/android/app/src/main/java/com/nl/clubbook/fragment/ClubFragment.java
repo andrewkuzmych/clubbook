@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,26 +48,22 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
     public static final String TAG = ClubFragment.class.getSimpleName();
 
-    private static final String ARG_CLUB_ID = "ARG_CLUB_ID";
+    private static final String ARG_CLUB = "ARG_CLUB";
 
     private final int ACTION_ID_CAN_NOT_CHECK_IN = 357;
     private final int ACTION_ID_CHECK_IN_EXPLANATION = 753;
 
-    public static final int LOAD_MODE_INIT = 1111;
-    public static final int LOAD_MODE_CHECK_IN = 9999;
-
     private Club mClub;
-    private String mClubId;
 
     private boolean mIsLoading = false;
     private boolean mCanCheckInHere = false;
 
-    public static Fragment newInstance(Fragment targetFragment, String clubId) {
+    public static Fragment newInstance(Fragment targetFragment, Club club) {
         Fragment fragment = new ClubFragment();
         fragment.setTargetFragment(targetFragment, 0);
 
         Bundle args = new Bundle();
-        args.putString(ARG_CLUB_ID, clubId);
+        args.putParcelable(ARG_CLUB, club);
         fragment.setArguments(args);
 
         return fragment;
@@ -85,11 +82,12 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
         initTarget();
 
-        UIUtils.displayEmptyIconInActionBar((ActionBarActivity)getActivity());
-        initActionBarTitle(getString(R.string.checked_in));
         handleArgs();
+
+        UIUtils.displayEmptyIconInActionBar((ActionBarActivity) getActivity());
+        initActionBarTitle(getString(R.string.checked_in));
         initView();
-        loadData(LOAD_MODE_INIT);
+        loadCheckedInUsers();
     }
 
     @Override
@@ -126,9 +124,9 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
             return;
         }
 
-        String userId = (String)viewUserId.getTag();
-        Fragment fragment = ProfileFragment.newInstance(ClubFragment.this, userId, mClub.getUsers(), ProfileFragment.OPEN_MODE_DEFAULT);
-        openFragment(fragment, ProfileFragment.class);
+//        String userId = (String)viewUserId.getTag();
+//        Fragment fragment = ProfileFragment.newInstance(ClubFragment.this, userId, mClub.getUsers(), ProfileFragment.OPEN_MODE_DEFAULT); //TODO
+//        openFragment(fragment, ProfileFragment.class);
     }
 
     @Override
@@ -167,7 +165,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
             return;
         }
 
-        mClubId = args.getString(ARG_CLUB_ID);
+        mClub = args.getParcelable(ARG_CLUB);
     }
 
     private void initView() {
@@ -182,15 +180,19 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
         GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
         gridUsers.setOnItemClickListener(ClubFragment.this);
+
+        fillView(view);
     }
 
     public void onClubCheckedOut() {
-        loadData(LOAD_MODE_CHECK_IN);
+        //TODO add refresh check in/out button
+
+        loadCheckedInUsers();
     }
 
-    protected void loadData(final int mode) {
+    protected void loadCheckedInUsers() {
         final View view = getView();
-        if(view == null) {
+        if(view == null || mClub == null || TextUtils.isEmpty(mClub.getId())) {
             return;
         }
 
@@ -201,33 +203,33 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
         final HashMap<String, String> user = this.getSession().getUserDetails();
 
-        setProgressViewState(mode, true);
+        setProgressViewState(true);
 
-        DataStore.retrievePlace(mClubId, user.get(SessionManager.KEY_ACCESS_TOCKEN), new DataStore.OnResultReady() {
+        DataStore.retrieveClubCheckedInUsers(mClub.getId(), user.get(SessionManager.KEY_ACCESS_TOCKEN), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
-                View view = getView();
-                if(view == null || isDetached() || getActivity() == null) {
-                    return;
-                }
-
-                if (failed) {
-                    showToast(R.string.something_went_wrong_please_try_again);
-                    view.findViewById(R.id.progressBar).setVisibility(View.GONE);
-                    hideProgressDialog();
-                    return;
-                }
-
-                setProgressViewState(mode, false);
-
-                mClub = (Club) result;
-
-                fillView(view);
+//                View view = getView();
+//                if(view == null || isDetached() || getActivity() == null) {
+//                    return;
+//                }
+//
+//                if (failed) {
+//                    showToast(R.string.something_went_wrong_please_try_again);
+//                    view.findViewById(R.id.progressBar).setVisibility(View.GONE);
+//                    hideProgressDialog();
+//                    return;
+//                }
+//
+//                setProgressViewState(false);
+//
+//                mClub = (Club) result;
+//
+//                fillView(view);
             }
         });
     }
 
-    private void fillView(View view) {
+    private void fillView(@NotNull View view) {
         if (mClub == null) {
             view.findViewById(R.id.progressBar).setVisibility(View.GONE);
             return;
@@ -241,8 +243,8 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         TextView txtFriendsCount = (TextView) view.findViewById(R.id.txtFriendsCount);
         ImageView imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
 
-        // Load profiles
-        initGridView(view, mClub.getUsers());
+//        // Load profiles
+//        initGridView(view, mClub.getUsers()); //TODO
 
         // if we checked in this this club set related style
         boolean isCheckedInHere = LocationCheckinHelper.getInstance().isCheckInHere(mClub);
@@ -329,7 +331,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         }
     }
 
-    private void setProgressViewState(int mode, boolean isLoading) {
+    private void setProgressViewState(boolean isLoading) {
         View view = getView();
         if(view == null) {
             return;
@@ -340,17 +342,9 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         }
 
         if(!mIsLoading) {
-            if (mode == LOAD_MODE_CHECK_IN) {
-                showProgressDialog(getString(R.string.checking_in));
-            } else {
-                setLoading(view, true);
-            }
+            setLoading(view, true);
         } else {
-            if (mode == LOAD_MODE_CHECK_IN) {
-                hideProgressDialog();
-            } else {
-                setLoading(view, false);
-            }
+            setLoading(view, false);
         }
     }
 
@@ -426,11 +420,11 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
             return;
         }
 
+        hideProgressDialog();
+
         if (result) {
             UiHelper.changeCheckInState(getActivity(), view, false);
-            loadData(LOAD_MODE_CHECK_IN);
-        } else {
-            setProgressViewState(LOAD_MODE_CHECK_IN, false);
+            loadCheckedInUsers();
         }
     }
 
@@ -439,10 +433,8 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
         if(isLoading) {
             view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.holderScreen).setVisibility(View.GONE);
         } else {
             view.findViewById(R.id.progressBar).setVisibility(View.GONE);
-            view.findViewById(R.id.holderScreen).setVisibility(View.VISIBLE);
         }
     }
 
@@ -464,7 +456,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
     private void initGridView(@NotNull View view, @Nullable List<CheckInUser> users) {
         if(users == null) {
-            view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.VISIBLE);
+//            view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.VISIBLE); //TODO
             return;
         }
 
@@ -491,9 +483,9 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         gridUsers.setAdapter(profileAdapter);
 
         if(users.size() == 0) {
-            view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.VISIBLE);
+//            view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.VISIBLE); //TODO
         } else {
-            view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.GONE);
+//            view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.GONE); //TODO
         }
     }
 }

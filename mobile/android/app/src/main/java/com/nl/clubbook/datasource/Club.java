@@ -1,11 +1,17 @@
 package com.nl.clubbook.datasource;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by Andrew on 5/27/2014.
  */
-public class Club {
+public class Club implements Parcelable {
+
     private String id;
     private String title;
     private String phone;
@@ -24,9 +30,42 @@ public class Club {
     private int activeFriendsCheckIns;
     private ClubWorkingHours todayWorkingHours;
     private List<ClubWorkingHours> workingHours;
-    private List<String> photos;
-    private List<CheckInUser> users;
+    private List<String> photos = new ArrayList<String>();
+    private List<CheckInUser> users; //TODO
 
+    public Club() {
+    }
+
+    public Club(Parcel in) {
+        id = in.readString();
+        title = in.readString();
+        phone = in.readString();
+        address = in.readString();
+        lat = in.readDouble();
+        lon = in.readDouble();
+        avatar = in.readString();
+        info = in.readString();
+        ageRestriction = in.readString();
+        dressCode = in.readString();
+        capacity = in.readString();
+        website = in.readString();
+        email = in.readString();
+        distance = in.readFloat();
+        activeCheckIns = in.readInt();
+        activeFriendsCheckIns = in.readInt();
+        todayWorkingHours = in.readParcelable(ClubWorkingHours.class.getClassLoader());
+
+        Parcelable[] hoursParc = in.readParcelableArray(ClubWorkingHours.class.getClassLoader());
+        ClubWorkingHours[] hoursArr = null;
+        if (hoursParc != null) {
+            hoursArr = Arrays.copyOf(hoursParc, hoursParc.length, ClubWorkingHours[].class);
+        }
+        if(hoursArr != null) {
+            workingHours = Arrays.asList(hoursArr);
+        }
+
+        in.readStringList(photos);
+    }
 
     public String getId() {
         return id;
@@ -187,4 +226,48 @@ public class Club {
     public void setWorkingHours(List<ClubWorkingHours> workingHours) {
         this.workingHours = workingHours;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(title);
+        dest.writeString(phone);
+        dest.writeString(address);
+        dest.writeDouble(lat);
+        dest.writeDouble(lon);
+        dest.writeString(avatar);
+        dest.writeString(info);
+        dest.writeString(ageRestriction);
+        dest.writeString(dressCode);
+        dest.writeString(capacity);
+        dest.writeString(website);
+        dest.writeString(email);
+        dest.writeFloat(distance);
+        dest.writeInt(activeCheckIns);
+        dest.writeInt(activeFriendsCheckIns);
+        dest.writeParcelable(todayWorkingHours, flags);
+
+        ClubWorkingHours[] hours = new ClubWorkingHours[workingHours.size()];
+        workingHours.toArray(hours);
+        dest.writeParcelableArray(hours, flags);
+
+        dest.writeStringList(photos);
+    }
+
+    public static final Creator<Club> CREATOR = new Creator<Club>() {
+        @Override
+        public Club createFromParcel(Parcel source) {
+            return new Club(source);
+        }
+
+        @Override
+        public Club[] newArray(int size) {
+            return new Club[size];
+        }
+    };
 }

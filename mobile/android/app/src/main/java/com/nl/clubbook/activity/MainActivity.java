@@ -93,7 +93,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_main);
 
-
         initReceivers();
 
         if (!getSession().isLoggedIn()) {
@@ -232,7 +231,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 onImgCheckOutClicked();
                 break;
             case R.id.txtClubName:
-                onClubClicked((String)v.getTag());
+                onClubClicked();
                 break;
         }
     }
@@ -458,7 +457,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         if(club != null && club.getId() != null && club.getId().length() > 0) {
             txtClubName.setText(club.getTitle());
-            txtClubName.setTag(club.getId());
             imgCheckOut.setTag(club.getId());
             imgCheckOut.setOnClickListener(MainActivity.this);
 
@@ -520,11 +518,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         actionbarChatCount.setText(String.valueOf(chatCountOfNewMessages));
     }
 
-    private void onMenuAddClicked() {
-        Intent intent = new Intent(MainActivity.this, FindFriendsFragment.class);
-        startActivity(intent);
-    }
-
     private void onChatBtnClicked() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         if(fragmentManager.getBackStackEntryCount() > 0) {
@@ -568,10 +561,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         });
     }
 
-    private void onClubClicked(String clubId) {
+    private void onClubClicked() {
+        Club club = LocationCheckinHelper.getInstance().getCurrentClub();
+        if(club == null) {
+            return;
+        }
+
         mDrawerLayout.closeDrawer(mDrawerList);
 
-        Fragment fragment = ClubFragment.newInstance(null, clubId);
+        Fragment fragment = ClubFragment.newInstance(null, club);
 
         FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
         fTransaction.replace(R.id.fragmentContainer, fragment, ClubFragment.TAG);
@@ -583,9 +581,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             return;
         }
 
+        hideProgressDialog();
+
         if (result) {
             mNavDrawerHeaderView.findViewById(R.id.holderCheckOut).setVisibility(View.GONE);
-            hideProgressDialog();
 
             Fragment fragment = getSupportFragmentManager().findFragmentByTag(ClubFragment.TAG);
             if(fragment != null && fragment instanceof ClubFragment) {

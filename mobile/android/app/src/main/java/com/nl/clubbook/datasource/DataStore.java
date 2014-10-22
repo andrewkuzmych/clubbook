@@ -430,26 +430,27 @@ public class DataStore {
         });
     }
 
-    public static void retrievePlace(String placeId, String accessToken, final OnResultReady onResultReady) {
+//    GET /_s/obj/club/:objectId/users
+    public static void retrieveClubCheckedInUsers(String clubId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
-        ClubbookRestClient.retrievePlace(placeId, params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.retrieveClubCheckedInUsers(clubId, params, new JsonHttpResponseHandler() {
             private boolean failed = true;
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                JSONObject jsonClub = responseJson.optJSONObject("club");
+//                JSONObject jsonClub = responseJson.optJSONObject("club");
+//
+//                Club club = JSONConverter.newClub(jsonClub);
+//                if (jsonClub != null && club != null) {
+//                    JSONArray jsonArrUsers = responseJson.optJSONArray("users");
+//                    List<CheckInUser> checkInUsers = JSONConverter.newCheckInUsersList(jsonArrUsers);
+//                    club.setUsers(checkInUsers);
+//                }
 
-                Club club = JSONConverter.newClub(jsonClub);
-                if (jsonClub != null && club != null) {
-                    JSONArray jsonArrUsers = responseJson.optJSONArray("users");
-                    List<CheckInUser> checkInUsers = JSONConverter.newCheckInUsersList(jsonArrUsers);
-                    club.setUsers(checkInUsers);
-                }
-
-                failed = false;
-                onResultReady.onReady(club, failed);
+//                failed = false;
+                onResultReady.onReady(null, failed);
             }
 
             @Override
@@ -461,12 +462,6 @@ public class DataStore {
             public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
                 onResultReady.onReady(null, true);
             }
-
-            @Override
-            public void onFinish() {
-                super.onFinish();
-            }
-
         });
     }
 
@@ -1468,5 +1463,52 @@ public class DataStore {
 
     public interface OnResultReady {
         public void onReady(Object result, boolean failed);
+    }
+
+    /*
+     *
+     *  Deprecated
+     *
+     */
+
+    @Deprecated
+    public static void retrievePlace(String placeId, String accessToken, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
+
+        ClubbookRestClient.retrievePlace(placeId, params, new JsonHttpResponseHandler() {
+            private boolean failed = true;
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                JSONObject jsonClub = responseJson.optJSONObject("club");
+
+                Club club = JSONConverter.newClub(jsonClub);
+                if (jsonClub != null && club != null) {
+                    JSONArray jsonArrUsers = responseJson.optJSONArray("users");
+                    List<CheckInUser> checkInUsers = JSONConverter.newCheckInUsersList(jsonArrUsers);
+                    club.setUsers(checkInUsers);
+                }
+
+                failed = false;
+                onResultReady.onReady(club, failed);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+
+        });
     }
 }

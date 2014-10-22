@@ -116,8 +116,8 @@ public class ClubbookRestClient {
         client.get(getBcAbsoluteUrl("obj/club"), params, responseHandler);
     }
 
-    public static void retrievePlace(String placeId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("obj/club/" + placeId), params, responseHandler);
+    public static void retrieveClubCheckedInUsers(String clubId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/club/" + clubId + "/users"), params, responseHandler);
     }
 
     public static void checkin(String placeId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
@@ -158,5 +158,17 @@ public class ClubbookRestClient {
 
     public static void getConfig(AsyncHttpResponseHandler responseHandler) {
         client.get(getBcAbsoluteUrl("obj/config"), null, responseHandler);
+    }
+
+
+    /*
+     *
+     * Deprecated
+     *
+     */
+
+    @Deprecated
+    public static void retrievePlace(String placeId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/club/" + placeId), params, responseHandler);
     }
 }

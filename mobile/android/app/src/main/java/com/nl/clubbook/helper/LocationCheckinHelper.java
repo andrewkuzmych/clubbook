@@ -17,6 +17,8 @@ import com.nl.clubbook.datasource.Club;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.utils.L;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 /**
@@ -64,6 +66,7 @@ public class LocationCheckinHelper {
     private LocationCheckinHelper() {
     }
 
+    @Nullable
     public Club getCurrentClub() {
         return mCurrentClub;
     }

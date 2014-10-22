@@ -6,7 +6,6 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/holderScreen"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -177,22 +176,26 @@
 
         </LinearLayout>
 
-        <GridView
-            android:id="@+id/gridUsers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:numColumns="@integer/grid_users_column_count"
-            android:scrollbars="none"/>
-
         <RelativeLayout
-            android:id="@+id/holderCheckInExplanation"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:layout_height="match_parent">
+
+            <GridView
+                android:id="@+id/gridUsers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:numColumns="@integer/grid_users_column_count"
+                android:scrollbars="none"/>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone" />
 
             <com.nl.clubbook.ui.view.HelveticaBoldTextView
+                android:id="@+id/txtNoUsers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
@@ -200,18 +203,12 @@
                 android:text="@string/no_users_checked_in_yet"
                 android:textColor="@color/grey"
                 android:textSize="@dimen/text_size_medium"
-                android:layout_centerInParent="true"/>
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
 
         </RelativeLayout>
 
     </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone" />
 
 </RelativeLayout>
 

@@ -42,7 +42,7 @@ public class ClubsAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Club getItem(int position) {
         return mClubs.get(position);
     }
 
@@ -95,7 +95,6 @@ public class ClubsAdapter extends BaseAdapter {
         holder.txtFriendsCount.setText(club.getActiveFriendsCheckIns() + "\n" + mFriends);
 
         holder.txtClubName.setText(club.getTitle());
-        holder.txtClubName.setTag(club.getId());
 
         ClubWorkingHours todayWorkingHours = club.getTodayWorkingHours();
         if(todayWorkingHours != null && ClubWorkingHours.STATUS_OPENED.equalsIgnoreCase(todayWorkingHours.getStatus())) {
