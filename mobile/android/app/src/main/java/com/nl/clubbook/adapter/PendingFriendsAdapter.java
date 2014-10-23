@@ -38,7 +38,7 @@ public class PendingFriendsAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public User getItem(int position) {
         return mUsers.get(position);
     }
 
@@ -84,7 +84,6 @@ public class PendingFriendsAdapter extends BaseAdapter {
 
     private void fillRow(ViewHolder holder, User user) {
         holder.txtName.setText(user.getName());
-        holder.txtName.setTag(user.getId());
 
         if (user.getAvatar() != null) {
             String imageUrl = ImageHelper.getUserListAvatar(user.getAvatar());

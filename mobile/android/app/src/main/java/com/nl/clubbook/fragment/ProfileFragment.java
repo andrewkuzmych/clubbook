@@ -9,45 +9,36 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.adapter.ProfileAdapter;
 import com.nl.clubbook.adapter.UserAvatarPagerAdapter;
-import com.nl.clubbook.datasource.CheckInUser;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.datasource.UserPhoto;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.SessionManager;
-import com.nl.clubbook.ui.view.HorizontalListView;
 import com.nl.clubbook.ui.view.ViewPagerBulletIndicatorView;
-import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.nl.clubbook.utils.UIUtils;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class ProfileFragment extends BaseInnerFragment implements View.OnClickListener, ViewPager.OnPageChangeListener,
-        AdapterView.OnItemClickListener, MessageDialog.MessageDialogListener {
+        MessageDialog.MessageDialogListener {
 
     private static final String ARG_OPEN_FRAGMENT_MODE = "ARG_OPEN_FRAGMENT_MODE";
 
     public static final int OPEN_FROM_CHAT = 4000;
     public static final int OPEN_MODE_DEFAULT = 6000;
 
-    private static final String ARG_PROFILE_ID = "ARG_PROFILE_ID";
-
-    private String mProfileId;
+    private User mUser;
     private String mUsername;
     private String mUserAvatarUrl;
-    private List<CheckInUser> mCheckInUsers;
     private UserAvatarPagerAdapter mPhotoAdapter;
 
     private ViewPagerBulletIndicatorView mBulletIndicator;
@@ -58,13 +49,12 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     private int mBtnAddFriendMode = BtnAddFriendModes.MODE_ADD;
     private int mBtnBlockUserMode = BtnBlockModes.MODE_BLOCK;
 
-    public static Fragment newInstance(@NotNull Fragment targetFragment, String profileId, @Nullable List<CheckInUser> checkedInUsers, int openMode) {
+    public static Fragment newInstance(@NotNull Fragment targetFragment, User currentUser, int openMode) {
         ProfileFragment fragment = new ProfileFragment();
         fragment.setTargetFragment(targetFragment, 0);
-        fragment.setCheckInUsers(checkedInUsers);
+        fragment.setCurrentUser(currentUser);
 
         Bundle args = new Bundle();
-        args.putString(ARG_PROFILE_ID, profileId);
         args.putInt(ARG_OPEN_FRAGMENT_MODE, openMode);
         fragment.setArguments(args);
 
@@ -84,12 +74,11 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         initTarget();
 
-        UIUtils.displayEmptyIconInActionBar((ActionBarActivity)getActivity());
+        UIUtils.displayEmptyIconInActionBar((ActionBarActivity) getActivity());
         initActionBarTitle(getString(R.string.user_profile));
         handleExtras();
         initView();
-        initCheckInUserList();
-        loadData(mProfileId);
+        fillProfile();
     }
 
     @Override
@@ -134,19 +123,6 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        View viewUserId = view.findViewById(R.id.userId);
-        String userId = (String)viewUserId.getTag();
-
-        if(mProfileId != null && mProfileId.equalsIgnoreCase(userId)) {
-            return;
-        }
-
-        mProfileId = userId;
-        loadData(mProfileId);
-    }
-
-    @Override
     public void onPositiveButtonClick(MessageDialog dialogFragment) {
         doRemoveFriend();
     }
@@ -162,7 +138,6 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             return;
         }
 
-        mProfileId = args.getString(ARG_PROFILE_ID);
         mOpenMode = args.getInt(ARG_OPEN_FRAGMENT_MODE);
     }
 
@@ -174,7 +149,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         View btnChat = view.findViewById(R.id.btnChat);
         View btnBlockUser = view.findViewById(R.id.txtBlockUser);
-        if(mProfileId != null && mProfileId.equalsIgnoreCase(getSession().getUserDetails().get(SessionManager.KEY_ID))) {
+        if(mUser != null && mUser.getId() != null && mUser.getId().equalsIgnoreCase(getSession().getUserDetails().get(SessionManager.KEY_ID))) {
             btnChat.setVisibility(View.GONE);
             btnBlockUser.setVisibility(View.GONE);
         } else {
@@ -186,75 +161,14 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         view.findViewById(R.id.txtRemoveFriend).setOnClickListener(this);
     }
 
-    private void initCheckInUserList() {
+    private void fillProfile() {
         View view = getView();
-        if(view == null) {
-            return;
-        }
-
-        if(mCheckInUsers == null) {
-            view.findViewById(R.id.listCheckInUsers).setVisibility(View.GONE);
-            return;
-        }
-
-        HorizontalListView listCheckInUser = (HorizontalListView) view.findViewById(R.id.listCheckInUsers);
-        ProfileAdapter adapter = new ProfileAdapter(getActivity(), mCheckInUsers, ProfileAdapter.MODE_LIST);
-        listCheckInUser.setAdapter(adapter);
-        listCheckInUser.setVisibility(View.VISIBLE);
-        listCheckInUser.setOnItemClickListener(this);
-    }
-
-    protected void loadData(@Nullable String profileId) {
-        if(profileId == null) {
-            L.i("Profile id = null");
-            return;
-        }
-
-        if(!NetworkUtils.isOn(getActivity())) {
-            getView().findViewById(R.id.scrollView).setVisibility(View.GONE);
-            showToast(R.string.no_connection);
-            return;
-        }
-
-        setRefreshing(getView(), true);
-
-        final SessionManager session = SessionManager.getInstance();
-        final HashMap<String, String> user = session.getUserDetails();
-        final String accessToken = user.get(SessionManager.KEY_ACCESS_TOCKEN);
-
-        DataStore.retrieveUserFriend(accessToken, profileId, new DataStore.OnResultReady() {
-            @Override
-            public void onReady(Object result, boolean failed) {
-                View view = getView();
-                if (view == null || isDetached()) {
-                    L.v("view == null || isDetached");
-                    return;
-                }
-
-                if (failed) {
-                    showToast(R.string.something_went_wrong_please_try_again);
-                    view.findViewById(R.id.progressBar).setVisibility(View.GONE);
-                    return;
-                }
-
-                setRefreshing(view, false);
-                fillProfile((User) result);
-            }
-        });
-    }
-
-    private void fillProfile(@Nullable User profile) {
-        if(profile == null) {
-            return;
-        }
-
-        View view = getView();
-        if(view == null) {
+        if(view == null || mUser == null) {
             return;
         }
 
         TextView txtBlockUser = (TextView) view.findViewById(R.id.txtBlockUser);
-        if(profile.isBlocked()) {
+        if(mUser.isBlocked()) {
             mIsBlocked = true;
             mBtnBlockUserMode = BtnBlockModes.MODE_UNBLOCK;
             txtBlockUser.setText(R.string.unblock_user);
@@ -264,47 +178,35 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             txtBlockUser.setText(R.string.block_user);
         }
 
-        List<UserPhoto> userPhotos = profile.getPhotos();
+        List<UserPhoto> userPhotos = mUser.getPhotos();
         if(userPhotos != null && !userPhotos.isEmpty()) {
             initViewPager(view, userPhotos);
         }
 
         // set name
-        mUsername = profile.getName();
+        mUsername = mUser.getName();
         TextView txtUserName = (TextView) view.findViewById(R.id.txtUsername);
         txtUserName.setText(mUsername);
 
         //set user info
         TextView txtUserInfo = (TextView) view.findViewById(R.id.txtUserInfo);
-        String age = profile.getAge();
-        String ageToDisplay = (age != null && age.length() > 0) ? profile.getAge() + ", " : "";
-        String gender = profile.getGender() != null ? profile.getGender() : "";
+        String age = mUser.getAge();
+        String ageToDisplay = (age != null && age.length() > 0) ? mUser.getAge() + ", " : "";
+        String gender = mUser.getGender() != null ? mUser.getGender() : "";
         txtUserInfo.setText(ageToDisplay + gender);
 
         //set country
         TextView txtCountry = (TextView) view.findViewById(R.id.txtCountry);
-        String country = profile.getCountry();
+        String country = mUser.getCountry();
         if(!TextUtils.isEmpty(country)) {
             txtCountry.setText(country);
         } else {
             txtCountry.setVisibility(View.GONE);
-            view.findViewById(R.id.dividerCoutnry).setVisibility(View.GONE);
-        }
-
-        //set about me
-        String aboutMe = profile.getBio();
-        if(!TextUtils.isEmpty(aboutMe)) {
-            TextView txtAboutMe = (TextView) view.findViewById(R.id.txtAboutMe);
-            txtAboutMe.setText(aboutMe);
-        } else {
-            view.findViewById(R.id.txtAboutMe).setVisibility(View.GONE);
-            view.findViewById(R.id.txtAboutMeLabel).setVisibility(View.GONE);
-            view.findViewById(R.id.dividerAboutMe).setVisibility(View.GONE);
         }
 
         //check is this user your friend
         TextView txtAddFriends = (TextView) view.findViewById(R.id.txtAddFriend);
-        String friendStatus = profile.getFriendStatus();
+        String friendStatus = mUser.getFriendStatus();
         if(User.STATUS_FRIEND.equalsIgnoreCase(friendStatus)) {
             txtAddFriends.setVisibility(View.GONE);
             view.findViewById(R.id.txtRemoveFriend).setVisibility(View.VISIBLE);
@@ -320,11 +222,9 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             mBtnAddFriendMode = BtnAddFriendModes.MODE_ADD;
         }
 
-        final HashMap<String, String> user = getSession().getUserDetails();
-        final String currentUserId = user.get(SessionManager.KEY_ID);
-
-        if(profile.getId() != null && profile.getId().equals(currentUserId)) {
-            view.findViewById(R.id.holderBlockRemoveUser).setVisibility(View.GONE);
+        String currentUserId = getSession().getUserId();
+        if(currentUserId.equalsIgnoreCase(mUser.getId())) {
+            view.findViewById(R.id.holderButtons).setVisibility(View.GONE);
             view.findViewById(R.id.txtAddFriend).setVisibility(View.GONE);
         }
     }
@@ -361,21 +261,6 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         UIUtils.loadPhotoToActionBar((ActionBarActivity) getActivity(), mUserAvatarUrl, mTarget);
     }
 
-    private void setRefreshing(View view, boolean isRefreshing) {
-        if(isRefreshing) {
-            view.findViewById(R.id.scrollView).setVisibility(View.GONE);
-            view.findViewById(R.id.listCheckInUsers).setVisibility(View.GONE);
-            view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-        } else {
-            view.findViewById(R.id.scrollView).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.progressBar).setVisibility(View.GONE);
-
-            if(mCheckInUsers != null && !mCheckInUsers.isEmpty()) {
-                view.findViewById(R.id.listCheckInUsers).setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
     private void onBtnAddFriendsClicked() {
         if(mIsBlocked) {
             showMessageDialog(getString(R.string.app_name), getString(R.string.you_cannot_add_remove_friend_when_user_is_blocked));
@@ -402,7 +287,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         showProgress(getString(R.string.loading));
 
-        DataStore.addFriendRequest(user.get(SessionManager.KEY_ID), mProfileId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
+        DataStore.addFriendRequest(user.get(SessionManager.KEY_ID), mUser.getId(), user.get(SessionManager.KEY_ACCESS_TOCKEN),
                 new DataStore.OnResultReady() {
 
             @Override
@@ -435,7 +320,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         showProgress(getString(R.string.loading));
 
-        DataStore.acceptFriendRequest(user.get(SessionManager.KEY_ID), mProfileId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
+        DataStore.acceptFriendRequest(user.get(SessionManager.KEY_ID), mUser.getId(), user.get(SessionManager.KEY_ACCESS_TOCKEN),
                 new DataStore.OnResultReady() {
 
                     @Override
@@ -467,7 +352,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         showProgress(getString(R.string.canceling));
 
-        DataStore.cancelFriendRequest(user.get(SessionManager.KEY_ID), mProfileId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
+        DataStore.cancelFriendRequest(user.get(SessionManager.KEY_ID), mUser.getId(), user.get(SessionManager.KEY_ACCESS_TOCKEN),
                 new DataStore.OnResultReady() {
 
                     @Override
@@ -498,7 +383,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         if(mOpenMode == OPEN_FROM_CHAT) {
             closeFragment();
         } else {
-            Fragment chatFragment = ChatFragment.newInstance(ProfileFragment.this, mProfileId, mUsername, mUserAvatarUrl);
+            Fragment chatFragment = ChatFragment.newInstance(ProfileFragment.this, mUser.getId(), mUsername, mUserAvatarUrl);
             openFragment(chatFragment, ChatFragment.class);
         }
     }
@@ -520,7 +405,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         SessionManager sessionManager = getSession();
 
         showProgress(getString(R.string.block_user_process));
-        DataStore.blockUserRequest(sessionManager.getUserId(), mProfileId, sessionManager.getAccessToken(),
+        DataStore.blockUserRequest(sessionManager.getUserId(), mUser.getId(), sessionManager.getAccessToken(),
                 new DataStore.OnResultReady() {
 
                     @Override
@@ -547,7 +432,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         SessionManager sessionManager = getSession();
 
         showProgress(getString(R.string.unblock_user_process));
-        DataStore.unblockUserRequest(sessionManager.getUserId(), mProfileId, sessionManager.getAccessToken(),
+        DataStore.unblockUserRequest(sessionManager.getUserId(), mUser.getId(), sessionManager.getAccessToken(),
                 new DataStore.OnResultReady() {
 
                     @Override
@@ -600,7 +485,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         String userId = user.get(SessionManager.KEY_ID);
         String accessToken = user.get(SessionManager.KEY_ACCESS_TOCKEN);
 
-        DataStore.unfriendRequest(accessToken, userId, mProfileId, new DataStore.OnResultReady() {
+        DataStore.unfriendRequest(accessToken, userId, mUser.getId(), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 View view = getView();
@@ -632,8 +517,8 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         getActivity().getSupportFragmentManager().popBackStack();
     }
 
-    public void setCheckInUsers(List<CheckInUser> mCheckInUsers) {
-        this.mCheckInUsers = mCheckInUsers;
+    public void setCurrentUser(User currentUser) {
+        mUser = currentUser;
     }
 
     private interface BtnBlockModes {

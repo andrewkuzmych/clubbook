@@ -182,10 +182,8 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         }
 
         if(!message.getIsMyMessage()) {
-            imgAvatar.setTag(message.getUserFrom());
             imgAvatar.setOnClickListener(mUserProfileClickListener);
         } else {
-            imgAvatar.setTag(null);
             imgAvatar.setOnClickListener(null);
         }
     }

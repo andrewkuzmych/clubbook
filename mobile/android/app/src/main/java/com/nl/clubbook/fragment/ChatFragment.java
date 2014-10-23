@@ -22,6 +22,7 @@ import com.nl.clubbook.datasource.BaseChatMessage;
 import com.nl.clubbook.datasource.Chat;
 import com.nl.clubbook.datasource.ChatMessage;
 import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.CalendarUtils;
 import com.nl.clubbook.utils.KeyboardUtils;
@@ -47,7 +48,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     private String mUserToId;
     private String mUserFromId;
     private String mAccessToken;
-    private Chat chat;
+    private Chat mChat;
 
     public static Fragment newInstance(Fragment targetFragment, String userId, String userName, String userPhotoUrl) {
         Fragment fragment = new ChatFragment();
@@ -129,7 +130,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                 sendMessage();
                 break;
             case R.id.imgAvatar:
-                onUserProfileClicked((String)v.getTag());
+                onUserProfileClicked();
                 break;
         }
     }
@@ -180,8 +181,8 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         mAdapter.add(message);
 
         DataStore.readMessages(
-                chat.getCurrentUser().getId(),
-                chat.getReceiver().getId(),
+                mChat.getCurrentUser().getId(),
+                mChat.getReceiver().getId(),
                 mAccessToken,
                 new DataStore.OnResultReady() {
 
@@ -221,9 +222,9 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setType(type);
         chatMessage.setIsMyMessage(true);
-        chatMessage.setUserFrom(chat.getCurrentUser().getId());
-        chatMessage.setUserFromName(chat.getCurrentUser().getName());
-        chatMessage.setUserFromAvatar(chat.getCurrentUser().getAvatar());
+        chatMessage.setUserFrom(mChat.getCurrentUser().getId());
+        chatMessage.setUserFromName(mChat.getCurrentUser().getName());
+        chatMessage.setUserFromAvatar(mChat.getCurrentUser().getAvatar());
         chatMessage.setMsg(formatMessage);
 
         mAdapter.add(chatMessage);
@@ -257,9 +258,9 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
             myNewMessage.setMsg(input);
             myNewMessage.setType(ChatMessage.TYPE_MESSAGE);
             myNewMessage.setIsMyMessage(true);
-            myNewMessage.setUserFrom(chat.getCurrentUser().getId());
-            myNewMessage.setUserFromName(chat.getCurrentUser().getName());
-            myNewMessage.setUserFromAvatar(chat.getCurrentUser().getAvatar());
+            myNewMessage.setUserFrom(mChat.getCurrentUser().getId());
+            myNewMessage.setUserFromName(mChat.getCurrentUser().getName());
+            myNewMessage.setUserFromAvatar(mChat.getCurrentUser().getAvatar());
 
             mAdapter.add(myNewMessage);
             inputText.setText("");
@@ -301,10 +302,15 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         }
     }
 
-    private void onUserProfileClicked(String userId) {
+    private void onUserProfileClicked() {
+        User receiver = mChat.getReceiver();
+        if(receiver == null) {
+            return;
+        }
+
         KeyboardUtils.closeKeyboard(getActivity(), getView().findViewById(R.id.messageInput));
 
-        Fragment fragment = ProfileFragment.newInstance(ChatFragment.this, userId, null, ProfileFragment.OPEN_FROM_CHAT);
+        Fragment fragment = ProfileFragment.newInstance(ChatFragment.this, receiver, ProfileFragment.OPEN_FROM_CHAT);
         openFragment(fragment, ProfileFragment.class);
     }
 
@@ -339,14 +345,14 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                     return;
                 }
 
-                chat = (Chat) result;
+                mChat = (Chat) result;
 
-                List<BaseChatMessage> baseChatMessages = getChatsMessages(chat.getConversation());
+                List<BaseChatMessage> baseChatMessages = getChatsMessages(mChat.getConversation());
 
                 mAdapter = new ChatAdapter(getActivity().getApplicationContext(), R.layout.item_chat_left, baseChatMessages, ChatFragment.this);
                 ListView listChat = (ListView) view.findViewById(R.id.listChat);
                 listChat.setAdapter(mAdapter);
-                listChat.setSelection(chat.getConversation().size());
+                listChat.setSelection(mChat.getConversation().size());
 
                 if(baseChatMessages.isEmpty()) {
                     view.findViewById(R.id.txtNoMessages).setVisibility(View.VISIBLE);
@@ -359,8 +365,8 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                 imm.showSoftInput(inputText, InputMethodManager.SHOW_IMPLICIT);
 
                 DataStore.readMessages(
-                        chat.getCurrentUser().getId(),
-                        chat.getReceiver().getId(),
+                        mChat.getCurrentUser().getId(),
+                        mChat.getReceiver().getId(),
                         mAccessToken,
                         new DataStore.OnResultReady() {
                             @Override

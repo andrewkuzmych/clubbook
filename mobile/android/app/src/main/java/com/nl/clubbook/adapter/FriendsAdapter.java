@@ -86,7 +86,6 @@ public class FriendsAdapter extends BaseAdapter {
 
     private void fillRow(FriendItemHolder holder, User user) {
         holder.txtUsername.setText(user.getName());
-        holder.txtUsername.setTag(user.getId());
 
         if (user.getAvatar() != null) {
             String imageUrl = ImageHelper.getUserListAvatar(user.getAvatar());

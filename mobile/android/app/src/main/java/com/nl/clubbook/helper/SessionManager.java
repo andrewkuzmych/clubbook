@@ -8,6 +8,7 @@ import com.nl.clubbook.datasource.Club;
 import com.nl.clubbook.datasource.User;
 import com.parse.PushService;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,10 +47,12 @@ public class SessionManager {
         mPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
+    @NotNull
     public String getUserId() {
         return mPreferences.getString(KEY_ID, "");
     }
 
+    @NotNull
     public String getAccessToken() {
         return mPreferences.getString(KEY_ACCESS_TOCKEN, "");
     }

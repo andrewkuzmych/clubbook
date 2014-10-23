@@ -134,12 +134,10 @@ public class LocationCheckinHelper {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (failed) {
-                    // error occurred
                     callback.onCheckInOutFinished(false);
                 } else {
                     setCurrentClub(club);
                     callback.onCheckInOutFinished(true);
-//                    startLocationUpdate(context);
 
                     //sent broadcast
                     Intent intent = new Intent();

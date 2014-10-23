@@ -88,43 +88,6 @@ public class JSONConverter {
         return result;
     }
 
-    public static List<CheckInUser> newCheckInUsersList(@Nullable JSONArray jsonArrUsers) {
-        if(jsonArrUsers == null) {
-            return null;
-        }
-
-        List<CheckInUser> checkInUsersList = new ArrayList<CheckInUser>();
-        for(int i = 0; i < jsonArrUsers.length(); i++) {
-            JSONObject jsonCheckInUser = jsonArrUsers.optJSONObject(i);
-            CheckInUser checkInUser = newCheckInUser(jsonCheckInUser);
-            checkInUsersList.add(checkInUser);
-        }
-
-        return checkInUsersList;
-    }
-
-    public static CheckInUser newCheckInUser(@Nullable JSONObject jsonCheckInUser) {
-        if(jsonCheckInUser == null) {
-            return null;
-        }
-
-        CheckInUser result = new CheckInUser();
-
-        result.setId(jsonCheckInUser.optString("_id"));
-        result.setName(jsonCheckInUser.optString("name"));
-        result.setGender(jsonCheckInUser.optString("gender"));
-
-        JSONObject jsonAvatar = jsonCheckInUser.optJSONObject("avatar");
-        if(jsonAvatar != null) {
-            String url = jsonAvatar.optString("url");
-            result.setAvatarUrl(url);
-        }
-
-        result.setFriend(jsonCheckInUser.optBoolean("is_friend"));
-
-        return result;
-    }
-
     public static List<UserPhoto> newUserPhotoList(@Nullable JSONArray photosJson) {
         if(photosJson == null) {
             return null;

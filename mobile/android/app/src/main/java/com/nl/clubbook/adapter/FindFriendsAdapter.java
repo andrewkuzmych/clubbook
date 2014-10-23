@@ -22,6 +22,8 @@ import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 /**
@@ -85,9 +87,18 @@ public class FindFriendsAdapter extends BaseAdapter {
         return row;
     }
 
+    public void updateData(@Nullable List<User> newUsers) {
+        if(newUsers == null) {
+            mUsers.clear();
+        } else {
+            mUsers = newUsers;
+        }
+
+        notifyDataSetChanged();
+    }
+
     private void fillView(ViewHolder holder, User user) {
         holder.txtUsername.setText(user.getName());
-        holder.txtUsername.setTag(user.getId());
 
         if (user.getAvatar() != null) {
             String imageUrl = ImageHelper.getUserListAvatar(user.getAvatar());

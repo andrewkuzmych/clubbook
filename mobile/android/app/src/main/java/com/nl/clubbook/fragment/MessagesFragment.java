@@ -14,6 +14,7 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.MessagesAdapter;
 import com.nl.clubbook.datasource.Chat;
 import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.L;
 
@@ -55,13 +56,15 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        TextView txtUsername = (TextView) view.findViewById(R.id.txtUsername);
-        ImageView imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
-        String userId = txtUsername.getTag().toString();
-        String userName = txtUsername.getText().toString();
-        String userPhotoUrl = (String)imgAvatar.getTag();
+        Chat chat = mAdapter.getItem(position);
+        User receiver = chat.getReceiver();
 
-        mChatFragment = (ChatFragment)ChatFragment.newInstance(MessagesFragment.this, userId, userName, userPhotoUrl);
+        mChatFragment = (ChatFragment)ChatFragment.newInstance(
+                MessagesFragment.this,
+                receiver.getId(),
+                receiver.getName(),
+                receiver.getAvatar()
+        );
         openFragment(mChatFragment, ChatFragment.class);
     }
 

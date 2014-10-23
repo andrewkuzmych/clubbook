@@ -25,10 +25,4 @@
         android:paddingRight="4dp"
         android:visibility="gone"/>
 
-    <View
-        android:id="@+id/userId"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
 </com.nl.clubbook.ui.view.SquareByHeightRelativeLayout>

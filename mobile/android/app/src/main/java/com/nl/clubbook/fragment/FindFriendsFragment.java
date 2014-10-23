@@ -40,6 +40,8 @@ public class FindFriendsFragment extends BaseFragment implements View.OnClickLis
 
     private int mLoginMode = LOGIN_FOR_RETRIEVE_FRIENDS;
 
+    private FindFriendsAdapter mAdapter;
+
     public static Fragment newInstance(Fragment targetFragment) {
         Fragment fragment = new FindFriendsFragment();
         fragment.setTargetFragment(targetFragment, 0);
@@ -68,8 +70,7 @@ public class FindFriendsFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String userId = view.findViewById(R.id.txtUsername).getTag().toString();
-        Fragment fragment = ProfileFragment.newInstance(getTargetFragment(), userId, null, ProfileFragment.OPEN_MODE_DEFAULT);
+        Fragment fragment = ProfileFragment.newInstance(getTargetFragment(), mAdapter.getItem(position), ProfileFragment.OPEN_MODE_DEFAULT);
         openFromInnerFragment(fragment, ProfileFragment.class);
     }
 
@@ -95,6 +96,11 @@ public class FindFriendsFragment extends BaseFragment implements View.OnClickLis
 
         view.findViewById(R.id.txtInviteFriends).setOnClickListener(this);
         view.findViewById(R.id.txtConnectFacebook).setOnClickListener(this);
+
+        mAdapter = new FindFriendsAdapter(getActivity(),FindFriendsFragment.this, new ArrayList<User>());
+        ListView listAvailableFriends = (ListView) view.findViewById(R.id.listAvailableFriends);
+        listAvailableFriends.setAdapter(mAdapter);
+        listAvailableFriends.setOnItemClickListener(FindFriendsFragment.this);
     }
 
     private void onInviteFriendsClicked() {
@@ -192,10 +198,7 @@ public class FindFriendsFragment extends BaseFragment implements View.OnClickLis
                 view.findViewById(R.id.txtNoFriends).setVisibility(View.GONE);
                 view.findViewById(R.id.txtConnectFacebook).setEnabled(false);
 
-                FindFriendsAdapter adapter = new FindFriendsAdapter(getActivity(),FindFriendsFragment.this, users);
-                ListView listAvailableFriends = (ListView) view.findViewById(R.id.listAvailableFriends);
-                listAvailableFriends.setAdapter(adapter);
-                listAvailableFriends.setOnItemClickListener(FindFriendsFragment.this);
+                mAdapter.updateData(users);
             }
         });
     }

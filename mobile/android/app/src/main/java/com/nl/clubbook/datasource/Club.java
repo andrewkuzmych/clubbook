@@ -31,7 +31,6 @@ public class Club implements Parcelable {
     private ClubWorkingHours todayWorkingHours;
     private List<ClubWorkingHours> workingHours;
     private List<String> photos = new ArrayList<String>();
-    private List<CheckInUser> users; //TODO
 
     public Club() {
     }
@@ -73,14 +72,6 @@ public class Club implements Parcelable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public List<CheckInUser> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<CheckInUser> users) {
-        this.users = users;
     }
 
     public String getTitle() {

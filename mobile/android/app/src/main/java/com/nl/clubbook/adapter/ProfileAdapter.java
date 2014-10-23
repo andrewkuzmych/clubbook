@@ -9,9 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.CheckInUser;
+import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.ImageHelper;
 import com.squareup.picasso.Picasso;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -23,12 +25,12 @@ public class ProfileAdapter extends BaseAdapter {
     public static final int MODE_LIST = 8888;
 
     private Context mContext;
-    private List<CheckInUser> mUsers;
+    private List<User> mUsers;
     private LayoutInflater mInflater;
     private int mMode = MODE_GRID;
 
 
-    public ProfileAdapter(Context context, List<CheckInUser> users, int mode) {
+    public ProfileAdapter(Context context, List<User> users, int mode) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mUsers = users;
@@ -41,7 +43,7 @@ public class ProfileAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public User getItem(int position) {
         return mUsers.get(position);
     }
 
@@ -65,7 +67,6 @@ public class ProfileAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.imgAvatar = (ImageView) row.findViewById(R.id.imgAvatar);
             holder.txtFriendIndicator = (TextView) row.findViewById(R.id.txtFriendIndicator);
-            holder.userId = row.findViewById(R.id.userId);
 
             row.setTag(holder);
         } else {
@@ -77,21 +78,28 @@ public class ProfileAdapter extends BaseAdapter {
         return row;
     }
 
-    private void fillView(ViewHolder holder, CheckInUser item) {
-        String imageUrl = ImageHelper.getUserListAvatar(item.getAvatarUrl());
+    public void updateData(@Nullable List<User> newUsers) {
+        if(newUsers == null) {
+            mUsers.clear();
+        } else {
+            mUsers = newUsers;
+        }
+
+        notifyDataSetChanged();
+    }
+
+    private void fillView(ViewHolder holder, User item) {
+        String imageUrl = ImageHelper.getUserListAvatar(item.getAvatar());
         Picasso.with(mContext).load(imageUrl).error(R.drawable.ic_avatar_unknown).into(holder.imgAvatar);
 
-        if(item.isFriend()) {
+        if(User.STATUS_FRIEND.equalsIgnoreCase(item.getFriendStatus())) {
             holder.txtFriendIndicator.setVisibility(View.VISIBLE);
         } else {
             holder.txtFriendIndicator.setVisibility(View.GONE);
         }
-
-        holder.userId.setTag(item.getId());
     }
 
     static class ViewHolder {
-        View userId;
         TextView txtFriendIndicator;
         ImageView imgAvatar;
     }

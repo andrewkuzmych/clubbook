@@ -9,6 +9,7 @@ import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.L;
 
 import org.apache.http.Header;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -430,7 +431,6 @@ public class DataStore {
         });
     }
 
-//    GET /_s/obj/club/:objectId/users
     public static void retrieveClubCheckedInUsers(String clubId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
@@ -440,17 +440,21 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-//                JSONObject jsonClub = responseJson.optJSONObject("club");
-//
-//                Club club = JSONConverter.newClub(jsonClub);
-//                if (jsonClub != null && club != null) {
-//                    JSONArray jsonArrUsers = responseJson.optJSONArray("users");
-//                    List<CheckInUser> checkInUsers = JSONConverter.newCheckInUsersList(jsonArrUsers);
-//                    club.setUsers(checkInUsers);
-//                }
+                String status = responseJson.optString("status");
+                List<User> users = new ArrayList<User>();
 
-//                failed = false;
-                onResultReady.onReady(null, failed);
+                if("ok".equalsIgnoreCase(status)) {
+                    failed = false;
+
+                    JSONArray jsonArrUsers = responseJson.optJSONArray("users");
+                    if(jsonArrUsers != null && jsonArrUsers.length() != 0) {
+                        users = JSONConverter.newUsersList(jsonArrUsers, true);
+                    }
+                } else {
+                    failed = true;
+                }
+
+                onResultReady.onReady(users, failed);
             }
 
             @Override
@@ -1462,7 +1466,7 @@ public class DataStore {
     }
 
     public interface OnResultReady {
-        public void onReady(Object result, boolean failed);
+        public void onReady(@Nullable Object result, boolean failed);
     }
 
     /*
@@ -1481,17 +1485,17 @@ public class DataStore {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
-                JSONObject jsonClub = responseJson.optJSONObject("club");
-
-                Club club = JSONConverter.newClub(jsonClub);
-                if (jsonClub != null && club != null) {
-                    JSONArray jsonArrUsers = responseJson.optJSONArray("users");
-                    List<CheckInUser> checkInUsers = JSONConverter.newCheckInUsersList(jsonArrUsers);
-                    club.setUsers(checkInUsers);
-                }
-
-                failed = false;
-                onResultReady.onReady(club, failed);
+//                JSONObject jsonClub = responseJson.optJSONObject("club");
+//
+//                Club club = JSONConverter.newClub(jsonClub);
+//                if (jsonClub != null && club != null) {
+//                    JSONArray jsonArrUsers = responseJson.optJSONArray("users");
+//                    List<CheckInUser> checkInUsers = JSONConverter.newCheckInUsersList(jsonArrUsers);
+//                    club.setUsers(checkInUsers);
+//                }
+//
+//                failed = false;
+//                onResultReady.onReady(club, failed);
             }
 
             @Override

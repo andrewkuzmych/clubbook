@@ -21,11 +21,11 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.activity.ClubInfoActivity;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.adapter.ProfileAdapter;
-import com.nl.clubbook.datasource.CheckInUser;
 import com.nl.clubbook.datasource.Club;
 import com.nl.clubbook.datasource.ClubWorkingHours;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.JSONConverter;
+import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.*;
@@ -37,6 +37,7 @@ import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -54,6 +55,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     private final int ACTION_ID_CHECK_IN_EXPLANATION = 753;
 
     private Club mClub;
+    private ProfileAdapter mProfileAdapter;
 
     private boolean mIsLoading = false;
     private boolean mCanCheckInHere = false;
@@ -117,16 +119,13 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        View viewUserId = view.findViewById(R.id.userId);
-
         if(!LocationCheckinHelper.getInstance().isCheckInHere(mClub)) {
             showToast(R.string.need_to_check_in_first);
             return;
         }
 
-//        String userId = (String)viewUserId.getTag();
-//        Fragment fragment = ProfileFragment.newInstance(ClubFragment.this, userId, mClub.getUsers(), ProfileFragment.OPEN_MODE_DEFAULT); //TODO
-//        openFragment(fragment, ProfileFragment.class);
+        Fragment fragment = ProfileFragment.newInstance(ClubFragment.this, mProfileAdapter.getItem(position), ProfileFragment.OPEN_MODE_DEFAULT);
+        openFragment(fragment, ProfileFragment.class);
     }
 
     @Override
@@ -180,12 +179,19 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
         GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
         gridUsers.setOnItemClickListener(ClubFragment.this);
+        mProfileAdapter = new ProfileAdapter(getActivity(), new ArrayList<User>(), ProfileAdapter.MODE_GRID);
+        gridUsers.setAdapter(mProfileAdapter);
 
         fillView(view);
     }
 
     public void onClubCheckedOut() {
-        //TODO add refresh check in/out button
+        View view = getView();
+        if(view == null) {
+            return;
+        }
+
+        handleCheckInCheckOutResults(view, false);
 
         loadCheckedInUsers();
     }
@@ -204,27 +210,30 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         final HashMap<String, String> user = this.getSession().getUserDetails();
 
         setProgressViewState(true);
+        view.findViewById(R.id.txtNoUsers).setVisibility(View.GONE);
+        view.findViewById(R.id.gridUsers).setVisibility(View.GONE);
+
 
         DataStore.retrieveClubCheckedInUsers(mClub.getId(), user.get(SessionManager.KEY_ACCESS_TOCKEN), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
-//                View view = getView();
-//                if(view == null || isDetached() || getActivity() == null) {
-//                    return;
-//                }
-//
-//                if (failed) {
-//                    showToast(R.string.something_went_wrong_please_try_again);
-//                    view.findViewById(R.id.progressBar).setVisibility(View.GONE);
-//                    hideProgressDialog();
-//                    return;
-//                }
-//
-//                setProgressViewState(false);
-//
-//                mClub = (Club) result;
-//
-//                fillView(view);
+                View view = getView();
+                if(view == null || isDetached() || getActivity() == null || result == null) {
+                    return;
+                }
+
+                if (failed) {
+                    showToast(R.string.something_went_wrong_please_try_again);
+                    view.findViewById(R.id.progressBar).setVisibility(View.GONE);
+                    view.findViewById(R.id.txtNoUsers).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.gridUsers).setVisibility(View.GONE);
+                    return;
+                }
+
+                setProgressViewState(false);
+                view.findViewById(R.id.gridUsers).setVisibility(View.VISIBLE);
+
+                fillCheckedInUsers(view, (List<User>) result);
             }
         });
     }
@@ -242,9 +251,6 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         TextView txtDistance = (TextView) view.findViewById(R.id.txtDistance);
         TextView txtFriendsCount = (TextView) view.findViewById(R.id.txtFriendsCount);
         ImageView imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
-
-//        // Load profiles
-//        initGridView(view, mClub.getUsers()); //TODO
 
         // if we checked in this this club set related style
         boolean isCheckedInHere = LocationCheckinHelper.getInstance().isCheckInHere(mClub);
@@ -373,8 +379,13 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
             LocationCheckinHelper.getInstance().checkOut(getActivity(), new CheckInOutCallbackInterface() {
                 @Override
-                public void onCheckInOutFinished(boolean isUserCheckOut) {
-                    handleCheckInCheckOutResults(view, isUserCheckOut);
+                public void onCheckInOutFinished(boolean isSuccess) {
+                    if(!isSuccess) {
+                        showToast(R.string.something_went_wrong_please_try_again);
+                        return;
+                    }
+
+                    handleCheckInCheckOutResults(view, false);
                 }
             });
         } else {
@@ -409,23 +420,26 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     private void checkIn(final View view) {
         LocationCheckinHelper.getInstance().checkIn(getActivity(), mClub, new CheckInOutCallbackInterface() {
             @Override
-            public void onCheckInOutFinished(boolean isUserCheckIn) {
-                handleCheckInCheckOutResults(view, isUserCheckIn);
+            public void onCheckInOutFinished(boolean isSuccess) {
+                if(!isSuccess) {
+                    showToast(R.string.something_went_wrong_please_try_again);
+                    return;
+                }
+
+                handleCheckInCheckOutResults(view, true);
             }
         });
     }
 
-    private void handleCheckInCheckOutResults(View view, boolean result) {
+    private void handleCheckInCheckOutResults(View view, boolean isCheckedIn) {
         if(isDetached() || getActivity() == null || getActivity().isFinishing()) {
             return;
         }
 
         hideProgressDialog();
 
-        if (result) {
-            UiHelper.changeCheckInState(getActivity(), view, false);
-            loadCheckedInUsers();
-        }
+        UiHelper.changeCheckInState(getActivity(), view, isCheckedIn);
+        loadCheckedInUsers();
     }
 
     private void setLoading(View view, boolean isLoading) {
@@ -454,15 +468,23 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         }
     }
 
-    private void initGridView(@NotNull View view, @Nullable List<CheckInUser> users) {
-        if(users == null) {
-//            view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.VISIBLE); //TODO
+    private void fillCheckedInUsers(@NotNull View view, @Nullable List<User> users) {
+        TextView txtCheckInCount = (TextView) view.findViewById(R.id.txtCheckInCount);
+        mProfileAdapter.updateData(users);
+
+        if(users == null || users.isEmpty()) {
+            view.findViewById(R.id.txtNoUsers).setVisibility(View.VISIBLE);
+            txtCheckInCount.setText(0 + "\n" + getString(R.string.checked_in));
             return;
         }
 
+        mClub.setActiveCheckIns(users.size());
+        txtCheckInCount.setText(mClub.getActiveCheckIns() + "\n" + getString(R.string.checked_in));
+        view.findViewById(R.id.txtNoUsers).setVisibility(View.GONE);
+
         String currentUserId = getSession().getUserDetails().get(SessionManager.KEY_ID);
         if(!LocationCheckinHelper.getInstance().isCheckIn()) {
-            for(CheckInUser user : users) {
+            for(User user : users) {
                 if(user != null && currentUserId.equalsIgnoreCase(user.getId())) {
                     LocationCheckinHelper.getInstance().setCurrentClub(mClub);
 
@@ -476,16 +498,6 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
                     break;
                 }
             }
-        }
-
-        GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
-        ProfileAdapter profileAdapter = new ProfileAdapter(getActivity(), users, ProfileAdapter.MODE_GRID);
-        gridUsers.setAdapter(profileAdapter);
-
-        if(users.size() == 0) {
-//            view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.VISIBLE); //TODO
-        } else {
-//            view.findViewById(R.id.holderCheckInExplanation).setVisibility(View.GONE); //TODO
         }
     }
 }
