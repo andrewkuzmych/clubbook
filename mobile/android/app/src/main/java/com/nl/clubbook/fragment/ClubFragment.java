@@ -108,6 +108,9 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
             case R.id.txtCheckIn:
                 onCheckInBtnClicked(view);
                 break;
+            case R.id.txtYesterday:
+                onYesterdayClicked();
+                break;
             case R.id.holderClubInfo:
                 onHolderClubInfoClicked();
                 break;
@@ -175,6 +178,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
         view.findViewById(R.id.txtCheckIn).setOnClickListener(this);
         view.findViewById(R.id.holderClubInfo).setOnClickListener(this);
+        view.findViewById(R.id.txtYesterday).setOnClickListener(this);
         view.findViewById(R.id.txtDistance).setOnClickListener(this);
 
         GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
@@ -212,7 +216,6 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         setProgressViewState(true);
         view.findViewById(R.id.txtNoUsers).setVisibility(View.GONE);
         view.findViewById(R.id.gridUsers).setVisibility(View.GONE);
-
 
         DataStore.retrieveClubCheckedInUsers(mClub.getId(), user.get(SessionManager.KEY_ACCESS_TOCKEN), new DataStore.OnResultReady() {
             @Override
@@ -272,6 +275,9 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
             }
         }
 
+
+        setCheckInTxtPaddings(txtCheckIn);
+
         txtClubName.setText(mClub.getTitle());
         txtCheckInCount.setText(mClub.getActiveCheckIns() + "\n" + getString(R.string.checked_in));
         txtFriendsCount.setText(mClub.getActiveFriendsCheckIns() + "\n" + getString(R.string.friends));
@@ -315,6 +321,10 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         intent.putExtra(ClubInfoActivity.EXTRA_CLUB, JSONConverter.newClub(mClub).toString());
         intent.putExtra(ClubInfoActivity.EXTRA_TITLE, mClub.getTitle());
         startActivity(intent);
+    }
+
+    private void onYesterdayClicked() {
+        //TODO
     }
 
     private void onDistanceClicked() {
@@ -431,6 +441,15 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         });
     }
 
+    private void setCheckInTxtPaddings(View view) {
+        view.setPadding(
+                (int)getResources().getDimension(R.dimen.btn_check_in_left_right_padding),
+                0,
+                (int)getResources().getDimension(R.dimen.btn_check_in_left_right_padding),
+                0
+        );
+    }
+
     private void handleCheckInCheckOutResults(View view, boolean isCheckedIn) {
         if(isDetached() || getActivity() == null || getActivity().isFinishing()) {
             return;
@@ -439,6 +458,8 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         hideProgressDialog();
 
         UiHelper.changeCheckInState(getActivity(), view, isCheckedIn);
+        setCheckInTxtPaddings(view);
+
         loadCheckedInUsers();
     }
 

@@ -280,16 +280,14 @@ public class LocationCheckinHelper {
         if (currentLocation != null) {
             double mLat = currentLocation.getLatitude();
             double mLong = currentLocation.getLongitude();
-            double eventLat = Double.valueOf(lat);
-            double eventLon = Double.valueOf(lon);
 
             Location loc1 = new Location("");
             loc1.setLatitude(mLat);
             loc1.setLongitude(mLong);
 
             Location loc2 = new Location("");
-            loc2.setLatitude(eventLat);
-            loc2.setLongitude(eventLon);
+            loc2.setLatitude(lat);
+            loc2.setLongitude(lon);
 
             distanceBtwPoints = loc1.distanceTo(loc2);
         }

@@ -73,6 +73,12 @@ public class ProfileAdapter extends BaseAdapter {
             holder = (ViewHolder) row.getTag();
         }
 
+        if(position == (mUsers.size() - 1)) {
+            row.setPadding(0, 0, 0, (int)mContext.getResources().getDimension(R.dimen.grid_user_bottom_padding));
+        } else {
+            row.setPadding(0, 0, 0, 0);
+        }
+
         fillView(holder, mUsers.get(position));
 
         return row;

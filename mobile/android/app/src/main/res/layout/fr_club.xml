@@ -132,11 +132,10 @@
 
             <com.nl.clubbook.ui.view.HelveticaRegularTextView
                 android:id="@+id/txtCheckInCount"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="8dp"
-                android:layout_weight="1"
+                android:layout_marginRight="4dp"
                 android:drawableLeft="@drawable/ic_checked_in_club_details"
                 android:drawablePadding="-4dp"
                 android:gravity="center_vertical"
@@ -146,32 +145,31 @@
 
             <com.nl.clubbook.ui.view.HelveticaRegularTextView
                 android:id="@+id/txtFriendsCount"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="8dp"
-                android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_friends_club_details"
-                android:drawablePadding="4dp"
+                android:drawablePadding="-4dp"
                 android:gravity="center_vertical"
                 android:text="@string/friends"
                 android:textColor="@color/grey_light"
                 android:textSize="@dimen/txt_check_in_users_size" />
 
             <com.nl.clubbook.ui.view.HelveticaRegularTextView
-                android:id="@+id/txtCheckIn"
+                android:id="@+id/txtYesterday"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:background="@drawable/bg_btn_green"
+                android:background="@drawable/bg_btn_yesterday"
                 android:gravity="center"
-                android:paddingBottom="4dp"
+                android:paddingBottom="8dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:paddingTop="4dp"
-                android:text="@string/check_in"
-                android:textColor="@android:color/white"
+                android:paddingTop="8dp"
+                android:text="@string/yesterday"
+                android:textColor="@color/grey_light"
                 android:textSize="@dimen/text_size_medium" />
 
         </LinearLayout>
@@ -185,7 +183,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:numColumns="@integer/grid_users_column_count"
-                android:scrollbars="none"/>
+                android:scrollbars="none"
+                android:background="@android:color/white"/>
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -205,6 +204,24 @@
                 android:textSize="@dimen/text_size_medium"
                 android:layout_centerInParent="true"
                 android:visibility="gone"/>
+
+            <com.nl.clubbook.ui.view.HelveticaRegularTextView
+                android:id="@+id/txtCheckIn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/bg_btn_green"
+                android:gravity="center"
+                android:paddingBottom="8dp"
+                android:paddingLeft="@dimen/btn_check_in_left_right_padding"
+                android:paddingRight="@dimen/btn_check_in_left_right_padding"
+                android:paddingTop="8dp"
+                android:text="@string/check_in"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_medium"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="16dp"/>
 
         </RelativeLayout>
 
