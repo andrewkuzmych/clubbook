@@ -120,6 +120,10 @@ public class ClubbookRestClient {
         client.get(getBcAbsoluteUrl("obj/club/" + clubId + "/users"), params, responseHandler);
     }
 
+    public static void retrieveClubYesterdayCheckedInUsers(String clubId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/club/" + clubId + "/users/yesterday"), params, responseHandler);
+    }
+
     public static void checkin(String placeId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getBcAbsoluteUrl("obj/club/" + placeId + "/checkin"), params, responseHandler);
     }

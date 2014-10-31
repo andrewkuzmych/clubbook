@@ -183,8 +183,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:numColumns="@integer/grid_users_column_count"
-                android:scrollbars="none"
-                android:background="@android:color/white"/>
+                android:scrollbars="none"/>
 
             <ProgressBar
                 android:id="@+id/progressBar"

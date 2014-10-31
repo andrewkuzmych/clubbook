@@ -21,13 +21,13 @@ import java.util.List;
  * Created by Andrew on 6/2/2014.
  */
 public class ProfileAdapter extends BaseAdapter {
-    public static final int MODE_GRID = 7777;
-    public static final int MODE_LIST = 8888;
+    public static final int MODE_CLUB_SCREEN = 7777;
+    public static final int MODE_YESTERDAY_CHEKED_IN = 8888;
 
     private Context mContext;
     private List<User> mUsers;
     private LayoutInflater mInflater;
-    private int mMode = MODE_GRID;
+    private int mMode = MODE_CLUB_SCREEN;
 
 
     public ProfileAdapter(Context context, List<User> users, int mode) {
@@ -58,11 +58,7 @@ public class ProfileAdapter extends BaseAdapter {
         ViewHolder holder;
 
         if (row == null) {
-            if(mMode == MODE_GRID) {
-                row = mInflater.inflate(R.layout.item_grid_profile, parent, false);
-            } else {
-                row = mInflater.inflate(R.layout.item_list_checked_in_users, parent, false);
-            }
+            row = mInflater.inflate(R.layout.item_grid_profile, parent, false);
 
             holder = new ViewHolder();
             holder.imgAvatar = (ImageView) row.findViewById(R.id.imgAvatar);
@@ -73,10 +69,12 @@ public class ProfileAdapter extends BaseAdapter {
             holder = (ViewHolder) row.getTag();
         }
 
-        if(position == (mUsers.size() - 1)) {
-            row.setPadding(0, 0, 0, (int)mContext.getResources().getDimension(R.dimen.grid_user_bottom_padding));
-        } else {
-            row.setPadding(0, 0, 0, 0);
+        if(mMode == MODE_YESTERDAY_CHEKED_IN) {
+            if (position == (mUsers.size() - 1)) {
+                row.setPadding(0, 0, 0, (int) mContext.getResources().getDimension(R.dimen.grid_user_bottom_padding));
+            } else {
+                row.setPadding(0, 0, 0, 0);
+            }
         }
 
         fillView(holder, mUsers.get(position));

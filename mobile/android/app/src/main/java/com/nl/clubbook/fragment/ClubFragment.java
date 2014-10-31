@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.ClubInfoActivity;
 import com.nl.clubbook.activity.MainActivity;
+import com.nl.clubbook.activity.YesterdayUsersGridActivity;
 import com.nl.clubbook.adapter.ProfileAdapter;
 import com.nl.clubbook.datasource.Club;
 import com.nl.clubbook.datasource.ClubWorkingHours;
@@ -183,7 +184,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
         GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
         gridUsers.setOnItemClickListener(ClubFragment.this);
-        mProfileAdapter = new ProfileAdapter(getActivity(), new ArrayList<User>(), ProfileAdapter.MODE_GRID);
+        mProfileAdapter = new ProfileAdapter(getActivity(), new ArrayList<User>(), ProfileAdapter.MODE_CLUB_SCREEN);
         gridUsers.setAdapter(mProfileAdapter);
 
         fillView(view);
@@ -324,7 +325,8 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     }
 
     private void onYesterdayClicked() {
-        //TODO
+        Intent intent = new Intent(getActivity(), YesterdayUsersGridActivity.class);
+        startActivity(intent);
     }
 
     private void onDistanceClicked() {

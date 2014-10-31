@@ -191,6 +191,9 @@
     <string name="cancel_request_">Cancel Request</string>
     <string name="remove_friend_">Remove Friend</string>
     <string name="no_friends">No friends</string>
+    <string name="club_profile">Club Profile</string>
+    <string name="users_checked_in_yesterday">Users Checked-in Yesterday</string>
+    <string name="sorry_you_cannot_access_this_information">Sorry, you cannot access this information, because you were not Checked-in to this Club yesterday</string>
     <!---->
 
     <!--For Google Analytics-->
