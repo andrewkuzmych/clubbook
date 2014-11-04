@@ -24,16 +24,32 @@
         <GridView
             android:id="@+id/gridUsers"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:numColumns="3"/>
 
         <com.nl.clubbook.ui.view.HelveticaRegularTextView
+            android:id="@+id/txtYouHaventAccess"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="64dp"
             android:text="@string/sorry_you_cannot_access_this_information"
-            android:textSize="@dimen/text_size_small"
+            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/grey"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            android:visibility="gone"/>
+
+        <com.nl.clubbook.ui.view.HelveticaRegularTextView
+            android:id="@+id/txtNoUsers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="64dp"
+            android:text="@string/no_users"
+            android:textSize="@dimen/text_size_medium"
             android:textColor="@color/grey"
             android:paddingRight="16dp"
             android:paddingLeft="16dp"

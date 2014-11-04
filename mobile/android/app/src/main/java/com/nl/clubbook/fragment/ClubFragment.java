@@ -326,6 +326,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
     private void onYesterdayClicked() {
         Intent intent = new Intent(getActivity(), YesterdayUsersGridActivity.class);
+        intent.putExtra(YesterdayUsersGridActivity.EXTRA_CLUB_ID, mClub.getId());
         startActivity(intent);
     }
 

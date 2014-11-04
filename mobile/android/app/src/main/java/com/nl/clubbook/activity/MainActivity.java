@@ -36,7 +36,6 @@ import com.nl.clubbook.fragment.BaseFragment;
 import com.nl.clubbook.fragment.ChatFragment;
 import com.nl.clubbook.fragment.ClubFragment;
 import com.nl.clubbook.fragment.ClubsListFragment;
-import com.nl.clubbook.fragment.FindFriendsFragment;
 import com.nl.clubbook.fragment.FriendsFragment;
 import com.nl.clubbook.fragment.MessagesFragment;
 import com.nl.clubbook.fragment.SettingsFragment;

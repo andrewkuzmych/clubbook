@@ -2,6 +2,7 @@ package com.nl.clubbook.datasource;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -474,25 +475,29 @@ public class DataStore {
         params.put("access_token", accessToken);
 
         ClubbookRestClient.retrieveClubYesterdayCheckedInUsers(clubId, params, new JsonHttpResponseHandler() {
-            private boolean failed = true;
-
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 String status = responseJson.optString("status");
-                List<User> users = new ArrayList<User>();
+
+                L.e("responseJson - " + responseJson);
 
                 if("ok".equalsIgnoreCase(status)) {
-                    failed = false;
+                    String msg = responseJson.optString("msg");
+                    if(TextUtils.isEmpty(msg)) {
+                        List<User> users = new ArrayList<User>();
+                        JSONArray jsonArrUsers = responseJson.optJSONArray("users");
+                        if(jsonArrUsers != null && jsonArrUsers.length() != 0) {
+                            users = JSONConverter.newUsersList(jsonArrUsers, true);
+                        }
 
-                    JSONArray jsonArrUsers = responseJson.optJSONArray("users");
-                    if(jsonArrUsers != null && jsonArrUsers.length() != 0) {
-                        users = JSONConverter.newUsersList(jsonArrUsers, true);
+                        onResultReady.onReady(users, false);
+                    } else {
+                        onResultReady.onReady(msg, true);
                     }
-                } else {
-                    failed = true;
-                }
 
-                onResultReady.onReady(users, failed);
+                } else {
+                    onResultReady.onReady(null, true);
+                }
             }
 
             @Override
