@@ -13,10 +13,11 @@ import java.util.List;
  */
 public class NavDrawerData {
     public static final int CLUB_LIST_POSITION = 0;
-    public static final int MESSAGES_POSITION = 1;
-    public static final int FRIENDS_POSITION = 2;
-    public static final int SHARE_POSITION = 3;
-    public static final int SETTINGS_POSITION = 4;
+    public static final int CLUB_CHECKED_IN= 1;
+    public static final int MESSAGES_POSITION = 2;
+    public static final int FRIENDS_POSITION = 3;
+    public static final int SHARE_POSITION = 4;
+    public static final int SETTINGS_POSITION = 5;
 
     public static final int DEFAULT_FRAGMENT_NUMBER = CLUB_LIST_POSITION;
 
@@ -41,6 +42,7 @@ public class NavDrawerData {
 
     public static final int[] DRAWER_TITLES_RESOURCES = new int[] {
             R.string.clubs,
+            R.string.checked_in_,
             R.string.messages,
             R.string.friends,
             R.string.share,
@@ -49,6 +51,7 @@ public class NavDrawerData {
 
     public static final int[] DRAWER_ICONS = new int[] {
             R.drawable.ic_club_list_nav_drawer,
+            0,
             R.drawable.ic_messages_nav_drawer,
             R.drawable.ic_friends_nav_drawer,
             R.drawable.ic_share_nav_drawer,

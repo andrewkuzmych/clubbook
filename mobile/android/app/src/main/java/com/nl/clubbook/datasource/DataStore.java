@@ -479,8 +479,6 @@ public class DataStore {
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 String status = responseJson.optString("status");
 
-                L.e("responseJson - " + responseJson);
-
                 if("ok".equalsIgnoreCase(status)) {
                     String msg = responseJson.optString("msg");
                     if(TextUtils.isEmpty(msg)) {
@@ -495,6 +493,44 @@ public class DataStore {
                         onResultReady.onReady(msg, true);
                     }
 
+                } else {
+                    onResultReady.onReady(null, true);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+        });
+    }
+
+    //    GET /_s/obj/users/checkedin?user_lat=52.448866&user_lon=4.805236&distance=100&access_token=
+    public static void retrieveCurrentCheckedInUsers(String accessToken, String userLat, String userLong, String distance, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("user_lat", userLat);
+        params.put("user_lon", userLong);
+        params.put("distance", distance);
+        params.put("access_token", accessToken);
+
+        ClubbookRestClient.retrieveCurrentCheckedInUsers(params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                String status = responseJson.optString("status");
+
+                if("ok".equalsIgnoreCase(status)) {
+                    List<User> users = new ArrayList<User>();
+                    JSONArray jsonArrUsers = responseJson.optJSONArray("users");
+                    if(jsonArrUsers != null && jsonArrUsers.length() != 0) {
+                        users = JSONConverter.newUsersList(jsonArrUsers, true);
+                    }
+
+                    onResultReady.onReady(users, false);
                 } else {
                     onResultReady.onReady(null, true);
                 }

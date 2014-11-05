@@ -29,7 +29,7 @@ public class Club implements Parcelable {
     private int activeCheckIns;
     private int activeFriendsCheckIns;
     private ClubWorkingHours todayWorkingHours;
-    private List<ClubWorkingHours> workingHours;
+    private List<ClubWorkingHours> workingHours = new ArrayList<ClubWorkingHours>();
     private List<String> photos = new ArrayList<String>();
 
     public Club() {

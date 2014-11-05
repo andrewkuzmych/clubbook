@@ -34,6 +34,7 @@ import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.JSONConverter;
 import com.nl.clubbook.fragment.BaseFragment;
 import com.nl.clubbook.fragment.ChatFragment;
+import com.nl.clubbook.fragment.CheckedInUsersFragment;
 import com.nl.clubbook.fragment.ClubFragment;
 import com.nl.clubbook.fragment.ClubsListFragment;
 import com.nl.clubbook.fragment.FriendsFragment;
@@ -473,7 +474,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void displayView(final int position) {
-        if(position == NavDrawerData.SETTINGS_POSITION) {
+        if(position == NavDrawerData.CLUB_CHECKED_IN) {
+            mCurrentFragment = new CheckedInUsersFragment();
+        } else if(position == NavDrawerData.SETTINGS_POSITION) {
             mCurrentFragment = new SettingsFragment();
         } else {
             mCurrentFragment = fragmentMap.get(position);

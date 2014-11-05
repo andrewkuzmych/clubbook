@@ -18,6 +18,7 @@
         android:background="@color/main_background_color"
         android:divider="@color/nav_drawer_divider_color"
         android:dividerHeight="1dp"
-        android:choiceMode="singleChoice"/>
+        android:choiceMode="singleChoice"
+        android:scrollbars="none"/>
 
 </android.support.v4.widget.DrawerLayout>

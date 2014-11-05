@@ -184,7 +184,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
         GridView gridUsers = (GridView) view.findViewById(R.id.gridUsers);
         gridUsers.setOnItemClickListener(ClubFragment.this);
-        mProfileAdapter = new ProfileAdapter(getActivity(), new ArrayList<User>(), ProfileAdapter.MODE_CLUB_SCREEN);
+        mProfileAdapter = new ProfileAdapter(getActivity(), new ArrayList<User>(), ProfileAdapter.MODE_DEFAULT);
         gridUsers.setAdapter(mProfileAdapter);
 
         fillView(view);

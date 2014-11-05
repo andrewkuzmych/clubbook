@@ -21,13 +21,13 @@ import java.util.List;
  * Created by Andrew on 6/2/2014.
  */
 public class ProfileAdapter extends BaseAdapter {
-    public static final int MODE_CLUB_SCREEN = 7777;
-    public static final int MODE_YESTERDAY_CHEKED_IN = 8888;
+    public static final int MODE_DEFAULT = 7777;
+    public static final int MODE_YESTERDAY_CHECKED_IN = 8888;
 
     private Context mContext;
     private List<User> mUsers;
     private LayoutInflater mInflater;
-    private int mMode = MODE_CLUB_SCREEN;
+    private int mMode = MODE_DEFAULT;
 
 
     public ProfileAdapter(Context context, List<User> users, int mode) {
@@ -69,7 +69,7 @@ public class ProfileAdapter extends BaseAdapter {
             holder = (ViewHolder) row.getTag();
         }
 
-        if(mMode == MODE_YESTERDAY_CHEKED_IN) {
+        if(mMode == MODE_YESTERDAY_CHECKED_IN) {
             if (position == (mUsers.size() - 1)) {
                 row.setPadding(0, 0, 0, (int) mContext.getResources().getDimension(R.dimen.grid_user_bottom_padding));
             } else {
