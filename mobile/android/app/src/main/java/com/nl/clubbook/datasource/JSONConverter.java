@@ -48,7 +48,7 @@ public class JSONConverter {
         User result = new User();
 
         result.setId(jsonUser.optString("_id"));
-        result.setFb_id(jsonUser.optString("fb_id"));
+        result.setFbId(jsonUser.optString("fb_id"));
         result.setName(jsonUser.optString("name"));
         result.setEmail(jsonUser.optString("email"));
         result.setGender(jsonUser.optString("gender"));

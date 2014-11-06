@@ -1,5 +1,6 @@
 package com.nl.clubbook.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,9 +40,13 @@ import java.util.List;
  */
 public class ChatFragment extends BaseInnerFragment implements View.OnClickListener {
 
+    public static final int MODE_OPEN_FROM_CHAT_LIST = 9999;
+    public static final int MODE_OPEN_FROM_PROFILE = 2222;
+
     private static final String ARG_USER_ID = "ARG_USER_ID";
     private static final String ARG_USER_NAME = "ARG_USER_NAME";
     private static final String ARG_USER_PHOTO_URL = "ARG_USER_PHOTO_URL";
+    private static final String ARG_MODE = "ARG_MODE";
 
     private ChatAdapter mAdapter;
     private EditText inputText;
@@ -49,8 +54,9 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     private String mUserFromId;
     private String mAccessToken;
     private Chat mChat;
+    private int mMode = MODE_OPEN_FROM_CHAT_LIST;
 
-    public static Fragment newInstance(Fragment targetFragment, String userId, String userName, String userPhotoUrl) {
+    public static Fragment newInstance(Fragment targetFragment, int mode, String userId, String userName, String userPhotoUrl) {
         Fragment fragment = new ChatFragment();
         fragment.setTargetFragment(targetFragment, 0);
 
@@ -58,6 +64,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         args.putString(ARG_USER_ID, userId);
         args.putString(ARG_USER_NAME, userName);
         args.putString(ARG_USER_PHOTO_URL, userPhotoUrl);
+        args.putInt(ARG_MODE, mode);
         fragment.setArguments(args);
 
         return fragment;
@@ -141,6 +148,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
             return;
         }
 
+        mMode = args.getInt(ARG_MODE, MODE_OPEN_FROM_CHAT_LIST);
         mUserToId = args.getString(ARG_USER_ID);
         String userName = args.getString(ARG_USER_NAME);
         String userPhotoUrl = args.getString(ARG_USER_PHOTO_URL);
@@ -310,8 +318,12 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
         KeyboardUtils.closeKeyboard(getActivity(), getView().findViewById(R.id.messageInput));
 
-        Fragment fragment = ProfileFragment.newInstance(ChatFragment.this, receiver, ProfileFragment.OPEN_FROM_CHAT);
-        openFragment(fragment, ProfileFragment.class);
+        if(mMode == MODE_OPEN_FROM_PROFILE) {
+            closeFragment();
+        } else {
+            Fragment fragment = ProfileFragment.newInstance(ChatFragment.this, receiver, ProfileFragment.OPEN_FROM_CHAT);
+            openFragment(fragment, ProfileFragment.class);
+        }
     }
 
     private void loadConversation() {
@@ -380,7 +392,11 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                                     return;
                                 }
 
-                                ((MainActivity) getActivity()).updateMessagesCount();
+                                Activity activity = getActivity();
+                                if(activity != null && activity instanceof MainActivity) {
+                                    MainActivity mainActivity = (MainActivity) activity;
+                                    mainActivity.updateMessagesCount();
+                                }
                             }
                         });
 

@@ -7,9 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.MessagesAdapter;
 import com.nl.clubbook.datasource.Chat;
@@ -61,6 +59,7 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
 
         mChatFragment = (ChatFragment)ChatFragment.newInstance(
                 MessagesFragment.this,
+                ChatFragment.MODE_OPEN_FROM_CHAT_LIST,
                 receiver.getId(),
                 receiver.getName(),
                 receiver.getAvatar()

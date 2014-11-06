@@ -81,6 +81,9 @@
         <activity
             android:name=".activity.YesterdayUsersGridActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ProfileActivity"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="CLOUDINARY_URL"

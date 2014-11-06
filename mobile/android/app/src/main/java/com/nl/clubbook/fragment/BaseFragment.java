@@ -164,6 +164,18 @@ public class BaseFragment extends Fragment {
         fTransaction.commitAllowingStateLoss();
     }
 
+    protected void closeFragment() {
+        Fragment targetFragment = getTargetFragment();
+        if(targetFragment == null) {
+            return;
+        }
+        FragmentTransaction fTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fTransaction.show(targetFragment);
+        fTransaction.remove(this);
+        fTransaction.commitAllowingStateLoss();
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
+
     protected void initTarget() {
         final ActionBarActivity activity = (ActionBarActivity) getActivity();
 

@@ -61,6 +61,17 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         return fragment;
     }
 
+    public static Fragment newInstance(User currentUser, int openMode) {
+        ProfileFragment fragment = new ProfileFragment();
+        fragment.setCurrentUser(currentUser);
+
+        Bundle args = new Bundle();
+        args.putInt(ARG_OPEN_FRAGMENT_MODE, openMode);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fr_profile, null);
@@ -383,7 +394,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         if(mOpenMode == OPEN_FROM_CHAT) {
             closeFragment();
         } else {
-            Fragment chatFragment = ChatFragment.newInstance(ProfileFragment.this, mUser.getId(), mUsername, mUserAvatarUrl);
+            Fragment chatFragment = ChatFragment.newInstance(ProfileFragment.this, ChatFragment.MODE_OPEN_FROM_PROFILE, mUser.getId(), mUsername, mUserAvatarUrl);
             openFragment(chatFragment, ChatFragment.class);
         }
     }
@@ -507,14 +518,6 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                 }
             }
         });
-    }
-
-    private void closeFragment() {
-        FragmentTransaction fTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        fTransaction.show(getTargetFragment());
-        fTransaction.remove(ProfileFragment.this);
-        fTransaction.commitAllowingStateLoss();
-        getActivity().getSupportFragmentManager().popBackStack();
     }
 
     public void setCurrentUser(User currentUser) {

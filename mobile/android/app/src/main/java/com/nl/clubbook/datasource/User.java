@@ -1,15 +1,21 @@
 package com.nl.clubbook.datasource;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.nl.clubbook.utils.ConvertUtils;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by Andrew on 5/19/2014.
  */
-public class User {
+public class User implements Parcelable {
 
     public static String STATUS_FRIEND = "friend";
     public static String STATUS_RECEIVE_REQUEST = "receive_request";
@@ -17,7 +23,7 @@ public class User {
 
     protected String id;
     protected String accessToken;
-    protected String fb_id;
+    protected String fbId;
     protected String name;
     protected String email;
     protected String password;
@@ -31,15 +37,40 @@ public class User {
     protected boolean isNotificationEnabled;
     private boolean isBlocked = false;
     protected CheckIn lastCheckIn;
-    protected List<UserPhoto> photos;
+    protected List<UserPhoto> photos = new ArrayList<UserPhoto>();
 
-    protected User() {
-
+    public User() {
     }
 
-    protected User(JSONObject userJson) {
+    public User(Parcel in) {
+        id = in.readString();
+        accessToken = in.readString();
+        fbId = in.readString();
+        name = in.readString();
+        email = in.readString();
+        password = in.readString();
+        gender = in.readString();
+        dob = in.readString();
+        age = in.readString();
+        avatar = in.readString();
+        country = in.readString();
+        bio = in.readString();
+        friendStatus = in.readString();
+        isNotificationEnabled = ConvertUtils.intToBoolean(in.readInt());
+        isBlocked = ConvertUtils.intToBoolean(in.readInt());
+        lastCheckIn = in.readParcelable(CheckIn.class.getClassLoader());
+
+        Parcelable[] userPhotosParcelable = in.readParcelableArray(UserPhoto.class.getClassLoader());
+        UserPhoto[] userPhotos;
+        if (userPhotosParcelable != null) {
+            userPhotos = Arrays.copyOf(userPhotosParcelable, userPhotosParcelable.length, UserPhoto[].class);
+            photos = Arrays.asList(userPhotos);
+        }
+    }
+
+    public User(JSONObject userJson) {
         id = userJson.optString("_id");
-        fb_id = userJson.optString("fb_id");
+        fbId = userJson.optString("fb_id");
         name = userJson.optString("name");
         email = userJson.optString("email");
         gender = userJson.optString("gender");
@@ -80,12 +111,12 @@ public class User {
         this.photos = photos;
     }
 
-    public String getFb_id() {
-        return fb_id;
+    public String getFbId() {
+        return fbId;
     }
 
-    public void setFb_id(String fb_id) {
-        this.fb_id = fb_id;
+    public void setFbId(String fbId) {
+        this.fbId = fbId;
     }
 
     public String getName() {
@@ -210,4 +241,44 @@ public class User {
     public void setBlocked(boolean isBlocked) {
         this.isBlocked = isBlocked;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(accessToken);
+        dest.writeString(fbId);
+        dest.writeString(name);
+        dest.writeString(email);
+        dest.writeString(password);
+        dest.writeString(gender);
+        dest.writeString(dob);
+        dest.writeString(age);
+        dest.writeString(avatar);
+        dest.writeString(country);
+        dest.writeString(bio);
+        dest.writeString(friendStatus);
+        dest.writeInt(ConvertUtils.booleanToInt(isNotificationEnabled));
+        dest.writeInt(ConvertUtils.booleanToInt(isBlocked));
+        dest.writeParcelable(lastCheckIn, flags);
+
+        UserPhoto[] userPhotos = new UserPhoto[photos.size()];
+        photos.toArray(userPhotos);
+        dest.writeParcelableArray(userPhotos, flags);
+    }
+
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }

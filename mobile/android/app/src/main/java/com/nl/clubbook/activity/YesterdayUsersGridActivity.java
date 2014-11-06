@@ -1,7 +1,7 @@
 package com.nl.clubbook.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,7 +12,6 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.ProfileAdapter;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.User;
-import com.nl.clubbook.fragment.ProfileFragment;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.NetworkUtils;
 
@@ -49,8 +48,9 @@ public class YesterdayUsersGridActivity extends BaseActivity implements AdapterV
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        Fragment fragment = ProfileFragment.newInstance(CheckedInUsersFragment.this, mProfileAdapter.getItem(position), ProfileFragment.OPEN_MODE_DEFAULT);
-//        openFragment(fragment, ProfileFragment.class);
+        Intent intent = new Intent(getBaseContext(), ProfileActivity.class);
+        intent.putExtra(ProfileActivity.EXTRA_USER, mProfileAdapter.getItem(position));
+        startActivity(intent);
     }
 
     protected void loadCheckedInUsers() {
@@ -96,13 +96,14 @@ public class YesterdayUsersGridActivity extends BaseActivity implements AdapterV
                     return;
                 }
 
-                gridUsers.findViewById(R.id.gridUsers).setVisibility(View.VISIBLE);
+                gridUsers.setVisibility(View.VISIBLE);
 
                 List<User> users = (List<User>) result;
 
                 if(users != null && !users.isEmpty()) {
-                    mProfileAdapter = new ProfileAdapter(getBaseContext(), users, ProfileAdapter.MODE_YESTERDAY_CHECKED_IN);
+                    mProfileAdapter = new ProfileAdapter(getBaseContext(), users, ProfileAdapter.MODE_DEFAULT);
                     gridUsers.setAdapter(mProfileAdapter);
+                    gridUsers.setOnItemClickListener(YesterdayUsersGridActivity.this);
                 } else {
                     txtNoUsers.setVisibility(View.GONE);
                 }
