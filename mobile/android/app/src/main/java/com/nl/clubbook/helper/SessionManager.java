@@ -1,10 +1,14 @@
 package com.nl.clubbook.helper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.text.TextUtils;
+
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.datasource.Club;
+import com.nl.clubbook.datasource.JSONConverter;
 import com.nl.clubbook.datasource.User;
 import com.parse.PushService;
 
@@ -20,6 +24,7 @@ import java.util.HashMap;
 /**
  * Created by Andrew on 5/19/2014.
  */
+@SuppressLint("CommitPrefEdits")
 public class SessionManager {
 
     private static final String PREF_NAME = "com.nl.clubbook.preferences";
@@ -184,39 +189,23 @@ public class SessionManager {
         }
 
         Editor editor = mPreferences.edit();
-
-        editor.putString(KEY_CHECKIN_CLUB_ID, club.getId());
-        editor.putFloat(KEY_CHECKIN_CLUB_LAT, (float) club.getLat());
-        editor.putFloat(KEY_CHECKIN_CLUB_LON, (float) club.getLon());
-        editor.putString(KEY_CHECKIN_CLUB_NAME, club.getTitle());
-
+        editor.putString(KEY_CHECKIN_CLUB, JSONConverter.newClub(club).toString());
         editor.commit();
     }
 
+    @Nullable
     public Club getCheckedInClubInfo() {
-        String clubId = mPreferences.getString(KEY_CHECKIN_CLUB_ID, null);
-        if(clubId == null) {
+        String clubStr = mPreferences.getString(KEY_CHECKIN_CLUB, null);
+        if(TextUtils.isEmpty(clubStr)) {
             return null;
         }
 
-        Club checkedInClub = new Club();
-
-        checkedInClub.setId(clubId);
-        checkedInClub.setLat(mPreferences.getFloat(KEY_CHECKIN_CLUB_LAT, 0f));
-        checkedInClub.setLon(mPreferences.getFloat(KEY_CHECKIN_CLUB_LON, 0f));
-        checkedInClub.setTitle(mPreferences.getString(KEY_CHECKIN_CLUB_NAME, ""));
-
-        return checkedInClub;
+        return JSONConverter.newClub(clubStr);
     }
 
     public void clearCheckInClubInfo() {
         Editor editor = mPreferences.edit();
-
-        editor.remove(KEY_CHECKIN_CLUB_ID);
-        editor.remove(KEY_CHECKIN_CLUB_LAT);
-        editor.remove(KEY_CHECKIN_CLUB_LON);
-        editor.remove(KEY_CHECKIN_CLUB_NAME);
-
+        editor.remove(KEY_CHECKIN_CLUB);
         editor.commit();
     }
 
@@ -245,7 +234,7 @@ public class SessionManager {
         editor.commit();
     }
 
-    public boolean isNotificationVibtraionEnabled() {
+    public boolean isNotificationVibrationEnabled() {
         return mPreferences.getBoolean(KEY_IS_NOTIFICATION_VIBRATION_ENABLE, true);
     }
 
@@ -323,10 +312,6 @@ public class SessionManager {
     public static final String KEY_FBACCESSTOKEN = "fb_access_token";
     public static final String KEY_FBACCESSEXPITES = "fb_access_expires";
     public static final String KEY_PERMISSIONS = "fb_permissions";
-    public static final String KEY_CHECKIN_CLUB_ID = "checkin_club_id";
-    public static final String KEY_CHECKIN_CLUB_LAT = "checkin_club_lan";
-    public static final String KEY_CHECKIN_CLUB_LON = "checkin_club_lat";
-    public static final String KEY_CHECKIN_CLUB_NAME= "checkin_club_name";
     public static final String KEY_CURRENT_CONVERSATION = "current_conversation";
 
     private static final String KEY_IS_LOGIN = "IsLoggedIn";
@@ -338,6 +323,9 @@ public class SessionManager {
     private static final String KEY_CHECK_IN_MAX_DISTANCE = "KEY_CHECK_IN_MAX_DISTANCE";
     private static final String KEY_IS_LOGGED_IN_BY_FACEBOOK = "KEY_IS_LOGED_IN_BY_FACEBOOK";
     private static final String KEY_IS_CHECK_IN_DIALOG_SHOWN = "KEY_IS_CHECK_IN_DIALOG_SHOWN";
+
+
+    public static final String KEY_CHECKIN_CLUB = "checkin_club";
 
 }
 

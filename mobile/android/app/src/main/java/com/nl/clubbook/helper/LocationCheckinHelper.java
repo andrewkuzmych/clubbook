@@ -48,6 +48,7 @@ public class LocationCheckinHelper {
     public static void init() {
         mCheckInHelper = new LocationCheckinHelper();
 
+        SessionManager.getInstance().getCheckedInClubInfo();
         mCheckInHelper.setCurrentClub(SessionManager.getInstance().getCheckedInClubInfo());
     }
 

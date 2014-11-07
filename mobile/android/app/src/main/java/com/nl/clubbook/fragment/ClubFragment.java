@@ -518,6 +518,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
                     View txtCheckIn = view.findViewById(R.id.txtCheckIn);
                     UiHelper.changeCheckInState(getActivity(), txtCheckIn, true);
+                    setCheckInTxtPaddings(txtCheckIn);
 
                     break;
                 }

@@ -58,7 +58,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                         .setContentText(message)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
-        if(SessionManager.getInstance().isNotificationVibtraionEnabled()) {
+        if(SessionManager.getInstance().isNotificationVibrationEnabled()) {
             mBuilder.setVibrate(new long[] {1000, 1000, 1000});
         }
 

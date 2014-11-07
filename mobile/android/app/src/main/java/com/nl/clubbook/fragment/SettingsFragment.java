@@ -123,7 +123,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         cbPushNotifications.setOnCheckedChangeListener(this);
 
         CheckBox cbPushVibrations = (CheckBox) view.findViewById(R.id.cbPushVibrations);
-        cbPushVibrations.setChecked(session.isNotificationVibtraionEnabled());
+        cbPushVibrations.setChecked(session.isNotificationVibrationEnabled());
         cbPushVibrations.setOnCheckedChangeListener(this);
 
         if(!getSession().isNotificationEnabled()) {
