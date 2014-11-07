@@ -83,17 +83,15 @@ public class BaseDateActivity extends BaseActivity implements DatePickerDialog.O
             L.i("" + e);
         }
 
-        if(birthdayTime > 0) {
-            long ageTime = System.currentTimeMillis() - birthdayTime;
+        long ageTime = System.currentTimeMillis() - birthdayTime;
 
-            Calendar calendarAgeTime = Calendar.getInstance();
-            Calendar calendarBeginTime = (Calendar) calendarAgeTime.clone();
+        Calendar calendarAgeTime = Calendar.getInstance();
+        Calendar calendarBeginTime = (Calendar) calendarAgeTime.clone();
 
-            calendarAgeTime.setTimeInMillis(ageTime);
-            calendarBeginTime.setTimeInMillis(0);
+        calendarAgeTime.setTimeInMillis(ageTime);
+        calendarBeginTime.setTimeInMillis(0);
 
-            result = "" + (calendarAgeTime.get(Calendar.YEAR) - calendarBeginTime.get(Calendar.YEAR));
-        }
+        result = "" + (calendarAgeTime.get(Calendar.YEAR) - calendarBeginTime.get(Calendar.YEAR));
 
         return result;
     }
