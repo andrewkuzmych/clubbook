@@ -499,6 +499,8 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         if(users == null || users.isEmpty()) {
             view.findViewById(R.id.txtNoUsers).setVisibility(View.VISIBLE);
             txtCheckInCount.setText(0 + "\n" + getString(R.string.checked_in));
+
+            checkCheckInState(view);
             return;
         }
 
@@ -506,23 +508,47 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         txtCheckInCount.setText(mClub.getActiveCheckIns() + "\n" + getString(R.string.checked_in));
         view.findViewById(R.id.txtNoUsers).setVisibility(View.GONE);
 
+        boolean isCheckedInHere = false;
         String currentUserId = getSession().getUserDetails().get(SessionManager.KEY_ID);
         if(!LocationCheckinHelper.getInstance().isCheckIn()) {
             for(User user : users) {
                 if(user != null && currentUserId.equalsIgnoreCase(user.getId())) {
                     LocationCheckinHelper.getInstance().setCurrentClub(mClub);
 
-                    Intent intent = new Intent();
-                    intent.setAction(MainActivity.ACTION_CHECK_IN_CHECK_OUT);
-                    getActivity().sendBroadcast(intent);
+                    sendCheckedInOutBroadcast();
 
                     View txtCheckIn = view.findViewById(R.id.txtCheckIn);
                     UiHelper.changeCheckInState(getActivity(), txtCheckIn, true);
                     setCheckInTxtPaddings(txtCheckIn);
 
+                    isCheckedInHere = true;
+
                     break;
                 }
             }
         }
+
+        if(!isCheckedInHere) {
+            checkCheckInState(view);
+        }
+    }
+
+    private void checkCheckInState(View view) {
+        Club currentClub = LocationCheckinHelper.getInstance().getCurrentClub();
+        if(currentClub != null && mClub.getId().equalsIgnoreCase(currentClub.getId())) {
+            LocationCheckinHelper.getInstance().clearCheckedInClubInfo();
+
+            sendCheckedInOutBroadcast();
+
+            View txtCheckIn = view.findViewById(R.id.txtCheckIn);
+            UiHelper.changeCheckInState(getActivity(), txtCheckIn, false);
+            setCheckInTxtPaddings(txtCheckIn);
+        }
+    }
+
+    private void sendCheckedInOutBroadcast() {
+        Intent intent = new Intent();
+        intent.setAction(MainActivity.ACTION_CHECK_IN_CHECK_OUT);
+        getActivity().sendBroadcast(intent);
     }
 }

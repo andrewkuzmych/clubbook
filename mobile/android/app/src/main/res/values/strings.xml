@@ -62,6 +62,7 @@
     <string name="sunday">Sunday</string>
     <string name="clubs">Clubs</string>
     <string name="checked_in_">Checked-In</string>
+    <string name="fast_check_in">Fast Check-in</string>
     <string name="messages">Messages</string>
     <string name="settings">Settings</string>
     <string name="male">Male</string>
@@ -212,5 +213,8 @@
     <string name="registration_screen_android">Registration Screen Android </string>
     <string name="login_screen_android">Login Screen Android</string>
     <string name="reset_password_screen_android">Reset Password Screen Android</string>
+    <string name="fast_check_in_android">Fast Check In Android</string>
+    <string name="checked_in_users_android">Checked-In Users Android</string>
+    <string name="yesterday_checked_in_users_android">Yesterday Checked-In Users Android</string>
 
 </resources>

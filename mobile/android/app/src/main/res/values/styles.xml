@@ -81,4 +81,16 @@
         <item name="android:minWidth">80dip</item>
     </style>
 
+    <style name="GreenButton">
+        <item name="android:background">@drawable/bg_btn_green</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">@dimen/btn_check_in_left_right_padding</item>
+        <item name="android:paddingRight">@dimen/btn_check_in_left_right_padding</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:text">@string/check_in</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
 </resources>

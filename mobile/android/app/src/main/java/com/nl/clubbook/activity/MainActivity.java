@@ -37,6 +37,7 @@ import com.nl.clubbook.fragment.ChatFragment;
 import com.nl.clubbook.fragment.CheckedInUsersFragment;
 import com.nl.clubbook.fragment.ClubFragment;
 import com.nl.clubbook.fragment.ClubsListFragment;
+import com.nl.clubbook.fragment.FastCheckInFragment;
 import com.nl.clubbook.fragment.FriendsFragment;
 import com.nl.clubbook.fragment.MessagesFragment;
 import com.nl.clubbook.fragment.SettingsFragment;
@@ -102,10 +103,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             return;
         }
 
-        fragmentMap.put(NavDrawerData.CLUB_LIST_POSITION, new ClubsListFragment());
-        fragmentMap.put(NavDrawerData.MESSAGES_POSITION, new MessagesFragment());
-        fragmentMap.put(NavDrawerData.FRIENDS_POSITION, new FriendsFragment());
-
+        initFragment();
         initActionBar();
         initNavDrawer();
 
@@ -429,10 +427,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         });
     }
 
+    private void initFragment() {
+        fragmentMap.put(NavDrawerData.CLUB_LIST_POSITION, new ClubsListFragment());
+        fragmentMap.put(NavDrawerData.MESSAGES_POSITION, new MessagesFragment());
+        fragmentMap.put(NavDrawerData.FAST_CHECK_IN, new FastCheckInFragment());
+        fragmentMap.put(NavDrawerData.CLUB_CHECKED_IN, new CheckedInUsersFragment());
+        fragmentMap.put(NavDrawerData.FRIENDS_POSITION, new FriendsFragment());
+    }
+
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME
-                | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
 
         initActionBar("");
     }
@@ -474,9 +479,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void displayView(final int position) {
-        if(position == NavDrawerData.CLUB_CHECKED_IN) {
-            mCurrentFragment = new CheckedInUsersFragment();
-        } else if(position == NavDrawerData.SETTINGS_POSITION) {
+        if(position == NavDrawerData.SETTINGS_POSITION) {
             mCurrentFragment = new SettingsFragment();
         } else {
             mCurrentFragment = fragmentMap.get(position);

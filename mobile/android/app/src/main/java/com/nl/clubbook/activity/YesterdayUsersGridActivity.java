@@ -32,6 +32,8 @@ public class YesterdayUsersGridActivity extends BaseActivity implements AdapterV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_yesterday_users_grid);
 
+        sendScreenStatistic(R.string.yesterday_checked_in_users_android);
+
         initActionBar(R.string.club_profile);
         loadCheckedInUsers();
     }

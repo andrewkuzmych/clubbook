@@ -205,19 +205,10 @@
                 android:visibility="gone"/>
 
             <com.nl.clubbook.ui.view.HelveticaRegularTextView
+                style="@style/GreenButton"
                 android:id="@+id/txtCheckIn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/bg_btn_green"
-                android:gravity="center"
-                android:paddingBottom="8dp"
-                android:paddingLeft="@dimen/btn_check_in_left_right_padding"
-                android:paddingRight="@dimen/btn_check_in_left_right_padding"
-                android:paddingTop="8dp"
-                android:text="@string/check_in"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size_medium"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="16dp"/>

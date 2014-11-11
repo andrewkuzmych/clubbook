@@ -46,6 +46,8 @@ public class CheckedInUsersFragment extends BaseRefreshFragment implements Adapt
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        sendScreenStatistic(R.string.checked_in_users_android);
+
         initActionBarTitle(getString(R.string.checked_in_));
         initView();
         loadData();
