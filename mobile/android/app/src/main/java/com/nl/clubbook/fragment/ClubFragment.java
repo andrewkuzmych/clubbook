@@ -277,7 +277,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         }
 
 
-        setCheckInTxtPaddings(txtCheckIn);
+        setCheckInTxtPadding(txtCheckIn);
 
         txtClubName.setText(mClub.getTitle());
         txtCheckInCount.setText(mClub.getActiveCheckIns() + "\n" + getString(R.string.checked_in));
@@ -444,7 +444,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         });
     }
 
-    private void setCheckInTxtPaddings(View view) {
+    private void setCheckInTxtPadding(View view) {
         view.setPadding(
                 (int)getResources().getDimension(R.dimen.btn_check_in_left_right_padding),
                 0,
@@ -461,7 +461,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         hideProgressDialog();
 
         UiHelper.changeCheckInState(getActivity(), view, isCheckedIn);
-        setCheckInTxtPaddings(view);
+        setCheckInTxtPadding(view);
 
         loadCheckedInUsers();
     }
@@ -508,9 +508,10 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         txtCheckInCount.setText(mClub.getActiveCheckIns() + "\n" + getString(R.string.checked_in));
         view.findViewById(R.id.txtNoUsers).setVisibility(View.GONE);
 
-        boolean isCheckedInHere = false;
         String currentUserId = getSession().getUserDetails().get(SessionManager.KEY_ID);
         if(!LocationCheckinHelper.getInstance().isCheckIn()) {
+            boolean isCheckedInHere = false;
+
             for(User user : users) {
                 if(user != null && currentUserId.equalsIgnoreCase(user.getId())) {
                     LocationCheckinHelper.getInstance().setCurrentClub(mClub);
@@ -519,17 +520,19 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
                     View txtCheckIn = view.findViewById(R.id.txtCheckIn);
                     UiHelper.changeCheckInState(getActivity(), txtCheckIn, true);
-                    setCheckInTxtPaddings(txtCheckIn);
+                    setCheckInTxtPadding(txtCheckIn);
 
                     isCheckedInHere = true;
 
                     break;
                 }
             }
-        }
 
-        if(!isCheckedInHere) {
-            checkCheckInState(view);
+            L.e("isCheckedInHere - " + isCheckedInHere);
+
+            if(!isCheckedInHere) {
+                checkCheckInState(view);
+            }
         }
     }
 
@@ -542,7 +545,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
 
             View txtCheckIn = view.findViewById(R.id.txtCheckIn);
             UiHelper.changeCheckInState(getActivity(), txtCheckIn, false);
-            setCheckInTxtPaddings(txtCheckIn);
+            setCheckInTxtPadding(txtCheckIn);
         }
     }
 

@@ -23,6 +23,7 @@
     <dimen name="btn_add_friend_padding">16dp</dimen>
 
     <dimen name="btn_check_in_left_right_padding">32dp</dimen>
+    <dimen name="btn_check_in_left_right_padding_fast_check_in">16dp</dimen>
 
     <dimen name="grid_user_bottom_padding">76dp</dimen>
 

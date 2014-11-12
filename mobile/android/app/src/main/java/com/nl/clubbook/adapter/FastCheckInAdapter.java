@@ -11,7 +11,11 @@ import android.widget.TextView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.Club;
+import com.nl.clubbook.helper.CheckInOutCallbackInterface;
 import com.nl.clubbook.helper.LocationCheckinHelper;
+import com.nl.clubbook.helper.SessionManager;
+import com.nl.clubbook.helper.UiHelper;
+import com.nl.clubbook.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.Nullable;
@@ -26,11 +30,14 @@ public class FastCheckInAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
     private List<Club> mClubs;
+    private View.OnClickListener mOnBtnCheckInClicked;
 
-    public FastCheckInAdapter(Context context, List<Club> clubs) {
+    public FastCheckInAdapter(Context context, List<Club> clubs, View.OnClickListener onBtnCheckInClicked) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mClubs = clubs;
+
+        mOnBtnCheckInClicked = onBtnCheckInClicked;
     }
 
     @Override
@@ -58,7 +65,7 @@ public class FastCheckInAdapter extends BaseAdapter {
             holder = new ViewHolder();
 
             holder.imgAvatar = (ImageView) row.findViewById(R.id.imgAvatar);
-            holder.txtCheckIn = (TextView) row.findViewById(R.id.txtCheckedIn);
+            holder.txtCheckIn = (TextView) row.findViewById(R.id.txtCheckIn);
             holder.txtClubName = (TextView) row.findViewById(R.id.txtClubName);
             holder.txtDistance = (TextView) row.findViewById(R.id.txtDistance);
 
@@ -95,6 +102,26 @@ public class FastCheckInAdapter extends BaseAdapter {
         } else {
             holder.imgAvatar.setImageResource(R.drawable.ic_club_avatar_default);
         }
+
+        //init CheckIn button
+        if(LocationCheckinHelper.getInstance().isCheckInHere(club)) {
+            UiHelper.changeCheckInState(mContext, holder.txtCheckIn, true);
+        } else {
+            UiHelper.changeCheckInState(mContext, holder.txtCheckIn, false);
+        }
+        setCheckInTxtPadding(mContext, holder.txtCheckIn);
+
+        holder.txtCheckIn.setTag(club);
+        holder.txtCheckIn.setOnClickListener(mOnBtnCheckInClicked);
+    }
+
+    public static void setCheckInTxtPadding(Context context, View view) {
+        view.setPadding(
+                (int)context.getResources().getDimension(R.dimen.btn_check_in_left_right_padding_fast_check_in),
+                0,
+                (int)context.getResources().getDimension(R.dimen.btn_check_in_left_right_padding_fast_check_in),
+                0
+        );
     }
 
     private class ViewHolder {

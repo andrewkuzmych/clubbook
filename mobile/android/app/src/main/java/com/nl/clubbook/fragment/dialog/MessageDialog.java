@@ -170,6 +170,7 @@ public class MessageDialog extends DialogFragment {
         }
 
         if(listener == null) {
+            dismissAllowingStateLoss();
             return;
         }
 

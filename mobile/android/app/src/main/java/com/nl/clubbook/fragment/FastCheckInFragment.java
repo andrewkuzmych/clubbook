@@ -2,6 +2,7 @@ package com.nl.clubbook.fragment;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -16,6 +17,9 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.FastCheckInAdapter;
 import com.nl.clubbook.datasource.Club;
 import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.fragment.dialog.MessageDialog;
+import com.nl.clubbook.fragment.dialog.ProgressDialog;
+import com.nl.clubbook.helper.CheckInOutCallbackInterface;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.L;
@@ -27,9 +31,13 @@ import java.util.List;
 /**
  * Created by Volodymyr on 11.11.2014.
  */
-public class FastCheckInFragment extends BaseRefreshFragment implements AdapterView.OnItemClickListener {
+public class FastCheckInFragment extends BaseRefreshFragment implements AdapterView.OnItemClickListener,
+        View.OnClickListener, MessageDialog.MessageDialogListener {
+
+    private final int ACTION_ID_CHECK_IN_EXPLANATION = 753;
 
     private FastCheckInAdapter mAdapter;
+    private Club mSelectedClub;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,6 +69,25 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Fragment fragment = ClubFragment.newInstance(FastCheckInFragment.this, mAdapter.getItem(position));
         openFragment(fragment, ClubFragment.class);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view.getId() == R.id.txtCheckIn) {
+            onCheckInBtnClicked(view);
+        }
+    }
+
+    @Override
+    public void onPositiveButtonClick(MessageDialog dialogFragment) {
+        if(dialogFragment.getActionId() == ACTION_ID_CHECK_IN_EXPLANATION) {
+            checkIn();
+        }
+    }
+
+    @Override
+    public void onNegativeButtonClick(MessageDialog dialogFragment) {
+        dialogFragment.dismissAllowingStateLoss();
     }
 
     @Override
@@ -124,11 +151,107 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
             return;
         }
 
-        mAdapter = new FastCheckInAdapter(getActivity(), new ArrayList<Club>());
+        mAdapter = new FastCheckInAdapter(getActivity(), new ArrayList<Club>(), this);
         ListView clubList = (ListView) view.findViewById(R.id.listClub);
         clubList.setAdapter(mAdapter);
         clubList.setOnItemClickListener(this);
 
         loadData();
+    }
+
+    private void onCheckInBtnClicked(final View view) {
+        mSelectedClub = (Club) view.getTag();
+
+        if(!LocationCheckinHelper.getInstance().canCheckInHere(mSelectedClub)) {
+            String messageTemplate = getString(R.string.you_need_to_be_within_m_in_order_to_check_in);
+            String dialogMessage = String.format(messageTemplate, SessionManager.getInstance().getCheckInMaxDistance());
+
+            showMessageDialog(dialogMessage, getString(R.string.ok));
+            return;
+        }
+
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
+        if (LocationCheckinHelper.getInstance().isCheckInHere(mSelectedClub)) {
+            showProgressDialog(getString(R.string.checking_out));
+
+            LocationCheckinHelper.getInstance().checkOut(getActivity(), new CheckInOutCallbackInterface() {
+                @Override
+                public void onCheckInOutFinished(boolean isSuccess) {
+                    if(!isSuccess) {
+                        showToast(R.string.something_went_wrong_please_try_again);
+                        return;
+                    }
+
+                    handleCheckInCheckOutResults();
+                }
+            });
+        } else {
+            showProgressDialog(getString(R.string.checking_in));
+
+            if(!getSession().isCheckInDialogShown()) {
+                showMessageDialog(
+                        FastCheckInFragment.this,
+                        ACTION_ID_CHECK_IN_EXPLANATION,
+                        getString(R.string.app_name),
+                        getString(R.string.you_will_be_automatically_checked_in_to_this_club),
+                        getString(R.string.ok_got_it),
+                        null
+                );
+
+                getSession().setCheckInDialogShown(true);
+            } else {
+                checkIn(view);
+            }
+        }
+    }
+
+    private void checkIn() {
+        View view = getView();
+        if(view == null) {
+            return;
+        }
+
+        View txtCheckIn = view.findViewById(R.id.txtCheckIn);
+        checkIn(txtCheckIn);
+    }
+
+    private void checkIn(final View view) {
+        LocationCheckinHelper.getInstance().checkIn(getActivity(), mSelectedClub, new CheckInOutCallbackInterface() {
+            @Override
+            public void onCheckInOutFinished(boolean isSuccess) {
+                if(!isSuccess) {
+                    showToast(R.string.something_went_wrong_please_try_again);
+                    return;
+                }
+
+                handleCheckInCheckOutResults();
+            }
+        });
+    }
+
+    private void handleCheckInCheckOutResults() {
+        if(isDetached() || getActivity() == null || getActivity().isFinishing()) {
+            return;
+        }
+
+        hideProgressDialog();
+
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private void showProgressDialog(String message) {
+        Fragment dialogFragment = ProgressDialog.newInstance(FastCheckInFragment.this, getString(R.string.app_name), message);
+        getChildFragmentManager().beginTransaction().add(dialogFragment, ProgressDialog.TAG).commitAllowingStateLoss();
+    }
+
+    private void hideProgressDialog() {
+        DialogFragment dialogFragment = (DialogFragment)getChildFragmentManager().findFragmentByTag(ProgressDialog.TAG);
+        if(dialogFragment != null) {
+            dialogFragment.dismissAllowingStateLoss();
+        }
     }
 }
