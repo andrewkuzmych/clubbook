@@ -1,34 +1,34 @@
 package com.nl.clubbook.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.adapter.UserAvatarPagerAdapter;
+import com.nl.clubbook.activity.ImagesGalleryActivity;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.datasource.UserPhoto;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.SessionManager;
-import com.nl.clubbook.ui.view.ViewPagerBulletIndicatorView;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.nl.clubbook.utils.UIUtils;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class ProfileFragment extends BaseInnerFragment implements View.OnClickListener, ViewPager.OnPageChangeListener,
+public class ProfileFragment extends BaseInnerFragment implements View.OnClickListener,
         MessageDialog.MessageDialogListener {
 
     private static final String ARG_OPEN_FRAGMENT_MODE = "ARG_OPEN_FRAGMENT_MODE";
@@ -38,10 +38,6 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
     private User mUser;
     private String mUsername;
-    private String mUserAvatarUrl;
-    private UserAvatarPagerAdapter mPhotoAdapter;
-
-    private ViewPagerBulletIndicatorView mBulletIndicator;
 
     private boolean mIsBlocked = false;
 
@@ -116,21 +112,10 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             case R.id.txtRemoveFriend:
                 onRemoveFriendClicked();
                 break;
+            case R.id.imgAvatar:
+                onAvatarClicked();
+                break;
         }
-    }
-
-    @Override
-    public void onPageScrolled(int i, float v, int i2) {
-    }
-
-
-    @Override
-    public void onPageScrollStateChanged(int i) {
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        mBulletIndicator.setSelectedView(position);
     }
 
     @Override
@@ -170,6 +155,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         view.findViewById(R.id.txtAddFriend).setOnClickListener(this);
         view.findViewById(R.id.txtRemoveFriend).setOnClickListener(this);
+        view.findViewById(R.id.imgAvatar).setOnClickListener(this);
     }
 
     private void fillProfile() {
@@ -189,9 +175,13 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             txtBlockUser.setText(R.string.block_user);
         }
 
-        List<UserPhoto> userPhotos = mUser.getPhotos();
-        if(userPhotos != null && !userPhotos.isEmpty()) {
-            initViewPager(view, userPhotos);
+        ImageView imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
+        String avatarUrl = mUser.getAvatar();
+        if(!TextUtils.isEmpty(avatarUrl)) {
+            Picasso.with(getActivity()).load(avatarUrl).error(R.drawable.ic_avatar_unknown).into(imgAvatar);
+            UIUtils.loadPhotoToActionBar((ActionBarActivity) getActivity(), ImageHelper.getUserListAvatar(avatarUrl), mTarget);
+        } else {
+            imgAvatar.setImageResource(R.drawable.ic_avatar_missing);
         }
 
         // set name
@@ -238,38 +228,6 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             view.findViewById(R.id.holderButtons).setVisibility(View.GONE);
             view.findViewById(R.id.txtAddFriend).setVisibility(View.GONE);
         }
-    }
-
-    private void initViewPager(@NotNull View view, @NotNull List<UserPhoto> userPhotoList) {
-        mBulletIndicator = (ViewPagerBulletIndicatorView)view.findViewById(R.id.indicatorAvatars);
-        mBulletIndicator.setBulletViewCount(userPhotoList.size());
-        if(userPhotoList.size() <= 1) {
-            mBulletIndicator.setVisibility(View.INVISIBLE);
-        }
-
-        mUserAvatarUrl = ImageHelper.getUserListAvatar(userPhotoList.get(0).getUrl());
-
-        ViewPager pagerImage = (ViewPager) view.findViewById(R.id.pagerAvatars);
-        if(mPhotoAdapter == null) {
-            mPhotoAdapter = new UserAvatarPagerAdapter(getChildFragmentManager(), userPhotoList);
-            pagerImage.setAdapter(mPhotoAdapter);
-        } else {
-            mPhotoAdapter.updateData(userPhotoList);
-        }
-
-        for(int i = 0; i < userPhotoList.size(); i++) {
-            UserPhoto userPhoto = userPhotoList.get(i);
-            if(userPhoto.getIsAvatar()) {
-                pagerImage.setCurrentItem(i, false);
-                mBulletIndicator.setSelectedView(i);
-
-                mUserAvatarUrl = ImageHelper.getUserListAvatar(userPhoto.getUrl());
-            }
-        }
-
-        pagerImage.setOnPageChangeListener(this);
-
-        UIUtils.loadPhotoToActionBar((ActionBarActivity) getActivity(), mUserAvatarUrl, mTarget);
     }
 
     private void onBtnAddFriendsClicked() {
@@ -394,7 +352,12 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         if(mOpenMode == OPEN_FROM_CHAT) {
             closeFragment();
         } else {
-            Fragment chatFragment = ChatFragment.newInstance(ProfileFragment.this, ChatFragment.MODE_OPEN_FROM_PROFILE, mUser.getId(), mUsername, mUserAvatarUrl);
+            Fragment chatFragment = ChatFragment.newInstance(
+                    ProfileFragment.this,
+                    ChatFragment.MODE_OPEN_FROM_PROFILE, mUser.getId(),
+                    mUsername,
+                    ImageHelper.getUserListAvatar(mUser.getAvatar())
+            );
             openFragment(chatFragment, ChatFragment.class);
         }
     }
@@ -480,6 +443,24 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                 getString(R.string.remove),
                 getString(R.string.cancel)
         );
+    }
+
+    private void onAvatarClicked() {
+        List<UserPhoto> photos = mUser.getPhotos();
+        if(photos == null || photos.isEmpty()) {
+            return;
+        }
+
+        String[] urls = new String[photos.size()];
+        for(int i = 0; i < photos.size(); i++) {
+            UserPhoto photo = photos.get(i);
+            urls[i] = photo.getUrl();
+        }
+
+        Intent intent = new Intent(getActivity(), ImagesGalleryActivity.class);
+        intent.putExtra(ImagesGalleryActivity.EXTRA_PHOTOS_URLS, urls);
+        intent.putExtra(ImagesGalleryActivity.EXTRA_SELECTED_PHOTO, 0);
+        startActivity(intent);
     }
 
     private void doRemoveFriend() {

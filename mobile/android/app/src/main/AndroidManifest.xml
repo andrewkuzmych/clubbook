@@ -75,7 +75,7 @@
             android:name=".activity.ResetPasswordActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.ImageViewActivity"
+            android:name=".activity.ImagesGalleryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppBlackTheme"/>
         <activity

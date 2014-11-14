@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.activity.ImageViewActivity;
+import com.nl.clubbook.activity.ImagesGalleryActivity;
 import com.nl.clubbook.adapter.ClubPhotoPagerAdapter;
 import com.nl.clubbook.datasource.Club;
 import com.nl.clubbook.datasource.ClubWorkingHours;
@@ -312,9 +312,9 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
         final GestureDetector tapGestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
-                Intent intent = new Intent(getActivity(), ImageViewActivity.class);
-                intent.putExtra(ImageViewActivity.EXTRA_PHOTOS_URLS, photosUrls);
-                intent.putExtra(ImageViewActivity.EXTRA_SELECTED_PHOTO, pagerImage.getCurrentItem());
+                Intent intent = new Intent(getActivity(), ImagesGalleryActivity.class);
+                intent.putExtra(ImagesGalleryActivity.EXTRA_PHOTOS_URLS, photosUrls);
+                intent.putExtra(ImagesGalleryActivity.EXTRA_SELECTED_PHOTO, pagerImage.getCurrentItem());
                 startActivity(intent);
 
                 return false;

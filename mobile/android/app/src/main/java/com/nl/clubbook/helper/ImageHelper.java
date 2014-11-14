@@ -1,5 +1,7 @@
 package com.nl.clubbook.helper;
 
+import android.text.TextUtils;
+
 /**
  * Created by Andrew on 5/23/2014.
  */
@@ -22,6 +24,10 @@ public class ImageHelper {
     }
 
     public static String getUserListAvatar(String url) {
+        if(TextUtils.isEmpty(url)) {
+            return "";
+        }
+
         String avatar_style = "w_300,h_300,c_thumb";
         return generateUrl(url, avatar_style);
     }

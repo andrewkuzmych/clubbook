@@ -12,7 +12,7 @@ import com.nl.clubbook.adapter.ClubPhotoPagerAdapter;
 /**
  * Created by Volodymyr on 29.09.2014.
  */
-public class ImageViewActivity extends BaseActivity {
+public class ImagesGalleryActivity extends BaseActivity {
 
     public static final String EXTRA_PHOTOS_URLS = "EXTRA_PHOTOS_URLS";
     public static final String EXTRA_SELECTED_PHOTO = "EXTRA_SELECTED_PHOTO";
