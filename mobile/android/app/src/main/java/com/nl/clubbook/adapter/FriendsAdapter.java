@@ -84,6 +84,10 @@ public class FriendsAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public List<User> getUsers() {
+        return mFriends;
+    }
+
     private void fillRow(FriendItemHolder holder, User user) {
         holder.txtUsername.setText(user.getName());
 

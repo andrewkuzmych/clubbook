@@ -92,6 +92,10 @@ public class ProfileAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public List<User> getUsers() {
+        return mUsers;
+    }
+
     private void fillView(ViewHolder holder, User item) {
         String imageUrl = ImageHelper.getUserListAvatar(item.getAvatar());
         Picasso.with(mContext).load(imageUrl).error(R.drawable.ic_avatar_unknown).into(holder.imgAvatar);

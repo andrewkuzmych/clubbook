@@ -13,8 +13,10 @@ import com.nl.clubbook.adapter.ProfileAdapter;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.SessionManager;
+import com.nl.clubbook.helper.SingleUsersHolder;
 import com.nl.clubbook.utils.NetworkUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -50,8 +52,10 @@ public class YesterdayUsersGridActivity extends BaseActivity implements AdapterV
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        SingleUsersHolder.getInstance().setUsers(mProfileAdapter.getUsers());
+
         Intent intent = new Intent(getBaseContext(), ProfileActivity.class);
-        intent.putExtra(ProfileActivity.EXTRA_USER, mProfileAdapter.getItem(position));
+        intent.putExtra(ProfileActivity.EXTRA_POSITION, position);
         startActivity(intent);
     }
 

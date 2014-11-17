@@ -82,6 +82,10 @@ public class PendingFriendsAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public List<User> getUsers() {
+        return mUsers;
+    }
+
     private void fillRow(ViewHolder holder, User user) {
         holder.txtName.setText(user.getName());
 

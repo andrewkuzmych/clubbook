@@ -128,8 +128,8 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
             return;
         }
 
-        Fragment fragment = ProfileFragment.newInstance(ClubFragment.this, mProfileAdapter.getItem(position), ProfileFragment.OPEN_MODE_DEFAULT);
-        openFragment(fragment, ProfileFragment.class);
+        Fragment fragment = ProfilePageHolderFragment.newInstance(this, mProfileAdapter.getUsers(), position);
+        openFromInnerFragment(fragment, ProfilePageHolderFragment.class);
     }
 
     @Override

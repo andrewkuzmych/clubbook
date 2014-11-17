@@ -24,6 +24,7 @@ import com.nl.clubbook.utils.UIUtils;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +46,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     private int mBtnAddFriendMode = BtnAddFriendModes.MODE_ADD;
     private int mBtnBlockUserMode = BtnBlockModes.MODE_BLOCK;
 
-    public static Fragment newInstance(@NotNull Fragment targetFragment, User currentUser, int openMode) {
+    public static Fragment newInstance(@Nullable Fragment targetFragment, User currentUser, int openMode) {
         ProfileFragment fragment = new ProfileFragment();
         fragment.setTargetFragment(targetFragment, 0);
         fragment.setCurrentUser(currentUser);

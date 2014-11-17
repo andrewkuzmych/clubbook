@@ -97,6 +97,10 @@ public class FindFriendsAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public List<User> getUsers() {
+        return mUsers;
+    }
+
     private void fillView(ViewHolder holder, User user) {
         holder.txtUsername.setText(user.getName());
 

@@ -7,15 +7,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.User;
-import com.nl.clubbook.fragment.ProfileFragment;
+import com.nl.clubbook.fragment.ProfilePageHolderFragment;
+import com.nl.clubbook.helper.SingleUsersHolder;
 
 /**
  * Created by Volodymyr on 06.11.2014.
  */
 public class ProfileActivity extends BaseActivity {
 
-    public static final String EXTRA_USER = "EXTRA_USER_ID";
+    public static final String EXTRA_POSITION = "EXTRA_POSITION";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,12 +47,9 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void initFragment() {
-        User user = getIntent().getParcelableExtra(EXTRA_USER);
-        if(user == null) {
-            return;
-        }
+        int position = getIntent().getIntExtra(EXTRA_POSITION, 0);
 
-        Fragment fragment = ProfileFragment.newInstance(user, ProfileFragment.OPEN_MODE_DEFAULT);
+        Fragment fragment = ProfilePageHolderFragment.newInstance(null, SingleUsersHolder.getInstance().getUsers(), position);
         FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
         fTransaction.replace(R.id.fragmentContainer, fragment);
         fTransaction.commit();

@@ -51,8 +51,8 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Fragment fragment = ProfileFragment.newInstance(getTargetFragment(), mAdapter.getItem(position), ProfileFragment.OPEN_MODE_DEFAULT);
-        openFromInnerFragment(fragment, ProfileFragment.class);
+        Fragment fragment = ProfilePageHolderFragment.newInstance(this, mAdapter.getUsers(), position);
+        openFromInnerFragment(fragment, ProfilePageHolderFragment.class);
     }
 
     @Override
