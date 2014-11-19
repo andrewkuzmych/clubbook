@@ -87,6 +87,15 @@ public class ClubsAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void addData(List<Club> newClubs) {
+        if(newClubs == null || newClubs.isEmpty()) {
+            return;
+        }
+
+        mClubs.addAll(newClubs);
+        notifyDataSetChanged();
+    }
+
     private void fillRow(ClubItemHolder holder, Club club) {
         String distance = LocationCheckinHelper.formatDistance(mContext, club.getDistance());
         holder.txtDistance.setText(distance);

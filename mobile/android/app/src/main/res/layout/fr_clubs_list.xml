@@ -9,6 +9,8 @@
         android:id="@+id/listClub"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:dividerHeight="1dp" />
+        android:dividerHeight="1dp"
+        android:footerDividersEnabled="false"
+        android:overScrollFooter="@android:color/transparent"/>
 
 </android.support.v4.widget.SwipeRefreshLayout>

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -29,7 +30,13 @@ import java.util.List;
 public class ClubsListFragment extends BaseRefreshFragment implements AdapterView.OnItemClickListener,
         SwipeRefreshLayout.OnRefreshListener {
 
+    private final int DEFAULT_CLUBS_COUNT = 20;
+    private final int DEFAULT_CLUBS_SKIP = 0;
+
     private ClubsAdapter mClubsAdapter;
+    private View mFooterProgress;
+
+    private int mSkipNumber = DEFAULT_CLUBS_SKIP;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +51,7 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
 
         initActionBarTitle(getString(R.string.clubs));
         initView();
+        doRefresh(true);
     }
 
     @Override
@@ -65,59 +73,9 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
 
     @Override
     protected void loadData() {
-        if(!NetworkUtils.isOn(getActivity())) {
-            Toast.makeText(getActivity(), R.string.no_connection, Toast.LENGTH_SHORT).show();
-            return;
-        }
+        mSkipNumber = DEFAULT_CLUBS_SKIP;
 
-        Log.d("Location Updates", "Google Play services is available.");
-
-        // retrieve my current location
-        LocationCheckinHelper locationCheckInHelper = LocationCheckinHelper.getInstance();
-        Location currentLocation = locationCheckInHelper.getCurrentLocation();
-        if(currentLocation == null) {
-            locationCheckInHelper.showLocationErrorView(getActivity(), locationCheckInHelper.isLocationProvidersEnabled());
-            return;
-        }
-
-        View view = getView();
-        if(view == null) {
-            L.v("view == null!");
-            return;
-        }
-
-        if(!mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.setRefreshing(true);
-        }
-
-        String accessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
-        if(accessToken == null) {
-            mSwipeRefreshLayout.setRefreshing(false);
-            L.i("accessToken = null");
-            return;
-        }
-
-        // retrieve places from server and set distance
-        DataStore.retrievePlaces(String.valueOf(currentLocation.getLatitude()),
-                String.valueOf(currentLocation.getLongitude()), accessToken, new DataStore.OnResultReady() {
-
-            @Override
-            public void onReady(Object result, boolean failed) {
-                if(isDetached() || getActivity() == null) {
-                    L.i("fragment_is_detached");
-                    return;
-                }
-
-                mSwipeRefreshLayout.setRefreshing(false);
-                if (failed) {
-                    showToast(R.string.something_went_wrong_please_try_again);
-                    return;
-                }
-
-                List<Club> places = (List<Club>) result;
-                mClubsAdapter.updateData(places);
-            }
-        });
+        doRefresh(true);
     }
 
     private void initView() {
@@ -127,10 +85,94 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
         }
 
         mClubsAdapter = new ClubsAdapter(getActivity(), new ArrayList<Club>());
-        ListView clubList = (ListView) view.findViewById(R.id.listClub);
+        mFooterProgress = LayoutInflater.from(getActivity()).inflate(R.layout.view_footer_progress, null);
+        mFooterProgress.setVisibility(View.INVISIBLE);
+
+        final ListView clubList = (ListView) view.findViewById(R.id.listClub);
+        clubList.addFooterView(mFooterProgress);
+
         clubList.setAdapter(mClubsAdapter);
         clubList.setOnItemClickListener(this);
+        clubList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == SCROLL_STATE_IDLE && clubList.getLastVisiblePosition() >= clubList.getCount() - 1) {
+                    mSkipNumber += DEFAULT_CLUBS_COUNT;
 
-        loadData();
+                    doRefresh(false);
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            }
+        });
+    }
+
+    private void doRefresh(boolean isSwipeLayoutRefreshing) {
+        if(!NetworkUtils.isOn(getActivity())) {
+            Toast.makeText(getActivity(), R.string.no_connection, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Log.d("Location Updates", "Google Play services is available.");
+
+        if(isSwipeLayoutRefreshing) {
+            mSwipeRefreshLayout.setRefreshing(true);
+            mFooterProgress.setVisibility(View.GONE);
+        } else {
+            mSwipeRefreshLayout.setRefreshing(false);
+            mFooterProgress.setVisibility(View.VISIBLE);
+        }
+
+        // retrieve my current location
+        LocationCheckinHelper locationCheckInHelper = LocationCheckinHelper.getInstance();
+        Location currentLocation = locationCheckInHelper.getCurrentLocation();
+        if(currentLocation == null) {
+            locationCheckInHelper.showLocationErrorView(getActivity(), locationCheckInHelper.isLocationProvidersEnabled());
+
+            mSwipeRefreshLayout.setRefreshing(false);
+            mFooterProgress.setVisibility(View.GONE);
+            return;
+        }
+
+        String accessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
+        if(accessToken == null) {
+            L.i("accessToken = null");
+
+            mSwipeRefreshLayout.setRefreshing(false);
+            mFooterProgress.setVisibility(View.GONE);
+
+            return;
+        }
+
+        // retrieve places from server and set distance
+        DataStore.retrievePlaces(String.valueOf(mSkipNumber), String.valueOf(DEFAULT_CLUBS_COUNT), String.valueOf(currentLocation.getLatitude()),
+                String.valueOf(currentLocation.getLongitude()), accessToken, new DataStore.OnResultReady() {
+
+                    @Override
+                    public void onReady(Object result, boolean failed) {
+                        if(isDetached() || getActivity() == null) {
+                            L.i("fragment_is_detached");
+                            return;
+                        }
+
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        mFooterProgress.setVisibility(View.GONE);
+
+                        if (failed) {
+                            showToast(R.string.something_went_wrong_please_try_again);
+                            return;
+                        }
+
+                        List<Club> places = (List<Club>) result;
+
+                        if(mSkipNumber == DEFAULT_CLUBS_SKIP) {
+                            mClubsAdapter.updateData(places);
+                        } else {
+                            mClubsAdapter.addData(places);
+                        }
+                    }
+                });
     }
 }
