@@ -19,6 +19,7 @@ import com.nl.clubbook.datasource.UserPhoto;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.SessionManager;
+import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.nl.clubbook.utils.UIUtils;
 import com.squareup.picasso.Picasso;
@@ -80,9 +81,6 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         sendScreenStatistic(R.string.user_screen_android);
 
-        initTarget();
-
-        UIUtils.displayEmptyIconInActionBar((ActionBarActivity) getActivity());
         initActionBarTitle(getString(R.string.user_profile));
         handleExtras();
         initView();
@@ -179,8 +177,8 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         ImageView imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
         String avatarUrl = mUser.getAvatar();
         if(!TextUtils.isEmpty(avatarUrl)) {
-            Picasso.with(getActivity()).load(avatarUrl).error(R.drawable.ic_avatar_unknown).into(imgAvatar);
-            UIUtils.loadPhotoToActionBar((ActionBarActivity) getActivity(), ImageHelper.getUserListAvatar(avatarUrl), mTarget);
+            int screenWidth = getResources().getDisplayMetrics().widthPixels;
+            Picasso.with(getActivity()).load(ImageHelper.getProfileBigImage(avatarUrl, screenWidth)).error(R.drawable.ic_avatar_unknown).into(imgAvatar);
         } else {
             imgAvatar.setImageResource(R.drawable.ic_avatar_missing);
         }

@@ -42,6 +42,11 @@ public class ImageHelper {
         return generateUrl(url, avatar_style);
     }
 
+    public static String getProfileBigImage(String url, int size) {
+        String avatar_style = "w_" + size + ",h_" + size + ",c_thumb";
+        return generateUrl(url, avatar_style);
+    }
+
     /**
      * Left navigation menu
      *

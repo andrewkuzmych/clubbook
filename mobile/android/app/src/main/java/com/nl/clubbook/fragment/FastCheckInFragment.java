@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nl.clubbook.R;
@@ -41,7 +42,7 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fr_fast_chekc_in, null);
+        return inflater.inflate(R.layout.fr_fast_check_in, null);
     }
 
     @Override
@@ -52,6 +53,7 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
 
         initActionBarTitle(getString(R.string.clubs));
         initView();
+        loadData();
     }
 
     @Override
@@ -105,7 +107,7 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
             return;
         }
 
-        View view = getView();
+        final View view = getView();
         if(view == null) {
             L.v("view == null!");
             return;
@@ -136,14 +138,18 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
                         mSwipeRefreshLayout.setRefreshing(false);
                         if (failed) {
                             showToast(R.string.something_went_wrong_please_try_again);
+                            showHideEmptyView(view);
+
                             return;
                         }
 
                         List<Club> places = (List<Club>) result;
                         mAdapter.updateData(places);
+                        showHideEmptyView(view);
                     }
                 });
     }
+
 
     private void initView() {
         View view = getView();
@@ -155,8 +161,15 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
         ListView clubList = (ListView) view.findViewById(R.id.listClub);
         clubList.setAdapter(mAdapter);
         clubList.setOnItemClickListener(this);
+    }
 
-        loadData();
+    private void showHideEmptyView(View view) {
+        TextView txtNoFastCheckIn = (TextView) view.findViewById(R.id.txtNoFastCheckIn);
+        if(mAdapter.getCount() > 0) {
+            txtNoFastCheckIn.setVisibility(View.GONE);
+        } else {
+            txtNoFastCheckIn.setVisibility(View.VISIBLE);
+        }
     }
 
     private void onCheckInBtnClicked(final View view) {

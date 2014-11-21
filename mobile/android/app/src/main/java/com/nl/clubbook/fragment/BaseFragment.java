@@ -16,7 +16,6 @@ import com.google.android.gms.analytics.Tracker;
 import com.nl.clubbook.ClubbookApplication;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.BaseActivity;
-import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.SessionManager;
@@ -72,7 +71,7 @@ public class BaseFragment extends Fragment {
     }
 
     public void sendScreenStatistic(String stringName) {
-        mTracker.setScreenName(MainActivity.class.getSimpleName());
+        mTracker.setScreenName(stringName);
         mTracker.send(new HitBuilders.AppViewBuilder().build());
     }
 

@@ -151,6 +151,7 @@
     <string name="closed_display">Closed</string>
     <string name="you_need_to_be_within_m_in_order_to_check_in">You need to be within %sm in order to Check-in</string>
     <string name="no_users_checked_in_yet">No users Checked-in yet</string>
+    <string name="currently_no_users_checked_in">Currently no users Checked-in</string>
     <string name="about">About</string>
     <string name="hours">Hours</string>
     <string name="info">Info</string>
@@ -196,6 +197,7 @@
     <string name="club_profile">Club Profile</string>
     <string name="users_checked_in_yesterday">Users Checked-in Yesterday</string>
     <string name="sorry_you_cannot_access_this_information">Sorry, you cannot access this information, because you were not Checked-in to this Club yesterday</string>
+    <string name="there_are_no_fast_check_in_spots_available">There are no Fast Check-in spots available</string>
     <!---->
 
     <!--For Google Analytics-->

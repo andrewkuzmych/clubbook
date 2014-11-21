@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
-        android:text="@string/no_users_checked_in_yet"
+        android:text="@string/currently_no_users_checked_in"
         android:textColor="@color/grey"
         android:textSize="@dimen/text_size_medium"
         android:layout_centerInParent="true"
