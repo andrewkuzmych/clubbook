@@ -51,7 +51,7 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
 
         sendScreenStatistic(R.string.fast_check_in_android);
 
-        initActionBarTitle(getString(R.string.clubs));
+        initActionBarTitle(getString(R.string.fast_check_in));
         initView();
         loadData();
     }

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.Club;
 import com.nl.clubbook.helper.CheckInOutCallbackInterface;
+import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.helper.UiHelper;
@@ -98,7 +99,7 @@ public class FastCheckInAdapter extends BaseAdapter {
 
         String photoUrl = club.getAvatar();
         if(!TextUtils.isEmpty(photoUrl)) {
-            Picasso.with(mContext).load(photoUrl).error(R.drawable.ic_club_avatar_default).into(holder.imgAvatar);
+            Picasso.with(mContext).load(ImageHelper.getClubListAvatar(photoUrl)).error(R.drawable.ic_club_avatar_default).into(holder.imgAvatar);
         } else {
             holder.imgAvatar.setImageResource(R.drawable.ic_club_avatar_default);
         }
