@@ -167,9 +167,6 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    User *user = _users[indexPath.row];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *userId = [defaults objectForKey:@"userId"];
     self.isLoaded = NO;
 
     [self performSegueWithIdentifier: @"onUsers" sender: indexPath];

@@ -15,8 +15,15 @@
 +(void) StoreUser:(User *)user
 {
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    [currentInstallation addUniqueObject:[NSString stringWithFormat:@"user_%@", user.id] forKey:@"channels"];
+    //[currentInstallation addUniqueObject:[NSString stringWithFormat:@"user_%@", user.id] forKey:@"channels"];
+    //[currentInstallation saveInBackground];
+    
+
+    currentInstallation.channels = @[[NSString stringWithFormat:@"user_%@", user.id] ];
     [currentInstallation saveInBackground];
+    
+    
+    
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:user.id forKey:@"userId"];

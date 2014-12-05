@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		492AD6FE1A31E042001E2F16 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49908EDA1970543500DA68F2 /* Parse.framework */; };
+		492AD7011A31E043001E2F16 /* ParseFacebookUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 492AD6FF1A31E043001E2F16 /* ParseFacebookUtils.framework */; };
+		492AD7021A31E043001E2F16 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 492AD7001A31E043001E2F16 /* ParseUI.framework */; };
+		492AD7071A31E280001E2F16 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 492AD7031A31E263001E2F16 /* FacebookSDK.framework */; };
 		4934F75819D047B800BFFDB1 /* MKAnnotationView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4934F73819D047B800BFFDB1 /* MKAnnotationView+WebCache.m */; };
 		4934F75919D047B800BFFDB1 /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = 4934F73A19D047B800BFFDB1 /* NSData+ImageContentType.m */; };
 		4934F75A19D047B800BFFDB1 /* SDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4934F73C19D047B800BFFDB1 /* SDImageCache.m */; };
@@ -173,7 +177,6 @@
 		498A6910196C4CFD00BC2859 /* PNConnectionChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 498A68C9196C4CFD00BC2859 /* PNConnectionChannel.m */; };
 		498A6912196C4D3600BC2859 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 498A6911196C4D3600BC2859 /* CFNetwork.framework */; };
 		498F928619E53B2100A8D570 /* FindMoreFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 498F928519E53B2100A8D570 /* FindMoreFriendsViewController.m */; };
-		49908EDB1970543500DA68F2 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49908EDA1970543500DA68F2 /* Parse.framework */; };
 		49908EE1197054A800DA68F2 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49908EE0197054A800DA68F2 /* MobileCoreServices.framework */; };
 		49908EE2197056AD00DA68F2 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 49E8314F1951DE4500D4A26C /* libz.dylib */; };
 		49908EE41970572700DA68F2 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49908EE31970572700DA68F2 /* Social.framework */; };
@@ -360,7 +363,6 @@
 		49E831601951DFBC00D4A26C /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49E8315F1951DFBC00D4A26C /* CoreVideo.framework */; };
 		49E831621951E04B00D4A26C /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49E831611951E04B00D4A26C /* ImageIO.framework */; };
 		49E831641951E06400D4A26C /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 49E831631951E06400D4A26C /* libiconv.dylib */; };
-		49E831651952375900D4A26C /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49E8314B1951DDE400D4A26C /* FacebookSDK.framework */; };
 		49E8316E1952EF3F00D4A26C /* ClubbookCommunicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 49E8316D1952EF3F00D4A26C /* ClubbookCommunicator.m */; };
 		49E831781952F89700D4A26C /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 49E831771952F89700D4A26C /* User.m */; };
 		49E8317F1953018E00D4A26C /* ClubbookManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 49E8317D1953018E00D4A26C /* ClubbookManager.m */; };
@@ -405,6 +407,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		492AD6FF1A31E043001E2F16 /* ParseFacebookUtils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtils.framework; sourceTree = "<group>"; };
+		492AD7001A31E043001E2F16 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
+		492AD7031A31E263001E2F16 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		4934F73719D047B800BFFDB1 /* MKAnnotationView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MKAnnotationView+WebCache.h"; sourceTree = "<group>"; };
 		4934F73819D047B800BFFDB1 /* MKAnnotationView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKAnnotationView+WebCache.m"; sourceTree = "<group>"; };
 		4934F73919D047B800BFFDB1 /* NSData+ImageContentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ImageContentType.h"; sourceTree = "<group>"; };
@@ -1000,7 +1005,6 @@
 		49E831401951B56700D4A26C /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
 		49E831441951B92000D4A26C /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		49E831451951B92000D4A26C /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
-		49E8314B1951DDE400D4A26C /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		49E8314D1951DE1F00D4A26C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		49E8314F1951DE4500D4A26C /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		49E831511951DE5C00D4A26C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -1088,18 +1092,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				492AD7071A31E280001E2F16 /* FacebookSDK.framework in Frameworks */,
 				499C8B4919C0B26100ABEE5D /* StoreKit.framework in Frameworks */,
+				49908EE1197054A800DA68F2 /* MobileCoreServices.framework in Frameworks */,
+				F4EECF16177C99F400778578 /* CoreGraphics.framework in Frameworks */,
+				498A6912196C4D3600BC2859 /* CFNetwork.framework in Frameworks */,
+				498A1B11196ACBAA00824E64 /* AudioToolbox.framework in Frameworks */,
 				49DDE91B19A26B1200B1DEB1 /* libsqlite3.0.dylib in Frameworks */,
 				49DDE91919A26AF100B1DEB1 /* libGoogleAnalyticsServices.a in Frameworks */,
 				49DDE91819A269CC00B1DEB1 /* AdSupport.framework in Frameworks */,
 				4993F21819791B0E00A225BE /* Accelerate.framework in Frameworks */,
 				49908EE41970572700DA68F2 /* Social.framework in Frameworks */,
 				49908EE2197056AD00DA68F2 /* libz.dylib in Frameworks */,
-				49908EE1197054A800DA68F2 /* MobileCoreServices.framework in Frameworks */,
+				492AD7011A31E043001E2F16 /* ParseFacebookUtils.framework in Frameworks */,
+				492AD6FE1A31E042001E2F16 /* Parse.framework in Frameworks */,
+				492AD7021A31E043001E2F16 /* ParseUI.framework in Frameworks */,
 				49E8314E1951DE1F00D4A26C /* Security.framework in Frameworks */,
-				49908EDB1970543500DA68F2 /* Parse.framework in Frameworks */,
-				498A6912196C4D3600BC2859 /* CFNetwork.framework in Frameworks */,
-				498A1B11196ACBAA00824E64 /* AudioToolbox.framework in Frameworks */,
 				49E8318A1953205500D4A26C /* libCloudinary.a in Frameworks */,
 				49E831521951DE5C00D4A26C /* SystemConfiguration.framework in Frameworks */,
 				49E831541951DE6F00D4A26C /* CoreData.framework in Frameworks */,
@@ -1109,13 +1117,11 @@
 				49E8315E1951DFA200D4A26C /* CoreMedia.framework in Frameworks */,
 				49E831581951DF3600D4A26C /* AVFoundation.framework in Frameworks */,
 				49E831601951DFBC00D4A26C /* CoreVideo.framework in Frameworks */,
-				49E831651952375900D4A26C /* FacebookSDK.framework in Frameworks */,
 				49E8315A1951DF4A00D4A26C /* Accounts.framework in Frameworks */,
 				F4EECF70177FE9B400778578 /* CoreLocation.framework in Frameworks */,
 				49E8315C1951DF6800D4A26C /* QuartzCore.framework in Frameworks */,
 				F4EECF72177FE9BA00778578 /* MapKit.framework in Frameworks */,
 				49E831621951E04B00D4A26C /* ImageIO.framework in Frameworks */,
-				F4EECF16177C99F400778578 /* CoreGraphics.framework in Frameworks */,
 				49E831641951E06400D4A26C /* libiconv.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1989,6 +1995,7 @@
 		F4EECF05177C99F400778578 = {
 			isa = PBXGroup;
 			children = (
+				492AD7031A31E263001E2F16 /* FacebookSDK.framework */,
 				49E8319119534EBB00D4A26C /* Libs */,
 				F4EECF71177FE9BA00778578 /* MapKit.framework */,
 				F4EECF6F177FE9B400778578 /* CoreLocation.framework */,
@@ -2010,6 +2017,8 @@
 		F4EECF10177C99F400778578 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				492AD6FF1A31E043001E2F16 /* ParseFacebookUtils.framework */,
+				492AD7001A31E043001E2F16 /* ParseUI.framework */,
 				499C8B4819C0B26100ABEE5D /* StoreKit.framework */,
 				49DDE91A19A26B1200B1DEB1 /* libsqlite3.0.dylib */,
 				49DDE91719A269CC00B1DEB1 /* AdSupport.framework */,
@@ -2034,7 +2043,6 @@
 				49E831511951DE5C00D4A26C /* SystemConfiguration.framework */,
 				49E8314F1951DE4500D4A26C /* libz.dylib */,
 				49E8314D1951DE1F00D4A26C /* Security.framework */,
-				49E8314B1951DDE400D4A26C /* FacebookSDK.framework */,
 				F4EECF11177C99F400778578 /* UIKit.framework */,
 				F4EECF13177C99F400778578 /* Foundation.framework */,
 				F4EECF15177C99F400778578 /* CoreGraphics.framework */,
@@ -2764,12 +2772,13 @@
 				GCC_PREFIX_HEADER = "Clubbook/Clubbook-Prefix.pch";
 				INFOPLIST_FILE = "Clubbook/Clubbook-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/cloudinary",
 					"$(PROJECT_DIR)/GoogleAnalytics",
 				);
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Clubbook;
 				PROVISIONING_PROFILE = "e360c272-8530-476f-b760-f242186613a9";
@@ -2794,6 +2803,7 @@
 				GCC_PREFIX_HEADER = "Clubbook/Clubbook-Prefix.pch";
 				INFOPLIST_FILE = "Clubbook/Clubbook-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/cloudinary",

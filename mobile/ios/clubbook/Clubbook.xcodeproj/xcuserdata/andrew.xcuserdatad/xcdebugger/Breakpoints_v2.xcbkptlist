@@ -4120,11 +4120,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Helpers/SessionHelper.m"
-            timestampString = "430218628.815793"
+            timestampString = "439477907.939556"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "23"
-            endingLineNumber = "23"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
             landmarkName = "+StoreUser:"
             landmarkType = "5">
          </BreakpointContent>
@@ -4168,11 +4168,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Helpers/SessionHelper.m"
-            timestampString = "430218628.815793"
+            timestampString = "439477907.939556"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "31"
-            endingLineNumber = "31"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
             landmarkName = "+StoreUser:"
             landmarkType = "5">
          </BreakpointContent>
@@ -6504,11 +6504,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Helpers/SessionHelper.m"
-            timestampString = "433357278.769846"
+            timestampString = "439477907.939556"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "28"
-            endingLineNumber = "28"
+            startingLineNumber = "35"
+            endingLineNumber = "35"
             landmarkName = "+StoreUser:"
             landmarkType = "5">
          </BreakpointContent>
@@ -7895,22 +7895,6 @@
             timestampString = "438946370.345905"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "54"
-            endingLineNumber = "54"
-            landmarkName = "-application:didFinishLaunchingWithOptions:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Clubbook/AppDelegate.m"
-            timestampString = "438946370.345905"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
             startingLineNumber = "28"
             endingLineNumber = "28"
             landmarkName = "-application:didFinishLaunchingWithOptions:"
@@ -8002,11 +7986,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/Helpers/SessionHelper.m"
-            timestampString = "434895941.256174"
+            timestampString = "439477907.939556"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "40"
-            endingLineNumber = "40"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
             landmarkName = "+DeleteUser"
             landmarkType = "5">
          </BreakpointContent>
@@ -8416,11 +8400,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/UserCheckinsViewController.m"
-            timestampString = "439322895.885132"
+            timestampString = "439475340.059771"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "217"
-            endingLineNumber = "217"
+            startingLineNumber = "214"
+            endingLineNumber = "214"
             landmarkName = "-collectionView:cellForItemAtIndexPath:"
             landmarkType = "5">
          </BreakpointContent>
@@ -8432,11 +8416,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/UserCheckinsViewController.m"
-            timestampString = "439322895.885132"
+            timestampString = "439475340.059771"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "197"
-            endingLineNumber = "197"
+            startingLineNumber = "194"
+            endingLineNumber = "194"
             landmarkName = "-collectionView:viewForSupplementaryElementOfKind:atIndexPath:"
             landmarkType = "5">
          </BreakpointContent>
@@ -8464,11 +8448,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/UserCheckinsViewController.m"
-            timestampString = "439322895.885132"
+            timestampString = "439475340.059771"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "180"
-            endingLineNumber = "180"
+            startingLineNumber = "177"
+            endingLineNumber = "177"
             landmarkName = "-prepareForSegue:sender:"
             landmarkType = "5">
          </BreakpointContent>
@@ -8480,11 +8464,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/UserCheckinsViewController.m"
-            timestampString = "439322895.885132"
+            timestampString = "439475340.059771"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "285"
-            endingLineNumber = "285"
+            startingLineNumber = "282"
+            endingLineNumber = "282"
             landmarkName = "-collectionViewCellForThing:"
             landmarkType = "5">
          </BreakpointContent>
@@ -8496,11 +8480,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/UserCheckinsViewController.m"
-            timestampString = "439322895.885132"
+            timestampString = "439475340.059771"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "240"
-            endingLineNumber = "240"
+            startingLineNumber = "237"
+            endingLineNumber = "237"
             landmarkName = "-navigationController:animationControllerForOperation:fromViewController:toViewController:"
             landmarkType = "5">
          </BreakpointContent>
@@ -8512,11 +8496,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Clubbook/UserCheckinsViewController.m"
-            timestampString = "439322895.885132"
+            timestampString = "439475340.059771"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "184"
-            endingLineNumber = "184"
+            startingLineNumber = "181"
+            endingLineNumber = "181"
             landmarkName = "-prepareForSegue:sender:"
             landmarkType = "5">
          </BreakpointContent>
@@ -8703,54 +8687,6 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Clubbook/MainLoginViewController.m"
-            timestampString = "438946370.345905"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "150"
-            endingLineNumber = "150"
-            landmarkName = "-doFbLogin"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Clubbook/MainLoginViewController.m"
-            timestampString = "438946370.345905"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "152"
-            endingLineNumber = "152"
-            landmarkName = "-doFbLogin"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Clubbook/MainLoginViewController.m"
-            timestampString = "438946370.345905"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "130"
-            endingLineNumber = "130"
-            landmarkName = "-fbAction:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Clubbook/UserCheckinsViewController.m"
             timestampString = "439322895.885132"
             startingColumnNumber = "9223372036854775807"
@@ -8854,6 +8790,54 @@
             startingLineNumber = "535"
             endingLineNumber = "535"
             landmarkName = "-chatAction:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Clubbook/MainLoginViewController.m"
+            timestampString = "439475291.491988"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "200"
+            endingLineNumber = "200"
+            landmarkName = "-onFbLogin:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Clubbook/MainLoginViewController.m"
+            timestampString = "439475305.108596"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "239"
+            endingLineNumber = "239"
+            landmarkName = "-didFbLoginUser:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Clubbook/Helpers/SessionHelper.m"
+            timestampString = "439475364.871985"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "17"
+            endingLineNumber = "17"
+            landmarkName = "+StoreUser:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
