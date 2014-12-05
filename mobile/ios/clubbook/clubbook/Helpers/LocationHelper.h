@@ -13,8 +13,8 @@
 @interface LocationHelper : NSObject <ClubbookManagerDelegate>
 
 + (NSString*) convertDistance:(NSInteger) distance;
-+ (void)startLocationUpdate:(Place *) club;
-+ (void) stopTimer;
++ (void)addCheckin:(Place *) club;
++ (void) removeCheckin;
 + (BOOL) isCheckinHere:(Place *) club;
 + (Place *) getCheckinClub;
 

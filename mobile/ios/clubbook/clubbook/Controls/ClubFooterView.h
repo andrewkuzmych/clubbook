@@ -14,6 +14,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *checkinLabel;
 @property (weak, nonatomic) IBOutlet UITextView *usersLeftToCheckinLabel;
 @property (weak, nonatomic) IBOutlet UIView *footerContainer;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
+@property (weak, nonatomic) IBOutlet UILabel *footerInfoLabel;
 
 - (void)collapse;
 - (void)expand;

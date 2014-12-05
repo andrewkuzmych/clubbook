@@ -18,6 +18,8 @@
 
 #import <FacebookSDK/FacebookSDK.h>
 
+#import <Bolts/Bolts.h>
+
 #import "RPSCommonObjects.h"
 #import "RPSDeeplyLinkedViewController.h"
 #import "RPSFriendsViewController.h"
@@ -27,26 +29,29 @@
 
 #pragma mark - Class methods
 
-+ (RPSCall)callFromAppLinkData:(FBAppLinkData *)appLinkData {
-    NSString *fbObjectID = [appLinkData originalQueryParameters][@"fb_object_id"];
-
-    if (fbObjectID == nil) {
++ (RPSCall)callFromAppLinkURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication {
+    BFURL *appLinkURL = [BFURL URLWithInboundURL:url sourceApplication:sourceApplication];
+    NSURL *appLinkTargetURL = [appLinkURL targetURL];
+    if (!appLinkTargetURL) {
         return RPSCallNone;
     }
-
-    RPSCall call = RPSCallNone;
-    NSInteger callOptionCount = sizeof(builtInOpenGraphObjects) / sizeof(builtInOpenGraphObjects[0]);
-    for (RPSCall callIndex = 0; callIndex < callOptionCount; callIndex++) {
-        if ([builtInOpenGraphObjects[callIndex] isEqualToString:fbObjectID]) {
-            call = callIndex;
-            break;
+    NSString *queryString = [appLinkTargetURL query];
+    for(NSString *component in [queryString componentsSeparatedByString:@"&"]) {
+        NSArray *pair = [component componentsSeparatedByString:@"="];
+        NSString *param = pair[0];
+        NSString *val = pair[1];
+        if ([param isEqualToString:@"gesture"]) {
+            if ([val isEqualToString:@"rock"]) {
+                return RPSCallRock;
+            } else if ([val isEqualToString:@"paper"]) {
+                return RPSCallPaper;
+            } else if ([val isEqualToString:@"scissors"]) {
+                return RPSCallScissors;
+            }
         }
     }
 
-    if (call == RPSCallNone) {
-        NSLog(@"Unexpected: deeplink was present, but did not contain a valid rock, paper or scissor fb_object_id");
-    }
-    return call;
+    return RPSCallNone;
 }
 
 #pragma mark - UIApplicationDelegate
@@ -58,10 +63,10 @@
     return [FBAppCall handleOpenURL:url
                   sourceApplication:sourceApplication
                     fallbackHandler:^(FBAppCall *call) {
-                        // Check for a deep link to parse out a call to show
-                        RPSCall deepCall = [RPSAppDelegate callFromAppLinkData:[call appLinkData]];
-                        if (deepCall != RPSCallNone) {
-                            RPSDeeplyLinkedViewController *vc = [[RPSDeeplyLinkedViewController alloc] initWithCall:deepCall];
+                        // Check for an app link to parse out a call to show
+                        RPSCall appLinkCall = [RPSAppDelegate callFromAppLinkURL:url sourceApplication:sourceApplication];
+                        if (appLinkCall != RPSCallNone) {
+                            RPSDeeplyLinkedViewController *vc = [[RPSDeeplyLinkedViewController alloc] initWithCall:appLinkCall];
                             [self.navigationController presentViewController:vc animated:YES completion:nil];
                         }
                     }];
@@ -84,21 +89,13 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
 
-#ifdef DEBUG
-    [FBSettings enableBetaFeature:FBBetaFeaturesOpenGraphShareDialog | FBBetaFeaturesShareDialog];
-#endif
-
     UIViewController *viewControllerGame;
-    FBUserSettingsViewController *viewControllerSettings;
+
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         viewControllerGame = [[RPSGameViewController alloc] initWithNibName:@"RPSGameViewController_iPhone" bundle:nil];
     } else {
         viewControllerGame = [[RPSGameViewController alloc] initWithNibName:@"RPSGameViewController_iPad" bundle:nil];
     }
-    viewControllerSettings = [[FBUserSettingsViewController alloc] init];
-    viewControllerSettings.title = @"Facebook Settings";
-    viewControllerSettings.tabBarItem.image = [UIImage imageNamed:@"second"];
-
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:viewControllerGame];
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];

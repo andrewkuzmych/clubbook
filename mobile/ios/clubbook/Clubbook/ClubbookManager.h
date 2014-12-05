@@ -28,9 +28,17 @@
 
 - (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type accessToken:(NSString *) accessToken;
 
-- (void)retrievePlaces:(double) lat lon:(double) lon accessToken:(NSString *) accessToken;
+- (void)retrievePlaces:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance accessToken:(NSString *) accessToken;
+
+- (void)updateUserLocation:(double) lat lon:(double) lon accessToken:(NSString *) accessToken;
 
 - (void)retrievePlace:(NSString *) clubId accessToken:(NSString *) accessToken;
+
+- (void)retrievePlaceUsers:(NSString *) clubId accessToken:(NSString *) accessToken;
+
+- (void)retrievePlaceUsersYesterday:(NSString *) clubId accessToken:(NSString *) accessToken;
+
+- (void)receivedUsers:(BOOL)all take:(int) take skip:(int) skip lat:(double) lat lon:(double) lon distance:(double) distance accessToken:(NSString *) accessToken;
 
 - (void)retrieveUser:(NSString *) accessToken;
 
@@ -73,6 +81,16 @@
 - (void)removeFriend:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken;
 
 - (void)removeFriendRequest:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken;
+
+- (void)changePass:(NSString *) oldPass newPass:(NSString *) newPass accessToken:(NSString *) accessToken;
+
+- (void)blockUser:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken;
+
+- (void)unblockUser:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken;
+
+- (void)inviteFbFriends:(NSString *) userId fb_ids:(NSArray *) fb_ids accessToken:(NSString *) accessToken;
+
+- (void)findFbFriends:(NSArray *) fb_ids accessToken:(NSString *) accessToken;
 
 - (void) getConfig;
 

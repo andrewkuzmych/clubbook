@@ -20,6 +20,7 @@
 		58D92C9C18C751FA0090E7E2 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58D92C9618C751FA0090E7E2 /* Default@2x.png */; };
 		58D92C9D18C751FA0090E7E2 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58D92C9718C751FA0090E7E2 /* Default-568h@2x.png */; };
 		58D92C9F18C7525A0090E7E2 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D92C9E18C7525A0090E7E2 /* AdSupport.framework */; };
+		EE8F50CD19EC90D900295348 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EE8F50CC19EC90D900295348 /* Images.xcassets */; };
 		EEFC6BE118FF3169004FE2E6 /* FBAudienceNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEFC6BE018FF3169004FE2E6 /* FBAudienceNetwork.framework */; };
 /* End PBXBuildFile section */
 
@@ -34,7 +35,7 @@
 		58D92C8418C751630090E7E2 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		58D92C8518C751630090E7E2 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		58D92C8C18C7519F0090E7E2 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		58D92C8D18C7519F0090E7E2 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		58D92C8D18C7519F0090E7E2 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; tabWidth = 2; };
 		58D92C8E18C7519F0090E7E2 /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
 		58D92C9118C751FA0090E7E2 /* AdUnitsSample-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "AdUnitsSample-Info.plist"; sourceTree = "<group>"; };
 		58D92C9218C751FA0090E7E2 /* InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
@@ -44,6 +45,7 @@
 		58D92C9618C751FA0090E7E2 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		58D92C9718C751FA0090E7E2 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		58D92C9E18C7525A0090E7E2 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		EE8F50CC19EC90D900295348 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		EEFC6BE018FF3169004FE2E6 /* FBAudienceNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBAudienceNetwork.framework; path = ../../../../../Documents/FacebookSDK/FBAudienceNetwork/FBAudienceNetwork.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -105,6 +107,7 @@
 				58D92C8C18C7519F0090E7E2 /* ViewController.h */,
 				58D92C8D18C7519F0090E7E2 /* ViewController.m */,
 				58D92C8E18C7519F0090E7E2 /* ViewController.xib */,
+				EE8F50CC19EC90D900295348 /* Images.xcassets */,
 				58D92C4E18C750E10090E7E2 /* Supporting Files */,
 			);
 			path = AdUnitsSample;
@@ -177,6 +180,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				58D92C9018C7519F0090E7E2 /* ViewController.xib in Resources */,
+				EE8F50CD19EC90D900295348 /* Images.xcassets in Resources */,
 				58D92C9C18C751FA0090E7E2 /* Default@2x.png in Resources */,
 				58D92C9B18C751FA0090E7E2 /* Default.png in Resources */,
 				58D92C9D18C751FA0090E7E2 /* Default-568h@2x.png in Resources */,

@@ -48,6 +48,8 @@ FOUNDATION_EXPORT const CGFloat kJSQMessagesToolbarContentViewHorizontalSpacingD
  */
 @property (weak, nonatomic) UIButton *leftBarButtonItem;
 
+@property (weak, nonatomic) UIButton *middleBarButtonItem;
+
 /**
  *  Specifies the width of the leftBarButtonItem.
  */

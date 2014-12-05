@@ -12,24 +12,29 @@
 #import "AddFriendButton.h"
 
 @interface UserViewController : BaseViewController<UIScrollViewDelegate, UIActionSheetDelegate>
-@property (strong, nonatomic) NSString *userId;
+//@property (strong, nonatomic) NSString *userId;
 @property (weak, nonatomic) IBOutlet UIScrollView *imageScrollView;
 @property (weak, nonatomic) IBOutlet UIPageControl *imagePageView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet AddFriendButton *addFriendButton;
 @property (weak, nonatomic) IBOutlet UIButton *connectButton;
+@property (weak, nonatomic) IBOutlet UIImageView *connectImage;
 @property (weak, nonatomic) IBOutlet UILabel *ageLabel;
 @property (weak, nonatomic) IBOutlet UILabel *countryLabel;
 @property (weak, nonatomic) IBOutlet UILabel *aboutMeTitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *aboutMeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *checkinLabel;
 @property (weak, nonatomic) IBOutlet UIScrollView *userPhotosScroll;
+@property (weak, nonatomic) IBOutlet AddFriendButton *blockUnblockButton;
+@property (weak, nonatomic) IBOutlet UIScrollView *mainScroll;
 
 @property (assign, nonatomic) BOOL isFromChat;
 
 @property (weak, nonatomic) Place *currentPlace;
+@property (weak, nonatomic) User *user;
 @property (weak, nonatomic) NSString *clubCheckinName;
 - (IBAction)chatAction:(id)sender;
 - (IBAction)addFriendAction:(AddFriendButton *)sender;
+- (IBAction)blockUnblockAction:(id)sender;
 
 @end

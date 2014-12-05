@@ -12,6 +12,7 @@
 #import "Constants.h"
 #import "CSNotificationView.h"
 #import "UserViewController.h"
+#import "SWRevealViewController.h"
 
 @interface ChatViewController (){
     bool canChat;
@@ -31,6 +32,20 @@
         // Custom initialization
     }
     return self;
+}
+
+-(NSUInteger)supportedInterfaceOrientations
+{
+    // AppDelegate *appDelegate = (AppDelegate *) [UIApplication sharedApplication].delegate;
+    //if(appDelegate.isOrientationOn) {
+    //    return UIInterfaceOrientationMaskAll;
+    //}
+    return UIInterfaceOrientationMaskAll;
+}
+
+- (BOOL)shouldAutorotate;
+{
+    return YES;
 }
 
 - (void)viewDidLoad
@@ -71,8 +86,9 @@
     [drinkButton setImage:[UIImage imageNamed:@"icon_chat_drink"] forState:UIControlStateNormal];
     
     self.inputToolbar.contentView.leftBarButtonItem = smileButton;
+    self.inputToolbar.contentView.backgroundColor = [UIColor colorWithRed:52/255.0 green:3/255.0 blue:69/255.0 alpha:1.0];
     
-    //self.inputToolbar.contentView.middleBarButtonItem = drinkButton;
+    self.inputToolbar.contentView.middleBarButtonItem = drinkButton;
 }
 
 - (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message {
@@ -86,8 +102,9 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
     
-    if ([user_to isEqualToString:self.sender]) {
+    if ([user_to isEqualToString:self.sender] && [user_from isEqualToString:self.userTo]) {
         canChat = YES;
+        [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
         [self putMessage:msg type:type sender:user_from];
         [self._manager readChat:_chat.currentUser.id toUser:_chat.receiver.id accessToken:accessToken];
     }
@@ -139,7 +156,7 @@
             
            // JSQMessage *jsqmessage1 = [[JSQMessage alloc] initWithText:@"Welcome to JSQMessages: A messaging UI framework for iOS." sender:self.sender date:[NSDate distantPast]];
             
-            [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
+            //[JSQSystemSoundPlayer jsq_playMessageReceivedSound];
             [self.messages addObject:jsqmessage];
         }
         
@@ -177,7 +194,7 @@
     if([[segue identifier] isEqualToString:@"onUser"]){
         UserViewController *userController =  [segue destinationViewController];
         userController.isFromChat = YES;
-        userController.userId = _chat.receiver.id;
+        userController.user = _chat.receiver;
     }
 }
 
@@ -250,7 +267,12 @@
 
 - (void)sendDrink:(UIButton *)senderElement
 {
-    [self sendMessage:NSLocalizedString(@"invite_for_drink", nil) type:@"drink"];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *userName = [defaults objectForKey:@"userName"];
+    
+    [self sendMessage:[NSString stringWithFormat:NSLocalizedString(@"invite_for_drink", nil), userName] type:@"drink"];
+    
+    //[self sendMessage:NSLocalizedString(@"invite_for_drink", nil) type:@"drink"];
 }
 
 - (void)sendMessage:(NSString *)message type:(NSString *)type
@@ -263,6 +285,8 @@
                                         duration:kCSNotificationViewDefaultShowDuration];
         return;
     }
+    
+    [JSQSystemSoundPlayer jsq_playMessageSentSound];
     [self putMessage:message type:type sender:self.sender];
     
     
@@ -277,15 +301,16 @@
 
 - (void)putMessage:(NSString *)message type:(NSString *)type sender:(NSString *) sender
 {
-   /* JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
+    JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date]];
+    /*JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
     if ([type isEqualToString:@"drink"]) {
         jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
     } else if ([type isEqualToString:@"smile"]) {
         jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
     }*/
     
-    [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
-  //  [self.messages addObject:jsqmessage];
+
+    [self.messages addObject:jsqmessage];
     [self setCanChat];
     [self finishReceivingMessage];
 }

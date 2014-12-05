@@ -1,17 +1,24 @@
-/*
- * Copyright 2010-present Facebook.
+/**
+ * Copyright 2014 Facebook, Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * You are hereby granted a non-exclusive, worldwide, royalty-free license to
+ * use, copy, modify, and distribute this software in source code or binary
+ * form for use in connection with the web and mobile services and APIs
+ * provided by Facebook.
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * As with any software that integrates with the Facebook platform, your use
+ * of this software is subject to the Facebook Developer Principles and
+ * Policies [http://developers.facebook.com/policy/]. This copyright notice
+ * shall be included in all copies or substantial portions of the software.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ *
  */
 
 #import "ViewController.h"
@@ -36,10 +43,11 @@
 
   // Create a banner's ad view with a unique placement ID (generate your own on the Facebook app settings).
   // Use different ID for each ad placement in your app.
-  self.adView = [[FBAdView alloc]
-    initWithPlacementID:@"YOUR_PLACEMENT_ID"
-    adSize:kFBAdSize320x50
-    rootViewController:self];
+  BOOL isIPAD = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
+  FBAdSize adSize = isIPAD ? kFBAdSizeHeight90Banner : kFBAdSizeHeight50Banner;
+  self.adView = [[FBAdView alloc] initWithPlacementID:@"YOUR_PLACEMENT_ID"
+                                               adSize:adSize
+                                   rootViewController:self];
 
   // Set a delegate to get notified on changes or when the user interact with the ad.
   self.adView.delegate = self;
@@ -51,21 +59,26 @@
   // Initiate a request to load an ad.
   [self.adView loadAd];
 
-  // Reposition the ad and add it to the view hierarchy.
-  CGRect screenRect = [[UIScreen mainScreen] bounds];
-  self.adView.frame =
-  CGRectOffset(self.adView.frame,
-               0,
-               screenRect.size.height - kFBAdSize320x50.size.height);
+  // Reposition the adView to the bottom of the screen
+  CGSize viewSize = self.view.bounds.size;
+  CGFloat bottomAlignedY = viewSize.height - adSize.size.height;
+  self.adView.frame = CGRectMake(0, bottomAlignedY, viewSize.width, adSize.size.height);
+
+  // Set autoresizingMask so the rotation is automatically handled
+  self.adView.autoresizingMask =
+    UIViewAutoresizingFlexibleRightMargin |
+    UIViewAutoresizingFlexibleLeftMargin|
+    UIViewAutoresizingFlexibleWidth |
+    UIViewAutoresizingFlexibleTopMargin;
+
+  // Add adView to the view hierarchy.
   [self.view addSubview:self.adView];
-
 }
-
 
 #pragma mark - IB Actions
 
-- (IBAction)loadInterstitalTapped:(id)sender {
-
+- (IBAction)loadInterstitalTapped:(id)sender
+{
   self.interstitalStatusLabel.text = @"Loading interstitial ad...";
 
   // Create the interstitial unit with a placement ID (generate your own on the Facebook app settings).
@@ -79,8 +92,8 @@
   [self.interstitialAd loadAd];
 }
 
-- (IBAction)showInterstitialTapped:(id)sender {
-
+- (IBAction)showInterstitialTapped:(id)sender
+{
   if (!self.interstitialAd || !self.interstitialAd.isAdValid)
   {
     // Ad not ready to present.
@@ -93,7 +106,15 @@
   }
 }
 
-#pragma mark - FBInterstitialAdDelegate implementation
+#pragma mark - FBAdViewDelegate implementation
+
+// Implement this function if you want to change the viewController after the FBAdView
+// is created. The viewController will be used to present the modal view (such as the
+// in-app browser that can appear when an ad is clicked).
+// - (UIViewController *)viewControllerForPresentingModalView
+// {
+//   return self;
+// }
 
 - (void)adViewDidClick:(FBAdView *)adView
 {
@@ -121,6 +142,11 @@
 
   // Hide the unit since no ad is shown.
   adView.hidden = YES;
+}
+
+- (void)adViewWillLogImpression:(FBAdView *)adView
+{
+  NSLog(@"Ad impression is being captured.");
 }
 
 #pragma mark - FBInterstitialAdDelegate implementation
@@ -153,6 +179,11 @@
 - (void)interstitialAdWillClose:(FBInterstitialAd *)interstitialAd
 {
   NSLog(@"Interstitial will close.");
+}
+
+- (void)interstitialAdWillLogImpression:(FBInterstitialAd *)interstitialAd
+{
+  NSLog(@"Interstitial impression is being captured.");
 }
 
 @end

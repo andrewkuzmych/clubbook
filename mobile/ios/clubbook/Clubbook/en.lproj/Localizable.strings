@@ -34,6 +34,7 @@
 "termsUrl" = "http://clubbookapp.herokuapp.com/terms";
 "privacyUrl" = "http://clubbookapp.herokuapp.com/privacy";
 "facebookPost" = "We don't post anything to Facebook.";
+"faqUrl" = "http://clubbookapp.herokuapp.com/faq";
 
 "checkApp" = "Hey there! I'm using Clubbook. Check it out!";
 "wrongName" = "Wrong Name";
@@ -46,7 +47,7 @@
 "error" = "Error";
 "kilometers" = "km";
 "meters" = "m";
-"invite_for_drink" = "Invite you for a Drink";
+"invite_for_drink" = "%@ invites you for a Drink";
 "send_like" = "likes your Profile";
 "email"= "Email";
 "pass"= "Password (minimum 6 characters)";
@@ -94,15 +95,14 @@
 "not_checked_in" = "Not Checked-in";
 "checked_in" = "Checked-in:";
 "chat_limit" = "You cannot send more than 3 messages to this user without receiving a reply";
-"checkin_distance" = "You need to be %d meters closer to this Club in order to Check-in";
-
-
+"checkin_distance" = "You need to be closer to this Club in order to Check-in.";
 "clubs" = "Clubs";
 "messages" = "Messages";
 "friends" = "Friends";
 "settings" = "Settings";
 "share" = "Share";
 "checkedIn" = "Checked-in";
+"fast_checkin" = "Fast Check-in";
 "friends_lower" = "Friends";
 "nearby" = "Nearby";
 "az" = "A-Z";
@@ -144,4 +144,31 @@
 "forgotPass" = "forgot password?";
 "resetPassUrl" = "http://clubbookapp.herokuapp.com/reset_pass";
 "ageLimit" = "You must be 18+ age to use Clubbook";
-
+"resetPass"= "Reset Password";
+"currentPass"= "Current password";
+"newPass"= "New password";
+"confirmNewPass"= "Confirm new password";
+"passDidNotMatch"= "You must enter the same password twice in oreder to confirm it";
+"passChanged"="Password changed.";
+"fbLoginCannotChangePass"= "You cannot change password because you logged in using Facebook";
+"noMessages"="no messages";
+"noFriendsAdded"="No Friends Added";
+"noRequestsAdded"="No Friend Requests";
+"blockUser"="Block User";
+"unblockUser"="Unblock User";
+"about" = "About";
+"checkinInfo" = "You will be automatically Checked-in to this Club for 6 hours, or until you manually Check-out or Check-in to another Club. ";
+"gotCheckinInfo" = "Ok. Got it!";
+"unblockingUser" = "Unblocking user...";
+"blockingUser" = "Blocking user...";
+"add_friends" = "Add+";
+"or" = "Or";
+"whoIsOn" = "See who is already on Clubbook";
+"invateFbFriends" = "Invite friends by Facebook";
+"findFbFriends" = "Find friends by Facebook";
+"noUsersCheckedIn" = "Currently no users Checked-in";
+"noAccessToYesterday" = "Sorry, you cannot access this information, because you were not Checked-in to this Club yesterday";
+"yesterday" = "Yesterday";
+"noClubCheckins" = "There are no Fast Check-in spots available";
+"goto" = "Go to";
+"all" = "All";

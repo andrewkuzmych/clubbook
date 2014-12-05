@@ -55,7 +55,7 @@
     self._manager.communicator.delegate = self._manager;
     self._manager.delegate = self;
     
-      self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
 }
 
 - (void)failedWithError:(NSError *)error

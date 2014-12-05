@@ -14,6 +14,7 @@
 #import "ErrorViewController.h"
 #import "UnreadMessages.h"
 #import "Config.h"
+#import "UsersYesterday.h"
 
 
 @implementation ClubbookManager
@@ -39,14 +40,24 @@
     [self.communicator chat:user_from user_to:user_to msg:msg msg_type:msg_type accessToken:accessToken];
 }
 
-- (void)retrievePlaces:(double) lat lon:(double) lon accessToken:(NSString *) accessToken
+- (void)retrievePlaces:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance accessToken:(NSString *) accessToken;
 {
-    [self.communicator retrievePlaces:lat lon:lon accessToken:accessToken];
+    [self.communicator retrievePlaces:lat lon:lon take:take skip:skip distance:(int) distance accessToken:accessToken];
 }
 
 - (void)retrievePlace:(NSString *) clubId accessToken:(NSString *) accessToken
 {
     [self.communicator retrievePlace:clubId accessToken:accessToken];
+}
+
+- (void)retrievePlaceUsers:(NSString *) clubId accessToken:(NSString *) accessToken
+{
+    [self.communicator retrievePlaceUsers:clubId accessToken:accessToken];
+}
+
+- (void)retrievePlaceUsersYesterday:(NSString *) clubId accessToken:(NSString *) accessToken
+{
+    [self.communicator retrievePlaceUsersYesterday:clubId accessToken:accessToken];
 }
 
 - (void)retrieveUser:(NSString *) accessToken
@@ -139,9 +150,19 @@
     [self.communicator removeFriend:userId friendId:friendId accessToken:accessToken];
 }
 
+- (void)updateUserLocation:(double) lat lon:(double) lon accessToken:(NSString *) accessToken
+{
+    [self.communicator updateUserLocation:lat lon:lon accessToken:accessToken];
+}
+
 - (void)removeFriendRequest:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken
 {
     [self.communicator removeFriendRequest:userId friendId:friendId accessToken:accessToken];
+}
+
+- (void)receivedUsers:(BOOL)all take:(int) take skip:(int) skip lat:(double) lat lon:(double) lon distance:(double) distance accessToken:(NSString *) accessToken
+{
+    [self.communicator receivedUsers:all take:take skip:skip lat:lat lon:lon distance:distance accessToken:accessToken];
 }
 
 - (void)retrieveFriends:(NSString *) userId accessToken:(NSString *) accessToken
@@ -152,6 +173,31 @@
 - (void)retrievePendingFriends:(NSString *) userId accessToken:(NSString *) accessToken
 {
     [self.communicator retrievePendingFriends:userId accessToken:accessToken];
+}
+
+- (void)changePass:(NSString *) oldPass newPass:(NSString *) newPass accessToken:(NSString *) accessToken
+{
+    [self.communicator changePass:oldPass newPass:newPass accessToken:accessToken];
+}
+
+- (void)blockUser:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken;
+{
+    [self.communicator blockUser:userId friendId:friendId accessToken:accessToken];
+}
+
+- (void)unblockUser:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken
+{
+    [self.communicator unblockUser:userId friendId:friendId accessToken:accessToken];
+}
+
+- (void)inviteFbFriends:(NSString *) userId fb_ids:(NSArray *) fb_ids accessToken:(NSString *) accessToken
+{
+    [self.communicator inviteFbFriends:userId fb_ids:fb_ids accessToken:accessToken];
+}
+
+- (void)findFbFriends:(NSArray *) fb_ids accessToken:(NSString *) accessToken
+{
+    [self.communicator findFbFriends:fb_ids accessToken:accessToken];
 }
 
 - (void)getConfig
@@ -175,13 +221,13 @@
 - (void)receivedFriendsJSON:(NSData *)objectNotation
 {
     NSError *error = nil;
-    NSArray *friends = [ObjectBuilder friendsJSON:objectNotation error:&error];
+    FriendsResult *friendsResult = [ObjectBuilder friendsJSON:objectNotation error:&error];
     
     if (error != nil) {
         [self.delegate  failedWithError:error];
         
     } else {
-        [self.delegate didRetrieveFriends:friends];
+        [self.delegate didRetrieveFriends:friendsResult];
     }
 }
 
@@ -201,16 +247,40 @@
 - (void)receivedPendingFriendsJSON:(NSData *)objectNotation
 {
     NSError *error = nil;
-    NSArray *friends = [ObjectBuilder friendsJSON:objectNotation error:&error];
+    FriendsResult *friendsResult  = [ObjectBuilder friendsJSON:objectNotation error:&error];
     
     if (error != nil) {
         [self.delegate  failedWithError:error];
         
     } else {
-        [self.delegate didRetrievePendingFriends:friends];
+        [self.delegate didRetrievePendingFriends:friendsResult];
     }
 }
 
+- (void)updateUserLocationJSON:(NSData *)objectNotation
+{
+    NSError *error = nil;
+    
+    if (error != nil) {
+        [self.delegate  failedWithError:error];
+        
+    } else {
+        [self.delegate didUpdateUserLocation:@"ok"];
+    }
+}
+- (void)changePassJSON:(NSData *)objectNotation
+{
+    NSError *error = nil;
+    BOOL result = [ObjectBuilder changePassFromJSON:objectNotation error:&error];
+    
+    if (error != nil) {
+        [self.delegate  failedWithError:error];
+        
+    } else {
+        [self.delegate didChangePass:result];
+    }
+    
+}
 
 - (void)sendFriendJSON:(NSData *)objectNotation
 {
@@ -411,6 +481,7 @@
     }
 }
 
+
 - (void)receivedConversationsJSON:(NSData *)objectNotation
 {
     NSError *error = nil;
@@ -464,6 +535,45 @@
     }
 }
 
+- (void)receivedPlaceUsersJSON:(NSData *)objectNotation
+{
+    NSError *error = nil;
+    NSArray *users = [ObjectBuilder placeUsersFromJSON:objectNotation error:&error];
+    
+    if (error != nil) {
+        [self.delegate  failedWithError:error];
+        
+    } else {
+        [self.delegate didReceivePlaceUsers:users];
+    }
+}
+
+- (void)receivedUsersCheckedinJSON:(NSData *)objectNotation
+{
+    NSError *error = nil;
+    NSArray *users = [ObjectBuilder placeUsersFromJSON:objectNotation error:&error];
+    
+    if (error != nil) {
+        [self.delegate  failedWithError:error];
+        
+    } else {
+        [self.delegate didReceiveUsersCheckedin:users];
+    }
+}
+
+- (void)receivedPlaceUsersYesterdayJSON:(NSData *)objectNotation
+{
+    NSError *error = nil;
+    UsersYesterday *usersYesterday = [ObjectBuilder placeUsersYesterdayFromJSON:objectNotation error:&error];
+    
+    if (error != nil) {
+        [self.delegate  failedWithError:error];
+        
+    } else {
+        [self.delegate didReceivePlaceUsersYesterday:usersYesterday];
+    }
+}
+
 - (void)signupJSON:(NSData *)objectNotation
 {
     NSError *error = nil;
@@ -514,6 +624,58 @@
         
     } else {
         [self.delegate didFbLoginUser:user];
+    }
+}
+
+- (void)blockUserJSON:(NSData *)objectNotation
+{
+    NSError *error = nil;
+    //User *user = [ObjectBuilder fbLoginFromJSON:objectNotation error:&error];
+    
+    if (error != nil) {
+        [self.delegate  failedWithError:error];
+        
+    } else {
+        [self.delegate didBlockUser:@"ok"];
+    }
+}
+
+- (void)unblockUserJSON:(NSData *)objectNotation
+{
+    NSError *error = nil;
+    //User *user = [ObjectBuilder fbLoginFromJSON:objectNotation error:&error];
+    
+    if (error != nil) {
+        [self.delegate  failedWithError:error];
+        
+    } else {
+        [self.delegate didUnblockUser:@"ok"];
+    }
+}
+
+- (void)inviteFbFriendsJSON:(NSData *)objectNotation
+{
+    NSError *error = nil;
+    //User *user = [ObjectBuilder fbLoginFromJSON:objectNotation error:&error];
+    
+    if (error != nil) {
+        [self.delegate  failedWithError:error];
+        
+    } else {
+        [self.delegate didInviteFbFriends:@"ok"];
+    }
+}
+
+- (void)findFbFriendsJSON:(NSData *)objectNotation
+{
+    NSError *error = nil;
+    NSArray *users = [ObjectBuilder usersJSON:objectNotation error:&error];
+    
+    if (error != nil) {
+        [self.delegate  failedWithError:error];
+        
+    } else {
+        [self.delegate didFindFbFriends:users];
     }
 }
 

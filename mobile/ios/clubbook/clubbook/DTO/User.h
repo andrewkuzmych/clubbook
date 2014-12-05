@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "BaseDto.h"
+#import "Place.h"
 
 @interface User : BaseDto
 
@@ -23,8 +24,11 @@
 @property (strong, nonatomic) NSString *country;
 @property (strong, nonatomic) NSString *access_token;
 @property (strong, nonatomic) NSString *currentCheckinClubName;
+@property (strong, nonatomic) Place *place;
 @property (strong, nonatomic) NSMutableArray *photos;
+@property (assign, nonatomic) BOOL isFb;
 @property (assign, nonatomic) BOOL isFriend;
 @property (assign, nonatomic) BOOL push;
+@property (assign, nonatomic) BOOL isBlocked;
 
 @end

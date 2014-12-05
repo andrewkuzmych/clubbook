@@ -31,6 +31,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.title = @"Login";
     [self.navigationController setNavigationBarHidden:NO];
 
     UIToolbar *baseToolbar = [self generateToolbarForKeyboard];

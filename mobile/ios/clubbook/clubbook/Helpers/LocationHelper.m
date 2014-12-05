@@ -55,23 +55,24 @@ static Place * clubCheckin;
     return NO;
 }
 
-+ (void)startLocationUpdate:(Place *) club
++ (void)addCheckin:(Place *) club
 {
-    manager = [[ClubbookManager alloc] init];
+    /*manager = [[ClubbookManager alloc] init];
     manager.communicator = [[ClubbookCommunicator alloc] init];
     manager.communicator.delegate = manager;
     manager.delegate = [self class];
     
     [self stopTimer];
+    */
     
     clubCheckin = club;
-    NSTimeInterval time = [GlobalVars getInstance].CheckinUpdateTime;
+    /*NSTimeInterval time = [GlobalVars getInstance].CheckinUpdateTime;
 	locationUpdateTimer =
     [NSTimer scheduledTimerWithTimeInterval:time
                                      target:[self class]
                                    selector:@selector(updateLocation:)
                                    userInfo:nil
-                                    repeats:YES];
+                                    repeats:YES];*/
 }
 
 
@@ -95,7 +96,7 @@ static Place * clubCheckin;
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
     [manager checkout:clubCheckin.id accessToken:accessToken userInfo:nil];
     
-    [self stopTimer];
+    [self removeCheckin];
 }
 
 + (void)didCheckout:(User *) user userInfo:(NSObject *)userInfo
@@ -103,9 +104,9 @@ static Place * clubCheckin;
 
 }
 
-+ (void) stopTimer{
++ (void) removeCheckin{
     clubCheckin = nil;
-    [locationUpdateTimer invalidate];
+    //[locationUpdateTimer invalidate];
 }
 
 + (void)didUpdateCheckin:(User *)user

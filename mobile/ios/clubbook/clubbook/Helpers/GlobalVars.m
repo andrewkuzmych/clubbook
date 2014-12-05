@@ -12,6 +12,8 @@
 @synthesize MaxCheckinRadius;
 @synthesize MaxFailedCheckin;
 @synthesize CheckinUpdateTime;
+@synthesize PushNavigationPage;
+@synthesize ChatUserId;
 
 static GlobalVars *instance = nil;
 

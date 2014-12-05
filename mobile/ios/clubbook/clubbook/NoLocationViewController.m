@@ -27,12 +27,29 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(appplicationIsActive:)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationEnteredForeground:)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)appplicationIsActive:(NSNotification *)notification {
+    [self performSegueWithIdentifier: @"onMain" sender: nil];
+}
+
+- (void)applicationEnteredForeground:(NSNotification *)notification {
+    [self performSegueWithIdentifier: @"onMain" sender: nil];
 }
 
 

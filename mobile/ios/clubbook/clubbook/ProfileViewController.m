@@ -396,7 +396,6 @@
 
 - (IBAction)saveAction:(id)sender
 {
-    
     NSString *wrongName = [NSString stringWithFormat:NSLocalizedString(@"wrongName", nil)];
     NSString *wrongDob = [NSString stringWithFormat:NSLocalizedString(@"wrongDob", nil)];
     NSString *wrongGender = [NSString stringWithFormat:NSLocalizedString(@"wrongGender", nil)];

@@ -12,6 +12,9 @@
 #import "Chat.h"
 #import "UnreadMessages.h"
 #import "Config.h"
+#import "FriendsResult.h"
+#import "UsersYesterday.h"
+
 
 @protocol ClubbookManagerDelegate <NSObject>
 
@@ -23,10 +26,13 @@
   - (void)didChat:(NSString *)result;
   - (void)didReceivePlaces:(NSArray *)places;
   - (void)didReceivePlace:(Place *)place;
+  - (void)didReceivePlaceUsers:(NSArray *)users;
+  - (void)didReceivePlaceUsersYesterday:(UsersYesterday *)usersYesterday;
+  - (void)didReceiveUsersCheckedin:(NSArray *)users;
   - (void)didReceiveUser:(User *)user;
   - (void)didReceiveFriend:(User *)user;
-  - (void)didRetrieveFriends:(NSArray *)friends;
-  - (void)didRetrievePendingFriends:(NSArray *)friends;
+  - (void)didRetrieveFriends:(FriendsResult *)friendsResult;
+  - (void)didRetrievePendingFriends:(FriendsResult *)friendsResult;
   - (void)didReceiveConversation:(Chat *)chat;
   - (void)didReceiveConversations:(NSArray *)chats;
   - (void)didUnreadMessages:(UnreadMessages *)unreadMessages;
@@ -39,12 +45,19 @@
   - (void)didDeleteUserImage:(User *)user;
   - (void)didUpdateUser:(User *)user;
   - (void)didDeleteUser:(NSString *)result;
+  - (void)didUpdateUserLocation:(NSString *)result;
+  - (void)didChangePass:(BOOL)result;
   - (void)didSendFriend:(User *)user;
   - (void)didConfirmFriend:(User *)user;
   - (void)didRemoveFriend:(User *)user;
   - (void)didRemoveFriendRequest:(User *)user;
   - (void)didChangePush:(User *)user;
   - (void)didGetConfig:(Config *)config;
+
+  - (void)didBlockUser:(NSString *)result;
+  - (void)didUnblockUser:(NSString *)result;
+  - (void)didInviteFbFriends:(NSString *)result;
+  - (void)didFindFbFriends:(NSArray *)users;
 
   - (void)failedWithError:(NSError *)error;
 

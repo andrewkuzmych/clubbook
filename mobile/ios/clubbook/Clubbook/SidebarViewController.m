@@ -40,9 +40,13 @@
 {
     [super viewDidLoad];
 
-    self.tableView.backgroundColor = [UIColor colorWithRed:52/256.0 green:3/256.0 blue:69/256.0 alpha:1.0];
+    //self.tableView.backgroundColor = [UIColor colorWithRed:52/256.0 green:3/256.0 blue:69/256.0 alpha:1.0];
+    UIImageView *tempImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+    tempImg.contentMode = UIViewContentModeScaleAspectFill;
+    [tempImg setImage:[UIImage imageNamed:@"menu_background.png"]];
+    [self.tableView setBackgroundView:tempImg];
     
-    _menuItems = @[@"title", @"clubs", @"messages", @"friends", @"settings", @"share"];
+    _menuItems = @[@"title", @"clubs", @"checkedIn", @"fast_checkin", @"messages", @"friends", @"settings", @"share"];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -59,10 +63,11 @@
     [PubNub setDelegate:self];
     
     // clear badge value
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    currentInstallation.badge = 0;
-    [currentInstallation saveEventually];
+    //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    //PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    //NSInteger b =  currentInstallation.badge;
+    //currentInstallation.badge = 0;
+    //[currentInstallation saveEventually];
     
     [self loadData];
 }
@@ -221,7 +226,7 @@
         //NSIndexPath *selectedIndexPath = [self.clubTable indexPathForSelectedRow];
         Place *place = (Place*) sender;
         clubController.hasBack = NO;
-        clubController.placeId = place.id;
+        clubController.place = place;
     }
  
     // Set the title of navigation bar by using the menu items
@@ -289,7 +294,7 @@
 - (void)didCheckout:(User *) user userInfo:(NSObject *)userInfo
 {
     [self hideProgress];
-    [LocationHelper stopTimer];
+    [LocationHelper removeCheckin];
     [self.tableView reloadData];
 }
 

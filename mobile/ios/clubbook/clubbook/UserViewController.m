@@ -15,13 +15,15 @@
 #import "UIView+StringTagAdditions.h"
 #import "CSNotificationView.h"
 #import "LocationHelper.h"
+#import "TransitionFromUserToClubUsers.h"
+#import "ClubUsersViewController.h"
 
-@interface UserViewController (){
-    User *_user;
+@interface UserViewController ()<UINavigationControllerDelegate>{
+   // User *_user;
     float oldX;
     float oldUserX;
 }
-
+@property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactivePopTransition;
 
 @end
 
@@ -36,35 +38,34 @@
     return self;
 }
 
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     self.title = NSLocalizedString(@"userProfile", nil);
     
-    self.connectButton.layer.borderColor = [UIColor whiteColor].CGColor;
-    self.nameLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:16.0];
-    self.connectButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:14.0];
-    self.ageLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
-    self.addFriendButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
-    self.countryLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
-    self.aboutMeTitleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15.0];
-    self.aboutMeTitleLabel.text = NSLocalizedString(@"aboutMe", nil);
-    self.aboutMeLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
-    
-    [self loadUser];
-    // Do any additional setup after loading the view.
+    [self populatedWithData];
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    // Stop being the navigation controller's delegate
+    if (self.navigationController.delegate == self) {
+        self.navigationController.delegate = nil;
+    }
     self.navigationController.navigationBar.translucent = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    // Set outself as the navigation controller's delegate so we're asked for a transitioning object
+    self.navigationController.delegate = self;
     
     //Google Analytics
     id tracker = [[GAI sharedInstance] defaultTracker];
@@ -81,88 +82,245 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)populatedWithData
+{
+    UIScreenEdgePanGestureRecognizer *popRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePopRecognizer:)];
+    popRecognizer.edges = UIRectEdgeLeft;
+    [self.view addGestureRecognizer:popRecognizer];
+    
+    
+    self.connectButton.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.nameLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:16.0];
+    self.connectButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:14.0];
+    self.ageLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
+    self.addFriendButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
+    self.blockUnblockButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
+    self.countryLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
+    self.aboutMeTitleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15.0];
+    self.aboutMeTitleLabel.text = NSLocalizedString(@"aboutMe", nil);
+    self.aboutMeLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
+    
+    
+    [self.imageScrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    for (int i = 0; i < [self.user.photos count]; i++) {
+        CGRect frame;
+        frame.origin.x = self.imageScrollView.frame.size.width * i;
+        frame.origin.y = 0;
+        frame.size = self.imageScrollView.frame.size;
+        
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        
+        // transform avatar
+        CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
+        CLTransformation *transformation = [CLTransformation transformation];
+        [transformation setParams: @{@"width": @450, @"height": @450, @"crop": @"fit"}];
+        //c_fit,h_450,w_450/v140483
+        NSString *avatarUrl = [cloudinary url: [[self.user.photos objectAtIndex:i] valueForKey:@"public_id"] options:@{@"transformation": transformation}];
+        
+        [imageView setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
+        [imageView setBackgroundColor:[UIColor whiteColor]];
+        [self.imageScrollView addSubview:imageView];
+        
+    }
+    
+    [self.addFriendButton setButtonState:self.user.friend_status];
+    [self.blockUnblockButton setButtonState:NSLocalizedString(@"friend", nil)];
+    
+    self.nameLabel.text = self.user.name;
+    self.imageScrollView.delegate = self;
+    
+    NSString *firstCapChar = [[self.user.country substringToIndex:1] capitalizedString];
+    NSString *cappedCountry = [self.user.country stringByReplacingCharactersInRange:NSMakeRange(0,1) withString:firstCapChar];
+    self.countryLabel.text = cappedCountry;
+    
+    self.checkinLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
+    if (self.clubCheckinName != nil) {
+        self.checkinLabel.hidden = NO;
+        [self.checkinLabel setText: [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"checked_in", nil), self.clubCheckinName]];
+    } else {
+        self.checkinLabel.hidden = YES;
+    }
+    
+    
+    if (self.user.bio != nil) {
+        self.aboutMeLabel.text = self.user.bio;
+    } else {
+        self.aboutMeLabel.text = NSLocalizedString(@"defoutBio", nil);
+    }
+    NSString* userAge = self.user.age;
+    NSString* userGender = self.user.gender;
+    
+    //defoutBio
+    if (userAge != nil) {
+        self.ageLabel.text = [NSString stringWithFormat:@"%@, %@",userAge, NSLocalizedString(userGender, nil)];
+    }
+    
+    self.imagePageView.numberOfPages = self.imageScrollView.subviews.count;
+    
+    self.imageScrollView.contentSize = CGSizeMake(self.imageScrollView.frame.size.width * [self.user.photos count]  , self.imageScrollView.frame.size.height + 2);
+    
+    if (self.user.isBlocked) {
+        [self.blockUnblockButton setTitle:NSLocalizedString(@"unblockUser", nil) forState:UIControlStateNormal];
+    } else {
+        [self.blockUnblockButton setTitle:NSLocalizedString(@"blockUser", nil) forState:UIControlStateNormal];
+    }
+    
+    
+    [self pupulateOtherUserPhotos];
+}
+
+#pragma mark UINavigationControllerDelegate methods
+
+- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
+                                  animationControllerForOperation:(UINavigationControllerOperation)operation
+                                               fromViewController:(UIViewController *)fromVC
+                                                 toViewController:(UIViewController *)toVC {
+    // Check if we're transitioning from this view controller to a DSLFirstViewController
+    if (fromVC == self && [toVC isKindOfClass:[ClubUsersViewController class]]) {
+        return [[TransitionFromUserToClubUsers alloc] init];
+    }
+    else {
+        return nil;
+    }
+}
+
+
+- (id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController
+                         interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController {
+    // Check if this is for our custom transition
+    if ([animationController isKindOfClass:[TransitionFromUserToClubUsers class]]) {
+        return self.interactivePopTransition;
+    }
+    else {
+        return nil;
+    }
+}
+
+
+#pragma mark UIGestureRecognizer handlers
+
+- (void)handlePopRecognizer:(UIScreenEdgePanGestureRecognizer*)recognizer {
+    CGFloat progress = [recognizer translationInView:self.view].x / (self.view.bounds.size.width * 1.0);
+    progress = MIN(1.0, MAX(0.0, progress));
+    
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        // Create a interactive transition and pop the view controller
+        self.interactivePopTransition = [[UIPercentDrivenInteractiveTransition alloc] init];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    else if (recognizer.state == UIGestureRecognizerStateChanged) {
+        // Update the interactive transition's progress
+        [self.interactivePopTransition updateInteractiveTransition:progress];
+    }
+    else if (recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled) {
+        // Finish or cancel the interactive transition
+        if (progress > 0.5) {
+            [self.interactivePopTransition finishInteractiveTransition];
+        }
+        else {
+            [self.interactivePopTransition cancelInteractiveTransition];
+        }
+        
+        self.interactivePopTransition = nil;
+    }
+    
+}
+
+
 - (void)loadUser
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSString *accessToken = [defaults objectForKey:@"accessToken"];
-        [self._manager retrieveFriend:self.userId accessToken:accessToken];
+        [self._manager retrieveFriend:self.user.id accessToken:accessToken];
         [self showProgress:YES title:nil];
     });
 }
 
-- (void)didReceiveFriend:(User *)user
+//- (void)didReceiveFriend:(User *)user
+//{
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [self hideProgress];
+//        
+//        [self.imageScrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+//        
+//        for (int i = 0; i < [user.photos count]; i++) {
+//            CGRect frame;
+//            frame.origin.x = self.imageScrollView.frame.size.width * i;
+//            frame.origin.y = 0;
+//            frame.size = self.imageScrollView.frame.size;
+//            
+//            UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
+//            imageView.contentMode = UIViewContentModeScaleAspectFit;
+//            
+//            // transform avatar
+//            CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
+//            CLTransformation *transformation = [CLTransformation transformation];
+//            [transformation setParams: @{@"width": @450, @"height": @450, @"crop": @"fit"}];
+//            //c_fit,h_450,w_450/v140483
+//            NSString *avatarUrl = [cloudinary url: [[user.photos objectAtIndex:i] valueForKey:@"public_id"] options:@{@"transformation": transformation}];
+//
+//            [imageView setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
+//            [imageView setBackgroundColor:[UIColor blackColor]];
+//            [self.imageScrollView addSubview:imageView];
+//            
+//        }
+//        
+//        [self.addFriendButton setButtonState:user.friend_status];
+//
+//        self.nameLabel.text = user.name;
+//        self.imageScrollView.delegate = self;
+//        
+//        NSString *firstCapChar = [[user.country substringToIndex:1] capitalizedString];
+//        NSString *cappedCountry = [user.country stringByReplacingCharactersInRange:NSMakeRange(0,1) withString:firstCapChar];
+//        self.countryLabel.text = cappedCountry;
+//        
+//        self.checkinLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
+//        if (self.clubCheckinName != nil) {
+//            self.checkinLabel.hidden = NO;
+//            [self.checkinLabel setText: [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"checked_in", nil), self.clubCheckinName]];
+//        } else {
+//            self.checkinLabel.hidden = YES;
+//        }
+//
+//        
+//        if (user.bio != nil) {
+//            self.aboutMeLabel.text = user.bio;
+//        } else {
+//            self.aboutMeLabel.text = NSLocalizedString(@"defoutBio", nil);
+//        }
+//        NSString* userAge = user.age;
+//        NSString* userGender = user.gender;
+//        
+//        //defoutBio
+//        if (userAge != nil) {
+//            self.ageLabel.text = [NSString stringWithFormat:@"%@, %@",userAge, NSLocalizedString(userGender, nil)];
+//        }
+//        
+//        self.imagePageView.numberOfPages = self.imageScrollView.subviews.count;
+//        
+//        self.imageScrollView.contentSize = CGSizeMake(self.imageScrollView.frame.size.width * [user.photos count]  , self.imageScrollView.frame.size.height + 2);
+//       
+//        _user = user;
+//
+//        [self setBlockButtonStatus];
+//  
+//        [self pupulateOtherUserPhotos];
+//        
+//        
+//    });
+//}
+//
+- (void)setBlockButtonStatus
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self hideProgress];
-        
-        [self.imageScrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-        
-        for (int i = 0; i < [user.photos count]; i++) {
-            CGRect frame;
-            frame.origin.x = self.imageScrollView.frame.size.width * i;
-            frame.origin.y = 0;
-            frame.size = self.imageScrollView.frame.size;
-            
-            UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
-            imageView.contentMode = UIViewContentModeScaleAspectFit;
-            
-            // transform avatar
-            CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
-            CLTransformation *transformation = [CLTransformation transformation];
-            [transformation setParams: @{@"width": @450, @"height": @450, @"crop": @"fit"}];
-            //c_fit,h_450,w_450/v140483
-            NSString *avatarUrl = [cloudinary url: [[user.photos objectAtIndex:i] valueForKey:@"public_id"] options:@{@"transformation": transformation}];
-
-            [imageView setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
-            [imageView setBackgroundColor:[UIColor blackColor]];
-            [self.imageScrollView addSubview:imageView];
-            
-        }
-        
-        [self.addFriendButton setButtonState:user.friend_status];
-
-        self.nameLabel.text = user.name;
-        self.imageScrollView.delegate = self;
-        
-        NSString *firstCapChar = [[user.country substringToIndex:1] capitalizedString];
-        NSString *cappedCountry = [user.country stringByReplacingCharactersInRange:NSMakeRange(0,1) withString:firstCapChar];
-        self.countryLabel.text = cappedCountry;
-        
-        self.checkinLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
-        if (self.clubCheckinName != nil) {
-            self.checkinLabel.hidden = NO;
-            [self.checkinLabel setText: [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"checked_in", nil), self.clubCheckinName]];
-        } else {
-            self.checkinLabel.hidden = YES;
-        }
-
-        
-        if (user.bio != nil) {
-            self.aboutMeLabel.text = user.bio;
-        } else {
-            self.aboutMeLabel.text = NSLocalizedString(@"defoutBio", nil);
-        }
-        NSString* userAge = user.age;
-        NSString* userGender = user.gender;
-        
-        //defoutBio
-        if (userAge != nil) {
-            self.ageLabel.text = [NSString stringWithFormat:@"%@, %@",userAge, NSLocalizedString(userGender, nil)];
-        }
-        
-        self.imagePageView.numberOfPages = self.imageScrollView.subviews.count;
-        
-        self.imageScrollView.contentSize = CGSizeMake(self.imageScrollView.frame.size.width * [user.photos count]  , self.imageScrollView.frame.size.height + 2);
-            
-        _user = user;
-  
-        [self pupulateOtherUserPhotos];
-        
-        
-    });
+    if (_user.isBlocked) {
+        [self.blockUnblockButton setTitle:NSLocalizedString(@"unblockUser", nil) forState:UIControlStateNormal];
+    } else {
+        [self.blockUnblockButton setTitle:NSLocalizedString(@"blockUser", nil) forState:UIControlStateNormal];
+    }
 }
-
 
 - (void)pupulateOtherUserPhotos
 {
@@ -234,7 +392,7 @@
         return;
     }
 
-    self.userId = user.id;
+    self.user = user;
     [self loadUser];
 }
 
@@ -294,7 +452,7 @@
     if([[segue identifier] isEqualToString:@"onChat"]){
         ChatViewController *chatController =  [segue destinationViewController];
         chatController.isFromUser = YES;
-        chatController.userTo = self.userId;
+        chatController.userTo = self.user.id;
     }
 }
 
@@ -314,10 +472,10 @@
 
     if ([sender.friendState isEqualToString:NSLocalizedString(@"noneFriend", nil)]) {
         [self showProgress:NO title:NSLocalizedString(@"processing", nil)];
-        [self._manager sendFriendReguest:userId friendId:self.userId accessToken:accessToken];
+        [self._manager sendFriendReguest:userId friendId:self.user.id accessToken:accessToken];
     } else if ([sender.friendState isEqualToString:NSLocalizedString(@"receiveRequest", nil)]){
         [self showProgress:NO title:NSLocalizedString(@"processing", nil)];
-        [self._manager confirmFriendRequest:userId friendId:self.userId accessToken:accessToken];
+        [self._manager confirmFriendRequest:userId friendId:self.user.id accessToken:accessToken];
     } else if ([sender.friendState isEqualToString:NSLocalizedString(@"friend", nil)]){
         UIActionSheet *popup = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"youSureUnfriend", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:
                                 NSLocalizedString(@"yes", nil),
@@ -325,6 +483,36 @@
         [popup showInView:[UIApplication sharedApplication].keyWindow];
     }
 }
+
+- (IBAction)blockUnblockAction:(id)sender {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
+    NSString *userId = [defaults objectForKey:@"userId"];
+    
+    if (_user.isBlocked) {
+        [self showProgress:NO title:NSLocalizedString(@"unblockingUser", nil)];
+
+        [self._manager unblockUser:userId friendId:_user.id accessToken:accessToken];
+    } else {
+        [self showProgress:NO title:NSLocalizedString(@"blockingUser", nil)];
+        [self._manager blockUser:userId friendId:_user.id accessToken:accessToken];
+    }
+}
+
+- (void)didBlockUser:(NSString *)result
+{
+    _user.isBlocked = YES;
+    [self setBlockButtonStatus];
+    [self hideProgress];
+}
+
+- (void)didUnblockUser:(NSString *)result
+{
+    _user.isBlocked = NO;
+    [self setBlockButtonStatus];
+    [self hideProgress];
+}
+
 
 -(void)actionSheet:(UIActionSheet *)popup clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -337,7 +525,7 @@
         {
             // click yes
             [self showProgress:NO title:NSLocalizedString(@"processing", nil)];
-            [self._manager removeFriend:userId friendId:self.userId accessToken:accessToken];
+            [self._manager removeFriend:userId friendId:self.user.id accessToken:accessToken];
             break;
         }
         case 1:
@@ -348,5 +536,7 @@
     }
     
 }
+
+
 
 @end

@@ -60,7 +60,12 @@
          normalColor = [UIColor whiteColor];
          self.backgroundColor = normalColor;
          highlightedColor = [UIColor whiteColor];
-     } else{
+     } else if ([state isEqualToString:NSLocalizedString(@"white", nil)]) {
+         [self setTitleColor:[UIColor colorWithRed:100/255.0 green:100/255.0 blue:100/255.0 alpha:1.0] forState:UIControlStateNormal];
+         normalColor = [UIColor whiteColor];
+         self.backgroundColor = normalColor;
+         highlightedColor = normalColor;
+     }else{
          [self setTitle:NSLocalizedString(@"unfriendTitle", nil) forState:UIControlStateNormal];
          [self setTitleColor:[UIColor colorWithRed:100/255.0 green:100/255.0 blue:100/255.0 alpha:1.0] forState:UIControlStateNormal];
          normalColor = [UIColor whiteColor];

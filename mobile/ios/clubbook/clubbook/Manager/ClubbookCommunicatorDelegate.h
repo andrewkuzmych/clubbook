@@ -16,6 +16,10 @@
 - (void)signinJSON:(NSData *)objectNotation;
 - (void)receivedPlacesJSON:(NSData *)objectNotation;
 - (void)receivedPlaceJSON:(NSData *)objectNotation;
+- (void)receivedPlaceUsersJSON:(NSData *)objectNotation;
+- (void)receivedPlaceUsersYesterdayJSON:(NSData *)objectNotation;
+- (void)receivedUsersCheckedinJSON:(NSData *)objectNotation;
+- (void)updateUserLocationJSON:(NSData *)objectNotation;
 - (void)receivedUserJSON:(NSData *)objectNotation;
 - (void)receivedFriendsJSON:(NSData *)objectNotation;
 - (void)receivedPendingFriendsJSON:(NSData *)objectNotation;
@@ -37,7 +41,12 @@
 - (void)updateUserJSON:(NSData *)objectNotation;
 - (void)deleteUserJSON:(NSData *)objectNotation;
 - (void)changeUserPushJSON:(NSData *)objectNotation;
+- (void)changePassJSON:(NSData *)objectNotation;
 - (void)getConfigJSON:(NSData *)objectNotation;
+- (void)blockUserJSON:(NSData *)objectNotation;
+- (void)unblockUserJSON:(NSData *)objectNotation;
+- (void)inviteFbFriendsJSON:(NSData *)objectNotation;
+- (void)findFbFriendsJSON:(NSData *)objectNotation;
 
 - (void)failedWithError:(NSError *)error;
 

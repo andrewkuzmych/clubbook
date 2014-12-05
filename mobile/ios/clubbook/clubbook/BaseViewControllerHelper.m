@@ -16,6 +16,7 @@
 @implementation BaseViewControllerHelper{
     UIViewController* currentController;
     CSNotificationView* permanentNotification;
+    BOOL isProgress;
 }
 
 - (id)initBase:(UIViewController *)controller sidebarButton:(UIBarButtonItem *)sidebarButton
@@ -26,6 +27,8 @@
         // Set the side bar button action. When it's tapped, it'll show up the sidebar.
         if (sidebarButton != nil) {
             sidebarButton.target = currentController.revealViewController;
+           // [currentController.revealViewController revealToggle:nil];
+
             sidebarButton.action = @selector(revealToggle:);
             [currentController.view addGestureRecognizer:currentController.revealViewController.panGestureRecognizer];
         }
@@ -77,6 +80,10 @@
 
 -(void)showProgress: (BOOL) clearContext title:(NSString*) title
 {
+    if (isProgress) {
+        return;
+    }
+    isProgress = YES;
     self.loadingView = [[UIView alloc] initWithFrame:currentController.view.bounds];
     
     //[self.loadingView setBackgroundColor: [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:0.8]];
@@ -105,13 +112,14 @@
         self.spinner.hidden = NO;
     } else{
        // show loading under navigation bar
+
         permanentNotification =
         [CSNotificationView notificationViewWithParentViewController:currentController.navigationController
                                                            tintColor:[UIColor colorWithRed:153/255.0f green:0/255.0f blue:217/255.0f alpha:1]
                                                                image:nil message:title];
         
-        //[permanentNotification setShowingActivity:YES];
-        
+
+                [permanentNotification setShowingActivity:YES];
         [permanentNotification setVisible:YES animated:YES completion:^{}];
     }
 }
@@ -119,7 +127,12 @@
 -(void)hideProgress
 {
     if (permanentNotification!=nil) {
-        [permanentNotification dismiss];
+       
+        [permanentNotification setVisible:NO animated:NO completion:^{ }];
+         //[permanentNotification dismissWithStyle:CSNotificationViewStyleSuccess
+         //                                    message:@"Sucess!"
+         //                                   duration:kCSNotificationViewDefaultShowDuration animated:YES];
+        //[permanentNotification dismiss];
         permanentNotification = nil;
         
     }
@@ -128,5 +141,7 @@
     [MRProgressOverlayView dismissOverlayForView:currentController.navigationController.view animated:YES];
     [self.spinner stopAnimating];
     self.spinner.hidden = YES;
+    
+    isProgress = NO;
 }
 @end

@@ -25,6 +25,8 @@
     [defaults setObject:user.gender forKey:@"userGender"];
     [defaults setObject:user.avatar forKey:@"userAvatar"];
     [defaults setObject:user.access_token forKey:@"accessToken"];
+    [defaults setBool:user.isFb forKey:@"isFb"];
+
     [defaults setObject:(user.push) ? @"true" : @"false" forKey:@"userPush"];
 
     if (user.age != nil) {
@@ -50,7 +52,7 @@
     [defaults setObject:@"" forKey:@"userAge"];
     [defaults setObject:@"" forKey:@"accessToken"];
     
-    [LocationHelper stopTimer];
+    [LocationHelper removeCheckin];
     
     [defaults synchronize];
 }

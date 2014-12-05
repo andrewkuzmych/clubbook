@@ -7,27 +7,31 @@
 //
 
 #import "ClubUsersViewController.h"
+#import <FacebookSDK/FacebookSDK.h>
 #import "HeaderView.h"
 #import "ClubFooterView.h"
 #import "LocationManagerSingleton.h"
 #import "LocationHelper.h"
 #import "UIImageView+WebCache.h"
-#import "UserViewController.h"
+#import "UserProfileViewController.h"
 #import "ProfileCell.h"
 #import "Constants.h"
 #import "CSNotificationView.h"
 #import "Cloudinary.h"
 #import "ClubViewController.h"
 #import "GlobalVars.h"
+#import "TransitionFromClubUsersToUser.h"
+#import "ClubUsersYesterdayViewController.h"
+#import "ProfilePagesViewController.h"
 
-@interface ClubUsersViewController ()
+@interface ClubUsersViewController ()<UINavigationControllerDelegate>
 {
-    Place *_place;
+   // Place *_place;
+    NSArray *_users;
     int minUserCount;
+    float oldX;
 }
 
-@property (nonatomic, strong) HeaderView *headerView;
-@property (nonatomic, strong) ClubFooterView *clubFooterView;
 
 @end
 
@@ -42,32 +46,64 @@
     return self;
 }
 
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
     if (self.hasBack) {
         self.navigationItem.leftBarButtonItem = nil;
     }
     
     self.title = NSLocalizedString(@"clubProfile", nil);
-
-    // Do any additional setup after loading the view.
-    minUserCount = 10;
     
-    [self showProgress:YES title:nil];
+    //[self showProgress:YES title:nil];
     dispatch_async(dispatch_get_main_queue(), ^{
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSString *accessToken = [defaults objectForKey:@"accessToken"];
-        [self._manager retrievePlace:self.placeId accessToken:accessToken];
+        [self.clubFooterView.loadingIndicator startAnimating];
+        self.clubFooterView.loadingIndicator.hidden = NO;
+        
+        [self._manager retrievePlaceUsers:self.place.id accessToken:accessToken];
     });
     
+    [PubNub setDelegate:self];
     self.profileCollection.dataSource = self;
     self.profileCollection.delegate = self;
+    [self.clubFooterView collapse];
+    [self populateData];
+    
+}
+
+- (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message
+{
+
+    if ([message.channel.name isEqualToString:@"checkin"] ) {
+        
+        NSDictionary *dataJson = [message.message valueForKey:@"data"];
+        NSString *club  = [dataJson valueForKey:@"club"];
+        
+        if ([club isEqualToString:self.place.id] ) {
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            NSString *accessToken = [defaults objectForKey:@"accessToken"];
+            [self.clubFooterView.loadingIndicator startAnimating];
+            self.clubFooterView.loadingIndicator.hidden = NO;
+        
+            [self._manager retrievePlaceUsers:self.place.id accessToken:accessToken];
+        }
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+   // NSString *channal = [NSString stringWithFormat:@"checkin_%@", self.place.id];
+    //[PubNub subscribeOnChannel:[PNChannel channelWithName:channal shouldObservePresence:YES]];
+    
+      
+    // Set outself as the navigation controller's delegate so we're asked for a transitioning object
+    self.navigationController.delegate = self;
     
     //Google Analytics
     id tracker = [[GAI sharedInstance] defaultTracker];
@@ -76,85 +112,58 @@
     [tracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    //NSString *channal = [NSString stringWithFormat:@"%message_%@", self.place.id];
+
+    //[PubNub unsubscribeFromChannel:[PNChannel channelWithName:channal shouldObservePresence:YES]];
+    // Stop being the navigation controller's delegate
+    if (self.navigationController.delegate == self) {
+        self.navigationController.delegate = nil;
+    }
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-- (void)didReceivePlace:(Place *)place
+- (void)didReceivePlaceUsers:(NSArray *)users;
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self hideProgress];
-        self.headerView.checkinButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:16.0];
-        self.headerView.checkinCountLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
-        self.headerView.friendsCountLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
-        self.headerView.checkinCountTitleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
-        self.headerView.checkinCountTitleLabel.text = NSLocalizedString(@"checkedIn", nil);
-        self.headerView.friendsCountTitleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
-        self.headerView.friendsCountTitleLabel.text = NSLocalizedString(@"friends_lower", nil);
-        self.headerView.clubNameText.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:19.0];
-        self.headerView.openTodayLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
-        self.headerView.workingHoursLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
-        self.headerView.clubInfoButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
-        self.headerView.clubDistanceText.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15.0];
-        self.clubFooterView.clubUsersLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0];
-        self.clubFooterView.checkinLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:20.0];
-        self.clubFooterView.checkinLabel.text = NSLocalizedString(@"checkedIn", nil);
-        self.clubFooterView.usersLeftToCheckinLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0];
-        
-        CLLocation *loc = [[CLLocation alloc] initWithLatitude:[place.lat doubleValue] longitude:[place.lon doubleValue]];
-        
-        CLLocationDistance distance = [[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc];
-        place.distance = distance;
-        
-        self.headerView.clubNameText.text = place.title;
-        
-        if (place.todayWorkingHours != nil) {
-            
-            if ([place.todayWorkingHours.status isEqualToString:@"opened"] ) {
-                 self.headerView.workingHoursLabel.text = [NSString stringWithFormat:@"%@ - %@", place.todayWorkingHours.startTime, place.todayWorkingHours.endTime];
-            } else
-                 self.headerView.workingHoursLabel.text = NSLocalizedString(@"closed", nil);
-        } else {
-            self.headerView.workingHoursLabel.text = NSLocalizedString(@"unknown", nil);
-        }
-        
-        int disatanceInt = (int)place.distance;
-        self.headerView.clubDistanceText.text = [LocationHelper convertDistance:disatanceInt];
-        
-        [self.headerView.clubAvatarImage setImageWithURL:[NSURL URLWithString:place.avatar] placeholderImage:[UIImage imageNamed:@"Default.png"]];
-        
-        BOOL isCheckinHere = [LocationHelper isCheckinHere:place];
-        if(isCheckinHere){
-            [self.headerView.checkinButton setSecondState:NSLocalizedString(@"checkout", nil)];
-        } else {
-            [self.headerView.checkinButton setMainState:NSLocalizedString(@"checkin", nil)];
-        }
-        
-        self.headerView.checkinCountLabel.text = [NSString stringWithFormat:@"%d",place.countOfUsers];
-        self.headerView.friendsCountLabel.text = [NSString stringWithFormat:@"%d",place.friendsCount];
+        _users = users;
+        [self.clubFooterView.loadingIndicator stopAnimating];
+        self.clubFooterView.loadingIndicator.hidden = YES;
+        int friendsCount =0;
 
-        _place = place;
-
-        if (place.users.count < minUserCount) {
-            NSString *userList = @"";
-            for (User *user in place.users) {
-                if([userList length] > 0)
-                    userList = [NSString stringWithFormat:@"%@,%@",userList, user.name];
-                else
-                    userList = user.name;
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *userId = [defaults objectForKey:@"userId"];
+        BOOL isCheckin = NO;
+        for (User *user in users) {
+            if([user.id isEqualToString:userId])
+            {
+                isCheckin = YES;
             }
             
-            if([userList length] == 0)
-                userList = NSLocalizedString(@"nonePeople", nil);
-            self.clubFooterView.clubUsersLabel.text = userList;
-            
-            self.clubFooterView.usersLeftToCheckinLabel.text = [NSString stringWithFormat:NSLocalizedString(@"usersLeftToChecdkin", nil),(minUserCount - place.users.count)];
-
+            if (user.isFriend) {
+                 friendsCount++;
+            }
         }
         
+        if (isCheckin) {
+            [self addCheckin];
+        } else {
+            [self removeCheckin];
+        }
+        
+        
+        self.headerView.checkinCountLabel.text = [NSString stringWithFormat:@"%lu",(unsigned long)users.count];
+        self.headerView.friendsCountLabel.text = [NSString stringWithFormat:@"%d",friendsCount];
+        
         [self updateFooter];
+        
+        [self updateFooterContainer];
          
         [self.profileCollection reloadData];
     });
@@ -162,22 +171,29 @@
 
 - (void) updateFooter
 {
-    if (_place.users.count < minUserCount) {
+    if (_users.count == 0) {
         [self.clubFooterView expand];
     } else {
         [self.clubFooterView collapse];
     }
 }
 
+- (void) updateFooterContainer
+{
+    if (_users.count == 0) {
+        self.clubFooterView.footerContainer.hidden = NO;
+    } else {
+        self.clubFooterView.footerContainer.hidden = YES   ;
+    }
+}
+
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if(_place == nil)
     {
         return 0;
     } else{
-        if(_place.users.count < minUserCount)
-            return minUserCount;
-        else
-            return _place.users.count;
+        return _users.count;
     }
 }
 
@@ -185,17 +201,7 @@
 {
 
     BOOL isCheckinHere = [LocationHelper isCheckinHere:_place];
-    if (_place.users.count < minUserCount) {
-        // not enough users to show profiles
-        NSString * text = [NSString stringWithFormat:NSLocalizedString(@"usersLeftToChecdkin", nil),(minUserCount - _place.users.count)];
-        
-        [CSNotificationView showInViewController:self
-                                       tintColor:[UIColor colorWithRed:153/255.0f green:0/255.0f blue:217/255.0f alpha:1]
-                                           image:nil
-                                         message:text
-                                        duration:kCSNotificationViewDefaultShowDuration];
-    } else {
-        User *user = _place.users[indexPath.row];
+        User *user = _users[indexPath.row];
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSString *userId = [defaults objectForKey:@"userId"];
         
@@ -206,30 +212,28 @@
                                                image:nil
                                             message:NSLocalizedString(@"needToCheckinFirst", nil)
                                             duration:kCSNotificationViewDefaultShowDuration];
-        else if([user.id isEqualToString:userId])
-            // cannot see own profile :)
-            [CSNotificationView showInViewController:self
-                                           tintColor:[UIColor colorWithRed:153/255.0f green:0/255.0f blue:217/255.0f alpha:1]
-                                               image:nil
-                                             message:NSLocalizedString(@"cannotSeeOwnPofile", nil)
-                                            duration:kCSNotificationViewDefaultShowDuration];
         else
-            [self performSegueWithIdentifier: @"onUser" sender: indexPath];
-
-    }
+            [self performSegueWithIdentifier: @"onUsers" sender: indexPath];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(NSIndexPath *)indexPath
 {
-    if([[segue identifier] isEqualToString:@"onUser"]){
-        UserViewController *userController =  [segue destinationViewController];
-        User *user = _place.users[indexPath.row];
-        userController.userId = user.id;
-        userController.currentPlace = _place;
-        userController.clubCheckinName = _place.title;
+    if([[segue identifier] isEqualToString:@"onUsers"]){
+        ProfilePagesViewController *profilePagesViewController =  [segue destinationViewController];
+        profilePagesViewController.profiles =_users;
+        profilePagesViewController.index = indexPath.row;
+//        User *user = _users[indexPath.row];
+//        userController.user= user;
+        profilePagesViewController.currentPlace = self.place;
+//        userController.clubCheckinName = self.place.title;
     } else if ([[segue identifier] isEqualToString:@"onClubInfo"]) {
         ClubViewController *clubController =  [segue destinationViewController];
         clubController.place = _place;
+    } else if ([[segue identifier] isEqualToString:@"onYesterday"]) {
+        ClubUsersYesterdayViewController *clubController =  [segue destinationViewController];
+        //NSIndexPath *selectedIndexPath = [self.clubTable indexPathForSelectedRow];
+        clubController.place = self.place;//place.id;
+        clubController.hasBack = YES;
     }
 }
 
@@ -250,25 +254,15 @@
         [self updateFooter];
         
     }
-    
     return reusableview;
 }
-
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *identifier = @"Cell";
     ProfileCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (_place.users.count < minUserCount) {
-            if (indexPath.row < _place.users.count)
-                [cell.profileAvatar setImage:[UIImage imageNamed:@"avatar_invisible.png"]];
-            else
-                [cell.profileAvatar setImage:[UIImage imageNamed:@"avatar_empty.png"]];
-            cell.friendIcon.hidden = YES;
-        }
-        else {
-            User *user = _place.users[indexPath.row];
+            User *user = _users[indexPath.row];
             cell.friendIcon.hidden = !user.isFriend;
             
             // transform avatar
@@ -277,33 +271,46 @@
             [transformation setParams: @{@"width": @120, @"height": @120}];
             NSString * avatarUrl  = [cloudinary url: [user.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
             [cell.profileAvatar setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
-        }
     });
     return cell;
 }
 
+- (void)addCheckin
+{
+    CbButton* checkinButton = (CbButton *) self.headerView.checkinButton;;
+    [checkinButton setSecondState:NSLocalizedString(@"checkout", nil)];
+    [LocationHelper addCheckin:_place];
+}
+
+- (void)removeCheckin
+{
+    CbButton* checkinButton = (CbButton *) self.headerView.checkinButton;
+    [checkinButton setMainState:NSLocalizedString(@"checkin", nil)];
+    
+    
+    if ([LocationHelper isCheckinHere:self.place]) {
+            [LocationHelper removeCheckin];
+    }
+}
+
 - (void)didCheckin:(User *) user userInfo:(NSObject *)userInfo
 {
-    //[self hideProgress];
+    [self hideProgress];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
-    [self._manager retrievePlace:self.placeId accessToken:accessToken];
+    [self._manager retrievePlaceUsers:self.place.id accessToken:accessToken];
     
-    CbButton* checkinButton = (CbButton *) userInfo;
-    [checkinButton setSecondState:NSLocalizedString(@"Checkout", nil)];
-    [LocationHelper startLocationUpdate:_place];
+    [self addCheckin];
 }
 
 - (void)didCheckout:(User *) user userInfo:(NSObject *)userInfo
 {
-    //[self hideProgress];
+    [self hideProgress];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
-    [self._manager retrievePlace:self.placeId accessToken:accessToken];
+    [self._manager retrievePlaceUsers:self.place.id accessToken:accessToken];
     
-    CbButton* checkinButton = (CbButton *) userInfo;
-    [checkinButton setMainState:NSLocalizedString(@"Checkin", nil)];
-    [LocationHelper stopTimer];
+    [self removeCheckin];
 }
 
 - (IBAction)checkinAction:(CbButton *)sender {
@@ -319,13 +326,27 @@
         [self._manager checkout:_place.id accessToken:accessToken userInfo:sender];
     } else {
         if([GlobalVars getInstance].MaxCheckinRadius  > (int)[[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc]) {
-            [self showProgress:NO title:NSLocalizedString(@"checking_in", nil)];
-            [self._manager checkin:_place.id accessToken:accessToken userInfo:sender];
+            
+            if([[NSUserDefaults standardUserDefaults] boolForKey:@"checkinInfoDisplayed"] == FALSE)
+            {
+                [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"checkinInfoDisplayed"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@""
+                                                                message:NSLocalizedString(@"checkinInfo", nil)
+                                                               delegate:self
+                                                      cancelButtonTitle:NSLocalizedString(@"gotCheckinInfo", nil)
+                                                      otherButtonTitles:nil];
+                [alert show];
+
+            } else {
+                [self showProgress:NO title:NSLocalizedString(@"checking_in", nil)];
+                [self._manager checkin:_place.id accessToken:accessToken userInfo:nil];
+            }
         }
         else {
-            [checkinButton setMainState:NSLocalizedString(@"Checkin", nil)];
+            [checkinButton setMainState:NSLocalizedString(@"checkin", nil)];
             
-            NSString *message = [NSString stringWithFormat:NSLocalizedString(@"checkin_distance", nil), [GlobalVars getInstance].MaxCheckinRadius];
+            NSString *message = NSLocalizedString(@"checkin_distance", nil);
             [CSNotificationView showInViewController:self
                                            tintColor:[UIColor colorWithRed:153/255.0f green:0/255.0f blue:217/255.0f alpha:1]
                                                image:nil
@@ -333,6 +354,17 @@
                                             duration:kCSNotificationViewDefaultShowDuration];
         }
     }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
+    
+    [self showProgress:NO title:NSLocalizedString(@"checking_in", nil)];
+    [self._manager checkin:_place.id accessToken:accessToken userInfo:nil];
+
+    
 }
 
 - (IBAction)directionAction:(id)sender {
@@ -345,6 +377,101 @@
                              MKLaunchOptionsDirectionsModeKey, nil];
     [MKMapItem openMapsWithItems: items launchOptions: options];
 }
+
+#pragma mark UINavigationControllerDelegate methods
+
+- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
+                                  animationControllerForOperation:(UINavigationControllerOperation)operation
+                                               fromViewController:(UIViewController *)fromVC
+                                                 toViewController:(UIViewController *)toVC {
+    // Check if we're transitioning from this view controller to a DSLSecondViewController
+    if (fromVC == self && [toVC isKindOfClass:[UserProfileViewController class]]) {
+        return [[TransitionFromClubUsersToUser alloc] init];
+    }
+    else {
+        return nil;
+    }
+}
+
+- (IBAction)onUserAction:(id)sender
+{
+}
+
+- (void)populateData
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [self.headerView.yesterdayButton setButtonState:NSLocalizedString(@"white", nil)];
+        [self.headerView.yesterdayButton setTitle:NSLocalizedString(@"yesterday", nil) forState:UIControlStateNormal];
+        self.headerView.checkinButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:16.0];
+        self.headerView.checkinCountLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
+        self.headerView.friendsCountLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
+        self.headerView.checkinCountTitleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
+        self.headerView.checkinCountTitleLabel.text = NSLocalizedString(@"checkedIn", nil);
+        self.headerView.friendsCountTitleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
+        self.headerView.friendsCountTitleLabel.text = NSLocalizedString(@"friends_lower", nil);
+        self.headerView.clubNameText.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:19.0];
+        
+        self.headerView.infoWallLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
+        
+        self.headerView.openTodayLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:11.0];
+        self.headerView.workingHoursLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:11.0];
+        self.headerView.clubInfoButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14.0];
+        self.headerView.clubDistanceText.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15.0];
+        self.clubFooterView.clubUsersLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0];
+        self.clubFooterView.checkinLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:20.0];
+        self.clubFooterView.checkinLabel.text = NSLocalizedString(@"checkedIn", nil);
+        self.clubFooterView.usersLeftToCheckinLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16.0];
+        
+        CLLocation *loc = [[CLLocation alloc] initWithLatitude:[self.place.lat doubleValue] longitude:[self.place.lon doubleValue]];
+        
+        CLLocationDistance distance = [[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc];
+        self.place.distance = distance;
+        
+        self.headerView.clubNameText.text = self.place.title;
+        
+        if (self.place.todayWorkingHours != nil) {
+            
+            if ([self.place.todayWorkingHours.status isEqualToString:@"opened"] ) {
+                self.headerView.workingHoursLabel.text = [NSString stringWithFormat:@"%@ - %@", self.place.todayWorkingHours.startTime, self.place.todayWorkingHours.endTime];
+            } else
+                self.headerView.workingHoursLabel.text = NSLocalizedString(@"closed", nil);
+        } else {
+            self.headerView.workingHoursLabel.text = NSLocalizedString(@"unknown", nil);
+        }
+        
+        int disatanceInt = (int)self.place.distance;
+        self.headerView.clubDistanceText.text = [LocationHelper convertDistance:disatanceInt];
+        
+        [self.headerView.clubAvatarImage setImageWithURL:[NSURL URLWithString:self.place.avatar] placeholderImage:[UIImage imageNamed:@"Default.png"]];
+        
+        BOOL isCheckinHere = [LocationHelper isCheckinHere:self.place];
+        if(isCheckinHere){
+            [self.headerView.checkinButton setSecondState:NSLocalizedString(@"checkout", nil)];
+        } else {
+            [self.headerView.checkinButton setMainState:NSLocalizedString(@"checkin", nil)];
+        }
+        
+        self.headerView.checkinCountLabel.text = [NSString stringWithFormat:@"%d",self.place.countOfUsers];
+        self.headerView.friendsCountLabel.text = [NSString stringWithFormat:@"%d",self.place.friendsCount];
+        
+        [self updateFooter];
+    });
+}
+
+#pragma mark
+
+- (ProfileCell*)collectionViewCellForThing:(User*)user {
+    NSUInteger userIndex = [_users indexOfObject:user];
+    if (userIndex == NSNotFound) {
+        return nil;
+    }
+    //static NSString *identifier = @"Cell";
+    //ProfileCell *cell = [self.profileCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:userIndex];
+    
+    return (ProfileCell*)[self.profileCollection cellForItemAtIndexPath:[NSIndexPath indexPathForRow:userIndex inSection:0]];
+}
+
 
 /*
 #pragma mark - Navigation

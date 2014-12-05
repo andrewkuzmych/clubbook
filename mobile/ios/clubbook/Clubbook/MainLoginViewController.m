@@ -37,6 +37,7 @@
     return self;
 }
 
+
 - (IBAction)unwindToLoginViewController:(UIStoryboardSegue *)unwindSegue
 {
 }
@@ -106,11 +107,19 @@
     
     [self showProgress:NO title:nil];
 
+    if (FBSession.activeSession.state == FBSessionStateOpen
+        || FBSession.activeSession.state == FBSessionStateOpenTokenExtended) {
+        [self doFbLogin];
+    }
+    
+        
+    
+        
     if (FBSession.activeSession.isOpen) {
          [self doFbLogin];
         
     } else {
-
+  
         dispatch_async(dispatch_get_main_queue(), ^{
             NSArray *permissions = [[NSArray alloc] initWithObjects: @"public_profile", @"email", @"user_friends",@"user_birthday", @"user_hometown", nil];
             [FBSession openActiveSessionWithReadPermissions:permissions
@@ -119,14 +128,17 @@
                                                               FBSessionState status,
                                                               NSError *error)
             {
-                
+
                 
                 if (error) {
                     [self hideProgress];                              
                 } else if (FB_ISSESSIONOPENWITHSTATE(status)) {
-                                              
                     [self doFbLogin];
+                } else{
+                    [self hideProgress]; 
                 }
+                
+                
             }];
         });
     }
@@ -142,40 +154,14 @@
                  return;
              }
              
-             NSString *query = [NSString stringWithFormat:@"SELECT hometown_location FROM   user WHERE uid = %@", user.id];
-             // Set up the query parameter
-             NSDictionary *queryParam = @{ @"q": query };
-             // Make the API request that uses FQL
-             [FBRequestConnection startWithGraphPath:@"/fql"
-                                          parameters:queryParam
-                                          HTTPMethod:@"GET"
-                                   completionHandler:^(FBRequestConnection *connection,
-                                                       id result,
-                                                       NSError *error) {
-                                       if (error) {
-                                           [self hideProgress];
-                                       } else {
-                                           NSArray *data = [result objectForKey:@"data"];
-                                           NSString *country = @"";
-                                           if (data.count > 0) {
-                                               FBGraphObject *ht = [[data objectAtIndex:0] objectForKey:@"hometown_location"];
-                                               if (ht != nil && ht != (id)[NSNull null]) {
-                                                   country = [ht objectForKey:@"country"];
-                                               }
-
-                                           }
-                                           
-                                           [self onFbLogin:user country:country];
-                                       }
-                                   }];
-             
+             [self onFbLogin:user];
              
          }];
     });
 }
 
 
--(void) onFbLogin:(NSDictionary<FBGraphUser> *) user country:(NSString *) country {
+-(void) onFbLogin:(NSDictionary<FBGraphUser> *) user {
     
     NSString *accessToken = [[FBSession activeSession] accessToken];
     NSString *expirationDate = [[FBSession activeSession] expirationDate];
@@ -183,6 +169,21 @@
     NSString *email  = [user objectForKey:@"email"];
     NSString *gender  = [user objectForKey:@"gender"];
     NSString *birthday = [user objectForKey:@"birthday"];
+    
+    NSString *country = @"";
+
+    FBGraphObject *hometownGroup = [user objectForKey:@"hometown"];
+    NSString *hometownName = [hometownGroup objectForKey:@"name"];
+    NSArray *hometownNameItems = [hometownName componentsSeparatedByString:@","];
+    if (hometownNameItems.count == 2) {
+        country = [hometownNameItems objectAtIndex:1];
+    } else if (hometownNameItems.count == 1) {
+        country = [hometownNameItems objectAtIndex:0];
+    }
+    
+    country = [country stringByTrimmingCharactersInSet:
+               [NSCharacterSet whitespaceCharacterSet]];
+    
     NSString *userid  = user.id;
     
     NSString *dob;

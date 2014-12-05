@@ -14,6 +14,7 @@
 #import "Constants.h"
 #import "Conversation.h"
 #import "Cloudinary.h"
+#import "SWRevealViewController.h"
 
 @interface MessagesViewController (){
     NSArray *_chats;
@@ -35,14 +36,22 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     // Do any additional setup after loading the view.
     self.messageTable.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.noMesssageLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:18.0];
+    self.noMesssageLabel.text =  NSLocalizedString(@"noMessages", nil);
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
+   // if ([[GlobalVars getInstance].ChatUserId length] > 0) {
+   //     [self performSegueWithIdentifier: @"onChat" sender: [GlobalVars getInstance].ChatUserId];
+   //     [GlobalVars getInstance].ChatUserId = nil;
+   // }
+   
     //Google Analytics
     id tracker = [[GAI sharedInstance] defaultTracker];
     [tracker set:kGAIScreenName
@@ -50,7 +59,9 @@
     [tracker send:[[GAIDictionaryBuilder createAppView] build]];
     
     [PubNub setDelegate:self];
-    [self showProgress:NO title:nil];
+    //  if (_chats.count == 0) {
+    //      [self showProgress:NO title:nil];
+    //  }
     [self loadChats];
 }
 
@@ -76,7 +87,10 @@
 - (void)didReceiveConversations:(NSArray *)chats
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self hideProgress];
+       // [self hideProgress];
+        
+        self.noMesssageLabel.hidden = (chats.count > 0);
+        
         _chats = chats;
          
         self.messageTable.hidden = NO;
@@ -140,7 +154,9 @@
 {
     NSIndexPath *selectedIndexPath = [self.messageTable indexPathForSelectedRow];
     Chat *chat = _chats[selectedIndexPath.row];
-    [self performSegueWithIdentifier: @"onChat" sender: chat];
+    [self performSegueWithIdentifier: @"onChat" sender: chat.receiver.id];
+    
+    //[self.revealViewController revealToggle:nil];
     
    // [self performSegueWithIdentifier: @"onMessage" sender: place];
 }
@@ -149,8 +165,8 @@
 {
     if([[segue identifier] isEqualToString:@"onChat"]){
         ChatViewController *chatController =  [segue destinationViewController];
-        Chat *chat = (Chat*) sender;
-        chatController.userTo = chat.receiver.id;
+        //Chat *chat = (Chat*) sender;
+        chatController.userTo = sender;
     }
 }
 

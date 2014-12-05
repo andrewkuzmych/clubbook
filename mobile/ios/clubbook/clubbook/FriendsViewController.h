@@ -10,8 +10,10 @@
 #import "BaseViewController.h"
 
 @interface FriendsViewController : BaseViewController<UITableViewDelegate, UITableViewDataSource>
+@property (weak, nonatomic) IBOutlet UILabel *noFriendsAdded;
 @property (weak, nonatomic) IBOutlet UITableView *friendsTable;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentControl;
+@property (weak, nonatomic) IBOutlet UIView *findFriendsContainer;
 - (IBAction)segmentChanged:(id)sender;
 - (IBAction)acceptFriendAction:(UIButton *)sender;
 - (IBAction)deleteFriendAction:(UIButton *)sender;

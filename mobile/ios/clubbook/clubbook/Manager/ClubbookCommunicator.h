@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#define baseURL @"http://clubbooktest.herokuapp.com/_s/"
+//#define baseURL @"http://clubbooktest.herokuapp.com/_s/"
+#define baseURL @"http://clubbookapp.herokuapp.com/_s/"
 //#define baseURL @"http://192.168.2.113:3000/_s/"
 
 
@@ -34,17 +35,27 @@
 
 - (void)readChat:(NSString *) fromUser toUser:(NSString *) toUser accessToken:(NSString *) accessToken;
 
-- (void)retrievePlaces:(double) lat lon:(double) lon accessToken:(NSString *) accessToken;
+- (void)retrievePlaces:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance  accessToken:(NSString *) accessToken;
 
 - (void)retrievePlace:(NSString *) clubId accessToken:(NSString *) accessToken;
+
+- (void)retrievePlaceUsers:(NSString *) clubId accessToken:(NSString *) accessToken;
+
+- (void)retrievePlaceUsersYesterday:(NSString *) clubId accessToken:(NSString *) accessToken;
+
+- (void)receivedUsers:(BOOL)all take:(int) take skip:(int) skip lat:(double) lat lon:(double) lon distance:(double) distance accessToken:(NSString *) accessToken;
 
 - (void)retrieveUser:(NSString *) accessToken;
 
 - (void)retrieveFriend:(NSString *) friendId accessToken:(NSString *) accessToken;
 
+- (void)changePass:(NSString *) oldPass newPass:(NSString *) newPass accessToken:(NSString *) accessToken;
+
 - (void)retrieveFriends:(NSString *) userId accessToken:(NSString *) accessToken;
 
 - (void)retrievePendingFriends:(NSString *) userId accessToken:(NSString *) accessToken;
+
+- (void)updateUserLocation:(double) lat lon:(double) lon accessToken:(NSString *) accessToken;
 
 - (void)checkin:(NSString *) clubId accessToken:(NSString *) accessToken userInfo:(NSObject *) userInfo;
 
@@ -71,6 +82,14 @@
 - (void)removeFriend:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken;
 
 - (void)removeFriendRequest:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken;
+
+- (void)blockUser:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken;
+
+- (void)unblockUser:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken;
+
+- (void)inviteFbFriends:(NSString *) userId fb_ids:(NSArray *) fb_ids accessToken:(NSString *) accessToken;
+
+- (void)findFbFriends:(NSArray *) fb_ids accessToken:(NSString *) accessToken;
 
 - (void)getConfig;
 

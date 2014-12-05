@@ -1,4 +1,4 @@
- //
+   //
 //  ViewController.m
 //  SidebarDemo
 //
@@ -22,10 +22,14 @@
 #import "Constants.h"
 #import "LocationManagerSingleton.h"
 #import "GlobalVars.h"
+#import "ClubUsersViewController.h"
+#import "TransitionFromClubListToClub.h"
+#import "FastCheckinViewController.h"
+#import "SVPullToRefresh.h"
 
-
-@interface MainViewController (){
-    NSArray *_places;
+@interface MainViewController ()<UINavigationControllerDelegate>{
+   // NSArray *_places;
+    BOOL isInitialLoad;
     int distanceKm;
     OBAlert * alert;
 }
@@ -37,11 +41,51 @@
 
 @implementation MainViewController
 
+//#pragma mark UINavigationControllerDelegate methods
+//
+//- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
+//                                  animationControllerForOperation:(UINavigationControllerOperation)operation
+//                                               fromViewController:(UIViewController *)fromVC
+//                                                 toViewController:(UIViewController *)toVC {
+//    // Check if we're transitioning from this view controller to a DSLSecondViewController
+//    if (fromVC == self && [toVC isKindOfClass:[ClubUsersViewController class]]) {
+//        return [[TransitionFromClubListToClub alloc] init];
+//    }
+//    else {
+//        return nil;
+//    }
+//}
+
+-(BOOL)shouldAutorotate
+{
+    return YES;
+}
+
+-(NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    self.clubTable.dataSource = self;
+    self.clubTable.delegate = self;
+    
+    // Do any additional setup after loading the view.
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(appplicationIsActive:)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationEnteredForeground:)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+
+
     self.title = NSLocalizedString(@"clubs", nil);
     alert = [[OBAlert alloc] initInViewController:self];
     
@@ -62,6 +106,31 @@
     [self.segmentControl setTitle:[NSString stringWithFormat:NSLocalizedString(@"az", nil)] forSegmentAtIndex:1];
     
     [self._manager getConfig];
+    
+    __weak MainViewController *weakSelf = self;
+    
+    // setup pull-to-refresh
+    [self.clubTable addPullToRefreshWithActionHandler:^{
+        [weakSelf insertRowAtTop];
+    }];
+    
+    // setup infinite scrolling
+    [self.clubTable addInfiniteScrollingWithActionHandler:^{
+        [weakSelf insertRowAtBottom];
+    }];
+    
+    [self loadClub:10 skip:0];
+
+}
+
+- (void)appplicationIsActive:(NSNotification *)notification {
+    [LocationManagerSingleton sharedSingleton].delegate = self;
+    [[LocationManagerSingleton sharedSingleton] startLocating];
+}
+
+- (void)applicationEnteredForeground:(NSNotification *)notification {
+    [LocationManagerSingleton sharedSingleton].delegate = self;
+    [[LocationManagerSingleton sharedSingleton] startLocating];
 }
 
 - (void)didGetConfig:(Config *)config
@@ -71,20 +140,28 @@
     [GlobalVars getInstance].CheckinUpdateTime = config.checkinUpdateTime;
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    
+    // Stop being the navigation controller's delegate
+    if (self.navigationController.delegate == self) {
+        self.navigationController.delegate = nil;
+    }
+    self.navigationController.navigationBar.translucent = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.navigationController.navigationBar.translucent = NO;
+    
+    // Set outself as the navigation controller's delegate so we're asked for a transitioning object
+    self.navigationController.delegate = self;
     // hide back button
     [[UIBarButtonItem appearance] setBackButtonTitlePositionAdjustment:UIOffsetMake(0, -60)
                                                          forBarMetrics:UIBarMetricsDefault];
     
     self.screenName = @"Main Screen";
-    [self loadClub];
     //[self.navigationController setNavigationBarHidden:NO];
     
     //Pubnub staff
@@ -94,7 +171,6 @@
     [PubNub setConfiguration:myConfig];
     
     [PubNub connectWithSuccessBlock:^(NSString *origin) {
-        PNLog(PNLogGeneralLevel, self, @"{BLOCK} PubNub client connected to: %@", origin);
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSString *userId = [defaults objectForKey:@"userId"];
         NSString *channal = [NSString stringWithFormat:@"%message_%@", userId];
@@ -107,16 +183,20 @@
                         }
                              
                    }];
-}
+ 
+    NSString *channal = [NSString stringWithFormat:@"checkin"];
+    [PubNub subscribeOnChannel:[PNChannel channelWithName:channal shouldObservePresence:YES]];
+    
+   }
 
 - (void)noLocation
-{
-    if (self.isViewLoaded && self.view.window){
+{//self.isViewLoaded &&
+    //if (self.view.window){
         // viewController is visible
         dispatch_async(dispatch_get_main_queue(), ^{
             [alert showAlertWithText:NSLocalizedString(@"no_location_msg", nil) titleText:NSLocalizedString(@"no_location_title", nil)];
         });
-    }
+  //  }
 }
 
 - (void)yesLocation
@@ -128,35 +208,61 @@
     }
 }
 
+- (void)insertRowAtTop {
+    [self loadClub:10 skip:0];
+}
+
+- (void)insertRowAtBottom {
+    
+    int countToSkip = [self.places count];
+    [self loadClub:10 skip:countToSkip];
+
+    //[self.clubTable.infiniteScrollingView stopAnimating];
+}
 
 - (void)didReceivePlaces:(NSArray *)places
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideProgress];
-        _places = places;
-
         
-        for (Place *place in places) {
-            CLLocation *loc = [[CLLocation alloc] initWithLatitude:[place.lat doubleValue] longitude:[place.lon doubleValue]];
-            CLLocationDistance distance = [[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc];
-            place.distance = distance;
+        if (isInitialLoad) {
+            _places = [places mutableCopy];
+        } else {
+            [_places addObjectsFromArray:places];
         }
-        
+            
+
         self.title = [NSString stringWithFormat:@"%@", NSLocalizedString(@"clubs", nil)];
         
         self.clubTable.hidden = NO;
-        self.clubTable.dataSource = self;
-        self.clubTable.delegate = self;
         
-        [self sortPlaces];
-        //[self.clubTable reloadData];
+        [self.clubTable.pullToRefreshView stopAnimating];
+        [self.clubTable.infiniteScrollingView stopAnimating];
+        CGPoint positin = self.clubTable.contentOffset;
+        [self.clubTable reloadData];
+        [self.clubTable setContentOffset:positin animated:NO];
+
+        
+        
+        // update user location
+        double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
+        double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *accessToken = [defaults objectForKey:@"accessToken"];
+        
+        [self._manager updateUserLocation:lat lon:lng accessToken:accessToken];
     });
+}
+
+- (void)didUpdateUserLocation:(NSString *)result
+{
 }
 
 - (void)didUpdateLocation
 {
     [self yesLocation];
-    [self loadClub];
+    [self loadClub:10 skip:0];
 }
 
 - (void)didFailUpdateLocation
@@ -164,20 +270,32 @@
     [self noLocation];
 }
 
-- (void)loadClub
+- (void)loadClub:(int)take skip:(int)skip
 {
-    if (self.isLoaded || [LocationManagerSingleton sharedSingleton].locationManager.location == nil) {
-        return;
+    isInitialLoad = NO;
+    if (skip == 0) {
+        isInitialLoad = YES;
+        if (_places.count == 0) {
+            if (self.isLoaded == YES)
+            {
+                return;
+            }
+            [self showProgress:NO title:nil];
+        }
+
     }
+    
     self.isLoaded = YES;
     double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
     double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
     
-    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
-    [self showProgress:NO title:nil];
-    [self._manager retrievePlaces:lat lon:lng accessToken:accessToken];
+    
+   // if (_places.count == 0) {
+   //     [self showProgress:NO title:nil];
+   // }
+    [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:0 accessToken:accessToken];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -213,12 +331,6 @@
     
     cell.checkinButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15];
     
-    //[cell.checkinButton setBackgroundColor:[UIColor colorWithRed:92/255.0 green:142/255.0 blue:95/255.0 alpha:1.0] forState:UIControlStateNormal];
-    
-    //[cell.checkinButton setBackgroundColor:[UIColor colorWithRed:115/255.0 green:178/255.0 blue:119/255.0 alpha:1.0] forState:UIControlStateHighlighted];
-    
-    //[cell.checkinButton setBackgroundColor:<#(UIColor *)#>]
-    
     [cell.checkinButton setMainState:NSLocalizedString(@"Checkin", nil)];
     
     int disatanceInt = (int)place.distance;
@@ -248,7 +360,19 @@
     NSIndexPath *selectedIndexPath = [self.clubTable indexPathForSelectedRow];
     Place *place = _places[selectedIndexPath.row];
     
-    [self performSegueWithIdentifier: @"onClub" sender: place];
+    UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle: nil];
+    ClubUsersViewController *clubController  = [mainStoryboard instantiateViewControllerWithIdentifier:@"club"];
+    clubController.place = place;//place.id;
+    clubController.hasBack = YES;
+    self.isLoaded = NO;
+    // ClubUsersViewController *clubController =  [segue ClubUsersViewController];
+    [UIView beginAnimations:@"animation" context:nil];
+    [UIView setAnimationDuration:0.5];
+    [self.navigationController pushViewController: clubController animated:NO];
+    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:NO];
+    [UIView commitAnimations];
+    
+    //[self performSegueWithIdentifier: @"onClub" sender: place];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(NSString *)sender
@@ -257,7 +381,7 @@
         ClubUsersViewController *clubController =  [segue destinationViewController];
         //NSIndexPath *selectedIndexPath = [self.clubTable indexPathForSelectedRow];
         Place *place = (Place*) sender;
-        clubController.placeId = place.id;
+        clubController.place = place;//place.id;
         clubController.hasBack = YES;
         self.isLoaded = NO;
     }
@@ -320,7 +444,7 @@
 
 - (IBAction)sliderTouchUp:(id)sender
 {
-    int sliderValue;
+ /*   int sliderValue;
     sliderValue = lroundf(self.sliderControl.value);
     [self.sliderControl setValue:sliderValue animated:YES];
     
@@ -328,7 +452,7 @@
     self.isLoaded = NO;
     [self loadClub];
     
-    [self.distance setText:[NSString stringWithFormat:@"%d%@", distanceKm, NSLocalizedString(@"kilometers", nil)]];
+    [self.distance setText:[NSString stringWithFormat:@"%d%@", distanceKm, NSLocalizedString(@"kilometers", nil)]];*/
 }
 
 
@@ -361,7 +485,7 @@
     
     [checkinButton setSecondState:NSLocalizedString(@"Checkout", nil)];
   
-    [LocationHelper startLocationUpdate:self.checkinPlace];
+    [LocationHelper addCheckin:self.checkinPlace];
  
     [self performSegueWithIdentifier: @"onClub" sender: self.checkinPlace];
 }
@@ -373,7 +497,7 @@
     
     [checkinButton setMainState:NSLocalizedString(@"Checkin", nil)];
     
-    [LocationHelper stopTimer];
+    [LocationHelper removeCheckin];
 }
 
 @end

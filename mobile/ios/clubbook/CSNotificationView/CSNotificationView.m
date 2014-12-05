@@ -7,34 +7,10 @@
 //
 
 #import "CSNotificationView.h"
+#import "CSNotificationView_Private.h"
 
-static NSInteger const kCSNotificationViewEmptySymbolViewTag = 666;
-
-static NSString* const kCSNotificationViewUINavigationControllerWillShowViewControllerNotification = @"UINavigationControllerWillShowViewControllerNotification";
-
-static void * kCSNavigationBarObservationContext = &kCSNavigationBarObservationContext;
-static NSString * kCSNavigationBarBoundsKeyPath = @"bounds";
-
-@interface CSNotificationView ()
-
-#pragma mark - blur effect
-@property (nonatomic, strong) UIToolbar *toolbar;
-@property (nonatomic, strong) CALayer *blurLayer;
-
-#pragma mark - presentation
-@property (nonatomic, weak) UIViewController* parentViewController;
-@property (nonatomic, weak) UINavigationController* parentNavigationController;
-@property (nonatomic, getter = isVisible) BOOL visible;
-
-#pragma mark - content views
-@property (nonatomic, strong, readonly) UIView* symbolView; // is updated by -(void)updateSymbolView
-@property (nonatomic, strong) UILabel* textLabel;
-@property (nonatomic, strong) UIColor* contentColor;
-
-#pragma mark - interaction
-@property (nonatomic, strong) UITapGestureRecognizer* tapRecognizer;
-
-@end
+#import "CSLayerStealingBlurView.h"
+#import "CSNativeBlurView.h"
 
 @implementation CSNotificationView
 
@@ -51,8 +27,6 @@ static NSString * kCSNavigationBarBoundsKeyPath = @"bounds";
     __block CSNotificationView* note = [[CSNotificationView alloc] initWithParentViewController:viewController];
     note.tintColor = tintColor;
     note.image = image;
-    
-    note.textLabel.font = [UIFont fontWithName:@"TitilliumWeb-Bold" size:13];
     note.textLabel.text = message;
     
     void (^completion)() = ^{[note setVisible:NO animated:YES completion:nil];};
@@ -131,22 +105,24 @@ static NSString * kCSNavigationBarBoundsKeyPath = @"bounds";
     self = [super initWithFrame:CGRectZero];
     if (self) {
         
-        //Blur | thanks to https://github.com/JagCesar/iOS-blur for providing this under the WTFPL-license!
+        self.backgroundColor = [UIColor clearColor];
+        
+        //Blur view
         {
-            [self setToolbar:[[UIToolbar alloc] initWithFrame:[self bounds]]];
-            [self setBlurLayer:[[self toolbar] layer]];
             
-            UIView *blurView = [UIView new];
-            [blurView setUserInteractionEnabled:NO];
-            [blurView.layer addSublayer:[self blurLayer]];
-            [blurView setTranslatesAutoresizingMaskIntoConstraints:NO];
-            blurView.clipsToBounds = NO;
-            [self insertSubview:blurView atIndex:0];
+            if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_7_1) {
+                //Use native effects
+                self.blurView = [[CSNativeBlurView alloc] initWithFrame:CGRectZero];
+            } else {
+                //Use layer stealing
+                self.blurView = [[CSLayerStealingBlurView alloc] initWithFrame:CGRectZero];
+            }
             
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[blurView]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(blurView)]];
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(-1)-[blurView]-(-1)-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(blurView)]];
+            self.blurView.userInteractionEnabled = NO;
+            self.blurView.translatesAutoresizingMaskIntoConstraints = NO;
+            self.blurView.clipsToBounds = NO;
+            [self insertSubview:self.blurView atIndex:0];
             
-            [self setBackgroundColor:[UIColor clearColor]];
         }
         
         //Parent view
@@ -167,11 +143,12 @@ static NSString * kCSNavigationBarBoundsKeyPath = @"bounds";
         //Notifications
         {
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(navigationControllerWillShowViewControllerNotification:) name:kCSNotificationViewUINavigationControllerWillShowViewControllerNotification object:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(navigationControllerDidShowViewControllerNotification:) name:kCSNotificationViewUINavigationControllerDidShowViewControllerNotification object:nil];
         }
 
         //Key-Value Observing
         {
-            [self.parentNavigationController.navigationBar addObserver:self forKeyPath:kCSNavigationBarBoundsKeyPath options:NSKeyValueObservingOptionNew context:kCSNavigationBarObservationContext];
+            [self addObserver:self forKeyPath:kCSNavigationBarBoundsKeyPath options:NSKeyValueObservingOptionNew context:kCSNavigationBarObservationContext];
         }
         
         //Content views
@@ -188,14 +165,9 @@ static NSString * kCSNavigationBarBoundsKeyPath = @"bounds";
                 _textLabel.minimumScaleFactor = 0.6;
                 _textLabel.lineBreakMode = NSLineBreakByTruncatingTail;
                 
-                if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
-                    UIFontDescriptor* textLabelFontDescriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleBody];
-                    _textLabel.font = [UIFont fontWithDescriptor:textLabelFontDescriptor size:17.0f];
-                    _textLabel.adjustsFontSizeToFitWidth = YES; //This only works in iOS 7 with multiline labels. UILabel doc: "In iOS 6 and earlier, this property is effective only when the numberOfLines property is set to 1."
-                } else {
-                    _textLabel.font = [UIFont systemFontOfSize:17.0f];
-                    _textLabel.preferredMaxLayoutWidth = 1; //Settings this to a minimum enforces line breaks.
-                }
+                UIFontDescriptor* textLabelFontDescriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleBody];
+                _textLabel.font = [UIFont fontWithDescriptor:textLabelFontDescriptor size:17.0f];
+                _textLabel.adjustsFontSizeToFitWidth = YES;
                 
                 [self addSubview:_textLabel];
             }
@@ -220,8 +192,8 @@ static NSString * kCSNavigationBarBoundsKeyPath = @"bounds";
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kCSNotificationViewUINavigationControllerWillShowViewControllerNotification object:nil];
-    [self.parentNavigationController.navigationBar removeObserver:self forKeyPath:kCSNavigationBarBoundsKeyPath context:kCSNavigationBarObservationContext];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self removeObserver:self forKeyPath:kCSNavigationBarBoundsKeyPath context:kCSNavigationBarObservationContext];
 }
 
 - (void)navigationControllerWillShowViewControllerNotification:(NSNotification*)note
@@ -234,6 +206,22 @@ static NSString * kCSNavigationBarBoundsKeyPath = @"bounds";
             [weakself animationFramesForVisible:weakself.visible startFrame:nil endFrame:&endFrame];
             [weakself setFrame:endFrame];
             [weakself updateConstraints];
+        }];
+        
+    }
+}
+
+- (void)navigationControllerDidShowViewControllerNotification:(NSNotification*)note
+{
+    if (self.visible && [self.parentNavigationController.navigationController isEqual:note.object]) {
+        
+        //We're about to be pushed away! This might happen in a UISplitViewController with both master/detailViewControllers being UINavgiationControllers
+        //Move to new parent
+        
+        __block typeof(self) weakself = self;
+        [self setVisible:NO animated:NO completion:^{
+            weakself.parentNavigationController = note.object;
+            [weakself setVisible:YES animated:NO completion:nil];
         }];
         
     }
@@ -256,6 +244,13 @@ static NSString * kCSNavigationBarBoundsKeyPath = @"bounds";
 - (void)updateConstraints
 {
     [self removeConstraints:self.constraints];
+    
+    NSDictionary* bindings = @{@"blurView":self.blurView};
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[blurView]|"
+                                                                 options:0 metrics:nil views:bindings]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(-1)-[blurView]-(-1)-|"
+                                                                 options:0 metrics:nil views:bindings]];
+
     
     CGFloat symbolViewWidth = self.symbolView.tag != kCSNotificationViewEmptySymbolViewTag ?
                                 kCSNotificationViewSymbolViewSidelength : 0.0f;
@@ -296,63 +291,12 @@ static NSString * kCSNavigationBarBoundsKeyPath = @"bounds";
     [super updateConstraints];
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews]; //Has to be called again after layout changes.
-    
-    if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {
-        //Manually adjustsFontSizeToFitWidth in iOS 6
-
-        CGFloat defaultPointSize, minimumPointSize;
-        defaultPointSize = self.textLabel.font.pointSize;
-        minimumPointSize = ceilf(defaultPointSize * self.textLabel.minimumScaleFactor);
-
-        UIFont *font = self.textLabel.font;
-        CGSize constrainedSize = CGSizeMake(self.textLabel.frame.size.width, CGFLOAT_MAX);
-
-        for (NSInteger pointSize = defaultPointSize; pointSize >= minimumPointSize; pointSize--) {
-            
-            font = [font fontWithSize:pointSize];
-            
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            
-            CGSize fitSize = [self.textLabel.text sizeWithFont:font
-                                             constrainedToSize:constrainedSize
-                                                 lineBreakMode:NSLineBreakByTruncatingTail];
-            
-#pragma clang diagnostic pop
-            
-            if (fitSize.height <= CGRectGetHeight(self.textLabel.frame)) {
-                break;
-            }
-        }
-        
-        self.textLabel.font = font;
-        
-        [super layoutSubviews];
-    }
-    
-}
-
-- (void)setFrame:(CGRect)frame
-{
-    [super setFrame:frame];
-    //Update blur layer frame by updating the bounds frame
-    self.toolbar.frame = self.bounds;
-}
-
 #pragma mark - tint color
 
 - (void)setTintColor:(UIColor *)tintColor
 {
     _tintColor = tintColor;
-    //Use 0.6 alpha value for translucency blur in UIToolbar
-    if ([self.toolbar respondsToSelector:@selector(setBarTintColor:)]) {
-        [self.toolbar setBarTintColor:[tintColor colorWithAlphaComponent:0.6]];
-    } else {
-        [self.toolbar setTintColor:[tintColor colorWithAlphaComponent:0.6]];
-    }
+    [self.blurView setBlurTintColor:tintColor];
     self.contentColor = [self legibleTextColorForBlurTintColor:tintColor];
 }
 
@@ -391,6 +335,7 @@ static NSString * kCSNavigationBarBoundsKeyPath = @"bounds";
         [UIView animateWithDuration:animationDuration animations:^{
             [weakself setFrame:endFrame];
         } completion:^(BOOL finished) {
+            
             if (!visible) {
                 [weakself removeFromSuperview];
             }
@@ -411,12 +356,6 @@ static NSString * kCSNavigationBarBoundsKeyPath = @"bounds";
     if (endFrame) *endFrame = visible ? [self visibleFrame] : [self hiddenFrame];
 }
 
-- (void)dismiss
-{
-    __block typeof(self) weakself = self;
-    [weakself setVisible:NO animated:YES completion:nil];
-}
-
 - (void)dismissWithStyle:(CSNotificationViewStyle)style message:(NSString *)message duration:(NSTimeInterval)duration animated:(BOOL)animated
 {
     NSParameterAssert(message);
@@ -426,7 +365,6 @@ static NSString * kCSNavigationBarBoundsKeyPath = @"bounds";
 
         weakself.showingActivity = NO;
         weakself.image = [CSNotificationView imageForStyle:style];
-        weakself.textLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:13];
         weakself.textLabel.text = message;
         weakself.tintColor = [CSNotificationView blurTintColorForStyle:style];
         
@@ -596,12 +534,16 @@ static NSString * kCSNavigationBarBoundsKeyPath = @"bounds";
 + (UIImage*)imageForStyle:(CSNotificationViewStyle)style
 {
     UIImage* matchedImage = nil;
+    //Load images from bundle generated by CocoaPods
+  //  NSBundle *assetsBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"CSNotificationView" withExtension:@"bundle"]];
     switch (style) {
         case CSNotificationViewStyleSuccess:
-            matchedImage = [UIImage imageNamed:@"CSNotificationView_checkmarkIcon"];
+            //matchedImage = [UIImage imageWithContentsOfFile:[assetsBundle pathForResource:@"checkmark" ofType:@"png"]];
+            matchedImage = [UIImage imageNamed: @"checkmark.png"];
             break;
         case CSNotificationViewStyleError:
-            matchedImage = [UIImage imageNamed:@"CSNotificationView_exclamationMarkIcon"];
+            //matchedImage = [UIImage imageWithContentsOfFile:[assetsBundle pathForResource:@"exclamationMark" ofType:@"png"]];
+             matchedImage = [UIImage imageNamed: @"exclamationMark.png"];
             break;
         default:
             break;

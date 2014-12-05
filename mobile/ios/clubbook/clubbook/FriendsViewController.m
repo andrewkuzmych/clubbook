@@ -11,12 +11,16 @@
 #import "Constants.h"
 #import "UIImageView+WebCache.h"
 #import "Cloudinary.h"
-#import "UserViewController.h"
+#import "UserProfileViewController.h"
+#import "ProfilePagesViewController.h"
 
 @interface FriendsViewController ()
 {
     NSArray *_friends;
     BOOL isFriends;
+    BOOL firstFriendLoad;
+    int friendsCount;
+    int pendingCount;
 }
 
 @end
@@ -35,14 +39,22 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.noFriendsAdded.hidden = YES;
+    firstFriendLoad = YES;
     self.friendsTable.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     // Do any additional setup after loading the view.
     
-    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:15], UITextAttributeFont, nil];
+    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14], UITextAttributeFont, nil];
     [self.segmentControl setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
 
     [self.segmentControl setTitle:[NSString stringWithFormat:NSLocalizedString(@"friends", nil)] forSegmentAtIndex:0];
     [self.segmentControl setTitle:[NSString stringWithFormat:NSLocalizedString(@"pending_requests", nil)] forSegmentAtIndex:1];
+    [self.segmentControl setTitle:[NSString stringWithFormat:NSLocalizedString(@"add_friends", nil)] forSegmentAtIndex:2];
+    
+    self.noFriendsAdded.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:18.0];
+    self.noFriendsAdded.text =  NSLocalizedString(@"noFriendsAdded", nil);
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -54,7 +66,7 @@
     
     if (self.segmentControl.selectedSegmentIndex == 0) {
         [self loadFriends];
-    } else {
+    } else if (self.segmentControl.selectedSegmentIndex == 1)  {
         [self loadPendingFriends];
     }
 }
@@ -62,7 +74,9 @@
 - (void) loadFriends
 {
     isFriends = YES;
-    [self showProgress:NO title:nil];
+    if (_friends.count == 0) {
+        [self showProgress:NO title:nil];
+    }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *userId = [defaults objectForKey:@"userId"];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
@@ -72,32 +86,62 @@
 - (void) loadPendingFriends
 {
     isFriends = NO;
-    [self showProgress:NO title:nil];
+    if (_friends.count == 0) {
+        [self showProgress:NO title:nil];
+    }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *userId = [defaults objectForKey:@"userId"];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
     [self._manager retrievePendingFriends:userId accessToken:accessToken];
 }
 
-- (void)didRetrieveFriends:(NSArray *)friends
+- (void)didRetrieveFriends:(FriendsResult *)friendsResult
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideProgress];
-        _friends = friends;
+        _friends = friendsResult.friends;
+        friendsCount = friendsResult.countOfFriends;
+        pendingCount = friendsResult.countOfPendings;
         
+        [self updateFriendsPendingsCount:friendsCount pendingCountParam:pendingCount];
+        
+        self.noFriendsAdded.hidden = (_friends.count > 0);
+        self.noFriendsAdded.text =  NSLocalizedString(@"noFriendsAdded", nil);
         self.friendsTable.hidden = NO;
         self.friendsTable.dataSource = self;
         self.friendsTable.delegate = self;
         [self.friendsTable reloadData];
+        
+        // if no friends -> go to add friend tab
+        if (firstFriendLoad) {
+            firstFriendLoad= NO;
+            self.noFriendsAdded.hidden = YES;
+            if (friendsCount == 0 && pendingCount == 0) {
+                [self.segmentControl setSelectedSegmentIndex:2];
+                self.findFriendsContainer.hidden = NO;
+            } else if (friendsCount == 0 && pendingCount > 0) {
+                [self.segmentControl setSelectedSegmentIndex:1];
+                 [self loadPendingFriends];
+            }
+
+        }
     });
 }
 
-- (void)didRetrievePendingFriends:(NSArray *)friends
+- (void)didRetrievePendingFriends:(FriendsResult *)friendsResult
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideProgress];
-        _friends = friends;
         
+        _friends = friendsResult.friends;
+        
+        friendsCount = friendsResult.countOfFriends;
+        pendingCount = friendsResult.countOfPendings;
+        
+        [self updateFriendsPendingsCount:friendsCount pendingCountParam:pendingCount];
+        
+        self.noFriendsAdded.hidden = (_friends.count > 0);
+        self.noFriendsAdded.text =  NSLocalizedString(@"noRequestsAdded", nil);
         self.friendsTable.hidden = NO;
         self.friendsTable.dataSource = self;
         self.friendsTable.delegate = self;
@@ -149,7 +193,6 @@
     [cell.acceptButton setTag:indexPath.row];
     [cell.deleteButton setTag:indexPath.row];
 
-    
     // transform avatar
     CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
     CLTransformation *transformation = [CLTransformation transformation];
@@ -166,33 +209,39 @@
 {
     NSIndexPath *selectedIndexPath = [self.friendsTable indexPathForSelectedRow];
     User *friend = _friends[selectedIndexPath.row];
-    [self performSegueWithIdentifier: @"onUser" sender: friend];
+    [self performSegueWithIdentifier: @"onUsers" sender: friend];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(User *)sender
 {
     if([[segue identifier] isEqualToString:@"onUser"]){
-        UserViewController *userController =  [segue destinationViewController];
-        userController.userId = sender.id;
+        UserProfileViewController *userController =  [segue destinationViewController];
+        //userController.userId = sender.id;
+        userController.user = sender;
         userController.clubCheckinName = sender.currentCheckinClubName;
+    }
+    
+    if([[segue identifier] isEqualToString:@"onUsers"]){
+        ProfilePagesViewController *profilePagesViewController =  [segue destinationViewController];
+        //userController.userId = sender.id;
+        NSIndexPath *selectedIndexPath = [self.friendsTable indexPathForSelectedRow];
+        profilePagesViewController.index = selectedIndexPath.row;
+        profilePagesViewController.profiles = _friends;
+        //profilePagesViewController.clubCheckinName = sender.currentCheckinClubName;
     }
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (void)updateFriendsPendingsCount:(int) friendsCountParam pendingCountParam:(int)pendingCountParam
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    [self.segmentControl setTitle:[NSString stringWithFormat:@"%@ (%d)", NSLocalizedString(@"friends", nil), friendsCountParam] forSegmentAtIndex:0];
+    [self.segmentControl setTitle:[NSString stringWithFormat:@"%@ (%d)", NSLocalizedString(@"pending_requests", nil), pendingCountParam] forSegmentAtIndex:1];
 }
-*/
 
 - (void)didConfirmFriend:(User *)user
 {
     [self hideProgress];
     [self loadPendingFriends];
+    [self updateFriendsPendingsCount:friendsCount pendingCountParam:pendingCount];
 }
 
 - (void)didRemoveFriendRequest:(User *)user
@@ -201,15 +250,18 @@
     [self loadPendingFriends];
 }
 
-
 - (IBAction)segmentChanged:(id)sender {
+    self.findFriendsContainer.hidden = YES;
     if([sender selectedSegmentIndex] == 0){
         [self loadFriends];
         
     }
     else if([sender selectedSegmentIndex] == 1){
         [self loadPendingFriends];
+    }else if([sender selectedSegmentIndex] == 2){
+        self.findFriendsContainer.hidden = NO;
     }
+    
 }
 
 - (void)actionSheet:(UIActionSheet *)popup clickedButtonAtIndex:(NSInteger)buttonIndex

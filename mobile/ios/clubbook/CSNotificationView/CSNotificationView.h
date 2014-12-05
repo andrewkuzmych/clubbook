@@ -48,6 +48,10 @@ typedef void(^CSVoidBlock)();
                                                           image:(UIImage*)image
                                                         message:(NSString*)message;
 
+#pragma mark + icons
+
++ (UIImage*)imageForStyle:(CSNotificationViewStyle)style;
+
 #pragma mark - initialization
 
 - (instancetype)initWithParentViewController:(UIViewController*)viewController;
@@ -55,8 +59,6 @@ typedef void(^CSVoidBlock)();
 #pragma mark - presentation
 
 - (void)setVisible:(BOOL)showing animated:(BOOL)animated completion:(void (^)())completion;
-
-- (void)dismiss;
 - (void)dismissWithStyle:(CSNotificationViewStyle)style message:(NSString*)message duration:(NSTimeInterval)duration animated:(BOOL)animated;
 @property (readonly, nonatomic, getter = isShowing) BOOL visible;
 

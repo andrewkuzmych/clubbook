@@ -11,5 +11,6 @@
 @interface MessagesViewController : BaseViewController<UITableViewDelegate, UITableViewDataSource, PNDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *messageTable;
+@property (weak, nonatomic) IBOutlet UILabel *noMesssageLabel;
 
 @end

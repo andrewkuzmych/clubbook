@@ -42,7 +42,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *satHoursLabel;
 @property (weak, nonatomic) IBOutlet UILabel *sanTitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *sanHoursLabel;
-- (IBAction)addressAction:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *addressLabel;
+@property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
+- (IBAction)distanceAction:(id)sender;
 - (IBAction)phoneAction:(id)sender;
 - (IBAction)siteAction:(id)sender;
 - (IBAction)emailAction:(id)sender;

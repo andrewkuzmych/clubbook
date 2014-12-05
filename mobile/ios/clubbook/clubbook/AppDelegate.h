@@ -8,10 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import <FacebookSDK/FacebookSDK.h>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate, PNDelegate>{
+@interface AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate, PNDelegate, UIAlertViewDelegate>{
 }
 
 @property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) UINavigationController *mainNC;
+@property (nonatomic, assign) BOOL appUsageCheckEnabled;
 
+
+- (void) sendRequest;
+- (void)sendRequestToiOSFriends;
 @end

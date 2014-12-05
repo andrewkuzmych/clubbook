@@ -27,9 +27,8 @@
 #import "SCSettings.h"
 #import "SCShareUtility.h"
 
-@interface SCMainViewController () <CLLocationManagerDelegate, FBFriendPickerDelegate, FBPlacePickerDelegate, SCImagePickerDelegate, SCMealPickerDelegate, SCShareUtilityDelegate>
+@interface SCMainViewController () <CLLocationManagerDelegate, FBViewControllerDelegate, FBPlacePickerDelegate, SCImagePickerDelegate, SCMealPickerDelegate, SCShareUtilityDelegate>
 @property (nonatomic, strong) UIView *activityOverlayView;
-@property (nonatomic, strong, readonly) FBCacheDescriptor *friendsCacheDescriptor;
 @property (nonatomic, strong) SCImagePicker *imagePicker;
 @property (nonatomic, strong, readonly) CLLocationManager *locationManager;
 @property (nonatomic, strong) SCMealPicker *mealPicker;
@@ -45,7 +44,6 @@ static int const MIN_USER_GENERATED_PHOTO_DIMENSION = 480;
 
 @implementation SCMainViewController
 {
-    FBCacheDescriptor *_friendsCacheDescriptor;
     CLLocationManager *_locationManager;
 }
 
@@ -57,14 +55,6 @@ static int const MIN_USER_GENERATED_PHOTO_DIMENSION = 480;
         [_activityOverlayView removeFromSuperview];
         _activityOverlayView = activityOverlayView;
     }
-}
-
-- (FBCacheDescriptor *)friendsCacheDescriptor
-{
-    if (!_friendsCacheDescriptor) {
-        _friendsCacheDescriptor = [FBFriendPickerViewController cacheDescriptor];
-    }
-    return _friendsCacheDescriptor;
 }
 
 - (void)setImagePicker:(SCImagePicker *)imagePicker
@@ -115,18 +105,18 @@ static int const MIN_USER_GENERATED_PHOTO_DIMENSION = 480;
         NSUInteger friendCount = _selectedFriends.count;
         if (friendCount > 2) {
             // Just to mix things up, don't always show the first friend.
-            id<FBGraphUser> randomFriend = [self.selectedFriends objectAtIndex:arc4random() % friendCount];
+            id<FBGraphPerson> randomFriend = [self.selectedFriends objectAtIndex:arc4random() % friendCount];
             friendsSubtitle = [NSString stringWithFormat:@"%@ and %lu others",
                                randomFriend.name,
                                (unsigned long)friendCount - 1];
         } else if (friendCount == 2) {
-            id<FBGraphUser> friend1 = [self.selectedFriends objectAtIndex:0];
-            id<FBGraphUser> friend2 = [self.selectedFriends objectAtIndex:1];
+            id<FBGraphPerson> friend1 = [self.selectedFriends objectAtIndex:0];
+            id<FBGraphPerson> friend2 = [self.selectedFriends objectAtIndex:1];
             friendsSubtitle = [NSString stringWithFormat:@"%@ and %@",
                                friend1.name,
                                friend2.name];
         } else if (friendCount == 1) {
-            id<FBGraphUser> friend = [self.selectedFriends objectAtIndex:0];
+            id<FBGraphPerson> friend = [self.selectedFriends objectAtIndex:0];
             friendsSubtitle = friend.name;
         }
         self.friendsLabel.text = friendsSubtitle;
@@ -174,9 +164,10 @@ static int const MIN_USER_GENERATED_PHOTO_DIMENSION = 480;
 
     self.profilePictureButton.pictureCropping = FBProfilePictureCroppingSquare;
 
-    if ([FBSession activeSession].isOpen) {
+    FBSession *activeSession = [FBSession activeSession];
+    if (activeSession.isOpen) {
         self.locationButton.enabled = YES;
-        self.friendsButton.enabled = YES;
+        self.friendsButton.enabled = [activeSession.permissions containsObject:@"user_friends"];
         self.profilePictureButton.profileID = @"me";
     } else {
         self.locationButton.enabled = NO;
@@ -184,8 +175,6 @@ static int const MIN_USER_GENERATED_PHOTO_DIMENSION = 480;
         self.profilePictureButton.profileID = nil;
     }
     self.shareButton.enabled = (self.selectedMeal != nil);
-
-    [self.friendsCacheDescriptor prefetchAndCacheForSession:[FBSession activeSession]];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -261,20 +250,18 @@ static int const MIN_USER_GENERATED_PHOTO_DIMENSION = 480;
         [placePickerViewController loadData];
         placePickerViewController.delegate = self;
     } else if ([identifier isEqualToString:@"showFriendPicker"]) {
-        FBFriendPickerViewController *friendPickerViewController = segue.destinationViewController;
-        // Set up the friend picker to sort and display names the same way as the
-        // iOS Address Book does.
+        FBTaggableFriendPickerViewController *taggableFriendPickerViewController = segue.destinationViewController;
+        // Set up the taggable friend picker to sort and display names the same way as
+        // the iOS Address Book does.
 
         // Need to call ABAddressBookCreate in order for the next two calls to do anything.
         ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
-        friendPickerViewController.sortOrdering = (ABPersonGetSortOrdering() == kABPersonSortByFirstName ? FBFriendSortByFirstName : FBFriendSortByLastName);
-        friendPickerViewController.displayOrdering = (ABPersonGetCompositeNameFormat() == kABPersonCompositeNameFormatFirstNameFirst ? FBFriendDisplayByFirstName : FBFriendDisplayByLastName);
+        taggableFriendPickerViewController.sortOrdering = (ABPersonGetSortOrdering() == kABPersonSortByFirstName ? FBFriendSortByFirstName : FBFriendSortByLastName);
+        taggableFriendPickerViewController.displayOrdering = (ABPersonGetCompositeNameFormat() == kABPersonCompositeNameFormatFirstNameFirst ? FBFriendDisplayByFirstName : FBFriendDisplayByLastName);
         CFRelease(addressBook);
 
-        [friendPickerViewController configureUsingCachedDescriptor:self.friendsCacheDescriptor];
-        [friendPickerViewController loadData];
-        friendPickerViewController.selection = self.selectedFriends;
-        friendPickerViewController.delegate = self;
+        [taggableFriendPickerViewController loadData];
+        taggableFriendPickerViewController.delegate = self;
     }
 }
 
@@ -319,8 +306,8 @@ static int const MIN_USER_GENERATED_PHOTO_DIMENSION = 480;
 {
     if ([sender isKindOfClass:[FBPlacePickerViewController class]]) {
         self.selectedPlace = ((FBPlacePickerViewController *)sender).selection;
-    } else if ([sender isKindOfClass:[FBFriendPickerViewController class]]) {
-        self.selectedFriends = ((FBFriendPickerViewController *)sender).selection;
+    } else if ([sender isKindOfClass:[FBTaggableFriendPickerViewController class]]) {
+        self.selectedFriends = ((FBTaggableFriendPickerViewController *)sender).selection;
     }
     [sender performSegueWithIdentifier:@"dismiss" sender:sender];
 }

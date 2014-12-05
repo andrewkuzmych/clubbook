@@ -18,6 +18,10 @@
 		58D92D6518C7A6BC0090E7E2 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58D92D6218C7A6BC0090E7E2 /* ViewController.xib */; };
 		58D92D6C18C7A6D00090E7E2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D92D6818C7A6D00090E7E2 /* main.m */; };
 		58D92D6E18C7A6EB0090E7E2 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D92D6D18C7A6EB0090E7E2 /* AdSupport.framework */; };
+		EE23E6E3198AEE5800215C81 /* NativeAdCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE23E6E1198AEE5800215C81 /* NativeAdCell.m */; };
+		EE23E6E4198AEE5800215C81 /* NativeAdCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE23E6E2198AEE5800215C81 /* NativeAdCell.xib */; };
+		EE23E6E8198B0B0600215C81 /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE23E6E6198B0B0600215C81 /* TableViewController.m */; };
+		EE23E6E9198B0B0600215C81 /* TableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE23E6E7198B0B0600215C81 /* TableViewController.xib */; };
 		EEFC6BE418FF33CF004FE2E6 /* FBAudienceNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEFC6BE318FF33CF004FE2E6 /* FBAudienceNetwork.framework */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +43,12 @@
 		58D92D6818C7A6D00090E7E2 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		58D92D6918C7A6D00090E7E2 /* NativeAdSample-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NativeAdSample-Prefix.pch"; sourceTree = "<group>"; };
 		58D92D6D18C7A6EB0090E7E2 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		EE23E6E0198AEE5800215C81 /* NativeAdCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NativeAdCell.h; sourceTree = "<group>"; };
+		EE23E6E1198AEE5800215C81 /* NativeAdCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NativeAdCell.m; sourceTree = "<group>"; };
+		EE23E6E2198AEE5800215C81 /* NativeAdCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NativeAdCell.xib; sourceTree = "<group>"; };
+		EE23E6E5198B0B0600215C81 /* TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewController.h; sourceTree = "<group>"; };
+		EE23E6E6198B0B0600215C81 /* TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewController.m; sourceTree = "<group>"; };
+		EE23E6E7198B0B0600215C81 /* TableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TableViewController.xib; sourceTree = "<group>"; };
 		EEFC6BE318FF33CF004FE2E6 /* FBAudienceNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBAudienceNetwork.framework; path = ../../../../../Documents/FacebookSDK/FBAudienceNetwork/FBAudienceNetwork.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -67,7 +77,9 @@
 				58D92D2018C7A6100090E7E2 /* Frameworks */,
 				58D92D1F18C7A6100090E7E2 /* Products */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		58D92D1F18C7A6100090E7E2 /* Products */ = {
 			isa = PBXGroup;
@@ -94,6 +106,12 @@
 		58D92D2718C7A6100090E7E2 /* NativeAdSample */ = {
 			isa = PBXGroup;
 			children = (
+				EE23E6E0198AEE5800215C81 /* NativeAdCell.h */,
+				EE23E6E1198AEE5800215C81 /* NativeAdCell.m */,
+				EE23E6E2198AEE5800215C81 /* NativeAdCell.xib */,
+				EE23E6E5198B0B0600215C81 /* TableViewController.h */,
+				EE23E6E6198B0B0600215C81 /* TableViewController.m */,
+				EE23E6E7198B0B0600215C81 /* TableViewController.xib */,
 				58D92D6018C7A6BC0090E7E2 /* ViewController.h */,
 				58D92D6118C7A6BC0090E7E2 /* ViewController.m */,
 				58D92D6218C7A6BC0090E7E2 /* ViewController.xib */,
@@ -169,7 +187,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				58D92D6518C7A6BC0090E7E2 /* ViewController.xib in Resources */,
+				EE23E6E4198AEE5800215C81 /* NativeAdCell.xib in Resources */,
 				58D92D5D18C7A6B10090E7E2 /* Images.xcassets in Resources */,
+				EE23E6E9198B0B0600215C81 /* TableViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -180,8 +200,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE23E6E3198AEE5800215C81 /* NativeAdCell.m in Sources */,
 				58D92D5C18C7A6B10090E7E2 /* AppDelegate.m in Sources */,
 				58D92D6C18C7A6D00090E7E2 /* main.m in Sources */,
+				EE23E6E8198B0B0600215C81 /* TableViewController.m in Sources */,
 				58D92D6418C7A6BC0090E7E2 /* ViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

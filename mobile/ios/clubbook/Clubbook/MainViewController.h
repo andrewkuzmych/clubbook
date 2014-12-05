@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UISlider *sliderControl;
 @property (weak, nonatomic) IBOutlet UILabel *distance;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentControl;
+@property (strong, nonatomic) NSMutableArray *places;
 - (IBAction)SliderChanged:(id)sender;
 - (IBAction)sliderTouchUp:(id)sender;
 //- (IBAction)checkinAction:(UIButton *)sender;

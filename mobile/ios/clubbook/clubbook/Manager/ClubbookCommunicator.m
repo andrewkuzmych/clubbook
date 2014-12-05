@@ -80,6 +80,35 @@
     });
 }
 
+- (void)changePass:(NSString *) oldPass newPass:(NSString *) newPass accessToken:(NSString *) accessToken
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/update_pass?access_token=%@", baseURL, accessToken];
+        NSDictionary * data  =
+        [NSDictionary
+         dictionaryWithObjectsAndKeys:
+         oldPass, @"old_password",
+         newPass, @"new_password",
+         nil];
+        
+        NSMutableURLRequest *request;
+        request = [self generateRequest:data url:urlAsString method:@"PUT"];
+        
+        [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            
+            if (error) {
+                [self.delegate failedWithError:error];
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.delegate changePassJSON:data];
+                });
+            }
+        }];
+    });
+
+}
+
 - (void)updateUserImage:(NSString *) userId objectId:(NSString *) objectId accessToken:(NSString *) accessToken{
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
@@ -315,6 +344,26 @@
     });
 }
 
+- (void)updateUserLocation:(double) lat lon:(double) lon accessToken:(NSString *) accessToken
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // switch to a background thread and perform your expensive operation
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/location/update?user_lat=%f&user_lon=%f&access_token=%@", baseURL, lat, lon, accessToken];
+        
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
+        
+        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [self.delegate failedWithError:error];
+                } else {
+                    [self.delegate updateUserLocationJSON:data];
+                }
+            });
+        }];
+    });
+}
+
 - (void)retrieveConversation:(NSString *) fromUser toUser:(NSString *) toUser accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -397,12 +446,15 @@
     
 }
 
-- (void)retrievePlaces:(double) lat lon:(double) lon accessToken:(NSString *) accessToken;
+- (void)retrievePlaces:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance accessToken:(NSString *) accessToken;
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/club?user_lat=%f&user_lon=%f&access_token=%@", baseURL, lat, lon, accessToken];
-
+        int distanceTemp = distance;
+        if (distanceTemp == 0) {
+            distanceTemp = 100000;
+        }
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/club?user_lat=%f&user_lon=%f&skip=%d&take=%d&distance=%d&access_token=%@", baseURL, lat, lon, skip, take, distanceTemp, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
@@ -443,6 +495,74 @@
             
         }];
         
+    });
+}
+
+- (void)retrievePlaceUsers:(NSString *) clubId accessToken:(NSString *) accessToken
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // switch to a background thread and perform your expensive operation
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/club/%@/users?access_token=%@", baseURL, clubId, accessToken];
+        
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
+        
+        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (error) {
+                    [self.delegate failedWithError:error];
+                } else {
+                    [self.delegate receivedPlaceUsersJSON:data];
+                }
+            });
+        }];
+    });
+}
+
+- (void)retrievePlaceUsersYesterday:(NSString *) clubId accessToken:(NSString *) accessToken
+{
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // switch to a background thread and perform your expensive operation
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/club/%@/users/yesterday?access_token=%@", baseURL, clubId, accessToken];
+        
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
+        
+        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (error) {
+                    [self.delegate failedWithError:error];
+                } else {
+                    [self.delegate receivedPlaceUsersYesterdayJSON:data];
+                }
+            });
+        }];
+    });
+}
+
+- (void)receivedUsers:(bool)all take:(int) take skip:(int) skip lat:(double) lat lon:(double) lon distance:(double) distance accessToken:(NSString *) accessToken
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // switch to a background thread and perform your expensive operation
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/users/checkedin?user_lat=%f&user_lon=%f&skip=%d&take=%d&distance=%f&access_token=%@", baseURL, lat, lon, skip, take, distance, accessToken];
+        if (all) {
+             urlAsString = [NSString stringWithFormat:@"%@obj/users/around?user_lat=%f&user_lon=%f&skip=%d&take=%d&distance=%f&access_token=%@", baseURL, lat, lon, skip, take, distance, accessToken];
+        }
+        
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
+        
+        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [self.delegate failedWithError:error];
+                } else {
+                    [self.delegate receivedUsersCheckedinJSON:data];
+                }
+            });
+        }];
     });
 }
 
@@ -680,6 +800,8 @@
     });
 }
 
+
+
 - (void)getConfig
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -697,6 +819,108 @@
                     [self.delegate getConfigJSON:data];
                 }
             });
+        }];
+    });
+}
+
+
+- (void)blockUser:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken;
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // switch to a background thread and perform your expensive operation
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/block/%@?access_token=%@", baseURL, userId, friendId, accessToken];
+        
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
+        
+        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [self.delegate failedWithError:error];
+                } else {
+                    [self.delegate blockUserJSON:data];
+                }
+            });
+        }];
+    });
+}
+
+
+- (void)unblockUser:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // switch to a background thread and perform your expensive operation
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/unblock/%@?access_token=%@", baseURL, userId, friendId, accessToken];
+        
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
+        
+        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [self.delegate failedWithError:error];
+                } else {
+                    [self.delegate unblockUserJSON:data];
+                }
+            });
+        }];
+    });
+
+}
+
+- (void)inviteFbFriends:(NSString *) userId fb_ids:(NSArray *) fb_ids accessToken:(NSString *) accessToken
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSString *fbIdCommaSeparated = [fb_ids componentsJoinedByString:@","];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/fb/invite?access_token=%@", baseURL, userId, accessToken];
+        NSDictionary * data  =
+        [NSDictionary
+         dictionaryWithObjectsAndKeys:
+         fbIdCommaSeparated, @"fb_ids",
+         nil];
+        
+        NSMutableURLRequest *request;
+        request = [self generateRequest:data url:urlAsString method:@"POST"];
+        
+        [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            
+            if (error) {
+                [self.delegate failedWithError:error];
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.delegate inviteFbFriendsJSON:data];
+                });
+            }
+        }];
+    });
+
+}
+
+- (void)findFbFriends:(NSArray *) fb_ids accessToken:(NSString *) accessToken
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSString *fbIdCommaSeparated = [fb_ids componentsJoinedByString:@","];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/fb/find?access_token=%@", baseURL, accessToken];
+        NSDictionary * data  =
+        [NSDictionary
+         dictionaryWithObjectsAndKeys:
+         fbIdCommaSeparated, @"fb_ids",
+         nil];
+        
+        NSMutableURLRequest *request;
+        request = [self generateRequest:data url:urlAsString method:@"POST"];
+        
+        [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            
+            if (error) {
+                [self.delegate failedWithError:error];
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.delegate findFbFriendsJSON:data];
+                });
+            }
         }];
     });
 }

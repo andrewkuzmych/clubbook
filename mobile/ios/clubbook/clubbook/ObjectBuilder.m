@@ -109,15 +109,60 @@
     for (NSDictionary *placeDic in venues) {
         Place *place = [[Place alloc] init];
         
-        place.id = [placeDic objectForKey:@"id"];
+        place.id  = [placeDic objectForKey:@"id"];
         place.title = [placeDic objectForKey:@"club_name"];
-        place.address = [placeDic objectForKey:@"club_address"];
         place.phone = [placeDic objectForKey:@"club_phone"];
+        place.address = [placeDic objectForKey:@"club_address"];
+        place.email = [placeDic objectForKey:@"club_email"];
+        place.site = [placeDic objectForKey:@"club_site"];
         place.avatar = [placeDic objectForKey:@"club_logo"];
-        place.lat = [[placeDic objectForKey:@"club_loc"] objectForKey:@"lat"];
+        place.info = [placeDic objectForKey:@"club_info"];
+        place.capacity = [[placeDic objectForKey:@"club_capacity"] intValue];
+        place.ageRestriction = [placeDic objectForKey:@"club_age_restriction"];
+        place.dressCode = [placeDic objectForKey:@"club_dress_code"];
+        place.distance = [[placeDic objectForKey:@"distance"] doubleValue] * 1000; // convert to meters;
+        
         place.lon = [[placeDic objectForKey:@"club_loc"] objectForKey:@"lon"];
+        place.lat = [[placeDic objectForKey:@"club_loc"] objectForKey:@"lat"];
         place.countOfUsers = [[placeDic objectForKey:@"active_checkins"] intValue];
         place.friendsCount = [[placeDic objectForKey:@"active_friends_checkins"] intValue];
+        
+        //place.friendsCount = [[parsedObject objectForKey:@"friends_count"] intValue];
+        
+        NSMutableArray *photos = [[NSMutableArray alloc] init];
+        
+        NSArray *club_photos = [placeDic objectForKey:@"club_photos"];
+        
+        for (NSString *club_photo in club_photos) {
+            [photos addObject:club_photo];
+        }
+        
+        place.photos = photos;
+        
+        // get working hours
+        NSMutableArray *clubWorkingHours = [[NSMutableArray alloc] init];
+        NSArray *clubWorkingHoursJson = [placeDic objectForKey:@"club_working_hours"];
+        for (NSDictionary *clubWorkingHourJson in clubWorkingHoursJson) {
+            WorkingHour *workingHour = [[WorkingHour alloc] init];
+            workingHour.day = [[clubWorkingHourJson objectForKey:@"day"] intValue];
+            workingHour.startTime = [clubWorkingHourJson objectForKey:@"start_time"];
+            workingHour.endTime = [clubWorkingHourJson objectForKey:@"end_time"];
+            workingHour.status = [clubWorkingHourJson objectForKey:@"status"];
+            [clubWorkingHours addObject:workingHour];
+        }
+        place.workingHours = clubWorkingHours;
+        
+        // get today working hours
+        NSDictionary *clubWorkingHoursTodayJson = [placeDic objectForKey:@"club_today_working_hours"];
+        WorkingHour *workingHour = [[WorkingHour alloc] init];
+        
+        if ([clubWorkingHoursTodayJson valueForKey:@"day"] != nil && [clubWorkingHoursTodayJson valueForKey:@"day"] != [NSNull null]) {
+            workingHour.day = [[clubWorkingHoursTodayJson objectForKey:@"day"] intValue];
+            workingHour.startTime = [clubWorkingHoursTodayJson objectForKey:@"start_time"];
+            workingHour.endTime = [clubWorkingHoursTodayJson objectForKey:@"end_time"];
+            workingHour.status = [clubWorkingHoursTodayJson objectForKey:@"status"];
+            place.todayWorkingHours = workingHour;
+        }
         
         [places addObject:place];
     }
@@ -125,7 +170,7 @@
     return places;
 }
 
-+ (NSArray *)friendsJSON:(NSData *)objectNotation error:(NSError **)error
++ (FriendsResult *)friendsJSON:(NSData *)objectNotation error:(NSError **)error
 {
     NSError *localError = nil;
     NSDictionary *parsedObject = [NSJSONSerialization JSONObjectWithData:objectNotation options:0 error:&localError];
@@ -148,10 +193,20 @@
         [friends addObject:friend];
     }
     
-    return friends;
+    FriendsResult *friendResult = [[FriendsResult alloc] init];
+    friendResult.friends = friends;
+    if ([result valueForKey:@"pending_count"] != nil && [result valueForKey:@"pending_count"] != [NSNull null]) {
+        friendResult.countOfPendings = [[result objectForKey:@"pending_count"] intValue];
+    }
+    
+    if ([result valueForKey:@"friends_count"] != nil && [result valueForKey:@"friends_count"] != [NSNull null]) {
+        friendResult.countOfFriends = [[result objectForKey:@"friends_count"] intValue];
+    }
+    
+    return friendResult;
 }
 
-+ (Place *)placeFromJSON:(NSData *)objectNotation error:(NSError **)error
++ (NSArray *)usersJSON:(NSData *)objectNotation error:(NSError **)error
 {
     NSError *localError = nil;
     NSDictionary *parsedObject = [NSJSONSerialization JSONObjectWithData:objectNotation options:0 error:&localError];
@@ -160,11 +215,77 @@
         *error = localError;
         return nil;
     }
-
-    NSMutableArray *users = [[NSMutableArray alloc] init];
-    NSDictionary *clubJson = [parsedObject objectForKey:@"club"];
-    NSArray *usersJson = [parsedObject objectForKey:@"users"];
     
+    // extract specific value...
+    NSDictionary *result = [parsedObject objectForKey:@"result"];
+    
+    NSArray *usersJson = [result objectForKey:@"users"];
+    
+    NSMutableArray *users = [[NSMutableArray alloc] init];
+    
+    for (NSDictionary *userDic in usersJson) {
+        User *user = [self getUserBase:parsedObject userJson:userDic];
+        
+        [users addObject:user];
+    }
+    
+    return users;
+}
+
++ (NSArray *)placeUsersFromJSON:(NSData *)objectNotation error:(NSError **)error
+{
+    NSError *localError = nil;
+    NSDictionary *parsedObject = [NSJSONSerialization JSONObjectWithData:objectNotation options:0 error:&localError];
+    
+    if (localError != nil) {
+        *error = localError;
+        return nil;
+    }
+    
+    NSMutableArray *users = [[NSMutableArray alloc] init];
+    NSArray *usersJson = [parsedObject objectForKey:@"users"];
+    for (NSDictionary *userJson in usersJson) {
+        
+        User *user = [self getUserBase:parsedObject userJson:userJson];
+        [users addObject:user];
+    }
+    
+    return users;
+}
+
++ (UsersYesterday *)placeUsersYesterdayFromJSON:(NSData *)objectNotation error:(NSError **)error
+{
+    NSError *localError = nil;
+    NSDictionary *parsedObject = [NSJSONSerialization JSONObjectWithData:objectNotation options:0 error:&localError];
+    
+    if (localError != nil) {
+        *error = localError;
+        return nil;
+    }
+    
+    UsersYesterday *usersYesterday =  [[UsersYesterday alloc] init];
+    NSMutableArray *users = [[NSMutableArray alloc] init];
+    NSString * msg = [parsedObject objectForKey:@"msg"];
+    
+    usersYesterday.hasAccess = YES;
+    if ([msg isEqualToString:@"yes_not_checked_in"]) {
+        usersYesterday.hasAccess = NO;
+    }
+    NSArray *usersJson = [parsedObject objectForKey:@"users"];
+    for (NSDictionary *userJson in usersJson) {
+        
+        User *user = [self getUserBase:parsedObject userJson:userJson];
+        [users addObject:user];
+        
+    }
+    
+    usersYesterday.users = users;
+    
+    return usersYesterday;
+}
+
++ (Place *)getPlace:(NSDictionary *)clubJson
+{
     Place *place = [[Place alloc] init];
     
     place.id  = [clubJson objectForKey:@"id"];
@@ -183,9 +304,9 @@
     place.lat = [[clubJson objectForKey:@"club_loc"] objectForKey:@"lat"];
     place.countOfUsers = [[clubJson objectForKey:@"active_checkins"] intValue];
     place.friendsCount = [[clubJson objectForKey:@"active_friends_checkins"] intValue];
-
+    
     //place.friendsCount = [[parsedObject objectForKey:@"friends_count"] intValue];
-
+    
     NSMutableArray *photos = [[NSMutableArray alloc] init];
     
     NSArray *club_photos = [clubJson objectForKey:@"club_photos"];
@@ -193,7 +314,7 @@
     for (NSString *club_photo in club_photos) {
         [photos addObject:club_photo];
     }
-
+    
     place.photos = photos;
     
     // get working hours
@@ -220,6 +341,25 @@
         workingHour.status = [clubWorkingHoursTodayJson objectForKey:@"status"];
         place.todayWorkingHours = workingHour;
     }
+    return place;
+}
+
++ (Place *)placeFromJSON:(NSData *)objectNotation error:(NSError **)error
+{
+    NSError *localError = nil;
+    NSDictionary *parsedObject = [NSJSONSerialization JSONObjectWithData:objectNotation options:0 error:&localError];
+    
+    if (localError != nil) {
+        *error = localError;
+        return nil;
+    }
+
+    NSMutableArray *users = [[NSMutableArray alloc] init];
+    NSDictionary *clubJson = [parsedObject objectForKey:@"club"];
+    NSArray *usersJson = [parsedObject objectForKey:@"users"];
+      
+    Place *place;
+    place = [self getPlace:clubJson];
    
     for (NSDictionary *userJson in usersJson) {
         
@@ -241,6 +381,23 @@
     
     return place;
    
+}
+
++ (BOOL)changePassFromJSON:(NSData *)objectNotation error:(NSError **)error
+{
+    NSError *localError = nil;
+    NSDictionary *parsedObject = [NSJSONSerialization JSONObjectWithData:objectNotation options:0 error:&localError];
+    
+    if (localError != nil) {
+        *error = localError;
+        return nil;
+    }
+    
+    // extract specific value...
+    NSString *stats = [parsedObject objectForKey:@"status"];
+    
+    return [stats isEqualToString:@"ok"];
+    
 }
 
 + (User *)userFromJSON:(NSData *)objectNotation error:(NSError **)error
@@ -447,6 +604,9 @@
     }
     
     user.id  = [userJson objectForKey:@"id"];
+    if (!user.id) {
+        user.id  = [userJson objectForKey:@"_id"];
+    }
     user.email  = [userJson objectForKey:@"email"];
     user.name  = [userJson objectForKey:@"name"];
     user.gender  = [userJson objectForKey:@"gender"];
@@ -462,6 +622,14 @@
     NSNumber * isPush = (NSNumber *)[userJson objectForKey: @"push"];
     user.push = (isPush && [isPush boolValue] == YES);
     
+    NSNumber * isBlocked = (NSNumber *)[userJson objectForKey: @"is_blocked"];
+    user.isBlocked = (isBlocked && [isBlocked boolValue] == YES);
+    
+    user.isFb = NO;
+     if ([userJson valueForKey:@"fb_id"] != nil && [userJson valueForKey:@"fb_id"] != [NSNull null]) {
+         user.isFb = YES;
+     }
+    
     if ([userJson valueForKey:@"checkin"] != nil && [userJson valueForKey:@"checkin"] != [NSNull null]) {
         NSArray * checkins = [userJson objectForKey:@"checkin"];
         if (checkins.count > 0) {
@@ -473,6 +641,7 @@
                 if ([[checkinJson objectForKey:@"club"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *clubJson = [checkinJson objectForKey:@"club"];
                     
+                    user.place = [self getPlace:clubJson];
                     user.currentCheckinClubName = [clubJson objectForKey:@"club_name"];
                 }
             }

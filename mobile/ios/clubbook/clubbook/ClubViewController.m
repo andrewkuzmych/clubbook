@@ -70,12 +70,12 @@
 
 - (void)populateData
 {
-    self.nameLabel.text = self.place.title;
+    self.nameLabel.text = NSLocalizedString(@"about", nil); //self.place.title;
     
     if (self.place.address!= nil) {
-        [self.addressButton setTitle:self.place.address forState:UIControlStateNormal];
+        self.addressLabel.text = self.place.address;
     } else {
-        [self.addressButton setTitle:NSLocalizedString(@"unknown", nil) forState:UIControlStateNormal];
+        self.addressLabel.text = NSLocalizedString(@"unknown", nil);
     }
     
     if (self.place.site!= nil) {
@@ -113,6 +113,9 @@
     } else {
         self.dressCodeLabel.text = NSLocalizedString(@"none", nil);
     }
+    
+    int disatanceInt = (int)self.place.distance;
+    self.distanceLabel.text = [LocationHelper convertDistance:disatanceInt];
     
     self.clubDescLabel.text = self.place.info;
     
@@ -178,7 +181,7 @@
 
 - (void)styleUi
 {
-    self.nameLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:19.0];
+    self.nameLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:19.0];
     self.clubDescLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
     self.ageRestrictionTitleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
     self.ageRestrictionTitleLabel.text = NSLocalizedString(@"ageRestiction", nil);
@@ -194,16 +197,19 @@
     self.dressCodeLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15.0];
     
     self.capacityLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15.0];
+
     
+    self.addressLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
+    self.distanceLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:11.0];
     self.addressButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
     
-    self.siteButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
+    self.siteButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
     
-    self.emailButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
+    self.emailButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
     
-    self.phoneButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
+    self.phoneButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
     
-    UIFont *workingHoursFont = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:15.0];
+    UIFont *workingHoursFont = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
     self.monTitleLabel.font = workingHoursFont;
     self.monHoursLabel.font = workingHoursFont;
     self.tueTitleLabel.font = workingHoursFont;
@@ -243,7 +249,7 @@
         label.text = NSLocalizedString(@"closed", nil);
     
     if (workingHour.day == self.place.todayWorkingHours.day) {
-        label.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17.0];
+        label.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:13.0];
     }
 }
 
@@ -265,7 +271,7 @@
     
     
     if (indexPath.row == 1) {
-        CGSize maximumLabelSize = CGSizeMake(296,9999);
+        CGSize maximumLabelSize = CGSizeMake(280,9999);
         CGSize expectedLabelSize = [self.clubDescLabel.text sizeWithFont:self.clubDescLabel.font
                                         constrainedToSize:maximumLabelSize
                                             lineBreakMode:self.clubDescLabel.lineBreakMode];
@@ -282,6 +288,17 @@
     }
     
     return height;
+}
+
+- (IBAction)distanceAction:(id)sender {
+    MKPlacemark* place = [[MKPlacemark alloc] initWithCoordinate: CLLocationCoordinate2DMake([self.place.lat doubleValue], [self.place.lon doubleValue]) addressDictionary: nil];
+    MKMapItem* destination = [[MKMapItem alloc] initWithPlacemark: place];
+    destination.name = self.place.title;
+    NSArray* items = [[NSArray alloc] initWithObjects: destination, nil];
+    NSDictionary* options = [[NSDictionary alloc] initWithObjectsAndKeys:
+                             MKLaunchOptionsDirectionsModeWalking,
+                             MKLaunchOptionsDirectionsModeKey, nil];
+    [MKMapItem openMapsWithItems: items launchOptions: options];
 }
 
 - (IBAction)addressAction:(id)sender {

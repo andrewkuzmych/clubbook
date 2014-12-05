@@ -17,7 +17,6 @@
 #import "FBAdImage.h"
 #import "FBAdView.h"
 
-@class FBAdRequest;
 @protocol FBNativeAdDelegate;
 
 /*!
@@ -27,16 +26,6 @@
  The FBNativeAd represents ad metadata to allow you to construct custom ad views.
  See the NativeAdSample in the sample apps section of the Audience Network framework.
  */
-@class FBNativeAd;
-
-/*!
- @typedef FBNativeAdCompletionHandler
-
- @abstract
- The completion handler invoked when the ad is clicked.
- */
-typedef void (^FBNativeAdCompletionHandler)(FBNativeAd *nativeAd);
-
 @interface FBNativeAd : NSObject
 
 /*!
@@ -85,7 +74,6 @@ typedef void (^FBNativeAdCompletionHandler)(FBNativeAd *nativeAd);
  */
 @property (nonatomic, weak) id<FBNativeAdDelegate> delegate;
 
-/* initialize an instance of FBNative Ad with a placement ID and a view controller */
 /*!
  @method
 
@@ -103,10 +91,13 @@ typedef void (^FBNativeAdCompletionHandler)(FBNativeAd *nativeAd);
  This is a method to associate a FBNativeAd with the UIView you will use to display the native ads.
 
  @param view The UIView you created to render all the native ads data elements.
+ @param viewController The UIViewController that will be used to present SKStoreProductViewController
+ (iTunes Store product information) or the in-app browser.
 
  @discussion The whole area of the UIView will be clickable.
  */
-- (void)registerViewForInteraction:(UIView *)view;
+- (void)registerViewForInteraction:(UIView *)view
+                withViewController:(UIViewController *)viewController;
 
 /*!
  @method
@@ -116,10 +107,14 @@ typedef void (^FBNativeAdCompletionHandler)(FBNativeAd *nativeAd);
  and set clickable areas.
 
  @param view The UIView you created to render all the native ads data elements.
+ @param viewController The UIViewController that will be used to present SKStoreProductViewController
+ (iTunes Store product information).
  @param clickableViews An array of UIView you created to render the native ads data element, e.g.
  CallToAction button, Icon image, which you want to specify as clickable.
  */
-- (void)registerViewForInteraction:(UIView *)view withClickableViews:(NSArray *)clickableViews;
+- (void)registerViewForInteraction:(UIView *)view
+                withViewController:(UIViewController *)viewController
+                withClickableViews:(NSArray *)clickableViews;
 
 /*!
  @method
@@ -160,6 +155,8 @@ typedef void (^FBNativeAdCompletionHandler)(FBNativeAd *nativeAd);
  */
 @protocol FBNativeAdDelegate <NSObject>
 
+@optional
+
 /*!
  @method
 
@@ -169,6 +166,17 @@ typedef void (^FBNativeAdCompletionHandler)(FBNativeAd *nativeAd);
  @param nativeAd An FBNativeAd object sending the message.
  */
 - (void)nativeAdDidLoad:(FBNativeAd *)nativeAd;
+
+/*!
+ @method
+
+ @abstract
+ Sent immediately before the impression of an FBNativeAd object will be logged.
+
+ @param nativeAd An FBNativeAd object sending the message.
+ */
+- (void)nativeAdWillLogImpression:(FBNativeAd *)nativeAd;
+
 /*!
  @method
 
