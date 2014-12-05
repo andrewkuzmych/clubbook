@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="x35-er-2Fh">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="x35-er-2Fh">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -599,8 +600,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="phQ-b2-ll2">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="f2u-1R-Mz3"/>
+                                </constraints>
+                            </scrollView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="75" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="kH0-2c-mrd">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="45" width="320" height="523"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="separatorColor" red="0.78985969389999999" green="0.78985969389999999" blue="0.78985969389999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -745,9 +752,15 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="kH0-2c-mrd" firstAttribute="top" secondItem="3" secondAttribute="topMargin" constant="45" id="0NO-oI-AEr"/>
                             <constraint firstAttribute="trailing" secondItem="kH0-2c-mrd" secondAttribute="trailing" id="CTT-bk-QeK"/>
-                            <constraint firstItem="kH0-2c-mrd" firstAttribute="top" secondItem="3" secondAttribute="top" id="VjO-Pw-JYR"/>
+                            <constraint firstItem="phQ-b2-ll2" firstAttribute="leading" secondItem="3" secondAttribute="leadingMargin" constant="-16" id="T5g-q6-1vu"/>
+                            <constraint firstItem="kH0-2c-mrd" firstAttribute="top" secondItem="3" secondAttribute="top" constant="45" id="VjO-Pw-JYR"/>
+                            <constraint firstItem="kH0-2c-mrd" firstAttribute="top" secondItem="3" secondAttribute="topMargin" constant="45" id="Yo2-ND-Q1n"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="phQ-b2-ll2" secondAttribute="trailing" constant="-16" id="Z01-vi-GHQ"/>
+                            <constraint firstItem="kH0-2c-mrd" firstAttribute="top" secondItem="phQ-b2-ll2" secondAttribute="bottom" id="cau-SM-gdL"/>
                             <constraint firstAttribute="bottom" secondItem="kH0-2c-mrd" secondAttribute="bottom" id="cus-hN-68e"/>
+                            <constraint firstItem="phQ-b2-ll2" firstAttribute="top" secondItem="3" secondAttribute="topMargin" id="gCE-yI-5g2"/>
                             <constraint firstItem="kH0-2c-mrd" firstAttribute="leading" secondItem="3" secondAttribute="leading" id="s8v-5G-9wP"/>
                         </constraints>
                     </view>
@@ -756,6 +769,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="clubTable" destination="kH0-2c-mrd" id="46H-rV-msg"/>
+                        <outlet property="filterTabView" destination="phQ-b2-ll2" id="fqJ-5i-ZKL"/>
                         <outlet property="sidebarButton" destination="4DU-rm-gHC" id="BaI-ve-kd6"/>
                         <segue destination="cfA-T2-NrK" kind="push" identifier="onClub" id="R55-D2-Pfl"/>
                     </connections>
@@ -3366,8 +3380,8 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="SSh-NF-ryv"/>
-        <segue reference="g4R-r7-bxr"/>
         <segue reference="Ky6-MD-mgx"/>
+        <segue reference="dow-PZ-Aqs"/>
         <segue reference="R55-D2-Pfl"/>
         <segue reference="SRl-Ke-nF1"/>
     </inferredMetricsTieBreakers>

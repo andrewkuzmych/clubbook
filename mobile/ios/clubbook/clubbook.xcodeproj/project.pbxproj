@@ -382,6 +382,8 @@
 		49E831E61959DA2800D4A26C /* green_color_selected.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 49E831E51959DA2800D4A26C /* green_color_selected.jpg */; };
 		49E831EA1959DE5200D4A26C /* user@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49E831E91959DE5200D4A26C /* user@2x.png */; };
 		49F2C675199C9A29006A3E21 /* Config.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F2C674199C9A29006A3E21 /* Config.m */; };
+		522ACCDF1A32084F006789EB /* SPSlideTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDC1A32084F006789EB /* SPSlideTabBar.m */; };
+		522ACCE01A32084F006789EB /* SPSlideTabButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDE1A32084F006789EB /* SPSlideTabButton.m */; };
 		F4EECF12177C99F400778578 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF11177C99F400778578 /* UIKit.framework */; };
 		F4EECF14177C99F400778578 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF13177C99F400778578 /* Foundation.framework */; };
 		F4EECF16177C99F400778578 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF15177C99F400778578 /* CoreGraphics.framework */; };
@@ -1057,6 +1059,10 @@
 		49E831E91959DE5200D4A26C /* user@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "user@2x.png"; path = "Images/user@2x.png"; sourceTree = "<group>"; };
 		49F2C673199C9A29006A3E21 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Config.h; path = DTO/Config.h; sourceTree = "<group>"; };
 		49F2C674199C9A29006A3E21 /* Config.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Config.m; path = DTO/Config.m; sourceTree = "<group>"; };
+		522ACCDB1A32084F006789EB /* SPSlideTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPSlideTabBar.h; path = SPSlideTabBar/SPSlideTabBar.h; sourceTree = "<group>"; };
+		522ACCDC1A32084F006789EB /* SPSlideTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPSlideTabBar.m; path = SPSlideTabBar/SPSlideTabBar.m; sourceTree = "<group>"; };
+		522ACCDD1A32084F006789EB /* SPSlideTabButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPSlideTabButton.h; path = SPSlideTabBar/SPSlideTabButton.h; sourceTree = "<group>"; };
+		522ACCDE1A32084F006789EB /* SPSlideTabButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPSlideTabButton.m; path = SPSlideTabBar/SPSlideTabButton.m; sourceTree = "<group>"; };
 		F4EECF0E177C99F400778578 /* Clubbook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clubbook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4EECF11177C99F400778578 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F4EECF13177C99F400778578 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1977,6 +1983,7 @@
 		49E8319119534EBB00D4A26C /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				522ACCE11A320852006789EB /* SPSlideTabBar */,
 				49C43BC91A0277F7004F5058 /* SVPullToRefresh */,
 				4994848919FB957600E906C0 /* SwipeView */,
 				4934F7F119D04B9300BFFDB1 /* JSQSystemSoundPlayer */,
@@ -1990,6 +1997,17 @@
 				498A67FB196C4CFD00BC2859 /* PubNub */,
 			);
 			name = Libs;
+			sourceTree = "<group>";
+		};
+		522ACCE11A320852006789EB /* SPSlideTabBar */ = {
+			isa = PBXGroup;
+			children = (
+				522ACCDB1A32084F006789EB /* SPSlideTabBar.h */,
+				522ACCDC1A32084F006789EB /* SPSlideTabBar.m */,
+				522ACCDD1A32084F006789EB /* SPSlideTabButton.h */,
+				522ACCDE1A32084F006789EB /* SPSlideTabButton.m */,
+			);
+			name = SPSlideTabBar;
 			sourceTree = "<group>";
 		};
 		F4EECF05177C99F400778578 = {
@@ -2542,6 +2560,7 @@
 				4934F75E19D047B800BFFDB1 /* SDWebImageDownloaderOperation.m in Sources */,
 				49ABA13B198FEE7700B060D0 /* WebViewController.m in Sources */,
 				498A68DC196C4CFD00BC2859 /* PNResponseParser.m in Sources */,
+				522ACCDF1A32084F006789EB /* SPSlideTabBar.m in Sources */,
 				4934F7D719D04A7100BFFDB1 /* JSQMessagesKeyboardController.m in Sources */,
 				4993F2121979194900A225BE /* MRNavigationBarProgressView.m in Sources */,
 				498A68F5196C4CFD00BC2859 /* NSMutableArray+PNAdditions.m in Sources */,
@@ -2596,6 +2615,7 @@
 				4934F7D519D04A7100BFFDB1 /* UIImage+JSQMessages.m in Sources */,
 				49E8316E1952EF3F00D4A26C /* ClubbookCommunicator.m in Sources */,
 				498A6903196C4CFD00BC2859 /* PNMessageHistoryRequest.m in Sources */,
+				522ACCE01A32084F006789EB /* SPSlideTabButton.m in Sources */,
 				498A68D9196C4CFD00BC2859 /* PNOperationStatusResponseParser.m in Sources */,
 				4934F75D19D047B800BFFDB1 /* SDWebImageDownloader.m in Sources */,
 				4994848819FB7DBD00E906C0 /* FastCheckinViewController.m in Sources */,
