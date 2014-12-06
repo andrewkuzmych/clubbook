@@ -147,9 +147,7 @@
         self.friendsTable.delegate = self;
         [self.friendsTable reloadData];
     });
-
 }
-
 
 - (void)didReceiveMemoryWarning
 {

@@ -36,10 +36,6 @@
 
 -(NSUInteger)supportedInterfaceOrientations
 {
-    // AppDelegate *appDelegate = (AppDelegate *) [UIApplication sharedApplication].delegate;
-    //if(appDelegate.isOrientationOn) {
-    //    return UIInterfaceOrientationMaskAll;
-    //}
     return UIInterfaceOrientationMaskAll;
 }
 
@@ -271,8 +267,6 @@
     NSString *userName = [defaults objectForKey:@"userName"];
     
     [self sendMessage:[NSString stringWithFormat:NSLocalizedString(@"invite_for_drink", nil), userName] type:@"drink"];
-    
-    //[self sendMessage:NSLocalizedString(@"invite_for_drink", nil) type:@"drink"];
 }
 
 - (void)sendMessage:(NSString *)message type:(NSString *)type
@@ -301,14 +295,7 @@
 
 - (void)putMessage:(NSString *)message type:(NSString *)type sender:(NSString *) sender
 {
-    JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date]];
-    /*JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
-    if ([type isEqualToString:@"drink"]) {
-        jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
-    } else if ([type isEqualToString:@"smile"]) {
-        jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
-    }*/
-    
+    JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date]];    
 
     [self.messages addObject:jsqmessage];
     [self setCanChat];

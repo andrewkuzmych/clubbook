@@ -22,5 +22,6 @@
 
 - (IBAction)sliderChanged:(id)sender;
 - (IBAction)sliderTouchUp:(id)sender;
+- (IBAction)usersSegmentChanged:(id)sender;
 
 @end

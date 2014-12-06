@@ -41,14 +41,11 @@
     
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     
-    
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:
      @{UITextAttributeFont:[UIFont fontWithName:NSLocalizedString(@"fontBold", nil)  size:16]
        } forState:UIControlStateNormal];
 
     [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
-    
-    
     
     // Register for Push Notitications, if running iOS 8
     if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {

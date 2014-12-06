@@ -1,0 +1,52 @@
+doctype 5
+html
+    head
+        title "Download Clubbook"
+        != css('/css/download_style')
+        link(rel="shortcut icon", href="/favicon.ico")
+
+        script(type="text/javascript", src="http://cufon.shoqolate.com/js/cufon-yui.js")
+        script(type="text/javascript", src="http://lp.frontflip.com/rs/frontflip/images/league-gothic.cufonfonts.js")
+        script.
+            Cufon.replace('.heading', { fontFamily: 'League Gothic', hover: true });
+            Cufon.replace('.actionButton', { fontFamily: 'League Gothic', hover: true });
+
+        script(type="text/javascript", src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js")
+        script(type="text/javascript", src="http://lp.frontflip.com/rs/frontflip/images/jquery.fittext.js")
+
+        script(type="text/javascript").
+            $(document).ready(function () {
+                var linkLocation = "#";
+                var iPhone = navigator.userAgent.match(/iPhone/i);
+                if (navigator.platform == 'iPad' || navigator.platform == 'iPhone' || navigator.platform == 'iPod') {
+                    iPhone = true;
+                }
+                var isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
+
+                if (isAndroid) { linkLocation = "https://play.google.com/store/apps/details?id=com.nl.clubbook"; }
+                if (iPhone) { linkLocation = "https://itunes.apple.com/us/app/clubbook/id910664382"; }
+
+                $(".actionButton").click(function () { window.location.href = linkLocation; });
+            });
+
+    body
+        div.container
+            .message
+                img(src='/img/clubbook_logo.png', alt='Clubbook', title='Clubbook')
+                h1 Let's get Social in the Club!
+                h1 Get the FREE app now
+                br
+                .actionButtonContainer
+                    .actionButton
+                        h1#download_text Download
+
+            script.
+                // Both functions resize text to fit browser width
+                $("#message_text").fitText(2.7);
+                $("#download_text").fitText(0.9);
+
+                // On mobile browser resize, page is restarted to adjust content to borders
+                $(window).resize(function () {
+                    location.reload();
+                });
+

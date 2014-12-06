@@ -52,6 +52,10 @@ block content
                   i.fa.fa-edit
                     &nbsp;
                     | edit
+                a.btn.default.black(href='/venue/#{current_venue._id}/news_delete/#{the_news._id}', style="margin:3px", onclick="return confirm('Are you sure you want to delete this news?')")
+                  i.fa.fa-edit
+                    &nbsp;
+                    | delete
 
       div
         a.btn.btn-primary(href="/venue/#{current_venue._id}/news_create") Add News

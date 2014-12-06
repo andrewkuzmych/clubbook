@@ -239,7 +239,6 @@
     }
 }
 
-
 - (id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController
                          interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController {
     // Check if this is for our custom transition
@@ -523,7 +522,6 @@
         return;
     }
     
-    
     if (self.isFromChat) {
         [self.navigationController popViewControllerAnimated:YES];
     } else {
@@ -612,9 +610,8 @@
     
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle: nil];
     ClubUsersViewController *clubController  = [mainStoryboard instantiateViewControllerWithIdentifier:@"club"];
-    clubController.place = self.currentPlace;//place.id;
+    clubController.place = self.currentPlace;
     clubController.hasBack = YES;
-    // ClubUsersViewController *clubController =  [segue ClubUsersViewController];
     [UIView beginAnimations:@"animation" context:nil];
     [UIView setAnimationDuration:0.5];
     [self.navigationController pushViewController: clubController animated:NO];

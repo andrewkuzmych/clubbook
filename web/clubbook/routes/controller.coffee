@@ -12,6 +12,51 @@ crypto = require('crypto');
 cloudinary = require('cloudinary')
 fs = require('fs')
 
+exports.user_push = (req, res)->
+  console.log 'user_' + req.params.user_id
+  send_push 'user_' + req.params.user_id, req.body.message, 'header', req.body.message
+         
+  res.json
+    status: 'ok'
+
+
+send_push = (channel, msg, header, alert)->
+    #send push
+    Parse = require("parse").Parse
+    Parse.initialize config.parse_app_id, config.parse_js_key
+    
+    # send message to Parse (android)
+    queryAndroid = new Parse.Query(Parse.Installation)
+    queryAndroid.equalTo "channels", channel
+    queryAndroid.equalTo "deviceType", "android"
+    Parse.Push.send
+      where: queryAndroid 
+      data:
+        alert: alert
+        #action: "com.nl.clubbook.UPDATE_STATUS"
+        msg: msg
+        header: header
+    ,
+      success: ->
+        console.log "push sent"
+
+    # Push was successful
+      error: (error) ->
+        console.log "push error: "
+        console.log error
+
+    queryIOS = new Parse.Query(Parse.Installation)
+    queryIOS.equalTo "channels", channel
+    queryIOS.equalTo "deviceType", "ios"      
+    Parse.Push.send
+      where: queryIOS 
+      data:
+        badge: "Increment"
+        alert: alert
+        sound: "nothing"
+
+exports.download = (req, res)->
+  res.render "download", {}
 
 exports.index = (req, res)->
   create_base_model req, res, (model)->
@@ -34,6 +79,13 @@ exports.terms = (req, res)->
     #model.active_venues = venues
     res.render "terms", model
 
+exports.faq = (req, res)->
+  create_base_model req, res, (model)->
+    #model.message_sent = req.flash("message_sent").length > 0
+    #db_model.Venue.find({visible:true}).exec (err, venues)->
+    #model.active_venues = venues
+    res.render "faq", model
+
 exports.privacy = (req, res)->
   create_base_model req, res, (model)->
     #model.message_sent = req.flash("message_sent").length > 0
@@ -44,13 +96,22 @@ exports.privacy = (req, res)->
 exports.home = (req, res)->
   create_base_model req, res, (model)->
     db_model.Venue.findOne().exec (err, venue)->
-      res.redirect "/venue/#{venue._id}/news"
+      res.redirect "/venue/#{venue._id}/clubs"
 
 exports.clubs = (req, res)->
   create_base_model req, res, (model)->
     db_model.Venue.find(req.params.venue_id).exec (err, venues)->
         model.clubs = venues
         res.render "pages/clubs", model
+
+exports.users = (req, res)->
+  console.log 'Users'
+  create_base_model req, res, (model)->
+    db_model.Venue.find(req.params.venue_id).exec (err, venues)->
+        res.render "pages/users", model
+
+  #create_base_model req, res, (model)->
+  #  res.render "pages/users", model
 
 exports.club_create = (req, res)->
   create_base_model req, res, (model)->
@@ -59,12 +120,12 @@ exports.club_create = (req, res)->
     model.club = {}
 
     club_working_hours =  [ {"day" : 1, "status" : "closed"},
-                          {"day" : 2, "status" : "closed"},
-                          {"day" : 3, "status" : "closed"},
-                          {"day" : 4, "status" : "closed"},
-                          {"day" : 5, "status" : "closed"},
-                          {"day" : 6, "status" : "closed"},
-                          {"day" : 0, "status" : "closed"}  ]
+                            {"day" : 2, "status" : "closed"},
+                            {"day" : 3, "status" : "closed"},
+                            {"day" : 4, "status" : "closed"},
+                            {"day" : 5, "status" : "closed"},
+                            {"day" : 6, "status" : "closed"},
+                            {"day" : 0, "status" : "closed"}  ]
 
     model.club.club_working_hours = club_working_hours
     model.age_restrictions = ["n/a", "18+", "21+", "23+", "25+"]
@@ -87,8 +148,7 @@ exports.club_create_action = (req, res)->
         club_age_restriction : req.body.club_age_restriction
         club_capacity : req.body.club_capacity
         
-      venue.club_loc.lat = req.body.lat
-      venue.club_loc.lon = req.body.lng
+      venue.club_loc = {lon:req.body.lng, lat: req.body.lat}
       venue.club_working_hours = []
       for day in [0..6]
         wh =
@@ -98,7 +158,7 @@ exports.club_create_action = (req, res)->
           wh.end_time = req.body["end_date_" + day]
           wh.status = 'opened'
         else
-          wh.status = 'closed'
+          wh.status = 'N/A'
 
         venue.club_working_hours.push wh
 
@@ -137,8 +197,7 @@ exports.club_edit_action = (req, res)->
         venue.club_site = req.body.club_site
         venue.club_info = req.body.club_info
         venue.club_address = req.body.club_address
-        venue.club_loc.lat = req.body.lat
-        venue.club_loc.lon = req.body.lng
+        venue.club_loc = {lon:req.body.lng, lat: req.body.lat}
         venue.club_age_restriction = req.body.club_age_restriction
         venue.club_capacity = req.body.club_capacity
 
@@ -150,7 +209,7 @@ exports.club_edit_action = (req, res)->
               wh.start_time = req.body["start_date_" + wh.day]
               wh.end_time = req.body["end_date_" + wh.day]
             else
-              wh.status = 'closed'
+              wh.status = 'N/A'
 
 
         console.log venue.club_working_hours
@@ -166,7 +225,11 @@ exports.club_edit_action = (req, res)->
         venue.save (err)->
           console.log err
           res.redirect "/venue/#{req.params.venue_id}/clubs"
-     
+    
+exports.club_delete_action = (req, res)->
+  db_model.Venue.findByIdAndRemove(req.params.id).exec (err)->
+    db_model.News.remove {"venue":req.params.id}, (err)->
+      res.redirect "/venue/#{req.params.venue_id}/clubs"
 
 exports.news = (req, res)->
   create_base_model req, res, (model)->
@@ -234,6 +297,11 @@ exports.news_edit_action = (req, res)->
 
         news.save (err)->
           res.redirect "/venue/#{req.params.venue_id}/news" 
+
+exports.news_delete_action = (req, res)->
+  db_model.News.findByIdAndRemove(req.params.id).exec (err)->
+    res.redirect "/venue/#{req.params.venue_id}/news"
+
 
 exports.reset_pass = (req, res)->
   create_base_model req, res, (model)->

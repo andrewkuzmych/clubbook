@@ -16,7 +16,7 @@ block content
      BEGIN PAGE CONTENT
   .row
     .col-md-12
-      table.table.table-bordered.table-striped.table-condensed.flip-content
+      table#clubs.table.table-bordered.table-striped.table-condensed.flip-content
         thead.flip-content
           tr
             th(width='20%')
@@ -45,6 +45,12 @@ block content
                   i.fa.fa-edit
                     &nbsp;
                     | edit
+                if current_venue._id.toString() != club._id.toString()
+                  a.btn.default.black(href='/venue/#{current_venue._id}/club_delete/#{club._id}', style="margin:3px", onclick="return confirm('Are you sure you want to delete club?')")
+                    i.fa.fa-edit
+                      &nbsp;
+                      | delete
+
 
       div
         a.btn.btn-primary(href="/venue/#{current_venue._id}/club_create") Add Club
@@ -53,4 +59,40 @@ block content
   //
      END PAGE CONTENT
 //
- END CONTENT 
+ END CONTENT
+
+block scripts
+
+  script(src='/assets/global/plugins/jquery.sparkline.min.js', type='text/javascript')
+  script(src='/assets/global/plugins/gritter/js/jquery.gritter.js', type='text/javascript')
+
+  script(src="/assets/global/plugins/datatables/media/js/jquery.dataTables.min.js", type="text/javascript")
+  script(src="/assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js",type="text/javascript")
+
+
+  script(type="text/javascript")
+    $(function () {
+
+      var table = $('#clubs');
+      table.dataTable({
+          "bStateSave": true, // save datatable state(pagination, sort, etc) in cookie.
+
+          "lengthMenu": [
+              [10, 20, 50, -1],
+              [10, 20, 50, "All"] // change per page values here
+          ],
+          "iDisplayLength": 20,
+          // set the initial value
+          "pageLength": 20,
+          "language": {
+              "lengthMenu": " _MENU_ records",
+              "paging": {
+                  "previous": "Prev",
+                  "next": "Next"
+              }
+          },
+          "order": [
+              [1, "asc"]
+          ] // set first column as a default sort by asc
+      });
+    });

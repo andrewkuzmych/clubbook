@@ -8,7 +8,78 @@ email_sender = require("../email/email_sender")
 check = require('validator').check
 apn = require('apn')
 gcm = require('node-gcm')
+cloudinary = require('cloudinary')
+  
 
+exports.user_list = (req, res)->
+  console.log 'USER LIST'
+  console.log req.query.iSortCol_0
+  echo = req.query.sEcho + 1
+
+  if req.query.sSortDir_0 == 'asc'
+    sort_order = 1
+  else
+    sort_order = -1
+
+  switch req.query.iSortCol_0
+     when '0' then sort_users = { created_on: sort_order }
+     when '1' then sort_users = { name: sort_order }
+     when '2' then sort_users = { email: sort_order }
+     when '3' then sort_users = { gender: sort_order}
+     when '4' then sort_users = { created_on: sort_order}
+     when '5' then sort_users = { name: sort_order}
+     when '6' then sort_users = { name: sort_order}
+     else sort_users = { created_on: -1 }
+
+
+  query = { name: { $exists: true } }
+
+  db_model.User.count(query).exec (err, user_count)->
+    #.sort(sort_users).skip(parseInt( req.query.iDisplayStart, 0)).limit(parseInt(req.query.iDisplayLength, 0 ))
+    db_model.User.find(query).sort(sort_users).skip(parseInt( req.query.iDisplayStart, 0)).limit(parseInt(req.query.iDisplayLength, 0 )).exec (err, users)->
+          data = []
+          #feedbacks = __.filter feedbacks, (client)-> client != null
+          for user in users
+            avatar = cloudinary.image(user.avatar.public_id, { height: 50 }) #"http"#"<img border='1', src='" + user.avatar + "', alt='Pulpit rock', width='50', height='50'/>"
+
+            name = ''
+            if user.fb_id
+              name = "<span><a href='http://facebook.com/" + user.fb_id + "', target='_blank'>" + user.name + " </a></span>" +
+                     "<a href='http://facebook.com/" + user.fb_id + "', target='_blank'><img border='1', src='/img/facbook_logo.gif', alt='Pulpit rock', width='15', height='15'/></a>"
+            else
+              name = "<span>" + user.name + "</span>"
+
+            email = "<a href='mailto:" + user.email + "'>" + user.email + "</a>"
+            
+            gender = "<span>" + user.gender + "</span>"
+
+            created_on = moment.utc(user.created_on).format("DD.MM.YYYY")
+
+            #description = "<span style='color: #817E7E;font-style: italic;'>" + feedback.description + "</span>"
+
+            # replays = ""
+            # for messages in feedback.replays
+            #   replays += messages
+            #   replays += "<br>"
+
+            replay = """
+               <input class="user_replay btn default blue" type="button" value="Send Message from Clubbook" user_id="#{user._id}"  />
+               <div name="user_replay_form" style="display: none">
+                 <input type="hidden" name="user_id" value="#{user._id}">
+                 <textarea rows="4" cols="40" name="user_replay_text"></textarea> <br><br>
+                 <input class="user_send btn default green" type="button" value="Send" />
+                 <input class="user_send_cancel btn default" type="button" value="Cancel" />
+               </div>
+            """
+            data.push [avatar, name, email, gender, created_on, replay]
+          
+          console.log user_count
+          console.log users.count
+          res.json
+            sEcho: echo
+            iTotalRecords: user_count
+            iTotalDisplayRecords: user_count
+            aaData: data
 
 exports.fb_signin = (req, res)->
   errors = {}
@@ -190,6 +261,69 @@ exports.signup = (req, res)->
         result:
           user: user
 
+exports.update_user_location = (req, res)->
+  current_user_id = req.params.me._id.toString()
+  db_model.User.findById(current_user_id).exec (err, current_user)->
+    current_user.last_loc = {lon: parseFloat(req.query.user_lon), lat: parseFloat(req.query.user_lat)}
+    db_model.save_or_update_user current_user, (err)-> 
+        res.json
+          status: "ok"
+          result:
+            user: current_user
+
+exports.users_checkedin = (req, res)->
+  current_user_id = req.params.me._id.toString()
+  skip = 0
+  if req.query.skip
+    skip = parseInt(req.query.skip)
+  take = 100
+  if req.query.take
+    take = parseInt(req.query.take)
+
+  db_model.User.findById(current_user_id).exec (err, current_user)->
+    db_model.Venue.find({club_loc: { '$near' : [req.query.user_lon, req.query.user_lat], '$maxDistance': parseFloat(req.query.distance)/112 }}).exec (err, venues)->
+      venue_objects = __.map venues, (venue)->
+        venue._id.toString()
+
+      db_model.User.find({'checkin': { '$elemMatch': { 'club' : {'$in': venue_objects}, 'active': true}}, 'bloked_users': {'$ne': current_user._id}}, { checkin: {$slice: -1}}).skip(skip).limit(take).populate('checkin.club').exec (err, users)->
+        converted_users = []
+        for user in users
+          user_object = convert_user_to_friend(current_user, user)
+          converted_users.push user_object   
+        res.json
+          status: "ok"
+          users: converted_users
+
+exports.users_around = (req, res)->
+  current_user_id = req.params.me._id.toString()
+  skip = 0
+  if req.query.skip
+    skip = parseInt(req.query.skip)
+  take = 20
+  if req.query.take
+    take = parseInt(req.query.take)
+
+  db_model.User.findById(current_user_id).exec (err, current_user)->
+    geoNear = 
+        near: [parseFloat(req.query.user_lon), parseFloat(req.query.user_lat) ] ,
+        distanceField: "distance",
+        maxDistance: parseFloat(req.query.distance)/6371,
+        spherical: true,
+        distanceMultiplier: 6371  
+
+    match = { name: { '$exists': true } }
+    query =  [{'$geoNear': geoNear}, {'$match': match}, {'$skip':skip}, {'$limit':take}]
+
+    db_model.User.aggregate query,{}, (err, users)->
+
+      converted_users = []
+      for user in users
+        user_object = user_to_friend(current_user, user)
+        converted_users.push user_object   
+      res.json
+        status: "ok"
+        users: converted_users
+
 exports.get_user_me = (req, res)->
   manager.get_user_by_id req.params.me._id.toString(), (err, user)->
     if err
@@ -262,41 +396,54 @@ exports.friends_my = (req, res)->
   # my_id, my_friends = user._id, user.friends
   # db.users.find({'_id':{'$in': my_friends}, 'friends': my_id})
 
-  db_model.User.findById(req.params.objectId).exec (err, user)->
+  db_model.User.findById(req.params.objectId).exec (err, current_user)->
+    db_model.User.find({"_id": {'$in': current_user.friends}, 'bloked_users': {'$ne': current_user._id}, 'friends': current_user._id}, { checkin: {$slice: -1} }).populate('checkin.club').sort("name").exec (err, users)->
+      db_model.User.count({"_id": {'$nin': current_user.friends}, 'friends': current_user._id}).exec (err, pending_count)->
+        converted_users = []
+        for user in users
+          user_object = convert_user_to_friend(current_user, user)
 
-    db_model.User.find({"_id": {'$in': user.friends}, 'bloked_users': {'$ne': user._id}, 'friends': user._id}, { checkin: {$slice: -1} }).select(db_model.USER_PUBLIC_INFO).populate('checkin.club').sort("name").exec (err, users)->
-      if err
-        console.log err
-        res.json
-          status: "error"
-          message: "can not find user friends: #{req.params.objectId}"
-      else
-        res.json
-          status: "ok"
-          result:
-            friends: users
-            _temp_user: user
+          converted_users.push user_object   
 
+        if err
+          console.log err
+          res.json
+            status: "error"
+            message: "can not find user friends: #{req.params.objectId}"
+        else
+          res.json
+            status: "ok"
+            result:
+              friends: converted_users
+              friends_count: converted_users.length
+              pending_count: pending_count
+              _temp_user: current_user
 
 exports.friends_pending = (req, res)->
   # my_id, my_friends = user._id, user.friends
   # db.users.find({'_id':{'$not_in': my_friends}, 'friends': my_id})
 
-  db_model.User.findById(req.params.objectId).exec (err, user)->
+  db_model.User.findById(req.params.objectId).exec (err, current_user)->
+    db_model.User.find({"_id": {'$nin': current_user.friends}, 'friends': current_user._id}, { checkin: {$slice: -1}}).populate('checkin.club').sort("name").exec (err, users)->
+      db_model.User.count({"_id": {'$in': current_user.friends}, 'bloked_users': {'$ne': current_user._id}, 'friends': current_user._id}).exec (err, friends_count)->
+        converted_users = []
+        for user in users
+          user_object = convert_user_to_friend(current_user, user)
+          converted_users.push user_object   
 
-    db_model.User.find({"_id": {'$nin': user.friends}, 'friends': user._id}, { checkin: {$slice: -1}}).select(db_model.USER_PUBLIC_INFO).populate('checkin.club').sort("name").exec (err, users)->
-      if err
-        console.log err
-        res.json
-          status: "error"
-          message: "can not find user friends: #{req.params.objectId}"
-      else
-        res.json
-          status: "ok"
-          result:
-            friends: users
-            _temp_user: user
-
+        if err
+          console.log err
+          res.json
+            status: "error"
+            message: "can not find user friends: #{req.params.objectId}"
+        else
+          res.json
+            status: "ok"
+            result:
+              friends: converted_users
+              friends_count: friends_count
+              pending_count: converted_users.length
+              _temp_user: current_user
 
 exports.friends_request = (req, res)->
   # user.friends.push friend_id
@@ -312,7 +459,7 @@ exports.friends_request = (req, res)->
       db_model.save_or_update_user user, ()->
         db_model.User.findById(req.params.friendId).select(db_model.USER_PUBLIC_INFO).exec (err, friend)->
           if friend.push
-            send_push 'user_' + req.params.friendId, 'sent you friend request', req.params.friendId, user.name, "friends", user.name + ' sent you friend request'
+            send_push 'user_' + req.params.friendId, 'sent you friend request', req.params.friendId, user.name, "friends", user.name + ' sent you friend request', req.params.objectId
           
           res.json
             status: "ok"
@@ -337,14 +484,13 @@ exports.friends_confirm = (req, res)->
           console.log friend
           if friend.push
             #send push
-            send_push 'user_' + req.params.friendId, 'confirmed your friend request', req.params.friendId, user.name, "friends", user.name + ' confirmed your friend request'
+            send_push 'user_' + req.params.friendId, 'confirmed your friend request', req.params.friendId, user.name, "friends", user.name + ' confirmed your friend request', req.params.objectId
 
           res.json
             status: "ok"
             result:
               message: "friend request"
               _temp_user: user
-
 
 exports.friends_unfriend = (req, res)->
   # user.friends.remove friend_id
@@ -432,7 +578,81 @@ exports.unblock_user = (req, res)->
           result:
             message: "unblock user"
             _temp_user: user
- 
+
+exports.invite_friend = (req, res)->
+  db_model.User.findById(req.params.objectId).exec (err, current_user)->
+    user = new db_model.User
+              name: req.body.name
+              email: req.body.email
+              state:'invited'
+              invited_by: current_user
+
+    db_model.save_or_update_user user, (err)-> 
+      if err
+        res.json
+          status: "error"
+          err: err
+      else
+        res.json
+          status: "ok"
+          result:
+            user: user
+
+exports.invite_friend_fb = (req, res)->
+  db_model.User.findById(req.params.objectId).exec (err, current_user)->
+    fb_ids = req.body.fb_ids.split(",")
+    async.each Object.keys(fb_ids), ((key, callback) ->
+          fb_id = fb_ids[key].trim()
+
+          db_model.User.findOne({"fb_id":fb_id}).exec (err, user)->
+             if not user
+               user = new db_model.User
+                 fb_id: fb_id
+       
+               db_model.save_or_update_user user, (err)-> 
+                 current_user.friends.push user
+                 callback()
+             else
+               callback()
+
+         ), (err) ->
+            db_model.save_or_update_user current_user, (err)->
+              res.json
+                status: "ok"
+
+
+exports.find_friends = (req, res)->
+  emails = req.body.emails.split(",")
+  db_model.User.find({'email': {'$in': emails}}).select(db_model.USER_PUBLIC_INFO).exec (err, users)->
+    if err
+      res.json
+        status: "error"
+        err: err
+    else
+      res.json
+        status: "ok"
+        result:
+          users: users
+
+exports.find_friends_fb = (req, res)->
+  db_model.User.findById(req.params.me._id).exec (err, current_user)->
+    fb_ids = req.body.fb_ids.split(",")
+    db_model.User.find({'fb_id': {'$in': fb_ids}}, { checkin: {$slice: -1} }).populate('checkin.club').exec (err, users)-> 
+      converted_users = []
+      for user in users
+        user_object = convert_user_to_friend(current_user, user)
+        converted_users.push user_object   
+
+      if err
+        res.json
+          status: "error"
+          err: err
+      else
+        res.json
+          status: "ok"
+          result:
+            users: converted_users
+
 ##################################################################################################
 
 exports.get_config = (req, res)->
@@ -463,11 +683,8 @@ exports.create_club = (req, res)->
   photosarray = req.body.club_photos.split(";")
 
   loc =
-    lat: req.body.club_lat
     lon: req.body.club_lon
-
-  console.log loc
-
+    lat: req.body.club_lat
 
   params =
     club_admin: adminsarray
@@ -492,6 +709,49 @@ exports.create_club = (req, res)->
         club: club
         status: "Added OK"
 
+exports.club_users = (req, res)->
+  current_user_id = req.params.me._id.toString()
+  club_id = req.params.objectId
+  db_model.Venue.findById(club_id).exec (err, club)->
+    db_model.User.findById(current_user_id).exec (err, current_user)->
+      db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}, 'bloked_users': {'$ne': current_user._id}}, { checkin: 0 }).exec (err, users)->
+          user_objects = []
+          for user in users
+            user_object = convert_user_to_friend(current_user, user)
+            user_objects.push user_object
+
+          user_objects = __.sortBy user_objects , (o) ->
+                  !o.is_friend
+          res.json
+            users: user_objects
+            status: "ok"
+
+exports.club_users_yesterday = (req, res)->
+  current_user_id = req.params.me._id.toString()
+  club_id = req.params.objectId
+  db_model.Venue.findById(club_id).exec (err, club)->
+    current_date_time = new Date()
+    yesterday_data_time = new Date(new Date().getTime() - 48 * 60 * 60 * 1000);
+    console.log yesterday_data_time
+    db_model.User.findOne({'_id': mongoose.Types.ObjectId(current_user_id), 'checkin': { '$elemMatch': { 'club' : club, 'time': {'$gte': yesterday_data_time}, 'time':{'$lte': current_date_time}}}}).exec (err, current_user)->
+      if current_user
+        db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'time': {'$gte': yesterday_data_time, '$lte': current_date_time}}}, 'bloked_users': {'$ne': current_user._id}}, { checkin: {$slice: -1} }).populate('checkin.club').exec (err, users)->
+        
+          user_objects = []
+          for user in users
+            user_object = convert_user_to_friend(current_user, user)
+            user_objects.push user_object
+
+          user_objects = __.sortBy user_objects , (o) ->
+                  !o.is_friend
+          res.json
+            users: user_objects
+            status: "ok"
+      else
+        res.json
+          status: "ok"
+          msg: 'yes_not_checked_in'
+
 exports.find_club = (req, res)->
   manager.find_club req.params.objectId, req.params.me._id.toString(), (err, club, users, friends_count)->
     if err
@@ -505,16 +765,44 @@ exports.find_club = (req, res)->
         friends_count: friends_count
         status: "Found Club OK!"
 
+exports.club_types = (req, res)->
+  console.log 'club types'
+  query =  [{'$group':{_id: "$club_type", count: { '$sum': 1 } } }]
+  console.log query
+  #query = { 'club_loc':{ '$near' : [ params.lat,params.lon] }}
+  db_model.Venue.aggregate query, {}, (err, result)->
+    console.log err
+    console.log  result
+    res.json
+      status: 'ok'
+      result: result
+
 exports.list_club = (req, res)->
   console.log req.params
+
+  skip = 0
+  if req.query.skip
+    skip = parseInt(req.query.skip)
+  
+  take = 300
+  if req.query.take
+    take = parseInt(req.query.take)
 
   params =
     #distance: req.query.distance
     lat: req.query.user_lat
     lon: req.query.user_lon
     user_id: req.params.me._id.toString()
+    type: req.query.type
+  
+  if req.query.distance
+    params.distance = parseInt(req.query.distance)
 
-  manager.list_club params, (err, clubs)->
+  params.skip = skip
+  params.take = take
+  
+  console.log params
+  manager.list_club params, (err, clubs, types)->
     if err
       res.json
         status: 'error'
@@ -524,6 +812,7 @@ exports.list_club = (req, res)->
       res.json
         status: 'ok'
         clubs: clubs
+        types: types
 
 exports.checkin = (req, res)->
   params =
@@ -537,6 +826,24 @@ exports.checkin = (req, res)->
         status: 'error'
         err: err
     else
+
+      # send message to pubnub
+      pubnub = require("pubnub").init({ publish_key: config.pub_publish_key, subscribe_key: config.pub_subscribe_key})
+      pubnab_data =
+        data:
+          club: req.params.objectId
+        type: "checkin"
+      
+      console.log  "checkin"
+      pubnub.publish
+        channel: "checkin"#"checkin_" + req.params.objectId
+        message: pubnab_data
+        callback: (e) ->
+          console.log "SUCCESS, PubNub message sent!", e
+
+        error: (e) ->
+          console.log "FAILED! PubNub can not send message", e
+
       res.json
         status: 'ok'
         user: user
@@ -557,9 +864,70 @@ exports.checkout = (req, res)->
     club_id: req.params.objectId
 
   manager.checkout params, (err, user)->
+
+    # send message to pubnub
+    pubnub = require("pubnub").init({ publish_key: config.pub_publish_key, subscribe_key: config.pub_subscribe_key})
+    pubnab_data =
+      data:
+        club: req.params.objectId
+      type: "checkout"
+    
+    console.log  "checkin_" + req.params.objectId
+    pubnub.publish
+      channel: "checkin"#"checkin_" + req.params.objectId
+      message: pubnab_data
+      callback: (e) ->
+        console.log "SUCCESS, PubNub message sent!", e
+
+      error: (e) ->
+        console.log "FAILED! PubNub can not send message", e
+
     res.json
       status: 'ok'
       user: user
+
+exports.user_push = (req, res)->
+  console.log 'user_' + req.params.user_id
+  params =
+    user_from: '543dabbe29f5a9020000000d'
+    user_to: req.params.user_id
+    msg: req.body.message
+    msg_type: 'message'
+
+  manager.get_user_by_id params.user_from, (err, user_from)->
+    manager.chat params, (err, chat)->
+      message = params.msg
+
+      # check if we have push
+      if chat.user2.push
+        send_push 'user_' + params.user_to, message, params.user_from + "_" + params.user_to, user_from.name, "chat", user_from.name + ': "' + message + '"', params.user_from
+
+      # send message to pubnub
+      pubnub = require("pubnub").init({ publish_key: config.pub_publish_key, subscribe_key: config.pub_subscribe_key})
+      conversation = prepare_chat_messages(chat, params.user_to)[0]
+      pubnab_data =
+        data:
+          user_from: params.user_from
+          user_to: params.user_to
+          last_message: conversation[conversation.length - 1]
+        type: "chat"
+
+      pubnub.publish
+        channel: "message_" + params.user_to
+        message: pubnab_data
+        callback: (e) ->
+          console.log "SUCCESS, PubNub message sent!", e
+
+        error: (e) ->
+          console.log "FAILED! PubNub can not send message", e
+
+      res.json
+        status: 'ok'
+        chat: chat
+
+  #send_push 'user_' + req.params.user_id, req.body.message, 'header', req.body.message   
+  #res.json
+  #  status: 'ok'
 
 exports.chat = (req, res)->
   # fix empty message type
@@ -578,7 +946,7 @@ exports.chat = (req, res)->
 
       # check if we have push
       if chat.user2.push
-        send_push 'user_' + req.body.user_to, message, req.body.user_from + "_" + req.body.user_to, user_from.name, "chat", user_from.name + ': "' + message + '"'
+        send_push 'user_' + req.body.user_to, message, req.body.user_from + "_" + req.body.user_to, user_from.name, "chat", user_from.name + ': "' + message + '"', req.body.user_from
 
       # send message to pubnub
       pubnub = require("pubnub").init({ publish_key: config.pub_publish_key, subscribe_key: config.pub_subscribe_key})
@@ -629,50 +997,85 @@ prepare_chat_messages = (chat, current_user)->
   return [messages, current_user, receiver]
 
 exports.get_conversations = (req, res)->
-  params =
-    user_id: req.params.current_user
+  #params =
+  #  user_id: req.params.current_user
 
-  manager.get_conversations params, (err, chats)->
-    result = []
-    for chat in chats
-      if chat.unread.user && chat.unread.user.toString() == params.user_id.toString()
-        unread_messages = chat.unread.count
-      else
-        unread_messages = 0
+  db_model.User.findById(req.params.current_user).exec (err, current_user)->  
+    db_model.User.find({'bloked_users': current_user}).exec (err, bloked_users)->
+      db_model.Chat.find({'$or':[{'user1': mongoose.Types.ObjectId(req.params.current_user), 'user2': {'$nin': bloked_users}}, {'user2': mongoose.Types.ObjectId(req.params.current_user), 'user1': {'$nin': bloked_users}}]}, { 'conversation': { '$slice': -1 }}).populate("user1",'-checkin').populate("user2",'-checkin').exec (err, chats)->
+        if not chats
+          res.json
+            status: 'ok'
+            result:
+              chats: []
+        else
+          sorted_chats = __.sortBy(chats, (chat) ->
+            if chat.unread.user && chat.unread.user.toString() == req.params.current_user.toString()
+               return chat.unread.count
+            else
+              return 0
+          ).reverse()
 
-      chat_dto = prepare_chat_messages(chat, req.params.current_user)
-      result.push
-        chat_id: chat._id
-        updated_on: chat.updated_on
-        unread_messages: unread_messages
-        conversation: chat_dto[0]
-        current_user: chat_dto[1]
-        receiver: chat_dto[2]
+          #callback err, sorted_chats
 
-    # sort by recived date
-    result = __.sortBy result, (chat)-> chat.updated_on
-    result = result.reverse()
+          result = []
+          for chat in sorted_chats
+            if chat.unread.user && chat.unread.user.toString() == req.params.current_user.toString()
+              unread_messages = chat.unread.count
+            else
+              unread_messages = 0
 
-    res.json
-      status: 'ok'
-      result:
-        chats: result
+            chat_dto = prepare_chat_messages(chat, req.params.current_user)
+            result.push
+              chat_id: chat._id
+              updated_on: chat.updated_on
+              unread_messages: unread_messages
+              conversation: chat_dto[0]
+              current_user: convert_user_to_friend(current_user, chat_dto[1])
+              receiver: convert_user_to_friend(current_user, chat_dto[2])
+
+          # sort by recived date
+          result = __.sortBy result, (chat)-> chat.updated_on
+          result = result.reverse()
+          res.json
+            status: 'ok'
+            result:
+              chats: result
 
 exports.get_conversation = (req, res)->
   params =
     user1: req.params.current_user
     user2: req.params.receiver
 
-  manager.get_conversation params, (err, chat)->
-    chat_dto = prepare_chat_messages chat, req.params.current_user
+  query = { '$or': [{ 'user1': mongoose.Types.ObjectId(params.user1), 'user2': mongoose.Types.ObjectId(params.user2) }, { 'user1': mongoose.Types.ObjectId(params.user2), 'user2': mongoose.Types.ObjectId(params.user1) }] }
+  db_model.User.findById(req.params.current_user).exec (err, current_user)->  
+    db_model.Chat.findOne(query).populate("user1", '-checkin').populate("user2", '-checkin').exec (err, chat)->
+      if not chat
+        db_model.User.find({'$or':[{"_id": params.user1}, {"_id": params.user2}]}).select('-checkin').exec (err, users)->
+          chat =
+            user1: users[0]
+            user2: users[1]
+            unread: {}
+            updated_on: new Date()
+            conversation: []
+          chat_dto = prepare_chat_messages chat, req.params.current_user
+          res.json
+            status: 'ok'
+            result:
+              chat_id: chat._id
+              conversation: chat_dto[0]
+              current_user: convert_user_to_friend(current_user, chat_dto[1])
+              receiver: convert_user_to_friend(current_user, chat_dto[2])
+      else
+        chat_dto = prepare_chat_messages chat, req.params.current_user
 
-    res.json
-      status: 'ok'
-      result:
-        chat_id: chat._id
-        conversation: chat_dto[0]
-        current_user: chat_dto[1]
-        receiver: chat_dto[2]
+        res.json
+          status: 'ok'
+          result:
+            chat_id: chat._id
+            conversation: chat_dto[0]
+            current_user: convert_user_to_friend(current_user, chat_dto[1])
+            receiver: convert_user_to_friend(current_user, chat_dto[2])
 
 exports.readchat = (req, res)->
   params =
@@ -693,8 +1096,8 @@ exports.unread_notifications_count = (req, res)->
 exports.remove_user =(req, res)->
   console.log "remove user", req.params.user_id
   db_model.User.remove {"_id": req.params.user_id}, (err)->
-    db_model.Chat.remove {"user1": req.params.user_id}, (err)->
-      db_model.Chat.remove {"user2": req.params.user_id}, (err)->
+    db_model.Chat.remove {"user1": mongoose.Types.ObjectId(req.params.user_id)}, (err)->
+      db_model.Chat.remove {"user2": mongoose.Types.ObjectId(req.params.user_id)}, (err)->
         res.json
           status: 'ok'
 
@@ -713,7 +1116,56 @@ exports.checkin_clean =(req, res)->
   res.json
     status: 'ok'
 
-send_push = (channel, msg, unique_id, header, type, alert)->
+# helpers
+
+convert_user_to_friend = (current_user, user)->
+  user_object = user.toObject();
+
+  return user_to_friend current_user, user_object
+
+user_to_friend = (current_user, user)->
+  is_current_user_friend_to_user = __.find(user.friends, (f) ->
+          f.toString() is current_user._id.toString()
+        )
+
+  is_user_friend_to_current_user = __.find(current_user.friends, (f) ->
+          f.toString() is user._id.toString()
+        )
+
+  user.is_friend = false
+  
+  friend_status = 'none'
+  if is_current_user_friend_to_user and not is_user_friend_to_current_user
+    friend_status = "receive_request"
+  if is_user_friend_to_current_user and not is_current_user_friend_to_user
+    friend_status = "sent_request"
+  if is_user_friend_to_current_user and is_current_user_friend_to_user
+    friend_status = "friend"
+    user.is_friend = true
+
+  is_blocked = __.find(current_user.bloked_users, (u) ->
+          u.toString() is user._id.toString()
+        )
+
+  user.friend_status = friend_status;
+
+  if user.photos and user.photos.length > 0
+    for _photo in user.photos
+      if _photo.profile
+        user.avatar = _photo
+
+  if user.dob
+    user.age = Math.floor((new Date() - user.dob) / 31536000000)
+
+  if is_blocked
+    user.is_blocked = true
+  else
+    user.is_blocked = false 
+
+  return user
+
+
+send_push = (channel, msg, unique_id, header, type, alert, from_user_id)->
     #send push
     Parse = require("parse").Parse
     Parse.initialize config.parse_app_id, config.parse_js_key
@@ -747,3 +1199,6 @@ send_push = (channel, msg, unique_id, header, type, alert)->
       data:
         badge: "Increment"
         alert: alert
+        type: type
+        from_user_id: from_user_id
+        sound: "nothing"

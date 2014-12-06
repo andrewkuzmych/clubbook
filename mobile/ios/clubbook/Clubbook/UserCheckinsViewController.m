@@ -245,10 +245,11 @@
 
 - (void)loadUsers:(int)take skip:(int)skip
 {
-    //if (self.isLoaded || [LocationManagerSingleton sharedSingleton].locationManager.location == nil) {
-    //    return;
-    //}
-    
+
+    BOOL all = YES;
+    if (self.usersSegment.selectedSegmentIndex == 1) {
+        all = NO;
+    }
     isInitialLoad = NO;
     if (skip == 0) {
         isInitialLoad = YES;
@@ -257,9 +258,7 @@
             {
                 return;
             }
-            //[self showProgress:NO title:nil];
         }
-        
     }
 
     self.isLoaded = YES;
@@ -272,7 +271,7 @@
         double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
         double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
 
-        [self._manager receivedUsers:true take:take skip:skip lat:lat lon:lng distance:distanceKm accessToken:accessToken];
+        [self._manager receivedUsers:all take:take skip:skip lat:lat lon:lng distance:distanceKm accessToken:accessToken];
     });
 }
 
@@ -342,6 +341,16 @@
     [self loadUsers:30 skip:0];
     
     [self.distance setText:[NSString stringWithFormat:@"%d%@", distanceKm, NSLocalizedString(@"kilometers", nil)]];
+}
+
+- (IBAction)usersSegmentChanged:(id)sender {
+    self.isLoaded = NO;
+    if([sender selectedSegmentIndex] == 0){
+        [self loadUsers:30 skip:0];
+    }
+    else if([sender selectedSegmentIndex] == 1){
+        [self loadUsers:30 skip:0];
+    }
 }
 
 /*

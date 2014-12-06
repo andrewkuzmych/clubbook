@@ -8,7 +8,9 @@ var ComponentsPickers = function () {
 
             $('.timepicker-no-seconds').timepicker({
                 autoclose: true,
-                minuteStep: 5
+                minuteStep: 5,
+                showSeconds: false,
+                showMeridian: false
             });
 
             // handle input group button click
@@ -74,8 +76,7 @@ var FormValidation = function () {
                       required: true,  
                     },
                     club_capacity: {
-                      required: true,
-                      digits: true  
+                      required: true
                     }
 
                 },

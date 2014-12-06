@@ -48,6 +48,7 @@
     self.noCheckinsLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:18];
     self.noCheckinsLabel.text = NSLocalizedString(@"noClubCheckins", nil);
     self.noCheckinsLabel.hidden = YES;
+    [self loadClub:10 skip:0];
     //[self sortPlaces];
     // Do any additional setup after loading the view.
 }
@@ -57,8 +58,8 @@
 {
     [super viewWillAppear:animated];
     isLoaded = NO;
-    [LocationManagerSingleton sharedSingleton].delegate = self;
-    [[LocationManagerSingleton sharedSingleton] startLocating];
+    //[LocationManagerSingleton sharedSingleton].delegate = self;
+    //[[LocationManagerSingleton sharedSingleton] startLocating];
     
 }
 
@@ -70,40 +71,33 @@
     Place *place = _places[tempButton.tag];
     [self showProgress:NO title:NSLocalizedString(@"checking_in", nil)];
      [self._manager checkin:place.id accessToken:accessToken userInfo:tempButton];
-    
-    
 }
 
-- (void)didUpdateLocation
+/*- (void)didUpdateLocation
 {
     //[self yesLocation];
     [self loadClub:10 skip:0];
-}
+}*/
 
-- (void)didFailUpdateLocation
+/*- (void)didFailUpdateLocation
 {
     //[self noLocation];
 }
+*/
 
 - (void)loadClub:(int)take skip:(int)skip
 {
 
     if (isLoaded) {
-        return;//[self showProgress:NO title:nil];
+        return;
     }
     isLoaded = YES;
-    // if ([LocationManagerSingleton sharedSingleton].locationManager.location == nil) {
-    //     return;
-    // }
     double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
     double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
     
-    // if (_places.count == 0) {
-    //     [self showProgress:NO title:nil];
-    // }
     [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:1 accessToken:accessToken];
 }
 
