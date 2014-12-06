@@ -10,8 +10,9 @@
 #import <CoreLocation/CoreLocation.h>
 #import "BaseViewController.h"
 #import "LocationManagerProtocol.h"
+#import "SPSlideTabBar.h"
 
-@interface MainViewController : BaseViewController<LocationManagerProtocol,UITableViewDelegate, UITableViewDataSource, PNDelegate>{
+@interface MainViewController : BaseViewController<LocationManagerProtocol,UITableViewDelegate, UITableViewDataSource, PNDelegate, SPSlideTabBarDelegate>{
  CLLocationManager *locationManager;
 }
 @property (weak, nonatomic) IBOutlet UITableView *clubTable;
@@ -19,6 +20,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *distance;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentControl;
 @property (strong, nonatomic) NSMutableArray *places;
+@property (weak, nonatomic) IBOutlet UIScrollView *filterTabView;
+@property (strong, nonatomic) IBOutlet SPSlideTabBar *filterTabBar;
 - (IBAction)SliderChanged:(id)sender;
 - (IBAction)sliderTouchUp:(id)sender;
 //- (IBAction)checkinAction:(UIButton *)sender;

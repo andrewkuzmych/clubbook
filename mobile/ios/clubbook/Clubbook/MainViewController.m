@@ -26,6 +26,7 @@
 #import "TransitionFromClubListToClub.h"
 #import "FastCheckinViewController.h"
 #import "SVPullToRefresh.h"
+#import "SPSlideTabButton.h"
 
 @interface MainViewController ()<UINavigationControllerDelegate>{
    // NSArray *_places;
@@ -118,6 +119,35 @@
     [self.clubTable addInfiniteScrollingWithActionHandler:^{
         [weakSelf insertRowAtBottom];
     }];
+    
+    //setup filter tab bar
+    self.filterTabBar = [[SPSlideTabBar alloc] initWithFrame:CGRectMake(0, 0, self.filterTabView.frame.size.width, self.filterTabView.frame.size.height)];
+    [self.filterTabBar setAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth];
+    [self.filterTabBar setBackgroundColor:[UIColor colorWithRed:0.651 green:0 blue:0.867 alpha:1]];
+    [self.filterTabBar setSeparatorStyle:SPSlideTabBarSeparatorStyleNone];
+    [self.filterTabBar setBarButtonTitleColor:[UIColor colorWithRed:192/255.0f green:154/255.0f blue:234/255.0f alpha:1.0f]];
+    [self.filterTabBar setSelectedButtonColor:[UIColor whiteColor]];
+    [self.filterTabBar setSelectedViewColor:[UIColor whiteColor]];
+    [self.filterTabBar setSlideDelegate:self];
+    [self.filterTabView addSubview:self.filterTabBar];
+    
+    //remove black line above filtertab
+    UINavigationBar *navigationBar = self.navigationController.navigationBar;
+    
+    [navigationBar setBackgroundImage:[UIImage new]
+                       forBarPosition:UIBarPositionAny
+                           barMetrics:UIBarMetricsDefault];
+    
+    [navigationBar setShadowImage:[UIImage new]];
+
+    NSMutableArray* filterOptions = [self getListOfFilteringOptions];
+    if ([filterOptions count] != 0) {
+        for (NSString* option in filterOptions) {
+            [self.filterTabBar addTabForTitle:option];
+        }
+        //set view on first filter option
+        [self filterForOption:0];
+    }
     
     [self loadClub:10 skip:0];
 
@@ -498,6 +528,25 @@
     [checkinButton setMainState:NSLocalizedString(@"Checkin", nil)];
     
     [LocationHelper removeCheckin];
+}
+
+-(NSMutableArray *) getListOfFilteringOptions {
+    NSMutableArray* filterList = [[NSMutableArray alloc] init];
+    [filterList addObject:@"All"];
+    [filterList addObject:@"Clubs"];
+    [filterList addObject:@"Bars & Cafes"];
+    [filterList addObject:@"Events"];
+    [filterList addObject:@"Festivals"];
+    return filterList;
+}
+
+#pragma mark - SPSlideTabBarDelegate
+- (void)barButtonClicked:(SPSlideTabButton *)button {
+    [self filterForOption:button.tag];
+}
+
+-(void) filterForOption:(NSUInteger) index {
+        [self.filterTabBar setSelectedIndex:index];
 }
 
 @end
