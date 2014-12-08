@@ -136,6 +136,7 @@
     
     NSString* allOption = [NSString stringWithFormat:@"%@", NSLocalizedString(@"all", nil)];
     [self.filterTabBar addTabForTitle:allOption];
+    [self.filterTabBar setSelectedIndex:0];
     
     //remove black line above filtertab
     UINavigationBar *navigationBar = self.navigationController.navigationBar;
@@ -255,7 +256,6 @@
         
         if (isInitialLoad) {
             _places = [places mutableCopy];
-            [self.filterTabBar setSelectedIndex:0];
             
             if (types) {
                 if ([types count] != 0) {
@@ -310,7 +310,21 @@
 }
 
 - (void) loadAllTypeClubs {
-    [self loadClubType:nil take:10 skip:0];
+    [self loadClubType:@"" take:10 skip:0];
+}
+
+- (void) filterForType:(NSString*) type {
+    [_places removeAllObjects];
+    [self.clubTable reloadData];
+    
+    self.isLoaded = YES;
+    double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
+    double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
+
+    [self._manager retrievePlaces:lat lon:lng take:10 skip:0 distance:0 type:type accessToken:accessToken];
 }
 
 - (void)loadClubType:(NSString*) type take:(int)take skip:(int)skip
@@ -551,13 +565,13 @@
 -(void) filterForOption:(NSUInteger) index {
     [self.filterTabBar setSelectedIndex:index];
     if (index == 0) {
-        selectedClubType = nil;
-        [self loadAllTypeClubs];
+        selectedClubType = @"";
+        [self filterForType:selectedClubType];
     }
     else {
         NSString* typeString = [self.filterTabBar getButtonTitleAtIndex:index];
         selectedClubType = [typeString lowercaseString];
-        [self loadClubType:selectedClubType take:10 skip:0];
+        [self filterForType:selectedClubType];
     }
 }
 

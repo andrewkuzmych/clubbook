@@ -455,18 +455,7 @@
             distanceTemp = 100000;
         }
         //make base url
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/club?", baseURL];
-        
-        //if we have type - append it to the url
-        //if "type" is not declared - we will receive all type of clubs
-        if (type) {
-            NSString* typeUrl = [NSString stringWithFormat:@"&type=%@", type];
-            urlAsString = [urlAsString stringByAppendingString:typeUrl];
-        }
-        
-        //append other data...
-        NSString* dataString = [NSString stringWithFormat:@"user_lat=%f&user_lon=%f&skip=%d&take=%d&distance=%d&access_token=%@", lat, lon, skip, take, distanceTemp, accessToken];
-        urlAsString = [urlAsString stringByAppendingString:dataString];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/club?user_lat=%f&user_lon=%f&type=%@&skip=%d&take=%d&distance=%d&access_token=%@", baseURL, lat, lon, type, skip, take, distanceTemp, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
