@@ -340,8 +340,8 @@
     [self.clubTable reloadData];
     
     self.isLoaded = YES;
-    double lat = 37;//[LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
-    double lng = -122;//[LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
+    double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
+    double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
@@ -354,8 +354,8 @@
     [self.clubTable reloadData];
     
     self.isLoaded = YES;
-    double lat = 37;//[LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
-    double lng = -122;//[LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
+    double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
+    double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
