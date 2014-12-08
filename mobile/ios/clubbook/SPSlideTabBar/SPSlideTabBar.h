@@ -43,6 +43,7 @@ typedef enum {
 @property (weak, nonatomic) id<SPSlideTabBarDelegate> slideDelegate;
 
 - (void)addTabForTitle:(NSString *)title;
+- (void)setEnabled:(BOOL)enabled;
 - (void)removeAllTabs;
 - (void)setScrollOffsetPercentage:(CGFloat)percentage;
 - (NSString*)getButtonTitleAtIndex:(NSUInteger) index;

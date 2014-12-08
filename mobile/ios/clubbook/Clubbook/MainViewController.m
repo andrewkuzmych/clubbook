@@ -34,6 +34,9 @@
     int distanceKm;
     NSString* selectedClubType;
     OBAlert * alert;
+    
+    BOOL isSearchBarShown;
+    float searchBarHeight;
 }
 
 @property (nonatomic) NSTimer* locationUpdateTimer;
@@ -146,6 +149,25 @@
                            barMetrics:UIBarMetricsDefault];
     
     [navigationBar setShadowImage:[UIImage new]];
+    
+    //set up search field
+    self.searchBar.barTintColor = self.filterTabBar.backgroundColor;
+    
+    //remove black line under searchbox
+    CGRect rect = self.searchBar.frame;
+    UIView *lineView = [[UIView alloc]initWithFrame:CGRectMake(0, rect.size.height - 2,rect.size.width, 2)];
+    lineView.backgroundColor = self.filterTabBar.backgroundColor;
+    [self.searchBar addSubview:lineView];
+    
+    //set placeholder text
+    self.searchBar.placeholder = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Search clubs, bars, events, etc. by name", nil)];
+
+    //store height of searchbox to animate it in future
+    searchBarHeight = rect.size.height - 2;
+    //hide searchbar
+    [self replaceTopConstraintOnView:self.searchBar withConstant: -searchBarHeight];
+    isSearchBarShown = NO;
+    self.searchBar.delegate = self;
     
     //set view on first filter option
     [self loadAllTypeClubs];
@@ -318,13 +340,27 @@
     [self.clubTable reloadData];
     
     self.isLoaded = YES;
-    double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
-    double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
+    double lat = 37;//[LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
+    double lng = -122;//[LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
 
-    [self._manager retrievePlaces:lat lon:lng take:10 skip:0 distance:0 type:type accessToken:accessToken];
+    [self._manager retrievePlaces:lat lon:lng take:10 skip:0 distance:0 type:type search:@"" accessToken:accessToken];
+}
+
+- (void) searchForWord:(NSString*) searchWord {
+    [_places removeAllObjects];
+    [self.clubTable reloadData];
+    
+    self.isLoaded = YES;
+    double lat = 37;//[LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
+    double lng = -122;//[LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
+    
+    [self._manager retrievePlaces:lat lon:lng take:10 skip:0 distance:0 type:@"" search:searchWord accessToken:accessToken];
 }
 
 - (void)loadClubType:(NSString*) type take:(int)take skip:(int)skip
@@ -352,7 +388,7 @@
    // if (_places.count == 0) {
    //     [self showProgress:NO title:nil];
    // }
-    [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:0 type:type accessToken:accessToken];
+    [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:0 type:type search:@"" accessToken:accessToken];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -428,7 +464,7 @@
     [self.navigationController pushViewController: clubController animated:NO];
     [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:NO];
     [UIView commitAnimations];
-    
+    [self.clubTable deselectRowAtIndexPath:indexPath animated:NO];
     //[self performSegueWithIdentifier: @"onClub" sender: place];
 }
 
@@ -574,5 +610,56 @@
         [self filterForType:selectedClubType];
     }
 }
+
+//search logic
+- (IBAction)handleSearchButton:(id)sender {
+    if(!isSearchBarShown) {
+        isSearchBarShown = YES;
+        [self.filterTabBar setEnabled:NO];
+        [self replaceTopConstraintOnView:self.searchBar withConstant: 0];
+        //show all places to search
+        if ([self.filterTabBar selectedIndex] != 0) {
+            [self filterForOption:0];
+        }
+        [self.searchBar becomeFirstResponder];
+    } else {
+        [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
+        [self.filterTabBar setEnabled:YES];
+        isSearchBarShown = NO;
+        [self.searchBar resignFirstResponder];
+    }
+    [self animateConstraints];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    [self.searchBar resignFirstResponder];
+    [self.filterTabBar setEnabled:YES];
+    isSearchBarShown = NO;
+    [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
+    [self animateConstraints];
+}
+
+- (void) searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    NSString* searchWord = self.searchBar.text;
+    [self searchForWord:searchWord];
+}
+
+//animation logic
+- (void)replaceTopConstraintOnView:(UIView *)view withConstant:(float)constant
+{
+    [self.view.constraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *constraint, NSUInteger idx, BOOL *stop) {
+        if ((constraint.firstItem == view) && (constraint.firstAttribute == NSLayoutAttributeTop)) {
+            constraint.constant = constant;
+        }
+    }];
+}
+
+- (void)animateConstraints
+{
+    [UIView animateWithDuration:0.5 animations:^{
+        [self.view layoutIfNeeded];
+    }];
+}
+
 
 @end

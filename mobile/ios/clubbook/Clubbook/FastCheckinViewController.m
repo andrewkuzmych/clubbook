@@ -104,7 +104,7 @@
     // if (_places.count == 0) {
     //     [self showProgress:NO title:nil];
     // }
-    [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:1 type:nil accessToken:accessToken];
+    [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:1 type:@"" search:@"" accessToken:accessToken];
 }
 
 - (void)didReceivePlaces:(NSArray *)places andTypes:(NSArray *)types

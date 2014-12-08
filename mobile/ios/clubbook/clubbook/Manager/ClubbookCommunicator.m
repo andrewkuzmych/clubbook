@@ -446,7 +446,7 @@
     
 }
 
-- (void)retrievePlaces:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance type:(NSString*) type accessToken:(NSString *) accessToken;
+- (void)retrievePlaces:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance type:(NSString*) type search:(NSString*) search accessToken:(NSString *) accessToken;
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
@@ -455,7 +455,7 @@
             distanceTemp = 100000;
         }
         //make base url
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/club?user_lat=%f&user_lon=%f&type=%@&skip=%d&take=%d&distance=%d&access_token=%@", baseURL, lat, lon, type, skip, take, distanceTemp, accessToken];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/club?user_lat=%f&user_lon=%f&type=%@&search=%@&skip=%d&take=%d&distance=%d&access_token=%@", baseURL, lat, lon, type, search, skip, take, distanceTemp, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         

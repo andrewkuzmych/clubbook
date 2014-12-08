@@ -12,7 +12,7 @@
 #import "LocationManagerProtocol.h"
 #import "SPSlideTabBar.h"
 
-@interface MainViewController : BaseViewController<LocationManagerProtocol,UITableViewDelegate, UITableViewDataSource, PNDelegate, SPSlideTabBarDelegate>{
+@interface MainViewController : BaseViewController<LocationManagerProtocol,UITableViewDelegate, UITableViewDataSource, PNDelegate, SPSlideTabBarDelegate, UISearchBarDelegate>{
  CLLocationManager *locationManager;
 }
 @property (weak, nonatomic) IBOutlet UITableView *clubTable;
@@ -22,6 +22,7 @@
 @property (strong, nonatomic) NSMutableArray *places;
 @property (weak, nonatomic) IBOutlet UIScrollView *filterTabView;
 @property (strong, nonatomic) IBOutlet SPSlideTabBar *filterTabBar;
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 - (IBAction)SliderChanged:(id)sender;
 - (IBAction)sliderTouchUp:(id)sender;
 //- (IBAction)checkinAction:(UIButton *)sender;

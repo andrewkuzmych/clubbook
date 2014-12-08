@@ -425,4 +425,11 @@
     }
 }
 
+- (void)setEnabled:(BOOL)enabled {
+    NSArray* buttonsArray = [self buttons];
+    for (SPSlideTabButton* but in buttonsArray) {
+        [but setEnabled:enabled];
+        }
+}
+
 @end
