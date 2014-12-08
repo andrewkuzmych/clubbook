@@ -88,7 +88,7 @@
                                                object:nil];
 
 
-    self.title = NSLocalizedString(@"clubs", nil);
+    self.title = NSLocalizedString(@"Going Out", nil);
     alert = [[OBAlert alloc] initInViewController:self];
     
     distanceKm = 5;
@@ -271,7 +271,7 @@
             [_places addObjectsFromArray:places];
         }
         
-        self.title = [NSString stringWithFormat:@"%@", NSLocalizedString(@"clubs", nil)];
+        self.title = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Going Out", nil)];
         
         self.clubTable.hidden = NO;
         
