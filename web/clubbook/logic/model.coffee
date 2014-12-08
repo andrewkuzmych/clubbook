@@ -34,12 +34,12 @@ UserSchema = new mongoose.Schema
 
   email: {type: String, trim: true, lowercase: true}
   password: {type: String}
-  name: {type: String, trim: true, required: true}
+  name: {type: String, trim: true}
 
   bloked: [
     { type: String }
   ]
-  gender: {type: String, trim: true, required: true, 'enum': ["male", "female"]}
+  gender: {type: String, trim: true, 'enum': ["male", "female"]}
   photos: [
     {url: { type: String }, public_id: { type: String }, profile: { type: Boolean, default: false }}
   ]
@@ -53,6 +53,10 @@ UserSchema = new mongoose.Schema
   friends: [type: mongoose.Schema.ObjectId, ref: 'User']
 
   bloked_users: [type: mongoose.Schema.ObjectId, ref: 'User']
+
+  state: {type: String, default: 'active', 'enum': ["active", "inactive", "invited"]}
+
+  invited_by: {type: mongoose.Schema.ObjectId, ref: 'User'}
   
   ios_tokens: [
     { type: String }
@@ -68,6 +72,9 @@ UserSchema = new mongoose.Schema
   checkin: [
     {club: { type: mongoose.Schema.ObjectId, ref: 'Venue' }, time: Date, active: Boolean}
   ]
+  last_loc:
+    lon: Number
+    lat: Number
 
 # http://stackoverflow.com/questions/6183147/storing-friend-relationships-in-mongodb
 # friends:[_id]
@@ -101,6 +108,7 @@ UserSchema.pre 'save', (next, done) ->
 
 UserSchema.set('toJSON', { getters: true, virtuals: true })
 UserSchema.set('toObject', { getters: true, virtuals: true })
+UserSchema.index({ last_loc: "2d" })
 exports.User = mongoose.model 'User', UserSchema
 
 exports.User.schema.path('email').validate (value, respond)->
@@ -124,7 +132,7 @@ exports.User.schema.path('name').validate (value, respond)->
 , 'Wrong first_name format'
 
 
-exports.USER_PUBLIC_INFO = '_id photos name gender dob push'
+exports.USER_PUBLIC_INFO = '_id photos name gender dob country push'
 
 
 #-------------------------------------------------------------------------------------
@@ -170,7 +178,8 @@ VenueSchema = new mongoose.Schema
   club_logo: {type: String, trim: true}
   club_dress_code: {type: String, trim: true}
   club_age_restriction: {type: String, trim: true}
-  club_capacity: {type: Number}
+  club_capacity: {type: String}
+  club_type: {type: String}
   club_loc:
     lon: Number
     lat: Number

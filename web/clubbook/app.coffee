@@ -187,6 +187,9 @@ app.get '/logout', (req, res)->
   res.redirect('/')
 
 app.get '/terms', controller.terms
+app.get '/faq', controller.terms
+
+app.get '/qr', controller.download
 app.get '/privacy', controller.privacy
 app.get '/reset_pass', controller.reset_pass
 app.post '/reset_pass', controller.reset_pass_action
@@ -194,21 +197,25 @@ app.post '/cloudinary_upload', controller.cloudinary_upload
 
 app.get '/home', require_role("user"), local_user, controller.home
 app.get '/venue/:venue_id/clubs', require_role("user"), local_user, validate_venue, controller.clubs
+app.get '/venue/:venue_id/users', require_role("user"), local_user, validate_venue, controller.users
 app.get '/venue/:venue_id/club_create', require_role("user"), local_user, validate_venue, controller.club_create
 app.post '/venue/:venue_id/club_create', require_role("user"), local_user, validate_venue, controller.club_create_action
 app.get '/venue/:venue_id/club_edit/:id', require_role("user"), local_user, validate_venue, controller.club_edit
 app.post '/venue/:venue_id/club_edit/:id', require_role("user"), local_user, validate_venue, controller.club_edit_action
+app.get '/venue/:venue_id/club_delete/:id', require_role("user"), local_user, validate_venue, controller.club_delete_action
 
 app.get '/venue/:venue_id/news', require_role("user"), local_user, validate_venue, controller.news
 app.get '/venue/:venue_id/news_create', require_role("user"), local_user, validate_venue, controller.news_create
 app.post '/venue/:venue_id/news_create', require_role("user"), local_user, validate_venue, controller.news_create_action
 app.get '/venue/:venue_id/news_edit/:id', require_role("user"), local_user, validate_venue, controller.news_edit
 app.post '/venue/:venue_id/news_edit/:id', require_role("user"), local_user, validate_venue, controller.news_edit_action
-
+app.get '/venue/:venue_id/news_delete/:id', require_role("user"), local_user, validate_venue, controller.news_delete_action
 
 #--------------------------------------------------------------------------------
 # Mobile API
 #--------------------------------------------------------------------------------
+
+app.post '/home/user/:user_id/replay', services.user_push
 
 # if not registered crete new user. Return user info.
 app.post '/_s/signin/fb', services.fb_signin
@@ -217,7 +224,12 @@ app.post '/_s/signinmail', services.signinmail
 
 # retrieve clubs
 app.get '/_s/obj/club', handle_access_token, services.list_club
+app.get '/_s/obj/club_types', handle_access_token, services.club_types
+
+
 app.get '/_s/obj/club/:objectId', handle_access_token, services.find_club
+app.get '/_s/obj/club/:objectId/users', handle_access_token, services.club_users
+app.get '/_s/obj/club/:objectId/users/yesterday', handle_access_token, services.club_users_yesterday
 
 # checkin / chekout
 app.get '/_s/obj/club/:objectId/checkin', handle_access_token, services.checkin
@@ -230,7 +242,12 @@ app.get '/_s/obj/chat/:current_user/:receiver', handle_access_token, services.ge
 app.get '/_s/obj/chat/:current_user/:receiver/read', handle_access_token, services.readchat
 app.get '/_s/obj/chat/:current_user', handle_access_token, services.get_conversations
 
+
+app.get '/_s/obj/users/checkedin', handle_access_token, services.users_checkedin
+app.get '/_s/obj/users/around', handle_access_token, services.users_around
+
 # crud users
+app.get '/_s/obj/user/location/update', handle_access_token, services.update_user_location
 app.get '/_s/obj/user/me', handle_access_token, services.get_user_me
 app.put '/_s/obj/user/me', handle_access_token, services.update_user
 app.delete '/_s/obj/user/me', handle_access_token, services.delete_user_me
@@ -262,9 +279,16 @@ app.get '/_s/obj/user/:objectId/friends/:friendId/cancel', handle_access_token, 
 app.get '/_s/obj/user/:objectId/block/:userId', handle_access_token, services.block_user
 # unblock
 app.get '/_s/obj/user/:objectId/unblock/:userId', handle_access_token, services.unblock_user
+#invite friend
+app.post '/_s/obj/user/:objectId/invite', handle_access_token, services.invite_friend
+#invite fb friend
+app.post '/_s/obj/user/:objectId/fb/invite', handle_access_token, services.invite_friend_fb
+#find friends
+app.post '/_s/obj/user/find', handle_access_token, services.find_friends
+#find fb friends
+app.post '/_s/obj/user/fb/find', handle_access_token, services.find_friends_fb
 
 #
-
 # configuration
 app.get '/_s/obj/config', services.get_config
 
@@ -273,9 +297,13 @@ app.post '/_s/create_club', services.create_club
 app.get '/_f/user/remove/:user_id', services.remove_user
 app.get '/_f/checkin/clean', services.checkin_clean
 
+app.get '/_a/user/list', services.user_list
+
+
 if config.is_test_server == "false"
   checkout_job = new cronJob(
-    cronTime: "0 */5 * * * *"
+    cronTime: "0 0 */1 * * *"
+               
     onTick: ->
       cron.cron_checkout()
     start: false

@@ -4,8 +4,9 @@ db_model = require('./model')
 async = require("async")
 __ = require("underscore")
 async = require("async")
+moment = require('moment-timezone')
 
-CHECKIN_LIVE_TIME =  1000 * 60 * 30;
+CHECKIN_LIVE_TIME =  1000 * 60 * 360;
 
 exports.get_user_by_id = (user_id, callback)->
   console.log "METHOD - Manager get_user_by_id"
@@ -22,7 +23,6 @@ exports.findUserByEmail = (email, callback)->
   db_model.User.findOne(query).exec (err, user)->
     console.log user
     callback err, user
-
 
 exports.get_friend = (friend_id, current_user_id, callback)->
   console.log "METHOD - Manager get_friend"
@@ -81,8 +81,35 @@ exports.signinmail = (params, callback)->
 
 exports.list_club = (params, callback)->
   console.log "METHOD - Manager list_club"
-  query = { 'club_loc':{ '$near' : [ params.lat,params.lon] }}
-  db_model.Venue.find(query).exec (err, clubs)->
+  geoNear = 
+      near: [ parseFloat(params.lon), parseFloat(params.lat)] ,
+      distanceField: "distance",
+      spherical: true,
+      distanceMultiplier: 6371  
+
+  if params.distance
+    geoNear.maxDistance = params.distance/6371 
+
+  query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take}]
+  if params.type
+     match = {club_type: params.type}
+     query =  [{'$geoNear': geoNear}, {'$match': match}, {'$skip':params.skip}, {'$limit':params.take}]
+
+  console.log 'QUERY'
+  console.log query
+     
+
+  #query = { 'club_loc':{ '$near' : [ params.lat,params.lon] }}
+  db_model.Venue.aggregate query,{}, (err, clubs)->
+    #  console.log err
+    #db_model.Venue.find(query).exec (err, clubs)->
+    for club in clubs
+      if club.club_working_hours
+        for wh in club.club_working_hours
+          if wh.day == moment.utc().day()
+            club.id = club._id
+            club.club_today_working_hours = wh
+    
     db_model.User.findById(params.user_id).exec (err, user)->
       match_pre =  {"_id": {'$in': user.friends}, 'bloked_users': {'$ne': user._id}, 'friends': user._id, 'checkin.active': true }
       match_post =  {'checkin.active': true}
@@ -90,7 +117,6 @@ exports.list_club = (params, callback)->
 
       query = [ { '$match': match_pre}, { '$unwind': "$checkin" }, { '$match': match_post }, {'$group': group} ]
 
-      console.log 'result1'
       db_model.User.aggregate query, {}, (err, result)->
         for c in result
           res = __.find(clubs, (c_res)->
@@ -99,7 +125,11 @@ exports.list_club = (params, callback)->
           if res
             res.active_friends_checkins = c.count
 
-        callback err, clubs
+        query =  [{'$group':{_id: "$club_type", count: { '$sum': 1 } } }]
+        db_model.Venue.aggregate query, {}, (err, types)->
+          console.log err
+          console.log  types
+          callback err, clubs, types 
   
 exports.get_people_count_in_club = (club, callback)->
   console.log "METHOD - Manager get_people_count_in_club"
@@ -276,8 +306,26 @@ exports.save_user = (params, callback)->
   console.log "METHOD - Manager save_user"
   db_model.User.findOne({"email":params.email}).exec (err, user)->
     if user
-      console.log 'user exists', params.email
-      callback 'user exists', null
+      if user.state is 'invited'
+        user.gender = params.gender
+        user.name = params.name
+        user.email = params.email
+        user.password = params.password
+        user.city = params.city
+        user.country = params.country
+        user.state = 'active'
+
+        if params.bio
+          user.bio = params.bio
+        if params.dob
+          user.dob = params.dob
+        if params.avatar
+          user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
+
+        db_model.save_or_update_user user, (err)-> callback err, user
+      else
+        console.log 'user exists', params.email
+        callback 'user exists', null
     else if __.isEmpty params.name?.trim()
       callback 'name is empty', null
     else if __.isEmpty params.email?.trim()
@@ -336,7 +384,8 @@ exports.save_or_update_fb_user = (params, callback)->
         if params.city then user.city = params.city
         
         if user.photos.length == 0
-          user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
+          if params.avatar
+            user.photos.push {public_id: params.avatar.public_id, url: params.avatar.url, profile: true}
 
         db_model.save_or_update_user user, (err)-> callback err, user
 
