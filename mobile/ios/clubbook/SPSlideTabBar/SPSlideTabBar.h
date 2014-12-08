@@ -45,5 +45,6 @@ typedef enum {
 - (void)addTabForTitle:(NSString *)title;
 - (void)removeAllTabs;
 - (void)setScrollOffsetPercentage:(CGFloat)percentage;
+- (NSString*)getButtonTitleAtIndex:(NSUInteger) index;
 
 @end

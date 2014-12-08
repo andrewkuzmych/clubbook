@@ -23,6 +23,7 @@
 + (User *)signupFromJSON:(NSData *)objectNotation error:(NSError **)error;
 + (User *)signinFromJSON:(NSData *)objectNotation error:(NSError **)error;
 + (NSArray *)placesFromJSON:(NSData *)objectNotation error:(NSError **)error;
++ (NSArray *)typesFromJSON:(NSData *)objectNotation error:(NSError **)error;
 + (Place *)placeFromJSON:(NSData *)objectNotation error:(NSError **)error;
 + (NSArray *)placeUsersFromJSON:(NSData *)objectNotation error:(NSError **)error;
 + (UsersYesterday *)placeUsersYesterdayFromJSON:(NSData *)objectNotation error:(NSError **)error;

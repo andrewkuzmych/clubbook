@@ -104,10 +104,10 @@
     // if (_places.count == 0) {
     //     [self showProgress:NO title:nil];
     // }
-    [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:1 accessToken:accessToken];
+    [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:1 type:nil accessToken:accessToken];
 }
 
-- (void)didReceivePlaces:(NSArray *)places
+- (void)didReceivePlaces:(NSArray *)places andTypes:(NSArray *)types
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideProgress];

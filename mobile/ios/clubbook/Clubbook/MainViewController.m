@@ -32,6 +32,7 @@
    // NSArray *_places;
     BOOL isInitialLoad;
     int distanceKm;
+    NSString* selectedClubType;
     OBAlert * alert;
 }
 
@@ -121,6 +122,8 @@
     }];
     
     //setup filter tab bar
+    selectedClubType = nil;
+    
     self.filterTabBar = [[SPSlideTabBar alloc] initWithFrame:CGRectMake(0, 0, self.filterTabView.frame.size.width, self.filterTabView.frame.size.height)];
     [self.filterTabBar setAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth];
     [self.filterTabBar setBackgroundColor:[UIColor colorWithRed:0.651 green:0 blue:0.867 alpha:1]];
@@ -131,6 +134,9 @@
     [self.filterTabBar setSlideDelegate:self];
     [self.filterTabView addSubview:self.filterTabBar];
     
+    NSString* allOption = [NSString stringWithFormat:@"%@", NSLocalizedString(@"all", nil)];
+    [self.filterTabBar addTabForTitle:allOption];
+    
     //remove black line above filtertab
     UINavigationBar *navigationBar = self.navigationController.navigationBar;
     
@@ -139,17 +145,9 @@
                            barMetrics:UIBarMetricsDefault];
     
     [navigationBar setShadowImage:[UIImage new]];
-
-    NSMutableArray* filterOptions = [self getListOfFilteringOptions];
-    if ([filterOptions count] != 0) {
-        for (NSString* option in filterOptions) {
-            [self.filterTabBar addTabForTitle:option];
-        }
-        //set view on first filter option
-        [self filterForOption:0];
-    }
     
-    [self loadClub:10 skip:0];
+    //set view on first filter option
+    [self loadAllTypeClubs];
 
 }
 
@@ -239,29 +237,40 @@
 }
 
 - (void)insertRowAtTop {
-    [self loadClub:10 skip:0];
+    [self loadClubType:selectedClubType take:10 skip:0];
 }
 
 - (void)insertRowAtBottom {
     
     int countToSkip = [self.places count];
-    [self loadClub:10 skip:countToSkip];
+     [self loadClubType:selectedClubType take:10 skip:countToSkip];
 
     //[self.clubTable.infiniteScrollingView stopAnimating];
 }
 
-- (void)didReceivePlaces:(NSArray *)places
+- (void)didReceivePlaces:(NSArray *)places andTypes:(NSArray *)types
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideProgress];
         
         if (isInitialLoad) {
             _places = [places mutableCopy];
+            [self.filterTabBar setSelectedIndex:0];
+            
+            if (types) {
+                if ([types count] != 0) {
+                    for (NSString* option in types) {
+                         NSString* filterOption = [NSString stringWithFormat:@"%@", NSLocalizedString(option, nil)];
+                        filterOption = [option capitalizedString];
+
+                        [self.filterTabBar addTabForTitle:filterOption];
+                    }
+                }
+            }
         } else {
             [_places addObjectsFromArray:places];
         }
-            
-
+        
         self.title = [NSString stringWithFormat:@"%@", NSLocalizedString(@"clubs", nil)];
         
         self.clubTable.hidden = NO;
@@ -292,7 +301,7 @@
 - (void)didUpdateLocation
 {
     [self yesLocation];
-    [self loadClub:10 skip:0];
+    [self loadAllTypeClubs];
 }
 
 - (void)didFailUpdateLocation
@@ -300,7 +309,11 @@
     [self noLocation];
 }
 
-- (void)loadClub:(int)take skip:(int)skip
+- (void) loadAllTypeClubs {
+    [self loadClubType:nil take:10 skip:0];
+}
+
+- (void)loadClubType:(NSString*) type take:(int)take skip:(int)skip
 {
     isInitialLoad = NO;
     if (skip == 0) {
@@ -325,7 +338,7 @@
    // if (_places.count == 0) {
    //     [self showProgress:NO title:nil];
    // }
-    [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:0 accessToken:accessToken];
+    [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:0 type:type accessToken:accessToken];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -530,23 +543,22 @@
     [LocationHelper removeCheckin];
 }
 
--(NSMutableArray *) getListOfFilteringOptions {
-    NSMutableArray* filterList = [[NSMutableArray alloc] init];
-    [filterList addObject:@"All"];
-    [filterList addObject:@"Clubs"];
-    [filterList addObject:@"Bars & Cafes"];
-    [filterList addObject:@"Events"];
-    [filterList addObject:@"Festivals"];
-    return filterList;
-}
-
 #pragma mark - SPSlideTabBarDelegate
 - (void)barButtonClicked:(SPSlideTabButton *)button {
     [self filterForOption:button.tag];
 }
 
 -(void) filterForOption:(NSUInteger) index {
-        [self.filterTabBar setSelectedIndex:index];
+    [self.filterTabBar setSelectedIndex:index];
+    if (index == 0) {
+        selectedClubType = nil;
+        [self loadAllTypeClubs];
+    }
+    else {
+        NSString* typeString = [self.filterTabBar getButtonTitleAtIndex:index];
+        selectedClubType = [typeString lowercaseString];
+        [self loadClubType:selectedClubType take:10 skip:0];
+    }
 }
 
 @end

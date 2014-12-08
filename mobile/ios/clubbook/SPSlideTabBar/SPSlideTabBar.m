@@ -136,6 +136,15 @@
 
 #pragma mark - Public
 - (void)addTabForTitle:(NSString *)title {
+    //check if we have already this title
+    NSArray* buttonsArray = [self buttons];
+    for (SPSlideTabButton* but in buttonsArray) {
+        NSString* buttonTitle = [but.titleLabel text];
+        if ([buttonTitle compare:title] == NSOrderedSame) {
+            return;
+        }
+    }
+    
     SPSlideTabButton *button = [[SPSlideTabButton alloc] initWithTitle:title WithHeight:self.frame.size.height];
     [button setTitleColor:[self barButtonTitleColor] forState:UIControlStateNormal];
     button.titleLabel.font = [self barButtonTitleFont];
@@ -213,6 +222,14 @@
         //}
 
     }
+}
+
+- (NSString*)getButtonTitleAtIndex:(NSUInteger) index {
+    SPSlideTabButton* button = [[self barButtons] objectAtIndex:index];
+    if (button) {
+        return [button.titleLabel text];
+    }
+    return nil;
 }
 
 #pragma private

@@ -40,9 +40,9 @@
     [self.communicator chat:user_from user_to:user_to msg:msg msg_type:msg_type accessToken:accessToken];
 }
 
-- (void)retrievePlaces:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance accessToken:(NSString *) accessToken;
+- (void)retrievePlaces:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance type:(NSString*) type accessToken:(NSString *) accessToken;
 {
-    [self.communicator retrievePlaces:lat lon:lon take:take skip:skip distance:(int) distance accessToken:accessToken];
+    [self.communicator retrievePlaces:lat lon:lon take:take skip:skip distance:(int) distance type:(NSString*) type accessToken:accessToken];
 }
 
 - (void)retrievePlace:(NSString *) clubId accessToken:(NSString *) accessToken
@@ -457,14 +457,19 @@
 
 - (void)receivedPlacesJSON:(NSData *)objectNotation
 {
-    NSError *error = nil;
-    NSArray *places = [ObjectBuilder placesFromJSON:objectNotation error:&error];
+    NSError *errorPlaces = nil;
+    NSError *errorTypes = nil;
+    NSArray *places = [ObjectBuilder placesFromJSON:objectNotation error:&errorPlaces];
+    NSArray *types = [ObjectBuilder typesFromJSON:objectNotation error:&errorTypes];
     
-    if (error != nil) {
-        [self.delegate  failedWithError:error];
+    if (errorPlaces != nil) {
+        [self.delegate  failedWithError:errorPlaces];
         
-    } else {
-        [self.delegate didReceivePlaces:places];
+    } else if (errorTypes != nil) {
+        [self.delegate  failedWithError:errorTypes];
+    }
+    else {
+        [self.delegate didReceivePlaces:places andTypes:types];
     }
 }
 

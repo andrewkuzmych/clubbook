@@ -24,7 +24,7 @@
   - (void)didSignapUser:(User *)user;
   - (void)didSigninUser:(User *)user;
   - (void)didChat:(NSString *)result;
-  - (void)didReceivePlaces:(NSArray *)places;
+  - (void)didReceivePlaces:(NSArray *)places andTypes:(NSArray*) types;
   - (void)didReceivePlace:(Place *)place;
   - (void)didReceivePlaceUsers:(NSArray *)users;
   - (void)didReceivePlaceUsersYesterday:(UsersYesterday *)usersYesterday;
