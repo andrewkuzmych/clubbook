@@ -162,6 +162,34 @@
 
 }
 
+- (void)changeUserVisibilityNearby:(NSString *) accessToken isVisible:(BOOL) visible
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/me?access_token=%@", baseURL, accessToken];
+        NSDictionary * data  =
+        [NSDictionary
+         dictionaryWithObjectsAndKeys:
+         (visible) ? @"true" : @"false", @"is_visible_nearby",
+         nil];
+        
+        NSMutableURLRequest *request;
+        request = [self generateRequest:data url:urlAsString method:@"PUT"];
+        
+        [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            
+            if (error) {
+                [self.delegate failedWithError:error];
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.delegate changeUserPushJSON:data];
+                });
+            }
+        }];
+    });
+
+}
+
 - (void)changeUserPush:(NSString *) accessToken push:(BOOL) push
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

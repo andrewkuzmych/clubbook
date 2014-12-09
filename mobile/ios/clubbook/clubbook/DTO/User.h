@@ -29,6 +29,7 @@
 @property (assign, nonatomic) BOOL isFb;
 @property (assign, nonatomic) BOOL isFriend;
 @property (assign, nonatomic) BOOL push;
+@property (assign, nonatomic) BOOL isVisibleNearby;
 @property (assign, nonatomic) BOOL isBlocked;
 
 @end

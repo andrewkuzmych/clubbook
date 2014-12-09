@@ -646,6 +646,9 @@
     NSNumber * isPush = (NSNumber *)[userJson objectForKey: @"push"];
     user.push = (isPush && [isPush boolValue] == YES);
     
+    NSNumber * isVisibleNearby = (NSNumber *)[userJson objectForKey: @"is_visible_nearby"];
+    user.isVisibleNearby = (isVisibleNearby && [isVisibleNearby boolValue] == YES);
+    
     NSNumber * isBlocked = (NSNumber *)[userJson objectForKey: @"is_blocked"];
     user.isBlocked = (isBlocked && [isBlocked boolValue] == YES);
     

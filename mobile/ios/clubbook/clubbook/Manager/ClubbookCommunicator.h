@@ -73,6 +73,8 @@
 
 - (void)deleteUser:(NSString *) accessToken;
 
+- (void)changeUserVisibilityNearby:(NSString *) accessToken isVisible:(BOOL) visible;
+
 - (void)changeUserPush:(NSString *) accessToken push:(BOOL) push;
 
 - (void)sendFriendRequest:(NSString *) userId friendId:(NSString *) friendId accessToken:(NSString *) accessToken;
