@@ -369,6 +369,8 @@
         if (_places.count == 0) {
             if (self.isLoaded == YES)
             {
+                [self.clubTable.pullToRefreshView stopAnimating];
+                [self.clubTable.infiniteScrollingView stopAnimating];
                 return;
             }
             [self showProgress:NO title:nil];
