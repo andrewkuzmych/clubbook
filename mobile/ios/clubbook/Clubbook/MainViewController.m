@@ -154,16 +154,14 @@
     self.searchBar.barTintColor = self.filterTabBar.backgroundColor;
     
     //remove black line under searchbox
-    CGRect rect = self.searchBar.frame;
-    UIView *lineView = [[UIView alloc]initWithFrame:CGRectMake(0, rect.size.height - 2,rect.size.width, 2)];
-    lineView.backgroundColor = self.filterTabBar.backgroundColor;
-    [self.searchBar addSubview:lineView];
+    self.searchBar.layer.borderWidth = 2;
+    self.searchBar.layer.borderColor = [[UIColor colorWithRed:0.651 green:0 blue:0.867 alpha:1] CGColor];
     
     //set placeholder text
     self.searchBar.placeholder = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Search clubs, bars, events, etc. by name", nil)];
 
     //store height of searchbox to animate it in future
-    searchBarHeight = rect.size.height - 2;
+    searchBarHeight = self.searchBar.frame.size.height; //rect.size.height - 2;
     //hide searchbar
     [self replaceTopConstraintOnView:self.searchBar withConstant: -searchBarHeight];
     isSearchBarShown = NO;
@@ -615,6 +613,7 @@
 - (IBAction)handleSearchButton:(id)sender {
     if(!isSearchBarShown) {
         isSearchBarShown = YES;
+        [self searchTextFieldEnabled:YES];
         [self.filterTabBar setEnabled:NO];
         [self replaceTopConstraintOnView:self.searchBar withConstant: 0];
         //show all places to search
@@ -625,6 +624,7 @@
     } else {
         [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
         [self.filterTabBar setEnabled:YES];
+        [self searchTextFieldEnabled:NO];
         isSearchBarShown = NO;
         [self.searchBar resignFirstResponder];
     }
@@ -642,6 +642,11 @@
 - (void) searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     NSString* searchWord = self.searchBar.text;
     [self searchForWord:searchWord];
+}
+
+- (void) searchTextFieldEnabled:(BOOL) enabled {
+    UITextField *txfSearchField = [self.searchBar valueForKey:@"_searchField"];
+    [txfSearchField setEnabled:enabled];
 }
 
 //animation logic
