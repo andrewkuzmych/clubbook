@@ -60,7 +60,7 @@
     if (self.navigationController.delegate == self) {
         self.navigationController.delegate = nil;
     }
-    self.navigationController.navigationBar.translucent = YES;
+    self.navigationController.navigationBar.translucent = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated
