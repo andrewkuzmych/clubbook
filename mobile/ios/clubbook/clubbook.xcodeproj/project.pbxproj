@@ -384,6 +384,7 @@
 		49F2C675199C9A29006A3E21 /* Config.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F2C674199C9A29006A3E21 /* Config.m */; };
 		522ACCDF1A32084F006789EB /* SPSlideTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDC1A32084F006789EB /* SPSlideTabBar.m */; };
 		522ACCE01A32084F006789EB /* SPSlideTabButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDE1A32084F006789EB /* SPSlideTabButton.m */; };
+		529048F51A373FF600F80DF9 /* RetrieveLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 529048F41A373FF600F80DF9 /* RetrieveLocationViewController.m */; };
 		F4EECF12177C99F400778578 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF11177C99F400778578 /* UIKit.framework */; };
 		F4EECF14177C99F400778578 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF13177C99F400778578 /* Foundation.framework */; };
 		F4EECF16177C99F400778578 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF15177C99F400778578 /* CoreGraphics.framework */; };
@@ -1063,6 +1064,8 @@
 		522ACCDC1A32084F006789EB /* SPSlideTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPSlideTabBar.m; path = SPSlideTabBar/SPSlideTabBar.m; sourceTree = "<group>"; };
 		522ACCDD1A32084F006789EB /* SPSlideTabButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPSlideTabButton.h; path = SPSlideTabBar/SPSlideTabButton.h; sourceTree = "<group>"; };
 		522ACCDE1A32084F006789EB /* SPSlideTabButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPSlideTabButton.m; path = SPSlideTabBar/SPSlideTabButton.m; sourceTree = "<group>"; };
+		529048F31A373FF600F80DF9 /* RetrieveLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RetrieveLocationViewController.h; sourceTree = "<group>"; };
+		529048F41A373FF600F80DF9 /* RetrieveLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RetrieveLocationViewController.m; sourceTree = "<group>"; };
 		F4EECF0E177C99F400778578 /* Clubbook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clubbook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4EECF11177C99F400778578 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F4EECF13177C99F400778578 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1718,6 +1721,8 @@
 				498F928519E53B2100A8D570 /* FindMoreFriendsViewController.m */,
 				4994848D19FB95C400E906C0 /* ProfilePagesViewController.h */,
 				4994848E19FB95C400E906C0 /* ProfilePagesViewController.m */,
+				529048F31A373FF600F80DF9 /* RetrieveLocationViewController.h */,
+				529048F41A373FF600F80DF9 /* RetrieveLocationViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -2528,6 +2533,7 @@
 				499929B519E97CB000B77A6E /* CSNativeBlurView.m in Sources */,
 				4934F76119D047B800BFFDB1 /* UIButton+WebCache.m in Sources */,
 				498A68E4196C4CFD00BC2859 /* PNClient.m in Sources */,
+				529048F51A373FF600F80DF9 /* RetrieveLocationViewController.m in Sources */,
 				4934F7F419D04B9300BFFDB1 /* JSQSystemSoundPlayer.m in Sources */,
 				498A690C196C4CFD00BC2859 /* PNNetworkHelper.m in Sources */,
 				4934F7DA19D04A7100BFFDB1 /* JSQMessagesAvatarFactory.m in Sources */,

@@ -1,0 +1,16 @@
+//
+//  RetrieveLocationViewController.h
+//  Clubbook
+//
+//  Created by Anton Semenyuk on 12/9/14.
+//  Copyright (c) 2014 clubbook. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface RetrieveLocationViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UIImageView *photoImageView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) IBOutlet UILabel *infoLabel;
+
+@end
