@@ -54,7 +54,7 @@
 
     [self startToLocate];
     
-    //[self performSegueWithIdentifier: @"onLocation" sender: self];
+    [self performSegueWithIdentifier: @"onLocation" sender: self];
 }
 
 - (void) startToLocate {

@@ -17,7 +17,8 @@
 #import "SWRevealViewController.h"
 
 @interface MessagesViewController (){
-    NSArray *_chats;
+    NSMutableArray *_chats;
+    NSIndexPath* rowToDelete;
 }
 
 @end
@@ -91,9 +92,10 @@
         
         self.noMesssageLabel.hidden = (chats.count > 0);
         
-        _chats = chats;
+        _chats = [chats mutableCopy];
          
         self.messageTable.hidden = NO;
+        [self.messageTable setEditing:YES];
         self.messageTable.dataSource = self;
         self.messageTable.delegate = self;
         [self.messageTable reloadData];
@@ -167,6 +169,49 @@
         ChatViewController *chatController =  [segue destinationViewController];
         //Chat *chat = (Chat*) sender;
         chatController.userTo = sender;
+    }
+}
+
+- (NSArray*)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewRowAction *deleteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"Delete" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath){
+        rowToDelete = indexPath;
+        Chat* conversation = [_chats objectAtIndex:rowToDelete.row];
+        [self deleteConversation:conversation];
+    }];
+    deleteAction.backgroundColor = [UIColor redColor];
+    return @[deleteAction];
+}
+
+- (void) deleteConversation:(Chat*) conversation {
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    NSString *userId = [defaults objectForKey:@"userId"];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
+    
+    User* receiver = [conversation receiver];
+    NSString* receiverId = receiver.id;
+    
+    [self._manager deleteConversation:userId toUser:receiverId accessToken:accessToken];
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return YES if you want the specified item to be editable.
+    return YES;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewCellEditingStyleDelete;
+}
+
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+}
+- (void)didDeleteConversation:(NSString *)result {
+    if([result compare:(@"ok")] == NSOrderedSame && rowToDelete) {
+        [_chats removeObjectAtIndex:rowToDelete.row];
+        //[self.messageTable reloadData];
+        [self.messageTable deleteRowsAtIndexPaths:@[rowToDelete] withRowAnimation:UITableViewRowAnimationAutomatic];
+        rowToDelete = nil;
     }
 }
 

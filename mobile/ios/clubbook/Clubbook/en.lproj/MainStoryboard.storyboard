@@ -1445,8 +1445,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="74"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="reC-nj-QUX">
-                                                    <rect key="frame" x="0.0" y="1" width="320" height="74"/>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="reC-nj-QUX">
+                                                    <rect key="frame" x="0.0" y="1" width="312" height="74"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dlp-4m-sai">
                                                             <rect key="frame" x="10" y="8" width="60" height="60"/>
@@ -1486,6 +1486,12 @@
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                 </view>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="reC-nj-QUX" firstAttribute="trailing" secondItem="KbU-Kc-u6n" secondAttribute="trailingMargin" id="Fyy-iR-jvi"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="reC-nj-QUX" secondAttribute="bottom" constant="-9" id="JNn-pe-4EX"/>
+                                                <constraint firstItem="reC-nj-QUX" firstAttribute="leading" secondItem="KbU-Kc-u6n" secondAttribute="leading" id="Ylh-l8-qgq"/>
+                                                <constraint firstItem="reC-nj-QUX" firstAttribute="top" secondItem="KbU-Kc-u6n" secondAttribute="topMargin" constant="-7" id="dGZ-tV-1q7"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="messageLabel" destination="ple-La-CvF" id="OBC-Ut-DkQ"/>
@@ -1523,7 +1529,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ddC-nc-bz0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2992" y="-323"/>
+            <point key="canvasLocation" x="-2992" y="-327"/>
         </scene>
         <!--Profile Pages View Controller-->
         <scene sceneID="e0r-me-BM5">
@@ -3503,7 +3509,7 @@
         <segue reference="fHF-fb-mVP"/>
         <segue reference="g4R-r7-bxr"/>
         <segue reference="R55-D2-Pfl"/>
-        <segue reference="Ky6-MD-mgx"/>
-        <segue reference="SRl-Ke-nF1"/>
+        <segue reference="d65-3G-9uv"/>
+        <segue reference="Zkk-XZ-3rw"/>
     </inferredMetricsTieBreakers>
 </document>
