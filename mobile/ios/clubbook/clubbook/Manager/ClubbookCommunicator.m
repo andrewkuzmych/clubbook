@@ -182,7 +182,7 @@
                 [self.delegate failedWithError:error];
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.delegate changeUserPushJSON:data];
+                    [self.delegate changeUserVisibleNearbyJSON:data];
                 });
             }
         }];
