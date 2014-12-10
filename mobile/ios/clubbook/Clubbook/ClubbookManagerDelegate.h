@@ -35,6 +35,7 @@
   - (void)didRetrievePendingFriends:(FriendsResult *)friendsResult;
   - (void)didReceiveConversation:(Chat *)chat;
   - (void)didReceiveConversations:(NSArray *)chats;
+  - (void)didDeleteConversation:(NSString *)result;
   - (void)didUnreadMessages:(UnreadMessages *)unreadMessages;
   - (void)didReadChat:(NSString *)result;
   - (void)didCheckin:(User *)user userInfo:(NSObject*) userInfo;

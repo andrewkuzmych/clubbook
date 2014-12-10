@@ -80,6 +80,11 @@
     [self.communicator retrieveConversations:userId accessToken:accessToken];
 }
 
+- (void)deleteConversation:(NSString *) fromUser toUser:(NSString *) toUser accessToken:(NSString *) accessToken
+{
+    [self.communicator deleteConversation:fromUser toUser:toUser accessToken:accessToken];
+}
+
 - (void)checkin:(NSString *) clubId accessToken:(NSString *) accessToken userInfo:(NSObject *) userInfo
 {
     [self.communicator checkin:clubId accessToken:accessToken userInfo:userInfo];
@@ -220,6 +225,19 @@
         
     } else {
         [self.delegate didGetConfig:config];
+    }
+}
+
+- (void)deleteConversationJSON:(NSData *)objectNotation
+{
+    NSError *error = nil;
+    //User *user = [ObjectBuilder userFromJSON:objectNotation error:&error];
+    
+    if (error != nil) {
+        [self.delegate  failedWithError:error];
+        
+    } else {
+        [self.delegate didDeleteConversation:@"ok"];
     }
 }
 

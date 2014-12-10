@@ -474,6 +474,28 @@
     
 }
 
+
+- (void)deleteConversation:(NSString *) fromUser toUser:(NSString *) toUser accessToken:(NSString *) accessToken
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // switch to a background thread and perform your expensive operation
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/chat/%@/%@/delete?access_token=%@", baseURL, fromUser, toUser,accessToken];
+        
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
+        
+        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [self.delegate failedWithError:error];
+                } else {
+                    [self.delegate deleteConversationJSON:data];
+                }
+            });
+        }];
+    });
+}
+
+
 - (void)retrievePlaces:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance type:(NSString*) type search:(NSString*) search accessToken:(NSString *) accessToken;
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
