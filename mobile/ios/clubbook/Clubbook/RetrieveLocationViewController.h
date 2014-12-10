@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LocationManagerProtocol.h"
 
-@interface RetrieveLocationViewController : UIViewController
+@interface RetrieveLocationViewController : UIViewController <LocationManagerProtocol>
 @property (weak, nonatomic) IBOutlet UIImageView *photoImageView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
+@property (weak, nonatomic) IBOutlet UIButton *retryButton;
 
 @end

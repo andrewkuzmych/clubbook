@@ -601,18 +601,18 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="pNU-Ri-Y1l">
-                                <rect key="frame" x="0.0" y="64" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="20" width="320" height="44"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="phQ-b2-ll2">
-                                <rect key="frame" x="0.0" y="108" width="320" height="45"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="45"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="Jha-jc-0GM"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="45" id="UND-AS-9hs"/>
                                 </constraints>
                             </scrollView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="75" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="kH0-2c-mrd">
-                                <rect key="frame" x="0.0" y="153" width="320" height="415"/>
+                                <rect key="frame" x="0.0" y="109" width="320" height="459"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="separatorColor" red="0.78985969389999999" green="0.78985969389999999" blue="0.78985969389999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -1355,36 +1355,65 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vIR-pu-ehC">
-                                <rect key="frame" x="98" y="98" width="125" height="125"/>
+                                <rect key="frame" x="110" y="98" width="100" height="100"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="125" id="qFp-iH-Ll3"/>
-                                    <constraint firstAttribute="width" constant="125" id="yM0-L0-zhv"/>
+                                    <constraint firstAttribute="height" constant="100" id="qFp-iH-Ll3"/>
+                                    <constraint firstAttribute="width" constant="100" id="yM0-L0-zhv"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="50"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Getting your location..." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KS3-aa-6GW">
-                                <rect key="frame" x="73" y="276" width="175" height="21"/>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="8N4-tC-zI5">
+                                <rect key="frame" x="142" y="206" width="37" height="37"/>
+                            </activityIndicatorView>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sa3-qI-hpr">
+                                <rect key="frame" x="94" y="210" width="133" height="30"/>
+                                <color key="backgroundColor" red="0.92637914539999999" green="0.070751030869999995" blue="0.25651361620000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Retry">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="handleRetry:" destination="47H-ad-Gea" eventType="touchUpInside" id="hEq-4K-9o0"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Checking your location..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KS3-aa-6GW">
+                                <rect key="frame" x="65" y="251" width="191" height="21"/>
+                                <rect key="contentStretch" x="1" y="0.0" width="1" height="1"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="8N4-tC-zI5">
-                                <rect key="frame" x="142" y="231" width="37" height="37"/>
-                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="0.21723019656602205" green="0.0071079931773783585" blue="0.29923148777173914" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="vIR-pu-ehC" firstAttribute="top" secondItem="SUG-p9-rbz" secondAttribute="bottom" constant="78" id="0wz-tb-BR5"/>
+                            <constraint firstItem="8N4-tC-zI5" firstAttribute="leading" secondItem="vx6-UW-o0Z" secondAttribute="leading" constant="142" id="GOT-Ed-Mid"/>
                             <constraint firstAttribute="centerX" secondItem="KS3-aa-6GW" secondAttribute="centerX" id="JiZ-aA-5VE"/>
-                            <constraint firstItem="vIR-pu-ehC" firstAttribute="centerX" secondItem="8N4-tC-zI5" secondAttribute="centerX" id="QAj-AB-ocP"/>
+                            <constraint firstItem="sa3-qI-hpr" firstAttribute="leading" secondItem="vx6-UW-o0Z" secondAttribute="leadingMargin" constant="78" id="OCT-gt-7ij"/>
+                            <constraint firstItem="sa3-qI-hpr" firstAttribute="top" secondItem="vIR-pu-ehC" secondAttribute="bottom" constant="12" id="QNN-e5-zzO"/>
+                            <constraint firstItem="sa3-qI-hpr" firstAttribute="centerX" secondItem="8N4-tC-zI5" secondAttribute="centerX" id="X6O-9R-agJ"/>
                             <constraint firstItem="KS3-aa-6GW" firstAttribute="top" secondItem="8N4-tC-zI5" secondAttribute="bottom" constant="8" id="ZKu-m1-5a7"/>
                             <constraint firstItem="8N4-tC-zI5" firstAttribute="top" secondItem="vIR-pu-ehC" secondAttribute="bottom" constant="8" id="ZqB-p0-NBr"/>
-                            <constraint firstAttribute="centerX" secondItem="8N4-tC-zI5" secondAttribute="centerX" id="xyX-ir-oro"/>
+                            <constraint firstItem="vIR-pu-ehC" firstAttribute="centerX" secondItem="KS3-aa-6GW" secondAttribute="centerX" id="sQl-E2-IqX"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="8N4-tC-zI5" id="mmH-ua-4q6"/>
                         <outlet property="infoLabel" destination="KS3-aa-6GW" id="8hV-IZ-HB7"/>
                         <outlet property="photoImageView" destination="vIR-pu-ehC" id="JfA-3I-9Pa"/>
+                        <outlet property="retryButton" destination="sa3-qI-hpr" id="rQ5-RU-oaf"/>
+                        <segue destination="FUu-XX-1jG" kind="modal" identifier="onLocation" id="oaS-f9-s54"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Yr0-Be-tB1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2760,7 +2789,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C4c-d4-88L" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4951" y="-1483"/>
+            <point key="canvasLocation" x="-4939" y="-1341"/>
         </scene>
         <!--No Location View Controller-->
         <scene sceneID="c10-d3-FD1">
@@ -2985,7 +3014,7 @@
                         <outlet property="sloganLabel" destination="2yt-Rz-8cS" id="je9-8z-UbY"/>
                         <outlet property="termOfUseButton" destination="lZP-wI-7ZE" id="yhO-QI-2wg"/>
                         <outlet property="termOfUseLabel" destination="y15-YR-Rbs" id="eKY-CJ-if5"/>
-                        <segue destination="FUu-XX-1jG" kind="modal" identifier="onLogin" animates="NO" id="SSh-NF-ryv"/>
+                        <segue destination="47H-ad-Gea" kind="modal" identifier="onLogin" id="G5L-PP-KnF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vnz-eF-5MI" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3168,7 +3197,7 @@
                         <outlet property="passText" destination="rhX-Wu-Bwf" id="dGH-gN-sSd"/>
                         <outlet property="profileImage" destination="IKH-pD-LMe" id="foe-ZI-NDF"/>
                         <outlet property="regButton" destination="p4d-bp-q8y" id="asr-y8-uDo"/>
-                        <segue destination="FUu-XX-1jG" kind="modal" identifier="onLogin" id="V2Y-sj-My7"/>
+                        <segue destination="47H-ad-Gea" kind="modal" identifier="onLogin" id="cMe-6e-UsR"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rnj-6O-t80" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3279,7 +3308,7 @@
                         <outlet property="forgotPassButton" destination="IAb-QC-RSN" id="OP8-mV-tDL"/>
                         <outlet property="loginButton" destination="jVW-tB-w6U" id="K9S-Uk-u2n"/>
                         <outlet property="passText" destination="ToX-mP-g3L" id="EBi-MA-aav"/>
-                        <segue destination="FUu-XX-1jG" kind="modal" identifier="onLogin" id="srA-Fm-t0q"/>
+                        <segue destination="47H-ad-Gea" kind="modal" identifier="onLogin" id="fHF-fb-mVP"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zs4-bA-c3R" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3447,10 +3476,10 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="SSh-NF-ryv"/>
-        <segue reference="Ky6-MD-mgx"/>
-        <segue reference="dow-PZ-Aqs"/>
+        <segue reference="fHF-fb-mVP"/>
+        <segue reference="g4R-r7-bxr"/>
         <segue reference="R55-D2-Pfl"/>
+        <segue reference="Ky6-MD-mgx"/>
         <segue reference="SRl-Ke-nF1"/>
     </inferredMetricsTieBreakers>
 </document>

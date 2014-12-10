@@ -18,7 +18,6 @@
 #import "Constants.h"
 #import "ErrorViewController.h"
 #import "NoLocationViewController.h"
-#import "OBAlert.h"
 #import "Constants.h"
 #import "LocationManagerSingleton.h"
 #import "GlobalVars.h"
@@ -33,7 +32,6 @@
     BOOL isInitialLoad;
     int distanceKm;
     NSString* selectedClubType;
-    OBAlert * alert;
     
     BOOL isSearchBarShown;
     float searchBarHeight;
@@ -92,16 +90,11 @@
 
 
     self.title = NSLocalizedString(@"Going Out", nil);
-    alert = [[OBAlert alloc] initInViewController:self];
     
     distanceKm = 5;
     
     self.distance.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14];
     [self.distance setText:[NSString stringWithFormat:@"%d%@", distanceKm, NSLocalizedString(@"kilometers", nil)]];
-    
-    [LocationManagerSingleton sharedSingleton].delegate = self;
-    [[LocationManagerSingleton sharedSingleton] startLocating];
-    
     self.clubTable.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:15], UITextAttributeFont, nil];
@@ -173,13 +166,11 @@
 }
 
 - (void)appplicationIsActive:(NSNotification *)notification {
-    [LocationManagerSingleton sharedSingleton].delegate = self;
-    [[LocationManagerSingleton sharedSingleton] startLocating];
+    
 }
 
 - (void)applicationEnteredForeground:(NSNotification *)notification {
-    [LocationManagerSingleton sharedSingleton].delegate = self;
-    [[LocationManagerSingleton sharedSingleton] startLocating];
+    
 }
 
 - (void)didGetConfig:(Config *)config
@@ -238,25 +229,6 @@
     
    }
 
-- (void)noLocation
-{//self.isViewLoaded &&
-    //if (self.view.window){
-        // viewController is visible
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [alert showAlertWithText:NSLocalizedString(@"no_location_msg", nil) titleText:NSLocalizedString(@"no_location_title", nil)];
-        });
-  //  }
-}
-
-- (void)yesLocation
-{
-    if (self.isViewLoaded && self.view.window){
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [alert removeAlert];
-        });
-    }
-}
-
 - (void)insertRowAtTop {
     [self loadClubType:selectedClubType take:10 skip:0];
 }
@@ -301,8 +273,6 @@
         [self.clubTable reloadData];
         [self.clubTable setContentOffset:positin animated:NO];
 
-        
-        
         // update user location
         double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
         double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
@@ -316,17 +286,6 @@
 
 - (void)didUpdateUserLocation:(NSString *)result
 {
-}
-
-- (void)didUpdateLocation
-{
-    [self yesLocation];
-    [self loadAllTypeClubs];
-}
-
-- (void)didFailUpdateLocation
-{
-    [self noLocation];
 }
 
 - (void) loadAllTypeClubs {

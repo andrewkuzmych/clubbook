@@ -9,10 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import "BaseViewController.h"
-#import "LocationManagerProtocol.h"
 #import "SPSlideTabBar.h"
 
-@interface MainViewController : BaseViewController<LocationManagerProtocol,UITableViewDelegate, UITableViewDataSource, PNDelegate, SPSlideTabBarDelegate, UISearchBarDelegate>{
+@interface MainViewController : BaseViewController<UITableViewDelegate, UITableViewDataSource, PNDelegate, SPSlideTabBarDelegate, UISearchBarDelegate>{
  CLLocationManager *locationManager;
 }
 @property (weak, nonatomic) IBOutlet UITableView *clubTable;
