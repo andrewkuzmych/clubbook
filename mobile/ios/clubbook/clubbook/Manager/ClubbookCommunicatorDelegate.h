@@ -40,6 +40,7 @@
 - (void)deleteUserImageJSON:(NSData *)objectNotation;
 - (void)updateUserJSON:(NSData *)objectNotation;
 - (void)deleteUserJSON:(NSData *)objectNotation;
+- (void)changeUserVisibleNearbyJSON:(NSData *)objectNotation;
 - (void)changeUserPushJSON:(NSData *)objectNotation;
 - (void)changePassJSON:(NSData *)objectNotation;
 - (void)getConfigJSON:(NSData *)objectNotation;

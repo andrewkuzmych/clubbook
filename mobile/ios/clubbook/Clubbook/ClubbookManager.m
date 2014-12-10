@@ -110,6 +110,11 @@
     [self.communicator addUserImage:userId avatar:avatar accessToken:accessToken];
 }
 
+- (void)changeUserVisible:(NSString*) accessToken visible:(BOOL) visible
+{
+    [self.communicator changeUserVisibilityNearby:accessToken isVisible:visible];
+}
+
 - (void)changeUserPush:(NSString *) accessToken push:(BOOL) push
 {
     [self.communicator changeUserPush:accessToken push:push];
@@ -228,6 +233,19 @@
         
     } else {
         [self.delegate didRetrieveFriends:friendsResult];
+    }
+}
+
+- (void)changeUserVisibleNearbyJSON:(NSData *)objectNotation
+{
+    NSError *error = nil;
+    User *user = [ObjectBuilder userFromJSON:objectNotation error:&error];
+    
+    if (error != nil) {
+        [self.delegate  failedWithError:error];
+        
+    } else {
+        [self.delegate didChangeVisibleNearby:user];
     }
 }
 

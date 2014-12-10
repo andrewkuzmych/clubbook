@@ -36,9 +36,10 @@
 {
     [super viewDidLoad];
     
-    self.settingsItems = @[@"push", @"privacy", @"terms", @"change", @"delete", @"contacts",@"faq", @"logout"];
+    self.settingsItems = @[@"push", @"visible", @"privacy", @"terms", @"change", @"delete", @"contacts",@"faq", @"logout"];
     // Do any additional setup after loading the view.
     self.pushLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16];
+    self.visibleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16];
     self.policyLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16];
     self.termsLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16];
     self.deleteLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:16];
@@ -52,6 +53,13 @@
         [self.pushSwitch setOn:YES animated:YES];
     } else {
         [self.pushSwitch setOn:NO animated:YES];
+    }
+    NSString *userVisible = [defaults objectForKey:@"userVisible"];
+    
+    if ([userVisible isEqualToString:@"true"]) {
+        [self.visibleSwitch setOn:YES animated:YES];
+    } else {
+        [self.visibleSwitch setOn:NO animated:YES];
     }
 }
 
@@ -107,6 +115,7 @@
     {
     [self performSegueWithIdentifier:@"onWeb" sender:NSLocalizedString(@"faqUrl", nil)];
     }
+    [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(NSString *)sender
@@ -179,8 +188,24 @@
         [self._manager changeUserPush:accessToken push:NO];
     }
 }
+- (IBAction)visibleSwitchAction:(id)sender {
+    BOOL state = [sender isOn];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
+    if (state) {
+        [self._manager changeUserVisible:accessToken visible:YES];
+    } else {
+        [self._manager changeUserVisible:accessToken visible:NO];
+    }
+}
 
 - (void)didChangePush:(User *)user;
+{
+    [SessionHelper StoreUser:user];
+}
+
+- (void)didChangeVisibleNearby:(User *)user;
 {
     [SessionHelper StoreUser:user];
 }

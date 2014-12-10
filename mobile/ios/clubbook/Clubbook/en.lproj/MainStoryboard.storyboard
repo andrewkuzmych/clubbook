@@ -1577,6 +1577,29 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="visible" id="lE0-PS-jNt" userLabel="visible" customClass="SettingsCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lE0-PS-jNt" id="npi-ag-aHJ">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="59"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="utc-AL-6hu">
+                                                    <rect key="frame" x="251" y="14" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="pushSwitchAction:" destination="GVb-UH-Luh" eventType="valueChanged" id="F8y-bK-PPI"/>
+                                                        <action selector="visibleSwitchAction:" destination="GVb-UH-Luh" eventType="valueChanged" id="Nwl-MP-vzN"/>
+                                                    </connections>
+                                                </switch>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Visible Nearby" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Psi-XD-8wf" userLabel="Visible Nearby">
+                                                    <rect key="frame" x="20" y="16" width="203" height="28"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.38431372549999998" green="0.38431372549999998" blue="0.38431372549999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="privacy" id="RiH-Ye-CAs" customClass="SettingsCell">
                                         <rect key="frame" x="0.0" y="60" width="320" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
@@ -1706,9 +1729,10 @@
                         <outlet property="logoutLabel" destination="Hvh-1y-9uf" id="TEa-yv-SQI"/>
                         <outlet property="policyLabel" destination="fn2-mx-MS6" id="Dje-XN-BhK"/>
                         <outlet property="pushLabel" destination="mEU-v7-RoJ" id="TyX-2t-OQW"/>
-                        <outlet property="pushSwitch" destination="gmp-07-Wke" id="yIv-iA-abc"/>
                         <outlet property="sidebarButton" destination="BmG-K6-uda" id="auV-bQ-pp2"/>
                         <outlet property="termsLabel" destination="g3v-NG-k6Z" id="FXL-pi-inB"/>
+                        <outlet property="visibleLabel" destination="Psi-XD-8wf" id="fQ9-Jb-6EY"/>
+                        <outlet property="visibleSwitch" destination="utc-AL-6hu" id="htr-NK-MU0"/>
                         <segue destination="ddF-EK-tYf" kind="unwind" identifier="onLogout" unwindAction="unwindToLoginViewController:" id="5kx-uQ-A1b"/>
                         <segue destination="oIg-mP-rVu" kind="push" identifier="onWeb" id="gFh-QK-vkU"/>
                         <segue destination="YaL-57-bxD" kind="push" identifier="onChange" id="Way-6Q-7xf"/>

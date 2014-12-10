@@ -51,6 +51,7 @@
   - (void)didConfirmFriend:(User *)user;
   - (void)didRemoveFriend:(User *)user;
   - (void)didRemoveFriendRequest:(User *)user;
+  - (void)didChangeVisibleNearby:(User *)user;
   - (void)didChangePush:(User *)user;
   - (void)didGetConfig:(Config *)config;
 

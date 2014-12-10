@@ -35,6 +35,7 @@
     [defaults setBool:user.isFb forKey:@"isFb"];
 
     [defaults setObject:(user.push) ? @"true" : @"false" forKey:@"userPush"];
+    [defaults setObject:(user.isVisibleNearby) ? @"true" : @"false" forKey:@"userVisible"];
 
     if (user.age != nil) {
        [defaults setObject:user.age forKey:@"userAge"];
