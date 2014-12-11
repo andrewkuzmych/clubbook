@@ -8,11 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "LocationManagerProtocol.h"
+#import "MultiplePulsingHaloLayer.h"
 
 @interface RetrieveLocationViewController : UIViewController <LocationManagerProtocol>
 @property (weak, nonatomic) IBOutlet UIImageView *photoImageView;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 @property (weak, nonatomic) IBOutlet UIButton *retryButton;
+@property (nonatomic, strong) MultiplePulsingHaloLayer *halo;
+@property (weak, nonatomic) IBOutlet UIView *testView;
+
 
 @end

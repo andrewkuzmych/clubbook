@@ -385,6 +385,8 @@
 		522ACCDF1A32084F006789EB /* SPSlideTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDC1A32084F006789EB /* SPSlideTabBar.m */; };
 		522ACCE01A32084F006789EB /* SPSlideTabButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDE1A32084F006789EB /* SPSlideTabButton.m */; };
 		529048F51A373FF600F80DF9 /* RetrieveLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 529048F41A373FF600F80DF9 /* RetrieveLocationViewController.m */; };
+		5297358E1A39B002009943C3 /* MultiplePulsingHaloLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297358B1A39B002009943C3 /* MultiplePulsingHaloLayer.m */; };
+		5297358F1A39B002009943C3 /* PulsingHaloLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297358D1A39B002009943C3 /* PulsingHaloLayer.m */; };
 		F4EECF12177C99F400778578 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF11177C99F400778578 /* UIKit.framework */; };
 		F4EECF14177C99F400778578 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF13177C99F400778578 /* Foundation.framework */; };
 		F4EECF16177C99F400778578 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF15177C99F400778578 /* CoreGraphics.framework */; };
@@ -1066,6 +1068,10 @@
 		522ACCDE1A32084F006789EB /* SPSlideTabButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPSlideTabButton.m; path = SPSlideTabBar/SPSlideTabButton.m; sourceTree = "<group>"; };
 		529048F31A373FF600F80DF9 /* RetrieveLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RetrieveLocationViewController.h; sourceTree = "<group>"; };
 		529048F41A373FF600F80DF9 /* RetrieveLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RetrieveLocationViewController.m; sourceTree = "<group>"; };
+		5297358A1A39B002009943C3 /* MultiplePulsingHaloLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiplePulsingHaloLayer.h; sourceTree = "<group>"; };
+		5297358B1A39B002009943C3 /* MultiplePulsingHaloLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiplePulsingHaloLayer.m; sourceTree = "<group>"; };
+		5297358C1A39B002009943C3 /* PulsingHaloLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PulsingHaloLayer.h; sourceTree = "<group>"; };
+		5297358D1A39B002009943C3 /* PulsingHaloLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PulsingHaloLayer.m; sourceTree = "<group>"; };
 		F4EECF0E177C99F400778578 /* Clubbook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clubbook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4EECF11177C99F400778578 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F4EECF13177C99F400778578 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1988,6 +1994,7 @@
 		49E8319119534EBB00D4A26C /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				529735891A39B002009943C3 /* PulsingHalo */,
 				522ACCE11A320852006789EB /* SPSlideTabBar */,
 				49C43BC91A0277F7004F5058 /* SVPullToRefresh */,
 				4994848919FB957600E906C0 /* SwipeView */,
@@ -2013,6 +2020,17 @@
 				522ACCDE1A32084F006789EB /* SPSlideTabButton.m */,
 			);
 			name = SPSlideTabBar;
+			sourceTree = "<group>";
+		};
+		529735891A39B002009943C3 /* PulsingHalo */ = {
+			isa = PBXGroup;
+			children = (
+				5297358A1A39B002009943C3 /* MultiplePulsingHaloLayer.h */,
+				5297358B1A39B002009943C3 /* MultiplePulsingHaloLayer.m */,
+				5297358C1A39B002009943C3 /* PulsingHaloLayer.h */,
+				5297358D1A39B002009943C3 /* PulsingHaloLayer.m */,
+			);
+			path = PulsingHalo;
 			sourceTree = "<group>";
 		};
 		F4EECF05177C99F400778578 = {
@@ -2574,6 +2592,7 @@
 				498A6906196C4CFD00BC2859 /* PNPushNotificationsRemoveRequest.m in Sources */,
 				49E831461951B92000D4A26C /* Constants.m in Sources */,
 				49908EF0197435FA00DA68F2 /* ErrorViewController.m in Sources */,
+				5297358E1A39B002009943C3 /* MultiplePulsingHaloLayer.m in Sources */,
 				498A68F0196C4CFD00BC2859 /* NSArray+PNAdditions.m in Sources */,
 				499929B619E97CB000B77A6E /* CSNotificationView.m in Sources */,
 				49C43BD01A0277F7004F5058 /* UIScrollView+SVPullToRefresh.m in Sources */,
@@ -2594,6 +2613,7 @@
 				4934F7E219D04A7100BFFDB1 /* JSQMessagesCollectionView.m in Sources */,
 				499247AC1976AB7F008C74D0 /* ProfileViewController.m in Sources */,
 				4934F7D619D04A7100BFFDB1 /* UIView+JSQMessages.m in Sources */,
+				5297358F1A39B002009943C3 /* PulsingHaloLayer.m in Sources */,
 				49908F0519751C5C00DA68F2 /* UIButton+ALBlock.m in Sources */,
 				49ABA12C198A919C00B060D0 /* FriendCell.m in Sources */,
 				49895A6C1969980700484EA2 /* CbLabel.m in Sources */,

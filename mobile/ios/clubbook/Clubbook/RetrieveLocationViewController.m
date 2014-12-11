@@ -11,6 +11,7 @@
 #import "CLCloudinary.h"
 #import "CLTransformation.h"
 #import "Constants.h"
+#import "MultiplePulsingHaloLayer.h"
 
 @interface RetrieveLocationViewController ()
 
@@ -22,6 +23,17 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
+    ///setup single halo layer
+    MultiplePulsingHaloLayer *multiLayer = [[MultiplePulsingHaloLayer alloc] initWithHaloLayerNum:3 andStartInterval:1];
+    self.halo = multiLayer;
+    self.halo.position = self.photoImageView.center;
+    self.halo.useTimingFunction = NO;
+    [self.halo buildSublayers];
+    self.halo.radius = 150;
+    self.halo.fromValueForRadius = 0.3;
+    [self.halo setHaloLayerColor:[UIColor whiteColor].CGColor];
+    [self.view.layer insertSublayer:self.halo below:self.photoImageView.layer];
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSDictionary *userAvatar = [defaults objectForKey:@"userAvatar"];
     
@@ -35,7 +47,7 @@
     UIImage* placeholderImage = [UIImage imageNamed:@"avatar_empty.png"];
     NSData* imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:avatarUrl]];
     UIImage* avatarImage = [UIImage imageWithData:imageData];
-    
+
     if(avatarImage) {
         self.photoImageView.image = avatarImage;
     }
@@ -53,24 +65,30 @@
     [super viewDidAppear:animated];
 
     [self startToLocate];
+}
+
+- (void) viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
     
-    [self performSegueWithIdentifier: @"onLocation" sender: self];
+    if(self.halo) {
+        self.halo.position = self.photoImageView.center;
+    }
 }
 
 - (void) startToLocate {
     if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
         NSString* warningMessage = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Allow Clubbook to use your location", nil)];
         [self.infoLabel setText:warningMessage];
-        [self.activityIndicator stopAnimating];
         
         [self.retryButton setHidden:NO];
+        [self.halo setHidden:YES];
     }
     else {
         [self.retryButton setHidden:YES];
+        [self.halo setHidden:NO];
         NSString* warningMessage = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Checking your location...", nil)];
         [self.infoLabel setText:warningMessage];
-        [self.activityIndicator startAnimating];
-        
+
         [LocationManagerSingleton sharedSingleton].delegate = self;
         [[LocationManagerSingleton sharedSingleton] startLocating];
     }

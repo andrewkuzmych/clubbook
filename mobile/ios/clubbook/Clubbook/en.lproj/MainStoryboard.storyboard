@@ -1355,9 +1355,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vIR-pu-ehC">
-                                <rect key="frame" x="110" y="98" width="100" height="100"/>
+                                <rect key="frame" x="110" y="234" width="100" height="100"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="qFp-iH-Ll3"/>
+                                    <constraint firstAttribute="height" constant="100" id="2mY-Xz-c6I"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="3hu-go-g13"/>
                                     <constraint firstAttribute="width" constant="100" id="yM0-L0-zhv"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -1367,12 +1368,23 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </imageView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="8N4-tC-zI5">
-                                <rect key="frame" x="142" y="206" width="37" height="37"/>
-                            </activityIndicatorView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Checking your location..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KS3-aa-6GW">
+                                <rect key="frame" x="65" y="380" width="191" height="21"/>
+                                <rect key="contentStretch" x="1" y="0.0" width="1" height="1"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="XWm-iY-aV5"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sa3-qI-hpr">
-                                <rect key="frame" x="94" y="210" width="133" height="30"/>
+                                <rect key="frame" x="94" y="342" width="133" height="30"/>
                                 <color key="backgroundColor" red="0.92637914539999999" green="0.070751030869999995" blue="0.25651361620000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="fT8-Ov-8RQ"/>
+                                    <constraint firstAttribute="width" constant="133" id="u8J-7a-jIH"/>
+                                </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="Retry">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -1387,29 +1399,20 @@
                                     <action selector="handleRetry:" destination="47H-ad-Gea" eventType="touchUpInside" id="hEq-4K-9o0"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Checking your location..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KS3-aa-6GW">
-                                <rect key="frame" x="65" y="251" width="191" height="21"/>
-                                <rect key="contentStretch" x="1" y="0.0" width="1" height="1"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.21723019656602205" green="0.0071079931773783585" blue="0.29923148777173914" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="vIR-pu-ehC" firstAttribute="top" secondItem="SUG-p9-rbz" secondAttribute="bottom" constant="78" id="0wz-tb-BR5"/>
-                            <constraint firstItem="8N4-tC-zI5" firstAttribute="leading" secondItem="vx6-UW-o0Z" secondAttribute="leading" constant="142" id="GOT-Ed-Mid"/>
-                            <constraint firstAttribute="centerX" secondItem="KS3-aa-6GW" secondAttribute="centerX" id="JiZ-aA-5VE"/>
-                            <constraint firstItem="sa3-qI-hpr" firstAttribute="leading" secondItem="vx6-UW-o0Z" secondAttribute="leadingMargin" constant="78" id="OCT-gt-7ij"/>
-                            <constraint firstItem="sa3-qI-hpr" firstAttribute="top" secondItem="vIR-pu-ehC" secondAttribute="bottom" constant="12" id="QNN-e5-zzO"/>
-                            <constraint firstItem="sa3-qI-hpr" firstAttribute="centerX" secondItem="8N4-tC-zI5" secondAttribute="centerX" id="X6O-9R-agJ"/>
-                            <constraint firstItem="KS3-aa-6GW" firstAttribute="top" secondItem="8N4-tC-zI5" secondAttribute="bottom" constant="8" id="ZKu-m1-5a7"/>
-                            <constraint firstItem="8N4-tC-zI5" firstAttribute="top" secondItem="vIR-pu-ehC" secondAttribute="bottom" constant="8" id="ZqB-p0-NBr"/>
-                            <constraint firstItem="vIR-pu-ehC" firstAttribute="centerX" secondItem="KS3-aa-6GW" secondAttribute="centerX" id="sQl-E2-IqX"/>
+                            <constraint firstAttribute="centerY" secondItem="vIR-pu-ehC" secondAttribute="centerY" id="2jB-Uk-fmm"/>
+                            <constraint firstAttribute="centerX" secondItem="KS3-aa-6GW" secondAttribute="centerX" id="HTY-2q-bEf"/>
+                            <constraint firstItem="sa3-qI-hpr" firstAttribute="top" secondItem="vIR-pu-ehC" secondAttribute="bottom" constant="8" id="ShH-ia-CE1"/>
+                            <constraint firstItem="sa3-qI-hpr" firstAttribute="leading" secondItem="vx6-UW-o0Z" secondAttribute="leadingMargin" constant="78" id="VN6-oU-IDP"/>
+                            <constraint firstAttribute="centerX" secondItem="vIR-pu-ehC" secondAttribute="centerX" id="W8w-pm-NQi"/>
+                            <constraint firstItem="Bm2-Jd-QKm" firstAttribute="top" secondItem="KS3-aa-6GW" secondAttribute="bottom" constant="167" id="qhS-yh-YEx"/>
+                            <constraint firstAttribute="centerX" secondItem="sa3-qI-hpr" secondAttribute="centerX" id="vOm-FI-aoE"/>
+                            <constraint firstItem="KS3-aa-6GW" firstAttribute="top" secondItem="sa3-qI-hpr" secondAttribute="bottom" constant="8" id="xdL-oQ-jpH"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="activityIndicator" destination="8N4-tC-zI5" id="mmH-ua-4q6"/>
                         <outlet property="infoLabel" destination="KS3-aa-6GW" id="8hV-IZ-HB7"/>
                         <outlet property="photoImageView" destination="vIR-pu-ehC" id="JfA-3I-9Pa"/>
                         <outlet property="retryButton" destination="sa3-qI-hpr" id="rQ5-RU-oaf"/>
