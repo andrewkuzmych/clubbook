@@ -7,8 +7,8 @@
 //
 
 #import "BaseViewController.h"
-
-@interface MessagesViewController : BaseViewController<UITableViewDelegate, UITableViewDataSource, PNDelegate, ClubbookCommunicatorDelegate>
+#import "SWRevealViewController.h"
+@interface MessagesViewController : BaseViewController<UITableViewDelegate, UITableViewDataSource, PNDelegate, SWRevealViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *messageTable;
 @property (weak, nonatomic) IBOutlet UILabel *noMesssageLabel;

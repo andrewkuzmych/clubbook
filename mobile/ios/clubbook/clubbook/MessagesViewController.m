@@ -14,9 +14,10 @@
 #import "Constants.h"
 #import "Conversation.h"
 #import "Cloudinary.h"
-#import "SWRevealViewController.h"
 
-@interface MessagesViewController (){
+
+@interface MessagesViewController ()
+{
     NSMutableArray *_chats;
     NSIndexPath* rowToDelete;
 }
@@ -37,8 +38,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    //self.revealViewController.delegate
     // Do any additional setup after loading the view.
+    self.revealViewController.delegate = self;
     self.messageTable.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.noMesssageLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:18.0];
     self.noMesssageLabel.text =  NSLocalizedString(@"noMessages", nil);
@@ -95,7 +97,8 @@
         _chats = [chats mutableCopy];
          
         self.messageTable.hidden = NO;
-        [self.messageTable setEditing:YES];
+        self.messageTable.editing = NO;
+        self.messageTable.userInteractionEnabled = YES;
         self.messageTable.dataSource = self;
         self.messageTable.delegate = self;
         [self.messageTable reloadData];
@@ -147,7 +150,7 @@
     
     NSString * avatarUrl  = [cloudinary url: [chat.receiver.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
     
-    [cell.userAvatar setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"Default.png"]];
+    [cell.userAvatar sd_setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"Default.png"]];
     
     return cell;
 }
@@ -161,6 +164,7 @@
     //[self.revealViewController revealToggle:nil];
     
    // [self performSegueWithIdentifier: @"onMessage" sender: place];
+    
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(NSString *)sender
@@ -172,14 +176,28 @@
     }
 }
 
-- (NSArray*)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewRowAction *deleteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"Delete" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath){
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return YES if you want the specified item to be editable.
+    return YES;
+}
+
+
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
         rowToDelete = indexPath;
         Chat* conversation = [_chats objectAtIndex:rowToDelete.row];
         [self deleteConversation:conversation];
-    }];
-    deleteAction.backgroundColor = [UIColor redColor];
-    return @[deleteAction];
+    }
+}
+
+- (BOOL)revealControllerPanGestureShouldBegin:(SWRevealViewController *)revealController
+{
+    float velocity = [revealController.panGestureRecognizer velocityInView:self.view].x;
+    if (velocity < 0 && self.revealViewController.frontViewPosition == FrontViewPositionLeft)
+        return NO;
+    else
+        return YES;
 }
 
 - (void) deleteConversation:(Chat*) conversation {
@@ -193,23 +211,9 @@
     [self._manager deleteConversation:userId toUser:receiverId accessToken:accessToken];
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return YES if you want the specified item to be editable.
-    return YES;
-}
-
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return UITableViewCellEditingStyleDelete;
-}
-
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
 - (void)didDeleteConversation:(NSString *)result {
     if([result compare:(@"ok")] == NSOrderedSame && rowToDelete) {
         [_chats removeObjectAtIndex:rowToDelete.row];
-        //[self.messageTable reloadData];
         [self.messageTable deleteRowsAtIndexPaths:@[rowToDelete] withRowAnimation:UITableViewRowAnimationAutomatic];
         rowToDelete = nil;
     }
