@@ -16,6 +16,7 @@
 #import "ClubUsersViewController.h"
 #import "GlobalVars.h"
 #import <Parse/Parse.h>
+#import <QuartzCore/QuartzCore.h>
 
 @interface SidebarViewController (){
     long unreadMessagesCount;
@@ -46,7 +47,7 @@
     [tempImg setImage:[UIImage imageNamed:@"menu_background.png"]];
     [self.tableView setBackgroundView:tempImg];
     
-    _menuItems = @[@"title", @"clubs", @"checkedIn", @"fast_checkin", @"messages", @"friends", @"settings", @"share"];
+    _menuItems = @[@"title", @"clubs", @"checkedIn", @"messages", @"friends", @"settings", @"share", @"fast_checkin"];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -187,15 +188,24 @@
         cell.countLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:16];
         cell.countLabel.hidden = (pendingFriendsCount == 0);
         cell.countLabel.text = [NSString stringWithFormat:@"%ld", pendingFriendsCount];
+    } else if ([cellIdentifier isEqualToString:@"fast_checkin"]) {
+        cell.titleLabel.layer.cornerRadius = 16;
+        cell.titleLabel.clipsToBounds = YES;
     }
     
-    cell.titleLabel.text = NSLocalizedString(cellIdentifier, nil);
+    if ([cellIdentifier isEqualToString:@"fast_checkin"]) {
+        NSString* title = NSLocalizedString(cellIdentifier, nil);
+        cell.titleLabel.text = [NSString stringWithFormat:@"%@ (5)", title, nil];
+    }
+    else {
+       cell.titleLabel.text = NSLocalizedString(cellIdentifier, nil);
+    }
    
     cell.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
     cell.nameLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
     cell.ageLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14];
     cell.ganderLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14];
-    
+
     return cell;
 }
 

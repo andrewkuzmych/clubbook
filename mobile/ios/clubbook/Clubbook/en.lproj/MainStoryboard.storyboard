@@ -2493,31 +2493,6 @@
                                     <segue destination="CNM-cn-JgE" kind="custom" customClass="SWRevealViewControllerSegue" id="HCG-gh-FSH"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="fast_checkin" id="sSj-xE-049" customClass="MenuCell">
-                                <rect key="frame" x="0.0" y="147" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="sSj-xE-049" id="NQd-d1-Qbf">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_fast-checkin.png" translatesAutoresizingMaskIntoConstraints="NO" id="3EL-1s-Dnd">
-                                            <rect key="frame" x="0.0" y="3" width="38" height="39"/>
-                                        </imageView>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="Fast Check-in" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tfv-Y8-nYY">
-                                            <rect key="frame" x="46" y="11" width="144" height="22"/>
-                                            <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="19"/>
-                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </label>
-                                    </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </tableViewCellContentView>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <connections>
-                                    <outlet property="titleLabel" destination="Tfv-Y8-nYY" id="ZaG-ly-Dwj"/>
-                                    <segue destination="KfF-P3-bG4" kind="custom" customClass="SWRevealViewControllerSegue" id="mF0-bo-i14"/>
-                                </connections>
-                            </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="messages" id="PAo-Xu-Tan" customClass="MenuCell">
                                 <rect key="frame" x="0.0" y="191" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
@@ -2645,6 +2620,39 @@
                                     <segue destination="GVb-UH-Luh" kind="custom" customClass="SWRevealViewControllerSegue" id="mOn-zw-v8w"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="fast_checkin" id="sSj-xE-049" customClass="MenuCell">
+                                <rect key="frame" x="0.0" y="147" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="sSj-xE-049" id="NQd-d1-Qbf">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Fast Check-in" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tfv-Y8-nYY">
+                                            <rect key="frame" x="28" y="7" width="200" height="30"/>
+                                            <color key="backgroundColor" red="0.20000001788139343" green="0.83529418706893921" blue="0.23137256503105164" alpha="1" colorSpace="deviceRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="200" id="Tfi-TI-h84"/>
+                                                <constraint firstAttribute="height" constant="30" id="WvX-8N-32A"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="19"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <constraints>
+                                        <constraint firstAttribute="centerX" secondItem="Tfv-Y8-nYY" secondAttribute="centerX" constant="32" id="DdD-mU-jRS"/>
+                                        <constraint firstAttribute="centerX" secondItem="Tfv-Y8-nYY" secondAttribute="centerX" constant="32" id="Kkk-PI-dvm"/>
+                                        <constraint firstAttribute="centerY" secondItem="Tfv-Y8-nYY" secondAttribute="centerY" id="hWA-tQ-5LK"/>
+                                        <constraint firstAttribute="centerY" secondItem="Tfv-Y8-nYY" secondAttribute="centerY" constant="-0.5" id="lPP-5p-8Ng"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="titleLabel" destination="Tfv-Y8-nYY" id="ZaG-ly-Dwj"/>
+                                    <segue destination="KfF-P3-bG4" kind="custom" customClass="SWRevealViewControllerSegue" id="mF0-bo-i14"/>
+                                </connections>
+                            </tableViewCell>
                         </prototypes>
                         <sections/>
                         <connections>
@@ -2658,7 +2666,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pan-AZ-D0k" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3921" y="-1191"/>
+            <point key="canvasLocation" x="-3921" y="-1196"/>
         </scene>
         <!--Custom Navigation Controller-->
         <scene sceneID="5Z6-ag-ZQ1">
@@ -3485,7 +3493,6 @@
         <image name="icon_clubview_friends.png" width="32" height="32"/>
         <image name="icon_clubview_guide.png" width="32" height="32"/>
         <image name="icon_facebook.png" width="32" height="32"/>
-        <image name="icon_fast-checkin.png" width="43" height="43"/>
         <image name="icon_friends.png" width="40" height="41"/>
         <image name="icon_hours.png" width="18" height="18"/>
         <image name="icon_info.png" width="48" height="48"/>
@@ -3509,10 +3516,10 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="Zkk-XZ-3rw"/>
         <segue reference="fHF-fb-mVP"/>
         <segue reference="g4R-r7-bxr"/>
-        <segue reference="R55-D2-Pfl"/>
+        <segue reference="XPG-A8-IJ5"/>
         <segue reference="d65-3G-9uv"/>
-        <segue reference="Zkk-XZ-3rw"/>
     </inferredMetricsTieBreakers>
 </document>
