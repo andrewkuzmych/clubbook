@@ -41,6 +41,8 @@
     
     self.title = NSLocalizedString(@"clubs", nil);
     
+    _places = [[NSMutableArray alloc] init];
+    
     self.clubTable.hidden = NO;
     self.clubTable.dataSource = self;
     self.clubTable.delegate = self;
@@ -101,7 +103,7 @@
     [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:1 type:@"" search:@"" accessToken:accessToken];
 }
 
-- (void)didReceivePlaces:(NSArray *)places
+- (void)didReceivePlaces:(NSArray *)places andTypes:(NSArray *)types
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideProgress];
