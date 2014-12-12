@@ -33,13 +33,14 @@
 }
 
 -(void) setSelectedImage:(BOOL) selected {
-    self.iconImage.backgroundColor = [UIColor colorWithWhite:0.810 alpha:1.000];
     self.iconImage.layer.cornerRadius = 10;
     self.iconImage.layer.masksToBounds = YES;
     self.iconImage.image = [[UIImage alloc] init];
-    if (selected) {
-       self.iconImage.backgroundColor = [UIColor clearColor];
-        self.iconImage.image = [UIImage imageNamed:@"icon_friends"];
+    if (!selected) {
+       self.iconImage.backgroundColor = [UIColor colorWithWhite:0.810 alpha:1.000];
+    }
+    else {
+        self.iconImage.backgroundColor = [UIColor colorWithRed:0.328 green:0.000 blue:0.458 alpha:1.000];
     }
     
 }
