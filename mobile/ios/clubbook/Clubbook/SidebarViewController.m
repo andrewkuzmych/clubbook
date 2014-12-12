@@ -263,20 +263,6 @@
     [self performSegueWithIdentifier: @"onClub" sender: checkinClub];
 }
 
-- (IBAction)checkoutClubAction:(id)sender {
-    
-   UIActionSheet *checkoutPopup = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"youSureCheckout", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:
-                   NSLocalizedString(@"yes", nil),
-                   nil];
-    [checkoutPopup showInView:[UIApplication sharedApplication].keyWindow];
-    
-    /*Place * checkinClub = [LocationHelper getCheckinClub];
-    [self showProgress:NO title:nil];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *accessToken = [defaults objectForKey:@"accessToken"];
-    [self._manager checkout:checkinClub.id accessToken:accessToken userInfo:sender];*/
-}
-
 - (void)actionSheet:(UIActionSheet *)popup clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     switch (buttonIndex) {
