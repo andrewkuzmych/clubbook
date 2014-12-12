@@ -38,7 +38,7 @@
 
 - (void)retrievePlaceUsersYesterday:(NSString *) clubId accessToken:(NSString *) accessToken;
 
-- (void)receivedUsers:(BOOL)all take:(int) take skip:(int) skip lat:(double) lat lon:(double) lon distance:(double) distance accessToken:(NSString *) accessToken;
+- (void)receivedUsers:(BOOL)all gender:(NSString*) gender take:(int) take skip:(int) skip lat:(double) lat lon:(double) lon distance:(double) distance accessToken:(NSString *) accessToken;
 
 - (void)retrieveUser:(NSString *) accessToken;
 

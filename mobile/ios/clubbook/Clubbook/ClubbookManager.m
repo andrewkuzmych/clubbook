@@ -170,9 +170,9 @@
     [self.communicator removeFriendRequest:userId friendId:friendId accessToken:accessToken];
 }
 
-- (void)receivedUsers:(BOOL)all take:(int) take skip:(int) skip lat:(double) lat lon:(double) lon distance:(double) distance accessToken:(NSString *) accessToken
+- (void)receivedUsers:(BOOL)all gender:(NSString*) gender take:(int) take skip:(int) skip lat:(double) lat lon:(double) lon distance:(double) distance accessToken:(NSString *) accessToken
 {
-    [self.communicator receivedUsers:all take:take skip:skip lat:lat lon:lon distance:distance accessToken:accessToken];
+    [self.communicator receivedUsers:all gender:gender take:take skip:skip lat:lat lon:lon distance:distance accessToken:accessToken];
 }
 
 - (void)retrieveFriends:(NSString *) userId accessToken:(NSString *) accessToken

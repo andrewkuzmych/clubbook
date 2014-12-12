@@ -594,13 +594,13 @@
     });
 }
 
-- (void)receivedUsers:(bool)all take:(int) take skip:(int) skip lat:(double) lat lon:(double) lon distance:(double) distance accessToken:(NSString *) accessToken
+- (void)receivedUsers:(bool)all gender:(NSString*) gender take:(int) take skip:(int) skip lat:(double) lat lon:(double) lon distance:(double) distance accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/users/checkedin?user_lat=%f&user_lon=%f&skip=%d&take=%d&distance=%f&access_token=%@", baseURL, lat, lon, skip, take, distance, accessToken];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/users/checkedin?gender=%@&user_lat=%f&user_lon=%f&skip=%d&take=%d&distance=%f&access_token=%@", baseURL, gender, lat, lon, skip, take, distance, accessToken];
         if (all) {
-             urlAsString = [NSString stringWithFormat:@"%@obj/users/around?user_lat=%f&user_lon=%f&skip=%d&take=%d&distance=%f&access_token=%@", baseURL, lat, lon, skip, take, distance, accessToken];
+             urlAsString = [NSString stringWithFormat:@"%@obj/users/around?gender=%@&user_lat=%f&user_lon=%f&skip=%d&take=%d&distance=%f&access_token=%@", baseURL, gender, lat, lon, skip, take, distance, accessToken];
         }
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];

@@ -33,6 +33,8 @@
     BOOL isFilterBarShown;
     NSString* selectedFilterMode;
     int distanceKm;
+    NSString* gender;
+    BOOL showAll;
 }
 
 @property (nonatomic) BOOL isLoaded;
@@ -45,6 +47,8 @@
     
     self.title = @"All";// NSLocalizedString(@"checkedIn", nil);
     selectedFilterMode = @"all";
+    gender = @"";
+    showAll = YES;
     self.profileCollection.dataSource = self;
     self.profileCollection.delegate = self;
     
@@ -300,7 +304,7 @@
         double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
         double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
 
-        [self._manager receivedUsers:true take:take skip:skip lat:lat lon:lng distance:distanceKm accessToken:accessToken];
+        [self._manager receivedUsers:showAll gender:gender take:take skip:skip lat:lat lon:lng distance:distanceKm accessToken:accessToken];
     });
 }
 
@@ -441,18 +445,60 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSUInteger row = indexPath.row;
-    selectedFilterMode = [filterOptions objectAtIndex:row];
-    [self.filterMenuTable deselectRowAtIndexPath:indexPath animated:NO];
-    
-    NSString* filterType = [selectedFilterMode capitalizedString];
-    NSString* newTitle = [NSString stringWithFormat:@"%@", filterType];
-    self.title = newTitle;
-    
-    [self.filterMenuTable reloadData];
-    
+    NSString* newMode = [filterOptions objectAtIndex:row];
+    if ([selectedFilterMode compare:newMode] != NSOrderedSame) {
+        selectedFilterMode = newMode;
+        [self.filterMenuTable deselectRowAtIndexPath:indexPath animated:NO];
+        
+        NSString* filterType = [selectedFilterMode capitalizedString];
+        NSString* newTitle = [NSString stringWithFormat:@"%@", filterType];
+        self.title = newTitle;
+        
+        [self.filterMenuTable reloadData];
+        
+        if([selectedFilterMode compare:@"all"] == NSOrderedSame) {
+            gender = @"";
+        }
+        else {
+            gender = selectedFilterMode;
+        }
+        [self filteredOptionsChanged];
+    }
     [self hideFilterMenu];
 }
 
+-(void) filterForOption:(NSString*) option {
+    gender = option;
+
+    [self filteredOptionsChanged];
+}
+
+-(void) filteredOptionsChanged {
+    [_users removeAllObjects];
+    [self.profileCollection reloadData];
+    
+    self.isLoaded = YES;
+    [self.clubFooterView.loadingIndicator startAnimating];
+    self.clubFooterView.loadingIndicator.hidden = NO;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *accessToken = [defaults objectForKey:@"accessToken"];
+        double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
+        double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
+        
+        [self._manager receivedUsers:showAll gender:gender take:30 skip:0 lat:lat lon:lng distance:distanceKm accessToken:accessToken];
+    });
+    
+}
+
+- (IBAction)segmentChanged:(id)sender {
+    if([sender selectedSegmentIndex] == 1){
+        showAll = YES;
+    } else if([sender selectedSegmentIndex] == 2){
+        showAll = NO;
+    }
+    [self filteredOptionsChanged];
+}
 
 //animation logic
 - (void)replaceTopConstraintOnView:(UIView *)view withConstant:(float)constant
