@@ -12,13 +12,14 @@
 #import "LocationManagerProtocol.h"
 #import "ProfileCell.h"
 
-@interface UserCheckinsViewController : BaseViewController<LocationManagerProtocol>
+@interface UserCheckinsViewController : BaseViewController<LocationManagerProtocol, UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *profileCollection;
 @property (nonatomic, strong) HeaderView *headerView;
 @property (nonatomic, strong) ClubFooterView *clubFooterView;
 @property (weak, nonatomic) IBOutlet UISlider *sliderControl;
 @property (weak, nonatomic) IBOutlet UILabel *distance;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *usersSegment;
+@property (weak, nonatomic) IBOutlet UITableView *filterMenuTable;
 
 - (IBAction)sliderChanged:(id)sender;
 - (IBAction)sliderTouchUp:(id)sender;

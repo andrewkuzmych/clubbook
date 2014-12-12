@@ -387,6 +387,7 @@
 		529048F51A373FF600F80DF9 /* RetrieveLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 529048F41A373FF600F80DF9 /* RetrieveLocationViewController.m */; };
 		5297358E1A39B002009943C3 /* MultiplePulsingHaloLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297358B1A39B002009943C3 /* MultiplePulsingHaloLayer.m */; };
 		5297358F1A39B002009943C3 /* PulsingHaloLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297358D1A39B002009943C3 /* PulsingHaloLayer.m */; };
+		529735951A39FBB9009943C3 /* FilterMenuTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 529735941A39FBB9009943C3 /* FilterMenuTableViewCell.m */; };
 		F4EECF12177C99F400778578 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF11177C99F400778578 /* UIKit.framework */; };
 		F4EECF14177C99F400778578 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF13177C99F400778578 /* Foundation.framework */; };
 		F4EECF16177C99F400778578 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF15177C99F400778578 /* CoreGraphics.framework */; };
@@ -1072,6 +1073,8 @@
 		5297358B1A39B002009943C3 /* MultiplePulsingHaloLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiplePulsingHaloLayer.m; sourceTree = "<group>"; };
 		5297358C1A39B002009943C3 /* PulsingHaloLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PulsingHaloLayer.h; sourceTree = "<group>"; };
 		5297358D1A39B002009943C3 /* PulsingHaloLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PulsingHaloLayer.m; sourceTree = "<group>"; };
+		529735931A39FBB9009943C3 /* FilterMenuTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterMenuTableViewCell.h; sourceTree = "<group>"; };
+		529735941A39FBB9009943C3 /* FilterMenuTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterMenuTableViewCell.m; sourceTree = "<group>"; };
 		F4EECF0E177C99F400778578 /* Clubbook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clubbook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4EECF11177C99F400778578 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F4EECF13177C99F400778578 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1933,6 +1936,8 @@
 				4939074F195086AA003F2FF9 /* MenuCell.m */,
 				49ABA136198F9D7F00B060D0 /* SettingsCell.h */,
 				49ABA137198F9D7F00B060D0 /* SettingsCell.m */,
+				529735931A39FBB9009943C3 /* FilterMenuTableViewCell.h */,
+				529735941A39FBB9009943C3 /* FilterMenuTableViewCell.m */,
 			);
 			name = Controls;
 			sourceTree = "<group>";
@@ -2598,6 +2603,7 @@
 				49C43BD01A0277F7004F5058 /* UIScrollView+SVPullToRefresh.m in Sources */,
 				4994848C19FB959C00E906C0 /* SwipeView.m in Sources */,
 				4934F76519D047B800BFFDB1 /* UIImageView+HighlightedWebCache.m in Sources */,
+				529735951A39FBB9009943C3 /* FilterMenuTableViewCell.m in Sources */,
 				4934F7E919D04A7100BFFDB1 /* JSQMessagesInputToolbar.m in Sources */,
 				49E831881953087A00D4A26C /* BaseViewController.m in Sources */,
 				49E831D619558D4200D4A26C /* Convertor.m in Sources */,

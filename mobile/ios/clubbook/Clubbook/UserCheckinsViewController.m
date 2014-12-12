@@ -22,10 +22,16 @@
 #import "TransitionFromClubUsersToUser.h"
 #import "ProfilePagesViewController.h"
 #import "SVPullToRefresh.h"
+#import "FilterMenuTableViewCell.h"
+
+#define FilterCellHeight 40
 
 @interface UserCheckinsViewController ()<UINavigationControllerDelegate>{
     BOOL isInitialLoad;
     NSMutableArray *_users;
+    NSArray* filterOptions;
+    BOOL isFilterBarShown;
+    NSString* selectedFilterMode;
     int distanceKm;
 }
 
@@ -37,9 +43,27 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = @"User Profiles";// NSLocalizedString(@"checkedIn", nil);
+    self.title = @"All";// NSLocalizedString(@"checkedIn", nil);
+    selectedFilterMode = @"all";
     self.profileCollection.dataSource = self;
     self.profileCollection.delegate = self;
+    
+    UIBarButtonItem *filterButton = [[UIBarButtonItem alloc]
+                                   initWithTitle:@"Filter"
+                                   style:UIBarButtonItemStyleBordered
+                                   target:self
+                                   action:@selector(handleFilterButton)];
+    self.navigationItem.rightBarButtonItem = filterButton;
+    isFilterBarShown = NO;
+    
+    self.filterMenuTable.delegate = self;
+    self.filterMenuTable.dataSource = self;
+    self.filterMenuTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    filterOptions = [NSArray arrayWithObjects:@"all", @"male", @"female", nil];
+    
+    float height = FilterCellHeight * [filterOptions count];
+    [self replaceTopConstraintOnView:self.filterMenuTable withConstant: -height];
     
     NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14], UITextAttributeFont, nil];
     [self.usersSegment setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
@@ -151,6 +175,10 @@
     [tracker set:kGAIScreenName
            value:@"Club Users Yesterday Screen"];
     [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -342,6 +370,105 @@
     [self loadUsers:30 skip:0];
     
     [self.distance setText:[NSString stringWithFormat:@"%d%@", distanceKm, NSLocalizedString(@"kilometers", nil)]];
+}
+
+- (void) handleFilterButton {
+    if(!isFilterBarShown) {
+        isFilterBarShown = YES;
+        self.filterMenuTable.allowsSelection = YES;
+        [self replaceTopConstraintOnView:self.filterMenuTable withConstant: 0];
+    } else {
+        [self replaceTopConstraintOnView:self.filterMenuTable withConstant: -self.filterMenuTable.frame.size.height];
+        self.filterMenuTable.allowsSelection = NO;
+        isFilterBarShown = NO;
+    }
+    [self animateConstraints];
+}
+
+- (void) hideFilterMenu {
+    isFilterBarShown = NO;
+    self.filterMenuTable.allowsSelection = NO;
+    [self replaceTopConstraintOnView:self.filterMenuTable withConstant: -self.filterMenuTable.frame.size.height];
+    [self animateConstraints];
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    return [filterOptions count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *cellIdentifier = @"FilterMenuTableViewCell";
+    
+    FilterMenuTableViewCell *cell = [self.filterMenuTable dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+    [cell setSelectedImage: NO];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    NSString* rowType = filterOptions[indexPath.row];
+    if ([rowType compare:@"all"] == NSOrderedSame) {
+        cell.filterLabel.text = @"All";
+        if ([selectedFilterMode compare:@"all"] == NSOrderedSame) {
+            [cell setSelectedImage:YES];
+        }
+    } else if ([rowType compare:@"male"] == NSOrderedSame) {
+        cell.filterLabel.text = @"Male";
+        if ([selectedFilterMode compare:@"male"] == NSOrderedSame) {
+            [cell setSelectedImage:YES];
+        }
+    } else if ([rowType compare:@"female"] == NSOrderedSame) {
+        cell.filterLabel.text = @"Female";
+        if ([selectedFilterMode compare:@"female"] == NSOrderedSame) {
+            [cell setSelectedImage:YES];
+        }
+    } else if ([rowType compare:@"friends"] == NSOrderedSame) {
+        cell.filterLabel.text = @"Show Friends first";
+    }
+
+    return cell;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return FilterCellHeight;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSUInteger row = indexPath.row;
+    selectedFilterMode = [filterOptions objectAtIndex:row];
+    [self.filterMenuTable deselectRowAtIndexPath:indexPath animated:NO];
+    
+    NSString* filterType = [selectedFilterMode capitalizedString];
+    NSString* newTitle = [NSString stringWithFormat:@"%@", filterType];
+    self.title = newTitle;
+    
+    [self.filterMenuTable reloadData];
+    
+    [self hideFilterMenu];
+}
+
+
+//animation logic
+- (void)replaceTopConstraintOnView:(UIView *)view withConstant:(float)constant
+{
+    [self.view.constraints enumerateObjectsUsingBlock:^(NSLayoutConstraint *constraint, NSUInteger idx, BOOL *stop) {
+        if ((constraint.firstItem == view) && (constraint.firstAttribute == NSLayoutAttributeTop)) {
+            constraint.constant = constant;
+        }
+    }];
+}
+
+- (void)animateConstraints
+{
+    [UIView animateWithDuration:0.5 animations:^{
+        [self.view layoutIfNeeded];
+    }];
 }
 
 /*
