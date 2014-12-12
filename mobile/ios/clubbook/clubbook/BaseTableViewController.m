@@ -56,6 +56,8 @@
     self._manager.delegate = self;
     
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
+    self.revealViewController.delegate = self;
 }
 
 - (void)failedWithError:(NSError *)error
@@ -166,6 +168,10 @@
     [alert show];
 }
 
+- (void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position
+{
+    self.view.userInteractionEnabled = (revealController.frontViewPosition == FrontViewPositionRight ? FALSE : TRUE);
+}
 
 /*
  #pragma mark - Navigation

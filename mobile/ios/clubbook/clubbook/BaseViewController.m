@@ -44,6 +44,7 @@
     self._manager.communicator = [[ClubbookCommunicator alloc] init];
     self._manager.communicator.delegate = self._manager;
     self._manager.delegate = self;
+    self.revealViewController.delegate = self;
 }
 
 
@@ -75,6 +76,11 @@
     purchaseContr.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentViewController:purchaseContr animated:NO completion:nil];
 */
+}
+
+- (void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position
+{
+    self.view.userInteractionEnabled = (revealController.frontViewPosition == FrontViewPositionRight ? FALSE : TRUE);
 }
 
 

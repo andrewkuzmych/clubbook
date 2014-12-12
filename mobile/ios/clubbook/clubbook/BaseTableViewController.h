@@ -11,8 +11,9 @@
 #import "GAI.h"
 #import "GAIFields.h"
 #import "GAIDictionaryBuilder.h"
+#import "SWRevealViewController.h"
 
-@interface BaseTableViewController : UITableViewController<UITextFieldDelegate>
+@interface BaseTableViewController : UITableViewController<UITextFieldDelegate, SWRevealViewControllerDelegate>
 
 @property (strong, nonatomic) ClubbookManager *_manager;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sidebarButton;
