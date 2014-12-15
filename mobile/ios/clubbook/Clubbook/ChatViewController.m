@@ -498,10 +498,13 @@
     JSQMessage *currentMessage = [self.messages objectAtIndex:index];
     JSQMessage *previousMessage = [self.messages objectAtIndex:index - 1];
     
-    NSString* currentMessageDate = [[JSQMessagesTimestampFormatter sharedFormatter] relativeDateForDate:currentMessage.date];
-    NSString* previousMessageDate = [[JSQMessagesTimestampFormatter sharedFormatter] relativeDateForDate:previousMessage.date];
+    NSDateComponents *currentComponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay|NSCalendarUnitMonth|NSCalendarUnitYear fromDate:currentMessage.date];
+    NSDateComponents *previousComponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay|NSCalendarUnitMonth|NSCalendarUnitYear fromDate:previousMessage.date];
+
     
-    if ([currentMessageDate compare:previousMessageDate] == NSOrderedSame) {
+    if (currentComponents.year == previousComponents.year &&
+        currentComponents.day == previousComponents.day &&
+        currentComponents.month == previousComponents.month) {
         return NO;
     }
     else {
