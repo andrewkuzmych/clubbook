@@ -421,9 +421,10 @@
      *
      *  Show a timestamp for every 3rd message
      */
-    if (indexPath.item % 3 == 0) {
+    if ([self previousMessageHaveDifferentDate:indexPath.item]) {
         JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
-        return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
+        NSString* dateOnly = [[JSQMessagesTimestampFormatter sharedFormatter] relativeDateForDate:message.date];
+        return [[NSAttributedString alloc] initWithString:dateOnly];
     }
     
     return nil;
@@ -436,7 +437,9 @@
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    return nil;
+    JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
+    NSString* timeOnly = [[JSQMessagesTimestampFormatter sharedFormatter] timeForDate:message.date];
+    return [[NSAttributedString alloc] initWithString:timeOnly];
 }
 
 #pragma mark - UICollectionView DataSource
@@ -483,6 +486,28 @@
     return cell;
 }
 
+- (BOOL) previousMessageHaveDifferentDate:(NSInteger) index {
+    
+    if (index >= [self.messages count]) {
+        return NO;
+    }
+    if (index == 0) {
+        return YES;
+    }
+    
+    JSQMessage *currentMessage = [self.messages objectAtIndex:index];
+    JSQMessage *previousMessage = [self.messages objectAtIndex:index - 1];
+    
+    NSString* currentMessageDate = [[JSQMessagesTimestampFormatter sharedFormatter] relativeDateForDate:currentMessage.date];
+    NSString* previousMessageDate = [[JSQMessagesTimestampFormatter sharedFormatter] relativeDateForDate:previousMessage.date];
+    
+    if ([currentMessageDate compare:previousMessageDate] == NSOrderedSame) {
+        return NO;
+    }
+    else {
+        return YES;
+    }
+}
 
 
 #pragma mark - JSQMessages collection view flow layout delegate
@@ -500,7 +525,7 @@
      *
      *  Show a timestamp for every 3rd message
      */
-    if (indexPath.item % 3 == 0) {
+    if ([self previousMessageHaveDifferentDate:indexPath.item]) {
         return kJSQMessagesCollectionViewCellLabelHeightDefault;
     }
     
@@ -525,13 +550,13 @@
         }
     }
     
-    return kJSQMessagesCollectionViewCellLabelHeightDefault;
+    return 0.0f;
 }
 
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 0.0f;
+    return kJSQMessagesCollectionViewCellLabelHeightDefault;
 }
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView
