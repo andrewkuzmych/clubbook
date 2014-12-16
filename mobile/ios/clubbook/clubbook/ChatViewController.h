@@ -30,16 +30,12 @@
 
 @property (strong, nonatomic) NSMutableArray *messages;
 
-@property (strong, nonatomic) UIImage *userFromImage;
-@property (strong, nonatomic) UIImage *userToImage;
+@property (strong, nonatomic) JSQMessagesAvatarImage *companionAvatar;
+@property (strong, nonatomic) JSQMessagesAvatarImage *userAvatar;
 
-@property (strong, nonatomic) UIImageView *outgoingBubbleImageView;
-@property (strong, nonatomic) UIImageView *incomingBubbleImageView;
-
-- (void)receiveMessagePressed:(UIBarButtonItem *)sender;
+@property (strong, nonatomic) JSQMessagesBubbleImage *userBubble;
+@property (strong, nonatomic) JSQMessagesBubbleImage *companionBubble;
 
 - (void)closePressed:(UIBarButtonItem *)sender;
-
-- (void)populateMessages;
 
 @end

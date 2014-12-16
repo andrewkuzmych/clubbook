@@ -64,7 +64,7 @@
         NSString *userFrom = [defaults objectForKey:@"userId"];
         NSString *accessToken = [defaults objectForKey:@"accessToken"];
         
-        self.sender = userFrom;
+        self.senderId = userFrom;
         
         // retreve conversation
         [self._manager retrieveConversation:userFrom toUser:self.userTo accessToken:accessToken];
@@ -91,8 +91,6 @@
     self.inputToolbar.contentView.leftBarButtonItem = smileButton;
     self.inputToolbar.contentView.backgroundColor = [UIColor colorWithRed:52/255.0 green:3/255.0 blue:69/255.0 alpha:1.0];
     
-    self.inputToolbar.contentView.middleBarButtonItem = drinkButton;
-    
     messageEditMenu = [UIMenuController sharedMenuController];
     messageToDelete = nil;
 }
@@ -108,7 +106,7 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
     
-    if ([user_to isEqualToString:self.sender] && [user_from isEqualToString:self.userTo]) {
+    if ([user_to isEqualToString:self.senderId] && [user_from isEqualToString:self.userTo]) {
         canChat = YES;
         [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
         [self putMessage:msg type:type sender:user_from];
@@ -136,15 +134,15 @@
         NSString * receiverUserUrl  = [cloudinary url: [chat.receiver.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
         NSURL *receiverUserUrlImageURL = [NSURL URLWithString:receiverUserUrl];
         NSData *receiverUserData = [NSData dataWithContentsOfURL:receiverUserUrlImageURL];
-        self.userToImage =  [JSQMessagesAvatarFactory avatarWithImage:[UIImage imageWithData:receiverUserData] diameter:incomingDiameter];
+        self.companionAvatar =  [JSQMessagesAvatarImageFactory avatarImageWithImage:[UIImage imageWithData:receiverUserData] diameter:incomingDiameter];
         
         NSString * senderUserUrl  = [cloudinary url: [chat.currentUser.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
         NSURL *senderUserUrlImageURL = [NSURL URLWithString:senderUserUrl];
         NSData *senderUserData = [NSData dataWithContentsOfURL:senderUserUrlImageURL];
-        self.userFromImage =  [JSQMessagesAvatarFactory avatarWithImage:[UIImage imageWithData:senderUserData] diameter:incomingDiameter];
+        self.userAvatar =  [JSQMessagesAvatarImageFactory avatarImageWithImage:[UIImage imageWithData:senderUserData] diameter:outgoingDiameter];
         
         // set user to photo button
-        UIImage *image =  [JSQMessagesAvatarFactory avatarWithImage:[UIImage imageWithData:receiverUserData] diameter:incomingDiameter];
+        UIImage *image =  [JSQMessagesAvatarImageFactory avatarImageWithImage:[UIImage imageWithData:receiverUserData] diameter:incomingDiameter].avatarImage;
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.bounds = CGRectMake( 0, 0, image.size.width, image.size.height );
         [button setImage:image forState:UIControlStateNormal];
@@ -157,8 +155,8 @@
         for(Conversation * conf in chat.conversations)
         {
             
-            JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:conf.msg sender:conf.user_from date:conf.time];
-        
+            //JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:conf.msg sender:conf.user_from date:conf.time];
+            JSQMessage *jsqmessage = [[JSQMessage alloc] initWithSenderId:self.senderId senderDisplayName:self.senderDisplayName date:conf.time text:conf.msg];
             
            // JSQMessage *jsqmessage1 = [[JSQMessage alloc] initWithText:@"Welcome to JSQMessages: A messaging UI framework for iOS." sender:self.sender date:[NSDate distantPast]];
             
@@ -169,11 +167,11 @@
         [self setCanChat];
 
         // chat bubbles
-        self.outgoingBubbleImageView = [JSQMessagesBubbleImageFactory
-                                        outgoingMessageBubbleImageViewWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
+        JSQMessagesBubbleImageFactory* factory = [[JSQMessagesBubbleImageFactory alloc] init];
         
-        self.incomingBubbleImageView = [JSQMessagesBubbleImageFactory
-                                        incomingMessageBubbleImageViewWithColor:[UIColor jsq_messageBubbleGreenColor]];
+        self.companionBubble = [factory outgoingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
+        
+        self.userBubble = [factory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleGreenColor]];
         
         [self finishReceivingMessage];
         
@@ -213,7 +211,7 @@
     }
     
     for (JSQMessage * mess in self.messages ) {
-        if ([mess.sender isEqualToString:self.userTo]) {
+        if ([mess.senderId isEqualToString:self.userTo]) {
             canChat = true;
             return;
         }
@@ -293,7 +291,7 @@
     }
     
     [JSQSystemSoundPlayer jsq_playMessageSentSound];
-    [self putMessage:message type:type sender:self.sender];
+    [self putMessage:message type:type sender:self.senderId];
     
     
     NSString* trimMessage = [message stringByTrimmingCharactersInSet:
@@ -302,12 +300,13 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
     // send to server
-    [self._manager chat:self.sender user_to:self.userTo msg:trimMessage msg_type:type accessToken:accessToken];
+    [self._manager chat:self.senderId user_to:self.userTo msg:trimMessage msg_type:type accessToken:accessToken];
 }
 
 - (void)putMessage:(NSString *)message type:(NSString *)type sender:(NSString *) sender
 {
-    JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date]];
+    JSQMessage *jsqmessage = [[JSQMessage alloc] initWithSenderId:self.senderId senderDisplayName:self.senderDisplayName date:[NSDate date] text:message];
+    //[[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date]];
     /*JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
     if ([type isEqualToString:@"drink"]) {
         jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
@@ -360,8 +359,7 @@
     return [self.messages objectAtIndex:indexPath.item];
 }
 
-- (UIImageView *)collectionView:(JSQMessagesCollectionView *)collectionView bubbleImageViewForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (id<JSQMessageBubbleImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView messageBubbleImageDataForItemAtIndexPath:(NSIndexPath *)indexPath {
     /**
      *  You may return nil here if you do not want bubbles.
      *  In this case, you should set the background color of your collection view cell's textView.
@@ -374,16 +372,14 @@
     
     JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
     
-    if ([message.sender isEqualToString:self.sender]) {
-        return [[UIImageView alloc] initWithImage:self.outgoingBubbleImageView.image
-                                 highlightedImage:self.outgoingBubbleImageView.highlightedImage];
+    if ([message.senderId isEqualToString:self.senderId]) {
+        return self.userBubble;
     }
     
-    return [[UIImageView alloc] initWithImage:self.incomingBubbleImageView.image
-                             highlightedImage:self.incomingBubbleImageView.highlightedImage];
+    return self.companionBubble;
 }
 
-- (UIImageView *)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageViewForItemAtIndexPath:(NSIndexPath *)indexPath
+- (id<JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath;
 {
     /**
      *  Return `nil` here if you do not want avatars.
@@ -409,14 +405,12 @@
     
     JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
     
-    UIImage *avatarImage = self.userFromImage;
+    JSQMessagesAvatarImage *avatarImage = self.userAvatar;
 
-    if([message.sender isEqualToString:self.userTo])
-       avatarImage=  self.userToImage;
+    if([message.senderId isEqualToString:self.userTo])
+       avatarImage =  self.companionAvatar;
     
-    UIImageView * imageView = [[UIImageView alloc] initWithImage:avatarImage];
-    
-    return imageView;
+    return avatarImage;
 }
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
@@ -548,13 +542,13 @@
      *  iOS7-style sender name labels
      */
     JSQMessage *currentMessage = [self.messages objectAtIndex:indexPath.item];
-    if ([[currentMessage sender] isEqualToString:self.sender]) {
+    if ([[currentMessage senderId] isEqualToString:self.senderId]) {
         return 0.0f;
     }
     
     if (indexPath.item - 1 > 0) {
         JSQMessage *previousMessage = [self.messages objectAtIndex:indexPath.item - 1];
-        if ([[previousMessage sender] isEqualToString:[currentMessage sender]]) {
+        if ([[previousMessage senderId] isEqualToString:[currentMessage senderId]]) {
             return 0.0f;
         }
     }
