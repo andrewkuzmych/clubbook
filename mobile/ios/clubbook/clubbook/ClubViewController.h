@@ -13,8 +13,6 @@
 @interface ClubViewController : BaseTableViewController
 //@property (weak, nonatomic) IBOutlet CbButton *checkinButton;
 
-@property (weak, nonatomic) IBOutlet UIScrollView *imageScrollView;
-@property (weak, nonatomic) IBOutlet UIPageControl *imagePageView;
 @property (strong, nonatomic) Place *place;
 @property (weak, nonatomic) IBOutlet UILabel *clubDescLabel;
 @property (weak, nonatomic) IBOutlet UILabel *ageRestrictionTitleLabel;

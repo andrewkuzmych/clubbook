@@ -23,6 +23,7 @@
 #import "TransitionFromClubUsersToUser.h"
 #import "ClubUsersYesterdayViewController.h"
 #import "ProfilePagesViewController.h"
+#import "ClubViewParallaxControllerViewController.h"
 
 @interface ClubUsersViewController ()<UINavigationControllerDelegate>
 {
@@ -227,7 +228,7 @@
         profilePagesViewController.currentPlace = self.place;
 //        userController.clubCheckinName = self.place.title;
     } else if ([[segue identifier] isEqualToString:@"onClubInfo"]) {
-        ClubViewController *clubController =  [segue destinationViewController];
+        ClubViewParallaxControllerViewController *clubController =  [segue destinationViewController];
         clubController.place = _place;
     } else if ([[segue identifier] isEqualToString:@"onYesterday"]) {
         ClubUsersYesterdayViewController *clubController =  [segue destinationViewController];

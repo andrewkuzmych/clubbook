@@ -388,6 +388,13 @@
 		5297358E1A39B002009943C3 /* MultiplePulsingHaloLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297358B1A39B002009943C3 /* MultiplePulsingHaloLayer.m */; };
 		5297358F1A39B002009943C3 /* PulsingHaloLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297358D1A39B002009943C3 /* PulsingHaloLayer.m */; };
 		529735951A39FBB9009943C3 /* FilterMenuTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 529735941A39FBB9009943C3 /* FilterMenuTableViewCell.m */; };
+		52C5FC811A3F19F2000147E8 /* QMBParallaxScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C5FC7E1A3F19F2000147E8 /* QMBParallaxScrollViewController.m */; };
+		52C5FC821A3F19F2000147E8 /* UIViewController+QMBParallaxScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C5FC801A3F19F2000147E8 /* UIViewController+QMBParallaxScrollViewController.m */; };
+		52C5FC8D1A3F28A8000147E8 /* ClubViewParallaxControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C5FC8C1A3F28A8000147E8 /* ClubViewParallaxControllerViewController.m */; };
+		52C5FC901A3F29E1000147E8 /* ClubImagesPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C5FC8F1A3F29E1000147E8 /* ClubImagesPageViewController.m */; };
+		52C5FC961A3F439C000147E8 /* KICamera.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C5FC921A3F439C000147E8 /* KICamera.png */; };
+		52C5FC971A3F439C000147E8 /* KICamera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C5FC931A3F439C000147E8 /* KICamera@2x.png */; };
+		52C5FC981A3F439C000147E8 /* KIImagePager.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C5FC951A3F439C000147E8 /* KIImagePager.m */; };
 		F4EECF12177C99F400778578 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF11177C99F400778578 /* UIKit.framework */; };
 		F4EECF14177C99F400778578 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF13177C99F400778578 /* Foundation.framework */; };
 		F4EECF16177C99F400778578 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF15177C99F400778578 /* CoreGraphics.framework */; };
@@ -1075,6 +1082,18 @@
 		5297358D1A39B002009943C3 /* PulsingHaloLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PulsingHaloLayer.m; sourceTree = "<group>"; };
 		529735931A39FBB9009943C3 /* FilterMenuTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterMenuTableViewCell.h; sourceTree = "<group>"; };
 		529735941A39FBB9009943C3 /* FilterMenuTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterMenuTableViewCell.m; sourceTree = "<group>"; };
+		52C5FC7D1A3F19F2000147E8 /* QMBParallaxScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMBParallaxScrollViewController.h; sourceTree = "<group>"; };
+		52C5FC7E1A3F19F2000147E8 /* QMBParallaxScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMBParallaxScrollViewController.m; sourceTree = "<group>"; };
+		52C5FC7F1A3F19F2000147E8 /* UIViewController+QMBParallaxScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+QMBParallaxScrollViewController.h"; sourceTree = "<group>"; };
+		52C5FC801A3F19F2000147E8 /* UIViewController+QMBParallaxScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+QMBParallaxScrollViewController.m"; sourceTree = "<group>"; };
+		52C5FC8B1A3F28A8000147E8 /* ClubViewParallaxControllerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubViewParallaxControllerViewController.h; sourceTree = "<group>"; };
+		52C5FC8C1A3F28A8000147E8 /* ClubViewParallaxControllerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubViewParallaxControllerViewController.m; sourceTree = "<group>"; };
+		52C5FC8E1A3F29E1000147E8 /* ClubImagesPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubImagesPageViewController.h; sourceTree = "<group>"; };
+		52C5FC8F1A3F29E1000147E8 /* ClubImagesPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubImagesPageViewController.m; sourceTree = "<group>"; };
+		52C5FC921A3F439C000147E8 /* KICamera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = KICamera.png; sourceTree = "<group>"; };
+		52C5FC931A3F439C000147E8 /* KICamera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "KICamera@2x.png"; sourceTree = "<group>"; };
+		52C5FC941A3F439C000147E8 /* KIImagePager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KIImagePager.h; sourceTree = "<group>"; };
+		52C5FC951A3F439C000147E8 /* KIImagePager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KIImagePager.m; sourceTree = "<group>"; };
 		F4EECF0E177C99F400778578 /* Clubbook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clubbook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4EECF11177C99F400778578 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F4EECF13177C99F400778578 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1700,6 +1719,10 @@
 				493E0EEE19D4549800B5ADEC /* ChangePassViewController.m */,
 				49836B1F1961969F00F2A2C6 /* ClubViewController.h */,
 				49836B201961969F00F2A2C6 /* ClubViewController.m */,
+				52C5FC8B1A3F28A8000147E8 /* ClubViewParallaxControllerViewController.h */,
+				52C5FC8C1A3F28A8000147E8 /* ClubViewParallaxControllerViewController.m */,
+				52C5FC8E1A3F29E1000147E8 /* ClubImagesPageViewController.h */,
+				52C5FC8F1A3F29E1000147E8 /* ClubImagesPageViewController.m */,
 				498975A519EC60150067A5E4 /* UserProfileViewController.h */,
 				498975A619EC60150067A5E4 /* UserProfileViewController.m */,
 				4994849019FE671C00E906C0 /* ProfileImagesViewController.h */,
@@ -1999,6 +2022,8 @@
 		49E8319119534EBB00D4A26C /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				52C5FC911A3F439C000147E8 /* KIImagePager */,
+				52C5FC7C1A3F19F2000147E8 /* QMBParallaxScrollViewController */,
 				529735891A39B002009943C3 /* PulsingHalo */,
 				522ACCE11A320852006789EB /* SPSlideTabBar */,
 				49C43BC91A0277F7004F5058 /* SVPullToRefresh */,
@@ -2036,6 +2061,28 @@
 				5297358D1A39B002009943C3 /* PulsingHaloLayer.m */,
 			);
 			path = PulsingHalo;
+			sourceTree = "<group>";
+		};
+		52C5FC7C1A3F19F2000147E8 /* QMBParallaxScrollViewController */ = {
+			isa = PBXGroup;
+			children = (
+				52C5FC7D1A3F19F2000147E8 /* QMBParallaxScrollViewController.h */,
+				52C5FC7E1A3F19F2000147E8 /* QMBParallaxScrollViewController.m */,
+				52C5FC7F1A3F19F2000147E8 /* UIViewController+QMBParallaxScrollViewController.h */,
+				52C5FC801A3F19F2000147E8 /* UIViewController+QMBParallaxScrollViewController.m */,
+			);
+			path = QMBParallaxScrollViewController;
+			sourceTree = "<group>";
+		};
+		52C5FC911A3F439C000147E8 /* KIImagePager */ = {
+			isa = PBXGroup;
+			children = (
+				52C5FC921A3F439C000147E8 /* KICamera.png */,
+				52C5FC931A3F439C000147E8 /* KICamera@2x.png */,
+				52C5FC941A3F439C000147E8 /* KIImagePager.h */,
+				52C5FC951A3F439C000147E8 /* KIImagePager.m */,
+			);
+			path = KIImagePager;
 			sourceTree = "<group>";
 		};
 		F4EECF05177C99F400778578 = {
@@ -2388,11 +2435,13 @@
 				49ABA1DC199524BF00B060D0 /* icon_userprofile_chat@2x.png in Resources */,
 				49ABA1C8199524BF00B060D0 /* icon_clubview_details@2x.png in Resources */,
 				49ABA18C1995239E00B060D0 /* icon_userprofile_removefriend.png in Resources */,
+				52C5FC961A3F439C000147E8 /* KICamera.png in Resources */,
 				F4EECF28177C99F400778578 /* Default-568h@2x.png in Resources */,
 				49ABA1D9199524BF00B060D0 /* icon_twitter@2x.png in Resources */,
 				49ABA1671995239E00B060D0 /* avatar_empty.png in Resources */,
 				49ABA1891995239E00B060D0 /* icon_userprofile_block.png in Resources */,
 				4934F7D919D04A7100BFFDB1 /* JSQMessagesViewController.xib in Resources */,
+				52C5FC971A3F439C000147E8 /* KICamera@2x.png in Resources */,
 				498975BC19EDBD4A0067A5E4 /* add_photos_plus_icon.jpg in Resources */,
 				49ABA1D5199524BF00B060D0 /* icon_menu_share@2x.png in Resources */,
 				4934F7C119D04A7100BFFDB1 /* bubble@2x.png in Resources */,
@@ -2542,6 +2591,7 @@
 				4993F2151979194900A225BE /* MRMessageInterceptor.m in Sources */,
 				4993F2161979194900A225BE /* MRWeakProxy.m in Sources */,
 				F4EECF1E177C99F400778578 /* main.m in Sources */,
+				52C5FC811A3F19F2000147E8 /* QMBParallaxScrollViewController.m in Sources */,
 				498A68DF196C4CFD00BC2859 /* PNAccessRightOptions.m in Sources */,
 				498A68EC196C4CFD00BC2859 /* PNOperationStatus.m in Sources */,
 				49ABA12F198A932B00B060D0 /* FriendsViewController.m in Sources */,
@@ -2552,6 +2602,7 @@
 				498A68E9196C4CFD00BC2859 /* PNJSONSerialization.m in Sources */,
 				49390750195086AA003F2FF9 /* MenuCell.m in Sources */,
 				498A68DA196C4CFD00BC2859 /* PNPushNotificationsEnabledChannelsParser.m in Sources */,
+				52C5FC821A3F19F2000147E8 /* UIViewController+QMBParallaxScrollViewController.m in Sources */,
 				4934F7D319D04A7100BFFDB1 /* NSString+JSQMessages.m in Sources */,
 				499929B519E97CB000B77A6E /* CSNativeBlurView.m in Sources */,
 				4934F76119D047B800BFFDB1 /* UIButton+WebCache.m in Sources */,
@@ -2585,6 +2636,7 @@
 				499929B419E97CB000B77A6E /* CSLayerStealingBlurView.m in Sources */,
 				49E83185195306FB00D4A26C /* BaseDto.m in Sources */,
 				498A68FD196C4CFD00BC2859 /* PNClientStateRequest.m in Sources */,
+				52C5FC981A3F439C000147E8 /* KIImagePager.m in Sources */,
 				498975B119ED2BA70067A5E4 /* ClubUsersYesterdayViewController.m in Sources */,
 				4934F75E19D047B800BFFDB1 /* SDWebImageDownloaderOperation.m in Sources */,
 				49ABA13B198FEE7700B060D0 /* WebViewController.m in Sources */,
@@ -2669,10 +2721,12 @@
 				49C43BCF1A0277F7004F5058 /* UIScrollView+SVInfiniteScrolling.m in Sources */,
 				4996E0BF19631C90000C721F /* LocationHelper.m in Sources */,
 				4934F7DE19D04A7100BFFDB1 /* JSQMessagesCollectionViewFlowLayout.m in Sources */,
+				52C5FC8D1A3F28A8000147E8 /* ClubViewParallaxControllerViewController.m in Sources */,
 				498A6910196C4CFD00BC2859 /* PNConnectionChannel.m in Sources */,
 				49908EF3197501B400DA68F2 /* NoLocationViewController.m in Sources */,
 				498A690D196C4CFD00BC2859 /* PNReachability.m in Sources */,
 				498A6901196C4CFD00BC2859 /* PNLatencyMeasureRequest.m in Sources */,
+				52C5FC901A3F29E1000147E8 /* ClubImagesPageViewController.m in Sources */,
 				49908F0419751C5C00DA68F2 /* OBAlert.m in Sources */,
 				498A68F4196C4CFD00BC2859 /* NSInvocation+PNAdditions.m in Sources */,
 				49D8D301197D6C8F00015052 /* UIView+StringTagAdditions.m in Sources */,

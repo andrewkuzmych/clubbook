@@ -23,7 +23,6 @@
 @interface ClubViewController (){
     BOOL showAllUsers;
     int collapsedUserCount;
-    float oldX;
 }
 
 @property (nonatomic, strong) HeaderView *headerView;
@@ -155,28 +154,6 @@
         }
     }
     
-    
-    [self.imageScrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    
-    for (int i = 0; i < [self.place.photos count]; i++) {
-        CGRect frame;
-        frame.origin.x = self.imageScrollView.frame.size.width * i;
-        frame.origin.y = 0;
-        frame.size = self.imageScrollView.frame.size;
-        
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
-        imageView.backgroundColor = [UIColor blackColor];
-        
-        [imageView setImageWithURL:[NSURL URLWithString:[self.place.photos objectAtIndex:i]] placeholderImage:[UIImage imageNamed:@"Default.png"]];
-        [self.imageScrollView addSubview:imageView];
-    }
-    //int count =  self.imageScrollView.subviews.count;
-    self.imageScrollView.delegate = self;
-    
-    self.imagePageView.numberOfPages = self.imageScrollView.subviews.count;
-    
-    self.imageScrollView.contentSize = CGSizeMake(self.imageScrollView.frame.size.width * [self.place.photos count]  , self.imageScrollView.frame.size.height + 5);
 }
 
 - (void)styleUi
@@ -253,24 +230,13 @@
     }
 }
 
-
-- (void)scrollViewDidScroll:(UIScrollView *)sender
-{
-    [self.imageScrollView setContentOffset: CGPointMake(self.imageScrollView.contentOffset.x, oldX  )];
-    
-    // Update the page when more than 50% of the previous/next page is visible
-    CGFloat pageWidth = self.imageScrollView.frame.size.width;
-    int page = floor((self.imageScrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-    self.imagePageView.currentPage = page;
-}
-
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     UITableViewCell *cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
     float height = cell.frame.size.height;
     
     
-    if (indexPath.row == 1) {
+    if (indexPath.row == 0) {
         CGSize maximumLabelSize = CGSizeMake(280,9999);
         CGSize expectedLabelSize = [self.clubDescLabel.text sizeWithFont:self.clubDescLabel.font
                                         constrainedToSize:maximumLabelSize

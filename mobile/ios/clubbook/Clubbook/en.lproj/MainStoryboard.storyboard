@@ -345,7 +345,7 @@
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
-                                                <segue destination="Ee6-5w-NsF" kind="push" identifier="onClubInfo" id="MHe-BE-7aW"/>
+                                                <segue destination="jL5-7w-U79" kind="push" identifier="onClubInfo" id="cVf-j3-sPO"/>
                                             </connections>
                                         </button>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Info &amp; Wall" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aa5-Ka-wES">
@@ -797,10 +797,65 @@
             </objects>
             <point key="canvasLocation" x="-3267" y="-1069"/>
         </scene>
+        <!--Club Images Page View Controller-->
+        <scene sceneID="Tme-c0-Ddh">
+            <objects>
+                <viewController storyboardIdentifier="ClubImagesPageViewController" id="4EA-Ss-4Od" customClass="ClubImagesPageViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="5HL-fZ-llv"/>
+                        <viewControllerLayoutGuide type="bottom" id="Yyn-W0-zS8"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="vA4-kE-jhS">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="216"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yPY-zy-EqI" customClass="KIImagePager">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="216"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="yPY-zy-EqI" firstAttribute="leading" secondItem="vA4-kE-jhS" secondAttribute="leading" id="4Rd-4a-NXi"/>
+                            <constraint firstAttribute="trailing" secondItem="yPY-zy-EqI" secondAttribute="trailing" id="Sbv-4K-Vfb"/>
+                            <constraint firstItem="yPY-zy-EqI" firstAttribute="top" secondItem="vA4-kE-jhS" secondAttribute="top" id="utc-Zh-nDh"/>
+                            <constraint firstItem="Yyn-W0-zS8" firstAttribute="top" secondItem="yPY-zy-EqI" secondAttribute="bottom" id="yZ1-JN-Gcx"/>
+                        </constraints>
+                    </view>
+                    <value key="contentSizeForViewInPopover" type="size" width="320" height="568"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="216"/>
+                    <connections>
+                        <outlet property="imageView" destination="yPY-zy-EqI" id="zNC-60-2DU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BwU-Ir-nCM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1256.5" y="-1637"/>
+        </scene>
+        <!--Club View Parallax Controller View Controller-->
+        <scene sceneID="h3u-Ik-sRS">
+            <objects>
+                <viewController id="jL5-7w-U79" customClass="ClubViewParallaxControllerViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="f9H-gE-6fM"/>
+                        <viewControllerLayoutGuide type="bottom" id="xwK-Ro-eU7"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="cKb-ri-cxi">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="ZTb-2o-91f"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WSL-iT-6ZJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1265" y="-1172"/>
+        </scene>
         <!--Club View Controller-->
         <scene sceneID="MYE-1A-44P">
             <objects>
-                <tableViewController id="Ee6-5w-NsF" customClass="ClubViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="ClubViewController" id="Ee6-5w-NsF" customClass="ClubViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="fjG-qF-XlJ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -808,22 +863,6 @@
                         <sections>
                             <tableViewSection id="R5j-QH-aDQ">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="216" id="n1N-Xo-KtJ">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="216"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="n1N-Xo-KtJ" id="uEQ-Rh-60I">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="216"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="O27-uJ-bsj">
-                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="216"/>
-                                                </scrollView>
-                                                <pageControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="cw1-NC-9IU">
-                                                    <rect key="frame" x="110" y="186" width="99" height="37"/>
-                                                </pageControl>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="74" id="i2S-dg-4Nj">
                                         <rect key="frame" x="0.0" y="216" width="320" height="74"/>
                                         <autoresizingMask key="autoresizingMask"/>
@@ -1123,8 +1162,6 @@
                         <outlet property="emailButton" destination="8zd-0d-Qr9" id="8kW-H2-EVO"/>
                         <outlet property="friHoursLabel" destination="5dm-XJ-hqH" id="KBU-Yg-32o"/>
                         <outlet property="friTitleLabel" destination="e2q-O9-viP" id="IKR-0h-P6V"/>
-                        <outlet property="imagePageView" destination="cw1-NC-9IU" id="W2d-p8-UdX"/>
-                        <outlet property="imageScrollView" destination="O27-uJ-bsj" id="u5E-JX-Ys0"/>
                         <outlet property="monHoursLabel" destination="98Y-Eq-ejD" id="csE-me-Dy9"/>
                         <outlet property="monTitleLabel" destination="c6n-zc-p2f" id="Kim-Kh-urd"/>
                         <outlet property="nameLabel" destination="qFq-12-kpX" id="T4k-Hn-RCR"/>
@@ -1144,7 +1181,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qlp-iI-QPs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1302" y="-1040"/>
+            <point key="canvasLocation" x="-886" y="-1346"/>
         </scene>
         <!--User Profile View Controller-->
         <scene sceneID="Szc-Ms-oMy">
@@ -3563,10 +3600,10 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Ky6-MD-mgx"/>
         <segue reference="fHF-fb-mVP"/>
-        <segue reference="g4R-r7-bxr"/>
         <segue reference="XPG-A8-IJ5"/>
+        <segue reference="g4R-r7-bxr"/>
+        <segue reference="l9k-Eo-3Kr"/>
         <segue reference="Zkk-XZ-3rw"/>
     </inferredMetricsTieBreakers>
 </document>
