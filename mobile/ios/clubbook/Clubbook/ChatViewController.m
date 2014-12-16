@@ -22,7 +22,10 @@
 @end
 
 @implementation ChatViewController
-
+{
+    UIMenuController *messageEditMenu;
+    NSIndexPath *messageToDelete;
+}
 #pragma mark - Demo setup
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -89,6 +92,9 @@
     self.inputToolbar.contentView.backgroundColor = [UIColor colorWithRed:52/255.0 green:3/255.0 blue:69/255.0 alpha:1.0];
     
     self.inputToolbar.contentView.middleBarButtonItem = drinkButton;
+    
+    messageEditMenu = [UIMenuController sharedMenuController];
+    messageToDelete = nil;
 }
 
 - (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message {
@@ -473,7 +479,7 @@
     JSQMessage *msg = [self.messages objectAtIndex:indexPath.item];
     
     cell.textView.textColor = [UIColor whiteColor];
-   
+    [cell.textView setEditable:NO];
     /*if ([msg.sender isEqualToString:self.sender]) {
         cell.textView.textColor = [UIColor blackColor];
     }
@@ -567,5 +573,31 @@
 {
     NSLog(@"Load earlier messages!");
 }
+
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
+    JSQMessagesCollectionViewCell *cell = (JSQMessagesCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+    CGRect selectionRect = cell.messageBubbleContainerView.frame;
+    [messageEditMenu setTargetRect:selectionRect inView:cell.contentView];
+    [messageEditMenu setMenuVisible:YES animated:YES];
+    messageToDelete = indexPath;
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
+    return (action == @selector(delete:));
+}
+
+
+#pragma mark - UIResponderStandardEditActions
+
+- (void)delete:(id)sender {
+    if (nil != messageToDelete) {
+        NSInteger indexOfMessage = messageToDelete.item;
+        [self.messages removeObjectAtIndex:indexOfMessage];
+        [self.collectionView deleteItemsAtIndexPaths:@[messageToDelete]];
+        messageToDelete = nil;
+    }
+    [messageEditMenu setMenuVisible:NO animated:YES];
+}
+
 
 @end
