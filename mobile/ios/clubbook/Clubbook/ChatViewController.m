@@ -13,6 +13,7 @@
 #import "CSNotificationView.h"
 #import "UserViewController.h"
 #import "SWRevealViewController.h"
+#import "LocationManagerSingleton.h"
 
 @interface ChatViewController (){
     bool canChat;
@@ -23,8 +24,7 @@
 
 @implementation ChatViewController
 {
-    UIMenuController *messageEditMenu;
-    NSIndexPath *messageToDelete;
+    UIImagePickerController* picker;
 }
 #pragma mark - Demo setup
 
@@ -37,27 +37,12 @@
     return self;
 }
 
--(NSUInteger)supportedInterfaceOrientations
-{
-    // AppDelegate *appDelegate = (AppDelegate *) [UIApplication sharedApplication].delegate;
-    //if(appDelegate.isOrientationOn) {
-    //    return UIInterfaceOrientationMaskAll;
-    //}
-    return UIInterfaceOrientationMaskAll;
-}
-
-- (BOOL)shouldAutorotate;
-{
-    return YES;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     [PubNub setDelegate:self];
     // Do any additional setup after loading the view.
-    //self.title = @"Chat";
     
     dispatch_async(dispatch_get_main_queue(), ^{
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -71,28 +56,24 @@
         [self showProgress:YES title:nil];
     });
     
+    //input toolbar cuztomize
+    UIButton* locationButton = [[UIButton alloc] init];
+    UIImage* locationImage = [UIImage imageNamed:@"map"];
+    [locationButton setImage:locationImage forState:UIControlStateNormal];
+    [locationButton addTarget:self action:@selector(shareMyLocation) forControlEvents:UIControlEventTouchUpInside];
     
-    // add chat hot buttons (smile, drink)
-    UIButton *smileButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [smileButton addTarget:self
-                    action:@selector(sendSmile:)
-          forControlEvents:UIControlEventTouchUpInside];
-    [smileButton setTitle:@"Like" forState:UIControlStateNormal];
-    [smileButton setTitleColor: [UIColor whiteColor] forState:UIControlStateNormal];
-    [smileButton setTitleColor: [UIColor greenColor] forState:UIControlStateHighlighted];
-    smileButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
+    UIButton* photoButton = [[UIButton alloc] init];
+    [photoButton setImage:[UIImage imageNamed:@"map"] forState:UIControlStateNormal];
+    [photoButton addTarget:self action:@selector(sharePhoto) forControlEvents:UIControlEventTouchUpInside];
     
-    UIButton *drinkButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [drinkButton addTarget:self
-                    action:@selector(sendDrink:)
-          forControlEvents:UIControlEventTouchUpInside];
-    [drinkButton setImage:[UIImage imageNamed:@"icon_chat_drink"] forState:UIControlStateNormal];
+    [self.inputToolbar.contentView setLeftBarButtonItem:locationButton];
+    [self.inputToolbar.contentView setMiddleBarButtonItem:photoButton];
     
-    self.inputToolbar.contentView.leftBarButtonItem = smileButton;
     self.inputToolbar.contentView.backgroundColor = [UIColor colorWithRed:52/255.0 green:3/255.0 blue:69/255.0 alpha:1.0];
     
-    messageEditMenu = [UIMenuController sharedMenuController];
-    messageToDelete = nil;
+    picker = [[UIImagePickerController alloc] init];
+    picker.delegate = self;
+
 }
 
 - (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message {
@@ -114,23 +95,30 @@
     }
 }
 
-- (void)didChat:(NSString *)result
-{
+-(NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
+- (BOOL)shouldAutorotate {
+    return YES;
 }
 
 - (void)didReceiveConversation:(Chat *)chat
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideProgress];
+        self.title = chat.receiver.name;
         _chat = chat;
         self.messages = [[NSMutableArray alloc] init];
         
         // get user to avatar
+        CGFloat incomingDiameter = self.collectionView.collectionViewLayout.incomingAvatarViewSize.width;
         CGFloat outgoingDiameter = self.collectionView.collectionViewLayout.outgoingAvatarViewSize.width;
+        
         CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
         CLTransformation *transformation = [CLTransformation transformation];
         [transformation setParams: @{@"width": @256, @"height": @256, @"crop": @"thumb", @"gravity": @"face"}];
-        CGFloat incomingDiameter = self.collectionView.collectionViewLayout.incomingAvatarViewSize.width;
+        
         NSString * receiverUserUrl  = [cloudinary url: [chat.receiver.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
         NSURL *receiverUserUrlImageURL = [NSURL URLWithString:receiverUserUrl];
         NSData *receiverUserData = [NSData dataWithContentsOfURL:receiverUserUrlImageURL];
@@ -148,19 +136,11 @@
         [button setImage:image forState:UIControlStateNormal];
         [button addTarget:self action:@selector(onUser:) forControlEvents:UIControlEventTouchUpInside];
         UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-        self.navigationItem.rightBarButtonItem=barButtonItem;
-        
-        self.title = chat.receiver.name;
-        
-        for(Conversation * conf in chat.conversations)
-        {
+        self.navigationItem.rightBarButtonItem = barButtonItem;
+       
+        for(Conversation * conf in chat.conversations) {
             
-            //JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:conf.msg sender:conf.user_from date:conf.time];
-            JSQMessage *jsqmessage = [[JSQMessage alloc] initWithSenderId:self.senderId senderDisplayName:self.senderDisplayName date:conf.time text:conf.msg];
-            
-           // JSQMessage *jsqmessage1 = [[JSQMessage alloc] initWithText:@"Welcome to JSQMessages: A messaging UI framework for iOS." sender:self.sender date:[NSDate distantPast]];
-            
-            //[JSQSystemSoundPlayer jsq_playMessageReceivedSound];
+            JSQMessage *jsqmessage = [[JSQMessage alloc] initWithSenderId:conf.user_from senderDisplayName:conf.user_from date:conf.time text:conf.msg];
             [self.messages addObject:jsqmessage];
         }
         
@@ -169,9 +149,9 @@
         // chat bubbles
         JSQMessagesBubbleImageFactory* factory = [[JSQMessagesBubbleImageFactory alloc] init];
         
-        self.companionBubble = [factory outgoingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
+        self.companionBubble = [factory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
         
-        self.userBubble = [factory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleGreenColor]];
+        self.userBubble = [factory outgoingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleGreenColor]];
         
         [self finishReceivingMessage];
         
@@ -224,7 +204,6 @@
 {
     [super viewWillAppear:animated];
     
-    
     //Google Analytics
     id tracker = [[GAI sharedInstance] defaultTracker];
     [tracker set:kGAIScreenName
@@ -245,11 +224,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    /**
-     *  Enable/disable springy bubbles, default is YES.
-     *  For best results, toggle from `viewDidAppear:`
-     */
+
     self.collectionView.collectionViewLayout.springinessEnabled = NO;
 }
 
@@ -260,24 +235,6 @@
 }
 
 #pragma mark - Actions
-
-- (void)sendSmile:(UIButton *)senderElement
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *userName = [defaults objectForKey:@"userName"];
-    
-    [self sendMessage:[NSString stringWithFormat:@"%@ %@", userName, NSLocalizedString(@"send_like", nil)] type:@"smile"];
-}
-
-- (void)sendDrink:(UIButton *)senderElement
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *userName = [defaults objectForKey:@"userName"];
-    
-    [self sendMessage:[NSString stringWithFormat:NSLocalizedString(@"invite_for_drink", nil), userName] type:@"drink"];
-    
-    //[self sendMessage:NSLocalizedString(@"invite_for_drink", nil) type:@"drink"];
-}
 
 - (void)sendMessage:(NSString *)message type:(NSString *)type
 {
@@ -306,14 +263,6 @@
 - (void)putMessage:(NSString *)message type:(NSString *)type sender:(NSString *) sender
 {
     JSQMessage *jsqmessage = [[JSQMessage alloc] initWithSenderId:self.senderId senderDisplayName:self.senderDisplayName date:[NSDate date] text:message];
-    //[[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date]];
-    /*JSQMessage *jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
-    if ([type isEqualToString:@"drink"]) {
-        jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
-    } else if ([type isEqualToString:@"smile"]) {
-        jsqmessage =  [[JSQMessage alloc] initWithText:message sender:sender date:[NSDate date] type:type];
-    }*/
-    
 
     [self.messages addObject:jsqmessage];
     [self setCanChat];
@@ -329,7 +278,8 @@
 
 - (void)didPressSendButton:(UIButton *)button
            withMessageText:(NSString *)text
-                    sender:(NSString *)sender
+                  senderId:(NSString *)senderId
+         senderDisplayName:(NSString *)senderDisplayName
                       date:(NSDate *)date
 {
     /**
@@ -346,10 +296,7 @@
 
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
-    NSLog(@"Camera pressed!");
-    /**
-     *  Accessory button has no default functionality, yet.
-     */
+    
 }
 
 #pragma mark - JSQMessages CollectionView DataSource
@@ -470,19 +417,13 @@
      *  Instead, override the properties you want on `self.collectionView.collectionViewLayout` from `viewDidLoad`
      */
     
-    JSQMessage *msg = [self.messages objectAtIndex:indexPath.item];
-    
-    cell.textView.textColor = [UIColor whiteColor];
-    [cell.textView setEditable:NO];
-    /*if ([msg.sender isEqualToString:self.sender]) {
-        cell.textView.textColor = [UIColor blackColor];
-    }
-    else {
+    if (cell.textView != nil) {
         cell.textView.textColor = [UIColor whiteColor];
-    }*/
-    
-    cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,
+        [cell.textView setEditable:NO];
+        
+        cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,
                                           NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
+    }
     return cell;
 }
 
@@ -568,30 +509,65 @@
     NSLog(@"Load earlier messages!");
 }
 
-- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
-    JSQMessagesCollectionViewCell *cell = (JSQMessagesCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-    CGRect selectionRect = cell.messageBubbleContainerView.frame;
-    [messageEditMenu setTargetRect:selectionRect inView:cell.contentView];
-    [messageEditMenu setMenuVisible:YES animated:YES];
-    messageToDelete = indexPath;
-}
-
-- (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
+- (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
+{
     return (action == @selector(delete:));
 }
 
-
-#pragma mark - UIResponderStandardEditActions
-
-- (void)delete:(id)sender {
-    if (nil != messageToDelete) {
-        NSInteger indexOfMessage = messageToDelete.item;
-        [self.messages removeObjectAtIndex:indexOfMessage];
-        [self.collectionView deleteItemsAtIndexPaths:@[messageToDelete]];
-        messageToDelete = nil;
-    }
-    [messageEditMenu setMenuVisible:NO animated:YES];
+- (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
+{
+    NSInteger indexOfMessage = indexPath.item;
+    [self.messages removeObjectAtIndex:indexOfMessage];
+    [self.collectionView deleteItemsAtIndexPaths:@[indexPath]];
 }
 
+//actions
+- (void) shareMyLocation {
+    __weak UICollectionView *weakView = self.collectionView;
+    CLLocation *userLocation = [LocationManagerSingleton sharedSingleton].locationManager.location;
+    
+    JSQLocationMediaItem *locationItem = [[JSQLocationMediaItem alloc] init];
+    
+    [locationItem setLocation:userLocation withCompletionHandler:^{
+        [weakView reloadData];
+    }];
+    
+    JSQMessage *locationMessage = [JSQMessage messageWithSenderId:self.senderId
+                                                      displayName:self.senderId
+                                                            media:locationItem];
+    [self.messages addObject:locationMessage];
+    [self.collectionView reloadData];
+    [self scrollToBottomAnimated:YES];
+    
+}
+- (void) sharePhoto {
+    [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
+    [self presentViewController:picker animated:YES completion:NULL];
+}
+
+//delegate methode will be called after picking photo either from camera or library
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    
+    if (image) {
+        JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:image];
+        JSQMessage *photoMessage = [JSQMessage messageWithSenderId:self.senderId
+                                                       displayName:self.senderId
+                                                             media:photoItem];
+        [self.messages addObject:photoMessage];
+        [self.collectionView reloadData];
+        [self scrollToBottomAnimated:YES];
+    }
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void) didChat:(NSString*)status {
+
+}
 
 @end

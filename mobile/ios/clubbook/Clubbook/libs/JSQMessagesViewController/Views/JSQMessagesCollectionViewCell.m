@@ -338,4 +338,20 @@
     return YES;
 }
 
+-(BOOL) canPerformAction:(SEL)action withSender:(id)sender{
+    if (action == @selector(delete:)) {
+        return YES;
+    }
+    return NO;
+}
+
+-(void) delete:(id)sender {
+    UICollectionView* collecitonView=(UICollectionView*)[self superview];
+    if ([collecitonView isKindOfClass:[UICollectionView class]]) {
+        id <UICollectionViewDelegate> d=collecitonView.delegate;
+        if  ([d respondsToSelector:@selector(collectionView:performAction:forItemAtIndexPath:withSender:)]){
+            [d collectionView:collecitonView performAction:@selector(delete:) forItemAtIndexPath:[collecitonView indexPathForCell:self] withSender:sender];
+        }
+    }
+}
 @end

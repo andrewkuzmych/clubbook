@@ -21,7 +21,7 @@
 @end
 
 
-@interface ChatViewController : BaseMessagesViewController<PNDelegate>
+@interface ChatViewController : BaseMessagesViewController<PNDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (assign, nonatomic) BOOL isFromUser;
 
