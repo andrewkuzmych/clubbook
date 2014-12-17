@@ -124,6 +124,11 @@
     }
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self.headerView setBackgroundColor:[UIColor clearColor]];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -203,9 +208,7 @@
 
     BOOL isCheckinHere = [LocationHelper isCheckinHere:_place];
         User *user = _users[indexPath.row];
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSString *userId = [defaults objectForKey:@"userId"];
-        
+   
         if (!isCheckinHere && !user.isFriend)
             // cannot see profile when you are not checked in and not friend
             [CSNotificationView showInViewController:self
@@ -228,6 +231,7 @@
         profilePagesViewController.currentPlace = self.place;
 //        userController.clubCheckinName = self.place.title;
     } else if ([[segue identifier] isEqualToString:@"onClubInfo"]) {
+        [self.headerView setBackgroundColor:[UIColor colorWithRed:0.973 green:0.913 blue:1.000 alpha:1.000]];
         ClubViewParallaxControllerViewController *clubController =  [segue destinationViewController];
         clubController.place = _place;
     } else if ([[segue identifier] isEqualToString:@"onYesterday"]) {
@@ -271,7 +275,7 @@
             CLTransformation *transformation = [CLTransformation transformation];
             [transformation setParams: @{@"width": @120, @"height": @120}];
             NSString * avatarUrl  = [cloudinary url: [user.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
-            [cell.profileAvatar setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
+            [cell.profileAvatar sd_setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
     });
     return cell;
 }

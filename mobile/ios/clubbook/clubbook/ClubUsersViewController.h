@@ -6,14 +6,14 @@
 //  Copyright (c) 2014 clubbook. All rights reserved.
 //
 
-#import "BaseViewController.h"
-#import "CbButton.h"
-#import "ProfileCell.h"
-#import "User.h";
 #import "HeaderView.h"
 #import "ClubFooterView.h"
+#import "User.h"
+#import "ProfileCell.h"
+#import "BaseViewController.h"
+#import "CbButton.h"
 
-@interface ClubUsersViewController : BaseViewController <UICollectionViewDelegate, UIAlertViewDelegate>
+@interface ClubUsersViewController : BaseViewController <UICollectionViewDelegate, UICollectionViewDataSource, UIAlertViewDelegate, PNDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *profileCollection;
 @property (strong, nonatomic) NSString *placeId;
 @property (strong, nonatomic) Place *place;
