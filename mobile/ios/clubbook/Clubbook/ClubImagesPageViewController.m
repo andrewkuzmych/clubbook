@@ -7,6 +7,8 @@
 //
 
 #import "ClubImagesPageViewController.h"
+#import "UIImageView+WebCache.h"
+#import "SDWebImageManager.h"
 
 @interface ClubImagesPageViewController ()
 
@@ -20,24 +22,24 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.imageView.indicatorDisabled = YES;
     
     photos = [[NSMutableArray alloc] init];
-    
     for (int i = 0; i < [self.place.photos count]; i++) {
-        UIImage* placeholderImage = [UIImage imageNamed:@"Default.png"];
-        NSData* imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:[self.place.photos objectAtIndex:i]]];
-        UIImage* image = [UIImage imageWithData:imageData];
+
+        NSURL* url = [NSURL URLWithString:[self.place.photos objectAtIndex:i]];
         
-        if(image) {
-            [photos addObject:image];
-        }
-        else {
-            [photos addObject:placeholderImage];
-        }
-        
-   
+        [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize)
+         {}
+                                                      completed:^(UIImage *image, NSError* error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL)
+         {
+             if (image)
+             {
+                 [photos addObject:image];
+                 [self.imageView reloadData];
+             }
+         }];
     }
-    //int count =  self.imageScrollView.subviews.count;
     self.imageView.delegate = self;
     self.imageView.dataSource = self;
 }
@@ -50,7 +52,6 @@
     self.imageView.pageControl.pageIndicatorTintColor = [UIColor whiteColor];
     self.imageView.pageControl.center = CGPointMake(CGRectGetWidth(self.imageView.frame) / 2, CGRectGetHeight(self.imageView.frame) - 27);
     
-    self.imageView.indicatorDisabled = YES;
 }
 
 - (NSArray *) arrayWithImages
@@ -63,6 +64,9 @@
     return UIViewContentModeScaleAspectFill;
 }
 
+- (UIImage *) placeHolderImageForImagePager {
+    return [UIImage imageNamed:@"Default"];
+}
 
 
 /*
