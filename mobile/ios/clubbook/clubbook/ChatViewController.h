@@ -21,7 +21,7 @@
 @end
 
 
-@interface ChatViewController : BaseMessagesViewController<PNDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface ChatViewController : BaseMessagesViewController<PNDelegate, UIDocumentInteractionControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (assign, nonatomic) BOOL isFromUser;
 
@@ -35,6 +35,8 @@
 
 @property (strong, nonatomic) JSQMessagesBubbleImage *userBubble;
 @property (strong, nonatomic) JSQMessagesBubbleImage *companionBubble;
+
+@property (nonatomic, retain) UIDocumentInteractionController *docController;
 
 - (void)closePressed:(UIBarButtonItem *)sender;
 

@@ -14,6 +14,7 @@
 #import "UserViewController.h"
 #import "SWRevealViewController.h"
 #import "LocationManagerSingleton.h"
+#import "UIImage+FixOrientation.h"
 
 @interface ChatViewController (){
     bool canChat;
@@ -73,6 +74,8 @@
     
     picker = [[UIImagePickerController alloc] init];
     picker.delegate = self;
+    
+    _docController = nil;
 
 }
 
@@ -267,11 +270,6 @@
     [self.messages addObject:jsqmessage];
     [self setCanChat];
     [self finishReceivingMessage];
-}
-
-- (void)closePressed:(UIBarButtonItem *)sender
-{
-    [self.delegateModal didDismissJSQDemoViewController:self];
 }
 
 #pragma mark - JSQMessagesViewController method overrides
@@ -497,6 +495,43 @@
     return 0.0f;
 }
 
+-(void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
+    JSQMessage* message = [self.messages objectAtIndex:indexPath.item];
+    
+    if (message) {
+        if (message.isMediaMessage) {
+            id mediaItem = message.media;
+            
+            if ([mediaItem isMemberOfClass:[JSQPhotoMediaItem class]]) {
+                JSQPhotoMediaItem* photo = (JSQPhotoMediaItem*)mediaItem;
+                NSURL *URL = [NSURL fileURLWithPath:photo.photoURL];
+                //NSURL *URL = [[NSBundle mainBundle] URLForResource:@"logo" withExtension:@"png"];
+                if (URL) {
+                    // Initialize Document Interaction Controller
+                    _docController = [UIDocumentInteractionController interactionControllerWithURL:URL];
+                    _docController.name = @"";
+                    // Configure Document Interaction Controller
+                    [_docController setDelegate:self];
+
+                    [_docController presentPreviewAnimated:YES];
+                }
+            }
+            else if ([mediaItem isMemberOfClass:[JSQLocationMediaItem class]]) {
+                JSQLocationMediaItem* location = (JSQLocationMediaItem*)mediaItem;
+                
+                MKPlacemark* place = [[MKPlacemark alloc] initWithCoordinate: location.location.coordinate addressDictionary: nil];
+                MKMapItem* destination = [[MKMapItem alloc] initWithPlacemark: place];
+                destination.name = [NSString stringWithFormat: @"%@ location", message.senderDisplayName, nil];
+                NSArray* items = [[NSArray alloc] initWithObjects: destination, nil];
+                NSDictionary* options = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                         MKLaunchOptionsDirectionsModeWalking,
+                                         MKLaunchOptionsDirectionsModeKey, nil];
+                [MKMapItem openMapsWithItems: items launchOptions: options];
+            }
+        }
+    }
+}
+
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -548,10 +583,28 @@
 //delegate methode will be called after picking photo either from camera or library
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    UIImage *tempImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+    UIImage *image = [tempImage fixOrientation];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+                                                         NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"hh-mm-dd-MM"];
+    NSString *dateFromString = [dateFormatter stringFromDate:[NSDate date]];
+    NSString *fileName = [NSString stringWithFormat:@"clubbook_photo_%@.jpg", dateFromString, nil];
+    
+    NSString *filePath =  [documentsDirectory stringByAppendingPathComponent:fileName];
+    NSLog (@"New photo file = %@", filePath);
+    
+    // Get PNG data from following method
+    NSData *myData = UIImageJPEGRepresentation(image, 0);
+    // It is better to get JPEG data because jpeg data will store the location and other related information of image.
+    [myData writeToFile:filePath atomically:YES];
     
     if (image) {
-        JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:image];
+        JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:image andFilePath:filePath];
         JSQMessage *photoMessage = [JSQMessage messageWithSenderId:self.senderId
                                                        displayName:self.senderId
                                                              media:photoItem];
@@ -568,6 +621,10 @@
 
 - (void) didChat:(NSString*)status {
 
+}
+
+- (UIViewController *) documentInteractionControllerViewControllerForPreview: (UIDocumentInteractionController *) controller {
+    return self;
 }
 
 @end

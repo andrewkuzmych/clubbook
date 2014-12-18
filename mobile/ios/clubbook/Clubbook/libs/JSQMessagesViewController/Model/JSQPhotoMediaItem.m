@@ -33,11 +33,12 @@
 
 #pragma mark - Initialization
 
-- (instancetype)initWithImage:(UIImage *)image
+- (instancetype)initWithImage:(UIImage *)image andFilePath:(NSString *)url
 {
     self = [super init];
     if (self) {
         _image = [UIImage imageWithCGImage:image.CGImage];
+        _photoURL = url;
         _cachedImageView = nil;
     }
     return self;
