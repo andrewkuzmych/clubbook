@@ -97,7 +97,7 @@
     [self.distance setText:[NSString stringWithFormat:@"%d%@", distanceKm, NSLocalizedString(@"kilometers", nil)]];
     self.clubTable.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
-    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:15], UITextAttributeFont, nil];
+    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:15], NSFontAttributeName, nil];
     [self.segmentControl setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
     
     [self.segmentControl setTitle:[NSString stringWithFormat:NSLocalizedString(@"nearby", nil)] forSegmentAtIndex:0];
@@ -161,6 +161,7 @@
     self.searchBar.delegate = self;
     
     //set view on first filter option
+    selectedClubType = @"";
     [self loadAllTypeClubs];
 
 }
@@ -393,7 +394,7 @@
     
     [cell.friendsCountLabel setText: [NSString stringWithFormat:@"%d", place.friendsCount]];
     
-    [cell.clubAvatar setImageWithURL:[NSURL URLWithString:place.avatar] placeholderImage:[UIImage imageNamed:@"avatar_default.png"]];
+    [cell.clubAvatar sd_setImageWithURL:[NSURL URLWithString:place.avatar] placeholderImage:[UIImage imageNamed:@"avatar_default.png"]];
     
     BOOL isCheckinHere = [LocationHelper isCheckinHere:place];
     if(isCheckinHere){
@@ -431,9 +432,8 @@
 {
     if([[segue identifier] isEqualToString:@"onClub"]){
         ClubUsersViewController *clubController =  [segue destinationViewController];
-        //NSIndexPath *selectedIndexPath = [self.clubTable indexPathForSelectedRow];
         Place *place = (Place*) sender;
-        clubController.place = place;//place.id;
+        clubController.place = place;
         clubController.hasBack = YES;
         self.isLoaded = NO;
     }
@@ -525,7 +525,7 @@
     sortDescriptor = [[NSSortDescriptor alloc] initWithKey:sortProperty
                                                      ascending:YES];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    _places = [_places sortedArrayUsingDescriptors:sortDescriptors];
+    _places = [[_places sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
     [self.clubTable reloadData];
 
 }
