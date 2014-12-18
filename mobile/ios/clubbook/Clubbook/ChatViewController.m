@@ -231,6 +231,12 @@
     self.collectionView.collectionViewLayout.springinessEnabled = NO;
 }
 
+- (void)closePressed:(UIBarButtonItem *)sender
+{
+    [self.delegateModal didDismissJSQDemoViewController:self];
+}
+
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
