@@ -58,6 +58,7 @@
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     self.revealViewController.delegate = self;
+    [self.revealViewController.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
 }
 
 - (void)failedWithError:(NSError *)error
