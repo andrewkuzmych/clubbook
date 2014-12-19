@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,8 +39,10 @@ import com.nl.clubbook.fragment.ClubFragment;
 import com.nl.clubbook.fragment.ClubsListFragment;
 import com.nl.clubbook.fragment.FastCheckInFragment;
 import com.nl.clubbook.fragment.FriendsFragment;
+import com.nl.clubbook.fragment.GoingOutFragment;
 import com.nl.clubbook.fragment.MessagesFragment;
 import com.nl.clubbook.fragment.SettingsFragment;
+import com.nl.clubbook.fragment.UsersNearbyFragment;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.CheckInOutCallbackInterface;
 import com.nl.clubbook.helper.ImageHelper;
@@ -94,6 +96,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_main);
 
+        setUpToolBar();
         initReceivers();
 
         if (!getSession().isLoggedIn()) {
@@ -104,7 +107,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
 
         initFragment();
-        initActionBar();
+        initActionBar("");
         initNavDrawer();
 
         loadData();
@@ -290,10 +293,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void initNavDrawer() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.listDrawer);
-        mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout,
-                R.drawable.ic_drawer,  R.string.drawer_open, R.string.drawer_close) {
+        mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             public void onDrawerClosed(View view) {
             }
 
@@ -428,18 +432,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void initFragment() {
-        fragmentMap.put(NavDrawerData.CLUB_LIST_POSITION, new ClubsListFragment());
+        fragmentMap.put(NavDrawerData.GOING_OUT_POSITION, new GoingOutFragment());
         fragmentMap.put(NavDrawerData.MESSAGES_POSITION, new MessagesFragment());
         fragmentMap.put(NavDrawerData.FAST_CHECK_IN, new FastCheckInFragment());
-        fragmentMap.put(NavDrawerData.CLUB_CHECKED_IN, new CheckedInUsersFragment());
+        fragmentMap.put(NavDrawerData.USERS_NEARBY, new UsersNearbyFragment());
         fragmentMap.put(NavDrawerData.FRIENDS_POSITION, new FriendsFragment());
-    }
-
-    private void initActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
-
-        initActionBar("");
     }
 
     private void loadConfig() {

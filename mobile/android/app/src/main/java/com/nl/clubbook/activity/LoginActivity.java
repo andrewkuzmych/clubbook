@@ -25,10 +25,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
+        setContentView(R.layout.ac_login);
 
         sendScreenStatistic(R.string.login_screen_android);
 
+        setUpToolBar();
         initActionBar(R.string.log_in);
         initView();
     }

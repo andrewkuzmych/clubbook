@@ -102,34 +102,34 @@ public class FriendsFragment extends BaseFragment implements ViewPager.OnPageCha
     }
 
     private void initView() {
-        View view = getView();
-        if(view == null) {
-            return;
-        }
-
-        //init TabHost
-        mTabHost = (TabHost) view.findViewById(android.R.id.tabhost);
-        mTabHost.setup();
-
-        mTabHost.addTab(newTabSpec(mTabHost, getString(R.string.friends)));
-        mTabHost.addTab(newTabSpec(mTabHost, getString(R.string.requests)));
-        mTabHost.addTab(newTabSpec(mTabHost, getString(R.string.add_plus)));
-
-        mTabHost.setOnTabChangedListener(this);
-
-        //init ViewPager
-        mFriendsPagerAdapter = new FriendsPagerAdapter(getChildFragmentManager(), FriendsFragment.this);
-        mViewPager = (ViewPager)view.findViewById(R.id.viewPager);
-        mViewPager.setOffscreenPageLimit(mFriendsPagerAdapter.getCount());
-        mViewPager.setAdapter(mFriendsPagerAdapter);
-        mViewPager.setOnPageChangeListener(this);
+//        View view = getView(); //TODO
+//        if(view == null) {
+//            return;
+//        }
+//
+//        //init TabHost
+//        mTabHost = (TabHost) view.findViewById(android.R.id.tabhost);
+//        mTabHost.setup();
+//
+//        mTabHost.addTab(newTabSpec(mTabHost, getString(R.string.friends)));
+//        mTabHost.addTab(newTabSpec(mTabHost, getString(R.string.requests)));
+//        mTabHost.addTab(newTabSpec(mTabHost, getString(R.string.add_plus)));
+//
+//        mTabHost.setOnTabChangedListener(this);
+//
+//        //init ViewPager
+//        mFriendsPagerAdapter = new FriendsPagerAdapter(getChildFragmentManager(), FriendsFragment.this);
+//        mViewPager = (ViewPager)view.findViewById(R.id.viewPager);
+//        mViewPager.setOffscreenPageLimit(mFriendsPagerAdapter.getCount());
+//        mViewPager.setAdapter(mFriendsPagerAdapter);
+//        mViewPager.setOnPageChangeListener(this);
     }
 
-    private TabHost.TabSpec newTabSpec(TabHost tabHost, String tabIndicator) {
-        View tabIndicatorView = LayoutInflater.from(getActivity()).inflate(R.layout.apptheme_tab_indicator_holo, tabHost.getTabWidget(), false);
-        TextView title = (TextView) tabIndicatorView.findViewById(android.R.id.title);
-        title.setText(tabIndicator);
-
-        return tabHost.newTabSpec(tabIndicator).setContent(android.R.id.tabcontent).setIndicator(tabIndicatorView);
-    }
+//    private TabHost.TabSpec newTabSpec(TabHost tabHost, String tabIndicator) {
+//        View tabIndicatorView = LayoutInflater.from(getActivity()).inflate(R.layout.apptheme_tab_indicator_holo, tabHost.getTabWidget(), false);
+//        TextView title = (TextView) tabIndicatorView.findViewById(android.R.id.title);
+//        title.setText(tabIndicator);
+//
+//        return tabHost.newTabSpec(tabIndicator).setContent(android.R.id.tabcontent).setIndicator(tabIndicatorView);
+//    }
 }

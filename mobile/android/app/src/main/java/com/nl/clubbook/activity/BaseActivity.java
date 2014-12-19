@@ -6,11 +6,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.nl.clubbook.ClubbookApplication;
+import com.nl.clubbook.R;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.SessionManager;
@@ -36,18 +38,6 @@ public class BaseActivity extends ActionBarActivity {
         mTracker = ((ClubbookApplication)getApplicationContext()).getTracker();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        //EasyTracker.getInstance(this).activityStart(this);  // Add this method.
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        //EasyTracker.getInstance(this).activityStop(this);  // Add this method.
-    }
-
     public void sendScreenStatistic(int stringResourceId) {
         sendScreenStatistic(getString(stringResourceId));
     }
@@ -55,6 +45,11 @@ public class BaseActivity extends ActionBarActivity {
     public void sendScreenStatistic(String screenName) {
         mTracker.setScreenName(MainActivity.class.getSimpleName());
         mTracker.send(new HitBuilders.AppViewBuilder().build());
+    }
+
+    protected void setUpToolBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
     public boolean isProgressShow() {

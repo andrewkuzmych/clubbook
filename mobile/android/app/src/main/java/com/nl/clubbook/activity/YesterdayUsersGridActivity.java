@@ -36,6 +36,7 @@ public class YesterdayUsersGridActivity extends BaseActivity implements AdapterV
 
         sendScreenStatistic(R.string.yesterday_checked_in_users_android);
 
+        setUpToolBar();
         initActionBar(R.string.club_profile);
         loadCheckedInUsers();
     }

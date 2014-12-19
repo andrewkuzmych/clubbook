@@ -44,7 +44,6 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.ac_main_login);
 
         sendScreenStatistic(R.string.main_login_screen_android);

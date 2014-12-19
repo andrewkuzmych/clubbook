@@ -61,6 +61,8 @@
     <string name="saturday">Saturday</string>
     <string name="sunday">Sunday</string>
     <string name="clubs">Clubs</string>
+    <string name="going_out">Going Out</string>
+    <string name="users_nearby">Users Nearby</string>
     <string name="checked_in_">Checked-In</string>
     <string name="fast_check_in">Fast Check-in</string>
     <string name="messages">Messages</string>

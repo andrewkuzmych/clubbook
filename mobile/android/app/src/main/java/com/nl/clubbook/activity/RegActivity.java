@@ -40,6 +40,7 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
 
         sendScreenStatistic(R.string.registration_screen_android);
 
+        setUpToolBar();
         initImageUploader();
         initActionBar(R.string.sing_up);
         initView();

@@ -12,15 +12,15 @@ import java.util.List;
  * Created by User on 19.08.2014.
  */
 public class NavDrawerData {
-    public static final int CLUB_LIST_POSITION = 0;
-    public static final int CLUB_CHECKED_IN= 1;
+    public static final int GOING_OUT_POSITION = 0;
+    public static final int USERS_NEARBY = 1;
     public static final int FAST_CHECK_IN = 2;
     public static final int MESSAGES_POSITION = 3;
     public static final int FRIENDS_POSITION = 4;
     public static final int SHARE_POSITION = 5;
     public static final int SETTINGS_POSITION = 6;
 
-    public static final int DEFAULT_FRAGMENT_NUMBER = CLUB_LIST_POSITION;
+    public static final int DEFAULT_FRAGMENT_NUMBER = GOING_OUT_POSITION;
 
     private NavDrawerData() {
     }
@@ -42,8 +42,8 @@ public class NavDrawerData {
     }
 
     public static final int[] DRAWER_TITLES_RESOURCES = new int[] {
-            R.string.clubs,
-            R.string.checked_in_,
+            R.string.going_out,
+            R.string.users_nearby,
             R.string.fast_check_in,
             R.string.messages,
             R.string.friends,

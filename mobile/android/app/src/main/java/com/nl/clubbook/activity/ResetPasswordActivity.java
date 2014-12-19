@@ -21,6 +21,7 @@ public class ResetPasswordActivity extends BaseActivity {
 
         sendScreenStatistic(R.string.reset_password_screen_android);
 
+        setUpToolBar();
         initActionBar(R.string.reset_password);
         initView();
     }
