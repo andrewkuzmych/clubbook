@@ -109,6 +109,10 @@
  */
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapCellAtIndexPath:(NSIndexPath *)indexPath touchLocation:(CGPoint)touchLocation;
 
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didLongPressAvatarImageView:(UIImageView *)avatarImageView atIndexPath:(NSIndexPath *)indexPath;
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didLongPressMessageBubbleAtIndexPath:(NSIndexPath *)indexPath;
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didLongPressCellAtIndexPath:(NSIndexPath *)indexPath touchLocation:(CGPoint)touchLocation;
+
 /**
  *  Notifies the delegate that the collection view's header did receive a tap event.
  *

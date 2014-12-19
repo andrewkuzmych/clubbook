@@ -23,6 +23,22 @@
 
 @class JSQMessagesCollectionViewCell;
 
+@protocol CustomActionMenuForMediaCellDelegate <NSObject>
+
+- (void) didPressDelete;
+
+@end
+
+@interface CustomActionMenuForMediaCell : UIView
+@property (strong, nonatomic) UIView* controlsView;
+@property (strong, nonatomic) UILabel* menuItemLabel;
+@property (strong, nonatomic) UIButton* yesButton;
+@property (strong, nonatomic) UIButton* noButton;
+@property (strong, nonatomic) id<CustomActionMenuForMediaCellDelegate> delegate;
+@property BOOL deleteMenuIsShown;
+
+@end
+
 /**
  *  The `JSQMessagesCollectionViewCellDelegate` protocol defines methods that allow you to manage
  *  additional interactions within the collection view cell.
@@ -60,6 +76,11 @@
  */
 - (void)messagesCollectionViewCellDidTapCell:(JSQMessagesCollectionViewCell *)cell atPosition:(CGPoint)position;
 
+
+- (void)messagesCollectionViewCellDidLongPressAvatar:(JSQMessagesCollectionViewCell *)cell;
+- (void)messagesCollectionViewCellDidLongPressMessageBubble:(JSQMessagesCollectionViewCell *)cell;
+- (void)messagesCollectionViewCellDidLongPressCell:(JSQMessagesCollectionViewCell *)cell atPosition:(CGPoint)position;
+
 @end
 
 
@@ -73,7 +94,7 @@
  *  @see JSQMessagesCollectionViewCellIncoming.
  *  @see JSQMessagesCollectionViewCellOutgoing.
  */
-@interface JSQMessagesCollectionViewCell : UICollectionViewCell
+@interface JSQMessagesCollectionViewCell : UICollectionViewCell <CustomActionMenuForMediaCellDelegate>
 
 /**
  *  The object that acts as the delegate for the cell.
@@ -179,5 +200,6 @@
  *  @return The string used to identify a reusable cell.
  */
 + (NSString *)mediaCellReuseIdentifier;
+- (void) cellDeselected;
 
 @end

@@ -165,4 +165,38 @@
                     touchLocation:position];
 }
 
+- (void)messagesCollectionViewCellDidLongPressAvatar:(JSQMessagesCollectionViewCell *)cell
+{
+    NSIndexPath *indexPath = [self indexPathForCell:cell];
+    if (indexPath == nil) {
+        return;
+    }
+    
+    [self.delegate collectionView:self
+            didLongPressAvatarImageView:cell.avatarImageView
+                      atIndexPath:indexPath];
+}
+
+- (void)messagesCollectionViewCellDidLongPressMessageBubble:(JSQMessagesCollectionViewCell *)cell
+{
+    NSIndexPath *indexPath = [self indexPathForCell:cell];
+    if (indexPath == nil) {
+        return;
+    }
+    
+    [self.delegate collectionView:self didLongPressMessageBubbleAtIndexPath:indexPath];
+}
+
+- (void)messagesCollectionViewCellDidLongPressCell:(JSQMessagesCollectionViewCell *)cell atPosition:(CGPoint)position
+{
+    NSIndexPath *indexPath = [self indexPathForCell:cell];
+    if (indexPath == nil) {
+        return;
+    }
+    
+    [self.delegate collectionView:self
+            didLongPressCellAtIndexPath:indexPath
+                    touchLocation:position];
+}
+
 @end

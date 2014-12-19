@@ -538,6 +538,20 @@
     }
 }
 
+-(void)collectionView:(JSQMessagesCollectionView *)collectionView didLongPressMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
+    JSQMessage* message = [self.messages objectAtIndex:indexPath.item];
+    JSQMessagesCollectionViewCell *cell = (JSQMessagesCollectionViewCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
+    
+    if (message && message.isMediaMessage) {
+        UIMenuController* menuController = [UIMenuController sharedMenuController];
+        UIMenuItem *listMenuItem = [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(delete:)];
+        
+        [menuController setMenuItems:[NSArray arrayWithObject:listMenuItem]];
+        [menuController setTargetRect:cell.messageBubbleContainerView.frame inView: self.view];
+        [menuController setMenuVisible:YES animated:YES];
+    }
+}
+
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -557,6 +571,12 @@
 
 - (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
 {
+    if (action == @selector(delete:)) {
+        [self deleteItemAtIndex:indexPath];
+    }
+}
+
+- (void) deleteItemAtIndex:(NSIndexPath *)indexPath {
     NSInteger indexOfMessage = indexPath.item;
     [self.messages removeObjectAtIndex:indexOfMessage];
     [self.collectionView deleteItemsAtIndexPaths:@[indexPath]];
