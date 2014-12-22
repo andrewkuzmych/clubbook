@@ -15,6 +15,7 @@
 #import "SWRevealViewController.h"
 #import "LocationManagerSingleton.h"
 #import "UIImage+FixOrientation.h"
+#import "DateHelper.h"
 
 @interface ChatViewController (){
     bool canChat;
@@ -389,7 +390,15 @@
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
     JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
-    NSString* timeOnly = [[JSQMessagesTimestampFormatter sharedFormatter] timeForDate:message.date];
+    NSString* timeOnly;
+    
+    if ([[DateHelper sharedSingleton] is24hFormat]) {
+        timeOnly = [[DateHelper sharedSingleton] get24hTime:message.date];
+    }
+    else {
+        timeOnly = [[DateHelper sharedSingleton] get12hTime:message.date];
+    }
+
     return [[NSAttributedString alloc] initWithString:timeOnly];
 }
 
