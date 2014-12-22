@@ -74,4 +74,8 @@
     return YES;
 }
 
+- (BOOL)canBecomeFirstResponder {
+    return NO;
+}
+
 @end
