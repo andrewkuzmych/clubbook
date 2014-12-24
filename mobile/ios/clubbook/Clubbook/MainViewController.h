@@ -11,7 +11,7 @@
 #import "BaseViewController.h"
 #import "SPSlideTabBar.h"
 
-@interface MainViewController : BaseViewController<UITableViewDelegate, UITableViewDataSource, PNDelegate, SPSlideTabBarDelegate, UISearchBarDelegate>{
+@interface MainViewController : BaseViewController<UITableViewDelegate, UITableViewDataSource, PNDelegate, SPSlideTabBarDelegate, UISearchBarDelegate, UIScrollViewDelegate>{
  CLLocationManager *locationManager;
 }
 @property (weak, nonatomic) IBOutlet UITableView *clubTable;

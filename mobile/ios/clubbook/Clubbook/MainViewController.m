@@ -27,7 +27,7 @@
 #import "SVPullToRefresh.h"
 #import "SPSlideTabButton.h"
 
-@interface MainViewController ()<UINavigationControllerDelegate>{
+@interface MainViewController ()<UINavigationControllerDelegate, UINavigationBarDelegate>{
    // NSArray *_places;
     BOOL isInitialLoad;
     int distanceKm;
@@ -35,6 +35,9 @@
     
     BOOL isSearchBarShown;
     float searchBarHeight;
+    
+    CGFloat lastContentOffset;
+    UIView* blankView;
 }
 
 @property (nonatomic) NSTimer* locationUpdateTimer;
@@ -163,7 +166,8 @@
     //set view on first filter option
     selectedClubType = @"";
     [self loadAllTypeClubs];
-
+    
+    [self.view setBackgroundColor:self.filterTabBar.backgroundColor];
 }
 
 - (void)appplicationIsActive:(NSNotification *)notification {
@@ -235,7 +239,6 @@
 }
 
 - (void)insertRowAtBottom {
-    
     int countToSkip = [self.places count];
      [self loadClubType:selectedClubType take:10 skip:countToSkip];
 
@@ -267,7 +270,7 @@
         self.title = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Going Out", nil)];
         
         self.clubTable.hidden = NO;
-        
+
         [self.clubTable.pullToRefreshView stopAnimating];
         [self.clubTable.infiniteScrollingView stopAnimating];
         CGPoint positin = self.clubTable.contentOffset;
@@ -627,5 +630,30 @@
     }];
 }
 
+-(void) scrollViewDidScroll:(UIScrollView *)scrollView {
+    
+    if(self.clubTable.pullToRefreshView.state || scrollView.contentOffset.y <= -10) { //|| dontHideNavBar) {
+       return;
+    }
+    //scrolled up
+    if (lastContentOffset < scrollView.contentOffset.y - 10) {
+        [self.searchBar setHidden:YES];
+        if (isSearchBarShown) {
+           [self handleSearchButton:nil];
+        }
+        [[self navigationController] setNavigationBarHidden:YES animated:YES];
+    }
+    //scrolled down
+    else if (lastContentOffset > scrollView.contentOffset.y + 5)  {
+        [[self navigationController] setNavigationBarHidden:NO animated:YES];
+     }
+    lastContentOffset = scrollView.contentOffset.y;
+}
 
+
+-(void) scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    if ([self.searchBar isHidden] && ![[self navigationController] isNavigationBarHidden]) {
+        [self.searchBar setHidden:NO];
+    }
+}
 @end
