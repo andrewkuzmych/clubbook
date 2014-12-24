@@ -139,6 +139,18 @@
     [cell.unreadMsgCount setText: [NSString stringWithFormat:@"%ld", (long)chat.unreadMessages]];
     cell.unreadMsgCount.hidden = (chat.unreadMessages == 0);
     
+    //get date of last message
+    NSUInteger messageCount = [chat.conversations count];
+    Conversation *lastMessage = [chat.conversations objectAtIndex:messageCount - 1];
+    
+    NSDate* lastMessageDate = lastMessage.time;
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"dd/MM/yyyy"];
+    NSString* stringFromDate = [formatter stringFromDate:lastMessageDate];
+    [cell.lastMessageLabel setText:stringFromDate];
+    [cell.lastMessageLabel setTextAlignment:NSTextAlignmentRight];
+    
     //[cell.checkinButton setBackgroundColor:[UIColor colorWithRed:92/255.0 green:142/255.0 blue:95/255.0 alpha:1.0] forState:UIControlStateNormal];
     
     //[cell.checkinButton setBackgroundColor:[UIColor colorWithRed:115/255.0 green:178/255.0 blue:119/255.0 alpha:1.0] forState:UIControlStateHighlighted];

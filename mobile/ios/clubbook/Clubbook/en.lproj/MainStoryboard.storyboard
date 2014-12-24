@@ -1520,6 +1520,12 @@
                                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                                             </userDefinedRuntimeAttributes>
                                                         </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Last message" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VOW-lb-fk6">
+                                                            <rect key="frame" x="236" y="47" width="73" height="21"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                                            <color key="textColor" red="0.49131176784308844" green="0.014262363481307567" blue="0.57147648358585856" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                 </view>
@@ -1532,6 +1538,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="lastMessageLabel" destination="VOW-lb-fk6" id="PKw-Z8-beC"/>
                                             <outlet property="messageLabel" destination="ple-La-CvF" id="OBC-Ut-DkQ"/>
                                             <outlet property="unreadMsgCount" destination="9wY-vl-rQH" id="iOc-8G-qsf"/>
                                             <outlet property="userAvatar" destination="Dlp-4m-sai" id="5XT-Qn-44z"/>
@@ -1567,7 +1574,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ddC-nc-bz0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2992" y="-327"/>
+            <point key="canvasLocation" x="-2992" y="-329"/>
         </scene>
         <!--Profile Pages View Controller-->
         <scene sceneID="e0r-me-BM5">
