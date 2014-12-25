@@ -532,15 +532,15 @@ public class DataStore {
         });
     }
 
-    //    GET /_s/obj/users/checkedin?user_lat=52.448866&user_lon=4.805236&distance=100&access_token=
-    public static void retrieveCurrentCheckedInUsers(String accessToken, String userLat, String userLong, String distance, final OnResultReady onResultReady) {
+    public static void retrieveNearbyUsers(String requestType, String gender, String accessToken, String userLat, String userLong, String distance, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("gender", gender);
         params.put("user_lat", userLat);
         params.put("user_lon", userLong);
         params.put("distance", distance);
         params.put("access_token", accessToken);
 
-        ClubbookRestClient.retrieveCurrentCheckedInUsers(params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.retrieveNearbyUsers(requestType, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 String status = responseJson.optString("status");

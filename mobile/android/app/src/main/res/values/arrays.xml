@@ -18,6 +18,11 @@
         <item>@string/wall</item>
     </string-array>
 
+    <string-array name="users_nearby_titles">
+        <item>@string/all</item>
+        <item>@string/checked_in</item>
+    </string-array>
+
     <integer-array name="colors">
         <item>@color/material_blue</item>
         <item>@color/material_red</item>
