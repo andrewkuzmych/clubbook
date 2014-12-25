@@ -37,4 +37,11 @@
     <color name="holo_green_light">#ff99cc00</color>
     <color name="holo_orange_light">#ffffbb33</color>
     <color name="holo_red_light">#ffff4444</color>
+
+    <!--CircularProgressBar-->
+    <color name="material_blue">#3476E6</color>
+    <color name="material_yellow">#F38626</color>
+    <color name="material_green">#1B8A5D</color>
+    <color name="material_red">#D63629</color>
+
 </resources>

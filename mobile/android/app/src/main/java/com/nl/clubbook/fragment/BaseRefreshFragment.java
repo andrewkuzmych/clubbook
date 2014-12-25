@@ -13,6 +13,9 @@ import com.nl.clubbook.utils.NetworkUtils;
  */
 public abstract class BaseRefreshFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
+    public static final int DEFAULT_CLUBS_COUNT = 20;
+    public static final int DEFAULT_CLUBS_SKIP = 0;
+
     protected SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override

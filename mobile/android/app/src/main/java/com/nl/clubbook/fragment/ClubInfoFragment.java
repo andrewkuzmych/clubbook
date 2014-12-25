@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -17,14 +16,12 @@ import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.ImagesGalleryActivity;
 import com.nl.clubbook.adapter.ClubPhotoPagerAdapter;
-import com.nl.clubbook.datasource.Club;
+import com.nl.clubbook.datasource.Place;
 import com.nl.clubbook.datasource.ClubWorkingHours;
 import com.nl.clubbook.datasource.JSONConverter;
-import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.ui.view.ViewPagerBulletIndicatorView;
 import com.nl.clubbook.utils.L;
-import com.nl.clubbook.utils.UIUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -91,47 +88,42 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
         }
 
         String jsonClub = args.getString(ARG_JSON_CLUB);
-        Club club = JSONConverter.newClub(jsonClub);
-        if(club == null) {
+        Place place = JSONConverter.newPlace(jsonClub);
+        if(place == null) {
             L.i("club = null");
             return;
         }
 
-        fillView(view, club);
+        fillView(view, place);
     }
 
-    private void fillView(@NotNull View view, @NotNull Club club) {
-        initViewPager(view, club.getPhotos());
+    private void fillView(@NotNull View view, @NotNull Place place) {
+        initViewPager(view, place.getPhotos());
 
-        String info = club.getInfo();
+        String info = place.getInfo();
         if(!setTextToTextView(view, info, R.id.txtAbout)) {
             view.findViewById(R.id.dividerInfo).setVisibility(View.GONE);
             view.findViewById(R.id.txtLabelAbout).setVisibility(View.GONE);
         }
 
-        fillLocationHolder(view, club);
-        fillClubRequirementsHolder(view, club);
-        fillContactHolder(view, club);
-        fillWorkingHoursHolder(view, club);
-
-        String avatarUrl = club.getAvatar();
-        if(avatarUrl != null && !avatarUrl.isEmpty()) {
-            UIUtils.loadPhotoToActionBar((ActionBarActivity)getActivity(), ImageHelper.getUserListAvatar(avatarUrl), mTarget);
-        }
+        fillLocationHolder(view, place);
+        fillClubRequirementsHolder(view, place);
+        fillContactHolder(view, place);
+        fillWorkingHoursHolder(view, place);
     }
 
-    private void fillContactHolder(View view, Club club) {
+    private void fillContactHolder(View view, Place place) {
         boolean result = false;
 
-        if(fillTextViewHolder(view, club.getPhone(), R.id.txtPhone, R.id.txtPhone)) {
+        if(fillTextViewHolder(view, place.getPhone(), R.id.txtPhone, R.id.txtPhone)) {
             result = true;
         }
 
-        if(fillTextViewHolder(view, club.getWebsite(), R.id.txtWebsite, R.id.txtWebsite)) {
+        if(fillTextViewHolder(view, place.getWebsite(), R.id.txtWebsite, R.id.txtWebsite)) {
             result = true;
         }
 
-        if(fillTextViewHolder(view, club.getEmail(), R.id.txtEmail, R.id.txtEmail)) {
+        if(fillTextViewHolder(view, place.getEmail(), R.id.txtEmail, R.id.txtEmail)) {
             result = true;
         }
 
@@ -141,11 +133,11 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
         }
     }
 
-    private void fillLocationHolder(View view, Club club) {
+    private void fillLocationHolder(View view, Place place) {
         boolean result = false;
 
         TextView txtLocation = (TextView) view.findViewById(R.id.txtLocation);
-        String address = club.getAddress();
+        String address = place.getAddress();
         if(address != null && address.length() > 0) {
             result = true;
             txtLocation.setText(address != null ? address : "");
@@ -153,7 +145,7 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
             txtLocation.setVisibility(View.INVISIBLE);
         }
 
-        String distance = LocationCheckinHelper.formatDistance(getActivity().getApplicationContext(), club.getDistance());
+        String distance = LocationCheckinHelper.formatDistance(getActivity().getApplicationContext(), place.getDistance());
         TextView txtDistance = (TextView) view.findViewById(R.id.txtDistance);
         if(distance != null && distance.length() > 0) {
             result = true;
@@ -168,14 +160,14 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
         }
     }
 
-    private void fillClubRequirementsHolder(View view, Club club) {
+    private void fillClubRequirementsHolder(View view, Place place) {
         boolean result = false;
 
-        if(fillTextViewHolder(view, club.getAgeRestriction(), R.id.txtAgeRestriction, R.id.holderAgeRestriction)) {
+        if(fillTextViewHolder(view, place.getAgeRestriction(), R.id.txtAgeRestriction, R.id.holderAgeRestriction)) {
             result = true;
         }
 
-        if(fillTextViewHolder(view, club.getCapacity(), R.id.txtCapacity, R.id.holderCapacity)) {
+        if(fillTextViewHolder(view, place.getCapacity(), R.id.txtCapacity, R.id.holderCapacity)) {
             result = true;
         }
 
@@ -185,12 +177,12 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
         }
     }
 
-    private void fillWorkingHoursHolder(View view, Club club) {
+    private void fillWorkingHoursHolder(View view, Place place) {
         boolean result = false;
 
         //fill today working hours
         TextView txtHours = (TextView) view.findViewById(R.id.txtHours);
-        ClubWorkingHours workHours = club.getTodayWorkingHours();
+        ClubWorkingHours workHours = place.getTodayWorkingHours();
         if(workHours != null) {
             result = true;
 
@@ -232,7 +224,7 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
         int calendarDayOfWeekIndex =  calendar.get(Calendar.DAY_OF_WEEK);
 
         LinearLayout holderWorkingHours = (LinearLayout)view.findViewById(R.id.holderWorkingHours);
-        List<ClubWorkingHours> workingHours = club.getWorkingHours();
+        List<ClubWorkingHours> workingHours = place.getWorkingHours();
         if(workingHours != null && !workingHours.isEmpty()) {
             result = true;
             LayoutInflater inflater = LayoutInflater.from(getActivity());

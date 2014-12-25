@@ -134,80 +134,80 @@ public class JSONConverter {
         return checkIn;
     }
 
-    public static List<Club> newClubList(@Nullable JSONArray jsonArrClub) {
-        if(jsonArrClub == null) {
-            return new ArrayList<Club>();
+    public static List<Place> newPlaceList(@Nullable JSONArray jsonArrPlaces) {
+        if(jsonArrPlaces == null) {
+            return new ArrayList<Place>();
         }
 
-        List<Club> result = new ArrayList<Club>();
-        for(int i = 0; i < jsonArrClub.length(); i++) {
-            JSONObject jsonClub = jsonArrClub.optJSONObject(i);
-            Club club = newClub(jsonClub);
+        List<Place> result = new ArrayList<Place>();
+        for(int i = 0; i < jsonArrPlaces.length(); i++) {
+            JSONObject jsonPlace = jsonArrPlaces.optJSONObject(i);
+            Place place = newPlace(jsonPlace);
 
-            if(club != null) {
-                result.add(club);
+            if(place != null) {
+                result.add(place);
             }
         }
 
         return result;
     }
 
-    public static Club newClub(@Nullable String strJsonClub) {
+    public static Place newPlace(@Nullable String strJsonClub) {
         if(strJsonClub == null) {
             return null;
         }
 
-        Club club = null;
+        Place place = null;
 
         try {
-            JSONObject jsonClub = new JSONObject(strJsonClub);
-            club = newClub(jsonClub);
+            JSONObject jsonPlace = new JSONObject(strJsonClub);
+            place = newPlace(jsonPlace);
         } catch (JSONException e) {
             L.v("" + e);
         }
 
-        return club;
+        return place;
     }
 
-    public static Club newClub(@Nullable JSONObject jsonClub) {
-        if(jsonClub == null) {
+    public static Place newPlace(@Nullable JSONObject jsonPlace) {
+        if(jsonPlace == null) {
             return null;
         }
 
-        Club club = new Club();
+        Place place = new Place();
 
-        club.setId(jsonClub.optString("id"));
-        club.setTitle(jsonClub.optString("club_name"));
-        club.setPhone(jsonClub.optString("club_phone"));
-        club.setAddress(jsonClub.optString("club_address"));
-        club.setAvatar(jsonClub.optString("club_logo"));
-        club.setActiveCheckIns(jsonClub.optInt("active_checkins"));
-        club.setActiveFriendsCheckIns(jsonClub.optInt("active_friends_checkins"));
-        club.setInfo(jsonClub.optString("club_info"));
-        club.setAgeRestriction(jsonClub.optString("club_age_restriction"));
-        club.setDressCode(jsonClub.optString("club_dress_code"));
-        club.setCapacity(jsonClub.optString("club_capacity"));
-        club.setWebsite(jsonClub.optString("club_site"));
-        club.setEmail(jsonClub.optString("club_email"));
+        place.setId(jsonPlace.optString("id"));
+        place.setTitle(jsonPlace.optString("club_name"));
+        place.setPhone(jsonPlace.optString("club_phone"));
+        place.setAddress(jsonPlace.optString("club_address"));
+        place.setAvatar(jsonPlace.optString("club_logo"));
+        place.setActiveCheckIns(jsonPlace.optInt("active_checkins"));
+        place.setActiveFriendsCheckIns(jsonPlace.optInt("active_friends_checkins"));
+        place.setInfo(jsonPlace.optString("club_info"));
+        place.setAgeRestriction(jsonPlace.optString("club_age_restriction"));
+        place.setDressCode(jsonPlace.optString("club_dress_code"));
+        place.setCapacity(jsonPlace.optString("club_capacity"));
+        place.setWebsite(jsonPlace.optString("club_site"));
+        place.setEmail(jsonPlace.optString("club_email"));
 
-        JSONObject jsonClubLocation = jsonClub.optJSONObject("club_loc");
+        JSONObject jsonClubLocation = jsonPlace.optJSONObject("club_loc");
         if(jsonClubLocation != null) {
-            club.setLon(jsonClubLocation.optDouble("lon"));
-            club.setLat(jsonClubLocation.optDouble("lat"));
-            club.setDistance(LocationCheckinHelper.getInstance().calculateDistance(club.getLat(), club.getLon()));
+            place.setLon(jsonClubLocation.optDouble("lon"));
+            place.setLat(jsonClubLocation.optDouble("lat"));
+            place.setDistance(LocationCheckinHelper.getInstance().calculateDistance(place.getLat(), place.getLon()));
         }
 
         List<String> photos = new ArrayList<String>();
-        JSONArray jsonArrPhotos = jsonClub.optJSONArray("club_photos");
+        JSONArray jsonArrPhotos = jsonPlace.optJSONArray("club_photos");
         if(jsonArrPhotos != null) {
             for (int i = 0; i < jsonArrPhotos.length(); i++) {
                 photos.add(jsonArrPhotos.optString(i, ""));
             }
         }
-        club.setPhotos(photos);
+        place.setPhotos(photos);
 
         List<ClubWorkingHours> workingHours = new ArrayList<ClubWorkingHours>();
-        JSONArray jsonArrHours = jsonClub.optJSONArray("club_working_hours");
+        JSONArray jsonArrHours = jsonPlace.optJSONArray("club_working_hours");
         if(jsonArrHours != null) {
             for(int i = 0; i < jsonArrHours.length(); i++) {
                 JSONObject jsonWorkHours = jsonArrHours.optJSONObject(i);
@@ -217,46 +217,46 @@ public class JSONConverter {
                 }
             }
         }
-        club.setWorkingHours(workingHours);
+        place.setWorkingHours(workingHours);
 
-        JSONObject jsonWorkingHours = jsonClub.optJSONObject("club_today_working_hours");
+        JSONObject jsonWorkingHours = jsonPlace.optJSONObject("club_today_working_hours");
         ClubWorkingHours todayWorkingHours = newClubWorkingHours(jsonWorkingHours);
-        club.setTodayWorkingHours(todayWorkingHours);
+        place.setTodayWorkingHours(todayWorkingHours);
 
-        return club;
+        return place;
     }
 
-    public static JSONObject newClub(@Nullable Club club) {
-        if(club == null) {
+    public static JSONObject newClub(@Nullable Place place) {
+        if(place == null) {
             return null;
         }
 
         JSONObject jsonClub = new JSONObject();
 
         try {
-            jsonClub.put("id", club.getId());
-            jsonClub.put("club_name", club.getTitle());
-            jsonClub.put("club_phone", club.getPhone());
-            jsonClub.put("club_address", club.getAddress());
-            jsonClub.put("club_logo", club.getAvatar());
-            jsonClub.put("active_checkins", club.getActiveCheckIns());
-            jsonClub.put("active_friends_checkins", club.getActiveFriendsCheckIns());
-            jsonClub.put("club_info", club.getInfo());
-            jsonClub.put("club_age_restriction", club.getAgeRestriction());
-            jsonClub.put("club_dress_code", club.getDressCode());
-            jsonClub.put("club_capacity", club.getCapacity());
-            jsonClub.put("club_site", club.getWebsite());
-            jsonClub.put("club_email", club.getEmail());
+            jsonClub.put("id", place.getId());
+            jsonClub.put("club_name", place.getTitle());
+            jsonClub.put("club_phone", place.getPhone());
+            jsonClub.put("club_address", place.getAddress());
+            jsonClub.put("club_logo", place.getAvatar());
+            jsonClub.put("active_checkins", place.getActiveCheckIns());
+            jsonClub.put("active_friends_checkins", place.getActiveFriendsCheckIns());
+            jsonClub.put("club_info", place.getInfo());
+            jsonClub.put("club_age_restriction", place.getAgeRestriction());
+            jsonClub.put("club_dress_code", place.getDressCode());
+            jsonClub.put("club_capacity", place.getCapacity());
+            jsonClub.put("club_site", place.getWebsite());
+            jsonClub.put("club_email", place.getEmail());
 
             JSONObject jsonLocation = new JSONObject();
-            jsonLocation.put("lon", club.getLon());
-            jsonLocation.put("lat", club.getLat());
+            jsonLocation.put("lon", place.getLon());
+            jsonLocation.put("lat", place.getLat());
             jsonClub.put("club_loc", jsonLocation);
 
-            jsonClub.put("club_today_working_hours", newClubWorkingHours(club.getTodayWorkingHours()));
+            jsonClub.put("club_today_working_hours", newClubWorkingHours(place.getTodayWorkingHours()));
 
             JSONArray jsonArrPhotos = new JSONArray();
-            List<String> photos = club.getPhotos();
+            List<String> photos = place.getPhotos();
             if(photos != null) {
                 for (int i = 0; i < photos.size(); i++) {
                     jsonArrPhotos.put(i, photos.get(i));
@@ -265,7 +265,7 @@ public class JSONConverter {
             jsonClub.put("club_photos", jsonArrPhotos);
 
             JSONArray jsonArrHours = new JSONArray();
-            List<ClubWorkingHours> workingHours = club.getWorkingHours();
+            List<ClubWorkingHours> workingHours = place.getWorkingHours();
             if(workingHours != null) {
                 for (int i = 0; i < workingHours.size(); i++) {
                     ClubWorkingHours workHours = workingHours.get(i);

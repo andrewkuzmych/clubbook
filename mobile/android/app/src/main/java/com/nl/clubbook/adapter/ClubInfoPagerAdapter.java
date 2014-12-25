@@ -17,11 +17,13 @@ public class ClubInfoPagerAdapter extends FragmentPagerAdapter {
 
     public static final int FRAGMENT_COUNT = 2;
 
+    private String[] mTitles;
     private String mJsonClub;
 
-    public ClubInfoPagerAdapter(FragmentManager fm, String jsonClub) {
+    public ClubInfoPagerAdapter(FragmentManager fm, String[] titles, String jsonClub) {
         super(fm);
 
+        mTitles = titles;
         mJsonClub = jsonClub;
     }
 
@@ -36,6 +38,11 @@ public class ClubInfoPagerAdapter extends FragmentPagerAdapter {
         }
 
         return fragment;
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return mTitles[position];
     }
 
     @Override

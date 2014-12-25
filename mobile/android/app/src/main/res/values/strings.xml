@@ -177,8 +177,6 @@
     <string name="block_user_process">Block user&#8230;</string>
     <string name="unblock_user_process">Unblock user&#8230;</string>
     <string name="you_cannot_add_remove_friend_when_user_is_blocked">You can\'t add, remove friend when user is blocked</string>
-
-    <!--New-->
     <string name="you_will_be_automatically_checked_in_to_this_club">You will be automatically Checked-in to this Club for 6 hours, or until you manually Check-out or Check-in to another Club</string>
     <string name="ok_got_it">Ok, got it</string>
     <string name="add_friends">Add friends</string>
@@ -200,7 +198,9 @@
     <string name="users_checked_in_yesterday">Users Checked-in Yesterday</string>
     <string name="sorry_you_cannot_access_this_information">Sorry, you cannot access this information, because you were not Checked-in to this Club yesterday</string>
     <string name="there_are_no_fast_check_in_spots_available">There are no Fast Check-in spots available</string>
-    <!---->
+
+    <string name="all">All</string>
+    <string name="bars_and_cafes">Bars&amp;Cafes</string>
 
     <!--For Google Analytics-->
     <string name="sidebar_screen_android">Sidebar Screen Android</string>

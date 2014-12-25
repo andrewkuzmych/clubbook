@@ -10,7 +10,7 @@
         android:layout_below="@android:id/tabhost">
 
         <ListView
-            android:id="@+id/listClub"
+            android:id="@+id/listPlaces"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:dividerHeight="1dp" />

@@ -16,7 +16,6 @@ import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.helper.SingleUsersHolder;
 import com.nl.clubbook.utils.NetworkUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class YesterdayUsersGridActivity extends BaseActivity implements AdapterV
 
         sendScreenStatistic(R.string.yesterday_checked_in_users_android);
 
-        setUpToolBar();
+        setupToolBar();
         initActionBar(R.string.club_profile);
         loadCheckedInUsers();
     }

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Andrew on 5/27/2014.
  */
-public class Club implements Parcelable {
+public class Place implements Parcelable {
 
     private String id;
     private String title;
@@ -32,10 +32,10 @@ public class Club implements Parcelable {
     private List<ClubWorkingHours> workingHours = new ArrayList<ClubWorkingHours>();
     private List<String> photos = new ArrayList<String>();
 
-    public Club() {
+    public Place() {
     }
 
-    public Club(Parcel in) {
+    public Place(Parcel in) {
         id = in.readString();
         title = in.readString();
         phone = in.readString();
@@ -250,15 +250,15 @@ public class Club implements Parcelable {
         dest.writeStringList(photos);
     }
 
-    public static final Creator<Club> CREATOR = new Creator<Club>() {
+    public static final Creator<Place> CREATOR = new Creator<Place>() {
         @Override
-        public Club createFromParcel(Parcel source) {
-            return new Club(source);
+        public Place createFromParcel(Parcel source) {
+            return new Place(source);
         }
 
         @Override
-        public Club[] newArray(int size) {
-            return new Club[size];
+        public Place[] newArray(int size) {
+            return new Place[size];
         }
     };
 }

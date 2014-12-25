@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +28,6 @@ import com.nl.clubbook.utils.CalendarUtils;
 import com.nl.clubbook.utils.KeyboardUtils;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
-import com.nl.clubbook.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,7 +81,6 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
         initTarget();
 
-        UIUtils.displayEmptyIconInActionBar((ActionBarActivity)getActivity());
         handleArgs();
         initView();
         loadConversation();
@@ -154,10 +151,6 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         String userPhotoUrl = args.getString(ARG_USER_PHOTO_URL);
 
         initActionBarTitle(userName != null ? userName : "");
-
-        if(userPhotoUrl != null && !userPhotoUrl.isEmpty()) {
-            UIUtils.loadPhotoToActionBar((ActionBarActivity)getActivity(), userPhotoUrl, mTarget);
-        }
     }
 
     private void initView() {

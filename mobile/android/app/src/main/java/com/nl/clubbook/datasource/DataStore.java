@@ -393,24 +393,24 @@ public class DataStore {
         });
     }
 
-    public static void retrievePlaces(String skip, String take, String lat, String lon, String accessToken, final OnResultReady onResultReady) {
+    public static void retrievePlaces(String type, String search, String skip, String take, String lat, String lon, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.add("skip", skip);
         params.add("take", take);
         params.add("user_lat", lat);
         params.add("user_lon", lon);
+        params.add("type", type);
+        params.add("search", search);
         params.add("access_token", accessToken);
 
         ClubbookRestClient.retrievePlaces(params, new JsonHttpResponseHandler() {
-            private boolean failed = true;
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 JSONArray jsonArrClubs = responseJson.optJSONArray("clubs");
-                List<Club> clubs = JSONConverter.newClubList(jsonArrClubs);
+                List<Place> places = JSONConverter.newPlaceList(jsonArrClubs);
 
-                failed = false;
-                onResultReady.onReady(clubs, failed);
+                onResultReady.onReady(places, false);
             }
 
             @Override
@@ -433,15 +433,13 @@ public class DataStore {
         params.add("distance", distance);
 
         ClubbookRestClient.retrievePlaces(params, new JsonHttpResponseHandler() {
-            private boolean failed = true;
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 JSONArray jsonArrClubs = responseJson.optJSONArray("clubs");
-                List<Club> clubs = JSONConverter.newClubList(jsonArrClubs);
+                List<Place> places = JSONConverter.newPlaceList(jsonArrClubs);
 
-                failed = false;
-                onResultReady.onReady(clubs, failed);
+                onResultReady.onReady(places, false);
             }
 
             @Override

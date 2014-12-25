@@ -9,18 +9,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TabHost;
-import android.widget.TextView;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.FriendsPagerAdapter;
 
-public class FriendsFragment extends BaseFragment implements ViewPager.OnPageChangeListener,
-        TabHost.OnTabChangeListener, PendingFriendsFragment.OnFriendRequestAcceptedListener {
+public class FriendsFragment extends BaseFragment implements PendingFriendsFragment.OnFriendRequestAcceptedListener {
 
-    private ViewPager mViewPager;
     private FriendsPagerAdapter mFriendsPagerAdapter;
-    private TabHost mTabHost;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +47,7 @@ public class FriendsFragment extends BaseFragment implements ViewPager.OnPageCha
 
         if(!hidden) {
             ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
-            actionBar.setIcon(R.drawable.icon_play);
+//            actionBar.setIcon(R.drawable.icon_play);
             actionBar.setTitle(R.string.friend_list);
         }
     }
@@ -65,33 +61,6 @@ public class FriendsFragment extends BaseFragment implements ViewPager.OnPageCha
     }
 
     @Override
-    public void onTabChanged(String tabId) {
-        String friends = getString(R.string.friends);
-        String requests = getString(R.string.requests);
-
-        if(friends.equalsIgnoreCase(tabId)) {
-            mViewPager.setCurrentItem(FriendsPagerAdapter.INDEX_FRIENDS_LIST);
-        } else if(requests.equalsIgnoreCase(tabId)) {
-            mViewPager.setCurrentItem(FriendsPagerAdapter.INDEX_PENDING_FRIENDS);
-        } else {
-            mViewPager.setCurrentItem(FriendsPagerAdapter.INDEX_ADD_INVITE_FRIENDS);
-        }
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int i) {
-    }
-
-    @Override
-    public void onPageScrolled(int i, float v, int i2) {
-    }
-
-    @Override
-    public void onPageSelected(int i) {
-        mTabHost.setCurrentTab(i);
-    }
-
-    @Override
     public void onFriendRequestAccepted() {
         Fragment fragment = mFriendsPagerAdapter.getFragmentByIndex(FriendsPagerAdapter.INDEX_FRIENDS_LIST);
 
@@ -102,34 +71,18 @@ public class FriendsFragment extends BaseFragment implements ViewPager.OnPageCha
     }
 
     private void initView() {
-//        View view = getView(); //TODO
-//        if(view == null) {
-//            return;
-//        }
-//
-//        //init TabHost
-//        mTabHost = (TabHost) view.findViewById(android.R.id.tabhost);
-//        mTabHost.setup();
-//
-//        mTabHost.addTab(newTabSpec(mTabHost, getString(R.string.friends)));
-//        mTabHost.addTab(newTabSpec(mTabHost, getString(R.string.requests)));
-//        mTabHost.addTab(newTabSpec(mTabHost, getString(R.string.add_plus)));
-//
-//        mTabHost.setOnTabChangedListener(this);
-//
-//        //init ViewPager
-//        mFriendsPagerAdapter = new FriendsPagerAdapter(getChildFragmentManager(), FriendsFragment.this);
-//        mViewPager = (ViewPager)view.findViewById(R.id.viewPager);
-//        mViewPager.setOffscreenPageLimit(mFriendsPagerAdapter.getCount());
-//        mViewPager.setAdapter(mFriendsPagerAdapter);
-//        mViewPager.setOnPageChangeListener(this);
-    }
+        View view = getView();
+        if(view == null) {
+            return;
+        }
 
-//    private TabHost.TabSpec newTabSpec(TabHost tabHost, String tabIndicator) {
-//        View tabIndicatorView = LayoutInflater.from(getActivity()).inflate(R.layout.apptheme_tab_indicator_holo, tabHost.getTabWidget(), false);
-//        TextView title = (TextView) tabIndicatorView.findViewById(android.R.id.title);
-//        title.setText(tabIndicator);
-//
-//        return tabHost.newTabSpec(tabIndicator).setContent(android.R.id.tabcontent).setIndicator(tabIndicatorView);
-//    }
+        //init ViewPager
+        mFriendsPagerAdapter = new FriendsPagerAdapter(getChildFragmentManager(), FriendsFragment.this, getResources().getStringArray(R.array.friend_titles));
+        ViewPager viewPager = (ViewPager)view.findViewById(R.id.viewPager);
+        viewPager.setOffscreenPageLimit(mFriendsPagerAdapter.getCount());
+        viewPager.setAdapter(mFriendsPagerAdapter);
+
+        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) getActivity().findViewById(R.id.tabs);
+        tabs.setViewPager(viewPager);
+    }
 }

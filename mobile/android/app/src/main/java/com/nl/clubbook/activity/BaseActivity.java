@@ -43,11 +43,11 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     public void sendScreenStatistic(String screenName) {
-        mTracker.setScreenName(MainActivity.class.getSimpleName());
+        mTracker.setScreenName(screenName);
         mTracker.send(new HitBuilders.AppViewBuilder().build());
     }
 
-    protected void setUpToolBar() {
+    protected void setupToolBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }

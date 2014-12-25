@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -29,14 +30,12 @@ import android.widget.Toast;
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.NavDrawerItem;
 import com.nl.clubbook.datasource.ChatMessage;
-import com.nl.clubbook.datasource.Club;
+import com.nl.clubbook.datasource.Place;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.JSONConverter;
 import com.nl.clubbook.fragment.BaseFragment;
 import com.nl.clubbook.fragment.ChatFragment;
-import com.nl.clubbook.fragment.CheckedInUsersFragment;
 import com.nl.clubbook.fragment.ClubFragment;
-import com.nl.clubbook.fragment.ClubsListFragment;
 import com.nl.clubbook.fragment.FastCheckInFragment;
 import com.nl.clubbook.fragment.FriendsFragment;
 import com.nl.clubbook.fragment.GoingOutFragment;
@@ -52,6 +51,7 @@ import com.nl.clubbook.helper.NotificationHelper;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.ui.drawer.NavDrawerData;
 import com.nl.clubbook.ui.drawer.NavDrawerListAdapter;
+import com.nl.clubbook.ui.view.CustomToolBar;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.pubnub.api.Callback;
@@ -88,6 +88,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private HashMap<Integer, BaseFragment> fragmentMap = new HashMap<Integer, BaseFragment>();
     private List<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter mAdapter;
+    private CustomToolBar mToolbar;
 
     private Fragment mCurrentFragment;
 
@@ -96,7 +97,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_main);
 
-        setUpToolBar();
+        setupToolBar();
         initReceivers();
 
         if (!getSession().isLoggedIn()) {
@@ -107,8 +108,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
 
         initFragment();
-        initActionBar("");
         initNavDrawer();
+        initView();
 
         loadData();
         loadConfig();
@@ -256,18 +257,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onInnerFragmentDestroyed() {
-        if (!mDrawerToggle.isDrawerIndicatorEnabled()) {
-            mDrawerToggle.setDrawerIndicatorEnabled(true);
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        mDrawerToggle.syncState();
     }
 
     @Override
     public void onInnerFragmentOpened() {
-        if (mDrawerToggle.isDrawerIndicatorEnabled()) {
-            mDrawerToggle.setDrawerIndicatorEnabled(false);
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolbar.setIsInBackMode(true);
     }
 
     @Override
@@ -315,6 +312,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mDrawerList.setOnItemClickListener(MainActivity.this);
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        mDrawerToggle.syncState();
     }
 
     private void initReceivers() {
@@ -431,6 +430,31 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         });
     }
 
+    private void initView() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("");
+
+        mToolbar = (CustomToolBar) findViewById(R.id.toolbar);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mToolbar.isInBackMode()) {
+                    onBackPressed();
+                    mToolbar.setIsInBackMode(false);
+                    return;
+                }
+
+                if(mDrawerLayout.isDrawerOpen(mDrawerList)) {
+                    mDrawerLayout.closeDrawer(mDrawerList);
+                } else {
+                    mDrawerLayout.openDrawer(mDrawerList);
+                }
+
+                mDrawerToggle.syncState();
+            }
+        });
+    }
+
     private void initFragment() {
         fragmentMap.put(NavDrawerData.GOING_OUT_POSITION, new GoingOutFragment());
         fragmentMap.put(NavDrawerData.MESSAGES_POSITION, new MessagesFragment());
@@ -452,14 +476,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void updateNavDrawerHeader() {
-        Club club = LocationCheckinHelper.getInstance().getCurrentClub();
+        Place place = LocationCheckinHelper.getInstance().getCurrentClub();
 
         TextView txtClubName = (TextView) mNavDrawerHeaderView.findViewById(R.id.txtClubName);
         View imgCheckOut = mNavDrawerHeaderView.findViewById(R.id.imgCheckOut);
 
-        if(club != null && club.getId() != null && club.getId().length() > 0) {
-            txtClubName.setText(club.getTitle());
-            imgCheckOut.setTag(club.getId());
+        if(place != null && place.getId() != null && place.getId().length() > 0) {
+            txtClubName.setText(place.getTitle());
+            imgCheckOut.setTag(place.getId());
             imgCheckOut.setOnClickListener(MainActivity.this);
 
             imgCheckOut.setVisibility(View.VISIBLE);
@@ -564,14 +588,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void onClubClicked() {
-        Club club = LocationCheckinHelper.getInstance().getCurrentClub();
-        if(club == null) {
+        Place place = LocationCheckinHelper.getInstance().getCurrentClub();
+        if(place == null) {
             return;
         }
 
         mDrawerLayout.closeDrawer(mDrawerList);
 
-        Fragment fragment = ClubFragment.newInstance(null, club);
+        Fragment fragment = ClubFragment.newInstance(null, place);
 
         FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
         fTransaction.replace(R.id.fragmentContainer, fragment, ClubFragment.TAG);
