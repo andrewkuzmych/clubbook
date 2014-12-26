@@ -249,7 +249,7 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideProgress];
-        
+        [self.activityIndicator setHidden:YES];
         if (isInitialLoad) {
             _places = [places mutableCopy];
             
@@ -299,6 +299,7 @@
 - (void) filterForType:(NSString*) type {
     [_places removeAllObjects];
     [self.clubTable reloadData];
+    [self.activityIndicator setHidden:NO];
     
     self.isLoaded = YES;
     double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;

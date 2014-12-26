@@ -26,5 +26,6 @@
 - (IBAction)sliderTouchUp:(id)sender;
 //- (IBAction)checkinAction:(UIButton *)sender;
 - (IBAction)segmentChanged:(id)sender;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 @end
