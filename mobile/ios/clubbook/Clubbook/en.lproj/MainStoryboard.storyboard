@@ -754,7 +754,7 @@
                                 <rect key="frame" x="0.0" y="20" width="320" height="44"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="55T-XG-3M2">
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="55T-XG-3M2">
                                 <rect key="frame" x="142" y="266" width="37" height="37"/>
                                 <color key="color" red="0.65054580952782393" green="0.011693084853526084" blue="0.91477272727272729" alpha="1" colorSpace="calibratedRGB"/>
                             </activityIndicatorView>
