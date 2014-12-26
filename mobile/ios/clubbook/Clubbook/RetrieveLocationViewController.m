@@ -100,7 +100,7 @@
 
 - (void)yesLocation
 {
-    //[self performSegueWithIdentifier: @"onLocation" sender: self];
+    [self performSegueWithIdentifier: @"onLocation" sender: self];
 }
 
 
