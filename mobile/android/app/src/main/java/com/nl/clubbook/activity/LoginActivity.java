@@ -29,7 +29,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         sendScreenStatistic(R.string.login_screen_android);
 
-        setUpToolBar();
+        setupToolBar();
         initActionBar(R.string.log_in);
         initView();
     }

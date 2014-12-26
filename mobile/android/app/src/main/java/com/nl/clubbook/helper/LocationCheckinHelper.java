@@ -13,7 +13,7 @@ import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.activity.MainLoginActivity;
 import com.nl.clubbook.activity.NoLocationActivity;
-import com.nl.clubbook.datasource.Club;
+import com.nl.clubbook.datasource.Place;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.utils.L;
 
@@ -36,7 +36,7 @@ public class LocationCheckinHelper {
     private boolean mIsListenerRemoved = false;
     private LocationManager mLocationManager;
 
-    private Club mCurrentClub;
+    private Place mCurrentPlace;
     private LocationListener mLocationListener;
     private boolean mShouldHideLocationErrorView = false;
 
@@ -68,17 +68,17 @@ public class LocationCheckinHelper {
     }
 
     @Nullable
-    public Club getCurrentClub() {
-        return mCurrentClub;
+    public Place getCurrentClub() {
+        return mCurrentPlace;
     }
 
-    public void setCurrentClub(Club currentClub) {
-        mCurrentClub = currentClub;
-        SessionManager.getInstance().putCheckedInClubInfo(currentClub);
+    public void setCurrentClub(Place currentPlace) {
+        mCurrentPlace = currentPlace;
+        SessionManager.getInstance().putCheckedInClubInfo(currentPlace);
     }
 
     public void clearCheckedInClubInfo() {
-        mCurrentClub = null;
+        mCurrentPlace = null;
         SessionManager.getInstance().clearCheckInClubInfo();
     }
 
@@ -86,12 +86,12 @@ public class LocationCheckinHelper {
         return currentLocation;
     }
 
-    public boolean isCheckInHere(Club club) {
-        if (mCurrentClub == null || club == null) {
+    public boolean isCheckInHere(Place place) {
+        if (mCurrentPlace == null || place == null) {
             return false;
         }
 
-        if (club.getId().equalsIgnoreCase(mCurrentClub.getId())) {
+        if (place.getId().equalsIgnoreCase(mCurrentPlace.getId())) {
             return true;
         }
 
@@ -99,18 +99,18 @@ public class LocationCheckinHelper {
     }
 
     public boolean isCheckIn() {
-        return (mCurrentClub != null && mCurrentClub.getId() != null && mCurrentClub.getId().length() != 0);
+        return (mCurrentPlace != null && mCurrentPlace.getId() != null && mCurrentPlace.getId().length() != 0);
     }
 
     /**
      * Check location and distance to club to allow check in
      */
-    public boolean canCheckInHere(Club club) {
-        if (club == null || currentLocation == null) {
+    public boolean canCheckInHere(Place place) {
+        if (place == null || currentLocation == null) {
             return false;
         }
 
-        Double distance = distanceBwPoints(currentLocation.getLatitude(), currentLocation.getLongitude(), club.getLat(), club.getLon());
+        Double distance = distanceBwPoints(currentLocation.getLatitude(), currentLocation.getLongitude(), place.getLat(), place.getLon());
         int maxCheckInDistance = SessionManager.getInstance().getCheckInMaxDistance();
 
         return distance < maxCheckInDistance;
@@ -119,25 +119,25 @@ public class LocationCheckinHelper {
     /**
      * Set current club
      */
-    public void checkIn(final Context context, final Club club, final CheckInOutCallbackInterface callback) {
+    public void checkIn(final Context context, final Place place, final CheckInOutCallbackInterface callback) {
         int maxCheckInDistance = SessionManager.getInstance().getCheckInMaxDistance();
 
         // location validation
         final Location current_location = getCurrentLocation();
-        double distance = distanceBwPoints(current_location.getLatitude(), current_location.getLongitude(), club.getLat(), club.getLon());
+        double distance = distanceBwPoints(current_location.getLatitude(), current_location.getLongitude(), place.getLat(), place.getLon());
         if (distance > maxCheckInDistance) {
             callback.onCheckInOutFinished(false);
             return;
         }
 
         SessionManager sessionManager = SessionManager.getInstance();
-        DataStore.checkin(club.getId(), sessionManager.getAccessToken(), new DataStore.OnResultReady() {
+        DataStore.checkin(place.getId(), sessionManager.getAccessToken(), new DataStore.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (failed) {
                     callback.onCheckInOutFinished(false);
                 } else {
-                    setCurrentClub(club);
+                    setCurrentClub(place);
                     callback.onCheckInOutFinished(true);
 
                     //sent broadcast
@@ -156,7 +156,7 @@ public class LocationCheckinHelper {
         L.d("Try to Check out user");
 
         SessionManager sessionManager = SessionManager.getInstance();
-        DataStore.checkout(mCurrentClub.getId(), sessionManager.getAccessToken(),
+        DataStore.checkout(mCurrentPlace.getId(), sessionManager.getAccessToken(),
                 new DataStore.OnResultReady() {
 
             @Override

@@ -7,7 +7,7 @@ import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 
 import com.nl.clubbook.activity.MainActivity;
-import com.nl.clubbook.datasource.Club;
+import com.nl.clubbook.datasource.Place;
 import com.nl.clubbook.datasource.JSONConverter;
 import com.nl.clubbook.datasource.User;
 import com.parse.PushService;
@@ -183,24 +183,24 @@ public class SessionManager {
         return user;
     }
 
-    public void putCheckedInClubInfo(@Nullable Club club) {
-        if(club == null) {
+    public void putCheckedInClubInfo(@Nullable Place place) {
+        if(place == null) {
             return;
         }
 
         Editor editor = mPreferences.edit();
-        editor.putString(KEY_CHECKIN_CLUB, JSONConverter.newClub(club).toString());
+        editor.putString(KEY_CHECKIN_CLUB, JSONConverter.newClub(place).toString());
         editor.commit();
     }
 
     @Nullable
-    public Club getCheckedInClubInfo() {
+    public Place getCheckedInClubInfo() {
         String clubStr = mPreferences.getString(KEY_CHECKIN_CLUB, null);
         if(TextUtils.isEmpty(clubStr)) {
             return null;
         }
 
-        return JSONConverter.newClub(clubStr);
+        return JSONConverter.newPlace(clubStr);
     }
 
     public void clearCheckInClubInfo() {

@@ -1,5 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string-array name="going_ouy_titles">
+        <item>@string/all</item>
+        <item>@string/clubs</item>
+        <item>@string/bars_and_cafes</item>
+    </string-array>
+
+    <string-array name="friend_titles">
+        <item>@string/friends</item>
+        <item>@string/requests</item>
+        <item>@string/add_plus</item>
+    </string-array>
+
+    <string-array name="club_info_titles">
+        <item>@string/info</item>
+        <item>@string/wall</item>
+    </string-array>
+
+    <string-array name="users_nearby_titles">
+        <item>@string/all</item>
+        <item>@string/checked_in</item>
+    </string-array>
+
+    <integer-array name="colors">
+        <item>@color/material_blue</item>
+        <item>@color/material_red</item>
+        <item>@color/material_yellow</item>
+        <item>@color/material_green</item>
+    </integer-array>
+
+    <!--Probably is deprecated-->
     <array name="countries_array">
         <item>Afghanistan</item>
         <item>Albania</item>

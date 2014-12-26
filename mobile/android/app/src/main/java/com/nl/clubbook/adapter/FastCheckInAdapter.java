@@ -10,13 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.Club;
-import com.nl.clubbook.helper.CheckInOutCallbackInterface;
+import com.nl.clubbook.datasource.Place;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.LocationCheckinHelper;
-import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.helper.UiHelper;
-import com.nl.clubbook.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.Nullable;
@@ -30,25 +27,25 @@ public class FastCheckInAdapter extends BaseAdapter {
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<Club> mClubs;
+    private List<Place> mPlaces;
     private View.OnClickListener mOnBtnCheckInClicked;
 
-    public FastCheckInAdapter(Context context, List<Club> clubs, View.OnClickListener onBtnCheckInClicked) {
+    public FastCheckInAdapter(Context context, List<Place> places, View.OnClickListener onBtnCheckInClicked) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
-        mClubs = clubs;
+        mPlaces = places;
 
         mOnBtnCheckInClicked = onBtnCheckInClicked;
     }
 
     @Override
     public int getCount() {
-        return mClubs.size();
+        return mPlaces.size();
     }
 
     @Override
-    public Club getItem(int position) {
-        return mClubs.get(position);
+    public Place getItem(int position) {
+        return mPlaces.get(position);
     }
 
     @Override
@@ -75,29 +72,29 @@ public class FastCheckInAdapter extends BaseAdapter {
             holder = (ViewHolder) row.getTag();
         }
 
-        fillRow(holder, mClubs.get(position));
+        fillRow(holder, mPlaces.get(position));
 
         return row;
     }
 
-    public void updateData(@Nullable List<Club> newClubs) {
-        if(newClubs == null) {
-            mClubs.clear();
+    public void updateData(@Nullable List<Place> newPlaces) {
+        if(newPlaces == null) {
+            mPlaces.clear();
         } else {
-            mClubs = newClubs;
+            mPlaces = newPlaces;
         }
 
         notifyDataSetChanged();
     }
 
-    private void fillRow(ViewHolder holder, Club club) {
-        String clubName = club.getTitle();
+    private void fillRow(ViewHolder holder, Place place) {
+        String clubName = place.getTitle();
         holder.txtClubName.setText(clubName != null ? clubName : "");
 
-        String distance = LocationCheckinHelper.formatDistance(mContext, club.getDistance());
+        String distance = LocationCheckinHelper.formatDistance(mContext, place.getDistance());
         holder.txtDistance.setText(distance);
 
-        String photoUrl = club.getAvatar();
+        String photoUrl = place.getAvatar();
         if(!TextUtils.isEmpty(photoUrl)) {
             Picasso.with(mContext).load(ImageHelper.getClubListAvatar(photoUrl)).error(R.drawable.ic_club_avatar_default).into(holder.imgAvatar);
         } else {
@@ -105,14 +102,14 @@ public class FastCheckInAdapter extends BaseAdapter {
         }
 
         //init CheckIn button
-        if(LocationCheckinHelper.getInstance().isCheckInHere(club)) {
+        if(LocationCheckinHelper.getInstance().isCheckInHere(place)) {
             UiHelper.changeCheckInState(mContext, holder.txtCheckIn, true);
         } else {
             UiHelper.changeCheckInState(mContext, holder.txtCheckIn, false);
         }
         setCheckInTxtPadding(mContext, holder.txtCheckIn);
 
-        holder.txtCheckIn.setTag(club);
+        holder.txtCheckIn.setTag(place);
         holder.txtCheckIn.setOnClickListener(mOnBtnCheckInClicked);
     }
 

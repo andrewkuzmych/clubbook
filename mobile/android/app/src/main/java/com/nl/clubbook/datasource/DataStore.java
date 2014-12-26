@@ -393,24 +393,24 @@ public class DataStore {
         });
     }
 
-    public static void retrievePlaces(String skip, String take, String lat, String lon, String accessToken, final OnResultReady onResultReady) {
+    public static void retrievePlaces(String type, String search, String skip, String take, String lat, String lon, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.add("skip", skip);
         params.add("take", take);
         params.add("user_lat", lat);
         params.add("user_lon", lon);
+        params.add("type", type);
+        params.add("search", search);
         params.add("access_token", accessToken);
 
         ClubbookRestClient.retrievePlaces(params, new JsonHttpResponseHandler() {
-            private boolean failed = true;
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 JSONArray jsonArrClubs = responseJson.optJSONArray("clubs");
-                List<Club> clubs = JSONConverter.newClubList(jsonArrClubs);
+                List<Place> places = JSONConverter.newPlaceList(jsonArrClubs);
 
-                failed = false;
-                onResultReady.onReady(clubs, failed);
+                onResultReady.onReady(places, false);
             }
 
             @Override
@@ -433,15 +433,13 @@ public class DataStore {
         params.add("distance", distance);
 
         ClubbookRestClient.retrievePlaces(params, new JsonHttpResponseHandler() {
-            private boolean failed = true;
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 JSONArray jsonArrClubs = responseJson.optJSONArray("clubs");
-                List<Club> clubs = JSONConverter.newClubList(jsonArrClubs);
+                List<Place> places = JSONConverter.newPlaceList(jsonArrClubs);
 
-                failed = false;
-                onResultReady.onReady(clubs, failed);
+                onResultReady.onReady(places, false);
             }
 
             @Override
@@ -534,15 +532,15 @@ public class DataStore {
         });
     }
 
-    //    GET /_s/obj/users/checkedin?user_lat=52.448866&user_lon=4.805236&distance=100&access_token=
-    public static void retrieveCurrentCheckedInUsers(String accessToken, String userLat, String userLong, String distance, final OnResultReady onResultReady) {
+    public static void retrieveNearbyUsers(String requestType, String gender, String accessToken, String userLat, String userLong, String distance, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
+        params.put("gender", gender);
         params.put("user_lat", userLat);
         params.put("user_lon", userLong);
         params.put("distance", distance);
         params.put("access_token", accessToken);
 
-        ClubbookRestClient.retrieveCurrentCheckedInUsers(params, new JsonHttpResponseHandler() {
+        ClubbookRestClient.retrieveNearbyUsers(requestType, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
                 String status = responseJson.optString("status");

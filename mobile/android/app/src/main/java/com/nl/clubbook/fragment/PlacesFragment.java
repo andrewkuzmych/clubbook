@@ -16,8 +16,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.adapter.ClubsAdapter;
-import com.nl.clubbook.datasource.Club;
+import com.nl.clubbook.adapter.PlacesAdapter;
+import com.nl.clubbook.datasource.Place;
 import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.helper.SessionManager;
@@ -27,20 +27,30 @@ import com.nl.clubbook.utils.NetworkUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClubsListFragment extends BaseRefreshFragment implements AdapterView.OnItemClickListener,
+public class PlacesFragment extends BaseRefreshFragment implements AdapterView.OnItemClickListener,
         SwipeRefreshLayout.OnRefreshListener {
 
-    private final int DEFAULT_CLUBS_COUNT = 20;
-    private final int DEFAULT_CLUBS_SKIP = 0;
+    private static final String ARG_PLACE_TYPE = "ARG_PLACE_TYPE";
 
-    private ClubsAdapter mClubsAdapter;
+    private PlacesAdapter mPlacesAdapter;
     private View mFooterProgress;
+    private View mProgressBar;
 
     private int mSkipNumber = DEFAULT_CLUBS_SKIP;
 
+    public static Fragment newInstance(String placeType) {
+        Fragment fragment = new PlacesFragment();
+
+        Bundle args = new Bundle();
+        args.putString(ARG_PLACE_TYPE, placeType);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fr_clubs_list, container, false);
+        return inflater.inflate(R.layout.fr_places, container, false);
     }
 
     @Override
@@ -49,9 +59,9 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
 
         sendScreenStatistic(R.string.main_screen_android);
 
-        initActionBarTitle(getString(R.string.clubs));
+        initActionBarTitle(getString(R.string.going_out));
         initView();
-        doRefresh(true);
+        doRefresh(false, false);
     }
 
     @Override
@@ -60,14 +70,13 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
 
         if(!hidden) {
             ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
-            actionBar.setIcon(R.drawable.icon_play);
-            actionBar.setTitle(R.string.clubs);
+            actionBar.setTitle(R.string.going_out);
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Fragment fragment = ClubFragment.newInstance(ClubsListFragment.this, mClubsAdapter.getItem(position));
+        Fragment fragment = ClubFragment.newInstance(PlacesFragment.this, mPlacesAdapter.getItem(position));
         openFragment(fragment, ClubFragment.class);
     }
 
@@ -75,7 +84,7 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
     protected void loadData() {
         mSkipNumber = DEFAULT_CLUBS_SKIP;
 
-        doRefresh(true);
+        doRefresh(true, false);
     }
 
     private void initView() {
@@ -84,14 +93,17 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
             return;
         }
 
-        mClubsAdapter = new ClubsAdapter(getActivity(), new ArrayList<Club>());
+        mProgressBar = view.findViewById(R.id.progressBar);
+        mProgressBar.setVisibility(View.GONE);
+
+        mPlacesAdapter = new PlacesAdapter(getActivity(), new ArrayList<Place>());
         mFooterProgress = LayoutInflater.from(getActivity()).inflate(R.layout.view_footer_progress, null);
         mFooterProgress.setVisibility(View.INVISIBLE);
 
-        final ListView clubList = (ListView) view.findViewById(R.id.listClub);
+        final ListView clubList = (ListView) view.findViewById(R.id.listPlaces);
         clubList.addFooterView(mFooterProgress);
 
-        clubList.setAdapter(mClubsAdapter);
+        clubList.setAdapter(mPlacesAdapter);
         clubList.setOnItemClickListener(this);
         clubList.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -99,7 +111,7 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
                 if (scrollState == SCROLL_STATE_IDLE && clubList.getLastVisiblePosition() >= clubList.getCount() - 1) {
                     mSkipNumber += DEFAULT_CLUBS_COUNT;
 
-                    doRefresh(false);
+                    doRefresh(false, true);
                 }
             }
 
@@ -109,7 +121,7 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
         });
     }
 
-    private void doRefresh(boolean isSwipeLayoutRefreshing) {
+    private void doRefresh(boolean isSwipeLayoutRefreshing, boolean isFooterVisible) {
         if(!NetworkUtils.isOn(getActivity())) {
             Toast.makeText(getActivity(), R.string.no_connection, Toast.LENGTH_SHORT).show();
             return;
@@ -118,11 +130,11 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
         Log.d("Location Updates", "Google Play services is available.");
 
         if(isSwipeLayoutRefreshing) {
-            mSwipeRefreshLayout.setRefreshing(true);
-            mFooterProgress.setVisibility(View.GONE);
+            setProgressViewsState(true, View.GONE, View.GONE);
+        } else if(isFooterVisible) {
+            setProgressViewsState(false, View.VISIBLE, View.GONE);
         } else {
-            mSwipeRefreshLayout.setRefreshing(false);
-            mFooterProgress.setVisibility(View.VISIBLE);
+            setProgressViewsState(false, View.GONE, View.VISIBLE);
         }
 
         // retrieve my current location
@@ -130,9 +142,8 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
         Location currentLocation = locationCheckInHelper.getCurrentLocation();
         if(currentLocation == null) {
             locationCheckInHelper.showLocationErrorView(getActivity(), locationCheckInHelper.isLocationProvidersEnabled());
+            setProgressViewsState(false, View.GONE, View.GONE);
 
-            mSwipeRefreshLayout.setRefreshing(false);
-            mFooterProgress.setVisibility(View.GONE);
             return;
         }
 
@@ -140,14 +151,15 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
         if(accessToken == null) {
             L.i("accessToken = null");
 
-            mSwipeRefreshLayout.setRefreshing(false);
-            mFooterProgress.setVisibility(View.GONE);
+            setProgressViewsState(false, View.GONE, View.GONE);
 
             return;
         }
 
+        final String type = getArguments().getString(ARG_PLACE_TYPE, Types.ALL);
+
         // retrieve places from server and set distance
-        DataStore.retrievePlaces(String.valueOf(mSkipNumber), String.valueOf(DEFAULT_CLUBS_COUNT), String.valueOf(currentLocation.getLatitude()),
+        DataStore.retrievePlaces(type, "", String.valueOf(mSkipNumber), String.valueOf(DEFAULT_CLUBS_COUNT), String.valueOf(currentLocation.getLatitude()),
                 String.valueOf(currentLocation.getLongitude()), accessToken, new DataStore.OnResultReady() {
 
                     @Override
@@ -157,22 +169,33 @@ public class ClubsListFragment extends BaseRefreshFragment implements AdapterVie
                             return;
                         }
 
-                        mSwipeRefreshLayout.setRefreshing(false);
-                        mFooterProgress.setVisibility(View.GONE);
+                        setProgressViewsState(false, View.GONE, View.GONE);
 
                         if (failed) {
                             showToast(R.string.something_went_wrong_please_try_again);
                             return;
                         }
 
-                        List<Club> places = (List<Club>) result;
+                        List<Place> places = (List<Place>) result;
 
                         if(mSkipNumber == DEFAULT_CLUBS_SKIP) {
-                            mClubsAdapter.updateData(places);
+                            mPlacesAdapter.updateData(places);
                         } else {
-                            mClubsAdapter.addData(places);
+                            mPlacesAdapter.addData(places);
                         }
                     }
                 });
+    }
+
+    private void setProgressViewsState(boolean isSwipeToRefreshRefreshed, int footerProgressBarVisibility, int progressBarVisibility) {
+        mSwipeRefreshLayout.setRefreshing(isSwipeToRefreshRefreshed);
+        mFooterProgress.setVisibility(footerProgressBarVisibility);
+        mProgressBar.setVisibility(progressBarVisibility);
+    }
+
+    public interface Types {
+        public static final String ALL = "";
+        public static final String CLUB = "club";
+        public static final String BAR = "bar";
     }
 }

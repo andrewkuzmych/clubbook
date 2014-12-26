@@ -26,13 +26,4 @@ public class UIUtils {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
     }
-
-    public static void displayEmptyIconInActionBar(ActionBarActivity activity) {
-        ActionBar actionBar = activity.getSupportActionBar();
-        actionBar.setIcon(R.drawable.ic_transparent);
-    }
-
-    public static void loadPhotoToActionBar(final ActionBarActivity activity, String url, Target target) {
-        Picasso.with(activity).load(url).into(target);
-    }
 }

@@ -20,14 +20,12 @@ import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.datasource.UserPhoto;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
-import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.ImageUploader;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.helper.UiHelper;
 import com.nl.clubbook.ui.view.HorizontalListView;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.nl.clubbook.utils.ParseUtils;
-import com.nl.clubbook.utils.UIUtils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -54,8 +52,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
         sendScreenStatistic(R.string.profile_screen_android);
 
-        setUpToolBar();
-        UIUtils.displayEmptyIconInActionBar(this);
+        setupToolBar();
         initImageHelpers();
         initView();
 
@@ -283,7 +280,6 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         for (UserPhoto userPhoto : userPhotoList) {
             if(userPhoto.getIsAvatar()) {
                 displayImageBigPreview(userPhoto);
-                UIUtils.loadPhotoToActionBar(EditProfileActivity.this, ImageHelper.getUserListAvatar(userPhoto.getUrl()), mTarget);
                 break;
             }
         }
@@ -390,8 +386,6 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
                 String url = selectedImageDto.getUrl();
                 getSession().updateValue(SessionManager.KEY_AVATAR, url);
-
-                UIUtils.loadPhotoToActionBar(EditProfileActivity.this, ImageHelper.getUserListAvatar(url), mTarget);
 
                 setResult(RESULT_OK);
             }
