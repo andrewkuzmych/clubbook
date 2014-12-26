@@ -62,11 +62,11 @@
     UIButton* locationButton = [[UIButton alloc] init];
     UIImage* locationImage = [UIImage imageNamed:@"map"];
     [locationButton setImage:locationImage forState:UIControlStateNormal];
-    [locationButton addTarget:self action:@selector(shareMyLocation) forControlEvents:UIControlEventTouchUpInside];
+    [locationButton addTarget:self action:@selector(showShareMenu) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton* photoButton = [[UIButton alloc] init];
-    [photoButton setImage:[UIImage imageNamed:@"map"] forState:UIControlStateNormal];
-    [photoButton addTarget:self action:@selector(sharePhoto) forControlEvents:UIControlEventTouchUpInside];
+    [photoButton setTitle:@"Like" forState:UIControlStateNormal];
+    [photoButton addTarget:self action:@selector(sendLike) forControlEvents:UIControlEventTouchUpInside];
     
     [self.inputToolbar.contentView setLeftBarButtonItem:locationButton];
     [self.inputToolbar.contentView setMiddleBarButtonItem:photoButton];
@@ -77,7 +77,6 @@
     picker.delegate = self;
     
     _docController = nil;
-
 }
 
 - (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message {
@@ -592,6 +591,28 @@
 }
 
 //actions
+-(void) showShareMenu {
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Share location", @"Take photo", @"Choose existing photo" ,nil];
+    actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+    [actionSheet showInView:self.view];
+}
+
+-(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    switch (buttonIndex) {
+        case 0:
+            [self shareMyLocation];
+            break;
+        case 1:
+            [self takePhoto];
+            break;
+        case 2:
+            [self shareExistingPhoto];
+            break;
+        default:
+            break;
+    }
+}
+
 - (void) shareMyLocation {
     __weak UICollectionView *weakView = self.collectionView;
     CLLocation *userLocation = [LocationManagerSingleton sharedSingleton].locationManager.location;
@@ -610,9 +631,22 @@
     [self scrollToBottomAnimated:YES];
     
 }
-- (void) sharePhoto {
+
+- (void) takePhoto {
     [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
     [self presentViewController:picker animated:YES completion:NULL];
+}
+
+- (void) shareExistingPhoto {
+    [picker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+    [self presentViewController:picker animated:YES completion:NULL];
+}
+
+- (void)sendLike {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *userName = [defaults objectForKey:@"userName"];
+    
+    [self sendMessage:[NSString stringWithFormat:@"%@ %@", userName, NSLocalizedString(@"send_like", nil)] type:@"smile"];
 }
 
 //delegate methode will be called after picking photo either from camera or library
