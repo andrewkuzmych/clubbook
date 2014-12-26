@@ -79,13 +79,14 @@
     if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
         NSString* warningMessage = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Allow Clubbook to use your location", nil)];
         [self.infoLabel setText:warningMessage];
-        
+        [self.activityIndicator setHidden:YES];
         [self.retryButton setHidden:NO];
         [self.halo setHidden:YES];
     }
     else {
         [self.retryButton setHidden:YES];
         [self.halo setHidden:NO];
+        [self.activityIndicator setHidden:NO];
         NSString* warningMessage = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Checking your location...", nil)];
         [self.infoLabel setText:warningMessage];
 
@@ -99,7 +100,7 @@
 
 - (void)yesLocation
 {
-    [self performSegueWithIdentifier: @"onLocation" sender: self];
+    //[self performSegueWithIdentifier: @"onLocation" sender: self];
 }
 
 

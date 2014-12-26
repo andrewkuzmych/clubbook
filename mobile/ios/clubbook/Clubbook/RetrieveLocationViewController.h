@@ -15,7 +15,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 @property (weak, nonatomic) IBOutlet UIButton *retryButton;
 @property (nonatomic, strong) MultiplePulsingHaloLayer *halo;
-@property (weak, nonatomic) IBOutlet UIView *testView;
 
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 @end

@@ -1436,18 +1436,24 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </imageView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="s0Q-bG-9IS">
+                                <rect key="frame" x="142" y="283" width="37" height="37"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="0.21723019656602205" green="0.0071079931773783585" blue="0.29923148777173914" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="s0Q-bG-9IS" firstAttribute="centerX" secondItem="sa3-qI-hpr" secondAttribute="centerX" id="GsQ-0k-yja"/>
                             <constraint firstItem="vIR-pu-ehC" firstAttribute="centerY" secondItem="vx6-UW-o0Z" secondAttribute="centerY" constant="-62" id="JUe-z9-62d"/>
                             <constraint firstItem="KS3-aa-6GW" firstAttribute="top" secondItem="sa3-qI-hpr" secondAttribute="bottom" constant="8" symbolic="YES" id="NzC-yR-nrG"/>
                             <constraint firstItem="vIR-pu-ehC" firstAttribute="centerX" secondItem="sa3-qI-hpr" secondAttribute="centerX" id="WHN-ey-oT7"/>
                             <constraint firstItem="sa3-qI-hpr" firstAttribute="top" secondItem="vIR-pu-ehC" secondAttribute="bottom" constant="18" id="WV9-g1-cXX"/>
                             <constraint firstItem="vIR-pu-ehC" firstAttribute="centerX" secondItem="vx6-UW-o0Z" secondAttribute="centerX" id="Yzz-QJ-OLa"/>
+                            <constraint firstItem="s0Q-bG-9IS" firstAttribute="top" secondItem="vIR-pu-ehC" secondAttribute="bottom" constant="11" id="d8S-TG-uyB"/>
                             <constraint firstItem="vIR-pu-ehC" firstAttribute="centerX" secondItem="KS3-aa-6GW" secondAttribute="centerX" id="s4x-BD-RND"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="s0Q-bG-9IS" id="WWY-yH-atE"/>
                         <outlet property="infoLabel" destination="KS3-aa-6GW" id="8hV-IZ-HB7"/>
                         <outlet property="photoImageView" destination="vIR-pu-ehC" id="JfA-3I-9Pa"/>
                         <outlet property="retryButton" destination="sa3-qI-hpr" id="rQ5-RU-oaf"/>
