@@ -570,7 +570,7 @@ const int FrontViewPositionNone = 0xff;
     _frontViewPosition = FrontViewPositionLeft;
     _rearViewPosition = FrontViewPositionLeft;
     _rightViewPosition = FrontViewPositionLeft;
-    _rearViewRevealWidth = 260.0f;
+    _rearViewRevealWidth = [self rearViewRevealWidthBasedOnDeviceScreen];
     _rearViewRevealOverdraw = 60.0f;
     _rearViewRevealDisplacement = 40.0f;
     _rightViewRevealWidth = 260.0f;
@@ -590,6 +590,17 @@ const int FrontViewPositionNone = 0xff;
     _userInteractionStore = YES;
     _animationQueue = [NSMutableArray array];
     _draggableBorderWidth = 0.0f;
+}
+
+
+- (CGFloat) rearViewRevealWidthBasedOnDeviceScreen {
+    CGSize size = [UIScreen mainScreen].bounds.size;
+    return size.width;
+}
+
+- (CGFloat) getRearViewRevealWidth {
+    _rearViewRevealWidth = [self rearViewRevealWidthBasedOnDeviceScreen];
+    return _rearViewRevealWidth;
 }
 
 

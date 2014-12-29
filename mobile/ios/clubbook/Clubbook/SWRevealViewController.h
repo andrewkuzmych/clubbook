@@ -208,7 +208,7 @@ typedef enum
 
 // Defines how much of the rear or right view is shown, default is 260. A negative value indicates that the reveal width should be
 // computed by substracting the full front view width, so the revealed frontView width is constant.
-@property (assign, nonatomic) CGFloat rearViewRevealWidth;
+@property (assign, nonatomic, getter=getRearViewRevealWidth) CGFloat rearViewRevealWidth;
 @property (assign, nonatomic) CGFloat rightViewRevealWidth; // <-- simetric implementation of the above for the rightViewController
 
 // Defines how much of an overdraw can occur when dragging further than 'rearViewRevealWidth', default is 60.
