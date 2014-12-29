@@ -1,48 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/view_pager_sliding_tab_strip"/>
+    <include
+        android:id="@+id/tabs"
+        layout="@layout/view_pager_sliding_tab_strip" />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewPager"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tabs"
+        android:layout_above="@+id/holderSeekBar"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/holderFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:divider="@drawable/divider"
+            android:orientation="vertical"
+            android:showDividers="middle">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.nl.clubbook.ui.view.HelveticaRegularTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_weight="1"
+                    android:text="@string/all"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/text_size_medium" />
+
+                <RadioButton
+                    android:id="@+id/rbAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:minHeight="48dp"
+                    android:paddingRight="16dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.nl.clubbook.ui.view.HelveticaRegularTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_weight="1"
+                    android:text="@string/male"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/text_size_medium" />
+
+                <RadioButton
+                    android:id="@+id/rbMale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:paddingRight="16dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.nl.clubbook.ui.view.HelveticaRegularTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_weight="1"
+                    android:text="@string/female"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/text_size_medium" />
+
+                <RadioButton
+                    android:id="@+id/rbFemale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:paddingRight="16dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/holderSeekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:background="@drawable/bg_btn_violet_light"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp">
+        android:background="@drawable/bg_btn_violet_light"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp" >
 
         <com.nl.clubbook.ui.view.HelveticaBoldTextView
             android:id="@+id/distance_text"
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:paddingBottom="5dp"
             android:singleLine="true"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size_large"
-            android:paddingBottom="5dp"/>
+            android:textSize="@dimen/text_size_large" />
 
         <SeekBar
             android:id="@+id/seekBarDistance"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

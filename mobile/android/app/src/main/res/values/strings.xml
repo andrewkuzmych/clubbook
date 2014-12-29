@@ -201,6 +201,7 @@
 
     <string name="all">All</string>
     <string name="bars_and_cafes">Bars&amp;Cafes</string>
+    <string name="filter">Filter</string>
 
     <!--For Google Analytics-->
     <string name="sidebar_screen_android">Sidebar Screen Android</string>

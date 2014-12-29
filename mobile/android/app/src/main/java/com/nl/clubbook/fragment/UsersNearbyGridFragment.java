@@ -117,18 +117,24 @@ public class UsersNearbyGridFragment extends BaseRefreshFragment implements Adap
         final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
-        String distanceKm = String.valueOf(UsersNearbyFragment.DISTANCES[UsersNearbyFragment.DEFAULT_DISTANCE]);
         Fragment targetFragment = getTargetFragment();
+        String distanceKm = String.valueOf(UsersNearbyFragment.DISTANCES[UsersNearbyFragment.DEFAULT_DISTANCE]);
         if(targetFragment != null && targetFragment instanceof OnGetDistanceListener) {
             OnGetDistanceListener listener = (OnGetDistanceListener) targetFragment;
-            distanceKm = String.valueOf(listener.getDistanceListener());
+            distanceKm = String.valueOf(listener.onGetDistanceListener());
         }
 
-        setSeekBarEnabling(false);
+        String gender = UsersNearbyFragment.Filter.ALL;
+        if(targetFragment != null && targetFragment instanceof OnGetFilterListener) {
+            OnGetFilterListener listener = (OnGetFilterListener) targetFragment;
+            gender = listener.onGetFilter();
+        }
+
+        setOnRefreshing(true);
 
         DataStore.retrieveNearbyUsers(
                 requestType,
-                "",
+                gender,
                 user.get(SessionManager.KEY_ACCESS_TOCKEN),
                 "" + location.getLatitude(),
                 "" + location.getLongitude(),
@@ -143,7 +149,7 @@ public class UsersNearbyGridFragment extends BaseRefreshFragment implements Adap
                         }
 
                         setProgressViewsState(false, View.GONE, View.GONE);
-                        setSeekBarEnabling(true);
+                        setOnRefreshing(false);
 
                         if (failed) {
                             showToast(R.string.something_went_wrong_please_try_again);
@@ -168,11 +174,11 @@ public class UsersNearbyGridFragment extends BaseRefreshFragment implements Adap
         mProgressBar.setVisibility(progressBarVisibility);
     }
 
-    private void setSeekBarEnabling(boolean isEnabled) {
+    private void setOnRefreshing(boolean isEnabled) {
         Fragment targetFragment = getTargetFragment();
-        if(targetFragment != null && targetFragment instanceof OnSetSeekBarEnablingListener) {
-            OnSetSeekBarEnablingListener listener = (OnSetSeekBarEnablingListener) targetFragment;
-            listener.setSeekBarEnabling(isEnabled);
+        if(targetFragment != null && targetFragment instanceof OnRefreshListener) {
+            OnRefreshListener listener = (OnRefreshListener) targetFragment;
+            listener.onRefresh(isEnabled);
         }
     }
 
@@ -182,10 +188,14 @@ public class UsersNearbyGridFragment extends BaseRefreshFragment implements Adap
     }
 
     public interface OnGetDistanceListener {
-        public int getDistanceListener();
+        public int onGetDistanceListener();
     }
 
-    public interface OnSetSeekBarEnablingListener {
-        public void setSeekBarEnabling(boolean isEnable);
+    public interface OnGetFilterListener {
+        public String onGetFilter();
+    }
+
+    public interface OnRefreshListener {
+        public void onRefresh(boolean isRefreshing);
     }
 }
