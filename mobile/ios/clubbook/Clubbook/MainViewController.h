@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
+
 #import "BaseViewController.h"
 #import "SPSlideTabBar.h"
 
@@ -22,10 +23,9 @@
 @property (weak, nonatomic) IBOutlet UIScrollView *filterTabView;
 @property (strong, nonatomic) IBOutlet SPSlideTabBar *filterTabBar;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
-- (IBAction)SliderChanged:(id)sender;
-- (IBAction)sliderTouchUp:(id)sender;
-//- (IBAction)checkinAction:(UIButton *)sender;
-- (IBAction)segmentChanged:(id)sender;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) IBOutlet UILabel *noResultsLabel;
+
+- (IBAction)segmentChanged:(id)sender;
 
 @end

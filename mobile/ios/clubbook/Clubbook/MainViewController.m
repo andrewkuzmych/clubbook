@@ -47,32 +47,6 @@
 
 @implementation MainViewController
 
-//#pragma mark UINavigationControllerDelegate methods
-//
-//- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
-//                                  animationControllerForOperation:(UINavigationControllerOperation)operation
-//                                               fromViewController:(UIViewController *)fromVC
-//                                                 toViewController:(UIViewController *)toVC {
-//    // Check if we're transitioning from this view controller to a DSLSecondViewController
-//    if (fromVC == self && [toVC isKindOfClass:[ClubUsersViewController class]]) {
-//        return [[TransitionFromClubListToClub alloc] init];
-//    }
-//    else {
-//        return nil;
-//    }
-//}
-
--(BOOL)shouldAutorotate
-{
-    return YES;
-}
-
--(NSUInteger)supportedInterfaceOrientations
-{
-    return UIInterfaceOrientationMaskPortrait;
-}
-
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -82,12 +56,12 @@
     
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(appplicationIsActive:)
+                                             selector:@selector(applicationIsActive)
                                                  name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(applicationEnteredForeground:)
+                                             selector:@selector(applicationEnteredForeground)
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
 
@@ -155,7 +129,8 @@
     
     //set placeholder text
     self.searchBar.placeholder = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Search clubs, bars, events, etc. by name", nil)];
-
+    [self changeSearchKeyboardButtonTitle];
+    
     //store height of searchbox to animate it in future
     searchBarHeight = self.searchBar.frame.size.height; //rect.size.height - 2;
     //hide searchbar
@@ -170,12 +145,20 @@
     [self.view setBackgroundColor:self.filterTabBar.backgroundColor];
 }
 
-- (void)appplicationIsActive:(NSNotification *)notification {
+-(void) applicationEnteredForeground {
     
 }
 
-- (void)applicationEnteredForeground:(NSNotification *)notification {
+-(void) applicationIsActive {
     
+}
+
+-(BOOL)shouldAutorotate {
+    return YES;
+}
+
+-(NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 - (void)didGetConfig:(Config *)config
@@ -239,10 +222,8 @@
 }
 
 - (void)insertRowAtBottom {
-    int countToSkip = [self.places count];
-     [self loadClubType:selectedClubType take:10 skip:countToSkip];
-
-    //[self.clubTable.infiniteScrollingView stopAnimating];
+    int countToSkip = (int)[self.places count];
+    [self loadClubType:selectedClubType take:10 skip:countToSkip];
 }
 
 - (void)didReceivePlaces:(NSArray *)places andTypes:(NSArray *)types
@@ -250,16 +231,19 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideProgress];
         [self.activityIndicator setHidden:YES];
+        
         if (isInitialLoad) {
             _places = [places mutableCopy];
             
             if (types) {
                 if ([types count] != 0) {
                     for (NSString* option in types) {
-                         NSString* filterOption = [NSString stringWithFormat:@"%@", NSLocalizedString(option, nil)];
-                        filterOption = [option capitalizedString];
-
-                        [self.filterTabBar addTabForTitle:filterOption];
+                        if ([option isKindOfClass:[NSString class]]) {
+                            NSString* filterOption = [NSString stringWithFormat:@"%@", NSLocalizedString(option, nil)];
+                            filterOption = [option capitalizedString];
+                            
+                            [self.filterTabBar addTabForTitle:filterOption];
+                        }
                     }
                 }
             }
@@ -270,6 +254,12 @@
         self.title = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Going Out", nil)];
         
         self.clubTable.hidden = NO;
+        if ([_places count] > 0) {
+            [self.noResultsLabel setHidden:YES];
+        }
+        else {
+            [self.noResultsLabel setHidden:NO];
+        }
 
         [self.clubTable.pullToRefreshView stopAnimating];
         [self.clubTable.infiniteScrollingView stopAnimating];
@@ -296,10 +286,15 @@
     [self loadClubType:@"" take:10 skip:0];
 }
 
-- (void) filterForType:(NSString*) type {
+- (void) tableWillBeRefreshed {
     [_places removeAllObjects];
     [self.clubTable reloadData];
     [self.activityIndicator setHidden:NO];
+    [self.noResultsLabel setHidden:YES];
+}
+
+- (void) filterForType:(NSString*) type {
+    [self tableWillBeRefreshed];
     
     self.isLoaded = YES;
     double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
@@ -312,8 +307,7 @@
 }
 
 - (void) searchForWord:(NSString*) searchWord {
-    [_places removeAllObjects];
-    [self.clubTable reloadData];
+    [self tableWillBeRefreshed];
     
     self.isLoaded = YES;
     double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
@@ -349,9 +343,6 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
     
-   // if (_places.count == 0) {
-   //     [self showProgress:NO title:nil];
-   // }
     [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:0 type:type search:@"" accessToken:accessToken];
 }
 
@@ -449,68 +440,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)SliderChanged:(id)sender {
-
-    int sliderValue;
-    sliderValue = lroundf(self.sliderControl.value);
-    distanceKm = [self convertToKm:sliderValue];
-    [self.distance setText:[NSString stringWithFormat:@"%d%@", distanceKm, NSLocalizedString(@"kilometers", nil)]];
-}
-
-- (int)convertToKm:(int)sliderValue
-{
-    int km = 1;
-    switch(sliderValue) {
-        case 1:
-            km = 1;
-            break;
-        case 2:
-            km = 2;
-            break;
-        case 3:
-            km = 3;
-            break;
-        case 4:
-            km = 4;
-            break;
-        case 5:
-            km = 5;
-            break;
-        case 6:
-            km = 10;
-            break;
-        case 7:
-            km = 20 ;
-            break;
-        case 8:
-            km = 30;
-            break;
-        case 9:
-            km = 50;
-            break;
-        case 10:
-            km = 100;
-            break;
-            
-        default:
-            break;
-    }
-    return km;
-}
-
-- (IBAction)sliderTouchUp:(id)sender
-{
- /*   int sliderValue;
-    sliderValue = lroundf(self.sliderControl.value);
-    [self.sliderControl setValue:sliderValue animated:YES];
-    
-    distanceKm = [self convertToKm:sliderValue];
-    self.isLoaded = NO;
-    [self loadClub];
-    
-    [self.distance setText:[NSString stringWithFormat:@"%d%@", distanceKm, NSLocalizedString(@"kilometers", nil)]];*/
-}
-
 
 - (IBAction)segmentChanged:(id)sender {
     [self sortPlaces];
@@ -605,13 +534,33 @@
 }
 
 - (void) searchBarSearchButtonClicked:(UISearchBar *)searchBar {
-    NSString* searchWord = self.searchBar.text;
-    [self searchForWord:searchWord];
+    [self handleSearchButton:nil];
 }
 
 - (void) searchTextFieldEnabled:(BOOL) enabled {
     UITextField *txfSearchField = [self.searchBar valueForKey:@"_searchField"];
     [txfSearchField setEnabled:enabled];
+}
+
+- (void) searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+   NSString* searchWord = self.searchBar.text;
+  [self searchForWord:searchWord];
+}
+
+- (void) changeSearchKeyboardButtonTitle {
+    for (UIView *subview in self.searchBar.subviews)
+    {
+        for (UIView *subSubview in subview.subviews)
+        {
+            if ([subSubview conformsToProtocol:@protocol(UITextInputTraits)])
+            {
+                UITextField *textField = (UITextField *)subSubview;
+                textField.returnKeyType = UIReturnKeyDone;
+                textField.enablesReturnKeyAutomatically = NO;
+                break;
+            }
+        }
+    }
 }
 
 //animation logic
@@ -633,7 +582,7 @@
 
 -(void) scrollViewDidScroll:(UIScrollView *)scrollView {
     
-    if(self.clubTable.pullToRefreshView.state || scrollView.contentOffset.y <= -10) { //|| dontHideNavBar) {
+    if(self.clubTable.pullToRefreshView.state || scrollView.contentOffset.y <= -10) { 
        return;
     }
     //scrolled up
