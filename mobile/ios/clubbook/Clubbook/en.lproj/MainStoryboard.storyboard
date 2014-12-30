@@ -603,6 +603,9 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Sad-W0-eHr">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gradient.png" translatesAutoresizingMaskIntoConstraints="NO" id="O0A-tJ-zcY">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            </imageView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="4n6-IE-U4V">
                                 <rect key="frame" x="31" y="129" width="258" height="419"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
@@ -701,17 +704,23 @@
                             <constraint firstItem="uCm-gf-07G" firstAttribute="top" secondItem="4n6-IE-U4V" secondAttribute="bottom" constant="20" id="0a5-kI-cTd"/>
                             <constraint firstItem="Sad-W0-eHr" firstAttribute="leading" secondItem="TE3-ew-a2d" secondAttribute="leading" id="5qS-xH-n5r"/>
                             <constraint firstItem="OTs-76-c9Y" firstAttribute="top" secondItem="UQN-xP-4YM" secondAttribute="bottom" constant="39" id="9HA-Vv-joL"/>
+                            <constraint firstAttribute="trailing" secondItem="O0A-tJ-zcY" secondAttribute="trailing" id="S8U-DT-x5h"/>
+                            <constraint firstItem="O0A-tJ-zcY" firstAttribute="top" secondItem="OTs-76-c9Y" secondAttribute="bottom" constant="-103" id="TNI-6c-9vN"/>
                             <constraint firstAttribute="trailing" secondItem="Sad-W0-eHr" secondAttribute="trailing" id="WAC-CC-0La"/>
+                            <constraint firstItem="O0A-tJ-zcY" firstAttribute="leading" secondItem="TE3-ew-a2d" secondAttribute="leading" id="ZPC-Tm-5Ns"/>
                             <constraint firstItem="4n6-IE-U4V" firstAttribute="leading" secondItem="TE3-ew-a2d" secondAttribute="leading" constant="31" id="jGI-U9-865"/>
                             <constraint firstAttribute="trailing" secondItem="4n6-IE-U4V" secondAttribute="trailing" constant="31" id="kR2-5p-hEb"/>
                             <constraint firstAttribute="bottom" secondItem="Sad-W0-eHr" secondAttribute="bottom" id="oIB-eJ-eA9"/>
                             <constraint firstItem="4n6-IE-U4V" firstAttribute="top" secondItem="OTs-76-c9Y" secondAttribute="bottom" constant="26" id="oJo-vx-tY5"/>
                             <constraint firstItem="Sad-W0-eHr" firstAttribute="top" secondItem="TE3-ew-a2d" secondAttribute="top" id="ocW-6z-ZEy"/>
+                            <constraint firstItem="uCm-gf-07G" firstAttribute="top" secondItem="O0A-tJ-zcY" secondAttribute="bottom" id="qQu-BH-6tq"/>
+                            <constraint firstItem="O0A-tJ-zcY" firstAttribute="top" secondItem="OTs-76-c9Y" secondAttribute="bottom" constant="-103" id="x2Z-yR-jZl"/>
                             <constraint firstAttribute="centerX" secondItem="OTs-76-c9Y" secondAttribute="centerX" id="xGk-KF-dN7"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="backgroundImageView" destination="Sad-W0-eHr" id="f07-HF-0sj"/>
+                        <outlet property="gradientImageView" destination="O0A-tJ-zcY" id="Lgh-nS-skN"/>
                         <outlet property="menuCollectionView" destination="4n6-IE-U4V" id="HrL-eA-oGR"/>
                         <segue destination="2" kind="custom" identifier="goingout" customClass="SWRevealViewControllerSegue" id="2DX-Kq-nMS"/>
                         <segue destination="KfF-P3-bG4" kind="custom" identifier="fastcheckin" customClass="SWRevealViewControllerSegue" id="tZc-hA-qG3"/>
@@ -3421,6 +3430,7 @@
         <image name="fb_color.jpg" width="40" height="40"/>
         <image name="fb_color_selected.jpg" width="40" height="40"/>
         <image name="gold.jpg" width="28" height="20"/>
+        <image name="gradient.png" width="360" height="640"/>
         <image name="green_color_selected.jpg" width="40" height="40"/>
         <image name="icon_avatar_friend.png" width="32" height="32"/>
         <image name="icon_clubdetails_capacity.png" width="43" height="43"/>
