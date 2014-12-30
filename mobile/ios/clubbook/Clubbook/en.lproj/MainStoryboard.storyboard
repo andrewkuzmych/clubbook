@@ -719,6 +719,7 @@
                         <segue destination="CNM-cn-JgE" kind="custom" identifier="usersnearby" customClass="SWRevealViewControllerSegue" id="wmt-lJ-Sf9"/>
                         <segue destination="Pkv-Q5-XCl" kind="custom" identifier="messages" customClass="SWRevealViewControllerSegue" id="Jdt-DP-aMC"/>
                         <segue destination="GVb-UH-Luh" kind="custom" identifier="settings" customClass="SWRevealViewControllerSegue" id="Td7-oY-0he"/>
+                        <segue destination="MzK-uN-iFg" kind="custom" identifier="profile" customClass="SWRevealViewControllerSegue" id="vLL-P8-d3f"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QUN-K5-YiA" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -44,7 +44,7 @@
     [self.backgroundImageView setImage: [UIImage imageNamed:@"menu_background.png"]];
     self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
     
-    _menuItems = @[@"goingout", @"usersnearby", @"messages", @"friends", @"settings", @"fastcheckin"];
+    _menuItems = @[@"goingout", @"usersnearby", @"messages", @"friends", @"settings", @"profile", @"fastcheckin"];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -172,6 +172,9 @@
     }
     else if ([currentItemId isEqualToString:@"settings"]) {
         cell.menuLabel.text = @"Settings";
+    }
+    else if ([currentItemId isEqualToString:@"profile"]) {
+        cell.menuLabel.text = @"Profile";
     }
     else if ([currentItemId isEqualToString:@"fastcheckin"]) {
         [cell.bigNotificationNumber setHidden:NO];
