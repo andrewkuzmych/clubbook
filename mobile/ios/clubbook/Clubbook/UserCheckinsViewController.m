@@ -69,7 +69,7 @@
     float height = FilterCellHeight * [filterOptions count];
     [self replaceTopConstraintOnView:self.filterMenuTable withConstant: -height];
     
-    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14], UITextAttributeFont, nil];
+    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14], NSFontAttributeName, nil];
     [self.usersSegment setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
     
     [self.usersSegment setTitle:[NSString stringWithFormat:NSLocalizedString(@"all", nil)] forSegmentAtIndex:0];
@@ -80,9 +80,7 @@
     [self.distance setText:[NSString stringWithFormat:@"%d%@", distanceKm, NSLocalizedString(@"kilometers", nil)]];
     
     self.clubFooterView.footerInfoLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:18];
-    //[LocationManagerSingleton sharedSingleton].delegate = self;
-    ///[[LocationManagerSingleton sharedSingleton] startLocating];
-    
+   
     __weak UserCheckinsViewController *weakSelf = self;
     
     // setup pull-to-refresh
@@ -107,13 +105,8 @@
 }
 
 - (void)insertRowAtBottom {
-    int countToSkip = [_users count];
+    int countToSkip = (int)[_users count];
     [self loadUsers:30 skip:countToSkip];
-    //[self loadUsers];
-    //int countToSkip = [self.places count];
-    //[self loadClub:10 skip:countToSkip];
-    
-    //[self.clubTable.infiniteScrollingView stopAnimating];
 }
 
 - (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message
@@ -254,7 +247,7 @@
         CLTransformation *transformation = [CLTransformation transformation];
         [transformation setParams: @{@"width": @120, @"height": @120}];
         NSString * avatarUrl  = [cloudinary url: [user.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
-        [cell.profileAvatar setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
+        [cell.profileAvatar sd_setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
     });
     return cell;
 }
@@ -324,7 +317,7 @@
 - (IBAction)sliderChanged:(id)sender {
     
     int sliderValue;
-    sliderValue = lroundf(self.sliderControl.value);
+    sliderValue = (int)lroundf(self.sliderControl.value);
     distanceKm = [self convertToKm:sliderValue];
     [self.distance setText:[NSString stringWithFormat:@"%d%@", distanceKm, NSLocalizedString(@"kilometers", nil)]];
 }
@@ -366,7 +359,7 @@
 - (IBAction)sliderTouchUp:(id)sender
 {
     int sliderValue;
-    sliderValue = lroundf(self.sliderControl.value);
+    sliderValue = (int)lroundf(self.sliderControl.value);
     [self.sliderControl setValue:sliderValue animated:YES];
     
     distanceKm = [self convertToKm:sliderValue];
@@ -492,9 +485,9 @@
 }
 
 - (IBAction)segmentChanged:(id)sender {
-    if([sender selectedSegmentIndex] == 1){
+    if([self.usersSegment selectedSegmentIndex] == 0){
         showAll = YES;
-    } else if([sender selectedSegmentIndex] == 2){
+    } else if([self.usersSegment selectedSegmentIndex] == 1){
         showAll = NO;
     }
     [self filteredOptionsChanged];

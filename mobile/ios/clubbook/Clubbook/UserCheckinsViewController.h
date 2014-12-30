@@ -12,7 +12,7 @@
 #import "LocationManagerProtocol.h"
 #import "ProfileCell.h"
 
-@interface UserCheckinsViewController : BaseViewController<LocationManagerProtocol, UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface UserCheckinsViewController : BaseViewController<LocationManagerProtocol, UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate, PNDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *profileCollection;
 @property (nonatomic, strong) HeaderView *headerView;
 @property (nonatomic, strong) ClubFooterView *clubFooterView;
