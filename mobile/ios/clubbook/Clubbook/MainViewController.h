@@ -27,5 +27,6 @@
 //- (IBAction)checkinAction:(UIButton *)sender;
 - (IBAction)segmentChanged:(id)sender;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) IBOutlet UILabel *noResultsLabel;
 
 @end

@@ -47,21 +47,6 @@
 
 @implementation MainViewController
 
-//#pragma mark UINavigationControllerDelegate methods
-//
-//- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
-//                                  animationControllerForOperation:(UINavigationControllerOperation)operation
-//                                               fromViewController:(UIViewController *)fromVC
-//                                                 toViewController:(UIViewController *)toVC {
-//    // Check if we're transitioning from this view controller to a DSLSecondViewController
-//    if (fromVC == self && [toVC isKindOfClass:[ClubUsersViewController class]]) {
-//        return [[TransitionFromClubListToClub alloc] init];
-//    }
-//    else {
-//        return nil;
-//    }
-//}
-
 -(BOOL)shouldAutorotate
 {
     return YES;
@@ -71,7 +56,6 @@
 {
     return UIInterfaceOrientationMaskPortrait;
 }
-
 
 - (void)viewDidLoad
 {
@@ -155,7 +139,8 @@
     
     //set placeholder text
     self.searchBar.placeholder = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Search clubs, bars, events, etc. by name", nil)];
-
+    [self changeSearchKeyboardButtonTitle];
+    
     //store height of searchbox to animate it in future
     searchBarHeight = self.searchBar.frame.size.height; //rect.size.height - 2;
     //hide searchbar
@@ -239,8 +224,8 @@
 }
 
 - (void)insertRowAtBottom {
-    int countToSkip = [self.places count];
-     [self loadClubType:selectedClubType take:10 skip:countToSkip];
+    int countToSkip = (int)[self.places count];
+    [self loadClubType:selectedClubType take:10 skip:countToSkip];
 
     //[self.clubTable.infiniteScrollingView stopAnimating];
 }
@@ -250,6 +235,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideProgress];
         [self.activityIndicator setHidden:YES];
+        
         if (isInitialLoad) {
             _places = [places mutableCopy];
             
@@ -272,6 +258,12 @@
         self.title = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Going Out", nil)];
         
         self.clubTable.hidden = NO;
+        if ([_places count] > 0) {
+            [self.noResultsLabel setHidden:YES];
+        }
+        else {
+            [self.noResultsLabel setHidden:NO];
+        }
 
         [self.clubTable.pullToRefreshView stopAnimating];
         [self.clubTable.infiniteScrollingView stopAnimating];
@@ -298,10 +290,15 @@
     [self loadClubType:@"" take:10 skip:0];
 }
 
-- (void) filterForType:(NSString*) type {
+- (void) tableWillBeRefreshed {
     [_places removeAllObjects];
     [self.clubTable reloadData];
     [self.activityIndicator setHidden:NO];
+    [self.noResultsLabel setHidden:YES];
+}
+
+- (void) filterForType:(NSString*) type {
+    [self tableWillBeRefreshed];
     
     self.isLoaded = YES;
     double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
@@ -314,8 +311,7 @@
 }
 
 - (void) searchForWord:(NSString*) searchWord {
-    [_places removeAllObjects];
-    [self.clubTable reloadData];
+    [self tableWillBeRefreshed];
     
     self.isLoaded = YES;
     double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
@@ -454,7 +450,7 @@
 - (IBAction)SliderChanged:(id)sender {
 
     int sliderValue;
-    sliderValue = lroundf(self.sliderControl.value);
+    sliderValue = (int)lroundf(self.sliderControl.value);
     distanceKm = [self convertToKm:sliderValue];
     [self.distance setText:[NSString stringWithFormat:@"%d%@", distanceKm, NSLocalizedString(@"kilometers", nil)]];
 }
@@ -607,13 +603,33 @@
 }
 
 - (void) searchBarSearchButtonClicked:(UISearchBar *)searchBar {
-    NSString* searchWord = self.searchBar.text;
-    [self searchForWord:searchWord];
+    [self handleSearchButton:nil];
 }
 
 - (void) searchTextFieldEnabled:(BOOL) enabled {
     UITextField *txfSearchField = [self.searchBar valueForKey:@"_searchField"];
     [txfSearchField setEnabled:enabled];
+}
+
+- (void) searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+   NSString* searchWord = self.searchBar.text;
+  [self searchForWord:searchWord];
+}
+
+- (void) changeSearchKeyboardButtonTitle {
+    for (UIView *subview in self.searchBar.subviews)
+    {
+        for (UIView *subSubview in subview.subviews)
+        {
+            if ([subSubview conformsToProtocol:@protocol(UITextInputTraits)])
+            {
+                UITextField *textField = (UITextField *)subSubview;
+                textField.returnKeyType = UIReturnKeyDone;
+                textField.enablesReturnKeyAutomatically = NO;
+                break;
+            }
+        }
+    }
 }
 
 //animation logic
@@ -635,7 +651,7 @@
 
 -(void) scrollViewDidScroll:(UIScrollView *)scrollView {
     
-    if(self.clubTable.pullToRefreshView.state || scrollView.contentOffset.y <= -10) { //|| dontHideNavBar) {
+    if(self.clubTable.pullToRefreshView.state || scrollView.contentOffset.y <= -10) { 
        return;
     }
     //scrolled up
