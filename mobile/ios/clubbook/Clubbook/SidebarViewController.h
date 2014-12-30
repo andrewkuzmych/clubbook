@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "BaseTableViewController.h"
 
-@interface SidebarViewController : BaseTableViewController
-- (IBAction)checkinClubAction:(id)sender;
+#import "BaseViewController.h"
+#import "PubNub.h"
+
+@interface SidebarViewController : BaseViewController <UICollectionViewDelegate, UICollectionViewDataSource, PNDelegate>
+@property (weak, nonatomic) IBOutlet UICollectionView *menuCollectionView;
+@property (weak, nonatomic) IBOutlet UIImageView *backgroundImageView;
 @end

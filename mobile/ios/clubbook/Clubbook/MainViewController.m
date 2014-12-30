@@ -256,10 +256,12 @@
             if (types) {
                 if ([types count] != 0) {
                     for (NSString* option in types) {
-                         NSString* filterOption = [NSString stringWithFormat:@"%@", NSLocalizedString(option, nil)];
-                        filterOption = [option capitalizedString];
-
-                        [self.filterTabBar addTabForTitle:filterOption];
+                        if ([option isKindOfClass:[NSString class]]) {
+                            NSString* filterOption = [NSString stringWithFormat:@"%@", NSLocalizedString(option, nil)];
+                            filterOption = [option capitalizedString];
+                            
+                            [self.filterTabBar addTabForTitle:filterOption];
+                        }
                     }
                 }
             }

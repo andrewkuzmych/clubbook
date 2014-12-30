@@ -6,6 +6,13 @@
 //  Copyright (c) 2013 Appcoda. All rights reserved.
 //
 
+#import <Parse/Parse.h>
+#import <QuartzCore/QuartzCore.h>
+
+#import "GAIFields.h"
+#import "GAIDictionaryBuilder.h"
+#import "GAI.h"
+
 #import "SidebarViewController.h"
 #import "SWRevealViewController.h"
 #import "MenuCell.h"
@@ -15,8 +22,9 @@
 #import "LocationHelper.h"
 #import "ClubUsersViewController.h"
 #import "GlobalVars.h"
-#import <Parse/Parse.h>
-#import <QuartzCore/QuartzCore.h>
+#import "MainMenuCollectionViewCell.h"
+
+
 
 @interface SidebarViewController (){
     long unreadMessagesCount;
@@ -28,26 +36,15 @@
 
 @implementation SidebarViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 
-    //self.tableView.backgroundColor = [UIColor colorWithRed:52/256.0 green:3/256.0 blue:69/256.0 alpha:1.0];
-    UIImageView *tempImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
-    tempImg.contentMode = UIViewContentModeScaleAspectFill;
-    [tempImg setImage:[UIImage imageNamed:@"menu_background.png"]];
-    [self.tableView setBackgroundView:tempImg];
+    self.view.backgroundColor = [UIColor colorWithRed:52/256.0 green:3/256.0 blue:69/256.0 alpha:1.0];
+    [self.backgroundImageView setImage: [UIImage imageNamed:@"menu_background.png"]];
+    self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
     
-    _menuItems = @[@"title", @"clubs", @"checkedIn", @"messages", @"friends", @"settings", @"share", @"fast_checkin"];
+    _menuItems = @[@"goingout", @"usersnearby", @"messages", @"friends", @"settings", @"fastcheckin"];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -62,14 +59,7 @@
     
     //Pubnub staff
     [PubNub setDelegate:self];
-    
-    // clear badge value
-    //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-    //PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    //NSInteger b =  currentInstallation.badge;
-    //currentInstallation.badge = 0;
-    //[currentInstallation saveEventually];
-    
+   
     [self loadData];
 }
 
@@ -96,7 +86,7 @@
 {
     unreadMessagesCount = unreadMessages.countOfUnreadChats;
     pendingFriendsCount = unreadMessages.countOfPendingFriends;
-    [self.tableView reloadData];
+    //[self.tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning
@@ -116,7 +106,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.menuItems count];
+    return 0;//[self.menuItems count];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -177,7 +167,7 @@
         
         NSString * avatarUrl  = [cloudinary url: [userAvatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
         
-        [cell.avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
+        [cell.avatarImage sd_setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
         
     } else if ([cellIdentifier isEqualToString:@"messages"]) {
         cell.countLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:16];
@@ -232,19 +222,19 @@
 - (void) prepareForSegue: (UIStoryboardSegue *) segue sender: (id) sender
 {
     if([[segue identifier] isEqualToString:@"onClub"]){
-        ClubUsersViewController *clubController =  [segue destinationViewController];
-        //NSIndexPath *selectedIndexPath = [self.clubTable indexPathForSelectedRow];
+        ClubUsersViewController *clubController = [segue destinationViewController];
         Place *place = (Place*) sender;
         clubController.hasBack = NO;
         clubController.place = place;
     }
  
     // Set the title of navigation bar by using the menu items
-    NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-    UINavigationController *destViewController = (UINavigationController*)segue.destinationViewController;
-    destViewController.title = NSLocalizedString([_menuItems objectAtIndex:indexPath.row], nil);//[[_menuItems objectAtIndex:indexPath.row] capitalizedString];
-
+    NSIndexPath *indexPath = [[self.menuCollectionView indexPathsForSelectedItems] objectAtIndex:0];
+    MainMenuCollectionViewCell* selectedItem = (MainMenuCollectionViewCell*)[self.menuCollectionView cellForItemAtIndexPath:indexPath];
     
+    UINavigationController *destViewController = (UINavigationController*)segue.destinationViewController;
+    destViewController.title = selectedItem.menuLabel.text;
+
     if ( [segue isKindOfClass: [SWRevealViewControllerSegue class]] ) {
         SWRevealViewControllerSegue *swSegue = (SWRevealViewControllerSegue*) segue;
         
@@ -255,12 +245,6 @@
                 [self.revealViewController setFrontViewPosition: FrontViewPositionLeft animated: YES];
         }; 
     }
-}
-
-
-- (IBAction)checkinClubAction:(id)sender {
-    Place * checkinClub = [LocationHelper getCheckinClub];
-    [self performSegueWithIdentifier: @"onClub" sender: checkinClub];
 }
 
 - (void)actionSheet:(UIActionSheet *)popup clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -291,7 +275,80 @@
 {
     [self hideProgress];
     [LocationHelper removeCheckin];
-    [self.tableView reloadData];
+    //[self.tableView reloadData];
+}
+
+#pragma mark - CollectionView
+#pragma mark DataSource
+
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:      (NSInteger)section
+{
+    return [_menuItems count];
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    MainMenuCollectionViewCell *cell = (MainMenuCollectionViewCell *)[self.menuCollectionView dequeueReusableCellWithReuseIdentifier:@"MenuCell" forIndexPath:indexPath];
+    
+    [cell setIconBackground:[UIColor colorWithRed:0.277 green:0.002 blue:0.371 alpha:0.500]];
+    cell.icon.layer.cornerRadius = 32;
+    cell.icon.layer.borderWidth = 2.0f;
+    cell.icon.layer.borderColor = [UIColor colorWithWhite:0.891 alpha:0.600].CGColor;
+    [cell.icon.layer setMasksToBounds:YES];
+    
+    cell.bigNotificationNumber.layer.cornerRadius = 32;
+    [cell.bigNotificationNumber.layer setMasksToBounds:YES];
+    cell.bigNotificationNumber.backgroundColor = cell.notificationNumberLabel.backgroundColor;
+    
+    
+    cell.notificationNumberLabel.layer.cornerRadius = 15;
+    [cell.notificationNumberLabel.layer setMasksToBounds:YES];
+    
+    NSUInteger item = indexPath.item;
+    NSString* currentItemId = [_menuItems objectAtIndex:item];
+  
+    if ([currentItemId isEqualToString:@"goingout"]) {
+        cell.menuLabel.text = @"Going Out";
+    }
+    else if ([currentItemId isEqualToString:@"usersnearby"]) {
+        cell.menuLabel.text = @"Users Nearby";
+    }
+    else if ([currentItemId isEqualToString:@"messages"]) {
+        if (unreadMessagesCount > 0) {
+            [cell.notificationNumberLabel setHidden:NO];
+            [cell.notificationNumberLabel setText:[NSString stringWithFormat:@"%ld", unreadMessagesCount, nil]];
+        }
+        cell.menuLabel.text = @"Messages";
+    }
+    else if ([currentItemId isEqualToString:@"friends"]) {
+        if (pendingFriendsCount > 0) {
+            [cell.notificationNumberLabel setHidden:NO];
+            [cell.notificationNumberLabel setText:[NSString stringWithFormat:@"%ld", pendingFriendsCount, nil]];
+        }
+        cell.menuLabel.text = @"Friends";
+    }
+    else if ([currentItemId isEqualToString:@"settings"]) {
+        cell.menuLabel.text = @"Settings";
+    }
+    else if ([currentItemId isEqualToString:@"fastcheckin"]) {
+        [cell.bigNotificationNumber setHidden:NO];
+        [cell.icon setBackgroundColor:[UIColor clearColor]];
+        [cell.icon.layer setBorderColor:[UIColor whiteColor].CGColor];
+        cell.menuLabel.text = @"Fast Checkin";
+    }
+    
+    return cell;
+}
+
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath  {
+    NSUInteger selectedItem = indexPath.item;
+    NSString* segueId = [_menuItems objectAtIndex:selectedItem];
+    [self performSegueWithIdentifier:segueId sender:self];
 }
 
 @end

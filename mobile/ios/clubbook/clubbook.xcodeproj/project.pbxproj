@@ -375,6 +375,7 @@
 		520897811A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520897561A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.xib */; };
 		520897861A407C7F00E8DD06 /* JSQSystemSoundPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 520897851A407C7F00E8DD06 /* JSQSystemSoundPlayer.m */; };
 		5210474D1A48300A006DD319 /* DateHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5210474C1A48300A006DD319 /* DateHelper.m */; };
+		52188DAE1A51876E0020DD6F /* MainMenuCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52188DAD1A51876E0020DD6F /* MainMenuCollectionViewCell.m */; };
 		522ACCDF1A32084F006789EB /* SPSlideTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDC1A32084F006789EB /* SPSlideTabBar.m */; };
 		522ACCE01A32084F006789EB /* SPSlideTabButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDE1A32084F006789EB /* SPSlideTabButton.m */; };
 		52343D9B1A430CF400F47A36 /* UIImage+FixOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 52343D9A1A430CF400F47A36 /* UIImage+FixOrientation.m */; };
@@ -1085,6 +1086,8 @@
 		520897851A407C7F00E8DD06 /* JSQSystemSoundPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSQSystemSoundPlayer.m; sourceTree = "<group>"; };
 		5210474B1A48300A006DD319 /* DateHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateHelper.h; sourceTree = "<group>"; };
 		5210474C1A48300A006DD319 /* DateHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateHelper.m; sourceTree = "<group>"; };
+		52188DAC1A51876E0020DD6F /* MainMenuCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenuCollectionViewCell.h; sourceTree = "<group>"; };
+		52188DAD1A51876E0020DD6F /* MainMenuCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainMenuCollectionViewCell.m; sourceTree = "<group>"; };
 		522ACCDB1A32084F006789EB /* SPSlideTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPSlideTabBar.h; path = SPSlideTabBar/SPSlideTabBar.h; sourceTree = "<group>"; };
 		522ACCDC1A32084F006789EB /* SPSlideTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPSlideTabBar.m; path = SPSlideTabBar/SPSlideTabBar.m; sourceTree = "<group>"; };
 		522ACCDD1A32084F006789EB /* SPSlideTabButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPSlideTabButton.h; path = SPSlideTabBar/SPSlideTabButton.h; sourceTree = "<group>"; };
@@ -1812,6 +1815,8 @@
 				529735941A39FBB9009943C3 /* FilterMenuTableViewCell.m */,
 				52343D991A430CF400F47A36 /* UIImage+FixOrientation.h */,
 				52343D9A1A430CF400F47A36 /* UIImage+FixOrientation.m */,
+				52188DAC1A51876E0020DD6F /* MainMenuCollectionViewCell.h */,
+				52188DAD1A51876E0020DD6F /* MainMenuCollectionViewCell.m */,
 			);
 			name = Controls;
 			sourceTree = "<group>";
@@ -2800,6 +2805,7 @@
 				4996E0C519669ED0000C721F /* CbButton.m in Sources */,
 				49E831E2195877C200D4A26C /* Place.m in Sources */,
 				52343D9B1A430CF400F47A36 /* UIImage+FixOrientation.m in Sources */,
+				52188DAE1A51876E0020DD6F /* MainMenuCollectionViewCell.m in Sources */,
 				498A68EA196C4CFD00BC2859 /* PNMessage.m in Sources */,
 				5208976C1A407C6700E8DD06 /* JSQMessage.m in Sources */,
 				498A68DE196C4CFD00BC2859 /* PNWhereNowResponseParser.m in Sources */,
