@@ -56,12 +56,12 @@
     
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(appplicationIsActive:)
+                                             selector:@selector(applicationIsActive)
                                                  name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(applicationEnteredForeground:)
+                                             selector:@selector(applicationEnteredForeground)
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
 
@@ -143,6 +143,14 @@
     [self loadAllTypeClubs];
     
     [self.view setBackgroundColor:self.filterTabBar.backgroundColor];
+}
+
+-(void) applicationEnteredForeground {
+    
+}
+
+-(void) applicationIsActive {
+    
 }
 
 -(BOOL)shouldAutorotate {
