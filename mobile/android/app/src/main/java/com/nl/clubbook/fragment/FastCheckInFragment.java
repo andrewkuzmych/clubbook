@@ -62,7 +62,6 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
 
         if(!hidden) {
             ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
-            actionBar.setIcon(R.drawable.icon_play);
             actionBar.setTitle(R.string.clubs);
         }
     }
