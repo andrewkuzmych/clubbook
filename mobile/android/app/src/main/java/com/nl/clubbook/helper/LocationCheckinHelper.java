@@ -13,8 +13,8 @@ import com.nl.clubbook.activity.BaseActivity;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.activity.MainLoginActivity;
 import com.nl.clubbook.activity.NoLocationActivity;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.Place;
-import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.utils.L;
 
 import org.jetbrains.annotations.Nullable;
@@ -131,7 +131,7 @@ public class LocationCheckinHelper {
         }
 
         SessionManager sessionManager = SessionManager.getInstance();
-        DataStore.checkin(place.getId(), sessionManager.getAccessToken(), new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().checkin(place.getId(), sessionManager.getAccessToken(), new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (failed) {
@@ -156,27 +156,27 @@ public class LocationCheckinHelper {
         L.d("Try to Check out user");
 
         SessionManager sessionManager = SessionManager.getInstance();
-        DataStore.checkout(mCurrentPlace.getId(), sessionManager.getAccessToken(),
-                new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().checkout(mCurrentPlace.getId(), sessionManager.getAccessToken(),
+                new HttpClientManager.OnResultReady() {
 
-            @Override
-            public void onReady(Object result, boolean failed) {
-                if (failed) {
-                    callback.onCheckInOutFinished(false);
-                } else {
-                    L.d("Checked out from club");
-                    clearCheckedInClubInfo();
-                    callback.onCheckInOutFinished(true);
+                    @Override
+                    public void onReady(Object result, boolean failed) {
+                        if (failed) {
+                            callback.onCheckInOutFinished(false);
+                        } else {
+                            L.d("Checked out from club");
+                            clearCheckedInClubInfo();
+                            callback.onCheckInOutFinished(true);
 
-                    //sent broadcast
-                    Intent intent = new Intent();
-                    intent.setAction(MainActivity.ACTION_CHECK_IN_CHECK_OUT);
-                    context.sendBroadcast(intent);
+                            //sent broadcast
+                            Intent intent = new Intent();
+                            intent.setAction(MainActivity.ACTION_CHECK_IN_CHECK_OUT);
+                            context.sendBroadcast(intent);
 
-                    cancelLocationUpdates(context);
-                }
-            }
-        });
+                            cancelLocationUpdates(context);
+                        }
+                    }
+                });
 
         // stop check in task
 //        scheduleTaskExecutor.shutdown();

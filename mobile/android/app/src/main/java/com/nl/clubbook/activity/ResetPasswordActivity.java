@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.utils.NetworkUtils;
 
 /**
@@ -81,16 +81,16 @@ public class ResetPasswordActivity extends BaseActivity {
         String accessToken = getSession().getAccessToken();
 
         showProgressDialog(getString(R.string.changing_password));
-        DataStore.resetPassword(oldPassword, newPassword, accessToken, new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().resetPassword(oldPassword, newPassword, accessToken, new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
-                if(isFinishing()) {
+                if (isFinishing()) {
                     return;
                 }
 
                 hideProgressDialog();
 
-                if(failed) {
+                if (failed) {
                     showToast(R.string.something_went_wrong_please_try_again);
                 } else {
                     showToast(R.string.password_changed);

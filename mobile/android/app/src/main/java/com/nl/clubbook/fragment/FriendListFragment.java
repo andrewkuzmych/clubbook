@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.FriendsAdapter;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.NetworkUtils;
@@ -75,8 +75,8 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
 
         mSwipeRefreshLayout.setRefreshing(true);
 
-        DataStore.retrieveFriends(user.get(SessionManager.KEY_ID), user.get(SessionManager.KEY_ACCESS_TOCKEN),
-                new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().retrieveFriends(user.get(SessionManager.KEY_ID), user.get(SessionManager.KEY_ACCESS_TOCKEN),
+                new HttpClientManager.OnResultReady() {
 
                     @Override
                     public void onReady(Object result, boolean failed) {
@@ -92,8 +92,8 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
                             return;
                         }
 
-                        List<User> userList = (List<User>)result;
-                        if(userList.size() > 0) {
+                        List<User> userList = (List<User>) result;
+                        if (userList.size() > 0) {
                             view.findViewById(R.id.txtNoFriendsAdded).setVisibility(View.GONE);
                         } else {
                             view.findViewById(R.id.txtNoFriendsAdded).setVisibility(View.VISIBLE);

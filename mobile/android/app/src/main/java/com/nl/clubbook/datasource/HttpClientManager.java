@@ -5,7 +5,9 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
+import com.nl.clubbook.fragment.PlacesFragment;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.L;
 
@@ -21,12 +23,24 @@ import java.util.List;
 /**
  * Created by Andrew on 5/19/2014.
  */
-public class DataStore {
+public class HttpClientManager {
 
-    private DataStore() {
+    private static HttpClientManager sManager;
+
+    private RequestHandle mRetrieveAllPlaceRequestHandle;
+
+    public static HttpClientManager getInstance() {
+        if(sManager == null) {
+            sManager = new HttpClientManager();
+        }
+
+        return sManager;
     }
 
-    public static void regByEmail(String name, String email, String pass, String gender, String dob, String country, String city, String bio, JSONObject avatar,
+    private HttpClientManager() {
+    }
+
+    public void regByEmail(String name, String email, String pass, String gender, String dob, String country, String city, String bio, JSONObject avatar,
                                   final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("email", email);
@@ -67,7 +81,7 @@ public class DataStore {
         });
     }
 
-    public static void updateUserProfile(String accessToken, String name, String gender, String dob, String country, String bio, final OnResultReady onResultReady) {
+    public void updateUserProfile(String accessToken, String name, String gender, String dob, String country, String bio, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("name", name);
         params.put("gender", gender);
@@ -109,7 +123,7 @@ public class DataStore {
         });
     }
 
-    public static void updateNotificationEnabling(String accessToken, String enablingState, final OnResultReady onResultReady) {
+    public void updateNotificationEnabling(String accessToken, String enablingState, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("push_not", enablingState);
         params.put("access_token", accessToken);
@@ -145,7 +159,7 @@ public class DataStore {
         });
     }
 
-    public static void deleteProfile(Context context, String accessToken, final OnResultReady onResultReady) {
+    public void deleteProfile(Context context, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -176,7 +190,7 @@ public class DataStore {
         });
     }
 
-    public static void profileAddImage(String accessToken, String userId, JSONObject avatar, final OnResultReady onResultReady) {
+    public void profileAddImage(String accessToken, String userId, JSONObject avatar, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
         params.put("avatar", avatar);
@@ -218,7 +232,7 @@ public class DataStore {
         });
     }
 
-    public static void profileDeleteImage(Context context, String accessToken, String userId, String imageId, final OnResultReady onResultReady) {
+    public void profileDeleteImage(Context context, String accessToken, String userId, String imageId, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -257,7 +271,7 @@ public class DataStore {
         });
     }
 
-    public static void profileUpdateImage(String accessToken, String userId, String imageId, Boolean isAvatar, final OnResultReady onResultReady) {
+    public void profileUpdateImage(String accessToken, String userId, String imageId, Boolean isAvatar, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
         params.put("is_avatar", isAvatar);
@@ -299,7 +313,7 @@ public class DataStore {
         });
     }
 
-    public static void loginByEmail(String email, String pass, final OnResultReady onResultReady) {
+    public void loginByEmail(String email, String pass, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("email", email);
         params.put("password", pass);
@@ -341,7 +355,7 @@ public class DataStore {
         });
     }
 
-    public static void loginByFb(String name, String email, String fbId, String fbAccessToken, String gender, String dob, JSONObject avatar,
+    public void loginByFb(String name, String email, String fbId, String fbAccessToken, String gender, String dob, JSONObject avatar,
                                  final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         if(email != null && !email.equalsIgnoreCase("null")) {
@@ -393,7 +407,7 @@ public class DataStore {
         });
     }
 
-    public static void retrievePlaces(String type, String search, String skip, String take, String lat, String lon, String accessToken, final OnResultReady onResultReady) {
+    public void retrievePlaces(String type, String search, String skip, String take, String lat, String lon, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.add("skip", skip);
         params.add("take", take);
@@ -403,7 +417,7 @@ public class DataStore {
         params.add("search", search);
         params.add("access_token", accessToken);
 
-        ClubbookRestClient.retrievePlaces(params, new JsonHttpResponseHandler() {
+        JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
@@ -422,10 +436,23 @@ public class DataStore {
             public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
                 onResultReady.onReady(null, true);
             }
-        });
+        };
+
+        // we need instance of getAllPlace request for canceling it when we search. In other way, we will have bug with displaying correct finding results, when one request finished faster then other one
+        // it's only implemented for GetAllPlaces
+
+        if(mRetrieveAllPlaceRequestHandle != null && !mRetrieveAllPlaceRequestHandle.isFinished() && PlacesFragment.Types.ALL.equalsIgnoreCase(type)) {
+            mRetrieveAllPlaceRequestHandle.cancel(true);
+        }
+
+        if(PlacesFragment.Types.ALL.equalsIgnoreCase(type)) {
+            mRetrieveAllPlaceRequestHandle = ClubbookRestClient.retrievePlaces(params, handler);
+        } else {
+            ClubbookRestClient.retrievePlaces(params, handler);
+        }
     }
 
-    public static void retrieveFastCheckInClub(String lat, String lon, String distance, String accessToken, final OnResultReady onResultReady) {
+    public void retrieveFastCheckInClub(String lat, String lon, String distance, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.add("user_lat", lat);
         params.add("user_lon", lon);
@@ -454,7 +481,7 @@ public class DataStore {
         });
     }
 
-    public static void retrieveClubCheckedInUsers(String clubId, String accessToken, final OnResultReady onResultReady) {
+    public void retrieveClubCheckedInUsers(String clubId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -492,7 +519,7 @@ public class DataStore {
         });
     }
 
-    public static void retrieveClubYesterdayCheckedInUsers(String clubId, String accessToken, final OnResultReady onResultReady) {
+    public void retrieveClubYesterdayCheckedInUsers(String clubId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -532,7 +559,7 @@ public class DataStore {
         });
     }
 
-    public static void retrieveNearbyUsers(String requestType, String gender, String accessToken, String userLat, String userLong, String distance, final OnResultReady onResultReady) {
+    public void retrieveNearbyUsers(String requestType, String gender, String accessToken, String userLat, String userLong, String distance, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("gender", gender);
         params.put("user_lat", userLat);
@@ -570,7 +597,7 @@ public class DataStore {
         });
     }
 
-    public static void retrieveUser(String accessToken, final OnResultReady onResultReady) {
+    public void retrieveUser(String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -615,7 +642,7 @@ public class DataStore {
         });
     }
 
-    public static void retrieveFriends(String userId, String accessToken, final OnResultReady onResultReady) {
+    public void retrieveFriends(String userId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -662,7 +689,7 @@ public class DataStore {
         });
     }
 
-    public static void getFacebookFriendsOnClubbook(String accessToken, List<String> fbIds, final OnResultReady onResultReady) {
+    public void getFacebookFriendsOnClubbook(String accessToken, List<String> fbIds, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -718,7 +745,7 @@ public class DataStore {
         });
     }
 
-    public static void invitedFriendsToClubbookFbIds(String profileId, String accessToken, List<String> fbIds, final OnResultReady onResultReady) {
+    public void invitedFriendsToClubbookFbIds(String profileId, String accessToken, List<String> fbIds, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -763,7 +790,7 @@ public class DataStore {
         });
     }
 
-    public static void retrievePendingFriends(String userId, String accessToken, final OnResultReady onResultReady) {
+    public void retrievePendingFriends(String userId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -810,7 +837,7 @@ public class DataStore {
         });
     }
 
-    public static void addFriendRequest(String userId, String friendId, String accessToken, final OnResultReady onResultReady) {
+    public void addFriendRequest(String userId, String friendId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -842,7 +869,7 @@ public class DataStore {
         });
     }
 
-    public static void acceptFriendRequest(String userId, String friendId, String accessToken, final OnResultReady onResultReady) {
+    public void acceptFriendRequest(String userId, String friendId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -874,7 +901,7 @@ public class DataStore {
         });
     }
 
-    public static void cancelFriendRequest(String userId, String friendId, String accessToken, final OnResultReady onResultReady) {
+    public void cancelFriendRequest(String userId, String friendId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -906,7 +933,7 @@ public class DataStore {
         });
     }
 
-    public static void blockUserRequest(String userId, String friendId, String accessToken, final OnResultReady onResultReady) {
+    public void blockUserRequest(String userId, String friendId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -938,7 +965,7 @@ public class DataStore {
         });
     }
 
-    public static void unblockUserRequest(String userId, String friendId, String accessToken, final OnResultReady onResultReady) {
+    public void unblockUserRequest(String userId, String friendId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -970,7 +997,7 @@ public class DataStore {
         });
     }
 
-    public static void unfriendRequest(String accessToken, String userId, String friendId, final OnResultReady onResultReady) {
+    public void unfriendRequest(String accessToken, String userId, String friendId, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -1002,7 +1029,7 @@ public class DataStore {
         });
     }
 
-    public static void declineFriendRequest(String accessToken, String userId, String friendId, final OnResultReady onResultReady) {
+    public void declineFriendRequest(String accessToken, String userId, String friendId, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -1034,7 +1061,7 @@ public class DataStore {
         });
     }
 
-    public static void retrieveUserFriend(String accessToken, String friendId, final OnResultReady onResultReady) {
+    public void retrieveUserFriend(String accessToken, String friendId, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -1078,7 +1105,7 @@ public class DataStore {
         });
     }
 
-    public static void resetPassword(String currentPassword, String newPassword, String accessToken, final OnResultReady onResultReady) {
+    public void resetPassword(String currentPassword, String newPassword, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("old_password", currentPassword);
         params.put("new_password", newPassword);
@@ -1112,7 +1139,7 @@ public class DataStore {
         });
     }
 
-    public static void checkin(String placeId, String accessToken, final OnResultReady onResultReady) {
+    public void checkin(String placeId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -1157,7 +1184,7 @@ public class DataStore {
         });
     }
 
-    public static void updateCheckin(String placeId, String accessToken, final OnResultReady onResultReady) {
+    public void updateCheckin(String placeId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -1202,7 +1229,7 @@ public class DataStore {
         });
     }
 
-    public static void checkout(String placeId, String accessToken, final OnResultReady onResultReady) {
+    public void checkout(String placeId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -1253,7 +1280,7 @@ public class DataStore {
      * @param receiverUserId
      * @param onResultReady
      */
-    public static void getConversation(final Activity activity, String currentUserId, String receiverUserId, String accessToken,
+    public void getConversation(final Activity activity, String currentUserId, String receiverUserId, String accessToken,
                                        final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
@@ -1312,7 +1339,7 @@ public class DataStore {
      * @param accessToken
      * @param onResultReady
      */
-    public static void getConversations(final String userId, String accessToken, final OnResultReady onResultReady) {
+    public void getConversations(final String userId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -1357,7 +1384,7 @@ public class DataStore {
         });
     }
 
-    public static void chat(String userFrom, String userTo, String msg, String type, String accessToken,
+    public void chat(String userFrom, String userTo, String msg, String type, String accessToken,
                             final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("user_from", userFrom);
@@ -1401,7 +1428,7 @@ public class DataStore {
         });
     }
 
-    public static void readMessages(String currentUserId, String receiverId, String accessToken,
+    public void readMessages(String currentUserId, String receiverId, String accessToken,
                                     final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
@@ -1437,7 +1464,7 @@ public class DataStore {
         });
     }
 
-    public static void file(InputStream file, final OnResultReady onResultReady) {
+    public void file(InputStream file, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("image", file);
 
@@ -1484,7 +1511,7 @@ public class DataStore {
         });
     }
 
-    public static void getNotifications(String accessToken, final OnResultReady onResultReady) {
+    public void getNotifications(String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 
@@ -1525,7 +1552,7 @@ public class DataStore {
         });
     }
 
-    public static void getConfig(final OnResultReady onResultReady) {
+    public void getConfig(final OnResultReady onResultReady) {
         ClubbookRestClient.getConfig(new JsonHttpResponseHandler() {
             private boolean failed = true;
 
@@ -1577,7 +1604,7 @@ public class DataStore {
      */
 
     @Deprecated
-    public static void retrievePlace(String placeId, String accessToken, final OnResultReady onResultReady) {
+    public void retrievePlace(String placeId, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
 

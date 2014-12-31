@@ -8,13 +8,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.widget.Toast;
 
 import com.cloudinary.Cloudinary;
 import com.facebook.Session;
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.fragment.SettingsFragment;
 import com.nl.clubbook.helper.LocationCheckinHelper;
@@ -180,7 +179,7 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
         final String finalDob = "";
 
         showProgressDialog(getString(R.string.loading));
-        DataStore.loginByFb(name, email, fb_id, access_token, gender, finalDob, avatar, new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().loginByFb(name, email, fb_id, access_token, gender, finalDob, avatar, new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 hideProgressDialog();

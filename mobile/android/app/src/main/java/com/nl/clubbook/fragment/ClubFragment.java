@@ -22,9 +22,9 @@ import com.nl.clubbook.activity.ClubInfoActivity;
 import com.nl.clubbook.activity.MainActivity;
 import com.nl.clubbook.activity.YesterdayUsersGridActivity;
 import com.nl.clubbook.adapter.ProfileAdapter;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.Place;
 import com.nl.clubbook.datasource.ClubWorkingHours;
-import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.datasource.JSONConverter;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
@@ -32,7 +32,6 @@ import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.*;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
-import com.nl.clubbook.utils.UIUtils;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -216,11 +215,11 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         view.findViewById(R.id.txtNoUsers).setVisibility(View.GONE);
         view.findViewById(R.id.gridUsers).setVisibility(View.GONE);
 
-        DataStore.retrieveClubCheckedInUsers(mPlace.getId(), user.get(SessionManager.KEY_ACCESS_TOCKEN), new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().retrieveClubCheckedInUsers(mPlace.getId(), user.get(SessionManager.KEY_ACCESS_TOCKEN), new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 View view = getView();
-                if(view == null || isDetached() || getActivity() == null || result == null) {
+                if (view == null || isDetached() || getActivity() == null || result == null) {
                     return;
                 }
 

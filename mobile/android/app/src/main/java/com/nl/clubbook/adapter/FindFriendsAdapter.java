@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.CheckIn;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.ImageHelper;
@@ -192,8 +192,8 @@ public class FindFriendsAdapter extends BaseAdapter {
 
         showProgress(mContext.getString(R.string.loading));
 
-        DataStore.addFriendRequest(userId, user.getId(), accessToken,
-                new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().addFriendRequest(userId, user.getId(), accessToken,
+                new HttpClientManager.OnResultReady() {
 
                     @Override
                     public void onReady(Object result, boolean failed) {
@@ -220,8 +220,8 @@ public class FindFriendsAdapter extends BaseAdapter {
 
         showProgress(mContext.getString(R.string.loading));
 
-        DataStore.acceptFriendRequest(userId, user.getId(), accessToken,
-                new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().acceptFriendRequest(userId, user.getId(), accessToken,
+                new HttpClientManager.OnResultReady() {
                     @Override
                     public void onReady(Object result, boolean failed) {
                         hideProgress();

@@ -11,7 +11,7 @@ import android.widget.ListView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.MessagesAdapter;
 import com.nl.clubbook.datasource.Chat;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.L;
@@ -74,13 +74,13 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
 
         mSwipeRefreshLayout.setRefreshing(true);
 
-        DataStore.getConversations(user.get(SessionManager.KEY_ID), user.get(SessionManager.KEY_ACCESS_TOCKEN),
-                new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().getConversations(user.get(SessionManager.KEY_ID), user.get(SessionManager.KEY_ACCESS_TOCKEN),
+                new HttpClientManager.OnResultReady() {
 
                     @Override
                     public void onReady(Object result, boolean failed) {
                         View view = getView();
-                        if(isDetached() || getActivity() == null || view == null) {
+                        if (isDetached() || getActivity() == null || view == null) {
                             L.i("fragment_is_detached");
                             return;
                         }
@@ -88,7 +88,7 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
                         mSwipeRefreshLayout.setRefreshing(false);
 
                         if (failed) {
-                            if (mAdapter.getCount() == 0){
+                            if (mAdapter.getCount() == 0) {
                                 view.findViewById(R.id.txtNoMessages).setVisibility(View.VISIBLE);
                             }
 
@@ -99,7 +99,7 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
                         List<Chat> chats = (List<Chat>) result;
                         mAdapter.updateData(chats);
 
-                        if(chats.size() == 0) {
+                        if (chats.size() == 0) {
                             view.findViewById(R.id.txtNoMessages).setVisibility(View.VISIBLE);
                         } else {
                             view.findViewById(R.id.txtNoMessages).setVisibility(View.GONE);

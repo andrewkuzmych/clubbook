@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.PendingFriendsAdapter;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.NetworkUtils;
@@ -109,8 +109,8 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
 
         mSwipeRefreshLayout.setRefreshing(true);
 
-        DataStore.retrievePendingFriends(user.get(SessionManager.KEY_ID), user.get(SessionManager.KEY_ACCESS_TOCKEN),
-                new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().retrievePendingFriends(user.get(SessionManager.KEY_ID), user.get(SessionManager.KEY_ACCESS_TOCKEN),
+                new HttpClientManager.OnResultReady() {
 
                     @Override
                     public void onReady(Object result, boolean failed) {
@@ -142,8 +142,8 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
 
         showProgress(getString(R.string.loading));
 
-        DataStore.acceptFriendRequest(user.get(SessionManager.KEY_ID), friendId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
-                new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().acceptFriendRequest(user.get(SessionManager.KEY_ID), friendId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
+                new HttpClientManager.OnResultReady() {
 
                     @Override
                     public void onReady(Object result, boolean failed) {
@@ -186,7 +186,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
         String userId = user.get(SessionManager.KEY_ID);
         String accessToken = user.get(SessionManager.KEY_ACCESS_TOCKEN);
 
-        DataStore.declineFriendRequest(accessToken, userId, friendId, new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().declineFriendRequest(accessToken, userId, friendId, new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 View view = getView();

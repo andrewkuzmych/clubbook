@@ -3,7 +3,6 @@ package com.nl.clubbook.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,18 +12,15 @@ import android.widget.TextView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.ImagesGalleryActivity;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.datasource.UserPhoto;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.SessionManager;
-import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
-import com.nl.clubbook.utils.UIUtils;
 import com.squareup.picasso.Picasso;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -255,26 +251,26 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         showProgress(getString(R.string.loading));
 
-        DataStore.addFriendRequest(user.get(SessionManager.KEY_ID), mUser.getId(), user.get(SessionManager.KEY_ACCESS_TOCKEN),
-                new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().addFriendRequest(user.get(SessionManager.KEY_ID), mUser.getId(), user.get(SessionManager.KEY_ACCESS_TOCKEN),
+                new HttpClientManager.OnResultReady() {
 
-            @Override
-            public void onReady(Object result, boolean failed) {
-                View view = getView();
-                if (view == null || isDetached()) {
-                    return;
-                }
+                    @Override
+                    public void onReady(Object result, boolean failed) {
+                        View view = getView();
+                        if (view == null || isDetached()) {
+                            return;
+                        }
 
-                hideProgress();
-                if (failed) {
-                    showToast(R.string.something_went_wrong_please_try_again);
-                } else {
-                    mBtnAddFriendMode = BtnAddFriendModes.MODE_CANCEL;
-                    TextView txtAddFriends = (TextView) view.findViewById(R.id.txtAddFriend);
-                    txtAddFriends.setText(R.string.cancel_request);
-                }
-            }
-        });
+                        hideProgress();
+                        if (failed) {
+                            showToast(R.string.something_went_wrong_please_try_again);
+                        } else {
+                            mBtnAddFriendMode = BtnAddFriendModes.MODE_CANCEL;
+                            TextView txtAddFriends = (TextView) view.findViewById(R.id.txtAddFriend);
+                            txtAddFriends.setText(R.string.cancel_request);
+                        }
+                    }
+                });
     }
 
     private void onAcceptFriendsRequestClicked() {
@@ -288,8 +284,8 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         showProgress(getString(R.string.loading));
 
-        DataStore.acceptFriendRequest(user.get(SessionManager.KEY_ID), mUser.getId(), user.get(SessionManager.KEY_ACCESS_TOCKEN),
-                new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().acceptFriendRequest(user.get(SessionManager.KEY_ID), mUser.getId(), user.get(SessionManager.KEY_ACCESS_TOCKEN),
+                new HttpClientManager.OnResultReady() {
 
                     @Override
                     public void onReady(Object result, boolean failed) {
@@ -320,8 +316,8 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         showProgress(getString(R.string.canceling));
 
-        DataStore.cancelFriendRequest(user.get(SessionManager.KEY_ID), mUser.getId(), user.get(SessionManager.KEY_ACCESS_TOCKEN),
-                new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().cancelFriendRequest(user.get(SessionManager.KEY_ID), mUser.getId(), user.get(SessionManager.KEY_ACCESS_TOCKEN),
+                new HttpClientManager.OnResultReady() {
 
                     @Override
                     public void onReady(Object result, boolean failed) {
@@ -378,8 +374,8 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         SessionManager sessionManager = getSession();
 
         showProgress(getString(R.string.block_user_process));
-        DataStore.blockUserRequest(sessionManager.getUserId(), mUser.getId(), sessionManager.getAccessToken(),
-                new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().blockUserRequest(sessionManager.getUserId(), mUser.getId(), sessionManager.getAccessToken(),
+                new HttpClientManager.OnResultReady() {
 
                     @Override
                     public void onReady(Object result, boolean failed) {
@@ -394,7 +390,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                         } else {
                             mIsBlocked = true;
                             mBtnBlockUserMode = BtnBlockModes.MODE_UNBLOCK;
-                            TextView txtBlockUser = (TextView)view.findViewById(R.id.txtBlockUser);
+                            TextView txtBlockUser = (TextView) view.findViewById(R.id.txtBlockUser);
                             txtBlockUser.setText(R.string.unblock_user);
                         }
                     }
@@ -405,8 +401,8 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         SessionManager sessionManager = getSession();
 
         showProgress(getString(R.string.unblock_user_process));
-        DataStore.unblockUserRequest(sessionManager.getUserId(), mUser.getId(), sessionManager.getAccessToken(),
-                new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().unblockUserRequest(sessionManager.getUserId(), mUser.getId(), sessionManager.getAccessToken(),
+                new HttpClientManager.OnResultReady() {
 
                     @Override
                     public void onReady(Object result, boolean failed) {
@@ -421,7 +417,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
                         } else {
                             mIsBlocked = false;
                             mBtnBlockUserMode = BtnBlockModes.MODE_BLOCK;
-                            TextView txtBlockUser = (TextView)view.findViewById(R.id.txtBlockUser);
+                            TextView txtBlockUser = (TextView) view.findViewById(R.id.txtBlockUser);
                             txtBlockUser.setText(R.string.block_user);
                         }
                     }
@@ -476,11 +472,11 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
         String userId = user.get(SessionManager.KEY_ID);
         String accessToken = user.get(SessionManager.KEY_ACCESS_TOCKEN);
 
-        DataStore.unfriendRequest(accessToken, userId, mUser.getId(), new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().unfriendRequest(accessToken, userId, mUser.getId(), new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 View view = getView();
-                if(view == null || isDetached()) {
+                if (view == null || isDetached()) {
                     return;
                 }
 

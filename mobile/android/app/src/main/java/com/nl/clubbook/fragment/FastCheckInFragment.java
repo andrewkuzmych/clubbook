@@ -16,8 +16,8 @@ import android.widget.Toast;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.FastCheckInAdapter;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.Place;
-import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.CheckInOutCallbackInterface;
@@ -125,8 +125,8 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
         }
 
         // retrieve places from server and set distance
-        DataStore.retrieveFastCheckInClub(String.valueOf(currentLocation.getLatitude()),
-                String.valueOf(currentLocation.getLongitude()), "1", accessToken, new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().retrieveFastCheckInClub(String.valueOf(currentLocation.getLatitude()),
+                String.valueOf(currentLocation.getLongitude()), "1", accessToken, new HttpClientManager.OnResultReady() {
 
                     @Override
                     public void onReady(Object result, boolean failed) {

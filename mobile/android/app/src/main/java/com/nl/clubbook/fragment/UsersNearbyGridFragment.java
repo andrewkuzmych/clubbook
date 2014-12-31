@@ -11,7 +11,7 @@ import android.widget.GridView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.ProfileAdapter;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.helper.SessionManager;
@@ -132,14 +132,14 @@ public class UsersNearbyGridFragment extends BaseRefreshFragment implements Adap
 
         setOnRefreshing(true);
 
-        DataStore.retrieveNearbyUsers(
+        HttpClientManager.getInstance().retrieveNearbyUsers(
                 requestType,
                 gender,
                 user.get(SessionManager.KEY_ACCESS_TOCKEN),
                 "" + location.getLatitude(),
                 "" + location.getLongitude(),
                 distanceKm,
-                new DataStore.OnResultReady() {
+                new HttpClientManager.OnResultReady() {
 
                     @Override
                     public void onReady(Object result, boolean failed) {

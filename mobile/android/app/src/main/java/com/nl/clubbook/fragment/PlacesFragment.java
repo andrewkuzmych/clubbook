@@ -17,8 +17,8 @@ import android.widget.Toast;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.PlacesAdapter;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.Place;
-import com.nl.clubbook.datasource.DataStore;
 import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.L;
@@ -38,8 +38,9 @@ public class PlacesFragment extends BaseRefreshFragment implements AdapterView.O
 
     private int mSkipNumber = DEFAULT_CLUBS_SKIP;
 
-    public static Fragment newInstance(String placeType) {
+    public static Fragment newInstance(Fragment targetFragment, String placeType) {
         Fragment fragment = new PlacesFragment();
+        fragment.setTargetFragment(targetFragment, 0);
 
         Bundle args = new Bundle();
         args.putString(ARG_PLACE_TYPE, placeType);
@@ -121,6 +122,18 @@ public class PlacesFragment extends BaseRefreshFragment implements AdapterView.O
         });
     }
 
+    public void doSearchPlaces() {
+        mSkipNumber = DEFAULT_CLUBS_SKIP;
+
+        doRefresh(true, false);
+    }
+
+    public void doRefresh() {
+        mSkipNumber = DEFAULT_CLUBS_SKIP;
+
+        doRefresh(true, false);
+    }
+
     private void doRefresh(boolean isSwipeLayoutRefreshing, boolean isFooterVisible) {
         if(!NetworkUtils.isOn(getActivity())) {
             Toast.makeText(getActivity(), R.string.no_connection, Toast.LENGTH_SHORT).show();
@@ -156,15 +169,22 @@ public class PlacesFragment extends BaseRefreshFragment implements AdapterView.O
             return;
         }
 
+        String searchQuery = "";
+        Fragment targetFragment = getTargetFragment();
+        if(targetFragment instanceof OnGetSearchQueryListener) {
+            OnGetSearchQueryListener listener = (OnGetSearchQueryListener) targetFragment;
+            searchQuery = listener.getSearchQuery();
+        }
+
         final String type = getArguments().getString(ARG_PLACE_TYPE, Types.ALL);
 
         // retrieve places from server and set distance
-        DataStore.retrievePlaces(type, "", String.valueOf(mSkipNumber), String.valueOf(DEFAULT_CLUBS_COUNT), String.valueOf(currentLocation.getLatitude()),
-                String.valueOf(currentLocation.getLongitude()), accessToken, new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().retrievePlaces(type, searchQuery, String.valueOf(mSkipNumber), String.valueOf(DEFAULT_CLUBS_COUNT), String.valueOf(currentLocation.getLatitude()),
+                String.valueOf(currentLocation.getLongitude()), accessToken, new HttpClientManager.OnResultReady() {
 
                     @Override
                     public void onReady(Object result, boolean failed) {
-                        if(isDetached() || getActivity() == null) {
+                        if (isDetached() || getActivity() == null) {
                             L.i("fragment_is_detached");
                             return;
                         }
@@ -178,7 +198,7 @@ public class PlacesFragment extends BaseRefreshFragment implements AdapterView.O
 
                         List<Place> places = (List<Place>) result;
 
-                        if(mSkipNumber == DEFAULT_CLUBS_SKIP) {
+                        if (mSkipNumber == DEFAULT_CLUBS_SKIP) {
                             mPlacesAdapter.updateData(places);
                         } else {
                             mPlacesAdapter.addData(places);
@@ -197,5 +217,9 @@ public class PlacesFragment extends BaseRefreshFragment implements AdapterView.O
         public static final String ALL = "";
         public static final String CLUB = "club";
         public static final String BAR = "bar";
+    }
+
+    public interface OnGetSearchQueryListener {
+        public String getSearchQuery();
     }
 }
