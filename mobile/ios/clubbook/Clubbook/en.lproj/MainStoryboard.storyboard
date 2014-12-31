@@ -729,6 +729,7 @@
                         <segue destination="Pkv-Q5-XCl" kind="custom" identifier="messages" customClass="SWRevealViewControllerSegue" id="Jdt-DP-aMC"/>
                         <segue destination="GVb-UH-Luh" kind="custom" identifier="settings" customClass="SWRevealViewControllerSegue" id="Td7-oY-0he"/>
                         <segue destination="MzK-uN-iFg" kind="custom" identifier="profile" customClass="SWRevealViewControllerSegue" id="vLL-P8-d3f"/>
+                        <segue destination="2" kind="custom" identifier="yesterday" customClass="SWRevealViewControllerSegue" id="uGm-RL-FcK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QUN-K5-YiA" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2722,7 +2723,7 @@
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                         <integer key="value" value="15"/>
                                     </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="NO"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
@@ -3460,9 +3461,9 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="fHF-fb-mVP"/>
-        <segue reference="2DX-Kq-nMS"/>
-        <segue reference="NRf-kh-47e"/>
         <segue reference="Zkk-XZ-3rw"/>
+        <segue reference="fHF-fb-mVP"/>
+        <segue reference="uGm-RL-FcK"/>
+        <segue reference="NRf-kh-47e"/>
     </inferredMetricsTieBreakers>
 </document>

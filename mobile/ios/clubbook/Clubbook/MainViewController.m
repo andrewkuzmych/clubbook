@@ -1,13 +1,10 @@
-   //
-//  ViewController.m
-//  SidebarDemo
 //
-//  Created by Simon on 28/6/13.
-//  Copyright (c) 2013 Appcoda. All rights reserved.
+//  Created by Clubbok.
 //
 
-#import "MainViewController.h"
 #import <QuartzCore/QuartzCore.h>
+
+#import "MainViewController.h"
 #import "SWRevealViewController.h"
 #import "ClubCell.h"
 #import "Place.h"
@@ -28,13 +25,10 @@
 #import "SPSlideTabButton.h"
 
 @interface MainViewController ()<UINavigationControllerDelegate, UINavigationBarDelegate>{
-   // NSArray *_places;
     BOOL isInitialLoad;
-    int distanceKm;
     NSString* selectedClubType;
     
     BOOL isSearchBarShown;
-    float searchBarHeight;
     
     CGFloat lastContentOffset;
     UIView* blankView;
@@ -54,31 +48,8 @@
     self.clubTable.dataSource = self;
     self.clubTable.delegate = self;
     
-    // Do any additional setup after loading the view.
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(applicationIsActive)
-                                                 name:UIApplicationDidBecomeActiveNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(applicationEnteredForeground)
-                                                 name:UIApplicationWillEnterForegroundNotification
-                                               object:nil];
-
-
     self.title = NSLocalizedString(@"Going Out", nil);
-    
-    distanceKm = 5;
-    
-    self.distance.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:14];
-    [self.distance setText:[NSString stringWithFormat:@"%d%@", distanceKm, NSLocalizedString(@"kilometers", nil)]];
     self.clubTable.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    
-    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:15], NSFontAttributeName, nil];
-    [self.segmentControl setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
-    
-    [self.segmentControl setTitle:[NSString stringWithFormat:NSLocalizedString(@"nearby", nil)] forSegmentAtIndex:0];
-    [self.segmentControl setTitle:[NSString stringWithFormat:NSLocalizedString(@"az", nil)] forSegmentAtIndex:1];
     
     [self._manager getConfig];
     
@@ -131,10 +102,8 @@
     self.searchBar.placeholder = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Search clubs, bars, events, etc. by name", nil)];
     [self changeSearchKeyboardButtonTitle];
     
-    //store height of searchbox to animate it in future
-    searchBarHeight = self.searchBar.frame.size.height; //rect.size.height - 2;
     //hide searchbar
-    [self replaceTopConstraintOnView:self.searchBar withConstant: -searchBarHeight];
+    [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
     isSearchBarShown = NO;
     self.searchBar.delegate = self;
     
@@ -145,14 +114,6 @@
     [self.view setBackgroundColor:self.filterTabBar.backgroundColor];
 }
 
--(void) applicationEnteredForeground {
-    
-}
-
--(void) applicationIsActive {
-    
-}
-
 -(BOOL)shouldAutorotate {
     return YES;
 }
@@ -161,8 +122,7 @@
     return UIInterfaceOrientationMaskPortrait;
 }
 
-- (void)didGetConfig:(Config *)config
-{
+- (void)didGetConfig:(Config *)config {
     [GlobalVars getInstance].MaxCheckinRadius = config.maxCheckinRadius;
     [GlobalVars getInstance].MaxFailedCheckin = config.maxFailedCheckin;
     [GlobalVars getInstance].CheckinUpdateTime = config.checkinUpdateTime;
@@ -190,7 +150,6 @@
                                                          forBarMetrics:UIBarMetricsDefault];
     
     self.screenName = @"Main Screen";
-    //[self.navigationController setNavigationBarHidden:NO];
     
     //Pubnub staff
     PNConfiguration *myConfig = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"  publishKey: Constants.PubnabPubKay subscribeKey:Constants.PubnabSubKay secretKey:nil];
@@ -413,14 +372,13 @@
     clubController.place = place;//place.id;
     clubController.hasBack = YES;
     self.isLoaded = NO;
-    // ClubUsersViewController *clubController =  [segue ClubUsersViewController];
+
     [UIView beginAnimations:@"animation" context:nil];
     [UIView setAnimationDuration:0.5];
     [self.navigationController pushViewController: clubController animated:NO];
     [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:NO];
     [UIView commitAnimations];
     [self.clubTable deselectRowAtIndexPath:indexPath animated:NO];
-    //[self performSegueWithIdentifier: @"onClub" sender: place];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(NSString *)sender
@@ -438,29 +396,6 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-
-- (IBAction)segmentChanged:(id)sender {
-    [self sortPlaces];
-}
-
--(void)sortPlaces{
-    NSString *sortProperty;
-    if([self.segmentControl selectedSegmentIndex] == 0){
-        sortProperty = @"distance";
-    }
-    else if([self.segmentControl selectedSegmentIndex] == 1){
-        sortProperty = @"title";
-    }
-    
-    NSSortDescriptor *sortDescriptor;
-    sortDescriptor = [[NSSortDescriptor alloc] initWithKey:sortProperty
-                                                     ascending:YES];
-    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    _places = [[_places sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
-    [self.clubTable reloadData];
-
 }
 
 - (void)didCheckin:(User *) user userInfo:(NSObject *)userInfo
