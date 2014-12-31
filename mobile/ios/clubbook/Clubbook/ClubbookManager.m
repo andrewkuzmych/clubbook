@@ -45,6 +45,10 @@
     [self.communicator retrievePlaces:lat lon:lon take:take skip:skip distance:distance type:type search:search accessToken:accessToken];
 }
 
+- (void) retrieveYesterdayPlacesAccessToken:(NSString*) accessToken {
+    [self.communicator retrieveYesterdayPlacesAccessToken:accessToken];
+}
+
 - (void)retrievePlace:(NSString *) clubId accessToken:(NSString *) accessToken
 {
     [self.communicator retrievePlace:clubId accessToken:accessToken];

@@ -39,6 +39,8 @@
 
 - (void)retrievePlaces:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance type:(NSString*) type search:(NSString*) search accessToken:(NSString *) accessToken;
 
+- (void)retrieveYesterdayPlacesAccessToken:(NSString*) accessToken;
+
 - (void)retrievePlace:(NSString *) clubId accessToken:(NSString *) accessToken;
 
 - (void)retrievePlaceUsers:(NSString *) clubId accessToken:(NSString *) accessToken;

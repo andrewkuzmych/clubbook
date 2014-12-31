@@ -236,8 +236,7 @@
         clubController.place = _place;
     } else if ([[segue identifier] isEqualToString:@"onYesterday"]) {
         ClubUsersYesterdayViewController *clubController =  [segue destinationViewController];
-        //NSIndexPath *selectedIndexPath = [self.clubTable indexPathForSelectedRow];
-        clubController.place = self.place;//place.id;
+        clubController.place = self.place;
         clubController.hasBack = YES;
     }
 }
