@@ -169,7 +169,7 @@
     Place *place = _places[selectedIndexPath.row];
     
     [self pushToClub:place];
-    
+    [self.clubTable deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 
