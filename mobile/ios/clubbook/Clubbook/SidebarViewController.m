@@ -44,7 +44,9 @@
     [self.backgroundImageView setImage: [UIImage imageNamed:@"menu_background.png"]];
     self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
     
-    _menuItems = @[@"goingout", @"usersnearby", @"messages", @"friends", @"settings", @"profile", @"fastcheckin"];
+    self.menuCollectionView.delaysContentTouches = NO;
+    
+    _menuItems = @[@"goingout", @"usersnearby", @"yesterday", @"messages", @"friends", @"settings", @"profile", @"fastcheckin"];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -156,6 +158,9 @@
     else if ([currentItemId isEqualToString:@"usersnearby"]) {
         cell.menuLabel.text = @"Users Nearby";
     }
+    else if ([currentItemId isEqualToString:@"yesterday"]) {
+        cell.menuLabel.text = @"Yesterday";
+    }
     else if ([currentItemId isEqualToString:@"messages"]) {
         if (unreadMessagesCount > 0) {
             [cell.notificationNumberLabel setHidden:NO];
@@ -187,6 +192,8 @@
 }
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath  {
+    MainMenuCollectionViewCell* cell = (MainMenuCollectionViewCell*)[self.menuCollectionView cellForItemAtIndexPath:indexPath];
+    [cell highlightIcon];
     NSUInteger selectedItem = indexPath.item;
     NSString* segueId = [_menuItems objectAtIndex:selectedItem];
     [self performSegueWithIdentifier:segueId sender:self];

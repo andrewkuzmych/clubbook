@@ -16,5 +16,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *bigNotificationNumber;
 
 -(void)setIconBackground:(UIColor*) color;
+-(void)highlightIcon;
 
 @end
