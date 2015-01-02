@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cQP-JN-F3e">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ZjF-WR-zDq">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -9,7 +9,7 @@
         <!--Club Profile Tab Bar View Controller-->
         <scene sceneID="yfa-ih-Zpd">
             <objects>
-                <tabBarController id="cQP-JN-F3e" customClass="ClubProfileTabBarViewController" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="ClubTabBar" id="cQP-JN-F3e" customClass="ClubProfileTabBarViewController" sceneMemberID="viewController">
                     <value key="contentSizeForViewInPopover" type="size" width="320" height="568"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
@@ -19,18 +19,21 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="ZjF-WR-zDq" kind="relationship" relationship="viewControllers" id="bXN-4N-Tsv"/>
+                        <segue destination="m8T-Jj-ixX" kind="relationship" relationship="viewControllers" id="S3C-if-s01"/>
+                        <segue destination="8YA-9j-GVB" kind="relationship" relationship="viewControllers" id="ql2-FJ-zSb"/>
+                        <segue destination="NIz-qn-ugs" kind="relationship" relationship="viewControllers" id="QZ8-Jz-528"/>
+                        <segue destination="TDL-Mz-WpF" kind="relationship" relationship="viewControllers" id="wXf-4V-iNm"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qSV-Kx-oM3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1040" y="-865"/>
+            <point key="canvasLocation" x="-868" y="-933"/>
         </scene>
-        <!--Item-->
+        <!--Club Profile-->
         <scene sceneID="zCY-1L-3fd">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ACi-tg-Xxh" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController storyboardIdentifier="club" id="ZjF-WR-zDq" customClass="ClubUsersViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="club" id="ZjF-WR-zDq" userLabel="Club Profile" customClass="ClubUsersViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="IbS-L6-b3F"/>
                         <viewControllerLayoutGuide type="bottom" id="IWs-sF-kYc"/>
@@ -40,7 +43,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="dUm-p8-azL">
-                                <rect key="frame" x="1" y="0.0" width="318" height="519"/>
+                                <rect key="frame" x="1" y="0.0" width="318" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="uCY-Zu-pfN">
                                     <size key="itemSize" width="106" height="106"/>
@@ -130,7 +133,7 @@
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
-                                                <segue destination="m8T-Jj-ixX" kind="push" identifier="onClubInfo" id="qA8-kr-jaG"/>
+                                                <action selector="onClubInfoPressed:" destination="ZjF-WR-zDq" eventType="touchUpInside" id="47S-1p-oXg"/>
                                             </connections>
                                         </button>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Info &amp; Wall" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L2e-RK-hti">
@@ -224,7 +227,7 @@
                                 </collectionReusableView>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nmo-RL-wuy" customClass="CbButton">
-                                <rect key="frame" x="70" y="469" width="180" height="40"/>
+                                <rect key="frame" x="70" y="518" width="180" height="40"/>
                                 <color key="backgroundColor" red="0.78985969389999999" green="0.78985969389999999" blue="0.78985969389999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="180" id="SGT-pD-51S"/>
@@ -253,13 +256,74 @@
                     <navigationItem key="navigationItem" id="SJ4-0F-X23">
                         <barButtonItem key="leftBarButtonItem" image="menu.png" id="uwA-6W-BtF"/>
                     </navigationItem>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="profileCollection" destination="dUm-p8-azL" id="FLQ-26-qWR"/>
                         <outlet property="sidebarButton" destination="uwA-6W-BtF" id="74N-EN-QpA"/>
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="-329" y="-1385"/>
+            <point key="canvasLocation" x="-1478" y="-893"/>
+        </scene>
+        <!--Item-->
+        <scene sceneID="ENo-6X-6cg">
+            <objects>
+                <viewController id="8YA-9j-GVB" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="nNF-ik-19r"/>
+                        <viewControllerLayoutGuide type="bottom" id="WAE-Ea-J9C"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="aCY-Fq-5nB">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="Zhh-1F-Ig1"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dxq-RH-b2l" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="115" y="-659"/>
+        </scene>
+        <!--Item-->
+        <scene sceneID="0XX-pc-By1">
+            <objects>
+                <viewController id="TDL-Mz-WpF" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="MLe-Ye-8MQ"/>
+                        <viewControllerLayoutGuide type="bottom" id="AQV-3T-q8K"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="AoB-lM-efz">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="ahD-zK-YLt"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iC2-JG-MJ1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1040" y="17"/>
+        </scene>
+        <!--Item-->
+        <scene sceneID="cke-YC-v2b">
+            <objects>
+                <viewController id="NIz-qn-ugs" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ocT-8K-5dg"/>
+                        <viewControllerLayoutGuide type="bottom" id="lES-Rm-xqz"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="M5R-8K-DUf">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="svH-a1-H8I"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6KI-Ol-31D" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-329" y="17"/>
         </scene>
         <!--Club Images Page View Controller-->
         <scene sceneID="Ovb-3d-1rT">
@@ -295,12 +359,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uQL-Ld-zvG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="968" y="-1849"/>
+            <point key="canvasLocation" x="776" y="-1989"/>
         </scene>
-        <!--Club View Parallax Controller View Controller-->
+        <!--Parallax-->
         <scene sceneID="stG-PH-Lqn">
             <objects>
-                <viewController id="m8T-Jj-ixX" customClass="ClubViewParallaxControllerViewController" sceneMemberID="viewController">
+                <viewController id="m8T-Jj-ixX" userLabel="Parallax" customClass="ClubViewParallaxControllerViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Dwm-1U-qpb"/>
                         <viewControllerLayoutGuide type="bottom" id="OAj-Br-FHj"/>
@@ -310,11 +374,12 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="ZaG-Xb-LZs"/>
                     <navigationItem key="navigationItem" id="B7u-hn-En3"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="us5-4Z-F66" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="217" y="-1385"/>
+            <point key="canvasLocation" x="-11" y="-1621"/>
         </scene>
         <!--Club View Controller-->
         <scene sceneID="Y2c-mf-WqM">
@@ -645,7 +710,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZxE-q9-k5Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="876" y="-1312"/>
+            <point key="canvasLocation" x="824" y="-1532"/>
         </scene>
     </scenes>
     <resources>

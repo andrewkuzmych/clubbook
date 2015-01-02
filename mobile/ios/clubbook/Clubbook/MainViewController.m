@@ -400,31 +400,30 @@
     NSIndexPath *selectedIndexPath = [self.clubTable indexPathForSelectedRow];
     Place *place = _places[selectedIndexPath.row];
     
-    UIStoryboard* clubProfileStoryBoard = [UIStoryboard storyboardWithName:@"ClubProfileStoryboard" bundle:nil];
-    ClubProfileTabBarViewController *theTabBar = [clubProfileStoryBoard instantiateInitialViewController];
-    theTabBar.place = place;
-    //theTabBar.hasBack = YES;
+    UIStoryboard *clubProfileStoryboard = [UIStoryboard storyboardWithName:@"ClubProfileStoryboard" bundle: nil];
+    ClubUsersViewController *clubController  = [clubProfileStoryboard instantiateViewControllerWithIdentifier:@"club"];
+    clubController.place = place;
+    clubController.hasBack = YES;
     self.isLoaded = NO;
 
     [UIView beginAnimations:@"animation" context:nil];
     [UIView setAnimationDuration:0.5];
-    [self.navigationController pushViewController: theTabBar animated:NO];
+    [self.navigationController pushViewController: clubController animated:NO];
     [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:NO];
     [UIView commitAnimations];
     [self.clubTable deselectRowAtIndexPath:indexPath animated:NO];
 }
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(NSString *)sender {
-    if ([[segue identifier] isEqualToString:@"onYesterday"]) {
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(NSString *)sender
+{
+   if ([[segue identifier] isEqualToString:@"onYesterday"]) {
         ClubUsersYesterdayViewController *yesterdayController =  [segue destinationViewController];
         if (placeToView != nil) {
             yesterdayController.place = placeToView;
             yesterdayController.hasBack = YES;
             placeToView = nil;
         }
-
     }
-
 }
 
 

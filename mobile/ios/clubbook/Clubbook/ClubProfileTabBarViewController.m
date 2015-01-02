@@ -7,7 +7,7 @@
 //
 
 #import "ClubProfileTabBarViewController.h"
-#import "ClubUsersViewController.h"
+#import "ClubViewParallaxControllerViewController.h"
 
 @interface ClubProfileTabBarViewController ()
 
@@ -22,11 +22,11 @@
         self.title = self.place.title;
         
         for (UIViewController *v in self.viewControllers) {
-            if ([v isKindOfClass:[ClubUsersViewController class]])
+            if ([v isKindOfClass:[ClubViewParallaxControllerViewController class]])
                  {
-                     ClubUsersViewController *clubController = (ClubUsersViewController*)v;
-                     clubController.place = self.place;
-                     clubController.hasBack = YES;
+                     ClubViewParallaxControllerViewController *parallaxController =  (ClubViewParallaxControllerViewController*)v;
+                     parallaxController.place = self.place;
+                     parallaxController.title = @"About";
                  }
 
         }

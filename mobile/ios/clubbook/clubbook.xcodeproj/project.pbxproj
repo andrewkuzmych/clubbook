@@ -1593,8 +1593,6 @@
 				49908EF2197501B400DA68F2 /* NoLocationViewController.m */,
 				499247AA1976AB7F008C74D0 /* ProfileViewController.h */,
 				499247AB1976AB7F008C74D0 /* ProfileViewController.m */,
-				49D8D3131986AA8100015052 /* ClubUsersViewController.h */,
-				49D8D3141986AA8100015052 /* ClubUsersViewController.m */,
 				498975AF19ED2BA70067A5E4 /* ClubUsersYesterdayViewController.h */,
 				498975B019ED2BA70067A5E4 /* ClubUsersYesterdayViewController.m */,
 				4994848319F92E7400E906C0 /* UserCheckinsViewController.h */,
@@ -2100,6 +2098,8 @@
 				52C5FC8F1A3F29E1000147E8 /* ClubImagesPageViewController.m */,
 				528C85961A56E3AC00BBB148 /* ClubProfileTabBarViewController.h */,
 				528C85971A56E3AC00BBB148 /* ClubProfileTabBarViewController.m */,
+				49D8D3131986AA8100015052 /* ClubUsersViewController.h */,
+				49D8D3141986AA8100015052 /* ClubUsersViewController.m */,
 			);
 			name = ClubProfileStoryboard;
 			sourceTree = "<group>";

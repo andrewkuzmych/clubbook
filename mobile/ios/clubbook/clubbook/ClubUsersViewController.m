@@ -24,13 +24,11 @@
 #import "ClubUsersYesterdayViewController.h"
 #import "ProfilePagesViewController.h"
 #import "ClubViewParallaxControllerViewController.h"
+#import "ClubProfileTabBarViewController.h"
 
 @interface ClubUsersViewController ()<UINavigationControllerDelegate>
 {
-   // Place *_place;
     NSArray *_users;
-    int minUserCount;
-    float oldX;
 }
 
 
@@ -98,13 +96,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-   // NSString *channal = [NSString stringWithFormat:@"checkin_%@", self.place.id];
-    //[PubNub subscribeOnChannel:[PNChannel channelWithName:channal shouldObservePresence:YES]];
-    
-      
-    // Set outself as the navigation controller's delegate so we're asked for a transitioning object
-    self.navigationController.delegate = self;
+     self.navigationController.delegate = self;
     
     //Google Analytics
     id tracker = [[GAI sharedInstance] defaultTracker];
@@ -115,10 +107,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    //NSString *channal = [NSString stringWithFormat:@"%message_%@", self.place.id];
 
-    //[PubNub unsubscribeFromChannel:[PNChannel channelWithName:channal shouldObservePresence:YES]];
-    // Stop being the navigation controller's delegate
     if (self.navigationController.delegate == self) {
         self.navigationController.delegate = nil;
     }
@@ -220,21 +209,23 @@
             [self performSegueWithIdentifier: @"onUsers" sender: indexPath];
 }
 
+- (IBAction)onClubInfoPressed:(id)sender {
+    [self.headerView setBackgroundColor:[UIColor colorWithRed:0.973 green:0.913 blue:1.000 alpha:1.000]];
+    UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"ClubProfileStoryboard" bundle:nil];
+    ClubProfileTabBarViewController *tabBar = [storyBoard instantiateViewControllerWithIdentifier:@"ClubTabBar"];
+    tabBar.place = self.place;
+    [[self navigationController] pushViewController:tabBar animated:YES];
+}
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(NSIndexPath *)indexPath
 {
     if([[segue identifier] isEqualToString:@"onUsers"]){
         ProfilePagesViewController *profilePagesViewController =  [segue destinationViewController];
         profilePagesViewController.profiles =_users;
         profilePagesViewController.index = indexPath.row;
-//        User *user = _users[indexPath.row];
-//        userController.user= user;
         profilePagesViewController.currentPlace = self.place;
-//        userController.clubCheckinName = self.place.title;
-    } else if ([[segue identifier] isEqualToString:@"onClubInfo"]) {
-        [self.headerView setBackgroundColor:[UIColor colorWithRed:0.973 green:0.913 blue:1.000 alpha:1.000]];
-        ClubViewParallaxControllerViewController *clubController =  [segue destinationViewController];
-        clubController.place = _place;
-    } else if ([[segue identifier] isEqualToString:@"onYesterday"]) {
+    }
+   else if ([[segue identifier] isEqualToString:@"onYesterday"]) {
         ClubUsersYesterdayViewController *clubController =  [segue destinationViewController];
         clubController.place = self.place;
         clubController.hasBack = YES;
@@ -367,8 +358,6 @@
     
     [self showProgress:NO title:NSLocalizedString(@"checking_in", nil)];
     [self._manager checkin:_place.id accessToken:accessToken userInfo:nil];
-
-    
 }
 
 - (IBAction)directionAction:(id)sender {
@@ -447,7 +436,7 @@
         int disatanceInt = (int)self.place.distance;
         self.headerView.clubDistanceText.text = [LocationHelper convertDistance:disatanceInt];
         
-        [self.headerView.clubAvatarImage setImageWithURL:[NSURL URLWithString:self.place.avatar] placeholderImage:[UIImage imageNamed:@"Default.png"]];
+        [self.headerView.clubAvatarImage sd_setImageWithURL:[NSURL URLWithString:self.place.avatar] placeholderImage:[UIImage imageNamed:@"Default.png"]];
         
         BOOL isCheckinHere = [LocationHelper isCheckinHere:self.place];
         if(isCheckinHere){
@@ -475,17 +464,5 @@
     
     return (ProfileCell*)[self.profileCollection cellForItemAtIndexPath:[NSIndexPath indexPathForRow:userIndex inSection:0]];
 }
-
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
