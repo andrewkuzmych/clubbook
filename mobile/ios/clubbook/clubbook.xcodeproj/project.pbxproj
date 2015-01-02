@@ -382,6 +382,8 @@
 		522ACCDF1A32084F006789EB /* SPSlideTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDC1A32084F006789EB /* SPSlideTabBar.m */; };
 		522ACCE01A32084F006789EB /* SPSlideTabButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDE1A32084F006789EB /* SPSlideTabButton.m */; };
 		52343D9B1A430CF400F47A36 /* UIImage+FixOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 52343D9A1A430CF400F47A36 /* UIImage+FixOrientation.m */; };
+		528C85951A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 528C85941A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard */; };
+		528C85981A56E3AC00BBB148 /* ClubProfileTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 528C85971A56E3AC00BBB148 /* ClubProfileTabBarViewController.m */; };
 		529048F51A373FF600F80DF9 /* RetrieveLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 529048F41A373FF600F80DF9 /* RetrieveLocationViewController.m */; };
 		5297358E1A39B002009943C3 /* MultiplePulsingHaloLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297358B1A39B002009943C3 /* MultiplePulsingHaloLayer.m */; };
 		5297358F1A39B002009943C3 /* PulsingHaloLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297358D1A39B002009943C3 /* PulsingHaloLayer.m */; };
@@ -1100,6 +1102,9 @@
 		522ACCDE1A32084F006789EB /* SPSlideTabButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPSlideTabButton.m; path = SPSlideTabBar/SPSlideTabButton.m; sourceTree = "<group>"; };
 		52343D991A430CF400F47A36 /* UIImage+FixOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FixOrientation.h"; sourceTree = "<group>"; };
 		52343D9A1A430CF400F47A36 /* UIImage+FixOrientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FixOrientation.m"; sourceTree = "<group>"; };
+		528C85941A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ClubProfileStoryboard.storyboard; sourceTree = "<group>"; };
+		528C85961A56E3AC00BBB148 /* ClubProfileTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubProfileTabBarViewController.h; sourceTree = "<group>"; };
+		528C85971A56E3AC00BBB148 /* ClubProfileTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubProfileTabBarViewController.m; sourceTree = "<group>"; };
 		529048F31A373FF600F80DF9 /* RetrieveLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RetrieveLocationViewController.h; sourceTree = "<group>"; };
 		529048F41A373FF600F80DF9 /* RetrieveLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RetrieveLocationViewController.m; sourceTree = "<group>"; };
 		5297358A1A39B002009943C3 /* MultiplePulsingHaloLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiplePulsingHaloLayer.h; sourceTree = "<group>"; };
@@ -1551,6 +1556,7 @@
 		499247AD1976AF93008C74D0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				528C85991A56EF0B00BBB148 /* ClubProfileStoryboard */,
 				499247B41976D940008C74D0 /* BaseViewControllerHelper.h */,
 				499247B51976D940008C74D0 /* BaseViewControllerHelper.m */,
 				49E831861953087A00D4A26C /* BaseViewController.h */,
@@ -1573,12 +1579,6 @@
 				49E831DB19583B2A00D4A26C /* LoginViewController.m */,
 				493E0EED19D4549800B5ADEC /* ChangePassViewController.h */,
 				493E0EEE19D4549800B5ADEC /* ChangePassViewController.m */,
-				49836B1F1961969F00F2A2C6 /* ClubViewController.h */,
-				49836B201961969F00F2A2C6 /* ClubViewController.m */,
-				52C5FC8B1A3F28A8000147E8 /* ClubViewParallaxControllerViewController.h */,
-				52C5FC8C1A3F28A8000147E8 /* ClubViewParallaxControllerViewController.m */,
-				52C5FC8E1A3F29E1000147E8 /* ClubImagesPageViewController.h */,
-				52C5FC8F1A3F29E1000147E8 /* ClubImagesPageViewController.m */,
 				498975A519EC60150067A5E4 /* UserProfileViewController.h */,
 				498975A619EC60150067A5E4 /* UserProfileViewController.m */,
 				4994849019FE671C00E906C0 /* ProfileImagesViewController.h */,
@@ -2089,6 +2089,21 @@
 			name = SPSlideTabBar;
 			sourceTree = "<group>";
 		};
+		528C85991A56EF0B00BBB148 /* ClubProfileStoryboard */ = {
+			isa = PBXGroup;
+			children = (
+				49836B1F1961969F00F2A2C6 /* ClubViewController.h */,
+				49836B201961969F00F2A2C6 /* ClubViewController.m */,
+				52C5FC8B1A3F28A8000147E8 /* ClubViewParallaxControllerViewController.h */,
+				52C5FC8C1A3F28A8000147E8 /* ClubViewParallaxControllerViewController.m */,
+				52C5FC8E1A3F29E1000147E8 /* ClubImagesPageViewController.h */,
+				52C5FC8F1A3F29E1000147E8 /* ClubImagesPageViewController.m */,
+				528C85961A56E3AC00BBB148 /* ClubProfileTabBarViewController.h */,
+				528C85971A56E3AC00BBB148 /* ClubProfileTabBarViewController.m */,
+			);
+			name = ClubProfileStoryboard;
+			sourceTree = "<group>";
+		};
 		529735891A39B002009943C3 /* PulsingHalo */ = {
 			isa = PBXGroup;
 			children = (
@@ -2193,6 +2208,7 @@
 				F4EECF20177C99F400778578 /* AppDelegate.h */,
 				F4EECF21177C99F400778578 /* AppDelegate.m */,
 				F4EECF29177C99F400778578 /* MainStoryboard.storyboard */,
+				528C85941A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard */,
 				F4EECF34177C9A1E00778578 /* Library */,
 				F4EECF18177C99F400778578 /* Supporting Files */,
 				49E831D11954AD2B00D4A26C /* Localizable.strings */,
@@ -2508,6 +2524,7 @@
 				49ABA1DA199524BF00B060D0 /* icon_userprofile_addfriend@2x.png in Resources */,
 				49ABA1761995239E00B060D0 /* icon_clubview_details.png in Resources */,
 				49ABA16C1995239E00B060D0 /* icon_back.png in Resources */,
+				528C85951A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard in Resources */,
 				49ABA17F1995239E00B060D0 /* icon_menu_clublist.png in Resources */,
 				49ABA1711995239E00B060D0 /* icon_clubdetails_phone.png in Resources */,
 				49ABA1681995239E00B060D0 /* avatar_invisible.png in Resources */,
@@ -2772,6 +2789,7 @@
 				498A6910196C4CFD00BC2859 /* PNConnectionChannel.m in Sources */,
 				5208977A1A407C6700E8DD06 /* JSQMessagesLabel.m in Sources */,
 				49908EF3197501B400DA68F2 /* NoLocationViewController.m in Sources */,
+				528C85981A56E3AC00BBB148 /* ClubProfileTabBarViewController.m in Sources */,
 				498A690D196C4CFD00BC2859 /* PNReachability.m in Sources */,
 				520897621A407C6700E8DD06 /* JSQMessagesAvatarImageFactory.m in Sources */,
 				498A6901196C4CFD00BC2859 /* PNLatencyMeasureRequest.m in Sources */,
