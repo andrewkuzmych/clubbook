@@ -91,6 +91,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private CustomToolBar mToolbar;
 
     private Fragment mCurrentFragment;
+    private int mSelectedDrawerItem = 0;
+    private boolean mShouldHandleDrawerClick = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -226,9 +228,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.actionbarChatButton:
                 onChatBtnClicked();
                 break;
-            case R.id.holderUserInfo:
-                onNavDrawerHeaderClicked();
-                break;
             case R.id.imgCheckOut:
                 onImgCheckOutClicked();
                 break;
@@ -240,14 +239,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if(position - 1 == NavDrawerData.SHARE_POSITION) {
-            mDrawerLayout.closeDrawer(mDrawerList);
-            onShareClicked();
-            return;
-        }
-
-        //list header has positions equals '0'
-        displayView(position - 1);
+        mDrawerLayout.closeDrawer(mDrawerList);
+        mSelectedDrawerItem = position;
+        mShouldHandleDrawerClick = true;
     }
 
     @Override
@@ -296,6 +290,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mDrawerList = (ListView) findViewById(R.id.listDrawer);
         mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             public void onDrawerClosed(View view) {
+                if(!mShouldHandleDrawerClick) {
+                    return;
+                }
+
+                mShouldHandleDrawerClick = false;
+
+                if(mSelectedDrawerItem == 0) { //header
+                    onNavDrawerHeaderClicked();
+                    return;
+                }
+
+                if(mSelectedDrawerItem - 1 == NavDrawerData.SHARE_POSITION) {
+                    onShareClicked();
+                    return;
+                }
+
+                displayView(mSelectedDrawerItem - 1);
             }
 
             public void onDrawerOpened(View drawerView) {
@@ -304,7 +315,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         };
         navDrawerItems = NavDrawerData.getNavDrawerItems(MainActivity.this);
 
-//        // set adapter
+        // set adapter
         View navDrawerHeaderView = initNavDrawerHeader();
         mAdapter = new NavDrawerListAdapter(MainActivity.this, navDrawerItems);
         mDrawerList.addHeaderView(navDrawerHeaderView);
@@ -322,7 +333,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private View initNavDrawerHeader() {
         mNavDrawerHeaderView = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_nav_drawer_header, null);
-        mNavDrawerHeaderView.findViewById(R.id.holderNavDrawerHeader).setOnClickListener(MainActivity.this);
 
         fillNavDrawerHeader();
 
@@ -350,7 +360,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         txtProfileInfo.setText((profileAge != null && profileAge.length() > 0) ? profileAge + ", " : "");
         txtProfileInfo.append(profileGender != null ? profileGender : "");
 
-        mNavDrawerHeaderView.findViewById(R.id.holderUserInfo).setOnClickListener(MainActivity.this);
         mNavDrawerHeaderView.findViewById(R.id.txtClubName).setOnClickListener(MainActivity.this);
 
         updateNavDrawerHeader();
