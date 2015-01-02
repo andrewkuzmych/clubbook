@@ -46,7 +46,7 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
         sendScreenStatistic(R.string.friends_screen_android);
 
         initView();
-        loadData();
+        doRefresh(false);
     }
 
     @Override
@@ -57,6 +57,22 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
 
     @Override
     protected void loadData() {
+        doRefresh(true);
+    }
+
+    private void initView() {
+        View view = getView();
+        if(view == null) {
+            return;
+        }
+
+        mAdapter = new FriendsAdapter(getActivity(), new ArrayList<User>());
+        mListFriends = (ListView) view.findViewById(R.id.listFriends);
+        mListFriends.setAdapter(mAdapter);
+        mListFriends.setOnItemClickListener(FriendListFragment.this);
+    }
+
+    private void doRefresh(boolean isSwipeRefreshRefreshed) {
         final View view = getView();
         if(view == null || mListFriends == null || mSwipeRefreshLayout == null) {
             return;
@@ -73,7 +89,11 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
         final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
-        mSwipeRefreshLayout.setRefreshing(true);
+        if(isSwipeRefreshRefreshed) {
+            mSwipeRefreshLayout.setRefreshing(true);
+        } else {
+            view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+        }
 
         HttpClientManager.getInstance().retrieveFriends(user.get(SessionManager.KEY_ID), user.get(SessionManager.KEY_ACCESS_TOCKEN),
                 new HttpClientManager.OnResultReady() {
@@ -86,6 +106,7 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
                         }
 
                         mSwipeRefreshLayout.setRefreshing(false);
+                        view.findViewById(R.id.progressBar).setVisibility(View.GONE);
 
                         if (failed) {
                             showToast(R.string.something_went_wrong_please_try_again);
@@ -102,17 +123,5 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
                         mAdapter.updateData(userList);
                     }
                 });
-    }
-
-    private void initView() {
-        View view = getView();
-        if(view == null) {
-            return;
-        }
-
-        mAdapter = new FriendsAdapter(getActivity(), new ArrayList<User>());
-        mListFriends = (ListView) view.findViewById(R.id.listFriends);
-        mListFriends.setAdapter(mAdapter);
-        mListFriends.setOnItemClickListener(FriendListFragment.this);
     }
 }

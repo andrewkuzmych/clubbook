@@ -26,5 +26,6 @@
     <dimen name="btn_check_in_left_right_padding_fast_check_in">16dp</dimen>
 
     <dimen name="grid_user_bottom_padding">76dp</dimen>
+    <dimen name="progress_bar_size">40dp</dimen>
 
 </resources>

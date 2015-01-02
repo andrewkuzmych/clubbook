@@ -43,7 +43,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
         super.onActivityCreated(savedInstanceState);
 
         initView();
-        loadData();
+        doLoadPendingFriends(false);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
 
     @Override
     protected void loadData() {
-        doLoadPendingFriends();
+        doLoadPendingFriends(true);
     }
 
     private void initView() {
@@ -93,7 +93,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
         listPendingFriends.setOnItemClickListener(this);
     }
 
-    private void doLoadPendingFriends() {
+    private void doLoadPendingFriends(boolean isSwipeToRefreshRefreshed) {
         final View view = getView();
         if(view == null || mSwipeRefreshLayout == null) {
             return;
@@ -107,7 +107,11 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
         final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
-        mSwipeRefreshLayout.setRefreshing(true);
+        if(isSwipeToRefreshRefreshed) {
+            mSwipeRefreshLayout.setRefreshing(true);
+        } else {
+            view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+        }
 
         HttpClientManager.getInstance().retrievePendingFriends(user.get(SessionManager.KEY_ID), user.get(SessionManager.KEY_ACCESS_TOCKEN),
                 new HttpClientManager.OnResultReady() {
@@ -120,6 +124,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
                         }
 
                         mSwipeRefreshLayout.setRefreshing(false);
+                        view.findViewById(R.id.progressBar).setVisibility(View.GONE);
 
                         if (failed) {
                             showToast(R.string.something_went_wrong_please_try_again);
@@ -163,7 +168,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
     }
 
     private void refreshFriends() {
-        doLoadPendingFriends();
+        doLoadPendingFriends(true);
 
         Fragment targetFragment = getTargetFragment();
         if(targetFragment != null && targetFragment instanceof OnFriendRequestAcceptedListener) {
@@ -198,7 +203,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
                 if (failed) {
                     showToast(R.string.something_went_wrong_please_try_again);
                 } else {
-                    doLoadPendingFriends();
+                    doLoadPendingFriends(true);
                 }
             }
         });

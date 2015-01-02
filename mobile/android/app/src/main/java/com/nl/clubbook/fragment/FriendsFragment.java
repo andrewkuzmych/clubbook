@@ -47,7 +47,6 @@ public class FriendsFragment extends BaseFragment implements PendingFriendsFragm
 
         if(!hidden) {
             ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
-//            actionBar.setIcon(R.drawable.icon_play);
             actionBar.setTitle(R.string.friend_list);
         }
     }

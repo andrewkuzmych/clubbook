@@ -53,7 +53,7 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
 
         initActionBarTitle(getString(R.string.fast_check_in));
         initView();
-        loadData();
+        doRefresh(false);
     }
 
     @Override
@@ -93,6 +93,22 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
 
     @Override
     protected void loadData() {
+        doRefresh(true);
+    }
+
+    private void initView() {
+        View view = getView();
+        if(view == null) {
+            return;
+        }
+
+        mAdapter = new FastCheckInAdapter(getActivity(), new ArrayList<Place>(), this);
+        ListView clubList = (ListView) view.findViewById(R.id.listPlaces);
+        clubList.setAdapter(mAdapter);
+        clubList.setOnItemClickListener(this);
+    }
+
+    private void doRefresh(boolean isPullToRefreshRefreshed) {
         if(!NetworkUtils.isOn(getActivity())) {
             Toast.makeText(getActivity(), R.string.no_connection, Toast.LENGTH_SHORT).show();
             return;
@@ -112,13 +128,18 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
             return;
         }
 
-        if(!mSwipeRefreshLayout.isRefreshing()) {
+        final View progressBar = view.findViewById(R.id.progressBar);
+
+        if(isPullToRefreshRefreshed) {
             mSwipeRefreshLayout.setRefreshing(true);
+        } else {
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         String accessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
         if(accessToken == null) {
             mSwipeRefreshLayout.setRefreshing(false);
+            progressBar.setVisibility(View.GONE);
             L.i("accessToken = null");
             return;
         }
@@ -135,6 +156,8 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
                         }
 
                         mSwipeRefreshLayout.setRefreshing(false);
+                        progressBar.setVisibility(View.GONE);
+
                         if (failed) {
                             showToast(R.string.something_went_wrong_please_try_again);
                             showHideEmptyView(view);
@@ -147,19 +170,6 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
                         showHideEmptyView(view);
                     }
                 });
-    }
-
-
-    private void initView() {
-        View view = getView();
-        if(view == null) {
-            return;
-        }
-
-        mAdapter = new FastCheckInAdapter(getActivity(), new ArrayList<Place>(), this);
-        ListView clubList = (ListView) view.findViewById(R.id.listPlaces);
-        clubList.setAdapter(mAdapter);
-        clubList.setOnItemClickListener(this);
     }
 
     private void showHideEmptyView(View view) {

@@ -15,6 +15,7 @@ import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.L;
+import com.nl.clubbook.utils.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +39,7 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
 
         initActionBarTitle(getString(R.string.messages));
         initView();
-        loadData();
+        doRefresh(false);
     }
 
     @Override
@@ -47,7 +48,6 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
 
         if(!hidden) {
             ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
-            actionBar.setIcon(R.drawable.icon_play);
             actionBar.setTitle(R.string.messages);
         }
     }
@@ -69,23 +69,57 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
 
     @Override
     protected void loadData() {
+        doRefresh(true);
+    }
+
+    public ChatFragment getChatFragment() {
+        return mChatFragment;
+    }
+
+    private void initView() {
+        View view = getView();
+        if(view == null) {
+            return;
+        }
+
+        ListView listMessages = (ListView)view.findViewById(R.id.listMessages);
+        mAdapter = new MessagesAdapter(getActivity(), new ArrayList<Chat>());
+        listMessages.setAdapter(mAdapter);
+        listMessages.setOnItemClickListener(this);
+    }
+
+    private void doRefresh(boolean isPullToRefreshRefreshed) {
+        final View view = getView();
+        if(view == null) {
+            return;
+        }
+
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
         final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
-        mSwipeRefreshLayout.setRefreshing(true);
+        if(isPullToRefreshRefreshed) {
+            mSwipeRefreshLayout.setRefreshing(true);
+        } else {
+            view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+        }
 
         HttpClientManager.getInstance().getConversations(user.get(SessionManager.KEY_ID), user.get(SessionManager.KEY_ACCESS_TOCKEN),
                 new HttpClientManager.OnResultReady() {
 
                     @Override
                     public void onReady(Object result, boolean failed) {
-                        View view = getView();
-                        if (isDetached() || getActivity() == null || view == null) {
+                        if (isDetached() || getActivity() == null) {
                             L.i("fragment_is_detached");
                             return;
                         }
 
                         mSwipeRefreshLayout.setRefreshing(false);
+                        view.findViewById(R.id.progressBar).setVisibility(View.GONE);
 
                         if (failed) {
                             if (mAdapter.getCount() == 0) {
@@ -106,21 +140,5 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
                         }
                     }
                 });
-    }
-
-    private void initView() {
-        View view = getView();
-        if(view == null) {
-            return;
-        }
-
-        ListView listMessages = (ListView)view.findViewById(R.id.listMessages);
-        mAdapter = new MessagesAdapter(getActivity(), new ArrayList<Chat>());
-        listMessages.setAdapter(mAdapter);
-        listMessages.setOnItemClickListener(this);
-    }
-
-    public ChatFragment getChatFragment() {
-        return mChatFragment;
     }
 }
