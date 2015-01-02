@@ -23,6 +23,7 @@
 #import "ClubUsersViewController.h"
 #import "GlobalVars.h"
 #import "MainMenuCollectionViewCell.h"
+#import "MainViewController.h"
 
 
 
@@ -99,6 +100,11 @@
         clubController.place = place;
     }
  
+    if([[segue identifier] isEqualToString:@"yesterday"]){
+        MainViewController *mainController = [segue destinationViewController];
+        mainController.showYesterdayPlaces = YES;
+    }
+    
     // Set the title of navigation bar by using the menu items
     NSIndexPath *indexPath = [[self.menuCollectionView indexPathsForSelectedItems] objectAtIndex:0];
     MainMenuCollectionViewCell* selectedItem = (MainMenuCollectionViewCell*)[self.menuCollectionView cellForItemAtIndexPath:indexPath];

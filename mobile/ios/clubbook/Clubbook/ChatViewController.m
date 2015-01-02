@@ -271,7 +271,7 @@
 
 - (void)putMessage:(NSString *)message type:(NSString *)type sender:(NSString *) sender
 {
-    JSQMessage *jsqmessage = [[JSQMessage alloc] initWithSenderId:self.senderId senderDisplayName:self.senderDisplayName date:[NSDate date] text:message];
+    JSQMessage *jsqmessage = [[JSQMessage alloc] initWithSenderId:sender senderDisplayName:self.senderDisplayName date:[NSDate date] text:message];
 
     [self.messages addObject:jsqmessage];
     [self setCanChat];

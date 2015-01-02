@@ -23,6 +23,7 @@
 #import "FastCheckinViewController.h"
 #import "SVPullToRefresh.h"
 #import "SPSlideTabButton.h"
+#import "ClubUsersYesterdayViewController.h"
 
 @interface MainViewController ()<UINavigationControllerDelegate, UINavigationBarDelegate>{
     BOOL isInitialLoad;
@@ -32,11 +33,13 @@
     
     CGFloat lastContentOffset;
     UIView* blankView;
+    
+    Place* placeToView;
 }
 
 @property (nonatomic) NSTimer* locationUpdateTimer;
 @property (nonatomic) BOOL isLoaded;
-@property (nonatomic) Place* checkinPlace;
+
 @end
 
 @implementation MainViewController
@@ -44,11 +47,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     self.clubTable.dataSource = self;
     self.clubTable.delegate = self;
-    
-    self.title = NSLocalizedString(@"Going Out", nil);
+
     self.clubTable.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     [self._manager getConfig];
@@ -65,53 +67,69 @@
         [weakSelf insertRowAtBottom];
     }];
     
-    //setup filter tab bar
     selectedClubType = nil;
     
-    self.filterTabBar = [[SPSlideTabBar alloc] initWithFrame:CGRectMake(0, 0, self.filterTabView.frame.size.width, self.filterTabView.frame.size.height)];
-    [self.filterTabBar setAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth];
-    [self.filterTabBar setBackgroundColor:[UIColor colorWithRed:0.651 green:0 blue:0.867 alpha:1]];
-    [self.filterTabBar setSeparatorStyle:SPSlideTabBarSeparatorStyleNone];
-    [self.filterTabBar setBarButtonTitleColor:[UIColor colorWithRed:192/255.0f green:154/255.0f blue:234/255.0f alpha:1.0f]];
-    [self.filterTabBar setSelectedButtonColor:[UIColor whiteColor]];
-    [self.filterTabBar setSelectedViewColor:[UIColor whiteColor]];
-    [self.filterTabBar setSlideDelegate:self];
-    [self.filterTabView addSubview:self.filterTabBar];
-    
-    NSString* allOption = [NSString stringWithFormat:@"%@", NSLocalizedString(@"all", nil)];
-    [self.filterTabBar addTabForTitle:allOption];
-    [self.filterTabBar setSelectedIndex:0];
-    
-    //remove black line above filtertab
-    UINavigationBar *navigationBar = self.navigationController.navigationBar;
-    
-    [navigationBar setBackgroundImage:[UIImage new]
-                       forBarPosition:UIBarPositionAny
-                           barMetrics:UIBarMetricsDefault];
-    
-    [navigationBar setShadowImage:[UIImage new]];
-    
-    //set up search field
-    self.searchBar.barTintColor = self.filterTabBar.backgroundColor;
-    
-    //remove black line under searchbox
-    self.searchBar.layer.borderWidth = 2;
-    self.searchBar.layer.borderColor = [[UIColor colorWithRed:0.651 green:0 blue:0.867 alpha:1] CGColor];
-    
-    //set placeholder text
-    self.searchBar.placeholder = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Search clubs, bars, events, etc. by name", nil)];
-    [self changeSearchKeyboardButtonTitle];
-    
-    //hide searchbar
-    [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
-    isSearchBarShown = NO;
-    self.searchBar.delegate = self;
+    if (self.showYesterdayPlaces) {
+        //hide searchbar and filter tab from view
+        placeToView = nil;
+        [self.filterTabBar setHidden:YES];
+        [self.searchBar setHidden:YES];
+        [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
+        [self replaceTopConstraintOnView:self.filterTabView withConstant: -self.filterTabView.frame.size.height];
+        
+        UIBarButtonItem *tempButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"icon_menu_clubpromo"] style:UIBarButtonItemStylePlain target:self action:@selector(handleInfoButton)];
+        self.navigationItem.rightBarButtonItem = tempButton;
+        
+        self.title = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Yesterday Check-ins", nil)];
+    }
+    else {
+        //setup filter tab bar
+        self.filterTabBar = [[SPSlideTabBar alloc] initWithFrame:CGRectMake(0, 0, self.filterTabView.frame.size.width, self.filterTabView.frame.size.height)];
+        [self.filterTabBar setAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth];
+        [self.filterTabBar setBackgroundColor:[UIColor colorWithRed:0.651 green:0 blue:0.867 alpha:1]];
+        [self.filterTabBar setSeparatorStyle:SPSlideTabBarSeparatorStyleNone];
+        [self.filterTabBar setBarButtonTitleColor:[UIColor colorWithRed:192/255.0f green:154/255.0f blue:234/255.0f alpha:1.0f]];
+        [self.filterTabBar setSelectedButtonColor:[UIColor whiteColor]];
+        [self.filterTabBar setSelectedViewColor:[UIColor whiteColor]];
+        [self.filterTabBar setSlideDelegate:self];
+        [self.filterTabView addSubview:self.filterTabBar];
+        
+        NSString* allOption = [NSString stringWithFormat:@"%@", NSLocalizedString(@"all", nil)];
+        [self.filterTabBar addTabForTitle:allOption];
+        [self.filterTabBar setSelectedIndex:0];
+        
+        //remove black line above filtertab
+        UINavigationBar *navigationBar = self.navigationController.navigationBar;
+        
+        [navigationBar setBackgroundImage:[UIImage new]
+                           forBarPosition:UIBarPositionAny
+                               barMetrics:UIBarMetricsDefault];
+        
+        [navigationBar setShadowImage:[UIImage new]];
+        
+        //set up search field
+        self.searchBar.barTintColor = self.filterTabBar.backgroundColor;
+        
+        //remove black line under searchbox
+        self.searchBar.layer.borderWidth = 2;
+        self.searchBar.layer.borderColor = [[UIColor colorWithRed:0.651 green:0 blue:0.867 alpha:1] CGColor];
+        
+        //set placeholder text
+        self.searchBar.placeholder = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Search clubs, bars, events, etc. by name", nil)];
+        [self changeSearchKeyboardButtonTitle];
+        
+        //hide searchbar
+        [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
+        isSearchBarShown = NO;
+        self.searchBar.delegate = self;
+        
+        [self.view setBackgroundColor:self.filterTabBar.backgroundColor];
+    }
     
     //set view on first filter option
     selectedClubType = @"";
     [self loadAllTypeClubs];
-    
-    [self.view setBackgroundColor:self.filterTabBar.backgroundColor];
+
 }
 
 -(BOOL)shouldAutorotate {
@@ -210,8 +228,6 @@
             [_places addObjectsFromArray:places];
         }
         
-        self.title = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Going Out", nil)];
-        
         self.clubTable.hidden = NO;
         if ([_places count] > 0) {
             [self.noResultsLabel setHidden:YES];
@@ -280,6 +296,15 @@
 
 - (void)loadClubType:(NSString*) type take:(int)take skip:(int)skip
 {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
+    
+    if (_showYesterdayPlaces) {
+        isInitialLoad = YES;
+        [self._manager retrieveYesterdayPlacesAccessToken:accessToken];
+        return;
+    }
+    
     isInitialLoad = NO;
     if (skip == 0) {
         isInitialLoad = YES;
@@ -299,10 +324,18 @@
     double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
     double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *accessToken = [defaults objectForKey:@"accessToken"];
-    
     [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:0 type:type search:@"" accessToken:accessToken];
+}
+
+- (IBAction)handleYesterdayButton:(id)sender {
+    CbButton* yesterDayButton = (CbButton *) sender;
+    placeToView = _places[yesterDayButton.tag];
+    
+    [self performSegueWithIdentifier: @"onYesterday" sender: self];
+}
+
+- (void) handleInfoButton {
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -336,10 +369,6 @@
     
     cell.closingValueLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:10];
     
-    cell.checkinButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15];
-    
-    [cell.checkinButton setMainState:NSLocalizedString(@"Checkin", nil)];
-    
     int disatanceInt = (int)place.distance;
     
     [cell.distanceLabel setText:[LocationHelper convertDistance:disatanceInt]];
@@ -350,14 +379,15 @@
     
     [cell.clubAvatar sd_setImageWithURL:[NSURL URLWithString:place.avatar] placeholderImage:[UIImage imageNamed:@"avatar_default.png"]];
     
-    BOOL isCheckinHere = [LocationHelper isCheckinHere:place];
-    if(isCheckinHere){
-        [cell.checkinButton setSecondState:NSLocalizedString(@"Checkout", nil)];
-    } else {
-        [cell.checkinButton setMainState:NSLocalizedString(@"Checkin", nil)];
+    if(_showYesterdayPlaces) {
+        [cell.distanceLabel setHidden:YES];
+        [cell.arrowImage setHidden:YES];
+        
+        [cell.viewYesterdayButton setHidden:NO];
+        
+        cell.viewYesterdayButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15];
+        [cell.viewYesterdayButton setMainState:NSLocalizedString(@"View", nil)];
     }
-    
-    [cell.checkinButton setTag:indexPath.row];
     
     return cell;
 }
@@ -369,7 +399,7 @@
     
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle: nil];
     ClubUsersViewController *clubController  = [mainStoryboard instantiateViewControllerWithIdentifier:@"club"];
-    clubController.place = place;//place.id;
+    clubController.place = place;
     clubController.hasBack = YES;
     self.isLoaded = NO;
 
@@ -390,34 +420,23 @@
         clubController.hasBack = YES;
         self.isLoaded = NO;
     }
+    else if ([[segue identifier] isEqualToString:@"onYesterday"]) {
+        ClubUsersYesterdayViewController *yesterdayController =  [segue destinationViewController];
+        if (placeToView != nil) {
+            yesterdayController.place = placeToView;
+            yesterdayController.hasBack = YES;
+            placeToView = nil;
+        }
+
+    }
+
 }
+
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)didCheckin:(User *) user userInfo:(NSObject *)userInfo
-{
-    [self hideProgress];
-    CbButton* checkinButton = (CbButton *) userInfo;
-    
-    [checkinButton setSecondState:NSLocalizedString(@"Checkout", nil)];
-  
-    [LocationHelper addCheckin:self.checkinPlace];
- 
-    [self performSegueWithIdentifier: @"onClub" sender: self.checkinPlace];
-}
-
-- (void)didCheckout:(User *) user userInfo:(NSObject *)userInfo
-{
-    [self hideProgress];
-    CbButton* checkinButton = (CbButton *) userInfo;
-    
-    [checkinButton setMainState:NSLocalizedString(@"Checkin", nil)];
-    
-    [LocationHelper removeCheckin];
 }
 
 #pragma mark - SPSlideTabBarDelegate
@@ -516,8 +535,7 @@
 }
 
 -(void) scrollViewDidScroll:(UIScrollView *)scrollView {
-    
-    if(self.clubTable.pullToRefreshView.state || scrollView.contentOffset.y <= -10) { 
+    if(self.clubTable.pullToRefreshView.state || scrollView.contentOffset.y <= -10 || _showYesterdayPlaces) {
        return;
     }
     //scrolled up
@@ -537,7 +555,7 @@
 
 
 -(void) scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    if ([self.searchBar isHidden] && ![[self navigationController] isNavigationBarHidden]) {
+    if ([self.searchBar isHidden] && ![[self navigationController] isNavigationBarHidden] && !self.showYesterdayPlaces) {
         [self.searchBar setHidden:NO];
     }
 }

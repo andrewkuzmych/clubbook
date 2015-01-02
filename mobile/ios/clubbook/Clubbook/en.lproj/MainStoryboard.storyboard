@@ -378,7 +378,7 @@
                                                 <action selector="directionAction:" destination="cfA-T2-NrK" eventType="touchUpInside" id="sOK-p3-zr3"/>
                                             </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nmk-PJ-53n" customClass="AddFriendButton">
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nmk-PJ-53n" customClass="AddFriendButton">
                                             <rect key="frame" x="176" y="104" width="128" height="30"/>
                                             <inset key="contentEdgeInsets" minX="30" minY="0.0" maxX="0.0" maxY="0.0"/>
                                             <state key="normal" title="Yesterday">
@@ -388,7 +388,7 @@
                                                 <segue destination="HcH-yt-Cix" kind="push" identifier="onYesterday" id="1jX-id-wit"/>
                                             </connections>
                                         </button>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="yesterday_icon.png" translatesAutoresizingMaskIntoConstraints="NO" id="UC7-3Z-mp9">
+                                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="yesterday_icon.png" translatesAutoresizingMaskIntoConstraints="NO" id="UC7-3Z-mp9">
                                             <rect key="frame" x="188" y="107" width="23" height="23"/>
                                         </imageView>
                                     </subviews>
@@ -749,7 +749,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="75" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="kH0-2c-mrd">
-                                <rect key="frame" x="0.0" y="109" width="320" height="459"/>
+                                <rect key="frame" x="0.0" y="153" width="320" height="415"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="separatorColor" red="0.78985969389999999" green="0.78985969389999999" blue="0.78985969389999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -809,7 +809,7 @@
                                                             </constraints>
                                                         </imageView>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_clubview_details.png" translatesAutoresizingMaskIntoConstraints="NO" id="Die-be-clR">
-                                                            <rect key="frame" x="297" y="20" width="23" height="35"/>
+                                                            <rect key="frame" x="297" y="20" width="23" height="34"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="23" id="sRh-uX-u3Z"/>
                                                             </constraints>
@@ -836,6 +836,19 @@
                                                             <color key="textColor" red="0.38431372549999998" green="0.38431372549999998" blue="0.38431372549999998" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a1r-se-HHo" customClass="CbButton">
+                                                            <rect key="frame" x="245" y="36" width="55" height="34"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="55" id="sCx-eY-3hT"/>
+                                                            </constraints>
+                                                            <state key="normal" title="Button">
+                                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                            </state>
+                                                            <connections>
+                                                                <action selector="checkinAction:" destination="KfF-P3-bG4" eventType="touchUpInside" id="PBd-W0-dKR"/>
+                                                                <action selector="handleYesterdayButton:" destination="2" eventType="touchUpInside" id="Xn1-Fd-5gp"/>
+                                                            </connections>
+                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                     <constraints>
@@ -849,7 +862,9 @@
                                                         <constraint firstItem="lJq-Qr-5SJ" firstAttribute="top" secondItem="TNe-Rl-Vgr" secondAttribute="top" constant="5" id="CQr-5B-AcI"/>
                                                         <constraint firstItem="Die-be-clR" firstAttribute="leading" secondItem="tOm-vR-QGO" secondAttribute="trailing" constant="62" id="DO1-G9-dvS"/>
                                                         <constraint firstAttribute="bottom" secondItem="lJq-Qr-5SJ" secondAttribute="bottom" constant="-1" id="GDb-19-NcG"/>
+                                                        <constraint firstAttribute="bottom" secondItem="a1r-se-HHo" secondAttribute="bottom" constant="4" id="Gs9-UZ-jVb"/>
                                                         <constraint firstItem="e8d-at-CHA" firstAttribute="top" secondItem="tOm-vR-QGO" secondAttribute="bottom" constant="1" id="ITT-m7-Tvz"/>
+                                                        <constraint firstAttribute="trailing" secondItem="a1r-se-HHo" secondAttribute="trailing" constant="20" id="Isf-TX-Bu6"/>
                                                         <constraint firstAttribute="bottom" secondItem="Zmm-GA-NHe" secondAttribute="bottom" constant="4" id="Mx2-2i-EH8"/>
                                                         <constraint firstItem="tOm-vR-QGO" firstAttribute="top" secondItem="TNe-Rl-Vgr" secondAttribute="top" constant="9" id="PhE-ks-0K9"/>
                                                         <constraint firstItem="tOm-vR-QGO" firstAttribute="leading" secondItem="lJq-Qr-5SJ" secondAttribute="trailing" constant="8" symbolic="YES" id="RV6-Ir-Yvf"/>
@@ -880,6 +895,7 @@
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <connections>
+                                            <outlet property="arrowImage" destination="Die-be-clR" id="k3J-Gz-iL7"/>
                                             <outlet property="clubAvatar" destination="lJq-Qr-5SJ" id="g5c-I8-p3e"/>
                                             <outlet property="clubNameText" destination="tOm-vR-QGO" id="DKD-xE-MuQ"/>
                                             <outlet property="distanceLabel" destination="VC5-Y6-bZr" id="JnE-yK-bt5"/>
@@ -887,19 +903,20 @@
                                             <outlet property="friendsCountLabelTitle" destination="rXg-0L-gzf" id="Mp2-N7-VHN"/>
                                             <outlet property="userCountLabel" destination="hkB-bC-ZJc" id="TbG-7e-pNd"/>
                                             <outlet property="userCountLabelTitle" destination="Zmm-GA-NHe" id="9Ar-nQ-DWb"/>
+                                            <outlet property="viewYesterdayButton" destination="a1r-se-HHo" id="psS-3h-NES"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="phQ-b2-ll2">
-                                <rect key="frame" x="0.0" y="64" width="320" height="45"/>
+                                <rect key="frame" x="0.0" y="108" width="320" height="45"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="Jha-jc-0GM"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="45" id="UND-AS-9hs"/>
                                 </constraints>
                             </scrollView>
                             <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="pNU-Ri-Y1l">
-                                <rect key="frame" x="0.0" y="20" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="44"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="55T-XG-3M2">
@@ -957,11 +974,12 @@
                         <outlet property="searchBar" destination="pNU-Ri-Y1l" id="pVG-KJ-MPp"/>
                         <outlet property="sidebarButton" destination="4DU-rm-gHC" id="BaI-ve-kd6"/>
                         <segue destination="cfA-T2-NrK" kind="push" identifier="onClub" id="R55-D2-Pfl"/>
+                        <segue destination="HcH-yt-Cix" kind="push" identifier="onYesterday" id="zNQ-Rf-V4q"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3267" y="-1069"/>
+            <point key="canvasLocation" x="-3267" y="-1072"/>
         </scene>
         <!--Club Images Page View Controller-->
         <scene sceneID="Tme-c0-Ddh">
@@ -1751,7 +1769,7 @@
                         <viewControllerLayoutGuide type="bottom" id="w0P-5X-KkC"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="AEP-IC-r4w">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="496"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </view>
                     <navigationItem key="navigationItem" id="g9W-4s-VOZ"/>
@@ -3461,9 +3479,10 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Zkk-XZ-3rw"/>
         <segue reference="fHF-fb-mVP"/>
-        <segue reference="uGm-RL-FcK"/>
-        <segue reference="NRf-kh-47e"/>
+        <segue reference="dow-PZ-Aqs"/>
+        <segue reference="zNQ-Rf-V4q"/>
+        <segue reference="j2F-Mn-C3U"/>
+        <segue reference="Zkk-XZ-3rw"/>
     </inferredMetricsTieBreakers>
 </document>
