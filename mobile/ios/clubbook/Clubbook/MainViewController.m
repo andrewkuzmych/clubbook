@@ -77,10 +77,12 @@
         [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
         [self replaceTopConstraintOnView:self.filterTabView withConstant: -self.filterTabView.frame.size.height];
         
-        UIBarButtonItem *tempButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"icon_menu_clubpromo"] style:UIBarButtonItemStylePlain target:self action:@selector(handleInfoButton)];
+        UIBarButtonItem *tempButton = [[UIBarButtonItem alloc] init];
         self.navigationItem.rightBarButtonItem = tempButton;
         
         self.title = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Yesterday Check-ins", nil)];
+        
+        self.noResultsLabel.text = @"You don`t have any check-ins from yesterday";
     }
     else {
         //setup filter tab bar
