@@ -8,6 +8,7 @@
 
 #import "ClubProfileTabBarViewController.h"
 #import "ClubViewParallaxControllerViewController.h"
+#import "ClubSubscribeSettingsTableViewController.h"
 
 @interface ClubProfileTabBarViewController ()
 
@@ -28,10 +29,20 @@
                      parallaxController.place = self.place;
                      parallaxController.title = @"About";
                  }
+            if ([v isKindOfClass:[ClubSubscribeSettingsTableViewController class]])
+            {
+                ClubSubscribeSettingsTableViewController *subscribeController =  (ClubSubscribeSettingsTableViewController*)v;
+                subscribeController.place = self.place;
+                subscribeController.title = @"Favorite";
+            }
 
         }
 
+    [[UITabBar appearance] setBarTintColor:[UIColor whiteColor]];
+    
     }
+    
+    
     // Do any additional setup after loading the view.
 }
 
