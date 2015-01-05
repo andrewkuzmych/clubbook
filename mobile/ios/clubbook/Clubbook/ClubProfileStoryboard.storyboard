@@ -32,7 +32,6 @@
         <!--Club Profile-->
         <scene sceneID="zCY-1L-3fd">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ACi-tg-Xxh" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="club" id="ZjF-WR-zDq" userLabel="Club Profile" customClass="ClubUsersViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="IbS-L6-b3F"/>
@@ -262,6 +261,7 @@
                         <outlet property="sidebarButton" destination="uwA-6W-BtF" id="74N-EN-QpA"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ACi-tg-Xxh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1478" y="-893"/>
         </scene>

@@ -1138,7 +1138,7 @@
         <!--Profile Pages View Controller-->
         <scene sceneID="e0r-me-BM5">
             <objects>
-                <viewController id="Bef-Dc-dOu" customClass="ProfilePagesViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ProfilePages" id="Bef-Dc-dOu" customClass="ProfilePagesViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="bsX-KT-zaM"/>
                         <viewControllerLayoutGuide type="bottom" id="w0P-5X-KkC"/>
@@ -2848,6 +2848,6 @@
         <segue reference="G5L-PP-KnF"/>
         <segue reference="dow-PZ-Aqs"/>
         <segue reference="j2F-Mn-C3U"/>
-        <segue reference="Zkk-XZ-3rw"/>
+        <segue reference="SRl-Ke-nF1"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -205,8 +205,15 @@
                                                image:nil
                                             message:NSLocalizedString(@"needToCheckinFirst", nil)
                                             duration:kCSNotificationViewDefaultShowDuration];
-        else
-            [self performSegueWithIdentifier: @"onUsers" sender: indexPath];
+        else {
+            UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+            ProfilePagesViewController *profilePagesViewController = [storyBoard instantiateViewControllerWithIdentifier:@"ProfilePages"];
+            profilePagesViewController.profiles =_users;
+            profilePagesViewController.index = indexPath.row;
+            profilePagesViewController.currentPlace = self.place;
+            [[self navigationController] pushViewController:profilePagesViewController animated:YES];
+        }
+    
 }
 
 - (IBAction)onClubInfoPressed:(id)sender {
@@ -219,13 +226,7 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(NSIndexPath *)indexPath
 {
-    if([[segue identifier] isEqualToString:@"onUsers"]){
-        ProfilePagesViewController *profilePagesViewController =  [segue destinationViewController];
-        profilePagesViewController.profiles =_users;
-        profilePagesViewController.index = indexPath.row;
-        profilePagesViewController.currentPlace = self.place;
-    }
-   else if ([[segue identifier] isEqualToString:@"onYesterday"]) {
+   if ([[segue identifier] isEqualToString:@"onYesterday"]) {
         ClubUsersYesterdayViewController *clubController =  [segue destinationViewController];
         clubController.place = self.place;
         clubController.hasBack = YES;
