@@ -82,27 +82,28 @@ exports.signinmail = (params, callback)->
 exports.list_club = (params, callback)->
   console.log "METHOD - Manager list_club"
   geoNear = 
-      near: [ parseFloat(params.lon), parseFloat(params.lat)] ,
+      near: [ parseFloat(params.lon), parseFloat(params.lat)],
       distanceField: "distance",
       spherical: true,
       distanceMultiplier: 6371  
 
-  if params.distance
-    geoNear.maxDistance = params.distance/6371 
+  #if params.distance
+  #  geoNear.maxDistance = params.distance/6371 
 
   query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take}]
+
+  match = {}
+  if params.search
+    search = params.search.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")
+    match.club_name =  { '$regex': search, '$options': 'i' }
+  
   if params.type
-     match = {club_type: params.type}
-     query =  [{'$geoNear': geoNear}, {'$match': match}, {'$skip':params.skip}, {'$limit':params.take}]
+    match.club_type = params.type
 
-  console.log 'QUERY'
-  console.log query
-     
+  if match
+    query = [{'$geoNear': geoNear}, {'$match': match}, {'$skip':params.skip}, {'$limit':params.take}]
 
-  #query = { 'club_loc':{ '$near' : [ params.lat,params.lon] }}
   db_model.Venue.aggregate query,{}, (err, clubs)->
-    #  console.log err
-    #db_model.Venue.find(query).exec (err, clubs)->
     for club in clubs
       if club.club_working_hours
         for wh in club.club_working_hours
@@ -114,7 +115,6 @@ exports.list_club = (params, callback)->
       match_pre =  {"_id": {'$in': user.friends}, 'bloked_users': {'$ne': user._id}, 'friends': user._id, 'checkin.active': true }
       match_post =  {'checkin.active': true}
       group = { _id: "$checkin.club", count: { $sum: 1 }}
-
       query = [ { '$match': match_pre}, { '$unwind': "$checkin" }, { '$match': match_post }, {'$group': group} ]
 
       db_model.User.aggregate query, {}, (err, result)->
@@ -127,8 +127,6 @@ exports.list_club = (params, callback)->
 
         query =  [{'$group':{_id: "$club_type", count: { '$sum': 1 } } }]
         db_model.Venue.aggregate query, {}, (err, types)->
-          console.log err
-          console.log  types
           callback err, clubs, types 
   
 exports.get_people_count_in_club = (club, callback)->

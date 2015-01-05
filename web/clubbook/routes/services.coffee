@@ -178,6 +178,13 @@ exports.update_user = (req, res)->
         else
           user.push = true
 
+      # change is visible nearby property
+      if req.body.is_visible_nearby
+        if req.body.is_visible_nearby == 'false'
+          user.is_visible_nearby = false
+        else
+          user.is_visible_nearby = true
+
       db_model.save_or_update_user user, (err)->
         if err then console.log err
         res.json
@@ -284,8 +291,11 @@ exports.users_checkedin = (req, res)->
     db_model.Venue.find({club_loc: { '$near' : [req.query.user_lon, req.query.user_lat], '$maxDistance': parseFloat(req.query.distance)/112 }}).exec (err, venues)->
       venue_objects = __.map venues, (venue)->
         venue._id.toString()
-
-      db_model.User.find({'checkin': { '$elemMatch': { 'club' : {'$in': venue_objects}, 'active': true}}, 'bloked_users': {'$ne': current_user._id}}, { checkin: {$slice: -1}}).skip(skip).limit(take).populate('checkin.club').exec (err, users)->
+      
+      query = {'checkin': { '$elemMatch': { 'club' : {'$in': venue_objects}, 'active': true}}, 'bloked_users': {'$ne': current_user._id}}
+      if req.query.gender
+        query.gender = req.query.gender
+      db_model.User.find(query, { checkin: {$slice: -1}}).skip(skip).limit(take).populate('checkin.club').exec (err, users)->
         converted_users = []
         for user in users
           user_object = convert_user_to_friend(current_user, user)
@@ -312,6 +322,9 @@ exports.users_around = (req, res)->
         distanceMultiplier: 6371  
 
     match = { name: { '$exists': true } }
+    if req.query.gender
+      match.gender = req.query.gender
+
     query =  [{'$geoNear': geoNear}, {'$match': match}, {'$skip':skip}, {'$limit':take}]
 
     db_model.User.aggregate query,{}, (err, users)->
@@ -794,6 +807,8 @@ exports.list_club = (req, res)->
     lon: req.query.user_lon
     user_id: req.params.me._id.toString()
     type: req.query.type
+    search: req.query.search
+
   
   if req.query.distance
     params.distance = parseInt(req.query.distance)
@@ -1041,6 +1056,17 @@ exports.get_conversations = (req, res)->
             status: 'ok'
             result:
               chats: result
+
+exports.delete_conversation = (req, res)->
+  params =
+    user1: req.params.current_user
+    user2: req.params.receiver
+
+  query = { '$or': [{ 'user1': mongoose.Types.ObjectId(params.user1), 'user2': mongoose.Types.ObjectId(params.user2) }, { 'user1': mongoose.Types.ObjectId(params.user2), 'user2': mongoose.Types.ObjectId(params.user1) }] }
+
+  db_model.Chat.remove query, (err)->
+    res.json
+      status: 'ok'
 
 exports.get_conversation = (req, res)->
   params =
