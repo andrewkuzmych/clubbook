@@ -739,6 +739,24 @@ exports.club_users = (req, res)->
             users: user_objects
             status: "ok"
 
+exports.clubs_yesterday = (req, res)->
+    current_user_id = req.params.me._id.toString()
+    current_date_time = new Date()
+    yesterday_data_time = new Date(new Date().getTime() - 48 * 60 * 60 * 1000);
+
+    query =  [{'$match': {_id : mongoose.Types.ObjectId(current_user_id)}}, {'$unwind': '$checkin'}, {'$match': {'checkin.time': {'$gte': yesterday_data_time, '$lte': current_date_time}}}]
+
+    db_model.User.aggregate query, {}, (err, result)->
+      club_ids = []
+      for r in result
+        club_ids.push r.checkin.club
+
+      db_model.Venue.find({'_id': { '$in': club_ids }}).exec (err, clubs)->
+        res.json
+          status: "ok"
+          clubs: clubs       
+
+
 exports.club_users_yesterday = (req, res)->
   current_user_id = req.params.me._id.toString()
   club_id = req.params.objectId

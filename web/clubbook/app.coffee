@@ -230,6 +230,7 @@ app.get '/_s/obj/club_types', handle_access_token, services.club_types
 app.get '/_s/obj/club/:objectId', handle_access_token, services.find_club
 app.get '/_s/obj/club/:objectId/users', handle_access_token, services.club_users
 app.get '/_s/obj/club/:objectId/users/yesterday', handle_access_token, services.club_users_yesterday
+app.get '/_s/obj/clubs/yesterday', handle_access_token, services.clubs_yesterday
 
 # checkin / chekout
 app.get '/_s/obj/club/:objectId/checkin', handle_access_token, services.checkin
