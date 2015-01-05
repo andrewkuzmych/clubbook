@@ -23,13 +23,12 @@
 #import "TransitionFromClubUsersToUser.h"
 #import "ClubUsersYesterdayViewController.h"
 #import "ProfilePagesViewController.h"
+#import "ClubViewParallaxControllerViewController.h"
+#import "ClubProfileTabBarViewController.h"
 
 @interface ClubUsersViewController ()<UINavigationControllerDelegate>
 {
-   // Place *_place;
     NSArray *_users;
-    int minUserCount;
-    float oldX;
 }
 
 
@@ -97,13 +96,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-   // NSString *channal = [NSString stringWithFormat:@"checkin_%@", self.place.id];
-    //[PubNub subscribeOnChannel:[PNChannel channelWithName:channal shouldObservePresence:YES]];
-    
-      
-    // Set outself as the navigation controller's delegate so we're asked for a transitioning object
-    self.navigationController.delegate = self;
+     self.navigationController.delegate = self;
     
     //Google Analytics
     id tracker = [[GAI sharedInstance] defaultTracker];
@@ -114,13 +107,15 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    //NSString *channal = [NSString stringWithFormat:@"%message_%@", self.place.id];
 
-    //[PubNub unsubscribeFromChannel:[PNChannel channelWithName:channal shouldObservePresence:YES]];
-    // Stop being the navigation controller's delegate
     if (self.navigationController.delegate == self) {
         self.navigationController.delegate = nil;
     }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self.headerView setBackgroundColor:[UIColor clearColor]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -202,9 +197,7 @@
 
     BOOL isCheckinHere = [LocationHelper isCheckinHere:_place];
         User *user = _users[indexPath.row];
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSString *userId = [defaults objectForKey:@"userId"];
-        
+   
         if (!isCheckinHere && !user.isFriend)
             // cannot see profile when you are not checked in and not friend
             [CSNotificationView showInViewController:self
@@ -212,27 +205,30 @@
                                                image:nil
                                             message:NSLocalizedString(@"needToCheckinFirst", nil)
                                             duration:kCSNotificationViewDefaultShowDuration];
-        else
-            [self performSegueWithIdentifier: @"onUsers" sender: indexPath];
+        else {
+            UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+            ProfilePagesViewController *profilePagesViewController = [storyBoard instantiateViewControllerWithIdentifier:@"ProfilePages"];
+            profilePagesViewController.profiles =_users;
+            profilePagesViewController.index = indexPath.row;
+            profilePagesViewController.currentPlace = self.place;
+            [[self navigationController] pushViewController:profilePagesViewController animated:YES];
+        }
+    
+}
+
+- (IBAction)onClubInfoPressed:(id)sender {
+    [self.headerView setBackgroundColor:[UIColor colorWithRed:0.973 green:0.913 blue:1.000 alpha:1.000]];
+    UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"ClubProfileStoryboard" bundle:nil];
+    ClubProfileTabBarViewController *tabBar = [storyBoard instantiateViewControllerWithIdentifier:@"ClubTabBar"];
+    tabBar.place = self.place;
+    [[self navigationController] pushViewController:tabBar animated:YES];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(NSIndexPath *)indexPath
 {
-    if([[segue identifier] isEqualToString:@"onUsers"]){
-        ProfilePagesViewController *profilePagesViewController =  [segue destinationViewController];
-        profilePagesViewController.profiles =_users;
-        profilePagesViewController.index = indexPath.row;
-//        User *user = _users[indexPath.row];
-//        userController.user= user;
-        profilePagesViewController.currentPlace = self.place;
-//        userController.clubCheckinName = self.place.title;
-    } else if ([[segue identifier] isEqualToString:@"onClubInfo"]) {
-        ClubViewController *clubController =  [segue destinationViewController];
-        clubController.place = _place;
-    } else if ([[segue identifier] isEqualToString:@"onYesterday"]) {
+   if ([[segue identifier] isEqualToString:@"onYesterday"]) {
         ClubUsersYesterdayViewController *clubController =  [segue destinationViewController];
-        //NSIndexPath *selectedIndexPath = [self.clubTable indexPathForSelectedRow];
-        clubController.place = self.place;//place.id;
+        clubController.place = self.place;
         clubController.hasBack = YES;
     }
 }
@@ -270,7 +266,7 @@
             CLTransformation *transformation = [CLTransformation transformation];
             [transformation setParams: @{@"width": @120, @"height": @120}];
             NSString * avatarUrl  = [cloudinary url: [user.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
-            [cell.profileAvatar setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
+            [cell.profileAvatar sd_setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
     });
     return cell;
 }
@@ -363,8 +359,6 @@
     
     [self showProgress:NO title:NSLocalizedString(@"checking_in", nil)];
     [self._manager checkin:_place.id accessToken:accessToken userInfo:nil];
-
-    
 }
 
 - (IBAction)directionAction:(id)sender {
@@ -443,7 +437,7 @@
         int disatanceInt = (int)self.place.distance;
         self.headerView.clubDistanceText.text = [LocationHelper convertDistance:disatanceInt];
         
-        [self.headerView.clubAvatarImage setImageWithURL:[NSURL URLWithString:self.place.avatar] placeholderImage:[UIImage imageNamed:@"Default.png"]];
+        [self.headerView.clubAvatarImage sd_setImageWithURL:[NSURL URLWithString:self.place.avatar] placeholderImage:[UIImage imageNamed:@"Default.png"]];
         
         BOOL isCheckinHere = [LocationHelper isCheckinHere:self.place];
         if(isCheckinHere){
@@ -471,17 +465,5 @@
     
     return (ProfileCell*)[self.profileCollection cellForItemAtIndexPath:[NSIndexPath indexPathForRow:userIndex inSection:0]];
 }
-
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.activity.ResetPasswordActivity;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.NetworkUtils;
@@ -158,16 +158,16 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         final String accessToken = getSession().getAccessToken();
 
-        DataStore.updateNotificationEnabling(accessToken, String.valueOf(isEnable), new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().updateNotificationEnabling(accessToken, String.valueOf(isEnable), new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 View view = getView();
-                if(view == null) {
+                if (view == null) {
                     return;
                 }
 
                 hideProgress();
-                if(failed) {
+                if (failed) {
                     showToast(R.string.something_went_wrong_please_try_again);
                     checkBox.setOnCheckedChangeListener(null);
                     checkBox.setChecked(!isEnable);
@@ -242,10 +242,10 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         showProgress(getString(R.string.deleting_profile));
 
         String accessToken = getSession().getAccessToken();
-        DataStore.deleteProfile(getActivity(), accessToken, new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().deleteProfile(getActivity(), accessToken, new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
-                if(!failed) {
+                if (!failed) {
                     hideProgress();
 
                     doLogOut();

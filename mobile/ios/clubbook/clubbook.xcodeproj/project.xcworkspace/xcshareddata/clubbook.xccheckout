@@ -14,7 +14,7 @@
 		<string>https://github.com/andrewkuzmych/clubbook.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>mobile/ios/clubbook/Clubbook.xcodeproj/project.xcworkspace</string>
+	<string>mobile/ios/clubbook/Clubbook.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>0E37A81E1B04218171266BF7E31B0568EAE5917D</key>

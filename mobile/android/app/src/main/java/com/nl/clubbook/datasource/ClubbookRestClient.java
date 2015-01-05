@@ -112,8 +112,8 @@ public class ClubbookRestClient {
         client.get(getBcAbsoluteUrl("obj/user/" + userId + "/friends/" + friendId + "/unfriend"), params, responseHandler);
     }
 
-    public static void retrievePlaces(RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("obj/club"), params, responseHandler);
+    public static com.loopj.android.http.RequestHandle retrievePlaces(RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        return client.get(getBcAbsoluteUrl("obj/club"), params, responseHandler);
     }
 
     public static void retrieveClubCheckedInUsers(String clubId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
@@ -124,8 +124,8 @@ public class ClubbookRestClient {
         client.get(getBcAbsoluteUrl("obj/club/" + clubId + "/users/yesterday"), params, responseHandler);
     }
 
-    public static void retrieveCurrentCheckedInUsers(RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getBcAbsoluteUrl("obj/users/checkedin"), params, responseHandler);
+    public static void retrieveNearbyUsers(String requestType, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.get(getBcAbsoluteUrl("obj/users/" + requestType), params, responseHandler);
     }
 
     public static void checkin(String placeId, RequestParams params, AsyncHttpResponseHandler responseHandler) {

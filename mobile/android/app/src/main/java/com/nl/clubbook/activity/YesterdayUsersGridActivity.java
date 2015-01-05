@@ -10,13 +10,12 @@ import android.widget.GridView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.ProfileAdapter;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.helper.SingleUsersHolder;
 import com.nl.clubbook.utils.NetworkUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,6 +35,7 @@ public class YesterdayUsersGridActivity extends BaseActivity implements AdapterV
 
         sendScreenStatistic(R.string.yesterday_checked_in_users_android);
 
+        setupToolBar();
         initActionBar(R.string.club_profile);
         loadCheckedInUsers();
     }
@@ -79,17 +79,17 @@ public class YesterdayUsersGridActivity extends BaseActivity implements AdapterV
 
         progressBar.setVisibility(View.VISIBLE);
 
-        DataStore.retrieveClubYesterdayCheckedInUsers(clubId, user.get(SessionManager.KEY_ACCESS_TOCKEN), new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().retrieveClubYesterdayCheckedInUsers(clubId, user.get(SessionManager.KEY_ACCESS_TOCKEN), new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
-                if(isFinishing()) {
+                if (isFinishing()) {
                     return;
                 }
 
                 progressBar.setVisibility(View.GONE);
 
                 if (failed) {
-                    if(result != null && result instanceof String && !((String) result).isEmpty()) {
+                    if (result != null && result instanceof String && !((String) result).isEmpty()) {
                         txtYouHaventAccess.setVisibility(View.VISIBLE);
                     } else {
                         showToast(R.string.something_went_wrong_please_try_again);
@@ -106,7 +106,7 @@ public class YesterdayUsersGridActivity extends BaseActivity implements AdapterV
 
                 List<User> users = (List<User>) result;
 
-                if(users != null && !users.isEmpty()) {
+                if (users != null && !users.isEmpty()) {
                     mProfileAdapter = new ProfileAdapter(getBaseContext(), users, ProfileAdapter.MODE_DEFAULT);
                     gridUsers.setAdapter(mProfileAdapter);
                     gridUsers.setOnItemClickListener(YesterdayUsersGridActivity.this);

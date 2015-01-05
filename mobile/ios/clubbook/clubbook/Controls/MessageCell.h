@@ -13,5 +13,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *userName;
 @property (weak, nonatomic) IBOutlet UILabel *messageLabel;
 @property (weak, nonatomic) IBOutlet UILabel *unreadMsgCount;
+@property (weak, nonatomic) IBOutlet UILabel *lastMessageLabel;
 
 @end

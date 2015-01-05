@@ -16,18 +16,16 @@ import android.widget.Spinner;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.UserPhotosAdapter;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.datasource.UserPhoto;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
-import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.helper.ImageUploader;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.helper.UiHelper;
 import com.nl.clubbook.ui.view.HorizontalListView;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.nl.clubbook.utils.ParseUtils;
-import com.nl.clubbook.utils.UIUtils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -54,7 +52,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
         sendScreenStatistic(R.string.profile_screen_android);
 
-        UIUtils.displayEmptyIconInActionBar(this);
+        setupToolBar();
         initImageHelpers();
         initView();
 
@@ -177,8 +175,8 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
         //upload data
         showProgressDialog(getString(R.string.loading));
-        DataStore.updateUserProfile(getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN),
-                userName, gender, mServerFormat.format(mBirthDate), country, aboutMe, new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().updateUserProfile(getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN),
+                userName, gender, mServerFormat.format(mBirthDate), country, aboutMe, new HttpClientManager.OnResultReady() {
                     @Override
                     public void onReady(Object result, boolean failed) {
                         hideProgressDialog();
@@ -232,10 +230,10 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
         setLoading(true);
 
-        DataStore.retrieveUser(getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN), new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().retrieveUser(getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN), new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
-                if(isFinishing()) {
+                if (isFinishing()) {
                     return;
                 }
 
@@ -254,7 +252,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                 EditText editAboutMe = (EditText) findViewById(R.id.editAboutMe);
 
                 String birthDate = profile.getDob();
-                if(birthDate != null && birthDate.length() > 0) {
+                if (birthDate != null && birthDate.length() > 0) {
                     parseBirthDate(birthDate);
 
                     editBirthDate.setText(mDisplayFormat.format(mBirthDate));
@@ -282,7 +280,6 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         for (UserPhoto userPhoto : userPhotoList) {
             if(userPhoto.getIsAvatar()) {
                 displayImageBigPreview(userPhoto);
-                UIUtils.loadPhotoToActionBar(EditProfileActivity.this, ImageHelper.getUserListAvatar(userPhoto.getUrl()), mTarget);
                 break;
             }
         }
@@ -312,7 +309,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         String accessToken = userDetails.get(SessionManager.KEY_ACCESS_TOCKEN);
         String userId = userDetails.get(SessionManager.KEY_ID);
 
-        DataStore.profileAddImage(accessToken, userId, imageJson, new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().profileAddImage(accessToken, userId, imageJson, new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 hideProgressDialog();
@@ -324,7 +321,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                 UserPhoto imageDto = (UserPhoto) result;
 
                 // add to small preview
-                if(mAdapter != null) {
+                if (mAdapter != null) {
                     mAdapter.addNewImage(imageDto, mAdapter.getCount());
                 }
                 displayImageBigPreview(imageDto);
@@ -339,7 +336,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         String userId = userDetails.get(SessionManager.KEY_ID);
         String accessToken = userDetails.get(SessionManager.KEY_ACCESS_TOCKEN);
 
-        DataStore.profileDeleteImage(EditProfileActivity.this, accessToken, userId, selectedImageDto.getId(), new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().profileDeleteImage(EditProfileActivity.this, accessToken, userId, selectedImageDto.getId(), new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 hideProgressDialog();
@@ -349,7 +346,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                 }
 
                 // remove from small preview
-                if(mAdapter != null) {
+                if (mAdapter != null) {
                     mAdapter.removePhoto(selectedImageDto);
                 }
 
@@ -373,7 +370,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         String userId = userDetails.get(SessionManager.KEY_ID);
         String accessToken = userDetails.get(SessionManager.KEY_ACCESS_TOCKEN);
 
-        DataStore.profileUpdateImage(accessToken, userId, selectedImageDto.getId(), true, new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().profileUpdateImage(accessToken, userId, selectedImageDto.getId(), true, new HttpClientManager.OnResultReady() {
 
             @Override
             public void onReady(Object result, boolean failed) {
@@ -389,8 +386,6 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
                 String url = selectedImageDto.getUrl();
                 getSession().updateValue(SessionManager.KEY_AVATAR, url);
-
-                UIUtils.loadPhotoToActionBar(EditProfileActivity.this, ImageHelper.getUserListAvatar(url), mTarget);
 
                 setResult(RESULT_OK);
             }

@@ -22,6 +22,7 @@ public class ProfileActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_profile);
 
+        setupToolBar();
         initActionBar(R.string.club_profile);
         initFragment();
     }

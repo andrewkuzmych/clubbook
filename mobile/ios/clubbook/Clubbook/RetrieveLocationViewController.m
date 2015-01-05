@@ -79,7 +79,6 @@
     if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
         NSString* warningMessage = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Allow Clubbook to use your location", nil)];
         [self.infoLabel setText:warningMessage];
-        
         [self.retryButton setHidden:NO];
         [self.halo setHidden:YES];
     }

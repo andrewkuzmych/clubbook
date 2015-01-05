@@ -3,6 +3,7 @@ package com.nl.clubbook.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -53,6 +54,10 @@ public class ProfilePageHolderFragment extends BaseInnerFragment implements View
 
         initActionBarTitle(getString(R.string.user_profile));
         initView();
+
+//        ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+//        actionBar.setDisplayHomeAsUpEnabled(true);
+//        actionBar.setHomeButtonEnabled(true);
     }
 
     @Override
@@ -76,7 +81,7 @@ public class ProfilePageHolderFragment extends BaseInnerFragment implements View
 
     @Override
     public void onPageSelected(int position) {
-        loadActionBarPhoto(position);
+//        loadActionBarPhoto(position);
     }
 
     private void initView() {
@@ -93,17 +98,17 @@ public class ProfilePageHolderFragment extends BaseInnerFragment implements View
         viewPager.setCurrentItem(currentPosition, false);
         viewPager.setOnPageChangeListener(this);
 
-        loadActionBarPhoto(currentPosition);
+//        loadActionBarPhoto(currentPosition);
     }
 
     private void setUser(List<User> newUsers) {
         mUsers = newUsers;
     }
 
-    private void loadActionBarPhoto(int position) {
-        User user = mUsers.get(position);
-        if(user != null && !TextUtils.isEmpty(user.getAvatar())) {
-            UIUtils.loadPhotoToActionBar((ActionBarActivity) getActivity(), ImageHelper.getUserListAvatar(user.getAvatar()), mTarget);
-        }
-    }
+//    private void loadActionBarPhoto(int position) {
+//        User user = mUsers.get(position);
+//        if(user != null && !TextUtils.isEmpty(user.getAvatar())) {
+//            UIUtils.loadPhotoToActionBar((ActionBarActivity) getActivity(), ImageHelper.getUserListAvatar(user.getAvatar()), mTarget);
+//        }
+//    }
 }

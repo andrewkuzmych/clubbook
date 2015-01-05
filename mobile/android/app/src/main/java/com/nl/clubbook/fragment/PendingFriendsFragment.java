@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.PendingFriendsAdapter;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.NetworkUtils;
@@ -43,7 +43,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
         super.onActivityCreated(savedInstanceState);
 
         initView();
-        loadData();
+        doLoadPendingFriends(false);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
 
     @Override
     protected void loadData() {
-        doLoadPendingFriends();
+        doLoadPendingFriends(true);
     }
 
     private void initView() {
@@ -93,7 +93,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
         listPendingFriends.setOnItemClickListener(this);
     }
 
-    private void doLoadPendingFriends() {
+    private void doLoadPendingFriends(boolean isSwipeToRefreshRefreshed) {
         final View view = getView();
         if(view == null || mSwipeRefreshLayout == null) {
             return;
@@ -107,10 +107,14 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
         final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
-        mSwipeRefreshLayout.setRefreshing(true);
+        if(isSwipeToRefreshRefreshed) {
+            mSwipeRefreshLayout.setRefreshing(true);
+        } else {
+            view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+        }
 
-        DataStore.retrievePendingFriends(user.get(SessionManager.KEY_ID), user.get(SessionManager.KEY_ACCESS_TOCKEN),
-                new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().retrievePendingFriends(user.get(SessionManager.KEY_ID), user.get(SessionManager.KEY_ACCESS_TOCKEN),
+                new HttpClientManager.OnResultReady() {
 
                     @Override
                     public void onReady(Object result, boolean failed) {
@@ -120,6 +124,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
                         }
 
                         mSwipeRefreshLayout.setRefreshing(false);
+                        view.findViewById(R.id.progressBar).setVisibility(View.GONE);
 
                         if (failed) {
                             showToast(R.string.something_went_wrong_please_try_again);
@@ -142,8 +147,8 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
 
         showProgress(getString(R.string.loading));
 
-        DataStore.acceptFriendRequest(user.get(SessionManager.KEY_ID), friendId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
-                new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().acceptFriendRequest(user.get(SessionManager.KEY_ID), friendId, user.get(SessionManager.KEY_ACCESS_TOCKEN),
+                new HttpClientManager.OnResultReady() {
 
                     @Override
                     public void onReady(Object result, boolean failed) {
@@ -163,7 +168,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
     }
 
     private void refreshFriends() {
-        doLoadPendingFriends();
+        doLoadPendingFriends(true);
 
         Fragment targetFragment = getTargetFragment();
         if(targetFragment != null && targetFragment instanceof OnFriendRequestAcceptedListener) {
@@ -186,7 +191,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
         String userId = user.get(SessionManager.KEY_ID);
         String accessToken = user.get(SessionManager.KEY_ACCESS_TOCKEN);
 
-        DataStore.declineFriendRequest(accessToken, userId, friendId, new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().declineFriendRequest(accessToken, userId, friendId, new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 View view = getView();
@@ -198,7 +203,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
                 if (failed) {
                     showToast(R.string.something_went_wrong_please_try_again);
                 } else {
-                    doLoadPendingFriends();
+                    doLoadPendingFriends(true);
                 }
             }
         });

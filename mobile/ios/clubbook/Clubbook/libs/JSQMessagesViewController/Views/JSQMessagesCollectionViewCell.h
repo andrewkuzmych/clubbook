@@ -1,6 +1,6 @@
 //
 //  Created by Jesse Squires
-//  http://www.hexedbits.com
+//  http://www.jessesquires.com
 //
 //
 //  Documentation
@@ -19,8 +19,25 @@
 #import <UIKit/UIKit.h>
 
 #import "JSQMessagesLabel.h"
+#import "JSQMessagesCellTextView.h"
 
 @class JSQMessagesCollectionViewCell;
+
+@protocol CustomActionMenuForMediaCellDelegate <NSObject>
+
+- (void) didPressDelete;
+
+@end
+
+@interface CustomActionMenuForMediaCell : UIView
+@property (strong, nonatomic) UIView* controlsView;
+@property (strong, nonatomic) UILabel* menuItemLabel;
+@property (strong, nonatomic) UIButton* yesButton;
+@property (strong, nonatomic) UIButton* noButton;
+@property (strong, nonatomic) id<CustomActionMenuForMediaCellDelegate> delegate;
+@property BOOL deleteMenuIsShown;
+
+@end
 
 /**
  *  The `JSQMessagesCollectionViewCellDelegate` protocol defines methods that allow you to manage
@@ -59,17 +76,25 @@
  */
 - (void)messagesCollectionViewCellDidTapCell:(JSQMessagesCollectionViewCell *)cell atPosition:(CGPoint)position;
 
+
+- (void)messagesCollectionViewCellDidLongPressAvatar:(JSQMessagesCollectionViewCell *)cell;
+- (void)messagesCollectionViewCellDidLongPressMessageBubble:(JSQMessagesCollectionViewCell *)cell;
+- (void)messagesCollectionViewCellDidLongPressCell:(JSQMessagesCollectionViewCell *)cell atPosition:(CGPoint)position;
+
 @end
 
 
 /**
- *  The `JSQMessagesCollectionViewCell` is an abstract class that presents the content for a single message data item
- *  when that item is within the collection view’s visible bounds. The layout and presentation 
- *  of cells is managed by the collection view and its corresponding layout object.
+ *  The `JSQMessagesCollectionViewCell` is an abstract base class that presents the content for 
+ *  a single message data item when that item is within the collection view’s visible bounds. 
+ *  The layout and presentation of cells is managed by the collection view and its corresponding layout object.
  *
  *  @warning This class is intended to be subclassed. You should not use it directly.
+ *
+ *  @see JSQMessagesCollectionViewCellIncoming.
+ *  @see JSQMessagesCollectionViewCellOutgoing.
  */
-@interface JSQMessagesCollectionViewCell : UICollectionViewCell
+@interface JSQMessagesCollectionViewCell : UICollectionViewCell <CustomActionMenuForMediaCellDelegate>
 
 /**
  *  The object that acts as the delegate for the cell.
@@ -96,8 +121,17 @@
 
 /**
  *  Returns the text view of the cell. This text view contains the message body text.
+ *
+ *  @warning If mediaView returns a non-nil view, then this value will be `nil`.
  */
-@property (weak, nonatomic, readonly) UITextView *textView;
+@property (weak, nonatomic, readonly) JSQMessagesCellTextView *textView;
+
+/**
+ *  Returns the bubble image view of the cell that is responsible for displaying message bubble images. 
+ *
+ *  @warning If mediaView returns a non-nil view, then this value will be `nil`.
+ */
+@property (weak, nonatomic, readonly) UIImageView *messageBubbleImageView;
 
 /**
  *  Returns the message bubble container view of the cell. This view is the superview of
@@ -113,6 +147,11 @@
 @property (weak, nonatomic, readonly) UIView *messageBubbleContainerView;
 
 /**
+ *  Returns the avatar image view of the cell that is responsible for displaying avatar images.
+ */
+@property (weak, nonatomic, readonly) UIImageView *avatarImageView;
+
+/**
  *  Returns the avatar container view of the cell. This view is the superview of 
  *  the cell's avatarImageView.
  *
@@ -126,16 +165,11 @@
 @property (weak, nonatomic, readonly) UIView *avatarContainerView;
 
 /**
- *  The bubble image view of the cell that is responsible for displaying bubble images.
- *  The default value is `nil`.
+ *  The media view of the cell. This view displays the contents of a media message.
+ *
+ *  @warning If this value is non-nil, then textView and messageBubbleImageView will both be `nil`.
  */
-@property (weak, nonatomic) UIImageView *messageBubbleImageView;
-
-/**
- *  The avatar image view of the cell that is responsible for displaying avatar images.
- *  The default value is `nil`.
- */
-@property (weak, nonatomic) UIImageView *avatarImageView;
+@property (weak, nonatomic) UIView *mediaView;
 
 /**
  *  Returns the underlying gesture recognizer for tap gestures in the avatarImageView of the cell.
@@ -154,10 +188,18 @@
 + (UINib *)nib;
 
 /**
- *  Returns the default string used to identify a reusable cell.
+ *  Returns the default string used to identify a reusable cell for text message items.
  *
  *  @return The string used to identify a reusable cell.
  */
 + (NSString *)cellReuseIdentifier;
+
+/**
+ *  Returns the default string used to identify a reusable cell for media message items.
+ *
+ *  @return The string used to identify a reusable cell.
+ */
++ (NSString *)mediaCellReuseIdentifier;
+- (void) cellDeselected;
 
 @end

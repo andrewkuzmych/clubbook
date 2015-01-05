@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.ImageUploader;
 import com.nl.clubbook.helper.UiHelper;
@@ -40,6 +40,7 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
 
         sendScreenStatistic(R.string.registration_screen_android);
 
+        setupToolBar();
         initImageUploader();
         initActionBar(R.string.sing_up);
         initView();
@@ -188,14 +189,14 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
         showProgressDialog(getString(R.string.loading));
 
         // store data
-        DataStore.regByEmail(userName, email, password, gender, mServerFormat.format(mBirthDate), country, city, bio, avatar, new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().regByEmail(userName, email, password, gender, mServerFormat.format(mBirthDate), country, city, bio, avatar, new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
 
                 hideProgressDialog();
 
                 if (failed) {
-                    if(result == null) {
+                    if (result == null) {
                         showToast(R.string.something_went_wrong_please_try_again);
                     } else {
                         showMessageDialog(getString(R.string.error), getString(R.string.user_with_this_email_has_already_exist));

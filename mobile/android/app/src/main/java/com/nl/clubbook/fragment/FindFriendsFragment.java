@@ -11,7 +11,7 @@ import android.widget.ListView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.FindFriendsAdapter;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.L;
@@ -175,22 +175,22 @@ public class FindFriendsFragment extends BaseFragment implements View.OnClickLis
         SessionManager sessionManager = getSession();
         String accessToken = sessionManager.getAccessToken();
 
-        DataStore.getFacebookFriendsOnClubbook(accessToken, ids, new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().getFacebookFriendsOnClubbook(accessToken, ids, new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 View view = getView();
-                if(isDetached() || view == null) {
+                if (isDetached() || view == null) {
                     return;
                 }
 
                 view.findViewById(R.id.progressBar).setVisibility(View.GONE);
 
-                if(result == null) {
+                if (result == null) {
                     return;
                 }
 
                 List<User> users = (List<User>) result;
-                if(users.isEmpty()) {
+                if (users.isEmpty()) {
                     view.findViewById(R.id.txtNoFriends).setVisibility(View.VISIBLE);
                     return;
                 }
@@ -244,7 +244,7 @@ public class FindFriendsFragment extends BaseFragment implements View.OnClickLis
         String userId = sessionManager.getUserId();
         String accessToken = sessionManager.getAccessToken();
 
-        DataStore.invitedFriendsToClubbookFbIds(userId, accessToken, ids, new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().invitedFriendsToClubbookFbIds(userId, accessToken, ids, new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
             }

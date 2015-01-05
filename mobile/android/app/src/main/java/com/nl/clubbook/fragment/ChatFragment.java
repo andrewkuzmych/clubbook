@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,14 +21,13 @@ import com.nl.clubbook.adapter.ChatAdapter;
 import com.nl.clubbook.datasource.BaseChatMessage;
 import com.nl.clubbook.datasource.Chat;
 import com.nl.clubbook.datasource.ChatMessage;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.CalendarUtils;
 import com.nl.clubbook.utils.KeyboardUtils;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
-import com.nl.clubbook.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,7 +81,6 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
         initTarget();
 
-        UIUtils.displayEmptyIconInActionBar((ActionBarActivity)getActivity());
         handleArgs();
         initView();
         loadConversation();
@@ -154,10 +151,6 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         String userPhotoUrl = args.getString(ARG_USER_PHOTO_URL);
 
         initActionBarTitle(userName != null ? userName : "");
-
-        if(userPhotoUrl != null && !userPhotoUrl.isEmpty()) {
-            UIUtils.loadPhotoToActionBar((ActionBarActivity)getActivity(), userPhotoUrl, mTarget);
-        }
     }
 
     private void initView() {
@@ -188,11 +181,11 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     public void receiveComment(ChatMessage message) {
         mAdapter.add(message);
 
-        DataStore.readMessages(
+        HttpClientManager.getInstance().readMessages(
                 mChat.getCurrentUser().getId(),
                 mChat.getReceiver().getId(),
                 mAccessToken,
-                new DataStore.OnResultReady() {
+                new HttpClientManager.OnResultReady() {
 
                     @Override
                     public void onReady(Object result, boolean failed) {
@@ -220,7 +213,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         String userName = userDetails.get(SessionManager.KEY_NAME);
         String formatMessage = (userName != null ? userName : "") + " " + messages;
 
-        DataStore.chat(mUserFromId, mUserToId, formatMessage, type, accessToken, new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().chat(mUserFromId, mUserToId, formatMessage, type, accessToken, new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
 
@@ -255,7 +248,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         String input = inputText.getText().toString().trim();
 
         if (!input.equals("")) {
-            DataStore.chat(mUserFromId, mUserToId, input, ChatMessage.TYPE_MESSAGE, accessToken, new DataStore.OnResultReady() {
+            HttpClientManager.getInstance().chat(mUserFromId, mUserToId, input, ChatMessage.TYPE_MESSAGE, accessToken, new HttpClientManager.OnResultReady() {
                 @Override
                 public void onReady(Object result, boolean failed) {
 
@@ -335,20 +328,20 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
         setLoading(true);
 
-        DataStore.getConversation(getActivity(), mUserFromId, mUserToId, mAccessToken, new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().getConversation(getActivity(), mUserFromId, mUserToId, mAccessToken, new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
-                if(isDetached() || getActivity() == null || getActivity().isFinishing()) {
+                if (isDetached() || getActivity() == null || getActivity().isFinishing()) {
                     return;
                 }
 
                 View view = getView();
-                if(view == null) {
+                if (view == null) {
                     return;
                 }
 
                 if (failed) {
-                    if(mAdapter == null || mAdapter.getCount() == 0) {
+                    if (mAdapter == null || mAdapter.getCount() == 0) {
                         view.findViewById(R.id.txtNoMessages).setVisibility(View.VISIBLE);
                     }
 
@@ -366,7 +359,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                 listChat.setAdapter(mAdapter);
                 listChat.setSelection(mChat.getConversation().size());
 
-                if(baseChatMessages.isEmpty()) {
+                if (baseChatMessages.isEmpty()) {
                     view.findViewById(R.id.txtNoMessages).setVisibility(View.VISIBLE);
                 } else {
                     view.findViewById(R.id.txtNoMessages).setVisibility(View.GONE);
@@ -376,14 +369,14 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(inputText, InputMethodManager.SHOW_IMPLICIT);
 
-                DataStore.readMessages(
+                HttpClientManager.getInstance().readMessages(
                         mChat.getCurrentUser().getId(),
                         mChat.getReceiver().getId(),
                         mAccessToken,
-                        new DataStore.OnResultReady() {
+                        new HttpClientManager.OnResultReady() {
                             @Override
                             public void onReady(Object result, boolean failed) {
-                                if(isDetached() || getActivity() == null) {
+                                if (isDetached() || getActivity() == null) {
                                     return;
                                 }
 
@@ -393,7 +386,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                                 }
 
                                 Activity activity = getActivity();
-                                if(activity != null && activity instanceof MainActivity) {
+                                if (activity != null && activity instanceof MainActivity) {
                                     MainActivity mainActivity = (MainActivity) activity;
                                     mainActivity.updateMessagesCount();
                                 }

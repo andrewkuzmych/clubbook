@@ -45,6 +45,7 @@
     self._manager.communicator.delegate = self._manager;
     self._manager.delegate = self;
     self.revealViewController.delegate = self;
+    [self.revealViewController.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
 }
 
 

@@ -11,10 +11,11 @@ import android.widget.ListView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.MessagesAdapter;
 import com.nl.clubbook.datasource.Chat;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.L;
+import com.nl.clubbook.utils.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +39,7 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
 
         initActionBarTitle(getString(R.string.messages));
         initView();
-        loadData();
+        doRefresh(false);
     }
 
     @Override
@@ -47,7 +48,6 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
 
         if(!hidden) {
             ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
-            actionBar.setIcon(R.drawable.icon_play);
             actionBar.setTitle(R.string.messages);
         }
     }
@@ -69,43 +69,11 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
 
     @Override
     protected void loadData() {
-        final SessionManager session = SessionManager.getInstance();
-        final HashMap<String, String> user = session.getUserDetails();
+        doRefresh(true);
+    }
 
-        mSwipeRefreshLayout.setRefreshing(true);
-
-        DataStore.getConversations(user.get(SessionManager.KEY_ID), user.get(SessionManager.KEY_ACCESS_TOCKEN),
-                new DataStore.OnResultReady() {
-
-                    @Override
-                    public void onReady(Object result, boolean failed) {
-                        View view = getView();
-                        if(isDetached() || getActivity() == null || view == null) {
-                            L.i("fragment_is_detached");
-                            return;
-                        }
-
-                        mSwipeRefreshLayout.setRefreshing(false);
-
-                        if (failed) {
-                            if (mAdapter.getCount() == 0){
-                                view.findViewById(R.id.txtNoMessages).setVisibility(View.VISIBLE);
-                            }
-
-                            showToast(R.string.something_went_wrong_please_try_again);
-                            return;
-                        }
-
-                        List<Chat> chats = (List<Chat>) result;
-                        mAdapter.updateData(chats);
-
-                        if(chats.size() == 0) {
-                            view.findViewById(R.id.txtNoMessages).setVisibility(View.VISIBLE);
-                        } else {
-                            view.findViewById(R.id.txtNoMessages).setVisibility(View.GONE);
-                        }
-                    }
-                });
+    public ChatFragment getChatFragment() {
+        return mChatFragment;
     }
 
     private void initView() {
@@ -120,7 +88,57 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
         listMessages.setOnItemClickListener(this);
     }
 
-    public ChatFragment getChatFragment() {
-        return mChatFragment;
+    private void doRefresh(boolean isPullToRefreshRefreshed) {
+        final View view = getView();
+        if(view == null) {
+            return;
+        }
+
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            return;
+        }
+
+        final SessionManager session = SessionManager.getInstance();
+        final HashMap<String, String> user = session.getUserDetails();
+
+        if(isPullToRefreshRefreshed) {
+            mSwipeRefreshLayout.setRefreshing(true);
+        } else {
+            view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+        }
+
+        HttpClientManager.getInstance().getConversations(user.get(SessionManager.KEY_ID), user.get(SessionManager.KEY_ACCESS_TOCKEN),
+                new HttpClientManager.OnResultReady() {
+
+                    @Override
+                    public void onReady(Object result, boolean failed) {
+                        if (isDetached() || getActivity() == null) {
+                            L.i("fragment_is_detached");
+                            return;
+                        }
+
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        view.findViewById(R.id.progressBar).setVisibility(View.GONE);
+
+                        if (failed) {
+                            if (mAdapter.getCount() == 0) {
+                                view.findViewById(R.id.txtNoMessages).setVisibility(View.VISIBLE);
+                            }
+
+                            showToast(R.string.something_went_wrong_please_try_again);
+                            return;
+                        }
+
+                        List<Chat> chats = (List<Chat>) result;
+                        mAdapter.updateData(chats);
+
+                        if (chats.size() == 0) {
+                            view.findViewById(R.id.txtNoMessages).setVisibility(View.VISIBLE);
+                        } else {
+                            view.findViewById(R.id.txtNoMessages).setVisibility(View.GONE);
+                        }
+                    }
+                });
     }
 }

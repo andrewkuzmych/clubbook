@@ -5,14 +5,14 @@
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/bg_screen_grey_light">
 
         <ListView
             android:id="@+id/listMessages"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:divider="@color/divider_color"
             android:dividerHeight="1dp" />
 
@@ -27,4 +27,12 @@
         android:textSize="@dimen/text_size_medium"
         android:textColor="@color/grey"
         android:visibility="gone"/>
+
+    <include
+        layout="@layout/view_progress_bar"
+        android:layout_height="@dimen/progress_bar_size"
+        android:layout_width="@dimen/progress_bar_size"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
 </RelativeLayout>

@@ -1,6 +1,6 @@
 //
 //  Created by Jesse Squires
-//  http://www.hexedbits.com
+//  http://www.jessesquires.com
 //
 //
 //  Documentation
@@ -24,7 +24,10 @@
 
 + (UIColor *)jsq_messageBubbleGreenColor
 {
-    return [UIColor colorWithRed:54/255.0 green:217/255.0 blue:0/255.0 alpha:1.0];
+    return [UIColor colorWithHue:130.0f / 360.0f
+                      saturation:0.68f
+                      brightness:0.84f
+                           alpha:1.0f];
 }
 
 + (UIColor *)jsq_messageBubbleBlueColor
@@ -35,9 +38,20 @@
                            alpha:1.0f];
 }
 
++ (UIColor *)jsq_messageBubbleRedColor
+{
+    return [UIColor colorWithHue:0.0f / 360.0f
+                      saturation:0.79f
+                      brightness:1.0f
+                           alpha:1.0f];
+}
+
 + (UIColor *)jsq_messageBubbleLightGrayColor
 {
-    return [UIColor colorWithRed:156/255.0 green:156/255.0 blue:156/255.0 alpha:1.0];
+    return [UIColor colorWithHue:240.0f / 360.0f
+                      saturation:0.02f
+                      brightness:0.92f
+                           alpha:1.0f];
 }
 
 #pragma mark - Utilities

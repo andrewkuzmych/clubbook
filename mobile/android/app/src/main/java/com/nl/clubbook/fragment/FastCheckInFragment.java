@@ -16,8 +16,8 @@ import android.widget.Toast;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.FastCheckInAdapter;
-import com.nl.clubbook.datasource.Club;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
+import com.nl.clubbook.datasource.Place;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.CheckInOutCallbackInterface;
@@ -38,7 +38,7 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
     private final int ACTION_ID_CHECK_IN_EXPLANATION = 753;
 
     private FastCheckInAdapter mAdapter;
-    private Club mSelectedClub;
+    private Place mSelectedPlace;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
 
         initActionBarTitle(getString(R.string.fast_check_in));
         initView();
-        loadData();
+        doRefresh(false);
     }
 
     @Override
@@ -62,7 +62,6 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
 
         if(!hidden) {
             ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
-            actionBar.setIcon(R.drawable.icon_play);
             actionBar.setTitle(R.string.clubs);
         }
     }
@@ -94,6 +93,22 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
 
     @Override
     protected void loadData() {
+        doRefresh(true);
+    }
+
+    private void initView() {
+        View view = getView();
+        if(view == null) {
+            return;
+        }
+
+        mAdapter = new FastCheckInAdapter(getActivity(), new ArrayList<Place>(), this);
+        ListView clubList = (ListView) view.findViewById(R.id.listPlaces);
+        clubList.setAdapter(mAdapter);
+        clubList.setOnItemClickListener(this);
+    }
+
+    private void doRefresh(boolean isPullToRefreshRefreshed) {
         if(!NetworkUtils.isOn(getActivity())) {
             Toast.makeText(getActivity(), R.string.no_connection, Toast.LENGTH_SHORT).show();
             return;
@@ -113,20 +128,25 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
             return;
         }
 
-        if(!mSwipeRefreshLayout.isRefreshing()) {
+        final View progressBar = view.findViewById(R.id.progressBar);
+
+        if(isPullToRefreshRefreshed) {
             mSwipeRefreshLayout.setRefreshing(true);
+        } else {
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         String accessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
         if(accessToken == null) {
             mSwipeRefreshLayout.setRefreshing(false);
+            progressBar.setVisibility(View.GONE);
             L.i("accessToken = null");
             return;
         }
 
         // retrieve places from server and set distance
-        DataStore.retrieveFastCheckInClub(String.valueOf(currentLocation.getLatitude()),
-                String.valueOf(currentLocation.getLongitude()), "1", accessToken, new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().retrieveFastCheckInClub(String.valueOf(currentLocation.getLatitude()),
+                String.valueOf(currentLocation.getLongitude()), "1", accessToken, new HttpClientManager.OnResultReady() {
 
                     @Override
                     public void onReady(Object result, boolean failed) {
@@ -136,6 +156,8 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
                         }
 
                         mSwipeRefreshLayout.setRefreshing(false);
+                        progressBar.setVisibility(View.GONE);
+
                         if (failed) {
                             showToast(R.string.something_went_wrong_please_try_again);
                             showHideEmptyView(view);
@@ -143,24 +165,11 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
                             return;
                         }
 
-                        List<Club> places = (List<Club>) result;
+                        List<Place> places = (List<Place>) result;
                         mAdapter.updateData(places);
                         showHideEmptyView(view);
                     }
                 });
-    }
-
-
-    private void initView() {
-        View view = getView();
-        if(view == null) {
-            return;
-        }
-
-        mAdapter = new FastCheckInAdapter(getActivity(), new ArrayList<Club>(), this);
-        ListView clubList = (ListView) view.findViewById(R.id.listClub);
-        clubList.setAdapter(mAdapter);
-        clubList.setOnItemClickListener(this);
     }
 
     private void showHideEmptyView(View view) {
@@ -173,9 +182,9 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
     }
 
     private void onCheckInBtnClicked(final View view) {
-        mSelectedClub = (Club) view.getTag();
+        mSelectedPlace = (Place) view.getTag();
 
-        if(!LocationCheckinHelper.getInstance().canCheckInHere(mSelectedClub)) {
+        if(!LocationCheckinHelper.getInstance().canCheckInHere(mSelectedPlace)) {
             String messageTemplate = getString(R.string.you_need_to_be_within_m_in_order_to_check_in);
             String dialogMessage = String.format(messageTemplate, SessionManager.getInstance().getCheckInMaxDistance());
 
@@ -188,7 +197,7 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
             return;
         }
 
-        if (LocationCheckinHelper.getInstance().isCheckInHere(mSelectedClub)) {
+        if (LocationCheckinHelper.getInstance().isCheckInHere(mSelectedPlace)) {
             showProgressDialog(getString(R.string.checking_out));
 
             LocationCheckinHelper.getInstance().checkOut(getActivity(), new CheckInOutCallbackInterface() {
@@ -233,7 +242,7 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
     }
 
     private void checkIn(final View view) {
-        LocationCheckinHelper.getInstance().checkIn(getActivity(), mSelectedClub, new CheckInOutCallbackInterface() {
+        LocationCheckinHelper.getInstance().checkIn(getActivity(), mSelectedPlace, new CheckInOutCallbackInterface() {
             @Override
             public void onCheckInOutFinished(boolean isSuccess) {
                 if(!isSuccess) {

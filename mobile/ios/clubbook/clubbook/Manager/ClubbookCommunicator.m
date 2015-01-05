@@ -525,6 +525,30 @@
     });
 }
 
+- (void)retrieveYesterdayPlacesAccessToken:(NSString*) accessToken;
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        //make base url
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/clubs/yesterday?access_token=%@", baseURL, accessToken];
+        
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
+        
+        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (error) {
+                    [self.delegate failedWithError:error];
+                } else {
+                    [self.delegate receivedPlacesJSON:data];
+                }
+            });
+            
+        }];
+        
+    });
+}
+
 - (void)retrievePlace:(NSString *) clubId accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

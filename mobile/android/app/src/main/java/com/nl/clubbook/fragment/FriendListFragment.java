@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 import com.nl.clubbook.R;
 import com.nl.clubbook.adapter.FriendsAdapter;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.NetworkUtils;
@@ -46,7 +46,7 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
         sendScreenStatistic(R.string.friends_screen_android);
 
         initView();
-        loadData();
+        doRefresh(false);
     }
 
     @Override
@@ -57,6 +57,22 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
 
     @Override
     protected void loadData() {
+        doRefresh(true);
+    }
+
+    private void initView() {
+        View view = getView();
+        if(view == null) {
+            return;
+        }
+
+        mAdapter = new FriendsAdapter(getActivity(), new ArrayList<User>());
+        mListFriends = (ListView) view.findViewById(R.id.listFriends);
+        mListFriends.setAdapter(mAdapter);
+        mListFriends.setOnItemClickListener(FriendListFragment.this);
+    }
+
+    private void doRefresh(boolean isSwipeRefreshRefreshed) {
         final View view = getView();
         if(view == null || mListFriends == null || mSwipeRefreshLayout == null) {
             return;
@@ -73,10 +89,14 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
         final SessionManager session = SessionManager.getInstance();
         final HashMap<String, String> user = session.getUserDetails();
 
-        mSwipeRefreshLayout.setRefreshing(true);
+        if(isSwipeRefreshRefreshed) {
+            mSwipeRefreshLayout.setRefreshing(true);
+        } else {
+            view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+        }
 
-        DataStore.retrieveFriends(user.get(SessionManager.KEY_ID), user.get(SessionManager.KEY_ACCESS_TOCKEN),
-                new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().retrieveFriends(user.get(SessionManager.KEY_ID), user.get(SessionManager.KEY_ACCESS_TOCKEN),
+                new HttpClientManager.OnResultReady() {
 
                     @Override
                     public void onReady(Object result, boolean failed) {
@@ -86,14 +106,15 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
                         }
 
                         mSwipeRefreshLayout.setRefreshing(false);
+                        view.findViewById(R.id.progressBar).setVisibility(View.GONE);
 
                         if (failed) {
                             showToast(R.string.something_went_wrong_please_try_again);
                             return;
                         }
 
-                        List<User> userList = (List<User>)result;
-                        if(userList.size() > 0) {
+                        List<User> userList = (List<User>) result;
+                        if (userList.size() > 0) {
                             view.findViewById(R.id.txtNoFriendsAdded).setVisibility(View.GONE);
                         } else {
                             view.findViewById(R.id.txtNoFriendsAdded).setVisibility(View.VISIBLE);
@@ -102,17 +123,5 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
                         mAdapter.updateData(userList);
                     }
                 });
-    }
-
-    private void initView() {
-        View view = getView();
-        if(view == null) {
-            return;
-        }
-
-        mAdapter = new FriendsAdapter(getActivity(), new ArrayList<User>());
-        mListFriends = (ListView) view.findViewById(R.id.listFriends);
-        mListFriends.setAdapter(mAdapter);
-        mListFriends.setOnItemClickListener(FriendListFragment.this);
     }
 }

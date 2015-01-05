@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.datasource.DataStore;
+import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.Validator;
 import com.nl.clubbook.utils.NetworkUtils;
@@ -25,10 +25,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
+        setContentView(R.layout.ac_login);
 
         sendScreenStatistic(R.string.login_screen_android);
 
+        setupToolBar();
         initActionBar(R.string.log_in);
         initView();
     }
@@ -98,7 +99,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private void doLoginRequest(String email, String password) {
         showProgressDialog(getString(R.string.loading));
-        DataStore.loginByEmail(email, password, new DataStore.OnResultReady() {
+        HttpClientManager.getInstance().loginByEmail(email, password, new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 hideProgressDialog();

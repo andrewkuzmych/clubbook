@@ -2,24 +2,29 @@
 <resources>
 
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="actionBarStyle">@style/AppActionBar</item>
-        <item name="android:seekBarStyle">@style/SeekBarAppTheme</item>
-        <item name="android:editTextStyle">@style/EditTextAppTheme</item>
-        <item name="android:checkboxStyle">@style/CheckBoxAppTheme</item>
-        <item name="android:spinnerStyle">@style/SpinnerAppTheme</item>
-        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemAppTheme</item>
+
+        <item name="colorPrimary">@color/main_background_color</item>
+        <item name="colorPrimaryDark">@color/main_background_color</item>
+
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+
+        <!--<item name="actionBarStyle">@style/AppActionBar</item>-->
+        <!--<item name="android:seekBarStyle">@style/SeekBarAppTheme</item>-->
+        <!--<item name="android:editTextStyle">@style/EditTextAppTheme</item>-->
+        <!--<item name="android:checkboxStyle">@style/CheckBoxAppTheme</item>-->
+        <!--<item name="android:spinnerStyle">@style/SpinnerAppTheme</item>-->
+        <!--<item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemAppTheme</item>-->
     </style>
 
-    <style name="AppActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="background">@color/main_background_color</item>
+    <style name="AppBlackTheme" parent="@style/AppTheme">
+        <item name="colorPrimary">@android:color/black</item>
+        <item name="colorPrimaryDark">@android:color/black</item>
     </style>
 
-    <style name="AppBlackTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="actionBarStyle">@style/AppBlackActionBar</item>
-    </style>
-
-    <style name="AppBlackActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="background">@android:color/black</item>
+    <style name="ThemeNoActionBar" parent="@style/Theme.AppCompat.Light">
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
     </style>
 
     <style name="SeekBarAppTheme" parent="android:Widget.SeekBar">

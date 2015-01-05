@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.nirhart.parallaxscroll.views.ParallaxScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:parallaxlib="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:scrollbars="none"
+    parallaxlib:parallax_factor="1.9"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg_screen_grey_light"
         android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/holderPagerAvatars"
             android:layout_width="match_parent"
+            android:background="@color/bg_screen_grey_light"
             android:layout_height="230dp">
 
             <com.nl.clubbook.ui.view.CustomViewPager
@@ -29,259 +32,266 @@
                 android:layout_marginBottom="8dp" />
         </RelativeLayout>
 
-        <com.nl.clubbook.ui.view.HelveticaRegularTextView
-            android:id="@+id/txtLabelAbout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="8dp"
-            android:text="@string/about"
-            android:textColor="@color/grey_light"
-            android:textSize="@dimen/text_size_medium" />
-
-        <com.nl.clubbook.ui.view.HelveticaRegularTextView
-            android:id="@+id/txtAbout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="8dp"
-            android:text="test"
-            android:textColor="@color/grey_light"
-            android:textSize="@dimen/text_size_small" />
-
-        <View
-            android:id="@+id/dividerInfo"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider_color" />
-
         <LinearLayout
-            android:id="@+id/holderRequirements"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="8dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="8dp">
-
-            <LinearLayout
-                android:id="@+id/holderAgeRestriction"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <com.nl.clubbook.ui.view.HelveticaRegularTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center"
-                    android:text="@string/age_restrictions"
-                    android:textColor="@color/grey_light"
-                    android:textSize="@dimen/text_size_small" />
-
-                <com.nl.clubbook.ui.view.HelveticaRegularTextView
-                    android:id="@+id/txtAgeRestriction"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@drawable/bg_age_restrictions"
-                    android:gravity="center"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_size_medium" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/holderCapacity"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <com.nl.clubbook.ui.view.HelveticaRegularTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/capacity"
-                    android:textColor="@color/grey_light"
-                    android:textSize="@dimen/text_size_small" />
-
-                <com.nl.clubbook.ui.view.HelveticaBoldTextView
-                    android:id="@+id/txtCapacity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:drawableLeft="@drawable/ic_capacity"
-                    android:gravity="center"
-                    android:textColor="@color/grey_light"
-                    android:textSize="@dimen/text_size_medium" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <View
-            android:id="@+id/holderClubRequirements"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider_color" />
-
-        <LinearLayout
-            android:id="@+id/holderLocation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="4dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="8dp"
-            android:paddingTop="4dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <com.nl.clubbook.ui.view.HelveticaRegularTextView
-                android:id="@+id/txtLocation"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:autoLink="map"
-                android:drawableLeft="@drawable/ic_location"
-                android:drawablePadding="16dp"
-                android:gravity="center_vertical"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"
-                android:textColor="@color/grey_light"
-                android:textSize="@dimen/text_size_small"/>
-
-            <com.nl.clubbook.ui.view.HelveticaBoldTextView
-                android:id="@+id/txtDistance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_bg_btn_transparent"
-                android:drawablePadding="4dp"
-                android:drawableTop="@drawable/ic_navigation"
-                android:gravity="center"
-                android:textSize="@dimen/text_size_small"
-                android:paddingBottom="4dp"
-                android:paddingRight="8dp"
-                android:paddingLeft="8dp"
-                android:paddingTop="4dp"
-                android:textColor="@color/grey"/>
-
-        </LinearLayout>
-
-        <View
-            android:id="@+id/dividerLocation"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider_color" />
-
-        <LinearLayout
-            android:id="@+id/holderWorkingHours"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="4dp">
+            android:background="@color/bg_screen_grey_light">
+
+            <com.nl.clubbook.ui.view.HelveticaRegularTextView
+                android:id="@+id/txtLabelAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="8dp"
+                android:text="@string/about"
+                android:textColor="@color/grey_light"
+                android:textSize="@dimen/text_size_medium" />
+
+            <com.nl.clubbook.ui.view.HelveticaRegularTextView
+                android:id="@+id/txtAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="8dp"
+                android:text="test"
+                android:textColor="@color/grey_light"
+                android:textSize="@dimen/text_size_small" />
+
+            <View
+                android:id="@+id/dividerInfo"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider_color" />
 
             <LinearLayout
+                android:id="@+id/holderRequirements"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/holderAgeRestriction"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.nl.clubbook.ui.view.HelveticaRegularTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center"
+                        android:text="@string/age_restrictions"
+                        android:textColor="@color/grey_light"
+                        android:textSize="@dimen/text_size_small" />
+
+                    <com.nl.clubbook.ui.view.HelveticaRegularTextView
+                        android:id="@+id/txtAgeRestriction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/bg_age_restrictions"
+                        android:gravity="center"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/text_size_medium" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/holderCapacity"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.nl.clubbook.ui.view.HelveticaRegularTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/capacity"
+                        android:textColor="@color/grey_light"
+                        android:textSize="@dimen/text_size_small" />
+
+                    <com.nl.clubbook.ui.view.HelveticaBoldTextView
+                        android:id="@+id/txtCapacity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:drawableLeft="@drawable/ic_capacity"
+                        android:gravity="center"
+                        android:textColor="@color/grey_light"
+                        android:textSize="@dimen/text_size_medium" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/holderClubRequirements"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider_color" />
+
+            <LinearLayout
+                android:id="@+id/holderLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="4dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="8dp"
+                android:paddingTop="4dp">
 
                 <com.nl.clubbook.ui.view.HelveticaRegularTextView
-                    android:id="@+id/txtHours"
+                    android:id="@+id/txtLocation"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:autoLink="map"
-                    android:drawableLeft="@drawable/ic_hours"
+                    android:drawableLeft="@drawable/ic_location"
                     android:drawablePadding="16dp"
-                    android:paddingBottom="8dp"
                     android:gravity="center_vertical"
-                    android:paddingTop="4dp"
-                    android:textColor="@color/grey_light"
-                    android:textSize="@dimen/text_size_small"/>
-
-                <com.nl.clubbook.ui.view.HelveticaRegularTextView
-                    android:id="@+id/txtOpenStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="4dp"
-                    android:gravity="center"
-                    android:textSize="@dimen/text_size_small"
                     android:paddingBottom="4dp"
                     android:paddingTop="4dp"
-                    android:layout_marginLeft="8dp"
-                    android:textColor="@color/green"/>
+                    android:textColor="@color/grey_light"
+                    android:textSize="@dimen/text_size_small" />
+
+                <com.nl.clubbook.ui.view.HelveticaBoldTextView
+                    android:id="@+id/txtDistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_bg_btn_transparent"
+                    android:drawablePadding="4dp"
+                    android:drawableTop="@drawable/ic_navigation"
+                    android:gravity="center"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="4dp"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/text_size_small" />
 
             </LinearLayout>
 
-        </LinearLayout>
+            <View
+                android:id="@+id/dividerLocation"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider_color" />
 
-        <View
-            android:id="@+id/dividerHours"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider_color" />
-
-        <LinearLayout
-            android:id="@+id/holderContacts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="12dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="12dp">
-
-            <com.nl.clubbook.ui.view.HelveticaRegularTextView
-                android:id="@+id/txtPhone"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/holderWorkingHours"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autoLink="phone"
-                android:drawableLeft="@drawable/ic_phone"
-                android:drawablePadding="16dp"
-                android:gravity="center_vertical"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"
-                android:textColor="@color/grey_light"
-                android:textSize="@dimen/text_size_small" />
+                android:orientation="vertical"
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="4dp">
 
-            <com.nl.clubbook.ui.view.HelveticaRegularTextView
-                android:id="@+id/txtWebsite"
-                android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <com.nl.clubbook.ui.view.HelveticaRegularTextView
+                        android:id="@+id/txtHours"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:autoLink="map"
+                        android:drawableLeft="@drawable/ic_hours"
+                        android:drawablePadding="16dp"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="8dp"
+                        android:paddingTop="4dp"
+                        android:textColor="@color/grey_light"
+                        android:textSize="@dimen/text_size_small" />
+
+                    <com.nl.clubbook.ui.view.HelveticaRegularTextView
+                        android:id="@+id/txtOpenStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:paddingBottom="4dp"
+                        android:paddingTop="4dp"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/text_size_small" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/dividerHours"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider_color" />
+
+            <LinearLayout
+                android:id="@+id/holderContacts"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autoLink="web"
-                android:drawableLeft="@drawable/ic_website"
-                android:drawablePadding="16dp"
-                android:gravity="center_vertical"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"
-                android:textColor="@color/grey_light"
-                android:textSize="@dimen/text_size_small" />
+                android:orientation="vertical"
+                android:paddingBottom="12dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="12dp">
 
-            <com.nl.clubbook.ui.view.HelveticaRegularTextView
-                android:id="@+id/txtEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:autoLink="email"
-                android:drawableLeft="@drawable/ic_email"
-                android:drawablePadding="16dp"
-                android:gravity="center_vertical"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"
-                android:textColor="@color/grey_light"
-                android:textSize="@dimen/text_size_small" />
+                <com.nl.clubbook.ui.view.HelveticaRegularTextView
+                    android:id="@+id/txtPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoLink="phone"
+                    android:drawableLeft="@drawable/ic_phone"
+                    android:drawablePadding="16dp"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:textColor="@color/grey_light"
+                    android:textSize="@dimen/text_size_small" />
 
+                <com.nl.clubbook.ui.view.HelveticaRegularTextView
+                    android:id="@+id/txtWebsite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoLink="web"
+                    android:drawableLeft="@drawable/ic_website"
+                    android:drawablePadding="16dp"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:textColor="@color/grey_light"
+                    android:textSize="@dimen/text_size_small" />
+
+                <com.nl.clubbook.ui.view.HelveticaRegularTextView
+                    android:id="@+id/txtEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoLink="email"
+                    android:drawableLeft="@drawable/ic_email"
+                    android:drawablePadding="16dp"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:textColor="@color/grey_light"
+                    android:textSize="@dimen/text_size_small" />
+
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
 
-</ScrollView>
+</com.nirhart.parallaxscroll.views.ParallaxScrollView>

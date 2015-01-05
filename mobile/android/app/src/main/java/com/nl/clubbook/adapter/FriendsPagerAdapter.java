@@ -25,11 +25,13 @@ public class FriendsPagerAdapter extends FragmentPagerAdapter {
 
     private HashMap<Integer, Fragment> mFragments = new LinkedHashMap<Integer, Fragment>();
     private Fragment mTargetFragment;
+    private String[] mTitles;
 
-    public FriendsPagerAdapter(FragmentManager fManager, Fragment targetFragment) {
+    public FriendsPagerAdapter(FragmentManager fManager, Fragment targetFragment, String[] titles) {
         super(fManager);
 
         mTargetFragment = targetFragment;
+        mTitles = titles;
     }
 
     @Override
@@ -66,6 +68,11 @@ public class FriendsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         return FRAGMENT_COUNT;
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return mTitles[position];
     }
 
     public Fragment getFragmentByIndex(int index) {

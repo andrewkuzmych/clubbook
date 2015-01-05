@@ -21,7 +21,7 @@
 @end
 
 
-@interface ChatViewController : BaseMessagesViewController<PNDelegate>
+@interface ChatViewController : BaseMessagesViewController<PNDelegate, UIDocumentInteractionControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate>
 
 @property (assign, nonatomic) BOOL isFromUser;
 
@@ -30,16 +30,14 @@
 
 @property (strong, nonatomic) NSMutableArray *messages;
 
-@property (strong, nonatomic) UIImage *userFromImage;
-@property (strong, nonatomic) UIImage *userToImage;
+@property (strong, nonatomic) JSQMessagesAvatarImage *companionAvatar;
+@property (strong, nonatomic) JSQMessagesAvatarImage *userAvatar;
 
-@property (strong, nonatomic) UIImageView *outgoingBubbleImageView;
-@property (strong, nonatomic) UIImageView *incomingBubbleImageView;
+@property (strong, nonatomic) JSQMessagesBubbleImage *userBubble;
+@property (strong, nonatomic) JSQMessagesBubbleImage *companionBubble;
 
-- (void)receiveMessagePressed:(UIBarButtonItem *)sender;
+@property (nonatomic, retain) UIDocumentInteractionController *docController;
 
 - (void)closePressed:(UIBarButtonItem *)sender;
-
-- (void)populateMessages;
 
 @end

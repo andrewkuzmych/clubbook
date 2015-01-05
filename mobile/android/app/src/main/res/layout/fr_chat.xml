@@ -79,10 +79,11 @@
             android:paddingLeft="4dp"/>
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+    <include
+        layout="@layout/view_progress_bar"
+        android:layout_height="@dimen/progress_bar_size"
+        android:layout_width="@dimen/progress_bar_size"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
 </RelativeLayout>

@@ -22,6 +22,7 @@ public class ImagesGalleryActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_image_view);
 
+        setupToolBar();
         initActionBar();
         initView();
     }

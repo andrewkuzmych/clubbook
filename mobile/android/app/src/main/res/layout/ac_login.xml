@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_screen_grey_light"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <com.nl.clubbook.ui.view.HelveticaRegularEditText
+                    android:id="@+id/editEmail"
+                    android:layout_width="fill_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
+                    android:singleLine="true"
+                    android:textColor="@color/grey" />
+
+                <com.nl.clubbook.ui.view.HelveticaRegularEditText
+                    android:id="@+id/editPassword"
+                    android:layout_width="fill_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/password"
+                    android:inputType="textPassword"
+                    android:singleLine="true"
+                    android:textColor="@color/grey" />
+
+                <com.nl.clubbook.ui.view.HelveticaRegularTextView
+                    android:id="@+id/txtForgotPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:gravity="center"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="8dp"
+                    android:text="@string/forgot_password"
+                    android:textColor="@color/main_background_color"
+                    android:textSize="@dimen/text_size_medium" />
+
+            </LinearLayout>
+
+            <com.nl.clubbook.ui.view.HelveticaBoldTextView
+                android:id="@+id/btnLogin"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="16dp"
+                android:background="@drawable/bg_btn_violet_light"
+                android:gravity="center"
+                android:text="@string/log_in"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_medium" />
+        </RelativeLayout>
+
+    </ScrollView>
+</LinearLayout>
