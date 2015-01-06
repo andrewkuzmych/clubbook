@@ -21,8 +21,8 @@
                     <connections>
                         <segue destination="m8T-Jj-ixX" kind="relationship" relationship="viewControllers" id="S3C-if-s01"/>
                         <segue destination="8YA-9j-GVB" kind="relationship" relationship="viewControllers" id="ql2-FJ-zSb"/>
-                        <segue destination="NIz-qn-ugs" kind="relationship" relationship="viewControllers" id="QZ8-Jz-528"/>
                         <segue destination="Seh-ng-vX2" kind="relationship" relationship="viewControllers" id="RcT-CS-UBh"/>
+                        <segue destination="OxJ-zq-HXS" kind="relationship" relationship="viewControllers" id="HgP-gz-IEQ"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qSV-Kx-oM3" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -423,25 +423,70 @@
             </objects>
             <point key="canvasLocation" x="-944" y="-23"/>
         </scene>
-        <!--Item-->
-        <scene sceneID="cke-YC-v2b">
+        <!--Photo Gallery-->
+        <scene sceneID="xZ1-uc-YKY">
             <objects>
-                <viewController id="NIz-qn-ugs" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="ocT-8K-5dg"/>
-                        <viewControllerLayoutGuide type="bottom" id="lES-Rm-xqz"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="M5R-8K-DUf">
+                <collectionViewController id="OxJ-zq-HXS" userLabel="Photo Gallery" customClass="ClubPhotGalleryCollectionViewController" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="6ux-I2-QQx">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="svH-a1-H8I"/>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="6KI-Ol-31D" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="yeY-dj-LhT">
+                            <size key="itemSize" width="105" height="105"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoCell" id="ZbJ-TR-7JJ" customClass="ClubPhotoGalleryCollectionViewCell">
+                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="105" height="105"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jjL-W1-c9I">
+                                            <rect key="frame" x="1" y="1" width="103" height="103"/>
+                                        </imageView>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <constraints>
+                                    <constraint firstItem="jjL-W1-c9I" firstAttribute="top" secondItem="ZbJ-TR-7JJ" secondAttribute="top" constant="2" id="05y-1b-aYd"/>
+                                    <constraint firstAttribute="bottom" secondItem="jjL-W1-c9I" secondAttribute="bottom" constant="2" id="32Z-v8-VTw"/>
+                                    <constraint firstAttribute="trailing" secondItem="jjL-W1-c9I" secondAttribute="trailing" constant="1" id="8c4-5q-3Xl"/>
+                                    <constraint firstItem="jjL-W1-c9I" firstAttribute="top" secondItem="ZbJ-TR-7JJ" secondAttribute="top" constant="1" id="O0P-jO-0dp"/>
+                                    <constraint firstItem="jjL-W1-c9I" firstAttribute="leading" secondItem="ZbJ-TR-7JJ" secondAttribute="leading" constant="1" id="Wye-Ww-mAR"/>
+                                    <constraint firstItem="jjL-W1-c9I" firstAttribute="leading" secondItem="ZbJ-TR-7JJ" secondAttribute="leading" constant="2" id="cPT-19-Sg4"/>
+                                    <constraint firstAttribute="bottom" secondItem="jjL-W1-c9I" secondAttribute="bottom" constant="1" id="o8I-IY-OLD"/>
+                                    <constraint firstAttribute="trailing" secondItem="jjL-W1-c9I" secondAttribute="trailing" constant="2" id="pp6-fm-bOg"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="05y-1b-aYd"/>
+                                        <exclude reference="32Z-v8-VTw"/>
+                                        <exclude reference="cPT-19-Sg4"/>
+                                        <exclude reference="pp6-fm-bOg"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <outlet property="clubPhotoImageView" destination="jjL-W1-c9I" id="kQ0-7c-MtO"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="OxJ-zq-HXS" id="5Gz-AQ-HM3"/>
+                            <outlet property="delegate" destination="OxJ-zq-HXS" id="nka-ZT-4Rb"/>
+                        </connections>
+                    </collectionView>
+                    <tabBarItem key="tabBarItem" title="Item" id="edL-wc-xYJ"/>
+                    <connections>
+                        <segue destination="trv-G4-eQD" kind="custom" identifier="onPhoto" id="afO-3j-u22"/>
+                    </connections>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xsx-6q-2Fh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-329" y="17"/>
+            <point key="canvasLocation" x="-390" y="-154"/>
         </scene>
         <!--Club Images Page View Controller-->
         <scene sceneID="Ovb-3d-1rT">
@@ -829,6 +874,58 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZxE-q9-k5Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="824" y="-1532"/>
+        </scene>
+        <!--Photo Slide View Controller-->
+        <scene sceneID="mYH-Cw-W8Y">
+            <objects>
+                <viewController storyboardIdentifier="image" id="trv-G4-eQD" customClass="PhotoSlideViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Y49-Q5-VSR"/>
+                        <viewControllerLayoutGuide type="bottom" id="om3-Vg-aDd"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Hrx-Fn-tUT">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="tYO-Qr-oz4">
+                                <rect key="frame" x="0.0" y="515" width="320" height="37"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="37" id="kdV-s6-GXo"/>
+                                </constraints>
+                            </pageControl>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" pagingEnabled="YES" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CIF-7X-ecY">
+                                <rect key="frame" x="0.0" y="-16" width="320" height="468"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="CIF-7X-ecY" firstAttribute="leading" secondItem="Hrx-Fn-tUT" secondAttribute="leading" id="KKP-h7-R0k"/>
+                            <constraint firstItem="om3-Vg-aDd" firstAttribute="top" secondItem="tYO-Qr-oz4" secondAttribute="bottom" constant="16" id="NpR-9i-hLy"/>
+                            <constraint firstItem="tYO-Qr-oz4" firstAttribute="leading" secondItem="Hrx-Fn-tUT" secondAttribute="leading" id="PSU-6T-jrJ"/>
+                            <constraint firstAttribute="trailing" secondItem="tYO-Qr-oz4" secondAttribute="trailing" id="Q1V-ib-hxG"/>
+                            <constraint firstItem="CIF-7X-ecY" firstAttribute="top" secondItem="Hrx-Fn-tUT" secondAttribute="top" id="V0w-mX-MWU"/>
+                            <constraint firstItem="om3-Vg-aDd" firstAttribute="top" secondItem="tYO-Qr-oz4" secondAttribute="bottom" id="Yim-G8-IJ4"/>
+                            <constraint firstAttribute="trailing" secondItem="CIF-7X-ecY" secondAttribute="trailing" id="b6C-Wk-DZM"/>
+                            <constraint firstItem="CIF-7X-ecY" firstAttribute="top" secondItem="Hrx-Fn-tUT" secondAttribute="topMargin" constant="-16" id="vlF-mp-0En"/>
+                            <constraint firstItem="om3-Vg-aDd" firstAttribute="top" secondItem="CIF-7X-ecY" secondAttribute="bottom" constant="116" id="zOw-Zd-wap"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="V0w-mX-MWU"/>
+                                <exclude reference="Yim-G8-IJ4"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <connections>
+                        <outlet property="imagePageControl" destination="tYO-Qr-oz4" id="3Os-sP-tuJ"/>
+                        <outlet property="imageScrollView" destination="CIF-7X-ecY" id="lDB-j2-23f"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uqT-YO-Xj2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-423" y="592"/>
         </scene>
     </scenes>
     <resources>
