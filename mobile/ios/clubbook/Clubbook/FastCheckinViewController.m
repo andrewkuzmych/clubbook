@@ -148,7 +148,7 @@
     
     [cell.distanceLabel setText:[LocationHelper convertDistance:disatanceInt]];
  
-    [cell.clubAvatar setImageWithURL:[NSURL URLWithString:place.avatar] placeholderImage:[UIImage imageNamed:@"avatar_default.png"]];
+    [cell.clubAvatar sd_setImageWithURL:[NSURL URLWithString:place.avatar] placeholderImage:[UIImage imageNamed:@"avatar_default.png"]];
     
     BOOL isCheckinHere = [LocationHelper isCheckinHere:place];
     if(isCheckinHere){

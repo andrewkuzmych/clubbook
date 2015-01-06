@@ -296,7 +296,7 @@
 - (void)populateImageCollection:(User *) user isProfileDefoult:(BOOL) isProfileDefoult
 {
     _user = user;
-    NSMutableArray *reversedArray = [[user.photos reverseObjectEnumerator] allObjects];
+    NSMutableArray *reversedArray = [[[user.photos reverseObjectEnumerator] allObjects] mutableCopy];
     
     // remove all subviews
     [[self.photosScroll subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -312,7 +312,7 @@
         
         NSString *avatarUrl = [cloudinary url: [[reversedArray objectAtIndex:i] valueForKey:@"public_id"] options:@{@"transformation": transformation}];
 
-        [imageButton setImageWithURL:[NSURL URLWithString:avatarUrl] forState:UIControlStateNormal];
+        [imageButton sd_setImageWithURL:[NSURL URLWithString:avatarUrl] forState:UIControlStateNormal];
         NSString* photoId = [[reversedArray objectAtIndex:i] valueForKey:@"_id"];
         imageButton.stringTag = photoId;
     
@@ -326,12 +326,12 @@
         if (isProfileDefoult) {
             if (imageButton.boolTag) {
                 [self changeSelectedImage:imageButton];
-                [self.topImage setImageWithURL:[NSURL URLWithString:avatarUrl]];
+                [self.topImage sd_setImageWithURL:[NSURL URLWithString:avatarUrl]];
             }
         } else
             if (i==0) {
                 [self changeSelectedImage:imageButton];
-                [self.topImage setImageWithURL:[NSURL URLWithString:avatarUrl]];
+                [self.topImage sd_setImageWithURL:[NSURL URLWithString:avatarUrl]];
             }
     }
     

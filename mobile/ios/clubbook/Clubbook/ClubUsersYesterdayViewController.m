@@ -53,8 +53,6 @@
     self.profileCollection.dataSource = self;
     self.profileCollection.delegate = self;
     [self updateFooter];
-  //  [self populateData];
-    // Do any additional setup after loading the view.
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -144,12 +142,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    BOOL isCheckinHere = [LocationHelper isCheckinHere:_place];
-    User *user = _users[indexPath.row];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *userId = [defaults objectForKey:@"userId"];
-    
+  
     [self performSegueWithIdentifier: @"onUsers" sender: indexPath];
 }
 
@@ -207,7 +200,7 @@
         CLTransformation *transformation = [CLTransformation transformation];
         [transformation setParams: @{@"width": @120, @"height": @120}];
         NSString * avatarUrl  = [cloudinary url: [user.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
-        [cell.profileAvatar setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
+        [cell.profileAvatar sd_setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
     });
     return cell;
 }

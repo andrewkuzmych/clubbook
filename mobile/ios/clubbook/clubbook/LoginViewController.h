@@ -16,7 +16,5 @@
 @property (weak, nonatomic) IBOutlet UIButton *forgotPassButton;
 - (IBAction)forgotPassAction:(id)sender;
 - (IBAction)loginAction:(id)sender;
-- (NSUInteger)supportedInterfaceOrientations;
-
 
 @end

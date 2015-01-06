@@ -238,11 +238,14 @@
     
     if (indexPath.row == 0) {
         CGSize maximumLabelSize = CGSizeMake(280,9999);
-        CGSize expectedLabelSize = [self.clubDescLabel.text sizeWithFont:self.clubDescLabel.font
-                                        constrainedToSize:maximumLabelSize
-                                            lineBreakMode:self.clubDescLabel.lineBreakMode];
         
+        UILabel *gettingSizeLabel = [[UILabel alloc] init];
+        gettingSizeLabel.font = self.clubDescLabel.font;
+        gettingSizeLabel.text = self.clubDescLabel.text;
+        gettingSizeLabel.numberOfLines = self.clubDescLabel.numberOfLines;
+        gettingSizeLabel.lineBreakMode = self.clubDescLabel.lineBreakMode;
         
+        CGSize expectedLabelSize = [gettingSizeLabel sizeThatFits:maximumLabelSize];
         
         //adjust the label the the new height.
         CGRect newFrame = self.clubDescLabel.frame;
