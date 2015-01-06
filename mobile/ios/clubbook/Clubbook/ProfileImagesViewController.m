@@ -68,7 +68,7 @@
         //c_fit,h_450,w_450/v140483
         NSString *avatarUrl = [cloudinary url: [[sortedPhotos objectAtIndex:i] valueForKey:@"public_id"] options:@{@"transformation": transformation}];
         
-        [imageView setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
+        [imageView sd_setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_empty.png"]];
         //[imageView setBackgroundColor:[UIColor whiteColor]];
         [self.imageScrollView addSubview:imageView];
         

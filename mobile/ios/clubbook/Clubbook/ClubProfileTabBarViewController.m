@@ -9,6 +9,7 @@
 #import "ClubProfileTabBarViewController.h"
 #import "ClubViewParallaxControllerViewController.h"
 #import "ClubSubscribeSettingsTableViewController.h"
+#import "ClubPhotGalleryCollectionViewController.h"
 
 @interface ClubProfileTabBarViewController ()
 
@@ -34,6 +35,12 @@
                 ClubSubscribeSettingsTableViewController *subscribeController =  (ClubSubscribeSettingsTableViewController*)v;
                 subscribeController.place = self.place;
                 subscribeController.title = @"Favorite";
+            }
+            if ([v isKindOfClass:[ClubPhotGalleryCollectionViewController class]])
+            {
+                ClubPhotGalleryCollectionViewController *photoGallery =  (ClubPhotGalleryCollectionViewController*)v;
+                photoGallery.place = self.place;
+                photoGallery.title = @"Photos";
             }
 
         }

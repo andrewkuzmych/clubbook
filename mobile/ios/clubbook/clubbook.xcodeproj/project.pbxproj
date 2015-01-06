@@ -382,6 +382,9 @@
 		522ACCDF1A32084F006789EB /* SPSlideTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDC1A32084F006789EB /* SPSlideTabBar.m */; };
 		522ACCE01A32084F006789EB /* SPSlideTabButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDE1A32084F006789EB /* SPSlideTabButton.m */; };
 		52343D9B1A430CF400F47A36 /* UIImage+FixOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 52343D9A1A430CF400F47A36 /* UIImage+FixOrientation.m */; };
+		5245DC621A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5245DC611A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m */; };
+		5245DC651A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5245DC641A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.m */; };
+		5245DC681A5C09F500CC0B1B /* PhotoSlideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5245DC671A5C09F500CC0B1B /* PhotoSlideViewController.m */; };
 		524B225A1A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 524B22591A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.m */; };
 		528C85951A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 528C85941A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard */; };
 		528C85981A56E3AC00BBB148 /* ClubProfileTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 528C85971A56E3AC00BBB148 /* ClubProfileTabBarViewController.m */; };
@@ -1103,6 +1106,12 @@
 		522ACCDE1A32084F006789EB /* SPSlideTabButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPSlideTabButton.m; path = SPSlideTabBar/SPSlideTabButton.m; sourceTree = "<group>"; };
 		52343D991A430CF400F47A36 /* UIImage+FixOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FixOrientation.h"; sourceTree = "<group>"; };
 		52343D9A1A430CF400F47A36 /* UIImage+FixOrientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FixOrientation.m"; sourceTree = "<group>"; };
+		5245DC601A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubPhotGalleryCollectionViewController.h; sourceTree = "<group>"; };
+		5245DC611A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubPhotGalleryCollectionViewController.m; sourceTree = "<group>"; };
+		5245DC631A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubPhotoGalleryCollectionViewCell.h; sourceTree = "<group>"; };
+		5245DC641A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubPhotoGalleryCollectionViewCell.m; sourceTree = "<group>"; };
+		5245DC661A5C09F500CC0B1B /* PhotoSlideViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoSlideViewController.h; sourceTree = "<group>"; };
+		5245DC671A5C09F500CC0B1B /* PhotoSlideViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoSlideViewController.m; sourceTree = "<group>"; };
 		524B22581A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubSubscribeSettingsTableViewController.h; sourceTree = "<group>"; };
 		524B22591A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubSubscribeSettingsTableViewController.m; sourceTree = "<group>"; };
 		528C85941A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ClubProfileStoryboard.storyboard; sourceTree = "<group>"; };
@@ -2090,9 +2099,23 @@
 			name = SPSlideTabBar;
 			sourceTree = "<group>";
 		};
+		5245DC5F1A5BEF1500CC0B1B /* PhotoGallery */ = {
+			isa = PBXGroup;
+			children = (
+				5245DC601A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.h */,
+				5245DC611A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m */,
+				5245DC631A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.h */,
+				5245DC641A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.m */,
+				5245DC661A5C09F500CC0B1B /* PhotoSlideViewController.h */,
+				5245DC671A5C09F500CC0B1B /* PhotoSlideViewController.m */,
+			);
+			name = PhotoGallery;
+			sourceTree = "<group>";
+		};
 		528C85991A56EF0B00BBB148 /* ClubProfileStoryboard */ = {
 			isa = PBXGroup;
 			children = (
+				5245DC5F1A5BEF1500CC0B1B /* PhotoGallery */,
 				49836B1F1961969F00F2A2C6 /* ClubViewController.h */,
 				49836B201961969F00F2A2C6 /* ClubViewController.m */,
 				52C5FC8B1A3F28A8000147E8 /* ClubViewParallaxControllerViewController.h */,
@@ -2629,6 +2652,7 @@
 				498A68FE196C4CFD00BC2859 /* PNClientStateUpdateRequest.m in Sources */,
 				4934F76019D047B800BFFDB1 /* SDWebImagePrefetcher.m in Sources */,
 				520897641A407C6700E8DD06 /* JSQMessagesMediaViewBubbleImageMasker.m in Sources */,
+				5245DC681A5C09F500CC0B1B /* PhotoSlideViewController.m in Sources */,
 				49E831821953034300D4A26C /* ObjectBuilder.m in Sources */,
 				498A68DB196C4CFD00BC2859 /* PNResponseDeserialize.m in Sources */,
 				498A68D6196C4CFD00BC2859 /* PNClientStateUpdateResponseParser.m in Sources */,
@@ -2733,6 +2757,7 @@
 				4993F2111979194900A225BE /* MRIconView.m in Sources */,
 				5208977B1A407C6700E8DD06 /* JSQMessagesLoadEarlierHeaderView.m in Sources */,
 				520897591A407C6700E8DD06 /* JSQSystemSoundPlayer+JSQMessages.m in Sources */,
+				5245DC651A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.m in Sources */,
 				498A68ED196C4CFD00BC2859 /* PNRequestsQueue.m in Sources */,
 				498A68F6196C4CFD00BC2859 /* NSString+PNAddition.m in Sources */,
 				498A690E196C4CFD00BC2859 /* PNServiceChannel.m in Sources */,
@@ -2799,6 +2824,7 @@
 				498A690D196C4CFD00BC2859 /* PNReachability.m in Sources */,
 				520897621A407C6700E8DD06 /* JSQMessagesAvatarImageFactory.m in Sources */,
 				498A6901196C4CFD00BC2859 /* PNLatencyMeasureRequest.m in Sources */,
+				5245DC621A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m in Sources */,
 				52C5FC901A3F29E1000147E8 /* ClubImagesPageViewController.m in Sources */,
 				49908F0419751C5C00DA68F2 /* OBAlert.m in Sources */,
 				498A68F4196C4CFD00BC2859 /* NSInvocation+PNAdditions.m in Sources */,
