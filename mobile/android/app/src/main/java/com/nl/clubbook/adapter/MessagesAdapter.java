@@ -12,12 +12,15 @@ import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.helper.ImageHelper;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
  * Created by Andrew on 6/2/2014.
  */
 public class MessagesAdapter extends BaseAdapter {
+
+    private final SimpleDateFormat mDateFormat = new SimpleDateFormat("dd/MM/yy");
 
     private Context mContext;
     private List<Chat> mChats = null;
@@ -57,6 +60,7 @@ public class MessagesAdapter extends BaseAdapter {
             holder.txtUsername = (TextView) row.findViewById(R.id.txtUsername);
             holder.txtLastMessage = (TextView) row.findViewById(R.id.txtLastMessage);
             holder.txtUnreadMessagesCount = (TextView) row.findViewById(R.id.txtUnreadMessagesCount);
+            holder.txtLastChatTime = (TextView) row.findViewById(R.id.txtLastChatTime);
 
             row.setTag(holder);
         } else {
@@ -90,12 +94,17 @@ public class MessagesAdapter extends BaseAdapter {
 
         List<ChatMessage> conversation = messageItem.getConversation();
         if(conversation != null && !conversation.isEmpty()) {
-            holder.txtLastMessage.setText(conversation.get(0).getFormatMessage(mContext));
+            ChatMessage lastChatMessage = conversation.get(0);
+
+            if(lastChatMessage != null) {
+                holder.txtLastMessage.setText(lastChatMessage.getFormatMessage(mContext));
+                holder.txtLastChatTime.setText(mDateFormat.format(lastChatMessage.getTime()));
+            }
         }
 
         int unreadMessageCount = messageItem.getUnreadMessages();
         if(unreadMessageCount == 0) {
-            holder.txtUnreadMessagesCount.setVisibility(View.GONE);
+            holder.txtUnreadMessagesCount.setVisibility(View.INVISIBLE);
         } else {
             holder.txtUnreadMessagesCount.setVisibility(View.VISIBLE);
         }
@@ -115,6 +124,7 @@ public class MessagesAdapter extends BaseAdapter {
         TextView txtUsername;
         TextView txtLastMessage;
         TextView txtUnreadMessagesCount;
+        TextView txtLastChatTime;
     }
 
 }

@@ -7,21 +7,20 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:paddingBottom="8dp"
+    android:gravity="center_vertical">
 
     <com.nl.clubbook.ui.view.CircleImageView
         android:id="@+id/imgAvatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:scaleType="centerCrop"
-        android:layout_gravity="center_vertical"/>
+        android:scaleType="centerCrop"/>
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_gravity="center_vertical"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp">
 
@@ -42,15 +41,32 @@
             android:textSize="@dimen/text_size_small"/>
     </LinearLayout>
 
-    <com.nl.clubbook.ui.view.HelveticaRegularTextView
-        android:id="@+id/txtUnreadMessagesCount"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_btn_green_small"
-        android:layout_gravity="center_vertical"
-        android:gravity="center"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/text_size_small"
-        android:paddingBottom="1dp"/>
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <com.nl.clubbook.ui.view.HelveticaRegularTextView
+            android:id="@+id/txtUnreadMessagesCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn_green_small"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_small"
+            android:paddingBottom="1dp"/>
+
+        <com.nl.clubbook.ui.view.HelveticaRegularTextView
+            android:id="@+id/txtLastChatTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text_size_small"
+            android:layout_marginTop="4dp"/>
+
+    </LinearLayout>
 
 </LinearLayout>

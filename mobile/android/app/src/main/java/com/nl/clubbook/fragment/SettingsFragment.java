@@ -90,6 +90,9 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
             case R.id.cbPushVibrations:
                 onPushVibrationCheckedChanged(isChecked);
                 break;
+            case R.id.cbUserVisibleNearby:
+                onVisibleNearbyCheckedChanged((CheckBox) buttonView, isChecked);
+                break;
         }
     }
 
@@ -125,6 +128,10 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         CheckBox cbPushVibrations = (CheckBox) view.findViewById(R.id.cbPushVibrations);
         cbPushVibrations.setChecked(session.isNotificationVibrationEnabled());
         cbPushVibrations.setOnCheckedChangeListener(this);
+
+        CheckBox cbUserVisibleNearby = (CheckBox) view.findViewById(R.id.cbUserVisibleNearby);
+        cbUserVisibleNearby.setChecked(session.isVisibleNearby());
+        cbUserVisibleNearby.setOnCheckedChangeListener(this);
 
         if(!getSession().isNotificationEnabled()) {
             view.findViewById(R.id.holderNotificationVibration).setEnabled(false);
@@ -183,13 +190,46 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void onPushVibrationCheckedChanged(boolean isEnabled) {
-        getSession().setNotificationVibtrationEnabled(isEnabled);
+        getSession().setNotificationVibrationEnabled(isEnabled);
     }
 
     private void onTxtPrivacyPolicyClicked() {
         Fragment fragment = WebViewFragment.newInstance(SettingsFragment.this, getString(R.string.privacy_policy),
                 URL_PRIVACY_POLICY);
         openFragment(fragment, WebViewFragment.class);
+    }
+
+    private void onVisibleNearbyCheckedChanged(final CheckBox checkBox, final boolean isVisible) {
+        if(!NetworkUtils.isOn(getActivity())) {
+            showToast(R.string.no_connection);
+            checkBox.setChecked(!isVisible);
+            return;
+        }
+
+        showProgress(getString(R.string.uploading));
+
+        final String accessToken = getSession().getAccessToken();
+
+        HttpClientManager.getInstance().updateVisibleNearby(accessToken, String.valueOf(isVisible), new HttpClientManager.OnResultReady() {
+            @Override
+            public void onReady(Object result, boolean failed) {
+                View view = getView();
+                if (view == null) {
+                    return;
+                }
+
+                hideProgress();
+                if (failed) {
+                    showToast(R.string.something_went_wrong_please_try_again);
+                    checkBox.setOnCheckedChangeListener(null);
+                    checkBox.setChecked(!isVisible);
+                    checkBox.setOnCheckedChangeListener(SettingsFragment.this);
+                    return;
+                }
+
+                getSession().setVisibleNearby(isVisible);
+            }
+        });
     }
 
     private void onTxtTermsOfServiceClicked() {

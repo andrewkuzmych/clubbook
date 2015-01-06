@@ -143,6 +143,7 @@ public class SessionManager {
         editor.putString(KEY_AVATAR, user.getAvatar());
         editor.putString(KEY_ACCESS_TOCKEN, user.getAccessToken());
         editor.putBoolean(KEY_IS_NOTIFICATION_ENABLE, user.isNotificationEnabled());
+        editor.putBoolean(KEY_IS_VISIBLE_NEARBY, user.isVisibleNearby());
 
         editor.commit();
     }
@@ -228,7 +229,7 @@ public class SessionManager {
         editor.commit();
     }
 
-    public void setNotificationVibtrationEnabled(boolean isVibrationEnabled) {
+    public void setNotificationVibrationEnabled(boolean isVibrationEnabled) {
         Editor editor = mPreferences.edit();
         editor.putBoolean(KEY_IS_NOTIFICATION_VIBRATION_ENABLE, isVibrationEnabled);
         editor.commit();
@@ -236,6 +237,16 @@ public class SessionManager {
 
     public boolean isNotificationVibrationEnabled() {
         return mPreferences.getBoolean(KEY_IS_NOTIFICATION_VIBRATION_ENABLE, true);
+    }
+
+    public void setVisibleNearby(boolean isVisibleNearby) {
+        Editor editor = mPreferences.edit();
+        editor.putBoolean(KEY_IS_VISIBLE_NEARBY, isVisibleNearby);
+        editor.commit();
+    }
+
+    public boolean isVisibleNearby() {
+        return mPreferences.getBoolean(KEY_IS_VISIBLE_NEARBY, true);
     }
 
     public int getUpdateCheckInStatusInterval() {
@@ -317,6 +328,7 @@ public class SessionManager {
     private static final String KEY_IS_LOGIN = "IsLoggedIn";
     private static final String KEY_IS_NOTIFICATION_ENABLE = "KEY_IS_NOTIFICATION_ENABLE";
     private static final String KEY_IS_NOTIFICATION_VIBRATION_ENABLE = "KEY_IS_NOTIFICATION_VIBRATION_ENABLE";
+    private static final String KEY_IS_VISIBLE_NEARBY = "KEY_IS_VISIBLE_NEARBY";
 
     private static final String KEY_UPDATE_CHECK_IN_STATUS_INTERVAL = "KEY_UPDATE_CHECK_IN_STATUS_INTERVAL";
     private static final String KEY_MAX_FAILED_CHECK_IN_COUNT = "KEY_MAX_FAILED_CHECK_IN_COUNT";
@@ -324,9 +336,7 @@ public class SessionManager {
     private static final String KEY_IS_LOGGED_IN_BY_FACEBOOK = "KEY_IS_LOGED_IN_BY_FACEBOOK";
     private static final String KEY_IS_CHECK_IN_DIALOG_SHOWN = "KEY_IS_CHECK_IN_DIALOG_SHOWN";
 
-
     public static final String KEY_CHECKIN_CLUB = "checkin_club";
-
 }
 
 

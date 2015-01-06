@@ -146,6 +146,7 @@
     <string name="need_to_check_in_first">To interact with this user, you need to Check-in to this Club first</string>
 
     <string name="enable_notification_vibration">Enable Notification Vibration</string>
+    <string name="visible_nearby">Visible Nearby</string>
     <string name="user_information_saved">User information saved</string>
     <string name="no_messages">No messages</string>
     <string name="no_friends_added">No friends added</string>

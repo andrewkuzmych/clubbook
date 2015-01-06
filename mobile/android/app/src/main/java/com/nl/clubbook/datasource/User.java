@@ -35,6 +35,7 @@ public class User implements Parcelable {
     protected String bio;
     private String friendStatus;
     protected boolean isNotificationEnabled;
+    protected boolean isVisibleNearby;
     private boolean isBlocked = false;
     protected CheckIn lastCheckIn;
     protected List<UserPhoto> photos = new ArrayList<UserPhoto>();
@@ -57,6 +58,7 @@ public class User implements Parcelable {
         bio = in.readString();
         friendStatus = in.readString();
         isNotificationEnabled = ConvertUtils.intToBoolean(in.readInt());
+        isVisibleNearby = ConvertUtils.intToBoolean(in.readInt());
         isBlocked = ConvertUtils.intToBoolean(in.readInt());
         lastCheckIn = in.readParcelable(CheckIn.class.getClassLoader());
 
@@ -80,6 +82,7 @@ public class User implements Parcelable {
         bio = userJson.optString("bio");
         accessToken = userJson.optString("access_token");
         isNotificationEnabled = userJson.optBoolean("push", true);
+        isVisibleNearby = userJson.optBoolean("is_visible_nearby", true);
 
         JSONArray photosJson = userJson.optJSONArray("photos");
         photos = new ArrayList<UserPhoto>();
@@ -226,6 +229,14 @@ public class User implements Parcelable {
         this.isNotificationEnabled = isNotificationEnabled;
     }
 
+    public boolean isVisibleNearby() {
+        return isVisibleNearby;
+    }
+
+    public void setVisibleNearby(boolean isVisibleNearby) {
+        this.isVisibleNearby = isVisibleNearby;
+    }
+
     public String getFriendStatus() {
         return friendStatus;
     }
@@ -263,6 +274,7 @@ public class User implements Parcelable {
         dest.writeString(bio);
         dest.writeString(friendStatus);
         dest.writeInt(ConvertUtils.booleanToInt(isNotificationEnabled));
+        dest.writeInt(ConvertUtils.booleanToInt(isVisibleNearby));
         dest.writeInt(ConvertUtils.booleanToInt(isBlocked));
         dest.writeParcelable(lastCheckIn, flags);
 

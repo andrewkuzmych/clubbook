@@ -74,6 +74,42 @@
         android:layout_height="1dp"
         android:background="@color/divider_color" />
 
+    <LinearLayout
+        android:id="@+id/holderUserVisibleNearby"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@android:color/white">
+
+        <com.nl.clubbook.ui.view.HelveticaRegularTextView
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:singleLine="true"
+            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/txt_item_settings_color_enabling"
+            android:text="@string/visible_nearby"
+            android:duplicateParentState="true"/>
+
+        <CheckBox
+            android:id="@+id/cbUserVisibleNearby"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:checked="true"
+            android:paddingRight="8dp"
+            android:layout_marginRight="8dp"
+            android:duplicateParentState="true"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color" />
+
     <com.nl.clubbook.ui.view.HelveticaRegularTextView
         android:id="@+id/txtPrivacyPolicy"
         android:layout_width="fill_parent"

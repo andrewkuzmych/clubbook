@@ -159,6 +159,42 @@ public class HttpClientManager {
         });
     }
 
+    public void updateVisibleNearby(String accessToken, String isVisibleNearby, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("is_visible_nearby", isVisibleNearby);
+        params.put("access_token", accessToken);
+
+        ClubbookRestClient.updateProfile(params, new JsonHttpResponseHandler() {
+            private boolean failed = true;
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
+                    failed = false;
+                } else {
+                    failed = true;
+                }
+
+                onResultReady.onReady(null, failed);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+    }
+
     public void deleteProfile(Context context, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("access_token", accessToken);
