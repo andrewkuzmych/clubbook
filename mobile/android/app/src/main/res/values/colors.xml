@@ -32,6 +32,9 @@
     <color name="white_semitransparent">#55FFFFFF</color>
     <color name="blue">#1C73DA</color>
 
+    <color name="btn_green">#4CAF50</color>
+    <color name="btn_green_selected">#994CAF50</color>
+
     <!--SwipeRefreshLayout colors-->
     <color name="holo_blue_bright">#ff00ddff</color>
     <color name="holo_green_light">#ff99cc00</color>

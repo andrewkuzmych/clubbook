@@ -203,6 +203,7 @@
     <string name="bars_and_cafes">Bars&amp;Cafes</string>
     <string name="filter">Filter</string>
     <string name="search">Search</string>
+    <string name="view">View</string>
 
     <!--For Google Analytics-->
     <string name="sidebar_screen_android">Sidebar Screen Android</string>
@@ -222,5 +223,6 @@
     <string name="fast_check_in_android">Fast Check In Android</string>
     <string name="checked_in_users_android">Checked-In Users Android</string>
     <string name="yesterday_checked_in_users_android">Yesterday Checked-In Users Android</string>
+    <string name="yesterday_screen">Yesterday Screen Android</string>
 
 </resources>

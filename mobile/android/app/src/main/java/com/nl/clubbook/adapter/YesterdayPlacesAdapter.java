@@ -1,36 +1,37 @@
 package com.nl.clubbook.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.nl.clubbook.R;
+import com.nl.clubbook.activity.YesterdayUsersGridActivity;
 import com.nl.clubbook.datasource.Place;
-import com.nl.clubbook.datasource.ClubWorkingHours;
 import com.nl.clubbook.helper.ImageHelper;
-import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 /**
- * Created by Andrew on 5/27/2014.
+ * Created by User on 06.01.2015.
  */
-public class PlacesAdapter extends BaseAdapter {
+public class YesterdayPlacesAdapter extends BaseAdapter {
 
-    private LayoutInflater mInflater;
     private Context mContext;
-    private List<Place> mPlaces = null;
+    private LayoutInflater mInflater;
+    private List<Place> mPlaces;
     private String mCheckedIn;
     private String mFriends;
 
-    public PlacesAdapter(Context context, List<Place> data) {
-        mInflater = LayoutInflater.from(context);
+    public YesterdayPlacesAdapter(Context context, List<Place> places) {
         mContext = context;
-        mPlaces = data;
+        mInflater = LayoutInflater.from(context);
+        mPlaces = places;
 
         mCheckedIn = context.getString(R.string.checked_in);
         mFriends = context.getString(R.string.friends);
@@ -48,7 +49,7 @@ public class PlacesAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return -1;
+        return position;
     }
 
     @Override
@@ -57,15 +58,14 @@ public class PlacesAdapter extends BaseAdapter {
         ClubItemHolder holder;
 
         if (row == null) {
-            row = mInflater.inflate(R.layout.item_list_place, parent, false);
+            row = mInflater.inflate(R.layout.item_list_yesterday_place, parent, false);
 
             holder = new ClubItemHolder();
             holder.imgAvatar = (ImageView) row.findViewById(R.id.imgAvatar);
             holder.txtClubName = (TextView) row.findViewById(R.id.txtClubName);
-            holder.txtDistance = (TextView) row.findViewById(R.id.txtDistance);
             holder.txtCheckedInCount = (TextView) row.findViewById(R.id.txtCheckedInCount);
             holder.txtFriendsCount = (TextView) row.findViewById(R.id.txtFriendsCount);
-            holder.txtStatus = (TextView) row.findViewById(R.id.txtStatus);
+            holder.txtView = (TextView) row.findViewById(R.id.txtView);
 
             row.setTag(holder);
         } else {
@@ -96,37 +96,32 @@ public class PlacesAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    private void fillRow(ClubItemHolder holder, Place place) {
-        String distance = LocationCheckinHelper.formatDistance(mContext, place.getDistance());
-        holder.txtDistance.setText(distance);
-
+    private void fillRow(ClubItemHolder holder, final Place place) {
         holder.txtCheckedInCount.setText(place.getActiveCheckIns() + "\n" + mCheckedIn);
         holder.txtFriendsCount.setText(place.getActiveFriendsCheckIns() + "\n" + mFriends);
 
         holder.txtClubName.setText(place.getTitle());
 
-        ClubWorkingHours todayWorkingHours = place.getTodayWorkingHours();
-        if(todayWorkingHours != null && ClubWorkingHours.STATUS_OPENED.equalsIgnoreCase(todayWorkingHours.getStatus())) {
-            holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.green));
-            holder.txtStatus.setText(R.string.open);
-        } else {
-            holder.txtStatus.setTextColor(mContext.getResources().getColor(R.color.red_light));
-            holder.txtStatus.setText(R.string.closed_display);
-        }
-
         //load image
         String imageUrl = ImageHelper.getClubListAvatar(place.getAvatar());
         holder.imgAvatar.setTag(imageUrl);
         Picasso.with(mContext).load(imageUrl).error(R.drawable.ic_club_avatar_default).into(holder.imgAvatar);
+
+        holder.txtView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, YesterdayUsersGridActivity.class);
+                intent.putExtra(YesterdayUsersGridActivity.EXTRA_CLUB_ID, place.getId());
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     static class ClubItemHolder {
         ImageView imgAvatar;
         TextView txtClubName;
-        TextView txtDistance;
         TextView txtCheckedInCount;
         TextView txtFriendsCount;
-        TextView txtStatus;
+        TextView txtView;
     }
-
 }

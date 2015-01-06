@@ -43,6 +43,8 @@ public class GoingOutFragment extends BaseFragment implements PlacesFragment.OnG
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        sendScreenStatistic(R.string.main_screen_android);
+
         initActionBarTitle(getString(R.string.going_out));
         initView();
     }

@@ -452,6 +452,37 @@ public class HttpClientManager {
         }
     }
 
+    public void retrieveYesterdayCheckedInPlaces(String accessToken, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.add("access_token", accessToken);
+
+        ClubbookRestClient.retrieveYesterdayCheckedInPlaces(params, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseJson) {
+                if(responseJson == null || !"OK".equalsIgnoreCase(responseJson.optString("status"))) {
+                    onResultReady.onReady(null, true);
+                    return;
+                }
+
+                JSONArray jsonArrClubs = responseJson.optJSONArray("clubs");
+                List<Place> places = JSONConverter.newPlaceList(jsonArrClubs);
+
+                onResultReady.onReady(places, false);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+        });
+    }
+
     public void retrieveFastCheckInClub(String lat, String lon, String distance, String accessToken, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.add("user_lat", lat);
