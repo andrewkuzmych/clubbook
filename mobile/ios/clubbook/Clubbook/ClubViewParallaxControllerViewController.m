@@ -24,12 +24,13 @@
     self.clubView.place = self.place;
     self.clubImages.place = self.place;
     
-    self.title = self.place.title;
-    
     self.delegate = self;
     
     [self setupWithTopViewController:self.clubImages andTopHeight:200 andBottomViewController:self.clubView];
-
+    
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    self.extendedLayoutIncludesOpaqueBars = NO;
+    self.automaticallyAdjustsScrollViewInsets = NO;
 }
 
 - (void)didReceiveMemoryWarning {

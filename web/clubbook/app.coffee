@@ -230,6 +230,7 @@ app.get '/_s/obj/club_types', handle_access_token, services.club_types
 app.get '/_s/obj/club/:objectId', handle_access_token, services.find_club
 app.get '/_s/obj/club/:objectId/users', handle_access_token, services.club_users
 app.get '/_s/obj/club/:objectId/users/yesterday', handle_access_token, services.club_users_yesterday
+app.get '/_s/obj/clubs/yesterday', handle_access_token, services.clubs_yesterday
 
 # checkin / chekout
 app.get '/_s/obj/club/:objectId/checkin', handle_access_token, services.checkin
@@ -239,6 +240,7 @@ app.get '/_s/obj/club/:objectId/checkout', handle_access_token, services.checkou
 # chat
 app.post '/_s/obj/chat', handle_access_token, services.chat
 app.get '/_s/obj/chat/:current_user/:receiver', handle_access_token, services.get_conversation
+app.get '/_s/obj/chat/:current_user/:receiver/delete', handle_access_token, services.delete_conversation
 app.get '/_s/obj/chat/:current_user/:receiver/read', handle_access_token, services.readchat
 app.get '/_s/obj/chat/:current_user', handle_access_token, services.get_conversations
 

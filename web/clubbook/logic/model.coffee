@@ -46,6 +46,7 @@ UserSchema = new mongoose.Schema
   dob: { type: Date }
   city: {type: String, trim: true, lowercase: true}
   push: {type: Boolean, default: true}
+  is_visible_nearby: {type: Boolean, default: true}
 
   country: {type: String, trim: true, lowercase: true}
   bio: {type: String}
@@ -179,7 +180,6 @@ VenueSchema = new mongoose.Schema
   club_dress_code: {type: String, trim: true}
   club_age_restriction: {type: String, trim: true}
   club_capacity: {type: String}
-  club_type: {type: String}
   club_loc:
     lon: Number
     lat: Number

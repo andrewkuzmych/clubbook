@@ -24,6 +24,7 @@
 #import "SVPullToRefresh.h"
 #import "SPSlideTabButton.h"
 #import "ClubUsersYesterdayViewController.h"
+#import "ClubProfileTabBarViewController.h"
 
 @interface MainViewController ()<UINavigationControllerDelegate, UINavigationBarDelegate>{
     BOOL isInitialLoad;
@@ -399,8 +400,8 @@
     NSIndexPath *selectedIndexPath = [self.clubTable indexPathForSelectedRow];
     Place *place = _places[selectedIndexPath.row];
     
-    UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle: nil];
-    ClubUsersViewController *clubController  = [mainStoryboard instantiateViewControllerWithIdentifier:@"club"];
+    UIStoryboard *clubProfileStoryboard = [UIStoryboard storyboardWithName:@"ClubProfileStoryboard" bundle: nil];
+    ClubUsersViewController *clubController  = [clubProfileStoryboard instantiateViewControllerWithIdentifier:@"club"];
     clubController.place = place;
     clubController.hasBack = YES;
     self.isLoaded = NO;
@@ -415,23 +416,14 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(NSString *)sender
 {
-    if([[segue identifier] isEqualToString:@"onClub"]){
-        ClubUsersViewController *clubController =  [segue destinationViewController];
-        Place *place = (Place*) sender;
-        clubController.place = place;
-        clubController.hasBack = YES;
-        self.isLoaded = NO;
-    }
-    else if ([[segue identifier] isEqualToString:@"onYesterday"]) {
+   if ([[segue identifier] isEqualToString:@"onYesterday"]) {
         ClubUsersYesterdayViewController *yesterdayController =  [segue destinationViewController];
         if (placeToView != nil) {
             yesterdayController.place = placeToView;
             yesterdayController.hasBack = YES;
             placeToView = nil;
         }
-
     }
-
 }
 
 
