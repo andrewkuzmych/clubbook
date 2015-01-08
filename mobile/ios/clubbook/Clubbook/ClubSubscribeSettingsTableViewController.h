@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "Place.h"
+#import "BaseTableViewController.h"
 
-@interface ClubSubscribeSettingsTableViewController : UITableViewController
+@interface ClubSubscribeSettingsTableViewController : BaseTableViewController
 @property (strong, nonatomic) Place* place;
 @property (weak, nonatomic) IBOutlet UILabel *clubTitleLabel;
 @property (weak, nonatomic) IBOutlet UISwitch *favoriteButton;
