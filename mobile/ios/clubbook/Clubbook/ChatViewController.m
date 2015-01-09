@@ -212,11 +212,6 @@
     [tracker set:kGAIScreenName
            value:@"Chat Screen"];
     [tracker send:[[GAIDictionaryBuilder createAppView] build]];
-    
-
-    if (self.delegateModal) {
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(closePressed:)];
-    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -230,12 +225,6 @@
 
     self.collectionView.collectionViewLayout.springinessEnabled = NO;
 }
-
-- (void)closePressed:(UIBarButtonItem *)sender
-{
-    [self.delegateModal didDismissJSQDemoViewController:self];
-}
-
 
 - (void)didReceiveMemoryWarning
 {
@@ -696,4 +685,7 @@
     return self;
 }
 
+- (void) canRotate {
+    
+}
 @end

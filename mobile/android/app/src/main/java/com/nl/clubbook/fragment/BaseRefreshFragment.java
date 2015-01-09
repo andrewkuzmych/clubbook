@@ -2,6 +2,7 @@ package com.nl.clubbook.fragment;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
@@ -17,6 +18,10 @@ public abstract class BaseRefreshFragment extends BaseFragment implements SwipeR
     public static final int DEFAULT_CLUBS_SKIP = 0;
 
     protected SwipeRefreshLayout mSwipeRefreshLayout;
+    protected View mFooterProgress;
+    protected View mProgressBar;
+
+    protected int mSkipNumber = DEFAULT_CLUBS_SKIP;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -37,6 +42,12 @@ public abstract class BaseRefreshFragment extends BaseFragment implements SwipeR
                 R.color.holo_green_light,
                 R.color.holo_orange_light,
                 R.color.holo_red_light);
+
+        mProgressBar = view.findViewById(R.id.progressBar);
+        mProgressBar.setVisibility(View.GONE);
+
+        mFooterProgress = LayoutInflater.from(getActivity()).inflate(R.layout.view_footer_progress, null);
+        mFooterProgress.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -54,4 +65,10 @@ public abstract class BaseRefreshFragment extends BaseFragment implements SwipeR
     }
 
     protected abstract void loadData();
+
+    protected void setProgressViewsState(boolean isSwipeToRefreshRefreshed, int footerProgressBarVisibility, int progressBarVisibility) {
+        mSwipeRefreshLayout.setRefreshing(isSwipeToRefreshRefreshed);
+        mFooterProgress.setVisibility(footerProgressBarVisibility);
+        mProgressBar.setVisibility(progressBarVisibility);
+    }
 }

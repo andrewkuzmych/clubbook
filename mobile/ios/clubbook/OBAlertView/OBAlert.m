@@ -73,7 +73,16 @@
 
     UIFont *font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
     message = [[UILabel alloc] init];
-    CGSize textSize = [alertText sizeWithFont:font constrainedToSize:CGSizeMake(kMessageWidth, kMessageMaxHeight) lineBreakMode:message.lineBreakMode];
+    
+    UILabel *gettingSizeLabel = [[UILabel alloc] init];
+    gettingSizeLabel.font = font;
+    gettingSizeLabel.text = message.text;
+    gettingSizeLabel.numberOfLines = message.numberOfLines;
+    gettingSizeLabel.lineBreakMode = message.lineBreakMode;
+    CGSize maximumLabelSize = CGSizeMake(kMessageWidth, kMessageMaxHeight);
+    
+    CGSize textSize = [gettingSizeLabel sizeThatFits:maximumLabelSize];
+    
     CGFloat y = kMessageMaxHeight/2 - textSize.height/2;
     [message setFrame:CGRectMake(kX, y, kMessageWidth, 170)];
     [message setFont:font];
@@ -84,7 +93,15 @@
     [message setNumberOfLines:kNumberOfLines];
     
     title = [[UILabel alloc] init];
-    CGSize titleSize = [titleText sizeWithFont:font constrainedToSize:CGSizeMake(kTitleWidth, kTitleMaxHeight) lineBreakMode:title.lineBreakMode];
+
+    gettingSizeLabel.font = font;
+    gettingSizeLabel.text = titleText;
+    gettingSizeLabel.numberOfLines = title.numberOfLines;
+    gettingSizeLabel.lineBreakMode = title.lineBreakMode;
+    maximumLabelSize = CGSizeMake(kTitleWidth, kTitleMaxHeight);
+    
+    CGSize titleSize = [gettingSizeLabel sizeThatFits:maximumLabelSize];
+    
     y = kTitleMaxHeight/2 - titleSize.height/2;
     [title setFrame:CGRectMake(kX, y, kTitleWidth, 20)];
     UIFont * titleFont = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:20.0];

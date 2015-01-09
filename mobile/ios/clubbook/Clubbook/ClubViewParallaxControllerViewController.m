@@ -27,6 +27,10 @@
     self.delegate = self;
     
     [self setupWithTopViewController:self.clubImages andTopHeight:200 andBottomViewController:self.clubView];
+    
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    self.extendedLayoutIncludesOpaqueBars = NO;
+    self.automaticallyAdjustsScrollViewInsets = NO;
 }
 
 - (void)didReceiveMemoryWarning {

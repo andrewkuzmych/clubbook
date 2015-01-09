@@ -168,7 +168,7 @@ public class UsersNearbyGridFragment extends BaseRefreshFragment implements Adap
                 });
     }
 
-    private void setProgressViewsState(boolean isSwipeToRefreshRefreshed, int footerVisibility, int progressBarVisibility) {
+    protected void setProgressViewsState(boolean isSwipeToRefreshRefreshed, int footerVisibility, int progressBarVisibility) {
         mSwipeRefreshLayout.setRefreshing(isSwipeToRefreshRefreshed);
         //TODO footer visibility
         mProgressBar.setVisibility(progressBarVisibility);

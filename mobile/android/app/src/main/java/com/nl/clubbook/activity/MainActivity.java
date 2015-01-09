@@ -42,6 +42,7 @@ import com.nl.clubbook.fragment.GoingOutFragment;
 import com.nl.clubbook.fragment.MessagesFragment;
 import com.nl.clubbook.fragment.SettingsFragment;
 import com.nl.clubbook.fragment.UsersNearbyFragment;
+import com.nl.clubbook.fragment.YesterdayFragment;
 import com.nl.clubbook.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.CheckInOutCallbackInterface;
 import com.nl.clubbook.helper.ImageHelper;
@@ -469,6 +470,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         fragmentMap.put(NavDrawerData.MESSAGES_POSITION, new MessagesFragment());
         fragmentMap.put(NavDrawerData.FAST_CHECK_IN, new FastCheckInFragment());
         fragmentMap.put(NavDrawerData.USERS_NEARBY, new UsersNearbyFragment());
+        fragmentMap.put(NavDrawerData.YESTERDAY, new YesterdayFragment());
         fragmentMap.put(NavDrawerData.FRIENDS_POSITION, new FriendsFragment());
     }
 

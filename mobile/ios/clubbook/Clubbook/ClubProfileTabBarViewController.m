@@ -8,6 +8,9 @@
 
 #import "ClubProfileTabBarViewController.h"
 #import "ClubViewParallaxControllerViewController.h"
+#import "ClubSubscribeSettingsTableViewController.h"
+#import "ClubPhotGalleryCollectionViewController.h"
+#import "NewsFeedTableViewController.h"
 
 @interface ClubProfileTabBarViewController ()
 
@@ -22,17 +25,29 @@
         self.title = self.place.title;
         
         for (UIViewController *v in self.viewControllers) {
-            if ([v isKindOfClass:[ClubViewParallaxControllerViewController class]])
-                 {
-                     ClubViewParallaxControllerViewController *parallaxController =  (ClubViewParallaxControllerViewController*)v;
-                     parallaxController.place = self.place;
-                     parallaxController.title = @"About";
+            if ([v isKindOfClass:[ClubViewParallaxControllerViewController class]]) {
+                 ClubViewParallaxControllerViewController *parallaxController =  (ClubViewParallaxControllerViewController*)v;
+                 parallaxController.place = self.place;
+                 parallaxController.title = @"About";
                  }
-
+            else if ([v isKindOfClass:[ClubSubscribeSettingsTableViewController class]]) {
+                ClubSubscribeSettingsTableViewController *subscribeController =  (ClubSubscribeSettingsTableViewController*)v;
+                subscribeController.place = self.place;
+                subscribeController.title = @"Favorite";
+            }
+            else if ([v isKindOfClass:[ClubPhotGalleryCollectionViewController class]]) {
+                ClubPhotGalleryCollectionViewController *photoGallery =  (ClubPhotGalleryCollectionViewController*)v;
+                photoGallery.place = self.place;
+                photoGallery.title = @"Photos";
+            }
+            else if ([v isKindOfClass:[NewsFeedTableViewController class]]) {
+                NewsFeedTableViewController *newsFeed =  (NewsFeedTableViewController*)v;
+                newsFeed.place = self.place;
+                newsFeed.title = @"News";
+            }
         }
-
+    [[UITabBar appearance] setBarTintColor:[UIColor whiteColor]];
     }
-    // Do any additional setup after loading the view.
 }
 
 - (void)didReceiveMemoryWarning {

@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "BaseTableViewController.h"
+#import "CLUploader.h"
 
-@interface ProfileViewController : BaseTableViewController <UIPickerViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate>
+@interface ProfileViewController : BaseTableViewController <UIPickerViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate, UIPickerViewDataSource, UIPickerViewDelegate, CLUploaderDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *countryText;
 @property (weak, nonatomic) IBOutlet UIScrollView *photosScroll;
 @property (weak, nonatomic) IBOutlet UIImageView *topImage;

@@ -38,6 +38,6 @@
 
 @property (nonatomic, retain) UIDocumentInteractionController *docController;
 
-- (void)closePressed:(UIBarButtonItem *)sender;
+- (void)canRotate;
 
 @end

@@ -33,10 +33,6 @@ public class PlacesFragment extends BaseRefreshFragment implements AdapterView.O
     private static final String ARG_PLACE_TYPE = "ARG_PLACE_TYPE";
 
     private PlacesAdapter mPlacesAdapter;
-    private View mFooterProgress;
-    private View mProgressBar;
-
-    private int mSkipNumber = DEFAULT_CLUBS_SKIP;
 
     public static Fragment newInstance(Fragment targetFragment, String placeType) {
         Fragment fragment = new PlacesFragment();
@@ -57,8 +53,6 @@ public class PlacesFragment extends BaseRefreshFragment implements AdapterView.O
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        sendScreenStatistic(R.string.main_screen_android);
 
         initActionBarTitle(getString(R.string.going_out));
         initView();
@@ -94,12 +88,7 @@ public class PlacesFragment extends BaseRefreshFragment implements AdapterView.O
             return;
         }
 
-        mProgressBar = view.findViewById(R.id.progressBar);
-        mProgressBar.setVisibility(View.GONE);
-
         mPlacesAdapter = new PlacesAdapter(getActivity(), new ArrayList<Place>());
-        mFooterProgress = LayoutInflater.from(getActivity()).inflate(R.layout.view_footer_progress, null);
-        mFooterProgress.setVisibility(View.INVISIBLE);
 
         final ListView clubList = (ListView) view.findViewById(R.id.listPlaces);
         clubList.addFooterView(mFooterProgress);
@@ -205,12 +194,6 @@ public class PlacesFragment extends BaseRefreshFragment implements AdapterView.O
                         }
                     }
                 });
-    }
-
-    private void setProgressViewsState(boolean isSwipeToRefreshRefreshed, int footerProgressBarVisibility, int progressBarVisibility) {
-        mSwipeRefreshLayout.setRefreshing(isSwipeToRefreshRefreshed);
-        mFooterProgress.setVisibility(footerProgressBarVisibility);
-        mProgressBar.setVisibility(progressBarVisibility);
     }
 
     public interface Types {

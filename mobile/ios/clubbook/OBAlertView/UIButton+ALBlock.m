@@ -27,8 +27,6 @@
 
 @implementation UIButton (ALBlock)
 
-static char overviewKey;
-
 @dynamic actions;
 
 - (void) setAction:(NSString*)action withBlock:(void(^)())block {

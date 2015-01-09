@@ -43,7 +43,7 @@
     
     
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:
-     @{UITextAttributeFont:[UIFont fontWithName:NSLocalizedString(@"fontBold", nil)  size:16]
+     @{NSFontAttributeName:[UIFont fontWithName:NSLocalizedString(@"fontBold", nil)  size:16]
        } forState:UIControlStateNormal];
 
     [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
@@ -298,11 +298,6 @@ didReceiveRemoteNotification:(NSDictionary *)userInfo {
         return;
     }
     
-    NSString *giftStr = [[NSString alloc]
-                         initWithData:jsonData
-                         encoding:NSUTF8StringEncoding];
-    
-    NSMutableDictionary* params = [@{@"data" : giftStr} mutableCopy];
     
     // Display the requests dialog
     [FBWebDialogs
@@ -577,4 +572,50 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex {
     }
 }
 
+- (UIViewController*)topViewController {
+    return [self topViewControllerWithRootViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
+}
+
+- (UIViewController*)topViewControllerWithRootViewController:(UIViewController*)rootViewController {
+    if ([rootViewController isKindOfClass:[UITabBarController class]]) {
+        UITabBarController* tabBarController = (UITabBarController*)rootViewController;
+        return [self topViewControllerWithRootViewController:tabBarController.selectedViewController];
+    } else if ([rootViewController isKindOfClass:[UINavigationController class]]) {
+        UINavigationController* navigationController = (UINavigationController*)rootViewController;
+        return [self topViewControllerWithRootViewController:navigationController.visibleViewController];
+    } else if (rootViewController.presentedViewController) {
+        UIViewController* presentedViewController = rootViewController.presentedViewController;
+        return [self topViewControllerWithRootViewController:presentedViewController];
+    } else {
+        return rootViewController;
+    }
+}
+
+- (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    // Get topmost/visible view controller
+    UIViewController *currentViewController = [self topViewController];
+    
+    // Check whether it implements a dummy methods called canRotate
+    if ([currentViewController respondsToSelector:@selector(canRotate)]) {
+        // Unlock landscape view orientations for this view controller
+        return UIInterfaceOrientationMaskAllButUpsideDown;
+    }
+    
+    if ([currentViewController isKindOfClass:[SWRevealViewController class]]) {
+        SWRevealViewController* revealController = (SWRevealViewController*)currentViewController;
+        if ([revealController.frontViewController isKindOfClass:[UINavigationController class]]) {
+            UINavigationController* navigationController = (UINavigationController*)revealController.frontViewController;
+            if ([navigationController.visibleViewController respondsToSelector:@selector(canRotate)]) {
+                // Unlock landscape view orientations for this view controller
+                return UIInterfaceOrientationMaskAllButUpsideDown;
+            }
+        }
+    }
+    
+    // Only allow portrait (standard behaviour)
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 @end
+
+

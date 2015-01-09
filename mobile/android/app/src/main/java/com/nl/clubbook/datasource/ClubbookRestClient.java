@@ -116,6 +116,10 @@ public class ClubbookRestClient {
         return client.get(getBcAbsoluteUrl("obj/club"), params, responseHandler);
     }
 
+    public static com.loopj.android.http.RequestHandle retrieveYesterdayCheckedInPlaces(RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        return client.get(getBcAbsoluteUrl("obj/clubs/yesterday"), params, responseHandler);
+    }
+
     public static void retrieveClubCheckedInUsers(String clubId, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getBcAbsoluteUrl("obj/club/" + clubId + "/users"), params, responseHandler);
     }

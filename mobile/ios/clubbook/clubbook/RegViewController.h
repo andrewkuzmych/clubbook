@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "BaseTableViewController.h"
+#import "CLUploader.h"
 
-@interface RegViewController : BaseTableViewController  <UIPickerViewDelegate>
+@interface RegViewController : BaseTableViewController  <UIPickerViewDelegate, UIPickerViewDataSource, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLUploaderDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *nameText;
 @property (weak, nonatomic) IBOutlet UITextField *genderName;
