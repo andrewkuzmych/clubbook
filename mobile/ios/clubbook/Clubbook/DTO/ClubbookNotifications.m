@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 clubbook. All rights reserved.
 //
 
-#import "UnreadMessages.h"
+#import "ClubbookNotifications.h"
 
-@implementation UnreadMessages
+@implementation ClubbookNotifications
 
 @end

@@ -12,7 +12,7 @@
 #import "ClubbookCommunicator.h"
 #import "Chat.h"
 #import "ErrorViewController.h"
-#import "UnreadMessages.h"
+#import "ClubbookNotifications.h"
 #import "Config.h"
 #import "UsersYesterday.h"
 
@@ -111,7 +111,7 @@
 
 - (void)unreadMessages:(NSString *) accessToken
 {
-    [self.communicator unreadMessages:accessToken];
+    [self.communicator retrieveNotifications:accessToken];
 }
 
 - (void)addUserImage:(NSString *) userId avatar:(NSString *) avatar accessToken:(NSString *) accessToken
@@ -458,16 +458,16 @@
     }
 }
 
-- (void)unreadMessagesJSON:(NSData *)objectNotation
+- (void)notificationsJSON:(NSData *)objectNotation
 {
     NSError *error = nil;
-    UnreadMessages *unreadMessages = [ObjectBuilder unreadMessagesFromJSON:objectNotation error:&error];
+    ClubbookNotifications *notifications = [ObjectBuilder unreadMessagesFromJSON:objectNotation error:&error];
     
     if (error != nil) {
         [self.delegate  failedWithError:error];
         
     } else {
-        [self.delegate didUnreadMessages:unreadMessages];
+        [self.delegate didReceivedNotifications:notifications];
     }
 }
 

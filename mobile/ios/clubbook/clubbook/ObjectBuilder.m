@@ -515,7 +515,7 @@
     return chat;
 }
 
-+ (UnreadMessages *)unreadMessagesFromJSON:(NSData *)objectNotation error:(NSError **)error
++ (ClubbookNotifications *)unreadMessagesFromJSON:(NSData *)objectNotation error:(NSError **)error
 {
     NSError *localError = nil;
     NSDictionary *parsedObject = [NSJSONSerialization JSONObjectWithData:objectNotation options:0 error:&localError];
@@ -525,12 +525,13 @@
         return nil;
     }
     
-    UnreadMessages *unreadMessages = [[UnreadMessages alloc] init];
+    ClubbookNotifications *notifications = [[ClubbookNotifications alloc] init];
     
-    unreadMessages.countOfUnreadChats = [[parsedObject objectForKey:@"unread_chat_count"] longValue];
-    unreadMessages.countOfPendingFriends = [[parsedObject objectForKey:@"pending_friends_count"] longValue];
+    notifications.countOfUnreadChats = (int)[[parsedObject objectForKey:@"unread_chat_count"] longValue];
+    notifications.countOfPendingFriends = (int)[[parsedObject objectForKey:@"pending_friends_count"] longValue];
+    notifications.fastCheckinPlaces = (int)[[parsedObject objectForKey:@"venue_count"] longValue];
     
-    return unreadMessages;
+    return notifications;
 }
 
 + (NSArray *)conversationsJSON:(NSData *)objectNotation error:(NSError **)error

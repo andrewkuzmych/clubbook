@@ -192,7 +192,7 @@
 		49ABA129198A188200B060D0 /* AddFriendButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA128198A188200B060D0 /* AddFriendButton.m */; };
 		49ABA12C198A919C00B060D0 /* FriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA12B198A919C00B060D0 /* FriendCell.m */; };
 		49ABA12F198A932B00B060D0 /* FriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA12E198A932A00B060D0 /* FriendsViewController.m */; };
-		49ABA132198CE5C700B060D0 /* UnreadMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA131198CE5C700B060D0 /* UnreadMessages.m */; };
+		49ABA132198CE5C700B060D0 /* ClubbookNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA131198CE5C700B060D0 /* ClubbookNotifications.m */; };
 		49ABA135198F9B6900B060D0 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA134198F9B6900B060D0 /* SettingsViewController.m */; };
 		49ABA138198F9D7F00B060D0 /* SettingsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA137198F9D7F00B060D0 /* SettingsCell.m */; };
 		49ABA13B198FEE7700B060D0 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA13A198FEE7700B060D0 /* WebViewController.m */; };
@@ -812,8 +812,8 @@
 		49ABA12B198A919C00B060D0 /* FriendCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FriendCell.m; path = Controls/FriendCell.m; sourceTree = "<group>"; };
 		49ABA12D198A932A00B060D0 /* FriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendsViewController.h; sourceTree = "<group>"; };
 		49ABA12E198A932A00B060D0 /* FriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendsViewController.m; sourceTree = "<group>"; };
-		49ABA130198CE5C700B060D0 /* UnreadMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnreadMessages.h; path = DTO/UnreadMessages.h; sourceTree = "<group>"; };
-		49ABA131198CE5C700B060D0 /* UnreadMessages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UnreadMessages.m; path = DTO/UnreadMessages.m; sourceTree = "<group>"; };
+		49ABA130198CE5C700B060D0 /* ClubbookNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClubbookNotifications.h; path = DTO/ClubbookNotifications.h; sourceTree = "<group>"; };
+		49ABA131198CE5C700B060D0 /* ClubbookNotifications.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ClubbookNotifications.m; path = DTO/ClubbookNotifications.m; sourceTree = "<group>"; };
 		49ABA133198F9B6900B060D0 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		49ABA134198F9B6900B060D0 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		49ABA136198F9D7F00B060D0 /* SettingsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingsCell.h; path = Controls/SettingsCell.h; sourceTree = "<group>"; };
@@ -1876,8 +1876,8 @@
 				498A1BAA196BD36900824E64 /* Chat.m */,
 				49ABA124198922EE00B060D0 /* WorkingHour.h */,
 				49ABA125198922EE00B060D0 /* WorkingHour.m */,
-				49ABA130198CE5C700B060D0 /* UnreadMessages.h */,
-				49ABA131198CE5C700B060D0 /* UnreadMessages.m */,
+				49ABA130198CE5C700B060D0 /* ClubbookNotifications.h */,
+				49ABA131198CE5C700B060D0 /* ClubbookNotifications.m */,
 				49F2C673199C9A29006A3E21 /* Config.h */,
 				49F2C674199C9A29006A3E21 /* Config.m */,
 				499929C119EAB6B900B77A6E /* FriendsResult.h */,
@@ -2878,7 +2878,7 @@
 				4996E0BC196317AA000C721F /* GlobalVars.m in Sources */,
 				499247A81976978F008C74D0 /* LocationManagerSingleton.m in Sources */,
 				498A68EF196C4CFD00BC2859 /* PNWhereNow.m in Sources */,
-				49ABA132198CE5C700B060D0 /* UnreadMessages.m in Sources */,
+				49ABA132198CE5C700B060D0 /* ClubbookNotifications.m in Sources */,
 				498975A719EC60150067A5E4 /* UserProfileViewController.m in Sources */,
 				498A68FF196C4CFD00BC2859 /* PNHeartbeatRequest.m in Sources */,
 				520897781A407C6700E8DD06 /* JSQMessagesComposerTextView.m in Sources */,

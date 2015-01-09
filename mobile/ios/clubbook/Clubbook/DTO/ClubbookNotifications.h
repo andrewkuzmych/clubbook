@@ -8,9 +8,10 @@
 
 #import "BaseDto.h"
 
-@interface UnreadMessages : BaseDto
+@interface ClubbookNotifications : BaseDto
 
 @property (assign, nonatomic) int countOfUnreadChats;
 @property (assign, nonatomic) int countOfPendingFriends;
+@property (assign, nonatomic) int fastCheckinPlaces;
 
 @end
