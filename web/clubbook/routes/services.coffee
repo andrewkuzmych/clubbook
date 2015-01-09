@@ -752,10 +752,34 @@ exports.clubs_yesterday = (req, res)->
         club_ids.push r.checkin.club
 
       db_model.Venue.find({'_id': { '$in': club_ids }}).exec (err, clubs)->
-        res.json
-          status: "ok"
-          clubs: clubs       
+        # set today working hour for each club
+        club_objects = []
+        for club in clubs
+          club_object = club.toObject()
+          club_objects.push club_object
+          if club_object.club_working_hours
+            for wh in club.club_working_hours
+              if wh.day == moment.utc().day()
+                club_object.id = club._id
+                club_object.club_today_working_hours = wh
 
+        db_model.User.findById(req.params.me._id.toString()).exec (err, user)->
+          match_pre =  {"_id": {'$in': user.friends}, 'bloked_users': {'$ne': user._id}, 'friends': user._id, 'checkin.active': true }
+          match_post =  {'checkin.active': true}
+          group = { _id: "$checkin.club", count: { $sum: 1 }}
+          query = [ { '$match': match_pre}, { '$unwind': "$checkin" }, { '$match': match_post }, {'$group': group} ]
+
+          db_model.User.aggregate query, {}, (err, checkins)->
+            for c in checkins
+              theclub = __.find(club_objects, (c_res)->
+                      c_res._id.toString() == c._id.toString()
+                )
+              if theclub
+                theclub.active_friends_checkins = c.count
+
+            res.json
+              status: "ok"
+              clubs: club_objects
 
 exports.club_users_yesterday = (req, res)->
   current_user_id = req.params.me._id.toString()
@@ -971,6 +995,7 @@ exports.chat = (req, res)->
     user_from: req.body.user_from
     user_to: req.body.user_to
     msg: req.body.msg
+    url: req.body.url
     msg_type: req.body.msg_type
 
   manager.get_user_by_id req.body.user_from, (err, user_from)->
@@ -1131,13 +1156,14 @@ exports.readchat = (req, res)->
       status: 'ok'
 
 exports.unread_notifications_count = (req, res)->
-  manager.unread_messages_count req.params.me._id.toString(), (err, unread_chat_count, pending_friends_count)->
+  manager.unread_messages_count req.query, req.params.me._id.toString(), (err, unread_chat_count, pending_friends_count, venue_count)->
     res.json
       status: 'ok'
       unread_chat_count: unread_chat_count
       pending_friends_count: pending_friends_count
+      venue_count: venue_count
 
-exports.remove_user =(req, res)->
+exports.remove_user = (req, res)->
   console.log "remove user", req.params.user_id
   db_model.User.remove {"_id": req.params.user_id}, (err)->
     db_model.Chat.remove {"user1": mongoose.Types.ObjectId(req.params.user_id)}, (err)->
@@ -1145,7 +1171,7 @@ exports.remove_user =(req, res)->
         res.json
           status: 'ok'
 
-exports.checkin_clean =(req, res)->
+exports.checkin_clean = (req, res)->
   console.log "checkin_clean", req.params.user_id
   db_model.User.find({}).exec (err, users)->
     for user in users

@@ -223,8 +223,9 @@ ChatSchema = new mongoose.Schema
   conversation: [
     {
       msg: { type: String },
+      url: { type: String },
       time: { type: Date, 'default': Date.now, required: true},
-      type: {type: String, trim: true, required: true, "default": "message", "enum": ["message", "drink", "smile"]},
+      type: {type: String, trim: true, required: true, "default": "message", "enum": ["message", "drink", "smile", "photo"]},
       from_who: {type: mongoose.Schema.ObjectId, ref: 'User', required: true}
       read: {type: Boolean, default: false}
     }
