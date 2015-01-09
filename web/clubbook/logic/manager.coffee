@@ -467,7 +467,7 @@ exports.chat = (params, callback)->
     else
       chat.unread.user = mongoose.Types.ObjectId(params.user_to)
       chat.unread.count = 1
-
+    
     chat.save (err)->
       # retreive chat with user data
       db_model.Chat.findById(chat._id).populate("user1", db_model.USER_PUBLIC_INFO).populate("user2", db_model.USER_PUBLIC_INFO).exec callback
