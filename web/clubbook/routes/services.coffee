@@ -871,6 +871,38 @@ exports.list_club = (req, res)->
         clubs: clubs
         types: types
 
+exports.add_favorite_club = (req, res)->
+  params = 
+    user_id: req.params.me._id.toString()
+    club_id: req.params.objectId
+
+  manager.add_favorite_club params, (err, result)->
+    if err
+      console.log err
+      res.json
+        status: 'error'
+        err: err
+    else
+      res.json
+        status: 'ok'
+        result: result
+
+exports.remove_favorite_club = (req, res)->
+    params = 
+    user_id: req.params.me._id.toString()
+    club_id: req.params.objectId
+
+  manager.remove_favorite_club params, (err, result)->
+    if err
+      console.log err
+      res.json
+        status: 'error'
+        err: err
+    else
+      res.json
+        status: 'ok'
+        result: result
+
 exports.checkin = (req, res)->
   params =
     user_id: req.params.me._id.toString()

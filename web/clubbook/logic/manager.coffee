@@ -196,6 +196,40 @@ exports.create_club = (params, callback)->
 # Checkin, Checkout logic
 ##################################################################################################################
 
+exports.add_favorite_club = (params, callback)->
+  console.log "METHOD - Add favorite clubs"
+  isClub = false
+  query =  [{'$match': {_id : mongoose.Types.ObjectId(params.user_id)}}, {'$unwind': '$favorite_clubs'}]
+  db_model.User.aggregate query, {}, (err, result)-> 
+    for r in result
+      if r.favorite_clubs.toString() == params.club_id.toString()
+        isClub = true
+    console.log isClub
+    if !isClub
+      db_model.User.findById(params.user_id).exec (err, user)->
+        user.favorite_clubs.push params.club_id
+        db_model.save_or_update_user user, (err)-> callback err, user
+    else
+      callback 'club already a favorite', null
+
+exports.remove_favorite_club = (params, callback)->
+  console.log "METHOD - Remove favorite clubs"
+  console.log "Params: "
+  console.log params
+  query =  [{'$match': {_id : mongoose.Types.ObjectId(params.user_id)}}, {'$unwind': '$favorite_clubs'}]
+  db_model.User.aggregate query, {}, (err, result)-> 
+    for r in result
+      if r.favorite_clubs.toString() == params.club_id.toString()
+        console.log "there is club"
+        db_model.User.findById(params.user_id).exec (err, user)->
+          user.favorite_clubs.pull params.club_id
+          db_model.save_or_update_user user, (err)-> callback err, user
+        #db_model.User.remove {"favorite_clubs": mongoose.Types.ObjectId(params.club_id)}, (err)->
+          #db_model.save_or_update_user user, (err)-> callback err, user
+
+      #callback 'club already a favorite', null
+
+
 exports.checkin = (params, callback)->
   console.log "METHOD - Manager checkin"
   console.log "Checkin user", params

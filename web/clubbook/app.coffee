@@ -232,6 +232,11 @@ app.get '/_s/obj/club/:objectId/users', handle_access_token, services.club_users
 app.get '/_s/obj/club/:objectId/users/yesterday', handle_access_token, services.club_users_yesterday
 app.get '/_s/obj/clubs/yesterday', handle_access_token, services.clubs_yesterday
 
+# favorite_clubs
+app.get '/_s/obj/club/:objectId/favorite/remove', handle_access_token, services.remove_favorite_club
+app.get '/_s/obj/club/:objectId/favorite/add', handle_access_token, services.add_favorite_club
+
+
 # checkin / chekout
 app.get '/_s/obj/club/:objectId/checkin', handle_access_token, services.checkin
 app.get '/_s/obj/club/:objectId/update', handle_access_token, services.update_checkin
