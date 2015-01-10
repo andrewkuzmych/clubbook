@@ -43,7 +43,6 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
     private static final String ARG_USER_ID = "ARG_USER_ID";
     private static final String ARG_USER_NAME = "ARG_USER_NAME";
-    private static final String ARG_USER_PHOTO_URL = "ARG_USER_PHOTO_URL";
     private static final String ARG_MODE = "ARG_MODE";
 
     private ChatAdapter mAdapter;
@@ -54,14 +53,13 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     private Chat mChat;
     private int mMode = MODE_OPEN_FROM_CHAT_LIST;
 
-    public static Fragment newInstance(Fragment targetFragment, int mode, String userId, String userName, String userPhotoUrl) {
+    public static Fragment newInstance(Fragment targetFragment, int mode, String userId, String userName) {
         Fragment fragment = new ChatFragment();
         fragment.setTargetFragment(targetFragment, 0);
 
         Bundle args = new Bundle();
         args.putString(ARG_USER_ID, userId);
         args.putString(ARG_USER_NAME, userName);
-        args.putString(ARG_USER_PHOTO_URL, userPhotoUrl);
         args.putInt(ARG_MODE, mode);
         fragment.setArguments(args);
 
@@ -148,7 +146,6 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         mMode = args.getInt(ARG_MODE, MODE_OPEN_FROM_CHAT_LIST);
         mUserToId = args.getString(ARG_USER_ID);
         String userName = args.getString(ARG_USER_NAME);
-        String userPhotoUrl = args.getString(ARG_USER_PHOTO_URL);
 
         initActionBarTitle(userName != null ? userName : "");
     }
@@ -262,6 +259,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
             myNewMessage.setUserFrom(mChat.getCurrentUser().getId());
             myNewMessage.setUserFromName(mChat.getCurrentUser().getName());
             myNewMessage.setUserFromAvatar(mChat.getCurrentUser().getAvatar());
+            myNewMessage.setTime(System.currentTimeMillis());
 
             mAdapter.add(myNewMessage);
             inputText.setText("");
@@ -365,9 +363,9 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                     view.findViewById(R.id.txtNoMessages).setVisibility(View.GONE);
                 }
 
-                inputText.requestFocus();
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(inputText, InputMethodManager.SHOW_IMPLICIT);
+//                inputText.requestFocus();
+//                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                imm.showSoftInput(inputText, InputMethodManager.SHOW_IMPLICIT);
 
                 HttpClientManager.getInstance().readMessages(
                         mChat.getCurrentUser().getId(),
