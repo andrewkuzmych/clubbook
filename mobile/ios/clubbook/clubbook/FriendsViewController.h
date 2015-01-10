@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "BaseViewController.h"
 
-@interface FriendsViewController : BaseViewController<UITableViewDelegate, UITableViewDataSource>
+@interface FriendsViewController : BaseViewController<UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *noFriendsAdded;
 @property (weak, nonatomic) IBOutlet UITableView *friendsTable;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentControl;

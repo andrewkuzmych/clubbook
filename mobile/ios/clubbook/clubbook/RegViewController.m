@@ -224,7 +224,6 @@
     NSString *wrongGender = [NSString stringWithFormat:NSLocalizedString(@"wrongGender", nil)];
     NSString *wrongCountry = [NSString stringWithFormat:NSLocalizedString(@"wrongCountry", nil)];
     NSString *wrongAvatar = [NSString stringWithFormat:NSLocalizedString(@"wrongAvatar", nil)];
-    NSString *error = [NSString stringWithFormat:NSLocalizedString(@"error", nil)];
     NSString *ageLimit = [NSString stringWithFormat:NSLocalizedString(@"ageLimit", nil)];
     
     BOOL isValidName = [Validator NSStringLength:self.nameText.text:2];

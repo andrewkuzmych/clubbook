@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+#import "BaseViewController.h"
 #import "Place.h"
 
-@interface ClubPhotGalleryCollectionViewController : UICollectionViewController
+@interface ClubPhotGalleryCollectionViewController : BaseViewController<UICollectionViewDelegate, UICollectionViewDataSource>
 
 @property (strong, nonatomic) NSMutableArray* photoArray;
 @property (strong, nonatomic) Place* place;

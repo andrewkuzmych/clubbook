@@ -25,7 +25,7 @@ static Place * clubCheckin;
 + (NSString*) convertDistance:(NSInteger) distance;
 {
     if (distance < 1000) {
-        NSNumber *disatanceDouble = [NSNumber numberWithInt:distance];
+        NSNumber *disatanceDouble = [NSNumber numberWithInt:(int)distance];
         
         return [NSString stringWithFormat: @"%@%@",[disatanceDouble stringValue], [NSString stringWithFormat:NSLocalizedString(@"meters", nil)]];
     } else {

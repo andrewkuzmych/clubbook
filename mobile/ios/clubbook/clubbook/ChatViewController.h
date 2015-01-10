@@ -8,6 +8,7 @@
 
 #import "JSQMessagesViewController.h"
 #import "BaseMessagesViewController.h"
+#import "CLUploader.h"
 
 #import "JSQMessages.h"
 
@@ -21,7 +22,7 @@
 @end
 
 
-@interface ChatViewController : BaseMessagesViewController<PNDelegate, UIDocumentInteractionControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate>
+@interface ChatViewController : BaseMessagesViewController<PNDelegate, UIDocumentInteractionControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate, CLUploaderDelegate>
 
 @property (assign, nonatomic) BOOL isFromUser;
 
@@ -38,6 +39,6 @@
 
 @property (nonatomic, retain) UIDocumentInteractionController *docController;
 
-- (void)closePressed:(UIBarButtonItem *)sender;
+- (void)canRotate;
 
 @end

@@ -33,7 +33,7 @@
 
 - (void)deleteConversation:(NSString *) fromUser toUser:(NSString *) toUser accessToken:(NSString *) accessToken;
 
-- (void)unreadMessages:(NSString *) accessToken;
+- (void)retrieveNotifications:(NSString *) accessToken;
 
 - (void)readChat:(NSString *) fromUser toUser:(NSString *) toUser accessToken:(NSString *) accessToken;
 

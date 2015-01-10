@@ -31,7 +31,7 @@
 - (void)receivedConversationJSON:(NSData *)objectNotation;
 - (void)receivedConversationsJSON:(NSData *)objectNotation;
 - (void)deleteConversationJSON:(NSData *)objectNotation;
-- (void)unreadMessagesJSON:(NSData *)objectNotation;
+- (void)notificationsJSON:(NSData *)objectNotation;
 - (void)readChatJSON:(NSData *)objectNotation;
 - (void)checkinJSON:(NSData *)objectNotation userInfo:(NSObject *) userInfo;
 - (void)checkoutJSON:(NSData *)objectNotation userInfo:(NSObject *) userInfo;

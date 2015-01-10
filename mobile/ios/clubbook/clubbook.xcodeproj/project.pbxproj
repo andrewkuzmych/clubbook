@@ -192,7 +192,7 @@
 		49ABA129198A188200B060D0 /* AddFriendButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA128198A188200B060D0 /* AddFriendButton.m */; };
 		49ABA12C198A919C00B060D0 /* FriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA12B198A919C00B060D0 /* FriendCell.m */; };
 		49ABA12F198A932B00B060D0 /* FriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA12E198A932A00B060D0 /* FriendsViewController.m */; };
-		49ABA132198CE5C700B060D0 /* UnreadMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA131198CE5C700B060D0 /* UnreadMessages.m */; };
+		49ABA132198CE5C700B060D0 /* ClubbookNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA131198CE5C700B060D0 /* ClubbookNotifications.m */; };
 		49ABA135198F9B6900B060D0 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA134198F9B6900B060D0 /* SettingsViewController.m */; };
 		49ABA138198F9D7F00B060D0 /* SettingsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA137198F9D7F00B060D0 /* SettingsCell.m */; };
 		49ABA13B198FEE7700B060D0 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABA13A198FEE7700B060D0 /* WebViewController.m */; };
@@ -374,6 +374,8 @@
 		520897801A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 520897551A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.m */; };
 		520897811A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520897561A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.xib */; };
 		520897861A407C7F00E8DD06 /* JSQSystemSoundPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 520897851A407C7F00E8DD06 /* JSQSystemSoundPlayer.m */; };
+		520F38AC1A5E93B600FB1E65 /* NewsFeedTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520F38AB1A5E93B600FB1E65 /* NewsFeedTableViewController.m */; };
+		520F38AF1A5E952000FB1E65 /* NewsFeedSingleImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 520F38AE1A5E952000FB1E65 /* NewsFeedSingleImageCell.m */; };
 		5210474D1A48300A006DD319 /* DateHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5210474C1A48300A006DD319 /* DateHelper.m */; };
 		52188DAE1A51876E0020DD6F /* MainMenuCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52188DAD1A51876E0020DD6F /* MainMenuCollectionViewCell.m */; };
 		521BEC3F1A52F576003E7A27 /* gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 521BEC3C1A52F576003E7A27 /* gradient.png */; };
@@ -382,6 +384,7 @@
 		522ACCDF1A32084F006789EB /* SPSlideTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDC1A32084F006789EB /* SPSlideTabBar.m */; };
 		522ACCE01A32084F006789EB /* SPSlideTabButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDE1A32084F006789EB /* SPSlideTabButton.m */; };
 		52343D9B1A430CF400F47A36 /* UIImage+FixOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 52343D9A1A430CF400F47A36 /* UIImage+FixOrientation.m */; };
+		523559C91A5EB48A00C1ED72 /* NewsFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 523559C81A5EB48A00C1ED72 /* NewsFeedCell.m */; };
 		5245DC621A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5245DC611A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m */; };
 		5245DC651A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5245DC641A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.m */; };
 		5245DC681A5C09F500CC0B1B /* PhotoSlideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5245DC671A5C09F500CC0B1B /* PhotoSlideViewController.m */; };
@@ -809,8 +812,8 @@
 		49ABA12B198A919C00B060D0 /* FriendCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FriendCell.m; path = Controls/FriendCell.m; sourceTree = "<group>"; };
 		49ABA12D198A932A00B060D0 /* FriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendsViewController.h; sourceTree = "<group>"; };
 		49ABA12E198A932A00B060D0 /* FriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendsViewController.m; sourceTree = "<group>"; };
-		49ABA130198CE5C700B060D0 /* UnreadMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnreadMessages.h; path = DTO/UnreadMessages.h; sourceTree = "<group>"; };
-		49ABA131198CE5C700B060D0 /* UnreadMessages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UnreadMessages.m; path = DTO/UnreadMessages.m; sourceTree = "<group>"; };
+		49ABA130198CE5C700B060D0 /* ClubbookNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClubbookNotifications.h; path = DTO/ClubbookNotifications.h; sourceTree = "<group>"; };
+		49ABA131198CE5C700B060D0 /* ClubbookNotifications.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ClubbookNotifications.m; path = DTO/ClubbookNotifications.m; sourceTree = "<group>"; };
 		49ABA133198F9B6900B060D0 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		49ABA134198F9B6900B060D0 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		49ABA136198F9D7F00B060D0 /* SettingsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingsCell.h; path = Controls/SettingsCell.h; sourceTree = "<group>"; };
@@ -1093,6 +1096,10 @@
 		520897561A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JSQMessagesTypingIndicatorFooterView.xib; sourceTree = "<group>"; };
 		520897841A407C7F00E8DD06 /* JSQSystemSoundPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSQSystemSoundPlayer.h; sourceTree = "<group>"; };
 		520897851A407C7F00E8DD06 /* JSQSystemSoundPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSQSystemSoundPlayer.m; sourceTree = "<group>"; };
+		520F38AA1A5E93B600FB1E65 /* NewsFeedTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedTableViewController.h; sourceTree = "<group>"; };
+		520F38AB1A5E93B600FB1E65 /* NewsFeedTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedTableViewController.m; sourceTree = "<group>"; };
+		520F38AD1A5E952000FB1E65 /* NewsFeedSingleImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedSingleImageCell.h; sourceTree = "<group>"; };
+		520F38AE1A5E952000FB1E65 /* NewsFeedSingleImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedSingleImageCell.m; sourceTree = "<group>"; };
 		5210474B1A48300A006DD319 /* DateHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateHelper.h; sourceTree = "<group>"; };
 		5210474C1A48300A006DD319 /* DateHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateHelper.m; sourceTree = "<group>"; };
 		52188DAC1A51876E0020DD6F /* MainMenuCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenuCollectionViewCell.h; sourceTree = "<group>"; };
@@ -1106,6 +1113,8 @@
 		522ACCDE1A32084F006789EB /* SPSlideTabButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPSlideTabButton.m; path = SPSlideTabBar/SPSlideTabButton.m; sourceTree = "<group>"; };
 		52343D991A430CF400F47A36 /* UIImage+FixOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FixOrientation.h"; sourceTree = "<group>"; };
 		52343D9A1A430CF400F47A36 /* UIImage+FixOrientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FixOrientation.m"; sourceTree = "<group>"; };
+		523559C71A5EB48A00C1ED72 /* NewsFeedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedCell.h; sourceTree = "<group>"; };
+		523559C81A5EB48A00C1ED72 /* NewsFeedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedCell.m; sourceTree = "<group>"; };
 		5245DC601A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubPhotGalleryCollectionViewController.h; sourceTree = "<group>"; };
 		5245DC611A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubPhotGalleryCollectionViewController.m; sourceTree = "<group>"; };
 		5245DC631A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubPhotoGalleryCollectionViewCell.h; sourceTree = "<group>"; };
@@ -1867,8 +1876,8 @@
 				498A1BAA196BD36900824E64 /* Chat.m */,
 				49ABA124198922EE00B060D0 /* WorkingHour.h */,
 				49ABA125198922EE00B060D0 /* WorkingHour.m */,
-				49ABA130198CE5C700B060D0 /* UnreadMessages.h */,
-				49ABA131198CE5C700B060D0 /* UnreadMessages.m */,
+				49ABA130198CE5C700B060D0 /* ClubbookNotifications.h */,
+				49ABA131198CE5C700B060D0 /* ClubbookNotifications.m */,
 				49F2C673199C9A29006A3E21 /* Config.h */,
 				49F2C674199C9A29006A3E21 /* Config.m */,
 				499929C119EAB6B900B77A6E /* FriendsResult.h */,
@@ -2088,6 +2097,19 @@
 			path = Classes;
 			sourceTree = "<group>";
 		};
+		520F38A91A5E939400FB1E65 /* NewsFeed */ = {
+			isa = PBXGroup;
+			children = (
+				520F38AA1A5E93B600FB1E65 /* NewsFeedTableViewController.h */,
+				520F38AB1A5E93B600FB1E65 /* NewsFeedTableViewController.m */,
+				520F38AD1A5E952000FB1E65 /* NewsFeedSingleImageCell.h */,
+				520F38AE1A5E952000FB1E65 /* NewsFeedSingleImageCell.m */,
+				523559C71A5EB48A00C1ED72 /* NewsFeedCell.h */,
+				523559C81A5EB48A00C1ED72 /* NewsFeedCell.m */,
+			);
+			name = NewsFeed;
+			sourceTree = "<group>";
+		};
 		522ACCE11A320852006789EB /* SPSlideTabBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -2115,6 +2137,7 @@
 		528C85991A56EF0B00BBB148 /* ClubProfileStoryboard */ = {
 			isa = PBXGroup;
 			children = (
+				520F38A91A5E939400FB1E65 /* NewsFeed */,
 				5245DC5F1A5BEF1500CC0B1B /* PhotoGallery */,
 				49836B1F1961969F00F2A2C6 /* ClubViewController.h */,
 				49836B201961969F00F2A2C6 /* ClubViewController.m */,
@@ -2669,6 +2692,7 @@
 				4939072A194F1E3E003F2FF9 /* SWRevealViewController.m in Sources */,
 				49ABA129198A188200B060D0 /* AddFriendButton.m in Sources */,
 				520897721A407C6700E8DD06 /* JSQMessagesCollectionView.m in Sources */,
+				520F38AF1A5E952000FB1E65 /* NewsFeedSingleImageCell.m in Sources */,
 				520897661A407C6700E8DD06 /* JSQMessagesToolbarButtonFactory.m in Sources */,
 				498A1BAE196BD90F00824E64 /* BaseMessagesViewController.m in Sources */,
 				4934F76419D047B800BFFDB1 /* UIImage+WebP.m in Sources */,
@@ -2711,6 +2735,7 @@
 				498A68CC196C4CFD00BC2859 /* PNWriteBuffer.m in Sources */,
 				498A68CE196C4CFD00BC2859 /* PNChannelPresence.m in Sources */,
 				49ABA126198922EE00B060D0 /* WorkingHour.m in Sources */,
+				523559C91A5EB48A00C1ED72 /* NewsFeedCell.m in Sources */,
 				498A68E5196C4CFD00BC2859 /* PNConfiguration.m in Sources */,
 				520897741A407C6700E8DD06 /* JSQMessagesCollectionViewCellIncoming.m in Sources */,
 				498A68E7196C4CFD00BC2859 /* PNError.m in Sources */,
@@ -2770,6 +2795,7 @@
 				49908F0519751C5C00DA68F2 /* UIButton+ALBlock.m in Sources */,
 				49ABA12C198A919C00B060D0 /* FriendCell.m in Sources */,
 				49895A6C1969980700484EA2 /* CbLabel.m in Sources */,
+				520F38AC1A5E93B600FB1E65 /* NewsFeedTableViewController.m in Sources */,
 				4934F76719D047B800BFFDB1 /* UIView+WebCacheOperation.m in Sources */,
 				520897691A407C6700E8DD06 /* JSQMessagesCollectionViewLayoutAttributes.m in Sources */,
 				499929C019E99FF000B77A6E /* CustomNavigationController.m in Sources */,
@@ -2852,7 +2878,7 @@
 				4996E0BC196317AA000C721F /* GlobalVars.m in Sources */,
 				499247A81976978F008C74D0 /* LocationManagerSingleton.m in Sources */,
 				498A68EF196C4CFD00BC2859 /* PNWhereNow.m in Sources */,
-				49ABA132198CE5C700B060D0 /* UnreadMessages.m in Sources */,
+				49ABA132198CE5C700B060D0 /* ClubbookNotifications.m in Sources */,
 				498975A719EC60150067A5E4 /* UserProfileViewController.m in Sources */,
 				498A68FF196C4CFD00BC2859 /* PNHeartbeatRequest.m in Sources */,
 				520897781A407C6700E8DD06 /* JSQMessagesComposerTextView.m in Sources */,

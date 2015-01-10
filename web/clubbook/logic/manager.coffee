@@ -119,11 +119,11 @@ exports.list_club = (params, callback)->
 
       db_model.User.aggregate query, {}, (err, result)->
         for c in result
-          res = __.find(clubs, (c_res)->
+          theclub = __.find(clubs, (c_res)->
                   c_res._id.toString() == c._id.toString()
             )
-          if res
-            res.active_friends_checkins = c.count
+          if theclub
+            theclub.active_friends_checkins = c.count
 
         query =  [{'$group':{_id: "$club_type", count: { '$sum': 1 } } }]
         db_model.Venue.aggregate query, {}, (err, types)->
@@ -460,14 +460,14 @@ exports.chat = (params, callback)->
         user1: mongoose.Types.ObjectId(params.user_from)
         user2: mongoose.Types.ObjectId(params.user_to)
 
-    chat.conversation.push {msg: params.msg, from_who: mongoose.Types.ObjectId(params.user_from), type: params.msg_type}
+    chat.conversation.push {msg: params.msg, url: params.url, from_who: mongoose.Types.ObjectId(params.user_from), type: params.msg_type}
 
     if chat.unread.user && chat.unread.user.toString() == params.user_to.toString()
       chat.unread.count += 1
     else
       chat.unread.user = mongoose.Types.ObjectId(params.user_to)
       chat.unread.count = 1
-
+    
     chat.save (err)->
       # retreive chat with user data
       db_model.Chat.findById(chat._id).populate("user1", db_model.USER_PUBLIC_INFO).populate("user2", db_model.USER_PUBLIC_INFO).exec callback
@@ -529,7 +529,7 @@ exports.readchat = (params, callback)->
         callback err, chat
 
 
-exports.unread_messages_count = (user_id, callback)->
+exports.unread_messages_count = (param, user_id, callback)->
   console.log "METHOD - Manager unread_messages_count"
   db_model.Chat.find({'unread.user':  mongoose.Types.ObjectId(user_id)}, {'conversation':0}).exec (err, chats)->
     unread_chat_count = 0
@@ -537,8 +537,10 @@ exports.unread_messages_count = (user_id, callback)->
       unread_chat_count = unread_chat_count + chat.unread.count
 
     db_model.User.findById(user_id).exec (err, user)->
-      db_model.User.count({"_id": {'$nin': user.friends}, 'friends': user._id}).exec (err, pending_friends_count)->
-        callback null, unread_chat_count, pending_friends_count
+      db_model.User.count({"_id": {'$nin': user.friends}, 'friends': user._id}).exec (err, pending_friends_count)->      
+        db_model.Venue.count({club_loc: { '$near' : [param.user_lon, param.user_lat], '$maxDistance': 1/112 }}).exec (err, venue_count)->        
+          callback null, unread_chat_count, pending_friends_count, venue_count
+
 
 # convert the radius value to km
 exports.radius_to_km = (distance)->

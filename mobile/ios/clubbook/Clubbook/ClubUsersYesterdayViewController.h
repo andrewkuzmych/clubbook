@@ -9,11 +9,11 @@
 #import "BaseViewController.h"
 #import "CbButton.h"
 #import "ProfileCell.h"
-#import "User.h";
+#import "User.h"
 #import "HeaderView.h"
 #import "ClubFooterView.h"
 
-@interface ClubUsersYesterdayViewController : BaseViewController
+@interface ClubUsersYesterdayViewController : BaseViewController<UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *profileCollection;
 @property (strong, nonatomic) NSString *placeId;
 @property (strong, nonatomic) Place *place;

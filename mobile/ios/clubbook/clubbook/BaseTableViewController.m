@@ -76,11 +76,10 @@
 {
     NSArray *segItemsArray = [NSArray arrayWithObjects: @"Previous", @"Next", nil];
     UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:segItemsArray];
-    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:12], UITextAttributeFont, nil];
+    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:12], NSFontAttributeName, nil];
     [segmentedControl setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
     
     segmentedControl.frame = CGRectMake(0, 0, 130, 10);
-    segmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;
     segmentedControl.selectedSegmentIndex = -1;
     [segmentedControl addTarget:self
                          action:@selector(segmentAction:)

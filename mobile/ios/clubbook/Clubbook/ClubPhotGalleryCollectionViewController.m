@@ -86,7 +86,6 @@ static NSString * const reuseIdentifier = @"PhotoCell";
         photoController.title = self.place.title;
         photoController.selectedIndex = selectedItem;
         }
-
 }
 
 @end

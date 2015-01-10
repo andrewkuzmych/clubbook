@@ -16,6 +16,7 @@
 #import "LocationManagerSingleton.h"
 #import "UIImage+FixOrientation.h"
 #import "DateHelper.h"
+#import "Convertor.h"
 
 @interface ChatViewController (){
     bool canChat;
@@ -142,9 +143,7 @@
         self.navigationItem.rightBarButtonItem = barButtonItem;
        
         for(Conversation * conf in chat.conversations) {
-            
-            JSQMessage *jsqmessage = [[JSQMessage alloc] initWithSenderId:conf.user_from senderDisplayName:conf.user_from date:conf.time text:conf.msg];
-            [self.messages addObject:jsqmessage];
+            [self loadMessage:conf.user_from displayName:conf.user_from date:conf.time message:conf.msg type:conf.type];
         }
         
         [self setCanChat];
@@ -212,11 +211,6 @@
     [tracker set:kGAIScreenName
            value:@"Chat Screen"];
     [tracker send:[[GAIDictionaryBuilder createAppView] build]];
-    
-
-    if (self.delegateModal) {
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(closePressed:)];
-    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -230,12 +224,6 @@
 
     self.collectionView.collectionViewLayout.springinessEnabled = NO;
 }
-
-- (void)closePressed:(UIBarButtonItem *)sender
-{
-    [self.delegateModal didDismissJSQDemoViewController:self];
-}
-
 
 - (void)didReceiveMemoryWarning
 {
@@ -269,11 +257,28 @@
     [self._manager chat:self.senderId user_to:self.userTo msg:trimMessage msg_type:type accessToken:accessToken];
 }
 
-- (void)putMessage:(NSString *)message type:(NSString *)type sender:(NSString *) sender
-{
-    JSQMessage *jsqmessage = [[JSQMessage alloc] initWithSenderId:sender senderDisplayName:self.senderDisplayName date:[NSDate date] text:message];
+- (void)loadMessage:(NSString*) sender displayName:(NSString*)displayName date:(NSDate*)date message:(NSString*)message type:(NSString*)type {
+    if ([type isEqualToString:@"photo"]) {
+        // transform avatar
+       
+        NSData* data = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:message]];
+        UIImage* image = [[UIImage alloc] initWithData:data];
 
-    [self.messages addObject:jsqmessage];
+        JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:image andFilePath:message];
+        JSQMessage *photoMessage = [JSQMessage messageWithSenderId:sender
+                                                           displayName:displayName
+                                                                 media:photoItem];
+        [self.messages addObject:photoMessage];
+        [self.collectionView reloadData];
+    }
+    else {
+        JSQMessage *jsqmessage = [[JSQMessage alloc] initWithSenderId:sender senderDisplayName:displayName date:date text:message];
+        [self.messages addObject:jsqmessage];
+    }
+}
+
+- (void)putMessage:(NSString *)message type:(NSString *)type sender:(NSString *) sender {
+    [self loadMessage:sender displayName:self.senderDisplayName date:[NSDate date] message:message type:type];
     [self setCanChat];
     [self finishReceivingMessage];
 }
@@ -672,15 +677,20 @@
     // It is better to get JPEG data because jpeg data will store the location and other related information of image.
     [myData writeToFile:filePath atomically:YES];
     
-    if (image) {
-        JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:image andFilePath:filePath];
-        JSQMessage *photoMessage = [JSQMessage messageWithSenderId:self.senderId
-                                                       displayName:self.senderId
-                                                             media:photoItem];
-        [self.messages addObject:photoMessage];
-        [self.collectionView reloadData];
-        [self scrollToBottomAnimated:YES];
-    }
+    // upload image to coudinary
+    CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
+    CLUploader* uploader = [[CLUploader alloc] init:cloudinary delegate:self];
+    
+     [uploader upload:myData options:@{} withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
+        if (successResult) {
+
+            NSString *photoResult = [successResult objectForKey:@"url"];
+            [self sendMessage:photoResult type:@"photo"];
+        } 
+    } andProgress:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite, id context) {
+        NSLog(@"Block upload progress: %ld/%ld (+%ld)", (long)totalBytesWritten, (long)totalBytesExpectedToWrite, (long)bytesWritten);
+    }];
+    
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
@@ -696,4 +706,7 @@
     return self;
 }
 
+- (void) canRotate {
+    
+}
 @end

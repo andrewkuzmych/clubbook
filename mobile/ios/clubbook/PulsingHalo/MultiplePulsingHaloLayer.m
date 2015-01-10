@@ -75,7 +75,7 @@
             [self addSublayer:layer];
         });
     }
-    NSLog(@"sub count:%i", self.sublayers.count);
+    NSLog(@"sub count:%i", (int)self.sublayers.count);
 }
 
 - (void)dealloc {

@@ -37,7 +37,7 @@
 
         [currentController.navigationController.navigationBar setTitleTextAttributes:
          [NSDictionary dictionaryWithObjectsAndKeys:
-          [UIColor whiteColor], UITextAttributeTextColor,
+          [UIColor whiteColor], NSForegroundColorAttributeName,
           [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17], NSFontAttributeName, nil]];
     }
     return self;
@@ -57,12 +57,13 @@
         });
     };
     
+    __weak typeof(self) weakSelf = self;
     // Internet is not reachable
     internetReachableFoo.unreachableBlock = ^(Reachability*reach)
     {
         // Update the UI on the main thread
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self showError];
+            [weakSelf showError];
             NSLog(@"Someone broke the internet :(");
         });
     };
