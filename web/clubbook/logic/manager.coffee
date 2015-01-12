@@ -250,12 +250,13 @@ exports.news_favorite = (params, callback)->
     else
       club_id = []
       news = []
-      query =  ['venue': {'$in': user.favorite_clubs}}]
+      query =  [{'venue': {'$in': user.favorite_clubs}}]
       db_model.News.aggregate query, {}, (err, favorite_club)-> 
         if not favorite_club
           callback 'favorite club does not exist', null
         else
           console.log 11111222222
+          console.log favorite_club
       ###query =  [{'$match': {_id : mongoose.Types.ObjectId(params.user_id)}}, {'$unwind': '$favorite_clubs'}]
       db_model.User.aggregate query, {}, (err, favorite_club)-> 
         if not favorite_club
