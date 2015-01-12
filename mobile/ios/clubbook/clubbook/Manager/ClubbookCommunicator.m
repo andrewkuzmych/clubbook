@@ -432,7 +432,7 @@
     });
 }
 
-- (void) unreadMessages:(NSString *) accessToken
+- (void) retrieveNotifications:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
@@ -446,7 +446,7 @@
                 if (error) {
                     [self.delegate failedWithError:error];
                 } else {
-                    [self.delegate unreadMessagesJSON:data];
+                    [self.delegate notificationsJSON:data];
                 }
             });
         }];

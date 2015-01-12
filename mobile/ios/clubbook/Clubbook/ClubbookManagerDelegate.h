@@ -10,7 +10,7 @@
 #import "User.h"
 #import "Place.h"
 #import "Chat.h"
-#import "UnreadMessages.h"
+#import "ClubbookNotifications.h"
 #import "Config.h"
 #import "FriendsResult.h"
 #import "UsersYesterday.h"
@@ -36,7 +36,7 @@
   - (void)didReceiveConversation:(Chat *)chat;
   - (void)didReceiveConversations:(NSArray *)chats;
   - (void)didDeleteConversation:(NSString *)result;
-  - (void)didUnreadMessages:(UnreadMessages *)unreadMessages;
+  - (void)didReceivedNotifications:(ClubbookNotifications *)notifications;
   - (void)didReadChat:(NSString *)result;
   - (void)didCheckin:(User *)user userInfo:(NSObject*) userInfo;
   - (void)didCheckout:(User *)user userInfo:(NSObject *) userInfo;

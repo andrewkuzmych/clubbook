@@ -350,8 +350,7 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             Fragment chatFragment = ChatFragment.newInstance(
                     ProfileFragment.this,
                     ChatFragment.MODE_OPEN_FROM_PROFILE, mUser.getId(),
-                    mUsername,
-                    ImageHelper.getUserListAvatar(mUser.getAvatar())
+                    mUsername
             );
             openFragment(chatFragment, ChatFragment.class);
         }

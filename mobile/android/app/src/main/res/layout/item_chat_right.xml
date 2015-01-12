@@ -8,27 +8,45 @@
     android:paddingBottom="8dp"
     android:background="@android:color/transparent">
 
-    <com.nl.clubbook.ui.view.HelveticaRegularTextView
-        android:id="@+id/txtChatMessage"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:layout_marginRight="8dp"
+        android:orientation="vertical"
         android:background="@drawable/ic_chat_bubble_grey_right"
-        android:textSize="@dimen/text_size_small"
-        android:paddingRight="24dp"
-        android:paddingLeft="16dp"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
-        android:gravity="center"
         android:layout_toLeftOf="@+id/imgAvatar"
-        android:layout_centerVertical="true"/>
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp">
+
+        <com.nl.clubbook.ui.view.HelveticaRegularTextView
+            android:id="@+id/txtChatMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_small"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"/>
+
+        <com.nl.clubbook.ui.view.HelveticaRegularTextView
+            android:id="@+id/txtDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_micro"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:gravity="center"
+            android:layout_below="@+id/txtChatMessage"
+            android:paddingBottom="8dp"/>
+
+    </RelativeLayout>
 
     <com.nl.clubbook.ui.view.CircleImageView
         android:id="@+id/imgAvatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:scaleType="centerCrop"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

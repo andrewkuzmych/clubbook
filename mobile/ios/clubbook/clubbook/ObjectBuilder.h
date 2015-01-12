@@ -11,7 +11,7 @@
 #import "User.h"
 #import "Place.h"
 #import "Chat.h"
-#import "UnreadMessages.h"
+#import "ClubbookNotifications.h"
 #import "Config.h"
 #import "FriendsResult.h"
 #import "UsersYesterday.h"
@@ -35,7 +35,7 @@
 + (FriendsResult *)friendsJSON:(NSData *)objectNotation error:(NSError **)error;
 + (NSArray *)usersJSON:(NSData *)objectNotation error:(NSError **)error;
 + (BOOL)changePassFromJSON:(NSData *)objectNotation error:(NSError **)error;
-+ (UnreadMessages *)unreadMessagesFromJSON:(NSData *)objectNotation error:(NSError **)error;
++ (ClubbookNotifications *)unreadMessagesFromJSON:(NSData *)objectNotation error:(NSError **)error;
 + (Config *)getConfigFromJSON:(NSData *)objectNotation error:(NSError **)error;
 
 @end

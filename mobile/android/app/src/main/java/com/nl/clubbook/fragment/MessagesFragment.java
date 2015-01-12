@@ -61,8 +61,7 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
                 MessagesFragment.this,
                 ChatFragment.MODE_OPEN_FROM_CHAT_LIST,
                 receiver.getId(),
-                receiver.getName(),
-                receiver.getAvatar()
+                receiver.getName()
         );
         openFragment(mChatFragment, ChatFragment.class);
     }

@@ -25,6 +25,8 @@ import java.util.Locale;
 public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
 
     private final SimpleDateFormat mFormat = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
+    private final SimpleDateFormat mDateMsgWithDay = new SimpleDateFormat("hh:mm aaa, d MMM", Locale.getDefault());
+    private final SimpleDateFormat mDateMsgToday = new SimpleDateFormat("hh:mm aaa", Locale.getDefault());
 
     private static final int TYPE_MESSAGE = 0;
     private static final int TYPE_DRINK = 1;
@@ -147,7 +149,7 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
             row = mInflater.inflate(R.layout.item_chat_left, null);
         }
 
-        fillRow(row, message);
+        fillMsgRow(row, message);
 
         return row;
     }
@@ -161,14 +163,22 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
             row = mInflater.inflate(R.layout.item_chat_drink_left, null);
         }
 
-        fillRow(row, message);
+        fillMsgRow(row, message);
 
         return row;
     }
 
-    private void fillRow(View row, ChatMessage message) {
+    private void fillMsgRow(View row, ChatMessage message) {
+        TextView txtDate = (TextView) row.findViewById(R.id.txtDate);
         ImageView imgAvatar = (ImageView) row.findViewById(R.id.imgAvatar);
         TextView txtChatMessage = (TextView) row.findViewById(R.id.txtChatMessage);
+
+        long messageTime = message.getTime();
+        if(messageTime < mCurrentTimeWithoutHours) {
+            txtDate.setText(mDateMsgWithDay.format(messageTime));
+        } else {
+            txtDate.setText(mDateMsgToday.format(messageTime));
+        }
 
         String avatarString = message.getUserFromAvatar();
         String avatarUrl = ImageHelper.getUserListAvatar(avatarString);
@@ -187,5 +197,4 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
             imgAvatar.setOnClickListener(null);
         }
     }
-
 }

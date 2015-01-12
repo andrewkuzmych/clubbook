@@ -28,8 +28,9 @@
 
 
 @interface SidebarViewController (){
-    long unreadMessagesCount;
-    long pendingFriendsCount;
+    int unreadMessagesCount;
+    int pendingFriendsCount;
+    int fastCheckinPlaces;
 }
 
 @property (nonatomic, strong) NSArray *menuItems;
@@ -85,10 +86,11 @@
     [self loadData];
 }
 
-- (void)didUnreadMessages:(UnreadMessages *)unreadMessages
+- (void)didReceivedNotifications:(ClubbookNotifications *)notifications
 {
-    unreadMessagesCount = unreadMessages.countOfUnreadChats;
-    pendingFriendsCount = unreadMessages.countOfPendingFriends;
+    unreadMessagesCount = notifications.countOfUnreadChats;
+    pendingFriendsCount = notifications.countOfPendingFriends;
+    fastCheckinPlaces = notifications.fastCheckinPlaces;
 }
 
 - (void) prepareForSegue: (UIStoryboardSegue *) segue sender: (id) sender
@@ -170,14 +172,14 @@
     else if ([currentItemId isEqualToString:@"messages"]) {
         if (unreadMessagesCount > 0) {
             [cell.notificationNumberLabel setHidden:NO];
-            [cell.notificationNumberLabel setText:[NSString stringWithFormat:@"%ld", unreadMessagesCount, nil]];
+            [cell.notificationNumberLabel setText:[NSString stringWithFormat:@"%d", unreadMessagesCount, nil]];
         }
         cell.menuLabel.text = @"Messages";
     }
     else if ([currentItemId isEqualToString:@"friends"]) {
         if (pendingFriendsCount > 0) {
             [cell.notificationNumberLabel setHidden:NO];
-            [cell.notificationNumberLabel setText:[NSString stringWithFormat:@"%ld", pendingFriendsCount, nil]];
+            [cell.notificationNumberLabel setText:[NSString stringWithFormat:@"%d", pendingFriendsCount, nil]];
         }
         cell.menuLabel.text = @"Friends";
     }
@@ -189,6 +191,8 @@
     }
     else if ([currentItemId isEqualToString:@"fastcheckin"]) {
         [cell.bigNotificationNumber setHidden:NO];
+        NSString* number = [NSString stringWithFormat:@"%d", fastCheckinPlaces];
+        [cell.bigNotificationNumber setText:number];
         [cell.icon setBackgroundColor:[UIColor clearColor]];
         [cell.icon.layer setBorderColor:[UIColor whiteColor].CGColor];
         cell.menuLabel.text = @"Fast Checkin";
