@@ -17,6 +17,7 @@
 #import "UIImage+FixOrientation.h"
 #import "DateHelper.h"
 #import "Convertor.h"
+#import "JTSImageViewController.h"
 
 @interface ChatViewController (){
     bool canChat;
@@ -143,7 +144,7 @@
         self.navigationItem.rightBarButtonItem = barButtonItem;
        
         for(Conversation * conf in chat.conversations) {
-            [self loadMessage:conf.user_from displayName:conf.user_from date:conf.time message:conf.msg type:conf.type];
+            [self loadMessage:conf.user_from displayName:conf.user_from date:conf.time message:conf.msg type:conf.type url:conf.url];
         }
         
         [self setCanChat];
@@ -245,8 +246,12 @@
     }
     
     [JSQSystemSoundPlayer jsq_playMessageSentSound];
-    [self putMessage:message type:type sender:self.senderId];
-    
+    if ([type isEqualToString:@"photo"]){
+        [self putPhotoMessageType:type url:message sender:self.senderId];
+    }
+    else {
+        [self putMessage:message type:type sender:self.senderId];
+    }
     
     NSString* trimMessage = [message stringByTrimmingCharactersInSet:
                               [NSCharacterSet whitespaceCharacterSet]];
@@ -257,14 +262,14 @@
     [self._manager chat:self.senderId user_to:self.userTo msg:trimMessage msg_type:type accessToken:accessToken];
 }
 
-- (void)loadMessage:(NSString*) sender displayName:(NSString*)displayName date:(NSDate*)date message:(NSString*)message type:(NSString*)type {
+- (void)loadMessage:(NSString*) sender displayName:(NSString*)displayName date:(NSDate*)date message:(NSString*)message type:(NSString*)type url:(NSString*)url {
     if ([type isEqualToString:@"photo"]) {
         // transform avatar
        
-        NSData* data = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:message]];
+        NSData* data = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:url]];
         UIImage* image = [[UIImage alloc] initWithData:data];
 
-        JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:image andFilePath:message];
+        JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:image andFilePath:url];
         JSQMessage *photoMessage = [JSQMessage messageWithSenderId:sender
                                                            displayName:displayName
                                                                  media:photoItem];
@@ -278,7 +283,13 @@
 }
 
 - (void)putMessage:(NSString *)message type:(NSString *)type sender:(NSString *) sender {
-    [self loadMessage:sender displayName:self.senderDisplayName date:[NSDate date] message:message type:type];
+    [self loadMessage:sender displayName:self.senderDisplayName date:[NSDate date] message:message type:type url:@""];
+    [self setCanChat];
+    [self finishReceivingMessage];
+}
+
+- (void)putPhotoMessageType:(NSString *)type url:(NSString*)url sender:(NSString *) sender {
+    [self loadMessage:sender displayName:self.senderDisplayName date:[NSDate date] message:@"" type:type url:url];
     [self setCanChat];
     [self finishReceivingMessage];
 }
@@ -516,6 +527,7 @@
 
 -(void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
     JSQMessage* message = [self.messages objectAtIndex:indexPath.item];
+
     
     if (message) {
         if (message.isMediaMessage) {
@@ -523,17 +535,20 @@
             
             if ([mediaItem isMemberOfClass:[JSQPhotoMediaItem class]]) {
                 JSQPhotoMediaItem* photo = (JSQPhotoMediaItem*)mediaItem;
-                NSURL *URL = [NSURL fileURLWithPath:photo.photoURL];
-                //NSURL *URL = [[NSBundle mainBundle] URLForResource:@"logo" withExtension:@"png"];
-                if (URL) {
-                    // Initialize Document Interaction Controller
-                    _docController = [UIDocumentInteractionController interactionControllerWithURL:URL];
-                    _docController.name = @"";
-                    // Configure Document Interaction Controller
-                    [_docController setDelegate:self];
-
-                    [_docController presentPreviewAnimated:YES];
-                }
+                JTSImageInfo *imageInfo = [[JTSImageInfo alloc] init];
+                imageInfo.image = photo.image;
+                
+                imageInfo.referenceRect = self.collectionView.frame;
+                imageInfo.referenceView = self.collectionView;
+                
+                // Setup view controller
+                JTSImageViewController *imageViewer = [[JTSImageViewController alloc]
+                                                       initWithImageInfo:imageInfo
+                                                       mode:JTSImageViewControllerMode_Image
+                                                       backgroundStyle:JTSImageViewControllerBackgroundOption_None];
+                // Present the view controller.
+                
+                [imageViewer showFromViewController:self transition:JTSImageViewControllerTransition_FromOffscreen];
             }
             else if ([mediaItem isMemberOfClass:[JSQLocationMediaItem class]]) {
                 JSQLocationMediaItem* location = (JSQLocationMediaItem*)mediaItem;

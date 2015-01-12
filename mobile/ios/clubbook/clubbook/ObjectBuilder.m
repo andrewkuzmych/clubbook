@@ -490,6 +490,7 @@
         conf.user_from = [conversationJson objectForKey:@"from_who"];
         conf.msg = [conversationJson objectForKey:@"msg"];
         conf.type = [conversationJson objectForKey:@"type"];
+        conf.url = [conversationJson objectForKey:@"url"];
         
         NSString *dateStr = [conversationJson objectForKey:@"time"];
         
