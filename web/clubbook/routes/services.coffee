@@ -888,7 +888,7 @@ exports.add_favorite_club = (req, res)->
         result: result
 
 exports.remove_favorite_club = (req, res)->
-    params = 
+  params = 
     user_id: req.params.me._id.toString()
     club_id: req.params.objectId
 
