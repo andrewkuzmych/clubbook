@@ -903,6 +903,34 @@ exports.remove_favorite_club = (req, res)->
         status: 'ok'
         result: result
 
+exports.news = (req, res)->
+  params =
+    club_id: req.params.objectId
+
+  manager.news params, (err, news)->
+    if err
+      res.json
+        status: 'error'
+        error: err
+    else
+      res.json
+        status: 'ok'
+        news: news
+
+exports.news_favorite = (req, res)->
+  params =
+    user_id: req.params.objectId
+
+  manager.news_favorite params, (err, news)->
+    if err
+      res.json
+        status: 'error'
+        error: err
+    else
+      res.json
+        status: 'ok'
+        news: news
+
 exports.checkin = (req, res)->
   params =
     user_id: req.params.me._id.toString()
@@ -1078,6 +1106,7 @@ prepare_chat_messages = (chat, current_user)->
       msg: conversation.msg
       time: conversationTime
       type: conversation.type
+      url: conversation.url
       from_who: conversation.from_who
       read: conversation.read
       from_who_name: if conversation.from_who.toString() is current_user._id.toString() then current_user.name else receiver.name

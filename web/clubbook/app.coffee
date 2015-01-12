@@ -236,6 +236,8 @@ app.get '/_s/obj/clubs/yesterday', handle_access_token, services.clubs_yesterday
 app.get '/_s/obj/club/:objectId/favorite/remove', handle_access_token, services.remove_favorite_club
 app.get '/_s/obj/club/:objectId/favorite/add', handle_access_token, services.add_favorite_club
 
+#news
+app.get '/_s/obj/club/:objectId/news', handle_access_token, services.news
 
 # checkin / chekout
 app.get '/_s/obj/club/:objectId/checkin', handle_access_token, services.checkin
@@ -252,6 +254,9 @@ app.get '/_s/obj/chat/:current_user', handle_access_token, services.get_conversa
 
 app.get '/_s/obj/users/checkedin', handle_access_token, services.users_checkedin
 app.get '/_s/obj/users/around', handle_access_token, services.users_around
+
+# users news
+app.get '/_s/obj/user/:objectId/favorite/news', handle_access_token, services.news_favorite
 
 # crud users
 app.get '/_s/obj/user/location/update', handle_access_token, services.update_user_location
