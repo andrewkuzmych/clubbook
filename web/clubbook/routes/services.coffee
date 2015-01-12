@@ -1057,6 +1057,7 @@ exports.chat = (req, res)->
     msg: req.body.msg
     url: req.body.url
     msg_type: req.body.msg_type
+    last_loc: req.body.last_loc
 
   manager.get_user_by_id req.body.user_from, (err, user_from)->
     manager.chat params, (err, chat)->
@@ -1107,6 +1108,7 @@ prepare_chat_messages = (chat, current_user)->
       time: conversationTime
       type: conversation.type
       url: conversation.url
+      last_loc: conversation.last_loc
       from_who: conversation.from_who
       read: conversation.read
       from_who_name: if conversation.from_who.toString() is current_user._id.toString() then current_user.name else receiver.name

@@ -225,6 +225,9 @@ ChatSchema = new mongoose.Schema
   unread: {user: {type: mongoose.Schema.ObjectId, ref: 'User'}, count: {type: Number, 'default': 0 }}
   conversation: [
     {
+      last_loc:
+        lon: Number
+        lat: Number
       msg: { type: String },
       url: { type: String },
       time: { type: Date, 'default': Date.now, required: true},

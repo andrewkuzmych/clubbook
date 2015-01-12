@@ -248,8 +248,6 @@ exports.news_favorite = (params, callback)->
     if not user
       callback 'user does not exist', null
     else
-      club_id = []
-      news = []
       query =  [{'$match':{'venue': {'$in': user.favorite_clubs}}}]
       db_model.News.aggregate query, {}, (err, news)-> 
         if not news
@@ -524,7 +522,7 @@ exports.chat = (params, callback)->
         user1: mongoose.Types.ObjectId(params.user_from)
         user2: mongoose.Types.ObjectId(params.user_to)
 
-    chat.conversation.push {msg: params.msg, url: params.url, from_who: mongoose.Types.ObjectId(params.user_from), type: params.msg_type}
+    chat.conversation.push {msg: params.msg, url: params.url, last_loc: params.last_loc, from_who: mongoose.Types.ObjectId(params.user_from), type: params.msg_type}
 
     if chat.unread.user && chat.unread.user.toString() == params.user_to.toString()
       chat.unread.count += 1
