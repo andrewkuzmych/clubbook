@@ -250,36 +250,13 @@ exports.news_favorite = (params, callback)->
     else
       club_id = []
       news = []
-      query =  [{'venue': {'$in': user.favorite_clubs}}]
-      db_model.News.aggregate query, {}, (err, favorite_club)-> 
-        if not favorite_club
-          callback 'favorite club does not exist', null
+      query =  [{'$match':{'venue': {'$in': user.favorite_clubs}}}]
+      db_model.News.aggregate query, {}, (err, news)-> 
+        if not news
+          callback 'news does not exist', null
         else
-          console.log 11111222222
-          console.log favorite_club
-      ###query =  [{'$match': {_id : mongoose.Types.ObjectId(params.user_id)}}, {'$unwind': '$favorite_clubs'}]
-      db_model.User.aggregate query, {}, (err, favorite_club)-> 
-        if not favorite_club
-          callback 'favorite club does not exist', null
-        else
-          for club in favorite_club
-            db_model.News.find({'venue': club.favorite_clubs}).exec (err, result)-> 
-              if not result
-               callback 'missing news for this club', null
-              else
-                console.log 111111111111111111
-                
-                news.push result
-            console.log news
-            #club_id.push club.favorite_clubs
           callback err, news
-###
-
-  ###db_model.User.find({'venue': params.club_id}).exec (err, news)-> 
-    if not news
-      callback 'missing news for this club', null
-    else
-      callback err, news###
+      
 
 exports.checkin = (params, callback)->
   console.log "METHOD - Manager checkin"
