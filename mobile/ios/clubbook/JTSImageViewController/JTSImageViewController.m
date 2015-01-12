@@ -1255,10 +1255,22 @@ typedef struct {
     UIViewController *presentingViewController = viewController.view.window.rootViewController;
     while (presentingViewController.presentedViewController)
         presentingViewController = presentingViewController.presentedViewController;
-    UIView *snapshot = [presentingViewController.view snapshotViewAfterScreenUpdates:YES];
+    //UIView *snapshot = [presentingViewController.view snapshotViewAfterScreenUpdates:YES];
+    
+    UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
+    CGRect rect = [keyWindow bounds];
+    UIGraphicsBeginImageContextWithOptions(rect.size,YES,0.0f);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    [keyWindow.layer renderInContext:context];
+    UIImage *capturedScreen = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    UIImageView* imageView = [[UIImageView alloc] initWithFrame:presentingViewController.view.frame];
+    [imageView setImage:capturedScreen];
+    
     //UIView *snapshot = [[UIView alloc] initWithFrame:self.view.frame];
-    snapshot.clipsToBounds = NO;
-    return snapshot;
+    //snapshot.clipsToBounds = NO;
+    return imageView;
 }
 
 - (UIView *)blurredSnapshotFromParentmostViewController:(UIViewController *)viewController {
