@@ -460,9 +460,6 @@
                         </connections>
                     </collectionView>
                     <tabBarItem key="tabBarItem" title="Item" id="edL-wc-xYJ"/>
-                    <connections>
-                        <segue destination="trv-G4-eQD" kind="show" identifier="onPhoto" id="afO-3j-u22"/>
-                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xsx-6q-2Fh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1097,59 +1094,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZxE-q9-k5Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="824" y="-1532"/>
-        </scene>
-        <!--Photo Slide View Controller-->
-        <scene sceneID="mYH-Cw-W8Y">
-            <objects>
-                <viewController storyboardIdentifier="image" id="trv-G4-eQD" customClass="PhotoSlideViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Y49-Q5-VSR"/>
-                        <viewControllerLayoutGuide type="bottom" id="om3-Vg-aDd"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="Hrx-Fn-tUT">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="tYO-Qr-oz4">
-                                <rect key="frame" x="0.0" y="474" width="320" height="37"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="37" id="kdV-s6-GXo"/>
-                                </constraints>
-                            </pageControl>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" pagingEnabled="YES" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CIF-7X-ecY">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="453"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                            </scrollView>
-                        </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="CIF-7X-ecY" firstAttribute="leading" secondItem="Hrx-Fn-tUT" secondAttribute="leading" id="KKP-h7-R0k"/>
-                            <constraint firstItem="om3-Vg-aDd" firstAttribute="top" secondItem="tYO-Qr-oz4" secondAttribute="bottom" constant="8" id="NpR-9i-hLy"/>
-                            <constraint firstItem="tYO-Qr-oz4" firstAttribute="leading" secondItem="Hrx-Fn-tUT" secondAttribute="leading" id="PSU-6T-jrJ"/>
-                            <constraint firstAttribute="trailing" secondItem="tYO-Qr-oz4" secondAttribute="trailing" id="Q1V-ib-hxG"/>
-                            <constraint firstItem="CIF-7X-ecY" firstAttribute="top" secondItem="Hrx-Fn-tUT" secondAttribute="top" id="V0w-mX-MWU"/>
-                            <constraint firstItem="om3-Vg-aDd" firstAttribute="top" secondItem="tYO-Qr-oz4" secondAttribute="bottom" id="Yim-G8-IJ4"/>
-                            <constraint firstAttribute="trailing" secondItem="CIF-7X-ecY" secondAttribute="trailing" id="b6C-Wk-DZM"/>
-                            <constraint firstItem="CIF-7X-ecY" firstAttribute="top" secondItem="Hrx-Fn-tUT" secondAttribute="topMargin" id="vlF-mp-0En"/>
-                            <constraint firstItem="om3-Vg-aDd" firstAttribute="top" secondItem="CIF-7X-ecY" secondAttribute="bottom" constant="66" id="zOw-Zd-wap"/>
-                        </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="V0w-mX-MWU"/>
-                                <exclude reference="Yim-G8-IJ4"/>
-                            </mask>
-                        </variation>
-                    </view>
-                    <navigationItem key="navigationItem" id="46w-S7-gFM"/>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
-                    <connections>
-                        <outlet property="imagePageControl" destination="tYO-Qr-oz4" id="3Os-sP-tuJ"/>
-                        <outlet property="imageScrollView" destination="CIF-7X-ecY" id="lDB-j2-23f"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="uqT-YO-Xj2" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-423" y="592"/>
         </scene>
     </scenes>
     <resources>

@@ -10,8 +10,10 @@
 
 #import "BaseViewController.h"
 #import "Place.h"
+#import "EBPhotoPagesDelegate.h"
+#import "EBPhotoPagesDataSource.h"
 
-@interface ClubPhotGalleryCollectionViewController : BaseViewController<UICollectionViewDelegate, UICollectionViewDataSource>
+@interface ClubPhotGalleryCollectionViewController : BaseViewController<UICollectionViewDelegate, UICollectionViewDataSource, EBPhotoPagesDelegate, EBPhotoPagesDataSource>
 
 @property (strong, nonatomic) NSMutableArray* photoArray;
 @property (strong, nonatomic) Place* place;
