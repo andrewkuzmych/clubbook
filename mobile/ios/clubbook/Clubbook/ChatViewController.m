@@ -88,6 +88,7 @@
     NSString *type = [messageJson valueForKey:@"type"];
     NSString *user_from = [dataJson valueForKey:@"user_from"];
     NSString *user_to = [dataJson valueForKey:@"user_to"];
+    NSString *url = [messageJson valueForKey:@"url"];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
@@ -95,7 +96,7 @@
     if ([user_to isEqualToString:self.senderId] && [user_from isEqualToString:self.userTo]) {
         canChat = YES;
         [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
-        [self putMessage:msg type:type sender:user_from];
+        [self putMessage:msg type:type url:url sender:user_from];
         [self._manager readChat:_chat.currentUser.id toUser:_chat.receiver.id accessToken:accessToken];
     }
 }
@@ -234,7 +235,7 @@
 
 #pragma mark - Actions
 
-- (void)sendMessage:(NSString *)message type:(NSString *)type
+- (void)sendMessage:(NSString *)message url:(NSString*)url type:(NSString *)type
 {
     if (!canChat) {
         [CSNotificationView showInViewController:self
@@ -245,21 +246,15 @@
         return;
     }
     
-    [JSQSystemSoundPlayer jsq_playMessageSentSound];
-    if ([type isEqualToString:@"photo"]){
-        [self putPhotoMessageType:type url:message sender:self.senderId];
-    }
-    else {
-        [self putMessage:message type:type sender:self.senderId];
-    }
-    
-    NSString* trimMessage = [message stringByTrimmingCharactersInSet:
-                              [NSCharacterSet whitespaceCharacterSet]];
-    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
+    
+    [JSQSystemSoundPlayer jsq_playMessageSentSound];
+    [self putMessage:message type:type url:url sender:self.senderId];
+    NSString* trimMessage = [message stringByTrimmingCharactersInSet:
+                               [NSCharacterSet whitespaceCharacterSet]];
     // send to server
-    [self._manager chat:self.senderId user_to:self.userTo msg:trimMessage msg_type:type accessToken:accessToken];
+    [self._manager chat:self.senderId user_to:self.userTo msg:trimMessage msg_type:type url:url accessToken:accessToken];
 }
 
 - (void)loadMessage:(NSString*) sender displayName:(NSString*)displayName date:(NSDate*)date message:(NSString*)message type:(NSString*)type url:(NSString*)url {
@@ -270,9 +265,17 @@
         UIImage* image = [[UIImage alloc] initWithData:data];
 
         JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:image andFilePath:url];
+        if([sender isEqualToString:self.senderId]) {
+            [photoItem setAppliesMediaViewMaskAsOutgoing:YES];
+        }
+        else {
+            [photoItem setAppliesMediaViewMaskAsOutgoing:NO];
+        }
         JSQMessage *photoMessage = [JSQMessage messageWithSenderId:sender
-                                                           displayName:displayName
-                                                                 media:photoItem];
+                                                       displayName:displayName
+                                                             media:photoItem];
+       
+        
         [self.messages addObject:photoMessage];
         [self.collectionView reloadData];
     }
@@ -282,14 +285,8 @@
     }
 }
 
-- (void)putMessage:(NSString *)message type:(NSString *)type sender:(NSString *) sender {
-    [self loadMessage:sender displayName:self.senderDisplayName date:[NSDate date] message:message type:type url:@""];
-    [self setCanChat];
-    [self finishReceivingMessage];
-}
-
-- (void)putPhotoMessageType:(NSString *)type url:(NSString*)url sender:(NSString *) sender {
-    [self loadMessage:sender displayName:self.senderDisplayName date:[NSDate date] message:@"" type:type url:url];
+- (void)putMessage:(NSString *)message type:(NSString *)type url:(NSString*)url sender:(NSString *) sender {
+    [self loadMessage:sender displayName:self.senderDisplayName date:[NSDate date] message:message type:type url:url];
     [self setCanChat];
     [self finishReceivingMessage];
 }
@@ -309,15 +306,16 @@
      *  2. Add new id<JSQMessageData> object to your data source
      *  3. Call `finishSendingMessage`
      */
+
+    [self sendMessage:text url:@"" type:@"message"];
     [self finishSendingMessage];
-    [self sendMessage:text type:@"message"];
-    
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
-    
 }
+
+
 
 #pragma mark - JSQMessages CollectionView DataSource
 
@@ -339,11 +337,11 @@
     
     JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
     
-    if ([message.senderId isEqualToString:self.senderId]) {
-        return self.userBubble;
+    if([message.senderId isEqualToString:self.userTo]) {
+        return self.companionBubble;
     }
     
-    return self.companionBubble;
+    return self.userBubble;
 }
 
 - (id<JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath;
@@ -666,7 +664,7 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *userName = [defaults objectForKey:@"userName"];
     
-    [self sendMessage:[NSString stringWithFormat:@"%@ %@", userName, NSLocalizedString(@"send_like", nil)] type:@"smile"];
+    [self sendMessage:[NSString stringWithFormat:@"%@ %@", userName, NSLocalizedString(@"send_like", nil)] url:@"" type:@"smile"];
 }
 
 //delegate methode will be called after picking photo either from camera or library
@@ -675,6 +673,7 @@
     UIImage *tempImage = [info objectForKey:UIImagePickerControllerOriginalImage];
     UIImage *image = [tempImage fixOrientation];
     
+    /* save to device photo part
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
                                                          NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -690,8 +689,10 @@
     // Get PNG data from following method
     NSData *myData = UIImageJPEGRepresentation(image, 0);
     // It is better to get JPEG data because jpeg data will store the location and other related information of image.
-    [myData writeToFile:filePath atomically:YES];
+    [myData writeToFile:filePath atomically:YES];*/
     
+    // Get PNG data from following method
+    NSData *myData = UIImageJPEGRepresentation(image, 0);
     // upload image to coudinary
     CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
     CLUploader* uploader = [[CLUploader alloc] init:cloudinary delegate:self];
@@ -700,7 +701,9 @@
         if (successResult) {
 
             NSString *photoResult = [successResult objectForKey:@"url"];
-            [self sendMessage:photoResult type:@"photo"];
+            [self sendMessage:@"" url:photoResult type:@"photo"];
+            [self.collectionView reloadData];
+            [self scrollToBottomAnimated:YES];
         } 
     } andProgress:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite, id context) {
         NSLog(@"Block upload progress: %ld/%ld (+%ld)", (long)totalBytesWritten, (long)totalBytesExpectedToWrite, (long)bytesWritten);
