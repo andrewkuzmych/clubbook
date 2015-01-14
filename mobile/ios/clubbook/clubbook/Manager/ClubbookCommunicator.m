@@ -342,18 +342,19 @@
     });
 }
 
-- (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type accessToken:(NSString *) accessToken
+- (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type url:(NSString*) url accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         NSString *urlAsString = [NSString stringWithFormat:@"%@obj/chat?access_token=%@", baseURL, accessToken];
-        NSDictionary * data  =
+        NSDictionary * data =
         [NSDictionary
          dictionaryWithObjectsAndKeys:
          msg_type, @"msg_type",
          msg, @"msg",
          user_from, @"user_from",
          user_to, @"user_to",
+         url, @"url",
          nil];
         
         NSMutableURLRequest *request;
