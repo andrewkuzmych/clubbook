@@ -41,7 +41,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-    return 2;//[newsArray count];    //count number of row from counting array hear cataGorry is An Array
+    return 0;
 }
 
 
@@ -49,26 +49,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == 0) {
-        static NSString *MyIdentifier = @"NewsSingleImageCell";
-        NewsFeedSingleImageCell *cell = [tableView dequeueReusableCellWithIdentifier:MyIdentifier forIndexPath:indexPath];
-        [cell.avatarImageView setImage:[UIImage imageNamed:@"avatar_default"]];
-        [cell.messageTextView setText:@"Hello! Check out new logo!"];
-        [cell.nameLabel setText:@"CLUBBOOK"];
-        [cell.dateLabel setText:@"12.12.2014"];
-        [cell.photoView setImage:[UIImage imageNamed:@"menu_background"]];
-        return cell;
-    }
-    else {
-        static NSString *MyIdentifier = @"NewsNoImageCell";
-        NewsFeedCell *cell = [tableView dequeueReusableCellWithIdentifier:MyIdentifier forIndexPath:indexPath];
-        [cell.avatarImageView setImage:[UIImage imageNamed:@"avatar_default"]];
-        [cell.messageTextView setText:@"Hello! Happy new 2015 year"];
-        [cell.nameLabel setText:@"CLUBBOOK"];
-        [cell.dateLabel setText:@"01.01.2015"];
-        return cell;
-    }
- 
+    return [[UITableViewCell alloc] init];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
