@@ -196,23 +196,21 @@ app.post '/reset_pass', controller.reset_pass_action
 app.post '/cloudinary_upload', controller.cloudinary_upload
 
 app.get '/home', require_role("user"), local_user, controller.home
-app.get '/venue/:venue_id/clubs', require_role("user"), local_user, validate_venue, controller.clubs
-app.get '/venue/:venue_id/users', require_role("user"), local_user, validate_venue, controller.users
-app.get '/venue/:venue_id/club_create', require_role("user"), local_user, validate_venue, controller.club_create
-app.post '/venue/:venue_id/club_create', require_role("user"), local_user, validate_venue, controller.club_create_action
-app.get '/venue/:venue_id/club_edit/:id', require_role("user"), local_user, validate_venue, controller.club_edit
-app.post '/venue/:venue_id/club_edit/:id', require_role("user"), local_user, validate_venue, controller.club_edit_action
-app.get '/venue/:venue_id/club_delete/:id', require_role("user"), local_user, validate_venue, controller.club_delete_action
-app.get '/venue/:venue_id/club_news/:id', require_role("user"), local_user, validate_venue, controller.club_news
+app.get '/venue/clubs', require_role("user"), local_user, controller.clubs
+app.get '/venue/users', require_role("user"), local_user, controller.users
+app.get '/venue/club_create', require_role("user"), local_user, controller.club_create
+app.post '/venue/club_create', require_role("user"), local_user, controller.club_create_action
+app.get '/venue/club_edit/:id', require_role("user"), local_user, controller.club_edit
+app.post '/venue/club_edit/:id', require_role("user"), local_user, controller.club_edit_action
+app.get '/venue/club_delete/:id', require_role("user"), local_user, controller.club_delete_action
+app.get '/venue/club_news/:id', require_role("user"), local_user, controller.club_news
 
-app.get '/venue/:venue_id/club_news_create/:id', require_role("user"), local_user, validate_venue, controller.club_news_create
-app.post '/venue/:venue_id/club_news_create/:id', require_role("user"), local_user, validate_venue, controller.club_news_create_action
-app.get '/venue/:venue_id/news', require_role("user"), local_user, validate_venue, controller.news
-app.get '/venue/:venue_id/news_create', require_role("user"), local_user, validate_venue, controller.news_create
-app.post '/venue/:venue_id/news_create', require_role("user"), local_user, validate_venue, controller.news_create_action
-app.get '/venue/:venue_id/news_edit/:id', require_role("user"), local_user, validate_venue, controller.news_edit
-app.post '/venue/:venue_id/news_edit/:id', require_role("user"), local_user, validate_venue, controller.news_edit_action
-app.get '/venue/:venue_id/news_delete/:id', require_role("user"), local_user, validate_venue, controller.news_delete_action
+app.get '/venue/club_news_create/:id', require_role("user"), local_user, controller.club_news_create
+app.post '/venue/club_news_create/:id', require_role("user"), local_user, controller.club_news_create_action
+#app.get '/venue/news', require_role("user"), local_user, controller.news
+app.get '/venue/news_edit/:id/:club_id', require_role("user"), local_user, controller.news_edit
+app.post '/venue/news_edit/:id/:club_id', require_role("user"), local_user, controller.news_edit_action
+app.get '/venue/news_delete/:id/:club_id', require_role("user"), local_user, controller.news_delete_action
 
 #--------------------------------------------------------------------------------
 # Mobile API
