@@ -50,7 +50,10 @@ block content
                     i.fa.fa-edit
                       &nbsp;
                       | delete
-
+                a.btn.default.blue(href='/venue/#{current_venue._id}/club_news/#{club._id}', style="margin:3px")
+                    i.fa.fa-book
+                      &nbsp;
+                      | news
 
       div
         a.btn.btn-primary(href="/venue/#{current_venue._id}/club_create") Add Club
