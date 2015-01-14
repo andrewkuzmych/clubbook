@@ -207,7 +207,6 @@ app.get '/venue/club_news/:id', require_role("user"), local_user, controller.clu
 
 app.get '/venue/club_news_create/:id', require_role("user"), local_user, controller.club_news_create
 app.post '/venue/club_news_create/:id', require_role("user"), local_user, controller.club_news_create_action
-#app.get '/venue/news', require_role("user"), local_user, controller.news
 app.get '/venue/news_edit/:id/:club_id', require_role("user"), local_user, controller.news_edit
 app.post '/venue/news_edit/:id/:club_id', require_role("user"), local_user, controller.news_edit_action
 app.get '/venue/news_delete/:id/:club_id', require_role("user"), local_user, controller.news_delete_action
