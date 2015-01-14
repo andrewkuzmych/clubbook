@@ -175,6 +175,15 @@ exports.club_create_action = (req, res)->
         console.log err
         res.redirect "/venue/#{req.params.venue_id}/clubs" 
  
+exports.club_news = (req, res)->
+  create_base_model req, res, (model)->
+    db_model.News.find({'venue': req.params.id}).exec (err, news)-> 
+      if not news
+        console.log  'missing news for this club'
+      else
+        model._id = req.params.id
+        model.news = news
+        res.render "pages/club_news", model
 
 exports.club_edit = (req, res)->
   create_base_model req, res, (model)->
@@ -252,6 +261,27 @@ exports.news = (req, res)->
         model.news = news_new
 
         res.render "pages/news", model
+
+exports.club_news_create = (req, res)->
+  create_base_model req, res, (model)->
+    model.cloudinary = cloudinary
+    model.news = {}
+    res.render "pages/news_update", model
+
+exports.club_news_create_action = (req, res)->
+  validate_news_model req, null, (validation)->
+    if validation.has_error
+      res.redirect "/venue/#{req.params.venue_id}/news_create?error=1"
+    else
+      news = new db_model.News
+        venue: mongoose.Types.ObjectId(req.params.id)
+        title: req.body.title
+        description: req.body.description
+      if req.body.news_image
+        news.image = req.body.news_image
+      news.save (err)->
+        console.log 'SAVE'
+        res.redirect "/venue/#{req.params.venue_id}/news"
 
 exports.news_create = (req, res)->
   create_base_model req, res, (model)->

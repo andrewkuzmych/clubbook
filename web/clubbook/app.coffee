@@ -203,7 +203,10 @@ app.post '/venue/:venue_id/club_create', require_role("user"), local_user, valid
 app.get '/venue/:venue_id/club_edit/:id', require_role("user"), local_user, validate_venue, controller.club_edit
 app.post '/venue/:venue_id/club_edit/:id', require_role("user"), local_user, validate_venue, controller.club_edit_action
 app.get '/venue/:venue_id/club_delete/:id', require_role("user"), local_user, validate_venue, controller.club_delete_action
+app.get '/venue/:venue_id/club_news/:id', require_role("user"), local_user, validate_venue, controller.club_news
 
+app.get '/venue/:venue_id/club_news_create/:id', require_role("user"), local_user, validate_venue, controller.club_news_create
+app.post '/venue/:venue_id/club_news_create/:id', require_role("user"), local_user, validate_venue, controller.club_news_create_action
 app.get '/venue/:venue_id/news', require_role("user"), local_user, validate_venue, controller.news
 app.get '/venue/:venue_id/news_create', require_role("user"), local_user, validate_venue, controller.news_create
 app.post '/venue/:venue_id/news_create', require_role("user"), local_user, validate_venue, controller.news_create_action
