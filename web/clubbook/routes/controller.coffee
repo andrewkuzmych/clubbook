@@ -170,7 +170,7 @@ exports.club_create_action = (req, res)->
         
       if req.body.club_logo
         venue.club_logo = req.body.club_logo
-
+      console.log venue
       venue.save (err)->
         console.log 1111111111
         console.log err
