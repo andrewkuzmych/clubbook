@@ -9,6 +9,7 @@
 #import "JSQMessagesViewController.h"
 #import "BaseMessagesViewController.h"
 #import "CLUploader.h"
+#import "EBPhotoPagesController.h"
 
 #import "JSQMessages.h"
 
@@ -22,7 +23,7 @@
 @end
 
 
-@interface ChatViewController : BaseMessagesViewController<PNDelegate, UIDocumentInteractionControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate, CLUploaderDelegate, UITextFieldDelegate>
+@interface ChatViewController : BaseMessagesViewController<PNDelegate, UIDocumentInteractionControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate, CLUploaderDelegate, UITextFieldDelegate, EBPhotoPagesDelegate, EBPhotoPagesDataSource>
 
 @property (assign, nonatomic) BOOL isFromUser;
 

@@ -17,7 +17,7 @@
 #import "UIImage+FixOrientation.h"
 #import "DateHelper.h"
 #import "Convertor.h"
-#import "JTSImageViewController.h"
+
 
 @interface ChatViewController (){
     bool canChat;
@@ -29,6 +29,7 @@
 @implementation ChatViewController
 {
     UIImagePickerController* picker;
+    UIImage* chatShowImage;
 }
 #pragma mark - Demo setup
 
@@ -533,20 +534,12 @@
             
             if ([mediaItem isMemberOfClass:[JSQPhotoMediaItem class]]) {
                 JSQPhotoMediaItem* photo = (JSQPhotoMediaItem*)mediaItem;
-                JTSImageInfo *imageInfo = [[JTSImageInfo alloc] init];
-                imageInfo.image = photo.image;
+                chatShowImage = photo.image;
                 
-                imageInfo.referenceRect = self.collectionView.frame;
-                imageInfo.referenceView = self.collectionView;
+                EBPhotoPagesController *photoPagesController = [[EBPhotoPagesController alloc]
+                                                                initWithDataSource:self delegate:self];
                 
-                // Setup view controller
-                JTSImageViewController *imageViewer = [[JTSImageViewController alloc]
-                                                       initWithImageInfo:imageInfo
-                                                       mode:JTSImageViewControllerMode_Image
-                                                       backgroundStyle:JTSImageViewControllerBackgroundOption_None];
-                // Present the view controller.
-                
-                [imageViewer showFromViewController:self transition:JTSImageViewControllerTransition_FromOffscreen];
+                [self presentViewController:photoPagesController animated:YES completion:nil];
             }
             else if ([mediaItem isMemberOfClass:[JSQLocationMediaItem class]]) {
                 JSQLocationMediaItem* location = (JSQLocationMediaItem*)mediaItem;
@@ -727,4 +720,37 @@
 - (void) canRotate {
     
 }
+
+#pragma mark - Image Datasource methods
+- (UIImage *)photoPagesController:(EBPhotoPagesController *)controller
+                     imageAtIndex:(NSInteger)index {
+    return chatShowImage;
+}
+
+- (void)photoPagesController:(EBPhotoPagesController *)controller
+                imageAtIndex:(NSInteger)index
+           completionHandler:(void(^)(UIImage *image))handler {
+    
+}
+
+- (BOOL)photoPagesController:(EBPhotoPagesController *)photoPagesController
+    shouldExpectPhotoAtIndex:(NSInteger)index {
+    if (index == 0) {
+        return YES;
+    }
+    return NO;
+}
+
+-(BOOL)photoPagesController:(EBPhotoPagesController *)photoPagesController shouldAllowCommentingForPhotoAtIndex:(NSInteger)index {
+    return NO;
+}
+
+-(BOOL)photoPagesController:(EBPhotoPagesController *)photoPagesController shouldAllowReportForPhotoAtIndex:(NSInteger)index {
+    return NO;
+}
+
+-(BOOL)photoPagesController:(EBPhotoPagesController *)photoPagesController shouldAllowMiscActionsForPhotoAtIndex:(NSInteger)index {
+    return NO;
+}
+
 @end

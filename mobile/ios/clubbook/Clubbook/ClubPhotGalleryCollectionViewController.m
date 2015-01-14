@@ -78,7 +78,7 @@ static NSString * const reuseIdentifier = @"PhotoCell";
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     selectedItem = indexPath.item;
     EBPhotoPagesController *photoPagesController = [[EBPhotoPagesController alloc]
-                                                    initWithDataSource:self delegate:self];
+                                                    initWithDataSource:self delegate:self photoAtIndex:selectedItem];
     
     [self presentViewController:photoPagesController animated:YES completion:nil];
 }
@@ -112,5 +112,15 @@ static NSString * const reuseIdentifier = @"PhotoCell";
     return NO;
 }
 
+-(BOOL)photoPagesController:(EBPhotoPagesController *)photoPagesController shouldAllowCommentingForPhotoAtIndex:(NSInteger)index {
+    return NO;
+}
 
+-(BOOL)photoPagesController:(EBPhotoPagesController *)photoPagesController shouldAllowReportForPhotoAtIndex:(NSInteger)index {
+    return NO;
+}
+
+-(BOOL)photoPagesController:(EBPhotoPagesController *)photoPagesController shouldAllowMiscActionsForPhotoAtIndex:(NSInteger)index {
+    return NO;
+}
 @end

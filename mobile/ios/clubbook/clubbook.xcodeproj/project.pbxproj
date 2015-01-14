@@ -381,12 +381,6 @@
 		521BEC3F1A52F576003E7A27 /* gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 521BEC3C1A52F576003E7A27 /* gradient.png */; };
 		521BEC401A52F576003E7A27 /* gradient@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 521BEC3D1A52F576003E7A27 /* gradient@2x.png */; };
 		521BEC411A52F576003E7A27 /* gradient@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 521BEC3E1A52F576003E7A27 /* gradient@3x.png */; };
-		52240C691A640AE000A06324 /* JTSAnimatedGIFUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 52240C5E1A640AE000A06324 /* JTSAnimatedGIFUtility.m */; };
-		52240C6A1A640AE000A06324 /* JTSImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 52240C601A640AE000A06324 /* JTSImageInfo.m */; };
-		52240C6B1A640AE000A06324 /* JTSImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52240C621A640AE000A06324 /* JTSImageViewController.m */; };
-		52240C6C1A640AE000A06324 /* JTSSimpleImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 52240C641A640AE000A06324 /* JTSSimpleImageDownloader.m */; };
-		52240C6D1A640AE000A06324 /* UIApplication+JTSImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52240C661A640AE000A06324 /* UIApplication+JTSImageViewController.m */; };
-		52240C6E1A640AE000A06324 /* UIImage+JTSImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 52240C681A640AE000A06324 /* UIImage+JTSImageEffects.m */; };
 		522ACCDF1A32084F006789EB /* SPSlideTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDC1A32084F006789EB /* SPSlideTabBar.m */; };
 		522ACCE01A32084F006789EB /* SPSlideTabButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDE1A32084F006789EB /* SPSlideTabButton.m */; };
 		522F75F31A6524680095991F /* EBCaptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 522F75D11A6524680095991F /* EBCaptionView.m */; };
@@ -1125,18 +1119,6 @@
 		521BEC3C1A52F576003E7A27 /* gradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gradient.png; sourceTree = "<group>"; };
 		521BEC3D1A52F576003E7A27 /* gradient@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gradient@2x.png"; sourceTree = "<group>"; };
 		521BEC3E1A52F576003E7A27 /* gradient@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gradient@3x.png"; sourceTree = "<group>"; };
-		52240C5D1A640AE000A06324 /* JTSAnimatedGIFUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTSAnimatedGIFUtility.h; sourceTree = "<group>"; };
-		52240C5E1A640AE000A06324 /* JTSAnimatedGIFUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTSAnimatedGIFUtility.m; sourceTree = "<group>"; };
-		52240C5F1A640AE000A06324 /* JTSImageInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTSImageInfo.h; sourceTree = "<group>"; };
-		52240C601A640AE000A06324 /* JTSImageInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTSImageInfo.m; sourceTree = "<group>"; };
-		52240C611A640AE000A06324 /* JTSImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTSImageViewController.h; sourceTree = "<group>"; };
-		52240C621A640AE000A06324 /* JTSImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTSImageViewController.m; sourceTree = "<group>"; };
-		52240C631A640AE000A06324 /* JTSSimpleImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTSSimpleImageDownloader.h; sourceTree = "<group>"; };
-		52240C641A640AE000A06324 /* JTSSimpleImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTSSimpleImageDownloader.m; sourceTree = "<group>"; };
-		52240C651A640AE000A06324 /* UIApplication+JTSImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+JTSImageViewController.h"; sourceTree = "<group>"; };
-		52240C661A640AE000A06324 /* UIApplication+JTSImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+JTSImageViewController.m"; sourceTree = "<group>"; };
-		52240C671A640AE000A06324 /* UIImage+JTSImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+JTSImageEffects.h"; sourceTree = "<group>"; };
-		52240C681A640AE000A06324 /* UIImage+JTSImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+JTSImageEffects.m"; sourceTree = "<group>"; };
 		522ACCDB1A32084F006789EB /* SPSlideTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPSlideTabBar.h; path = SPSlideTabBar/SPSlideTabBar.h; sourceTree = "<group>"; };
 		522ACCDC1A32084F006789EB /* SPSlideTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPSlideTabBar.m; path = SPSlideTabBar/SPSlideTabBar.m; sourceTree = "<group>"; };
 		522ACCDD1A32084F006789EB /* SPSlideTabButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPSlideTabButton.h; path = SPSlideTabBar/SPSlideTabButton.h; sourceTree = "<group>"; };
@@ -1967,7 +1949,6 @@
 			isa = PBXGroup;
 			children = (
 				522F75CF1A6524680095991F /* EBPhotoPagesController */,
-				52240C5C1A640AE000A06324 /* JTSImageViewController */,
 				520897821A407C7F00E8DD06 /* JSQSystemSoundPlayer */,
 				520896EA1A407C6700E8DD06 /* JSQMessagesViewController */,
 				52C5FC911A3F439C000147E8 /* KIImagePager */,
@@ -2173,25 +2154,6 @@
 				523559C81A5EB48A00C1ED72 /* NewsFeedCell.m */,
 			);
 			name = NewsFeed;
-			sourceTree = "<group>";
-		};
-		52240C5C1A640AE000A06324 /* JTSImageViewController */ = {
-			isa = PBXGroup;
-			children = (
-				52240C5D1A640AE000A06324 /* JTSAnimatedGIFUtility.h */,
-				52240C5E1A640AE000A06324 /* JTSAnimatedGIFUtility.m */,
-				52240C5F1A640AE000A06324 /* JTSImageInfo.h */,
-				52240C601A640AE000A06324 /* JTSImageInfo.m */,
-				52240C611A640AE000A06324 /* JTSImageViewController.h */,
-				52240C621A640AE000A06324 /* JTSImageViewController.m */,
-				52240C631A640AE000A06324 /* JTSSimpleImageDownloader.h */,
-				52240C641A640AE000A06324 /* JTSSimpleImageDownloader.m */,
-				52240C651A640AE000A06324 /* UIApplication+JTSImageViewController.h */,
-				52240C661A640AE000A06324 /* UIApplication+JTSImageViewController.m */,
-				52240C671A640AE000A06324 /* UIImage+JTSImageEffects.h */,
-				52240C681A640AE000A06324 /* UIImage+JTSImageEffects.m */,
-			);
-			path = JTSImageViewController;
 			sourceTree = "<group>";
 		};
 		522ACCE11A320852006789EB /* SPSlideTabBar */ = {
@@ -2819,7 +2781,6 @@
 				520F38AF1A5E952000FB1E65 /* NewsFeedSingleImageCell.m in Sources */,
 				520897661A407C6700E8DD06 /* JSQMessagesToolbarButtonFactory.m in Sources */,
 				498A1BAE196BD90F00824E64 /* BaseMessagesViewController.m in Sources */,
-				52240C6C1A640AE000A06324 /* JTSSimpleImageDownloader.m in Sources */,
 				4934F76419D047B800BFFDB1 /* UIImage+WebP.m in Sources */,
 				49ABA135198F9B6900B060D0 /* SettingsViewController.m in Sources */,
 				49F2C675199C9A29006A3E21 /* Config.m in Sources */,
@@ -2880,7 +2841,6 @@
 				498A68FD196C4CFD00BC2859 /* PNClientStateRequest.m in Sources */,
 				52C5FC981A3F439C000147E8 /* KIImagePager.m in Sources */,
 				498975B119ED2BA70067A5E4 /* ClubUsersYesterdayViewController.m in Sources */,
-				52240C6D1A640AE000A06324 /* UIApplication+JTSImageViewController.m in Sources */,
 				4934F75E19D047B800BFFDB1 /* SDWebImageDownloaderOperation.m in Sources */,
 				49ABA13B198FEE7700B060D0 /* WebViewController.m in Sources */,
 				498A68DC196C4CFD00BC2859 /* PNResponseParser.m in Sources */,
@@ -2955,7 +2915,6 @@
 				4934F75D19D047B800BFFDB1 /* SDWebImageDownloader.m in Sources */,
 				520897801A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.m in Sources */,
 				4994848819FB7DBD00E906C0 /* FastCheckinViewController.m in Sources */,
-				52240C6A1A640AE000A06324 /* JTSImageInfo.m in Sources */,
 				498A68E8196C4CFD00BC2859 /* PNHereNow.m in Sources */,
 				4999299D19E92FE900B77A6E /* TransitionFromClubUsersToUser.m in Sources */,
 				49E831DF1958715200D4A26C /* ClubCell.m in Sources */,
@@ -2967,7 +2926,6 @@
 				4993F2131979194900A225BE /* MRProgressOverlayView.m in Sources */,
 				4934F76619D047B800BFFDB1 /* UIImageView+WebCache.m in Sources */,
 				498A68F8196C4CFD00BC2859 /* PNHelper.m in Sources */,
-				52240C691A640AE000A06324 /* JTSAnimatedGIFUtility.m in Sources */,
 				498A6902196C4CFD00BC2859 /* PNLeaveRequest.m in Sources */,
 				5208975B1A407C6700E8DD06 /* UIColor+JSQMessages.m in Sources */,
 				520897761A407C6700E8DD06 /* JSQMessagesCollectionViewCellOutgoing.m in Sources */,
@@ -3029,7 +2987,6 @@
 				5208975F1A407C6700E8DD06 /* JSQMessagesKeyboardController.m in Sources */,
 				498A68D7196C4CFD00BC2859 /* PNErrorResponseParser.m in Sources */,
 				4993F2101979194900A225BE /* MRCircularProgressView.m in Sources */,
-				52240C6B1A640AE000A06324 /* JTSImageViewController.m in Sources */,
 				4996E0C519669ED0000C721F /* CbButton.m in Sources */,
 				522F75FA1A6524680095991F /* EBPhotoPagesState.m in Sources */,
 				49E831E2195877C200D4A26C /* Place.m in Sources */,
@@ -3037,7 +2994,6 @@
 				52188DAE1A51876E0020DD6F /* MainMenuCollectionViewCell.m in Sources */,
 				498A68EA196C4CFD00BC2859 /* PNMessage.m in Sources */,
 				5208976C1A407C6700E8DD06 /* JSQMessage.m in Sources */,
-				52240C6E1A640AE000A06324 /* UIImage+JTSImageEffects.m in Sources */,
 				498A68DE196C4CFD00BC2859 /* PNWhereNowResponseParser.m in Sources */,
 				498A1BAB196BD36900824E64 /* Chat.m in Sources */,
 				498A6900196C4CFD00BC2859 /* PNHereNowRequest.m in Sources */,
