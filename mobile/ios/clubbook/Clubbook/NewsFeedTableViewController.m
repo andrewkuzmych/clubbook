@@ -7,8 +7,6 @@
 //
 
 #import "NewsFeedTableViewController.h"
-#import "NewsFeedSingleImageCell.h"
-#import "NewsFeedCell.h"
 
 @interface NewsFeedTableViewController ()
 
