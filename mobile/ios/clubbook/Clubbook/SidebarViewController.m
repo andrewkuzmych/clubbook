@@ -156,6 +156,7 @@
     
     cell.bigNotificationNumber.layer.cornerRadius = 32;
     [cell.bigNotificationNumber.layer setMasksToBounds:YES];
+    [cell.bigNotificationNumber setHidden:YES];
     cell.bigNotificationNumber.backgroundColor = cell.notificationNumberLabel.backgroundColor;
     
     
