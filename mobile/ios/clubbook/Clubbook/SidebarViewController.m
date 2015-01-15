@@ -71,6 +71,9 @@
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
+
+    [self.menuCollectionView reloadData];
+    
     [self._manager unreadMessages:accessToken];
 }
 
@@ -91,6 +94,8 @@
     unreadMessagesCount = notifications.countOfUnreadChats;
     pendingFriendsCount = notifications.countOfPendingFriends;
     fastCheckinPlaces = notifications.fastCheckinPlaces;
+    
+    [self.menuCollectionView reloadData];
 }
 
 - (void) prepareForSegue: (UIStoryboardSegue *) segue sender: (id) sender
@@ -151,6 +156,7 @@
     
     cell.bigNotificationNumber.layer.cornerRadius = 32;
     [cell.bigNotificationNumber.layer setMasksToBounds:YES];
+    [cell.bigNotificationNumber setHidden:YES];
     cell.bigNotificationNumber.backgroundColor = cell.notificationNumberLabel.backgroundColor;
     
     
@@ -174,12 +180,18 @@
             [cell.notificationNumberLabel setHidden:NO];
             [cell.notificationNumberLabel setText:[NSString stringWithFormat:@"%d", unreadMessagesCount, nil]];
         }
+        else {
+            [cell.notificationNumberLabel setHidden:YES];
+        }
         cell.menuLabel.text = @"Messages";
     }
     else if ([currentItemId isEqualToString:@"friends"]) {
         if (pendingFriendsCount > 0) {
             [cell.notificationNumberLabel setHidden:NO];
             [cell.notificationNumberLabel setText:[NSString stringWithFormat:@"%d", pendingFriendsCount, nil]];
+        }
+        else {
+            [cell.notificationNumberLabel setHidden:YES];
         }
         cell.menuLabel.text = @"Friends";
     }
@@ -206,7 +218,12 @@
     [cell highlightIcon];
     NSUInteger selectedItem = indexPath.item;
     NSString* segueId = [_menuItems objectAtIndex:selectedItem];
+    NSString* messegesID = @"messages";
+    if ([segueId isEqualToString:messegesID]) {
+        unreadMessagesCount = 0;
+    }
     [self performSegueWithIdentifier:segueId sender:self];
+    
 }
 
 @end

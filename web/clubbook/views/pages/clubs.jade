@@ -9,7 +9,7 @@ block content
     ul.page-breadcrumb
       li
         i.fa.fa-home
-        a(href='/venue/#{current_venue._id}/clubs') Clubs
+        a(href='/venue/clubs') Clubs
   //
      END PAGE HEADER
   //
@@ -41,19 +41,21 @@ block content
               td(style="vertical-align: middle;")
                 | #{club.club_email} 
               td(style="vertical-align: middle;")
-                a.edit-btn.btn.default.yellow(href='/venue/#{current_venue._id}/club_edit/#{club._id}', style="margin:3px")
+                a.edit-btn.btn.default.yellow(href='/venue/club_edit/#{club._id}', style="margin:3px")
                   i.fa.fa-edit
                     &nbsp;
                     | edit
-                if current_venue._id.toString() != club._id.toString()
-                  a.btn.default.black(href='/venue/#{current_venue._id}/club_delete/#{club._id}', style="margin:3px", onclick="return confirm('Are you sure you want to delete club?')")
-                    i.fa.fa-edit
+                a.btn.default.black(href='/venue/club_delete/#{club._id}', style="margin:3px", onclick="return confirm('Are you sure you want to delete club?')")
+                  i.fa.fa-edit
+                    &nbsp;
+                    | delete
+                a.btn.default.blue(href='/venue/club_news/#{club._id}', style="margin:3px")
+                    i.fa.fa-book
                       &nbsp;
-                      | delete
-
+                      | news
 
       div
-        a.btn.btn-primary(href="/venue/#{current_venue._id}/club_create") Add Club
+        a.btn.btn-primary(href="/venue/club_create") Add Club
 
 
   //

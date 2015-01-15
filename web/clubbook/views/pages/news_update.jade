@@ -7,7 +7,7 @@ block content
     ul.page-breadcrumb
       li
         i.fa.fa-home
-        a(href='/venue/#{current_venue._id}/news_create') News
+        a(href='/venue/news_create') News
   .row
     .col-md-12
       div.portlet-body.form
@@ -16,7 +16,8 @@ block content
             .row
               .col-md-offset-3.col-md-9
                 button.btn.green(type='submit') Submit
-                a.btn.default(href="/venue/#{current_venue._id}/news", style="margin-left:5px;") Cancel
+                // /venue/club_news/:id
+                a.btn.default(href="", style="margin-left:5px;") Cancel
           .form-body
               .alert.alert-danger.display-hide
                 button.close(data-close='alert')
@@ -63,7 +64,8 @@ block content
               .row
                 .col-md-offset-3.col-md-9
                   button.btn.green(type='submit') Submit
-                  a.btn.default(href="/venue/#{current_venue._id}/news", style="margin-left:5px;") Cancel
+                  // /venue/club_news/:id
+                  a.btn.default(href="", style="margin-left:5px;") Cancel
 
 block scripts
   script(src="/assets/admin/pages/scripts/update_news.js", type='text/javascript')

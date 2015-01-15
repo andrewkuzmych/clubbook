@@ -7,7 +7,7 @@ block content
     ul.page-breadcrumb
       li
         i.fa.fa-home
-        a(href='/venue/#{current_venue._id}/clubs') Clubs
+        a(href='/venue/clubs') Clubs
   .row
     .col-md-12
       div.portlet-body.form
@@ -16,7 +16,7 @@ block content
             .row
               .col-md-offset-3.col-md-9
                 button.btn.green(type='submit') Submit
-                a.btn.default(href="/venue/#{current_venue._id}/clubs", style="margin-left:5px;") Cancel
+                a.btn.default(href="/venue/clubs", style="margin-left:5px;") Cancel
 
           .form-body
               .alert.alert-danger.display-hide
@@ -174,7 +174,7 @@ block content
               .row
                 .col-md-offset-3.col-md-9
                   button.btn.green(type='submit') Submit
-                  a.btn.default(href="/venue/#{current_venue._id}/clubs", style="margin-left:5px;") Cancel
+                  a.btn.default(href="/venue/clubs", style="margin-left:5px;") Cancel
 
 block scripts
   script(type="text/javascript", src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDWlaBHVehLQeKiXQXbguAFIg6k-2Jk3Vw&sensor=false&libraries=places&language=#{locale}")

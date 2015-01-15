@@ -10,6 +10,7 @@
 #import "ClubPhotoGalleryCollectionViewCell.h"
 #import "PhotoSlideViewController.h"
 #import "SDWebImageManager.h"
+#import "EBPhotoPagesController.h"
 
 @interface ClubPhotGalleryCollectionViewController ()
 
@@ -76,7 +77,10 @@ static NSString * const reuseIdentifier = @"PhotoCell";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     selectedItem = indexPath.item;
-    [self performSegueWithIdentifier: @"onPhoto" sender: self];
+    EBPhotoPagesController *photoPagesController = [[EBPhotoPagesController alloc]
+                                                    initWithDataSource:self delegate:self photoAtIndex:selectedItem];
+    
+    [self presentViewController:photoPagesController animated:YES completion:nil];
 }
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -88,4 +92,35 @@ static NSString * const reuseIdentifier = @"PhotoCell";
         }
 }
 
+#pragma mark - Image Datasource methods
+- (UIImage *)photoPagesController:(EBPhotoPagesController *)controller
+                     imageAtIndex:(NSInteger)index {
+    return [self.photoArray objectAtIndex:index];
+}
+
+- (void)photoPagesController:(EBPhotoPagesController *)controller
+                imageAtIndex:(NSInteger)index
+           completionHandler:(void(^)(UIImage *image))handler {
+    
+}
+
+- (BOOL)photoPagesController:(EBPhotoPagesController *)photoPagesController
+    shouldExpectPhotoAtIndex:(NSInteger)index {
+    if (index < [self.photoArray count]) {
+       return YES;
+    }
+    return NO;
+}
+
+-(BOOL)photoPagesController:(EBPhotoPagesController *)photoPagesController shouldAllowCommentingForPhotoAtIndex:(NSInteger)index {
+    return NO;
+}
+
+-(BOOL)photoPagesController:(EBPhotoPagesController *)photoPagesController shouldAllowReportForPhotoAtIndex:(NSInteger)index {
+    return NO;
+}
+
+-(BOOL)photoPagesController:(EBPhotoPagesController *)photoPagesController shouldAllowMiscActionsForPhotoAtIndex:(NSInteger)index {
+    return NO;
+}
 @end

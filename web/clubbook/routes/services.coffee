@@ -871,6 +871,66 @@ exports.list_club = (req, res)->
         clubs: clubs
         types: types
 
+exports.add_favorite_club = (req, res)->
+  params = 
+    user_id: req.params.me._id.toString()
+    club_id: req.params.objectId
+
+  manager.add_favorite_club params, (err, result)->
+    if err
+      console.log err
+      res.json
+        status: 'error'
+        err: err
+    else
+      res.json
+        status: 'ok'
+        result: result
+
+exports.remove_favorite_club = (req, res)->
+  params = 
+    user_id: req.params.me._id.toString()
+    club_id: req.params.objectId
+
+  manager.remove_favorite_club params, (err, result)->
+    if err
+      console.log err
+      res.json
+        status: 'error'
+        err: err
+    else
+      res.json
+        status: 'ok'
+        result: result
+
+exports.news = (req, res)->
+  params =
+    club_id: req.params.objectId
+
+  manager.news params, (err, news)->
+    if err
+      res.json
+        status: 'error'
+        error: err
+    else
+      res.json
+        status: 'ok'
+        news: news
+
+exports.news_favorite = (req, res)->
+  params =
+    user_id: req.params.objectId
+
+  manager.news_favorite params, (err, news)->
+    if err
+      res.json
+        status: 'error'
+        error: err
+    else
+      res.json
+        status: 'ok'
+        news: news
+
 exports.checkin = (req, res)->
   params =
     user_id: req.params.me._id.toString()
@@ -990,6 +1050,9 @@ exports.chat = (req, res)->
   # fix empty message type
   if not req.body.msg_type
     req.body.msg_type = "message"
+  loc =
+    lon: req.body.lon
+    lat: req.body.lat
 
   params =
     user_from: req.body.user_from
@@ -997,6 +1060,7 @@ exports.chat = (req, res)->
     msg: req.body.msg
     url: req.body.url
     msg_type: req.body.msg_type
+    location: loc
 
   manager.get_user_by_id req.body.user_from, (err, user_from)->
     manager.chat params, (err, chat)->
@@ -1046,6 +1110,8 @@ prepare_chat_messages = (chat, current_user)->
       msg: conversation.msg
       time: conversationTime
       type: conversation.type
+      url: conversation.url
+      location: conversation.location
       from_who: conversation.from_who
       read: conversation.read
       from_who_name: if conversation.from_who.toString() is current_user._id.toString() then current_user.name else receiver.name

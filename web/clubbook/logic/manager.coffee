@@ -196,6 +196,66 @@ exports.create_club = (params, callback)->
 # Checkin, Checkout logic
 ##################################################################################################################
 
+exports.add_favorite_club = (params, callback)->
+  console.log "METHOD - Add favorite clubs"
+  isClub = false
+  query =  [{'$match': {_id : mongoose.Types.ObjectId(params.user_id)}}, {'$unwind': '$favorite_clubs'}]
+  db_model.User.aggregate query, {}, (err, result)-> 
+    for r in result
+      if r.favorite_clubs.toString() == params.club_id.toString()
+        isClub = true
+    console.log isClub
+    if !isClub
+      db_model.User.findById(params.user_id).exec (err, user)->
+        user.favorite_clubs.push params.club_id
+        db_model.save_or_update_user user, (err)-> callback err, user
+    else
+      callback 'club already a favorite', null
+
+exports.remove_favorite_club = (params, callback)->
+  console.log "METHOD - Remove favorite clubs"
+  console.log "Params: "
+  console.log params
+  isClub = false
+  query =  [{'$match': {_id : mongoose.Types.ObjectId(params.user_id)}}, {'$unwind': '$favorite_clubs'}]
+  db_model.User.aggregate query, {}, (err, result)-> 
+    for r in result
+      if r.favorite_clubs.toString() == params.club_id.toString()
+        isClub = true
+    console.log isClub
+    if isClub
+      db_model.User.findById(params.user_id).exec (err, user)->
+        user.favorite_clubs.pull params.club_id
+        db_model.save_or_update_user user, (err)-> callback err, user
+    else
+      callback 'club not favorite', null
+
+exports.news = (params, callback)->
+  console.log "METHOD - News"
+  console.log "Params: "
+  console.log params
+  db_model.News.find({'venue': params.club_id}).exec (err, news)-> 
+    if not news
+      callback 'missing news for this club', null
+    else
+      callback err, news
+
+exports.news_favorite = (params, callback)->
+  console.log "METHOD - News favorite club"
+  console.log "Params: "
+  console.log params
+  db_model.User.findById(params.user_id).exec (err, user)->
+    if not user
+      callback 'user does not exist', null
+    else
+      query =  [{'$match':{'venue': {'$in': user.favorite_clubs}}}]
+      db_model.News.aggregate query, {}, (err, news)-> 
+        if not news
+          callback 'news does not exist', null
+        else
+          callback err, news
+      
+
 exports.checkin = (params, callback)->
   console.log "METHOD - Manager checkin"
   console.log "Checkin user", params
@@ -214,6 +274,8 @@ exports.checkin = (params, callback)->
             if not user
               callback 'user does not exist', null
             else
+              # add to favorite list
+              exports.add_favorite_club {user_id: params.user_id, club_id: params.club_id}, ()->
               # checkout user from all clubs
               exports.checkout_from_all_clubs user, ()->
                 club.active_checkins += 1
@@ -460,7 +522,7 @@ exports.chat = (params, callback)->
         user1: mongoose.Types.ObjectId(params.user_from)
         user2: mongoose.Types.ObjectId(params.user_to)
 
-    chat.conversation.push {msg: params.msg, url: params.url, from_who: mongoose.Types.ObjectId(params.user_from), type: params.msg_type}
+    chat.conversation.push {msg: params.msg, url: params.url, location: params.location, from_who: mongoose.Types.ObjectId(params.user_from), type: params.msg_type}
 
     if chat.unread.user && chat.unread.user.toString() == params.user_to.toString()
       chat.unread.count += 1
