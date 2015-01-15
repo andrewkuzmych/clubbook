@@ -9,7 +9,7 @@
 #import "BaseTableViewController.h"
 #import "Place.h"
 
-@interface NewsFeedTableViewController : BaseTableViewController
+@interface NewsFeedTableViewController : BaseTableViewController <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (strong, nonatomic) Place* place;
 

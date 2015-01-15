@@ -399,8 +399,12 @@
 		5245DC621A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5245DC611A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m */; };
 		5245DC651A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5245DC641A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.m */; };
 		524B225A1A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 524B22591A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.m */; };
+		52520A781A66928B006399EF /* NewsFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52520A761A66928B006399EF /* NewsFeedCell.m */; };
+		52520A801A66B022006399EF /* NewsData.m in Sources */ = {isa = PBXBuildFile; fileRef = 52520A7F1A66B022006399EF /* NewsData.m */; };
+		526ABCCA1A67FFAF0010F485 /* NewsPhotosLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 526ABCC91A67FFAF0010F485 /* NewsPhotosLayout.m */; };
 		528C85951A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 528C85941A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard */; };
 		528C85981A56E3AC00BBB148 /* ClubProfileTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 528C85971A56E3AC00BBB148 /* ClubProfileTabBarViewController.m */; };
+		528D6CA41A66C7E800B2E6B0 /* NewsPhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 528D6CA21A66C7E800B2E6B0 /* NewsPhotoCell.m */; };
 		529048F51A373FF600F80DF9 /* RetrieveLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 529048F41A373FF600F80DF9 /* RetrieveLocationViewController.m */; };
 		5297358E1A39B002009943C3 /* MultiplePulsingHaloLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297358B1A39B002009943C3 /* MultiplePulsingHaloLayer.m */; };
 		5297358F1A39B002009943C3 /* PulsingHaloLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297358D1A39B002009943C3 /* PulsingHaloLayer.m */; };
@@ -1162,9 +1166,17 @@
 		5245DC641A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubPhotoGalleryCollectionViewCell.m; sourceTree = "<group>"; };
 		524B22581A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubSubscribeSettingsTableViewController.h; sourceTree = "<group>"; };
 		524B22591A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubSubscribeSettingsTableViewController.m; sourceTree = "<group>"; };
+		52520A751A66928B006399EF /* NewsFeedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedCell.h; sourceTree = "<group>"; };
+		52520A761A66928B006399EF /* NewsFeedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedCell.m; sourceTree = "<group>"; };
+		52520A7E1A66B022006399EF /* NewsData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsData.h; sourceTree = "<group>"; };
+		52520A7F1A66B022006399EF /* NewsData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsData.m; sourceTree = "<group>"; };
+		526ABCC81A67FFAF0010F485 /* NewsPhotosLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsPhotosLayout.h; sourceTree = "<group>"; };
+		526ABCC91A67FFAF0010F485 /* NewsPhotosLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsPhotosLayout.m; sourceTree = "<group>"; };
 		528C85941A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ClubProfileStoryboard.storyboard; sourceTree = "<group>"; };
 		528C85961A56E3AC00BBB148 /* ClubProfileTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubProfileTabBarViewController.h; sourceTree = "<group>"; };
 		528C85971A56E3AC00BBB148 /* ClubProfileTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubProfileTabBarViewController.m; sourceTree = "<group>"; };
+		528D6CA11A66C7E800B2E6B0 /* NewsPhotoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsPhotoCell.h; sourceTree = "<group>"; };
+		528D6CA21A66C7E800B2E6B0 /* NewsPhotoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsPhotoCell.m; sourceTree = "<group>"; };
 		529048F31A373FF600F80DF9 /* RetrieveLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RetrieveLocationViewController.h; sourceTree = "<group>"; };
 		529048F41A373FF600F80DF9 /* RetrieveLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RetrieveLocationViewController.m; sourceTree = "<group>"; };
 		5297358A1A39B002009943C3 /* MultiplePulsingHaloLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiplePulsingHaloLayer.h; sourceTree = "<group>"; };
@@ -2142,6 +2154,14 @@
 			children = (
 				520F38AA1A5E93B600FB1E65 /* NewsFeedTableViewController.h */,
 				520F38AB1A5E93B600FB1E65 /* NewsFeedTableViewController.m */,
+				52520A751A66928B006399EF /* NewsFeedCell.h */,
+				52520A761A66928B006399EF /* NewsFeedCell.m */,
+				52520A7E1A66B022006399EF /* NewsData.h */,
+				528D6CA11A66C7E800B2E6B0 /* NewsPhotoCell.h */,
+				528D6CA21A66C7E800B2E6B0 /* NewsPhotoCell.m */,
+				52520A7F1A66B022006399EF /* NewsData.m */,
+				526ABCC81A67FFAF0010F485 /* NewsPhotosLayout.h */,
+				526ABCC91A67FFAF0010F485 /* NewsPhotosLayout.m */,
 			);
 			name = NewsFeed;
 			sourceTree = "<group>";
@@ -2749,6 +2769,7 @@
 				4993F20E1979194900A225BE /* UIImage+MRImageEffects.m in Sources */,
 				499929C319EAB6B900B77A6E /* FriendsResult.m in Sources */,
 				498A68FE196C4CFD00BC2859 /* PNClientStateUpdateRequest.m in Sources */,
+				52520A801A66B022006399EF /* NewsData.m in Sources */,
 				4934F76019D047B800BFFDB1 /* SDWebImagePrefetcher.m in Sources */,
 				520897641A407C6700E8DD06 /* JSQMessagesMediaViewBubbleImageMasker.m in Sources */,
 				49E831821953034300D4A26C /* ObjectBuilder.m in Sources */,
@@ -2936,6 +2957,7 @@
 				49908F0419751C5C00DA68F2 /* OBAlert.m in Sources */,
 				498A68F4196C4CFD00BC2859 /* NSInvocation+PNAdditions.m in Sources */,
 				49D8D301197D6C8F00015052 /* UIView+StringTagAdditions.m in Sources */,
+				52520A781A66928B006399EF /* NewsFeedCell.m in Sources */,
 				522F75F51A6524680095991F /* EBCommentsTableView.m in Sources */,
 				498A68E6196C4CFD00BC2859 /* PNDate.m in Sources */,
 				499682B31A11059F0097AED5 /* Harpy.m in Sources */,
@@ -2953,6 +2975,7 @@
 				498A1BA8196BD2B200824E64 /* Conversation.m in Sources */,
 				498A1B9B196ACF9100824E64 /* ChatViewController.m in Sources */,
 				49ABA138198F9D7F00B060D0 /* SettingsCell.m in Sources */,
+				528D6CA41A66C7E800B2E6B0 /* NewsPhotoCell.m in Sources */,
 				4993F20D1979194900A225BE /* MRBlurView.m in Sources */,
 				498A68FA196C4CFD00BC2859 /* PNAccessRightsAuditRequest.m in Sources */,
 				4934F76219D047B800BFFDB1 /* UIImage+GIF.m in Sources */,
@@ -2973,6 +2996,7 @@
 				4934F76319D047B800BFFDB1 /* UIImage+MultiFormat.m in Sources */,
 				522F75FE1A6524680095991F /* EBShadedView.m in Sources */,
 				5208975F1A407C6700E8DD06 /* JSQMessagesKeyboardController.m in Sources */,
+				526ABCCA1A67FFAF0010F485 /* NewsPhotosLayout.m in Sources */,
 				498A68D7196C4CFD00BC2859 /* PNErrorResponseParser.m in Sources */,
 				4993F2101979194900A225BE /* MRCircularProgressView.m in Sources */,
 				4996E0C519669ED0000C721F /* CbButton.m in Sources */,
