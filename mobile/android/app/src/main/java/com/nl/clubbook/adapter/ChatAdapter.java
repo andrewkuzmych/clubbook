@@ -32,8 +32,10 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
     private static final int TYPE_DRINK = 1;
     private static final int TYPE_SMILE = 2;
     private static final int TYPE_DATE = 3;
+    private static final int TYPE_LOCATION = 4;
+    private static final int TYPE_PHOTO = 5;
 
-    private static final int TYPE_COUNT = 4; //date item
+    private static final int TYPE_COUNT = 6; //date item
 
     private LayoutInflater mInflater;
     private List<BaseChatMessage> mMessages;
@@ -111,12 +113,16 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         ChatMessage chatMessage = (ChatMessage) baseMessage;
         String type = chatMessage.getType();
 
-        if (ChatMessage.TYPE_MESSAGE.equalsIgnoreCase(type)) {
+        if (ChatMessage.Types.TYPE_MESSAGE.equalsIgnoreCase(type)) {
             return TYPE_MESSAGE;
-        } else if(ChatMessage.TYPE_DRINK.equalsIgnoreCase(type)) {
-            return TYPE_DRINK;
-        } else {
+        } else if(ChatMessage.Types.TYPE_SMILE.equalsIgnoreCase(type)){
             return TYPE_SMILE;
+        } else if(ChatMessage.Types.TYPE_LOCATION.equalsIgnoreCase(type))  {
+            return TYPE_LOCATION;
+        } else if(ChatMessage.Types.TYPE_PHOTO.equalsIgnoreCase(type)) {
+            return TYPE_PHOTO;
+        } else {
+            return TYPE_DRINK;
         }
     }
 

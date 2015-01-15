@@ -31,6 +31,8 @@
     <color name="selector">#55592B5C</color>
     <color name="white_semitransparent">#55FFFFFF</color>
     <color name="blue">#1C73DA</color>
+    <color name="bg_item_share_content">#F5F5F5</color>
+    <color name="color_text_item_share_content">#616161</color>
 
     <color name="btn_green">#4CAF50</color>
     <color name="btn_green_selected">#994CAF50</color>
