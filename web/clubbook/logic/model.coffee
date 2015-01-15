@@ -75,7 +75,7 @@ UserSchema = new mongoose.Schema
   checkin: [
     {club: { type: mongoose.Schema.ObjectId, ref: 'Venue' }, time: Date, active: Boolean}
   ]
-  last_loc:
+  loc:
     lon: Number
     lat: Number
 
@@ -225,13 +225,13 @@ ChatSchema = new mongoose.Schema
   unread: {user: {type: mongoose.Schema.ObjectId, ref: 'User'}, count: {type: Number, 'default': 0 }}
   conversation: [
     {
-      last_loc:
+      location:
         lon: Number
         lat: Number
       msg: { type: String },
       url: { type: String },
       time: { type: Date, 'default': Date.now, required: true},
-      type: {type: String, trim: true, required: true, "default": "message", "enum": ["message", "drink", "smile", "photo"]},
+      type: {type: String, trim: true, required: true, "default": "message", "enum": ["message", "drink", "smile", "photo", "location"]},
       from_who: {type: mongoose.Schema.ObjectId, ref: 'User', required: true}
       read: {type: Boolean, default: false}
     }

@@ -96,19 +96,19 @@ exports.privacy = (req, res)->
 exports.home = (req, res)->
   create_base_model req, res, (model)->
     db_model.Venue.findOne().exec (err, venue)->
-      res.redirect "/venue/#{venue._id}/clubs"
+      res.redirect "/venue/clubs"
 
 exports.clubs = (req, res)->
   create_base_model req, res, (model)->
-    db_model.Venue.find(req.params.venue_id).exec (err, venues)->
+    #req.params.venue_id
+    db_model.Venue.find().exec (err, venues)->
         model.clubs = venues
         res.render "pages/clubs", model
 
 exports.users = (req, res)->
   console.log 'Users'
   create_base_model req, res, (model)->
-    db_model.Venue.find(req.params.venue_id).exec (err, venues)->
-        res.render "pages/users", model
+      res.render "pages/users", model
 
   #create_base_model req, res, (model)->
   #  res.render "pages/users", model
@@ -135,7 +135,7 @@ exports.club_create = (req, res)->
 exports.club_create_action = (req, res)->
   validate_club_model req, null, (validation)->
     if validation.has_error
-      res.redirect "/venue/#{req.params.venue_id}/club_create?error=1"
+      res.redirect "/venue/club_create?error=1"
     else
       venue = new db_model.Venue
         club_email : req.body.club_email
@@ -170,10 +170,11 @@ exports.club_create_action = (req, res)->
         
       if req.body.club_logo
         venue.club_logo = req.body.club_logo
-
+      console.log venue
       venue.save (err)->
+        console.log 1111111111
         console.log err
-        res.redirect "/venue/#{req.params.venue_id}/clubs" 
+        res.redirect "/venue/clubs" 
  
 exports.club_news = (req, res)->
   create_base_model req, res, (model)->
@@ -197,7 +198,7 @@ exports.club_edit = (req, res)->
 exports.club_edit_action = (req, res)->
   validate_club_model req, null, (validation)->
     if validation.has_error
-      res.redirect "/venue/#{req.params.venue_id}/club_edit?error=1"
+      res.redirect "/venue/club_edit?error=1"
     else
       db_model.Venue.findById(req.params.id).exec (err, venue)->
         venue.club_email = req.body.club_email
@@ -233,14 +234,14 @@ exports.club_edit_action = (req, res)->
 
         venue.save (err)->
           console.log err
-          res.redirect "/venue/#{req.params.venue_id}/clubs"
+          res.redirect "/venue/clubs"
     
 exports.club_delete_action = (req, res)->
   db_model.Venue.findByIdAndRemove(req.params.id).exec (err)->
     db_model.News.remove {"venue":req.params.id}, (err)->
-      res.redirect "/venue/#{req.params.venue_id}/clubs"
+      res.redirect "/venue/clubs"
 
-exports.news = (req, res)->
+###exports.news = (req, res)->
   create_base_model req, res, (model)->
     db_model.Venue.findById(req.params.venue_id).exec (err, venue)->
       db_model.News.find({'venue' : venue}).sort({created_on: 'desc'}).exec (err, news)->
@@ -260,7 +261,7 @@ exports.news = (req, res)->
 
         model.news = news_new
 
-        res.render "pages/news", model
+        res.render "pages/news", model###
 
 exports.club_news_create = (req, res)->
   create_base_model req, res, (model)->
@@ -271,7 +272,7 @@ exports.club_news_create = (req, res)->
 exports.club_news_create_action = (req, res)->
   validate_news_model req, null, (validation)->
     if validation.has_error
-      res.redirect "/venue/#{req.params.venue_id}/news_create?error=1"
+      res.redirect "/venue/news_create?error=1"
     else
       news = new db_model.News
         venue: mongoose.Types.ObjectId(req.params.id)
@@ -281,9 +282,9 @@ exports.club_news_create_action = (req, res)->
         news.image = req.body.news_image
       news.save (err)->
         console.log 'SAVE'
-        res.redirect "/venue/#{req.params.venue_id}/news"
+        res.redirect "/venue/club_news/#{req.params.id}"
 
-exports.news_create = (req, res)->
+###exports.news_create = (req, res)->
   create_base_model req, res, (model)->
     model.cloudinary = cloudinary
     model.news = {}
@@ -303,7 +304,7 @@ exports.news_create_action = (req, res)->
         news.image = req.body.news_image
       news.save (err)->
         console.log 'SAVE'
-        res.redirect "/venue/#{req.params.venue_id}/news" 
+        res.redirect "/venue/#{req.params.venue_id}/news" ###
 
 exports.news_edit = (req, res)->
   create_base_model req, res, (model)->
@@ -317,7 +318,7 @@ exports.news_edit = (req, res)->
 exports.news_edit_action = (req, res)->
   validate_news_model req, null, (validation)->
     if validation.has_error
-      res.redirect "/venue/#{req.params.venue_id}/news_edit/#{req.params.id}?error=1"
+      res.redirect "/venue/news_edit/#{req.params.id}?error=1"
     else
       db_model.News.findById(req.params.id).exec (err, news)->
         news.title = req.body.title
@@ -326,11 +327,11 @@ exports.news_edit_action = (req, res)->
           news.image = req.body.news_image
 
         news.save (err)->
-          res.redirect "/venue/#{req.params.venue_id}/news" 
+          res.redirect "/venue/club_news/#{req.params.club_id}" 
 
 exports.news_delete_action = (req, res)->
   db_model.News.findByIdAndRemove(req.params.id).exec (err)->
-    res.redirect "/venue/#{req.params.venue_id}/news"
+    res.redirect "/venue/club_news/#{req.params.club_id}"
 
 
 exports.reset_pass = (req, res)->
@@ -416,18 +417,18 @@ create_base_model = (req, res, callback)->
   else
     model.has_error = false
 
-  # manage venue page
-  if req.params.venue
-    model.current_venue = req.params.venue
-    # dropdown with available venues
-  if req.user
-    query_venue = if req.user.is_admin then {} else {"admins": req.user._id}
-    db_model.Venue.find(query_venue).sort("title").exec (err, venues)->
-      model.my_venues = venues
-      if venues.length > 0
-        if req.params.venue_id
-          model.active_venue = __.find venues, (venue)-> venue._id.toString() is req.params.venue_id
-        if not model.active_venue then model.active_venue = venues[0]
-      callback model
-  else
-    callback model
+  ###  # manage venue page
+    if req.params.venue
+      model.current_venue = req.params.venue
+      # dropdown with available venues
+    if req.user
+      query_venue = if req.user.is_admin then {} else {"admins": req.user._id}
+      db_model.Venue.find(query_venue).sort("title").exec (err, venues)->
+        model.my_venues = venues
+        if venues.length > 0
+          if req.params.venue_id
+            model.active_venue = __.find venues, (venue)-> venue._id.toString() is req.params.venue_id
+          if not model.active_venue then model.active_venue = venues[0]
+        callback model
+    else###
+  callback model

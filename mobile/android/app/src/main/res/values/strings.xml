@@ -205,6 +205,10 @@
     <string name="filter">Filter</string>
     <string name="search">Search</string>
     <string name="view">View</string>
+    <string name="write_a_message">Write a message</string>
+    <string name="take_photo">Take photo</string>
+    <string name="choose_existing_photo">Choose existing photo</string>
+    <string name="share_your_location">Share your location</string>
 
     <!--For Google Analytics-->
     <string name="sidebar_screen_android">Sidebar Screen Android</string>

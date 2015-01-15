@@ -46,12 +46,13 @@
             android:paddingRight="4dp"/>
 
         <ImageView
-            android:id="@+id/imgSendDrink"
+            android:id="@+id/imgShareContent"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/ic_drink"
+            android:src="@drawable/ic_attachment_white"
             android:layout_marginRight="4dp"
-            android:layout_marginLeft="4dp"/>
+            android:layout_marginLeft="4dp"
+            android:scaleType="centerInside"/>
 
         <com.nl.clubbook.ui.view.HelveticaRegularEditText
             style="@style/EditTextAppThemeWhite"
@@ -62,21 +63,31 @@
             android:inputType="textMultiLine"
             android:minHeight="48dp"
             android:textColor="@android:color/white"
+            android:textColorHint="@color/white_semitransparent"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:gravity="center_vertical"
-            android:maxLines="4"/>
+            android:maxLines="4"
+            android:hint="@string/write_a_message"/>
 
-        <com.nl.clubbook.ui.view.HelveticaBoldTextView
+        <ImageView
             android:id="@+id/txtSend"
-            android:layout_width="wrap_content"
+            android:layout_width="48dp"
             android:layout_height="48dp"
-            android:text="@string/send"
-            android:textColor="@color/white_semitransparent"
-            android:textSize="@dimen/text_size_medium"
             android:gravity="center"
-            android:paddingRight="16dp"
-            android:paddingLeft="4dp"/>
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_send_white"/>
+
+        <!--<com.nl.clubbook.ui.view.HelveticaBoldTextView-->
+            <!--android:id="@+id/txtSend"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="48dp"-->
+            <!--android:text="@string/send"-->
+            <!--android:textColor="@color/white_semitransparent"-->
+            <!--android:textSize="@dimen/text_size_medium"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingRight="16dp"-->
+            <!--android:paddingLeft="4dp"/>-->
     </LinearLayout>
 
     <include

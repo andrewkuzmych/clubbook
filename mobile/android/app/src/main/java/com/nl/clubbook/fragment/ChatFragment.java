@@ -1,15 +1,15 @@
 package com.nl.clubbook.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,6 +23,7 @@ import com.nl.clubbook.datasource.Chat;
 import com.nl.clubbook.datasource.ChatMessage;
 import com.nl.clubbook.datasource.HttpClientManager;
 import com.nl.clubbook.datasource.User;
+import com.nl.clubbook.fragment.dialog.ShareContentDialog;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.CalendarUtils;
 import com.nl.clubbook.utils.KeyboardUtils;
@@ -36,7 +37,7 @@ import java.util.List;
 /**
  * Created by Andrew on 6/8/2014.
  */
-public class ChatFragment extends BaseInnerFragment implements View.OnClickListener {
+public class ChatFragment extends BaseInnerFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     public static final int MODE_OPEN_FROM_CHAT_LIST = 9999;
     public static final int MODE_OPEN_FROM_PROFILE = 2222;
@@ -123,18 +124,23 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.txtLike:
-                sendMessageTemp(ChatMessage.TYPE_SMILE, getString(R.string.likes_the_profile));
-                break;
-            case R.id.imgSendDrink:
-                sendMessageTemp(ChatMessage.TYPE_DRINK, getString(R.string.invites_for_a_drink));
+                sendMessageTemp(ChatMessage.Types.TYPE_SMILE, getString(R.string.likes_the_profile));
                 break;
             case R.id.txtSend:
                 sendMessage();
+                break;
+            case R.id.imgShareContent:
+                onShareContentClicked();
                 break;
             case R.id.imgAvatar:
                 onUserProfileClicked();
                 break;
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //TODO
     }
 
     private void handleArgs() {
@@ -171,8 +177,8 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         });
 
         view.findViewById(R.id.txtSend).setOnClickListener(ChatFragment.this);
-        view.findViewById(R.id.imgSendDrink).setOnClickListener(ChatFragment.this);
         view.findViewById(R.id.txtLike).setOnClickListener(ChatFragment.this);
+        view.findViewById(R.id.imgShareContent).setOnClickListener(ChatFragment.this);
     }
 
     public void receiveComment(ChatMessage message) {
@@ -245,7 +251,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         String input = inputText.getText().toString().trim();
 
         if (!input.equals("")) {
-            HttpClientManager.getInstance().chat(mUserFromId, mUserToId, input, ChatMessage.TYPE_MESSAGE, accessToken, new HttpClientManager.OnResultReady() {
+            HttpClientManager.getInstance().chat(mUserFromId, mUserToId, input, ChatMessage.Types.TYPE_MESSAGE, accessToken, new HttpClientManager.OnResultReady() {
                 @Override
                 public void onReady(Object result, boolean failed) {
 
@@ -254,7 +260,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
             ChatMessage myNewMessage = new ChatMessage();
             myNewMessage.setMsg(input);
-            myNewMessage.setType(ChatMessage.TYPE_MESSAGE);
+            myNewMessage.setType(ChatMessage.Types.TYPE_MESSAGE);
             myNewMessage.setIsMyMessage(true);
             myNewMessage.setUserFrom(mChat.getCurrentUser().getId());
             myNewMessage.setUserFromName(mChat.getCurrentUser().getName());
@@ -266,6 +272,13 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
             getView().findViewById(R.id.txtNoMessages).setVisibility(View.GONE);
         }
+    }
+
+    private void onShareContentClicked() {
+        Fragment shareContentDialog = ShareContentDialog.newInstance(ChatFragment.this);
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.add(shareContentDialog, ShareContentDialog.TAG);
+        fragmentTransaction.commitAllowingStateLoss();
     }
 
     private boolean isSendingMessagesEnabled() {

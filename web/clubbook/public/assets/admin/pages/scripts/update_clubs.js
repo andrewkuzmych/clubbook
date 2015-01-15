@@ -77,6 +77,9 @@ var FormValidation = function () {
                     },
                     club_capacity: {
                       required: true
+                    },
+                    club_address: {
+                      required: true
                     }
 
                 },

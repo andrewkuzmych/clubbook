@@ -30,6 +30,12 @@
         <item>@color/material_green</item>
     </integer-array>
 
+    <string-array name="share_content_title">
+        <item>@string/take_photo</item>
+        <item>@string/choose_existing_photo</item>
+        <item>@string/share_your_location</item>
+    </string-array>
+
     <!--Probably is deprecated-->
     <array name="countries_array">
         <item>Afghanistan</item>
