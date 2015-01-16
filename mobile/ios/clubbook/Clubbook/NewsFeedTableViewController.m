@@ -11,6 +11,7 @@
 #import "NewsData.h"
 #import "NewsPhotoCell.h"
 #import "DateHelper.h"
+#import "EBPhotoPagesController.h"
 
 #define STATIC_HEIGHT 100
 
@@ -21,6 +22,7 @@
 @implementation NewsFeedTableViewController
 {
     NSMutableArray* newsArray;
+    NSArray* photoSlideShow;
 }
 
 static NSString* NewsFeedCellIdentifier = @"NewsFeedCell";
@@ -64,7 +66,7 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
         news3.messageText = @"!!!!!!!!!!!!!!!!!!!!!!";
         news3.arrayOfPhotos = [[NSMutableArray alloc] init];
         [news3.arrayOfPhotos addObject:[UIImage imageNamed:@"menu_background"]];
-        [news3.arrayOfPhotos addObject:[UIImage imageNamed:@"menu_background"]];
+        [news3.arrayOfPhotos addObject:[UIImage imageNamed:@"photo"]];
         [newsArray addObject:news3];
         
         //dummy data
@@ -75,8 +77,8 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
         news2.messageText = @"Check out sweet new main photo!";
         news2.arrayOfPhotos = [[NSMutableArray alloc] init];
         [news2.arrayOfPhotos addObject:[UIImage imageNamed:@"menu_background"]];
-        [news2.arrayOfPhotos addObject:[UIImage imageNamed:@"menu_background"]];
-        [news2.arrayOfPhotos addObject:[UIImage imageNamed:@"menu_background"]];
+        [news2.arrayOfPhotos addObject:[UIImage imageNamed:@"photo"]];
+        [news2.arrayOfPhotos addObject:[UIImage imageNamed:@"news"]];
         [newsArray addObject:news2];
     
 }
@@ -134,6 +136,7 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     if ([news.arrayOfPhotos count] > 0) {
         height += cell.photosView.frame.size.height;
     }
+    
     return height;
 }
 
@@ -162,5 +165,51 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     return cell;
     
 }
+
+-(void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    int tag = (int)collectionView.tag;
+    NewsData* news = [newsArray objectAtIndex:tag];
+    photoSlideShow = news.arrayOfPhotos;
+    NSInteger itemClicked = indexPath.item;
+    
+    EBPhotoPagesController *photoPagesController = [[EBPhotoPagesController alloc]
+                                                    initWithDataSource:self delegate:self photoAtIndex:itemClicked ];
+    
+    [self presentViewController:photoPagesController animated:YES completion:nil];
+    
+}
+
+#pragma mark - Image Datasource methods
+- (UIImage *)photoPagesController:(EBPhotoPagesController *)controller
+                     imageAtIndex:(NSInteger)index {
+    return [photoSlideShow objectAtIndex:index];
+}
+
+- (void)photoPagesController:(EBPhotoPagesController *)controller
+                imageAtIndex:(NSInteger)index
+           completionHandler:(void(^)(UIImage *image))handler {
+    
+}
+
+- (BOOL)photoPagesController:(EBPhotoPagesController *)photoPagesController
+    shouldExpectPhotoAtIndex:(NSInteger)index {
+    if (index < [photoSlideShow count]) {
+        return YES;
+    }
+    return NO;
+}
+
+-(BOOL)photoPagesController:(EBPhotoPagesController *)photoPagesController shouldAllowCommentingForPhotoAtIndex:(NSInteger)index {
+    return NO;
+}
+
+-(BOOL)photoPagesController:(EBPhotoPagesController *)photoPagesController shouldAllowReportForPhotoAtIndex:(NSInteger)index {
+    return NO;
+}
+
+-(BOOL)photoPagesController:(EBPhotoPagesController *)photoPagesController shouldAllowMiscActionsForPhotoAtIndex:(NSInteger)index {
+    return NO;
+}
+
 
 @end

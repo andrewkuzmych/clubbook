@@ -538,34 +538,30 @@
                                                 </textView>
                                                 <collectionView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="nZg-kq-OIU">
                                                     <rect key="frame" x="0.0" y="99" width="312" height="200"/>
+                                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="200" id="pQP-HQ-B2C"/>
                                                     </constraints>
-                                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="tWj-kt-lcY">
-                                                        <size key="itemSize" width="312" height="200"/>
-                                                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                    </collectionViewFlowLayout>
+                                                    <collectionViewLayout key="collectionViewLayout" id="djH-Lu-HVr" customClass="NewsPhotoLayout"/>
                                                     <cells>
                                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="NewsPhotoCell" id="ZeR-mI-A0H" customClass="NewsPhotoCell">
                                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                                <rect key="frame" x="0.0" y="0.0" width="312" height="200"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
                                                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="08u-hR-pQl">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="312" height="200"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                                     </imageView>
                                                                 </subviews>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                             </view>
                                                             <constraints>
-                                                                <constraint firstItem="08u-hR-pQl" firstAttribute="leading" secondItem="ZeR-mI-A0H" secondAttribute="leading" id="9rX-WA-OOQ"/>
-                                                                <constraint firstAttribute="bottom" secondItem="08u-hR-pQl" secondAttribute="bottom" id="Gdn-ML-xG5"/>
-                                                                <constraint firstItem="08u-hR-pQl" firstAttribute="top" secondItem="ZeR-mI-A0H" secondAttribute="top" id="K2o-Zy-Usi"/>
-                                                                <constraint firstAttribute="trailing" secondItem="08u-hR-pQl" secondAttribute="trailing" id="oni-w5-5l0"/>
+                                                                <constraint firstItem="08u-hR-pQl" firstAttribute="leading" secondItem="ZeR-mI-A0H" secondAttribute="leading" id="Isv-AZ-BjW"/>
+                                                                <constraint firstItem="08u-hR-pQl" firstAttribute="top" secondItem="ZeR-mI-A0H" secondAttribute="top" id="WjA-1z-CzP"/>
+                                                                <constraint firstAttribute="bottom" secondItem="08u-hR-pQl" secondAttribute="bottom" id="hTe-bg-DjL"/>
+                                                                <constraint firstAttribute="trailing" secondItem="08u-hR-pQl" secondAttribute="trailing" id="ukB-2m-Viu"/>
                                                             </constraints>
                                                             <connections>
                                                                 <outlet property="photoImageView" destination="08u-hR-pQl" id="e5c-8U-CU2"/>

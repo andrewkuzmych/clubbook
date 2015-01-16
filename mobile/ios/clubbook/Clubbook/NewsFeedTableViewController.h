@@ -7,9 +7,10 @@
 //
 
 #import "BaseTableViewController.h"
+#import "EBPhotoPagesController.h"
 #import "Place.h"
 
-@interface NewsFeedTableViewController : BaseTableViewController <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface NewsFeedTableViewController : BaseTableViewController <UICollectionViewDataSource, UICollectionViewDelegate, EBPhotoPagesDelegate, EBPhotoPagesDataSource>
 
 @property (strong, nonatomic) Place* place;
 

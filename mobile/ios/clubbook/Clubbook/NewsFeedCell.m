@@ -30,7 +30,7 @@
     self.photosView.dataSource = dataSourceDelegate;
     self.photosView.delegate = dataSourceDelegate;
     self.photosView.tag = index;
-    
+        
     [self.photosView reloadData];
 }
 

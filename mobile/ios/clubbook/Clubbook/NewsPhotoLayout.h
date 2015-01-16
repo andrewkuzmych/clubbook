@@ -1,5 +1,5 @@
 //
-//  NewsPhotosLayout.h
+//  NewsPhotoLayout.h
 //  Clubbook
 //
 //  Created by Anton Semenyuk on 1/15/15.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface NewsPhotosLayout : UICollectionViewLayout
+@interface NewsPhotoLayout : UICollectionViewLayout
 
 @end
