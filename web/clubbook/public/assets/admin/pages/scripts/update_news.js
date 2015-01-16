@@ -25,10 +25,6 @@ var FormValidation = function () {
                       required: true,
                     }
 
-                    //club_address: {
-                    //  required: true,  
-                   // }
-
                 },
 
                 invalidHandler: function (event, validator) { //display error alert on form submit  
