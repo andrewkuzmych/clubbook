@@ -39,8 +39,9 @@ block content
 
             tr
               td(style="vertical-align: middle;")
-                if the_news.image
-                  img(src='#{the_news.image}', alt='#{the_news.title}', height="50")
+                if the_news.photos[0]
+                  img(src='#{the_news.photos[0]}', alt='#{the_news.title}', height="50")
+
               td(style="vertical-align: middle;")
                 | #{the_news.title} 
               td(style="vertical-align: middle;")

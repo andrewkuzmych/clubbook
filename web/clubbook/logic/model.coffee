@@ -149,6 +149,9 @@ NewsSchema = new mongoose.Schema
   title: {type: String, trim: true}
   description: {type: String, trim: true}
   is_favorite: {type: Boolean, default: false}
+  photos: [
+    {type: String, trim: true}
+  ]
 
 NewsSchema.pre 'save', (next, done) ->
   this.updated_on = new Date().toISOString()

@@ -181,6 +181,7 @@ exports.club_news = (req, res)->
     db_model.News.find({'venue': req.params.id}).exec (err, news)-> 
       if not news
         console.log  'missing news for this club'
+        res.redirect "/venue/club_news/#{req.params.id}"        
       else
         model._id = req.params.id
         model.news = news
@@ -241,32 +242,11 @@ exports.club_delete_action = (req, res)->
     db_model.News.remove {"venue":req.params.id}, (err)->
       res.redirect "/venue/clubs"
 
-###exports.news = (req, res)->
-  create_base_model req, res, (model)->
-    db_model.Venue.findById(req.params.venue_id).exec (err, venue)->
-      db_model.News.find({'venue' : venue}).sort({created_on: 'desc'}).exec (err, news)->
-        #model.news = news
-        news_new = []
-        if news
-          __.each news, ((the_new) ->
-            the_news_new = 
-              _id: the_new._id
-              title: the_new.title
-              description: the_new.description
-              image: the_new.image
-              updated_on: moment.utc(the_new.updated_on).format("DD.MM.YYYY")
-
-            news_new.push the_news_new
-          ), this
-
-        model.news = news_new
-
-        res.render "pages/news", model###
-
 exports.club_news_create = (req, res)->
   create_base_model req, res, (model)->
     model.cloudinary = cloudinary
     model.news = {}
+    model.club_id = req.params.id
     res.render "pages/news_update", model
 
 exports.club_news_create_action = (req, res)->
@@ -278,41 +258,21 @@ exports.club_news_create_action = (req, res)->
         venue: mongoose.Types.ObjectId(req.params.id)
         title: req.body.title
         description: req.body.description
-      if req.body.news_image
-        news.image = req.body.news_image
+      news.photos = []
+      for photo in req.body.news_images.split(',')
+        if photo
+          news.photos.push photo
       news.save (err)->
         console.log 'SAVE'
         res.redirect "/venue/club_news/#{req.params.id}"
 
-###exports.news_create = (req, res)->
-  create_base_model req, res, (model)->
-    model.cloudinary = cloudinary
-    model.news = {}
-    res.render "pages/news_update", model
-
-exports.news_create_action = (req, res)->
-  validate_news_model req, null, (validation)->
-    if validation.has_error
-      res.redirect "/venue/#{req.params.venue_id}/news_create?error=1"
-    else
-      news = new db_model.News
-        venue: mongoose.Types.ObjectId(req.params.venue_id)
-        title: req.body.title
-        description: req.body.description
-
-      if req.body.news_image
-        news.image = req.body.news_image
-      news.save (err)->
-        console.log 'SAVE'
-        res.redirect "/venue/#{req.params.venue_id}/news" ###
 
 exports.news_edit = (req, res)->
   create_base_model req, res, (model)->
     db_model.News.findById(req.params.id).exec (err, news)->
       model.cloudinary = cloudinary
       model.news = news
-      console.log news
-      console.log model.news
+      model.club_id = req.params.club_id
       res.render "pages/news_update", model
 
 exports.news_edit_action = (req, res)->
@@ -323,9 +283,10 @@ exports.news_edit_action = (req, res)->
       db_model.News.findById(req.params.id).exec (err, news)->
         news.title = req.body.title
         news.description = req.body.description
-        if req.body.news_image
-          news.image = req.body.news_image
-
+        news.photos = []
+        for photo in req.body.news_images.split(',')
+          if photo
+            news.photos.push photo
         news.save (err)->
           res.redirect "/venue/club_news/#{req.params.club_id}" 
 
@@ -417,18 +378,5 @@ create_base_model = (req, res, callback)->
   else
     model.has_error = false
 
-  ###  # manage venue page
-    if req.params.venue
-      model.current_venue = req.params.venue
-      # dropdown with available venues
-    if req.user
-      query_venue = if req.user.is_admin then {} else {"admins": req.user._id}
-      db_model.Venue.find(query_venue).sort("title").exec (err, venues)->
-        model.my_venues = venues
-        if venues.length > 0
-          if req.params.venue_id
-            model.active_venue = __.find venues, (venue)-> venue._id.toString() is req.params.venue_id
-          if not model.active_venue then model.active_venue = venues[0]
-        callback model
-    else###
+
   callback model
