@@ -8,9 +8,6 @@ import com.nl.clubbook.R;
  * Created by Andrew on 6/6/2014.
  */
 public class ChatMessage extends BaseChatMessage {
-    public static final String TYPE_MESSAGE = "message";
-    public static final String TYPE_DRINK = "drink";
-    public static final String TYPE_SMILE = "smile";
 
     private String userFrom;
     private String userFromName;
@@ -24,13 +21,13 @@ public class ChatMessage extends BaseChatMessage {
     public String getFormatMessage(Context context){
         String result;
 
-        if(TYPE_MESSAGE.equalsIgnoreCase(type)){
+        if(Types.TYPE_MESSAGE.equalsIgnoreCase(type)){
             result = msg;
 
-        } else if(TYPE_SMILE.equalsIgnoreCase(type)) {
+        } else if(Types.TYPE_SMILE.equalsIgnoreCase(type)) {
             result = userFromName + " " + context.getString(R.string.likes_the_profile);
 
-        } else if(TYPE_DRINK.equalsIgnoreCase(type)) {
+        } else if(Types.TYPE_DRINK.equalsIgnoreCase(type)) {
             result = userFromName + " " + context.getString(R.string.invites_for_a_drink);
 
         } else {
@@ -102,5 +99,13 @@ public class ChatMessage extends BaseChatMessage {
 
     public void setRead(boolean isRead) {
         this.isRead = isRead;
+    }
+
+    public interface Types {
+        public static final String TYPE_MESSAGE = "message";
+        public static final String TYPE_DRINK = "drink";
+        public static final String TYPE_SMILE = "smile";
+        public static final String TYPE_LOCATION = "location";
+        public static final String TYPE_PHOTO = "photo";
     }
 }

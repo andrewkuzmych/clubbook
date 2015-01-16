@@ -375,7 +375,6 @@
 		520897811A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520897561A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.xib */; };
 		520897861A407C7F00E8DD06 /* JSQSystemSoundPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 520897851A407C7F00E8DD06 /* JSQSystemSoundPlayer.m */; };
 		520F38AC1A5E93B600FB1E65 /* NewsFeedTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520F38AB1A5E93B600FB1E65 /* NewsFeedTableViewController.m */; };
-		520F38AF1A5E952000FB1E65 /* NewsFeedSingleImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 520F38AE1A5E952000FB1E65 /* NewsFeedSingleImageCell.m */; };
 		5210474D1A48300A006DD319 /* DateHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5210474C1A48300A006DD319 /* DateHelper.m */; };
 		52188DAE1A51876E0020DD6F /* MainMenuCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52188DAD1A51876E0020DD6F /* MainMenuCollectionViewCell.m */; };
 		521BEC3F1A52F576003E7A27 /* gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 521BEC3C1A52F576003E7A27 /* gradient.png */; };
@@ -397,12 +396,15 @@
 		522F75FE1A6524680095991F /* EBShadedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 522F75EF1A6524680095991F /* EBShadedView.m */; };
 		522F75FF1A6524680095991F /* EBTagPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 522F75F11A6524680095991F /* EBTagPopover.m */; };
 		52343D9B1A430CF400F47A36 /* UIImage+FixOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 52343D9A1A430CF400F47A36 /* UIImage+FixOrientation.m */; };
-		523559C91A5EB48A00C1ED72 /* NewsFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 523559C81A5EB48A00C1ED72 /* NewsFeedCell.m */; };
 		5245DC621A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5245DC611A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m */; };
 		5245DC651A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5245DC641A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.m */; };
 		524B225A1A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 524B22591A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.m */; };
+		52520A781A66928B006399EF /* NewsFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52520A761A66928B006399EF /* NewsFeedCell.m */; };
+		52520A801A66B022006399EF /* NewsData.m in Sources */ = {isa = PBXBuildFile; fileRef = 52520A7F1A66B022006399EF /* NewsData.m */; };
+		526ABCCA1A67FFAF0010F485 /* NewsPhotosLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 526ABCC91A67FFAF0010F485 /* NewsPhotosLayout.m */; };
 		528C85951A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 528C85941A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard */; };
 		528C85981A56E3AC00BBB148 /* ClubProfileTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 528C85971A56E3AC00BBB148 /* ClubProfileTabBarViewController.m */; };
+		528D6CA41A66C7E800B2E6B0 /* NewsPhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 528D6CA21A66C7E800B2E6B0 /* NewsPhotoCell.m */; };
 		529048F51A373FF600F80DF9 /* RetrieveLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 529048F41A373FF600F80DF9 /* RetrieveLocationViewController.m */; };
 		5297358E1A39B002009943C3 /* MultiplePulsingHaloLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297358B1A39B002009943C3 /* MultiplePulsingHaloLayer.m */; };
 		5297358F1A39B002009943C3 /* PulsingHaloLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297358D1A39B002009943C3 /* PulsingHaloLayer.m */; };
@@ -1110,8 +1112,6 @@
 		520897851A407C7F00E8DD06 /* JSQSystemSoundPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSQSystemSoundPlayer.m; sourceTree = "<group>"; };
 		520F38AA1A5E93B600FB1E65 /* NewsFeedTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedTableViewController.h; sourceTree = "<group>"; };
 		520F38AB1A5E93B600FB1E65 /* NewsFeedTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedTableViewController.m; sourceTree = "<group>"; };
-		520F38AD1A5E952000FB1E65 /* NewsFeedSingleImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedSingleImageCell.h; sourceTree = "<group>"; };
-		520F38AE1A5E952000FB1E65 /* NewsFeedSingleImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedSingleImageCell.m; sourceTree = "<group>"; };
 		5210474B1A48300A006DD319 /* DateHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateHelper.h; sourceTree = "<group>"; };
 		5210474C1A48300A006DD319 /* DateHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateHelper.m; sourceTree = "<group>"; };
 		52188DAC1A51876E0020DD6F /* MainMenuCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenuCollectionViewCell.h; sourceTree = "<group>"; };
@@ -1160,17 +1160,23 @@
 		522F75F21A6524680095991F /* EBTagPopoverDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EBTagPopoverDelegate.h; sourceTree = "<group>"; };
 		52343D991A430CF400F47A36 /* UIImage+FixOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FixOrientation.h"; sourceTree = "<group>"; };
 		52343D9A1A430CF400F47A36 /* UIImage+FixOrientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FixOrientation.m"; sourceTree = "<group>"; };
-		523559C71A5EB48A00C1ED72 /* NewsFeedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedCell.h; sourceTree = "<group>"; };
-		523559C81A5EB48A00C1ED72 /* NewsFeedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedCell.m; sourceTree = "<group>"; };
 		5245DC601A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubPhotGalleryCollectionViewController.h; sourceTree = "<group>"; };
 		5245DC611A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubPhotGalleryCollectionViewController.m; sourceTree = "<group>"; };
 		5245DC631A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubPhotoGalleryCollectionViewCell.h; sourceTree = "<group>"; };
 		5245DC641A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubPhotoGalleryCollectionViewCell.m; sourceTree = "<group>"; };
 		524B22581A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubSubscribeSettingsTableViewController.h; sourceTree = "<group>"; };
 		524B22591A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubSubscribeSettingsTableViewController.m; sourceTree = "<group>"; };
+		52520A751A66928B006399EF /* NewsFeedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedCell.h; sourceTree = "<group>"; };
+		52520A761A66928B006399EF /* NewsFeedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedCell.m; sourceTree = "<group>"; };
+		52520A7E1A66B022006399EF /* NewsData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsData.h; sourceTree = "<group>"; };
+		52520A7F1A66B022006399EF /* NewsData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsData.m; sourceTree = "<group>"; };
+		526ABCC81A67FFAF0010F485 /* NewsPhotosLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsPhotosLayout.h; sourceTree = "<group>"; };
+		526ABCC91A67FFAF0010F485 /* NewsPhotosLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsPhotosLayout.m; sourceTree = "<group>"; };
 		528C85941A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ClubProfileStoryboard.storyboard; sourceTree = "<group>"; };
 		528C85961A56E3AC00BBB148 /* ClubProfileTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubProfileTabBarViewController.h; sourceTree = "<group>"; };
 		528C85971A56E3AC00BBB148 /* ClubProfileTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubProfileTabBarViewController.m; sourceTree = "<group>"; };
+		528D6CA11A66C7E800B2E6B0 /* NewsPhotoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsPhotoCell.h; sourceTree = "<group>"; };
+		528D6CA21A66C7E800B2E6B0 /* NewsPhotoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsPhotoCell.m; sourceTree = "<group>"; };
 		529048F31A373FF600F80DF9 /* RetrieveLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RetrieveLocationViewController.h; sourceTree = "<group>"; };
 		529048F41A373FF600F80DF9 /* RetrieveLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RetrieveLocationViewController.m; sourceTree = "<group>"; };
 		5297358A1A39B002009943C3 /* MultiplePulsingHaloLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiplePulsingHaloLayer.h; sourceTree = "<group>"; };
@@ -2148,10 +2154,14 @@
 			children = (
 				520F38AA1A5E93B600FB1E65 /* NewsFeedTableViewController.h */,
 				520F38AB1A5E93B600FB1E65 /* NewsFeedTableViewController.m */,
-				520F38AD1A5E952000FB1E65 /* NewsFeedSingleImageCell.h */,
-				520F38AE1A5E952000FB1E65 /* NewsFeedSingleImageCell.m */,
-				523559C71A5EB48A00C1ED72 /* NewsFeedCell.h */,
-				523559C81A5EB48A00C1ED72 /* NewsFeedCell.m */,
+				52520A751A66928B006399EF /* NewsFeedCell.h */,
+				52520A761A66928B006399EF /* NewsFeedCell.m */,
+				52520A7E1A66B022006399EF /* NewsData.h */,
+				528D6CA11A66C7E800B2E6B0 /* NewsPhotoCell.h */,
+				528D6CA21A66C7E800B2E6B0 /* NewsPhotoCell.m */,
+				52520A7F1A66B022006399EF /* NewsData.m */,
+				526ABCC81A67FFAF0010F485 /* NewsPhotosLayout.h */,
+				526ABCC91A67FFAF0010F485 /* NewsPhotosLayout.m */,
 			);
 			name = NewsFeed;
 			sourceTree = "<group>";
@@ -2759,6 +2769,7 @@
 				4993F20E1979194900A225BE /* UIImage+MRImageEffects.m in Sources */,
 				499929C319EAB6B900B77A6E /* FriendsResult.m in Sources */,
 				498A68FE196C4CFD00BC2859 /* PNClientStateUpdateRequest.m in Sources */,
+				52520A801A66B022006399EF /* NewsData.m in Sources */,
 				4934F76019D047B800BFFDB1 /* SDWebImagePrefetcher.m in Sources */,
 				520897641A407C6700E8DD06 /* JSQMessagesMediaViewBubbleImageMasker.m in Sources */,
 				49E831821953034300D4A26C /* ObjectBuilder.m in Sources */,
@@ -2778,7 +2789,6 @@
 				4939072A194F1E3E003F2FF9 /* SWRevealViewController.m in Sources */,
 				49ABA129198A188200B060D0 /* AddFriendButton.m in Sources */,
 				520897721A407C6700E8DD06 /* JSQMessagesCollectionView.m in Sources */,
-				520F38AF1A5E952000FB1E65 /* NewsFeedSingleImageCell.m in Sources */,
 				520897661A407C6700E8DD06 /* JSQMessagesToolbarButtonFactory.m in Sources */,
 				498A1BAE196BD90F00824E64 /* BaseMessagesViewController.m in Sources */,
 				4934F76419D047B800BFFDB1 /* UIImage+WebP.m in Sources */,
@@ -2822,7 +2832,6 @@
 				498A68CE196C4CFD00BC2859 /* PNChannelPresence.m in Sources */,
 				49ABA126198922EE00B060D0 /* WorkingHour.m in Sources */,
 				522F75F91A6524680095991F /* EBPhotoPagesOperation.m in Sources */,
-				523559C91A5EB48A00C1ED72 /* NewsFeedCell.m in Sources */,
 				498A68E5196C4CFD00BC2859 /* PNConfiguration.m in Sources */,
 				520897741A407C6700E8DD06 /* JSQMessagesCollectionViewCellIncoming.m in Sources */,
 				498A68E7196C4CFD00BC2859 /* PNError.m in Sources */,
@@ -2948,6 +2957,7 @@
 				49908F0419751C5C00DA68F2 /* OBAlert.m in Sources */,
 				498A68F4196C4CFD00BC2859 /* NSInvocation+PNAdditions.m in Sources */,
 				49D8D301197D6C8F00015052 /* UIView+StringTagAdditions.m in Sources */,
+				52520A781A66928B006399EF /* NewsFeedCell.m in Sources */,
 				522F75F51A6524680095991F /* EBCommentsTableView.m in Sources */,
 				498A68E6196C4CFD00BC2859 /* PNDate.m in Sources */,
 				499682B31A11059F0097AED5 /* Harpy.m in Sources */,
@@ -2965,6 +2975,7 @@
 				498A1BA8196BD2B200824E64 /* Conversation.m in Sources */,
 				498A1B9B196ACF9100824E64 /* ChatViewController.m in Sources */,
 				49ABA138198F9D7F00B060D0 /* SettingsCell.m in Sources */,
+				528D6CA41A66C7E800B2E6B0 /* NewsPhotoCell.m in Sources */,
 				4993F20D1979194900A225BE /* MRBlurView.m in Sources */,
 				498A68FA196C4CFD00BC2859 /* PNAccessRightsAuditRequest.m in Sources */,
 				4934F76219D047B800BFFDB1 /* UIImage+GIF.m in Sources */,
@@ -2985,6 +2996,7 @@
 				4934F76319D047B800BFFDB1 /* UIImage+MultiFormat.m in Sources */,
 				522F75FE1A6524680095991F /* EBShadedView.m in Sources */,
 				5208975F1A407C6700E8DD06 /* JSQMessagesKeyboardController.m in Sources */,
+				526ABCCA1A67FFAF0010F485 /* NewsPhotosLayout.m in Sources */,
 				498A68D7196C4CFD00BC2859 /* PNErrorResponseParser.m in Sources */,
 				4993F2101979194900A225BE /* MRCircularProgressView.m in Sources */,
 				4996E0C519669ED0000C721F /* CbButton.m in Sources */,
