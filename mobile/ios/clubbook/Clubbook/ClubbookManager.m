@@ -35,9 +35,9 @@
      [self.communicator signinUser:email pass:pass];
 }
 
-- (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type url:(NSString*) url accessToken:(NSString *) accessToken
+- (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type url:(NSString*) url location:(NSDictionary*) location accessToken:(NSString *) accessToken
 {
-    [self.communicator chat:user_from user_to:user_to msg:msg msg_type:msg_type url:url accessToken:accessToken];
+    [self.communicator chat:user_from user_to:user_to msg:msg msg_type:msg_type url:url location:location accessToken:accessToken];
 }
 
 - (void)retrievePlaces:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance type:(NSString*) type search:(NSString*) search accessToken:(NSString *) accessToken;

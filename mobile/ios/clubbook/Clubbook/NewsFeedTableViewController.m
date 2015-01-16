@@ -45,7 +45,7 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
         news.nameUser = @"CLUBBOOK";
         news.dateOfPost = [NSDate date];
         news.avatarImageUrl = [UIImage imageNamed:@"avatar_default"];
-        news.messageText = @"!!!!!!!!!!!!!!!!!!!!!!";
+        news.messageText = @"Wish You New Year 2015 On 1st January,\nwhen Moon Sets and Sun Rises,\n the world would wake up to a new dawn,i wish all my friends and family live long and to witness 100 such dawns.\nHappy new Year.";
         news.arrayOfPhotos = [[NSMutableArray alloc] init];
         
         [newsArray addObject:news];
@@ -54,7 +54,7 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
         news1.nameUser = @"CLUBBOOK";
         news1.dateOfPost = [NSDate date];
         news1.avatarImageUrl = [UIImage imageNamed:@"avatar_default"];
-        news1.messageText = @"!!!!!!!!!!!!!!!!!!!!!!";
+        news1.messageText = @"Check our new cover photo!";
         news1.arrayOfPhotos = [[NSMutableArray alloc] init];
         [news1.arrayOfPhotos addObject:[UIImage imageNamed:@"menu_background"]];
         [newsArray addObject:news1];
@@ -63,10 +63,10 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
         news3.nameUser = @"CLUBBOOK";
         news3.dateOfPost = [NSDate date];
         news3.avatarImageUrl = [UIImage imageNamed:@"avatar_default"];
-        news3.messageText = @"!!!!!!!!!!!!!!!!!!!!!!";
+        news3.messageText = @"Our brand images";
         news3.arrayOfPhotos = [[NSMutableArray alloc] init];
+        [news3.arrayOfPhotos addObject:[UIImage imageNamed:@"background"]];
         [news3.arrayOfPhotos addObject:[UIImage imageNamed:@"menu_background"]];
-        [news3.arrayOfPhotos addObject:[UIImage imageNamed:@"photo"]];
         [newsArray addObject:news3];
         
         //dummy data
@@ -77,8 +77,8 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
         news2.messageText = @"Check out sweet new main photo!";
         news2.arrayOfPhotos = [[NSMutableArray alloc] init];
         [news2.arrayOfPhotos addObject:[UIImage imageNamed:@"menu_background"]];
-        [news2.arrayOfPhotos addObject:[UIImage imageNamed:@"photo"]];
-        [news2.arrayOfPhotos addObject:[UIImage imageNamed:@"news"]];
+        [news2.arrayOfPhotos addObject:[UIImage imageNamed:@"background"]];
+        [news2.arrayOfPhotos addObject:[UIImage imageNamed:@"gradient@3x"]];
         [newsArray addObject:news2];
     
 }

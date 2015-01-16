@@ -16,6 +16,7 @@
 @property (strong, nonatomic) NSString *msg;
 @property (strong, nonatomic) NSDate *time;
 @property (strong, nonatomic) NSString *url;
+@property (strong, nonatomic) NSDictionary *location;
 @property (assign, nonatomic) BOOL read;
 
 @end

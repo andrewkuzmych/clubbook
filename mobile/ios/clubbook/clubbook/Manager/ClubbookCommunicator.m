@@ -342,11 +342,15 @@
     });
 }
 
-- (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type url:(NSString*) url accessToken:(NSString *) accessToken
+- (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type url:(NSString*) url location:(NSDictionary*)location accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         NSString *urlAsString = [NSString stringWithFormat:@"%@obj/chat?access_token=%@", baseURL, accessToken];
+        
+        NSNumber* lat = [location objectForKey:@"lat"];
+        NSNumber* lon = [location objectForKey:@"lon"];
+        
         NSDictionary * data =
         [NSDictionary
          dictionaryWithObjectsAndKeys:
@@ -355,8 +359,10 @@
          user_from, @"user_from",
          user_to, @"user_to",
          url, @"url",
+         lat, @"lat",
+         lon, @"lon",
          nil];
-        
+        ;
         NSMutableURLRequest *request;
         request = [self generateRequest:data url:urlAsString method:@"POST"];
         

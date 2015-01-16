@@ -90,6 +90,7 @@
     NSString *user_from = [dataJson valueForKey:@"user_from"];
     NSString *user_to = [dataJson valueForKey:@"user_to"];
     NSString *url = [messageJson valueForKey:@"url"];
+    NSDictionary* location = [messageJson valueForKey:@"location"];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
@@ -97,7 +98,7 @@
     if ([user_to isEqualToString:self.senderId] && [user_from isEqualToString:self.userTo]) {
         canChat = YES;
         [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
-        [self putMessage:msg type:type url:url sender:user_from];
+        [self putMessage:msg type:type url:url location:location sender:user_from];
         [self._manager readChat:_chat.currentUser.id toUser:_chat.receiver.id accessToken:accessToken];
     }
 }
@@ -146,7 +147,7 @@
         self.navigationItem.rightBarButtonItem = barButtonItem;
        
         for(Conversation * conf in chat.conversations) {
-            [self loadMessage:conf.user_from displayName:conf.user_from date:conf.time message:conf.msg type:conf.type url:conf.url];
+            [self loadMessage:conf.user_from displayName:conf.user_from date:conf.time message:conf.msg type:conf.type url:conf.url location:conf.location];
         }
         
         [self setCanChat];
@@ -236,7 +237,7 @@
 
 #pragma mark - Actions
 
-- (void)sendMessage:(NSString *)message url:(NSString*)url type:(NSString *)type
+- (void)sendMessage:(NSString *)message url:(NSString*)url type:(NSString *)type location:(NSDictionary*)location
 {
     if (!canChat) {
         [CSNotificationView showInViewController:self
@@ -251,14 +252,14 @@
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
     
     [JSQSystemSoundPlayer jsq_playMessageSentSound];
-    [self putMessage:message type:type url:url sender:self.senderId];
+    [self putMessage:message type:type url:url location:location sender:self.senderId];
     NSString* trimMessage = [message stringByTrimmingCharactersInSet:
                                [NSCharacterSet whitespaceCharacterSet]];
     // send to server
-    [self._manager chat:self.senderId user_to:self.userTo msg:trimMessage msg_type:type url:url accessToken:accessToken];
+    [self._manager chat:self.senderId user_to:self.userTo msg:trimMessage msg_type:type url:url location:location accessToken:accessToken];
 }
 
-- (void)loadMessage:(NSString*) sender displayName:(NSString*)displayName date:(NSDate*)date message:(NSString*)message type:(NSString*)type url:(NSString*)url {
+- (void)loadMessage:(NSString*) sender displayName:(NSString*)displayName date:(NSDate*)date message:(NSString*)message type:(NSString*)type url:(NSString*)url location:(NSDictionary*) location{
     if ([type isEqualToString:@"photo"]) {
         // transform avatar
        
@@ -280,14 +281,39 @@
         [self.messages addObject:photoMessage];
         [self.collectionView reloadData];
     }
+    if ([type isEqualToString:@"location"]) {
+        // transform avatar
+        
+        __weak UICollectionView *weakView = self.collectionView;
+        NSNumber* lat = [location objectForKey:@"lat"];
+        NSNumber* lon = [location objectForKey:@"lon"];
+
+        CLLocation *userLocation = [[CLLocation alloc] initWithLatitude:[lat doubleValue] longitude:[lon doubleValue]];
+        
+        JSQLocationMediaItem *locationItem = [[JSQLocationMediaItem alloc] init];
+        if([sender isEqualToString:self.senderId]) {
+            [locationItem setAppliesMediaViewMaskAsOutgoing:YES];
+        }
+        else {
+            [locationItem setAppliesMediaViewMaskAsOutgoing:NO];
+        }
+        [locationItem setLocation:userLocation withCompletionHandler:^{
+            [weakView reloadData];
+        }];
+        
+        JSQMessage *locationMessage = [JSQMessage messageWithSenderId:sender
+                                                          displayName:displayName
+                                                                media:locationItem];
+        [self.messages addObject:locationMessage];
+    }
     else {
         JSQMessage *jsqmessage = [[JSQMessage alloc] initWithSenderId:sender senderDisplayName:displayName date:date text:message];
         [self.messages addObject:jsqmessage];
     }
 }
 
-- (void)putMessage:(NSString *)message type:(NSString *)type url:(NSString*)url sender:(NSString *) sender {
-    [self loadMessage:sender displayName:self.senderDisplayName date:[NSDate date] message:message type:type url:url];
+- (void)putMessage:(NSString *)message type:(NSString *)type url:(NSString*)url location:(NSDictionary*)location sender:(NSString *) sender {
+    [self loadMessage:sender displayName:self.senderDisplayName date:[NSDate date] message:message type:type url:url location:location];
     [self setCanChat];
     [self finishReceivingMessage];
 }
@@ -308,7 +334,7 @@
      *  3. Call `finishSendingMessage`
      */
 
-    [self sendMessage:text url:@"" type:@"message"];
+    [self sendMessage:text url:@"" type:@"message" location:nil];
     [self finishSendingMessage];
 }
 
@@ -625,21 +651,15 @@
 }
 
 - (void) shareMyLocation {
-    __weak UICollectionView *weakView = self.collectionView;
     CLLocation *userLocation = [LocationManagerSingleton sharedSingleton].locationManager.location;
+    NSNumber* lon = [[NSNumber alloc] initWithDouble:userLocation.coordinate.longitude];
+    NSNumber* lat = [[NSNumber alloc] initWithDouble:userLocation.coordinate.latitude];
+    NSMutableDictionary* location = [[NSMutableDictionary alloc] init];
     
-    JSQLocationMediaItem *locationItem = [[JSQLocationMediaItem alloc] init];
+    [location setObject:lon forKey:@"lon"];
+    [location setObject:lat forKey:@"lat"];
     
-    [locationItem setLocation:userLocation withCompletionHandler:^{
-        [weakView reloadData];
-    }];
-    
-    JSQMessage *locationMessage = [JSQMessage messageWithSenderId:self.senderId
-                                                      displayName:self.senderId
-                                                            media:locationItem];
-    [self.messages addObject:locationMessage];
-    [self.collectionView reloadData];
-    [self scrollToBottomAnimated:YES];
+    [self sendMessage:@"" url:@"" type:@"location" location:location];
     
 }
 
@@ -657,7 +677,7 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *userName = [defaults objectForKey:@"userName"];
     
-    [self sendMessage:[NSString stringWithFormat:@"%@ %@", userName, NSLocalizedString(@"send_like", nil)] url:@"" type:@"smile"];
+    [self sendMessage:[NSString stringWithFormat:@"%@ %@", userName, NSLocalizedString(@"send_like", nil)] url:@"" type:@"smile" location:nil];
 }
 
 //delegate methode will be called after picking photo either from camera or library
@@ -694,7 +714,7 @@
         if (successResult) {
 
             NSString *photoResult = [successResult objectForKey:@"url"];
-            [self sendMessage:@"" url:photoResult type:@"photo"];
+            [self sendMessage:@"" url:photoResult type:@"photo" location:nil];
             [self.collectionView reloadData];
             [self scrollToBottomAnimated:YES];
         } 

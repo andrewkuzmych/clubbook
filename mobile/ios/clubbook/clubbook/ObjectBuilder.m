@@ -491,6 +491,7 @@
         conf.msg = [conversationJson objectForKey:@"msg"];
         conf.type = [conversationJson objectForKey:@"type"];
         conf.url = [conversationJson objectForKey:@"url"];
+        conf.location = [conversationJson objectForKey:@"location"];
         
         NSString *dateStr = [conversationJson objectForKey:@"time"];
         
@@ -575,6 +576,8 @@
             conf.user_from = [conversationJson objectForKey:@"from_who"];
             conf.msg = [conversationJson objectForKey:@"msg"];
             conf.type = [conversationJson objectForKey:@"type"];
+            conf.url = [conversationJson objectForKey:@"url"];
+            conf.location = [conversationJson objectForKey:@"location"];
             
             NSNumber * isRead = (NSNumber *)[conversationJson objectForKey: @"read"];
             conf.read = (isRead && [isRead boolValue] == YES);
