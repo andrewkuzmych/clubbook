@@ -31,6 +31,8 @@
   - (void)didReceiveUsersCheckedin:(NSArray *)users;
   - (void)didReceiveUser:(User *)user;
   - (void)didReceiveFriend:(User *)user;
+  - (void)didReceiveUserNews:(NSArray *)news;
+  - (void)didReceivePlaceNews:(NSArray *)news;
   - (void)didRetrieveFriends:(FriendsResult *)friendsResult;
   - (void)didRetrievePendingFriends:(FriendsResult *)friendsResult;
   - (void)didReceiveConversation:(Chat *)chat;

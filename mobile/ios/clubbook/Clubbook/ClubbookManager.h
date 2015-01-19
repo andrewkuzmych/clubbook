@@ -44,6 +44,10 @@
 
 - (void)retrieveUser:(NSString *) accessToken;
 
+- (void)retrievePlaceNews:(NSString*) clubId accessToken:(NSString*) accessToken;
+
+- (void)retrieveUserNews:(NSString*) userId accessToken:(NSString*) accessToken;
+
 - (void)retrieveFriend:(NSString *) friendId accessToken:(NSString *) accessToken;
 
 - (void)retrieveConversation:(NSString *) fromUser toUser:(NSString *) toUser accessToken:(NSString *) accessToken;

@@ -69,6 +69,14 @@
     [self.communicator retrieveUser:accessToken];
 }
 
+- (void)retrievePlaceNews:(NSString*) clubId accessToken:(NSString*) accessToken {
+    [self.communicator retrievePlaceNews:clubId accessToken:accessToken];
+}
+
+- (void)retrieveUserNews:(NSString*) userId accessToken:(NSString*) accessToken {
+    [self.communicator retrieveUserNews:userId accessToken:accessToken];
+}
+
 - (void)retrieveFriend:(NSString *) friendId accessToken:(NSString *) accessToken
 {
     [self.communicator retrieveFriend:friendId accessToken:accessToken];
@@ -567,8 +575,34 @@
     }
 }
 
-- (void)receivedPlaceJSON:(NSData *)objectNotation
+
+- (void)receivedPlaceNewsJSON:(NSData *)objectNotation
 {
+    NSError *error = nil;
+    NSArray *news = [ObjectBuilder newsFromJSON:objectNotation error:&error];
+    
+    if (error != nil) {
+        [self.delegate  failedWithError:error];
+        
+    } else {
+        [self.delegate didReceivePlaceNews:news];
+    }
+}
+
+- (void)receivedUserNewsJSON:(NSData *)objectNotation
+{
+    NSError *error = nil;
+    NSArray *news = [ObjectBuilder newsFromJSON:objectNotation error:&error];
+    
+    if (error != nil) {
+        [self.delegate  failedWithError:error];
+        
+    } else {
+        [self.delegate didReceivePlaceNews:news];
+    }
+}
+
+- (void)receivedPlaceJSON:(NSData *)objectNotation {
     NSError *error = nil;
     Place *place = [ObjectBuilder placeFromJSON:objectNotation error:&error];
     

@@ -12,6 +12,9 @@
 #import "NewsPhotoCell.h"
 #import "DateHelper.h"
 #import "EBPhotoPagesController.h"
+#import "CLCloudinary.h"
+#import "Constants.h"
+#import "UIImageView+WebCache.h"
 
 #define STATIC_HEIGHT 100
 
@@ -21,8 +24,9 @@
 
 @implementation NewsFeedTableViewController
 {
-    NSMutableArray* newsArray;
-    NSArray* photoSlideShow;
+    NSArray* newsArray;
+    NSArray* photoSlideShowUrls;
+    NSMutableDictionary* photoImages;
 }
 
 static NSString* NewsFeedCellIdentifier = @"NewsFeedCell";
@@ -39,53 +43,23 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     
     [self.tableView setBackgroundColor:[UIColor colorWithRed:0.980 green:0.839 blue:1.000 alpha:1.000]];
     
-
-//    for (int i = 0; i < 10; ++i) {
-        NewsData* news = [[NewsData alloc] init];
-        news.nameUser = @"CLUBBOOK";
-        news.dateOfPost = [NSDate date];
-        news.avatarImageUrl = [UIImage imageNamed:@"avatar_default"];
-        news.messageText = @"Wish You New Year 2015 On 1st January,\nwhen Moon Sets and Sun Rises,\n the world would wake up to a new dawn,i wish all my friends and family live long and to witness 100 such dawns.\nHappy new Year.";
-        news.arrayOfPhotos = [[NSMutableArray alloc] init];
-        
-        [newsArray addObject:news];
-        
-        NewsData* news1 = [[NewsData alloc] init];
-        news1.nameUser = @"CLUBBOOK";
-        news1.dateOfPost = [NSDate date];
-        news1.avatarImageUrl = [UIImage imageNamed:@"avatar_default"];
-        news1.messageText = @"Check our new cover photo!";
-        news1.arrayOfPhotos = [[NSMutableArray alloc] init];
-        [news1.arrayOfPhotos addObject:[UIImage imageNamed:@"menu_background"]];
-        [newsArray addObject:news1];
-        
-        NewsData* news3 = [[NewsData alloc] init];
-        news3.nameUser = @"CLUBBOOK";
-        news3.dateOfPost = [NSDate date];
-        news3.avatarImageUrl = [UIImage imageNamed:@"avatar_default"];
-        news3.messageText = @"Our brand images";
-        news3.arrayOfPhotos = [[NSMutableArray alloc] init];
-        [news3.arrayOfPhotos addObject:[UIImage imageNamed:@"background"]];
-        [news3.arrayOfPhotos addObject:[UIImage imageNamed:@"menu_background"]];
-        [newsArray addObject:news3];
-        
-        //dummy data
-        NewsData* news2 = [[NewsData alloc] init];
-        news2.nameUser = @"CLUBBOOK";
-        news2.dateOfPost = [NSDate date];
-        news2.avatarImageUrl = [UIImage imageNamed:@"avatar_default"];
-        news2.messageText = @"Check out sweet new main photo!";
-        news2.arrayOfPhotos = [[NSMutableArray alloc] init];
-        [news2.arrayOfPhotos addObject:[UIImage imageNamed:@"menu_background"]];
-        [news2.arrayOfPhotos addObject:[UIImage imageNamed:@"background"]];
-        [news2.arrayOfPhotos addObject:[UIImage imageNamed:@"gradient@3x"]];
-        [newsArray addObject:news2];
     
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [defaults objectForKey:@"accessToken"];
+     
+    [self._manager retrievePlaceNews:self.place.id accessToken:accessToken];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void) didReceivePlaceNews:(NSArray*) news {
+    newsArray = news;
+    if ([newsArray count] > 0) {
+        [self.tableView reloadData];
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -109,15 +83,15 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     
     NewsData* news = [newsArray objectAtIndex:indexPath.row];
     
-    [cell.avatarImage setImage:news.avatarImageUrl];
-    [cell.nameLabel setText:news.nameUser];
+    [cell.avatarImage sd_setImageWithURL:[NSURL URLWithString:self.place.avatar] placeholderImage:[UIImage imageNamed:@"avatar_default.png"]];
+    [cell.nameLabel setText:self.place.title];
     
-    NSString* date = [[DateHelper sharedSingleton] get24hTime:news.dateOfPost];
+    NSString* date = [[DateHelper sharedSingleton] get24hTime:news.createDate];
     [cell.timeLabel setText:date];
     [cell.contentView setBackgroundColor:self.tableView.backgroundColor];
-    [cell.newsText setText:news.messageText];
+    [cell.newsText setText:news.newsDescription];
     [cell.photosView setHidden:YES];
-    if ([news.arrayOfPhotos count] > 0) {
+    if ([news.photos count] > 0) {
         [cell.photosView setHidden:NO];
     }
     
@@ -127,13 +101,13 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NewsData* news = [newsArray objectAtIndex:indexPath.row];
     NewsFeedCell *cell = [tableView dequeueReusableCellWithIdentifier:NewsFeedCellIdentifier];
-    cell.newsText.text = news.messageText;
+    cell.newsText.text = news.newsDescription;
     CGSize maximumLabelSize = CGSizeMake(cell.newsText.frame.size.width, 9999);
     CGSize expectedLabelSize = [cell.newsText sizeThatFits:maximumLabelSize];
 
     CGFloat height = STATIC_HEIGHT + expectedLabelSize.height;
     
-    if ([news.arrayOfPhotos count] > 0) {
+    if ([news.photos count] > 0) {
         height += cell.photosView.frame.size.height;
     }
     
@@ -153,14 +127,19 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     int tag = (int)collectionView.tag;
     NewsData* news = [newsArray objectAtIndex:tag];
     
-    return [news.arrayOfPhotos count];
+    return [news.photos count];
 }
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NewsPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:PhotoCellIdentifier forIndexPath:indexPath];
     int tag = (int)collectionView.tag;
     NewsData* news = [newsArray objectAtIndex:tag];
-    [cell.photoImageView setImage:[news.arrayOfPhotos objectAtIndex:indexPath.item]];
+    
+    CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
+    NSString * url = [news.photos objectAtIndex:indexPath.item];
+    NSString * imageUrl  = [cloudinary url:url options:@{}];
+    [cell.photoImageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"background"]];
+
     cell.photoImageView.contentMode = UIViewContentModeScaleAspectFill;
     return cell;
     
@@ -169,7 +148,7 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
 -(void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     int tag = (int)collectionView.tag;
     NewsData* news = [newsArray objectAtIndex:tag];
-    photoSlideShow = news.arrayOfPhotos;
+    photoSlideShowUrls = news.photos;
     NSInteger itemClicked = indexPath.item;
     
     EBPhotoPagesController *photoPagesController = [[EBPhotoPagesController alloc]
@@ -182,7 +161,26 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
 #pragma mark - Image Datasource methods
 - (UIImage *)photoPagesController:(EBPhotoPagesController *)controller
                      imageAtIndex:(NSInteger)index {
-    return [photoSlideShow objectAtIndex:index];
+    
+    NSString *indexKey = [@(index) stringValue];
+    UIImage* img = [photoImages objectForKey:indexKey];
+    if (img == nil) {
+        if (photoImages == nil) {
+            photoImages = [[NSMutableDictionary alloc]init];
+        }
+        
+        CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
+        NSString * url = [photoSlideShowUrls objectAtIndex:index];
+        NSString * imageUrl  = [cloudinary url:url options:@{}];
+        
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]];
+        img = [[UIImage alloc] initWithData:data];
+        
+        NSString *inStr = [@(index) stringValue];
+        [photoImages setObject:img forKey:inStr];
+    }
+
+    return img;
 }
 
 - (void)photoPagesController:(EBPhotoPagesController *)controller
@@ -193,7 +191,7 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
 
 - (BOOL)photoPagesController:(EBPhotoPagesController *)photoPagesController
     shouldExpectPhotoAtIndex:(NSInteger)index {
-    if (index < [photoSlideShow count]) {
+    if (index < [photoSlideShowUrls count]) {
         return YES;
     }
     return NO;

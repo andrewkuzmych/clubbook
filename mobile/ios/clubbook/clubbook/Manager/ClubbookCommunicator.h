@@ -53,6 +53,10 @@
 
 - (void)retrieveFriend:(NSString *) friendId accessToken:(NSString *) accessToken;
 
+- (void)retrievePlaceNews:(NSString*) clubId accessToken:(NSString*) accessToken;
+
+- (void)retrieveUserNews:(NSString*) userId accessToken:(NSString*) accessToken;
+
 - (void)changePass:(NSString *) oldPass newPass:(NSString *) newPass accessToken:(NSString *) accessToken;
 
 - (void)retrieveFriends:(NSString *) userId accessToken:(NSString *) accessToken;

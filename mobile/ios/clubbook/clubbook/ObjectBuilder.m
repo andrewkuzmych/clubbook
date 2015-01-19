@@ -12,6 +12,7 @@
 #import "Conversation.h"
 #import "WorkingHour.h"
 #import "Config.h"
+#import "NewsData.h"
 
 @implementation ObjectBuilder
 
@@ -104,8 +105,6 @@
     
     NSArray *venues = [parsedObject objectForKey:@"clubs"];
     
-    NSLog(@"Count %d", venues.count);
-    
     for (NSDictionary *placeDic in venues) {
         Place *place = [[Place alloc] init];
         
@@ -183,8 +182,6 @@
     NSMutableArray *types = [[NSMutableArray alloc] init];
     
     NSArray *venues = [parsedObject objectForKey:@"types"];
-    
-    NSLog(@"Types count %d", venues.count);
     
     for (NSDictionary *typeDic in venues) {
         NSString* typeId = typeDic[@"_id"];
@@ -464,6 +461,39 @@
     
     return user;
     
+}
+
++ (NSArray *) newsFromJSON:(NSData *)objectNotation error:(NSError *__autoreleasing *)error {
+    NSError *localError = nil;
+    NSDictionary *parsedObject = [NSJSONSerialization JSONObjectWithData:objectNotation options:0 error:&localError];
+    
+    if (localError != nil) {
+        *error = localError;
+        return nil;
+    }
+    
+    NSMutableArray *news = [[NSMutableArray alloc] init];
+    
+    NSArray *newsData = [parsedObject objectForKey:@"news"];
+    
+    for (NSDictionary *newsDic in newsData) {
+        NewsData *newsObject = [[NewsData alloc] init];
+        newsObject.title = [newsDic objectForKey:@"title"];
+        newsObject.newsDescription = [newsDic objectForKey:@"description"];
+        newsObject.photos = [newsDic objectForKey:@"photos"];
+        
+        
+        NSString* dateStr = [newsDic objectForKey:@"created_on"];
+        // Convert string to date object
+        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+        [dateFormat setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+        [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        newsObject.createDate = [dateFormat dateFromString:dateStr];
+        
+        [news addObject:newsObject];
+    }
+    
+    return news;
 }
 
 + (Chat *)chatFromJSON:(NSData *)objectNotation error:(NSError **)error;

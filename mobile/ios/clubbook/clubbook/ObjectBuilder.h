@@ -29,6 +29,7 @@
 + (UsersYesterday *)placeUsersYesterdayFromJSON:(NSData *)objectNotation error:(NSError **)error;
 + (User *)checkinFromJSON:(NSData *)objectNotation error:(NSError **)error;
 + (User *)userFromJSON:(NSData *)objectNotation error:(NSError **)error;
++ (NSArray *)newsFromJSON:(NSData *)objectNotation error:(NSError **)error;
 + (User *)tempUserFromJSON:(NSData *)objectNotation error:(NSError **)error;
 + (Chat *)chatFromJSON:(NSData *)objectNotation error:(NSError **)error;
 + (NSArray *)conversationsJSON:(NSData *)objectNotation error:(NSError **)error;

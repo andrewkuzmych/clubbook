@@ -10,10 +10,10 @@
 
 @interface NewsData : NSObject
 
-@property (strong, nonatomic) NSString* nameUser;
-@property (strong, nonatomic) NSDate* dateOfPost;
-@property (strong, nonatomic) UIImage* avatarImageUrl;
-@property (strong, nonatomic) NSString* messageText;
-@property (strong, nonatomic) NSMutableArray* arrayOfPhotos;
+@property (strong, nonatomic) NSString* createdById;
+@property (strong, nonatomic) NSDate* createDate;
+@property (strong, nonatomic) NSString* newsDescription;
+@property (strong, nonatomic) NSString* title;
+@property (strong, nonatomic) NSMutableArray* photos;
 
 @end
