@@ -24,29 +24,46 @@
     if (self.place != nil) {
         self.title = self.place.title;
         
+        NSMutableDictionary *controllersArray = [[NSMutableDictionary alloc] init];
+        
+        UIStoryboard *newsStoryboard = [UIStoryboard storyboardWithName:@"NewsFeedStoryboard" bundle: nil];
+        NewsFeedTableViewController *newsController  = [newsStoryboard instantiateInitialViewController];
+        newsController.place = self.place;
+        newsController.title = @"News";
+        
+        [controllersArray setObject:newsController forKey:@"news"];
+        
         for (UIViewController *v in self.viewControllers) {
             if ([v isKindOfClass:[ClubViewParallaxControllerViewController class]]) {
                  ClubViewParallaxControllerViewController *parallaxController =  (ClubViewParallaxControllerViewController*)v;
                  parallaxController.place = self.place;
                  parallaxController.title = @"About";
+                 [controllersArray setObject:parallaxController forKey:@"about"];
                  }
-            else if ([v isKindOfClass:[ClubSubscribeSettingsTableViewController class]]) {
-                ClubSubscribeSettingsTableViewController *subscribeController =  (ClubSubscribeSettingsTableViewController*)v;
-                subscribeController.place = self.place;
-                subscribeController.title = @"Favorite";
-            }
             else if ([v isKindOfClass:[ClubPhotGalleryCollectionViewController class]]) {
                 ClubPhotGalleryCollectionViewController *photoGallery =  (ClubPhotGalleryCollectionViewController*)v;
                 photoGallery.place = self.place;
                 photoGallery.title = @"Photos";
+                [controllersArray setObject:photoGallery forKey:@"photo"];
             }
-            else if ([v isKindOfClass:[NewsFeedTableViewController class]]) {
-                NewsFeedTableViewController *newsFeed =  (NewsFeedTableViewController*)v;
-                newsFeed.place = self.place;
-                newsFeed.title = @"News";
+            else if ([v isKindOfClass:[ClubSubscribeSettingsTableViewController class]]) {
+                ClubSubscribeSettingsTableViewController *subscribeController =  (ClubSubscribeSettingsTableViewController*)v;
+                subscribeController.place = self.place;
+                subscribeController.title = @"Favorite";
+                [controllersArray setObject:subscribeController forKey:@"fav"];
             }
         }
-    [[UITabBar appearance] setBarTintColor:[UIColor whiteColor]];
+        
+        //order of controllers should be: info, news, photos, favorite
+        NSMutableArray* orderedArrays = [[NSMutableArray alloc] init];
+        [orderedArrays addObject:[controllersArray objectForKey:@"about"]];
+        [orderedArrays addObject:[controllersArray objectForKey:@"news"]];
+        [orderedArrays addObject:[controllersArray objectForKey:@"photo"]];
+        [orderedArrays addObject:[controllersArray objectForKey:@"fav"]];
+        
+        self.viewControllers = orderedArrays;
+        
+        [[UITabBar appearance] setBarTintColor:[UIColor whiteColor]];
     }
 }
 
