@@ -234,7 +234,11 @@ exports.news = (params, callback)->
   console.log "METHOD - News"
   console.log "Params: "
   console.log params
-  db_model.News.find({'venue': params.club_id}).populate('venue').exec (err, news)-> 
+  if !params.skip
+    params.skip=0
+  if !params.limit
+    params.limit=10
+  db_model.News.find({'venue': params.club_id}).populate('venue').sort( { updated_on: -1 } ).skip(params.skip).limit(params.limit).exec (err, news)-> 
     if not news
       callback 'missing news for this club', null
     else
@@ -244,11 +248,15 @@ exports.news_favorite = (params, callback)->
   console.log "METHOD - News favorite club"
   console.log "Params: "
   console.log params
+  if !params.skip
+    params.skip=0
+  if !params.limit
+    params.limit=10
   db_model.User.findById(params.user_id).exec (err, user)->
     if not user
       callback 'user does not exist', null
     else
-      db_model.News.find({'venue': {'$in': user.favorite_clubs}}).populate('venue').exec (err, news)-> 
+      db_model.News.find({'venue': {'$in': user.favorite_clubs}}).populate('venue').sort( { updated_on: -1 } ).skip(params.skip).limit(params.limit).exec (err, news)-> 
         if not news
           callback 'news does not exist', null
         else

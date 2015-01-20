@@ -906,7 +906,9 @@ exports.remove_favorite_club = (req, res)->
 exports.news = (req, res)->
   params =
     club_id: req.params.objectId
-
+    skip: req.query.skip
+    limit: req.query.limit
+    
   manager.news params, (err, news)->
     if err
       res.json
@@ -920,6 +922,8 @@ exports.news = (req, res)->
 exports.news_favorite = (req, res)->
   params =
     user_id: req.params.me._id.toString()
+    skip: req.query.skip
+    limit: req.query.limit
 
   manager.news_favorite params, (err, news)->
     if err
