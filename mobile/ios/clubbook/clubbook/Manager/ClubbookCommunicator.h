@@ -33,7 +33,7 @@
 
 - (void)deleteConversation:(NSString *) fromUser toUser:(NSString *) toUser accessToken:(NSString *) accessToken;
 
-- (void)retrieveNotifications:(NSString *) accessToken;
+- (void)retrieveNotifications:(double) lat lon:(double) lon accessToken:(NSString *) accessToken;
 
 - (void)readChat:(NSString *) fromUser toUser:(NSString *) toUser accessToken:(NSString *) accessToken;
 
@@ -53,9 +53,7 @@
 
 - (void)retrieveFriend:(NSString *) friendId accessToken:(NSString *) accessToken;
 
-- (void)retrievePlaceNews:(NSString*) clubId accessToken:(NSString*) accessToken;
-
-- (void)retrieveUserNews:(NSString*) userId accessToken:(NSString*) accessToken;
+- (void)retrieveNews:(NSString*)type withId:(NSString*) objectId accessToken:(NSString*) accessToken;
 
 - (void)changePass:(NSString *) oldPass newPass:(NSString *) newPass accessToken:(NSString *) accessToken;
 

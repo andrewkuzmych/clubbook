@@ -23,8 +23,7 @@
 - (void)receivedUserJSON:(NSData *)objectNotation;
 - (void)receivedFriendsJSON:(NSData *)objectNotation;
 - (void)receivedPendingFriendsJSON:(NSData *)objectNotation;
-- (void)receivedPlaceNewsJSON:(NSData *)objectNotation;
-- (void)receivedUserNewsJSON:(NSData *)objectNotation;
+- (void)receivedNewsJSON:(NSData *)objectNotation;
 - (void)receivedFriendJSON:(NSData *)objectNotation;
 - (void)sendFriendJSON:(NSData *)objectNotation;
 - (void)confirmFriendJSON:(NSData *)objectNotation;

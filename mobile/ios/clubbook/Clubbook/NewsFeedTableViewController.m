@@ -36,10 +36,6 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     newsArray = [[NSMutableArray alloc] init];
-    // Do any additional setup after loading the view.
-    self.edgesForExtendedLayout = UIRectEdgeNone;
-    self.extendedLayoutIncludesOpaqueBars = NO;
-    self.automaticallyAdjustsScrollViewInsets = NO;
     
     [self.tableView setBackgroundColor:[UIColor colorWithRed:0.980 green:0.839 blue:1.000 alpha:1.000]];
     
@@ -47,7 +43,7 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
      
-    [self._manager retrievePlaceNews:self.place.id accessToken:accessToken];
+    [self._manager retrieveNews:self.type withId:self.newsObjectId accessToken:accessToken];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -55,7 +51,7 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     // Dispose of any resources that can be recreated.
 }
 
-- (void) didReceivePlaceNews:(NSArray*) news {
+- (void) didReceiveNews:(NSArray*) news {
     newsArray = news;
     if ([newsArray count] > 0) {
         [self.tableView reloadData];
@@ -83,8 +79,8 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     
     NewsData* news = [newsArray objectAtIndex:indexPath.row];
     
-    [cell.avatarImage sd_setImageWithURL:[NSURL URLWithString:self.place.avatar] placeholderImage:[UIImage imageNamed:@"avatar_default.png"]];
-    [cell.nameLabel setText:self.place.title];
+    //[cell.avatarImage sd_setImageWithURL:[NSURL URLWithString:self.place.avatar] placeholderImage:[UIImage imageNamed:@"avatar_default.png"]];
+    [cell.nameLabel setText:@"TODO"];
     
     NSString* date = [[DateHelper sharedSingleton] get24hTime:news.createDate];
     [cell.timeLabel setText:date];
