@@ -919,7 +919,7 @@ exports.news = (req, res)->
 
 exports.news_favorite = (req, res)->
   params =
-    user_id: req.params.objectId
+    user_id: req.params.me._id.toString()
 
   manager.news_favorite params, (err, news)->
     if err
