@@ -6,7 +6,7 @@
         "start": "node server.js"
     },
     "dependencies": {
-		"coffee-script": "1.6.3",
+		"coffee-script": "~1.6.3",
 		"underscore": "1.5.2",
 		"less": "1.5.0",
 		"connect-assets": "2.5.3",
