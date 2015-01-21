@@ -26,7 +26,7 @@
 
 - (void)signinUser:(NSString *) email pass:(NSString *) pass;
 
-- (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type url:(NSString*) url accessToken:(NSString *) accessToken;
+- (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type url:(NSString*) url location:(NSDictionary*) location accessToken:(NSString *) accessToken;
 
 - (void)retrievePlaces:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance type:(NSString*) type search:(NSString*) search accessToken:(NSString *) accessToken;
 
@@ -43,6 +43,10 @@
 - (void)receivedUsers:(BOOL)all gender:(NSString*) gender take:(int) take skip:(int) skip lat:(double) lat lon:(double) lon distance:(double) distance accessToken:(NSString *) accessToken;
 
 - (void)retrieveUser:(NSString *) accessToken;
+
+- (void)retrievePlaceNews:(NSString*) clubId accessToken:(NSString*) accessToken;
+
+- (void)retrieveUserNews:(NSString*) userId accessToken:(NSString*) accessToken;
 
 - (void)retrieveFriend:(NSString *) friendId accessToken:(NSString *) accessToken;
 

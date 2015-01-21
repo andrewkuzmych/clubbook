@@ -342,11 +342,15 @@
     });
 }
 
-- (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type url:(NSString*) url accessToken:(NSString *) accessToken
+- (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type url:(NSString*) url location:(NSDictionary*)location accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         NSString *urlAsString = [NSString stringWithFormat:@"%@obj/chat?access_token=%@", baseURL, accessToken];
+        
+        NSNumber* lat = [location objectForKey:@"lat"];
+        NSNumber* lon = [location objectForKey:@"lon"];
+        
         NSDictionary * data =
         [NSDictionary
          dictionaryWithObjectsAndKeys:
@@ -355,8 +359,10 @@
          user_from, @"user_from",
          user_to, @"user_to",
          url, @"url",
+         lat, @"lat",
+         lon, @"lon",
          nil];
-        
+        ;
         NSMutableURLRequest *request;
         request = [self generateRequest:data url:urlAsString method:@"POST"];
         
@@ -682,6 +688,43 @@
     });
 }
 
+- (void)retrievePlaceNews:(NSString*) clubId accessToken:(NSString*) accessToken {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // switch to a background thread and perform your expensive operation
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/club/%@/news?access_token=%@", baseURL, clubId, accessToken];
+        
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
+        
+        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [self.delegate failedWithError:error];
+                } else {
+                    [self.delegate receivedPlaceNewsJSON:data];
+                }
+            });
+        }];
+    });
+}
+
+- (void)retrieveUserNews:(NSString*) userId accessToken:(NSString*) accessToken {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // switch to a background thread and perform your expensive operation
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/news?access_token=%@", baseURL, userId, accessToken];
+        
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
+        
+        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    [self.delegate failedWithError:error];
+                } else {
+                    [self.delegate receivedUserNewsJSON:data];
+                }
+            });
+        }];
+    });
+}
 
 - (void)checkin:(NSString *) clubId accessToken:(NSString *) accessToken userInfo:(NSObject *) userInfo;
 {
@@ -1018,7 +1061,7 @@
     
     [request setTimeoutInterval:30.0f];
     
-    NSString * msgLength =  [NSString stringWithFormat: @"%d", [bodyData length]];
+    NSString * msgLength =  [NSString stringWithFormat: @"%lu", (unsigned long)[bodyData length]];
     
     [request
      addValue: @"application/x-www-form-urlencoded; charset=utf-8"

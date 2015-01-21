@@ -16,8 +16,7 @@ block content
             .row
               .col-md-offset-3.col-md-9
                 button.btn.green(type='submit') Submit
-                // /venue/club_news/:id
-                a.btn.default(href="", style="margin-left:5px;") Cancel
+                a.btn.default(href="/venue/club_news/#{club_id}", style="margin-left:5px;") Cancel
           .form-body
               .alert.alert-danger.display-hide
                 button.close(data-close='alert')
@@ -33,17 +32,26 @@ block content
               .form-group
                   label.col-md-3.control-label Cover Image
                   .col-md-4
-                    .preview
+                    //.preview
                       if news.image
                         img(border='0', src='#{news.image}', height='200')
-
+                   
+                    table.table
+                      if news.photos
+                        for photo in news.photos
+                            tr
+                              td(style="vertical-align: middle;")
+                                img.news_image(border='0', src='#{photo}', height='200')
+                              td(style="vertical-align: middle;")
+                                a.btn.red.delete delete
+                     
                     div.fileUpload.btn.btn-default
                       span Upload
-                      !=cloudinary.uploader.image_upload_tag('image', {html: { class: "upload" }})
-                    div#progress
+                      !=cloudinary.uploader.image_upload_tag('image', {html: { class: "upload", tag:"upload_images" }})
+                    div#upload_images_progress
                       div.bar(style="width:0%;height:18px;background: green;")
 
-                    input(type="hidden", name="news_image", value="#{news.image?news.image:''}")
+                    input(type="hidden", name="news_images", value="#{news.photos?news.photos.join():''}")
               .form-group
                 label.control-label.col-md-3 Name
                   span.required *
@@ -64,8 +72,7 @@ block content
               .row
                 .col-md-offset-3.col-md-9
                   button.btn.green(type='submit') Submit
-                  // /venue/club_news/:id
-                  a.btn.default(href="", style="margin-left:5px;") Cancel
+                  a.btn.default(href="/venue/club_news/#{club_id}", style="margin-left:5px;") Cancel
 
 block scripts
   script(src="/assets/admin/pages/scripts/update_news.js", type='text/javascript')
@@ -73,22 +80,31 @@ block scripts
     // Configure Cloudinary
     $.cloudinary.config({ api_key: '!{api_key}', cloud_name: '!{cloud_name}' });
 
-    $('.cloudinary-fileupload').bind('fileuploadstart', function(e){
-      $('#progress .bar').css('width', '0%');
+    $('[tag=upload_images].cloudinary-fileupload').bind('fileuploadstart', function(e){
+      //$('.preview').html('Upload started...');
+      $('#upload_images_progress .bar').css('width', '0%');
     });
 
-    $('.cloudinary-fileupload').bind('fileuploadprogress', function(e, data) { 
-      $('#progress .bar').css('width', Math.round((data.loaded * 100.0) / data.total) + '%'); 
+    $('[tag=upload_images].cloudinary-fileupload').bind('fileuploadprogress', function(e, data) { 
+      $('#upload_images_progress .bar').css('width', Math.round((data.loaded * 100.0) / data.total) + '%'); 
     });
     // Upload finished
-    $('.cloudinary-fileupload').bind('cloudinarydone', function(e, data){
-      $('[name=news_image]').val($.cloudinary.url(data.result.public_id));
-      $('.preview').html(
-        $.cloudinary.image(data.result.public_id, { format: data.result.format, version: data.result.version,  height: 200 })
-      );
-      $('#progress .bar').css('width', '0%');
+    $('[tag=upload_images].cloudinary-fileupload').bind('cloudinarydone', function(e, data){
+      $( "table.table" ).prepend( "<tr><td style='vertical-align: middle;'><img class='news_image' src='" + $.cloudinary.url(data.result.public_id) + "' height='200'></td><td style='vertical-align: middle;'><a class='btn red delete'>delete</a></td></tr>");
+      $('#upload_images_progress .bar').css('width', '0%');
+      updateClubImages()
       return true;
     });
+
+    $(".delete").live("click", function(){
+      $(this).closest('tr').remove();  
+      updateClubImages();
+    });
+
+    function updateClubImages() {
+      $('[name=news_images]').val($('img.news_image').map(function() { return this.src; }).get().join());
+    }
+
 
     FormValidation.init();
 
