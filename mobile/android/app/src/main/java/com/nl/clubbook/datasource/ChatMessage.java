@@ -14,6 +14,7 @@ public class ChatMessage extends BaseChatMessage {
     private String userFromAvatar;
     private String msg;
     private String type;
+    private Location location;
     private long time;
     private boolean isMyMessage;
     private boolean isRead;
@@ -99,6 +100,14 @@ public class ChatMessage extends BaseChatMessage {
 
     public void setRead(boolean isRead) {
         this.isRead = isRead;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public interface Types {

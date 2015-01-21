@@ -1451,14 +1451,18 @@ public class HttpClientManager {
         });
     }
 
-    public void chat(String userFrom, String userTo, String msg, String type, String accessToken,
-                            final OnResultReady onResultReady) {
+    public void sendMessage(String userFrom, String userTo, String msg, String type, String accessToken, String lat, String lng, final OnResultReady onResultReady) {
         RequestParams params = new RequestParams();
         params.put("user_from", userFrom);
         params.put("user_to", userTo);
         params.put("msg", msg);
         params.put("msg_type", type);
         params.put("access_token", accessToken);
+
+        if(lat != null && lng != null) {
+            params.put("lat", lat);
+            params.put("lon", lng);
+        }
 
         ClubbookRestClient.sendMsg(params, new JsonHttpResponseHandler() {
             private boolean failed = true;
@@ -1474,7 +1478,7 @@ public class HttpClientManager {
                 } catch (Exception e) {
                     L.i("" + e);
                 }
-                //failed = false;
+
                 onResultReady.onReady("ok", failed);
             }
 
@@ -1596,7 +1600,7 @@ public class HttpClientManager {
                         failed = true;
                     }
                 } catch (Exception e) {
-                    L.i("" + e);
+                    L.d("" + e);
                 }
 
                 onResultReady.onReady(count, failed);

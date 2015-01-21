@@ -46,7 +46,14 @@ public class ShareContentDialog extends DialogFragment {
         ListView listItems = (ListView) view.findViewById(R.id.list);
         ShareContentAdapter adapter = new ShareContentAdapter(context, getItems());
         listItems.setAdapter(adapter);
-        listItems.setOnItemClickListener(mOnItemClickListener);
+        listItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mOnItemClickListener.onItemClick(parent, view, position, id);
+
+                dismissAllowingStateLoss();
+            }
+        });
 
         dialog.setView(view);
 
@@ -137,4 +144,10 @@ public class ShareContentDialog extends DialogFragment {
             R.drawable.ic_photo_grey,
             R.drawable.ic_my_location_grey
     };
+
+    public interface Position {
+        public static final int TAKE_PHOTO = 0;
+        public static final int CHOOSE_EXISTING_PHOTO = 1;
+        public static final int SHARE_LOCATION = 2;
+    }
 }

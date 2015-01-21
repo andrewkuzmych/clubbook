@@ -56,7 +56,7 @@
 
         <com.nl.clubbook.ui.view.HelveticaRegularEditText
             style="@style/EditTextAppThemeWhite"
-            android:id="@+id/messageInput"
+            android:id="@+id/editMessage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
