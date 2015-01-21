@@ -312,7 +312,6 @@ exports.users_around = (req, res)->
   take = 20
   if req.query.take
     take = parseInt(req.query.take)
-
   db_model.User.findById(current_user_id).exec (err, current_user)->
     geoNear = 
         near: [parseFloat(req.query.user_lon), parseFloat(req.query.user_lat) ] ,
@@ -320,15 +319,12 @@ exports.users_around = (req, res)->
         maxDistance: parseFloat(req.query.distance)/6371,
         spherical: true,
         distanceMultiplier: 6371  
-
     match = { name: { '$exists': true } }
     if req.query.gender
       match.gender = req.query.gender
 
     query =  [{'$geoNear': geoNear}, {'$match': match}, {'$skip':skip}, {'$limit':take}]
-
     db_model.User.aggregate query,{}, (err, users)->
-
       converted_users = []
       for user in users
         user_object = user_to_friend(current_user, user)
