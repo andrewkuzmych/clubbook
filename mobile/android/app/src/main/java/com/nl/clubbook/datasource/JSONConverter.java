@@ -359,6 +359,18 @@ public class JSONConverter {
         result.setIsMyMessage(jsonChatMessage.optBoolean("is_my_message"));
         result.setUserFromName(jsonChatMessage.optString("from_who_name"));
 
+        JSONObject jsonLocation = jsonChatMessage.optJSONObject("location");
+        if(jsonLocation != null) {
+            double lat = jsonLocation.optDouble("lat");
+            double lon = jsonLocation.optDouble("lon");
+
+            Location location = new Location();
+            location.setLon(lon);
+            location.setLat(lat);
+
+            result.setLocation(location);
+        }
+
         String date = jsonChatMessage.optString("time");
         try {
             result.setTime(FORMAT_DATE.parse(date).getTime());

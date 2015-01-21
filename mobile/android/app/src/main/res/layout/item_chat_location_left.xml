@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="bottom"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:background="@android:color/transparent">
+
+    <com.nl.clubbook.ui.view.CircleImageView
+        android:id="@+id/imgAvatar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="centerCrop"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/ic_chat_bubble_green_left"
+        android:layout_marginLeft="8dp">
+
+        <com.nl.clubbook.ui.view.SquareByWidthImageView
+            android:id="@+id/imgLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="6dp"
+            android:background="@android:color/white"
+            android:scaleType="centerCrop"/>
+
+        <!--<ImageView-->
+            <!--android:id="@+id/imgLocation"-->
+            <!--android:layout_width="@dimen/size_location_image"-->
+            <!--android:layout_height="@dimen/size_location_image"-->
+            <!--android:layout_marginLeft="12dp"-->
+            <!--android:layout_marginRight="12dp"-->
+            <!--android:layout_marginTop="12dp"-->
+            <!--android:layout_marginBottom="6dp"-->
+            <!--android:background="@android:color/white"/>-->
+
+        <com.nl.clubbook.ui.view.HelveticaRegularTextView
+            android:id="@+id/txtDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_micro"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:gravity="center"
+            android:layout_below="@+id/imgLocation"
+            android:paddingBottom="8dp"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

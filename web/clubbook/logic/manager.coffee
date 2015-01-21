@@ -82,35 +82,31 @@ exports.signinmail = (params, callback)->
 exports.list_club = (params, callback)->
   console.log "METHOD - Manager list_club"
   geoNear = 
-      near: [ parseFloat(params.lon), parseFloat(params.lat)],
+      near: [parseFloat(params.lon), parseFloat(params.lat)],
       distanceField: "distance",
       spherical: true,
       distanceMultiplier: 6371  
 
-  #if params.distance
-  #  geoNear.maxDistance = params.distance/6371 
-
+  if params.distance
+    geoNear.maxDistance = params.distance/6371 
   query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take}]
-
   match = {}
   if params.search
     search = params.search.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")
     match.club_name =  { '$regex': search, '$options': 'i' }
-  
   if params.type
     match.club_type = params.type
 
   if match
     query = [{'$geoNear': geoNear}, {'$match': match}, {'$skip':params.skip}, {'$limit':params.take}]
-
   db_model.Venue.aggregate query,{}, (err, clubs)->
+    console.log err
     for club in clubs
       if club.club_working_hours
         for wh in club.club_working_hours
           if wh.day == moment.utc().day()
             club.id = club._id
             club.club_today_working_hours = wh
-    
     db_model.User.findById(params.user_id).exec (err, user)->
       match_pre =  {"_id": {'$in': user.friends}, 'bloked_users': {'$ne': user._id}, 'friends': user._id, 'checkin.active': true }
       match_post =  {'checkin.active': true}
@@ -204,7 +200,6 @@ exports.add_favorite_club = (params, callback)->
     for r in result
       if r.favorite_clubs.toString() == params.club_id.toString()
         isClub = true
-    console.log isClub
     if !isClub
       db_model.User.findById(params.user_id).exec (err, user)->
         user.favorite_clubs.push params.club_id
@@ -222,7 +217,6 @@ exports.remove_favorite_club = (params, callback)->
     for r in result
       if r.favorite_clubs.toString() == params.club_id.toString()
         isClub = true
-    console.log isClub
     if isClub
       db_model.User.findById(params.user_id).exec (err, user)->
         user.favorite_clubs.pull params.club_id
@@ -234,7 +228,11 @@ exports.news = (params, callback)->
   console.log "METHOD - News"
   console.log "Params: "
   console.log params
-  db_model.News.find({'venue': params.club_id}).exec (err, news)-> 
+  if !params.skip
+    params.skip=0
+  if !params.limit
+    params.limit=10
+  db_model.News.find({'venue': params.club_id}).populate('venue').sort( { updated_on: -1 } ).skip(params.skip).limit(params.limit).exec (err, news)-> 
     if not news
       callback 'missing news for this club', null
     else
@@ -244,12 +242,15 @@ exports.news_favorite = (params, callback)->
   console.log "METHOD - News favorite club"
   console.log "Params: "
   console.log params
+  if !params.skip
+    params.skip=0
+  if !params.limit
+    params.limit=10
   db_model.User.findById(params.user_id).exec (err, user)->
     if not user
       callback 'user does not exist', null
     else
-      query =  [{'$match':{'venue': {'$in': user.favorite_clubs}}}]
-      db_model.News.aggregate query, {}, (err, news)-> 
+      db_model.News.find({'venue': {'$in': user.favorite_clubs}}).populate('venue').sort( { updated_on: -1 } ).skip(params.skip).limit(params.limit).exec (err, news)-> 
         if not news
           callback 'news does not exist', null
         else

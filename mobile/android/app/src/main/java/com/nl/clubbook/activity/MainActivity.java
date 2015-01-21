@@ -116,6 +116,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         loadData();
         loadConfig();
+
+        L.i("onCreate");
     }
 
     @Override
@@ -143,6 +145,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     protected void onDestroy() {
+        L.e("onDestroy");
+
         fragmentMap.clear();
 
         unregisterReceiver(mCheckInCheckOutReceiver);

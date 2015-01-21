@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,16 +23,18 @@ import com.nl.clubbook.datasource.BaseChatMessage;
 import com.nl.clubbook.datasource.Chat;
 import com.nl.clubbook.datasource.ChatMessage;
 import com.nl.clubbook.datasource.HttpClientManager;
+import com.nl.clubbook.datasource.Location;
 import com.nl.clubbook.datasource.User;
 import com.nl.clubbook.fragment.dialog.ShareContentDialog;
+import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.helper.SessionManager;
 import com.nl.clubbook.utils.CalendarUtils;
 import com.nl.clubbook.utils.KeyboardUtils;
 import com.nl.clubbook.utils.L;
+import com.nl.clubbook.utils.MapUtils;
 import com.nl.clubbook.utils.NetworkUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -47,7 +50,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     private static final String ARG_MODE = "ARG_MODE";
 
     private ChatAdapter mAdapter;
-    private EditText inputText;
+    private EditText mEditMessage;
     private String mUserToId;
     private String mUserFromId;
     private String mAccessToken;
@@ -114,7 +117,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     public void onDestroyView() {
         View view = getView();
         if(view != null) {
-            KeyboardUtils.closeKeyboard(getActivity(), view.findViewById(R.id.messageInput));
+            KeyboardUtils.closeKeyboard(getActivity(), mEditMessage);
         }
 
         super.onDestroyView();
@@ -124,10 +127,10 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.txtLike:
-                sendMessageTemp(ChatMessage.Types.TYPE_SMILE, getString(R.string.likes_the_profile));
+                sendLikeProfileMessage();
                 break;
             case R.id.txtSend:
-                sendMessage();
+                sendTextMessage();
                 break;
             case R.id.imgShareContent:
                 onShareContentClicked();
@@ -135,12 +138,24 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
             case R.id.imgAvatar:
                 onUserProfileClicked();
                 break;
+            case R.id.imgLocation:
+                onLocationClicked(v);
+                break;
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //TODO
+        switch (position) {
+            case ShareContentDialog.Position.TAKE_PHOTO:
+                onTakePhotoClicked();
+                break;
+            case ShareContentDialog.Position.CHOOSE_EXISTING_PHOTO:
+                onChoosePhotoClicked();
+                break;
+            case ShareContentDialog.Position.SHARE_LOCATION:
+                sendShareLocationMessage();
+        }
     }
 
     private void handleArgs() {
@@ -165,12 +180,12 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         mUserFromId = getCurrentUserId();
         mAccessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
 
-        inputText = (EditText) view.findViewById(R.id.messageInput);
-        inputText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mEditMessage = (EditText) view.findViewById(R.id.editMessage);
+        mEditMessage.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 if (actionId == EditorInfo.IME_NULL && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-                    sendMessage();
+                    sendTextMessage();
                 }
                 return true;
             }
@@ -189,18 +204,14 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                 mChat.getReceiver().getId(),
                 mAccessToken,
                 new HttpClientManager.OnResultReady() {
-
                     @Override
                     public void onReady(Object result, boolean failed) {
-                        if (failed) {
-                            return;
-                        }
                     }
                 }
         );
     }
 
-    private void sendMessageTemp(String type, String messages) {
+    private void sendMessage(String type, String message, String lat, String lon) {
         if(!NetworkUtils.isOn(getActivity())) {
             showToast(R.string.no_connection);
             return;
@@ -211,67 +222,60 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
             return;
         }
 
-        HashMap<String, String> userDetails = getSession().getUserDetails();
-        String accessToken = userDetails.get(SessionManager.KEY_ACCESS_TOCKEN);
-        String userName = userDetails.get(SessionManager.KEY_NAME);
-        String formatMessage = (userName != null ? userName : "") + " " + messages;
-
-        HttpClientManager.getInstance().chat(mUserFromId, mUserToId, formatMessage, type, accessToken, new HttpClientManager.OnResultReady() {
+        HttpClientManager.getInstance().sendMessage(mUserFromId, mUserToId, message, type, mAccessToken, lat, lon, new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
-
             }
         });
 
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setType(type);
-        chatMessage.setIsMyMessage(true);
-        chatMessage.setUserFrom(mChat.getCurrentUser().getId());
-        chatMessage.setUserFromName(mChat.getCurrentUser().getName());
-        chatMessage.setUserFromAvatar(mChat.getCurrentUser().getAvatar());
-        chatMessage.setMsg(formatMessage);
+        ChatMessage myNewMessage = new ChatMessage();
+        myNewMessage.setMsg(message);
+        myNewMessage.setType(type);
+        myNewMessage.setIsMyMessage(true);
+        myNewMessage.setUserFrom(mChat.getCurrentUser().getId());
+        myNewMessage.setUserFromName(mChat.getCurrentUser().getName());
+        myNewMessage.setUserFromAvatar(mChat.getCurrentUser().getAvatar());
+        myNewMessage.setTime(System.currentTimeMillis());
 
-        mAdapter.add(chatMessage);
+        if(lat != null && lon != null) {
+            android.location.Location currentLocation = LocationCheckinHelper.getInstance().getCurrentLocation();
 
-        getView().findViewById(R.id.txtNoMessages).setVisibility(View.GONE);
+            Location location = new Location();
+            location.setLat(currentLocation.getLatitude());
+            location.setLon(currentLocation.getLongitude());
+
+            myNewMessage.setLocation(location);
+        }
+
+        mAdapter.add(myNewMessage);
+        mEditMessage.setText("");
+
+        View view = getView();
+        if(view != null) {
+            view.findViewById(R.id.txtNoMessages).setVisibility(View.GONE);
+        }
     }
 
-    private void sendMessage() {
-        if(!NetworkUtils.isOn(getActivity())) {
-            showToast(R.string.no_connection);
+    private void sendTextMessage() {
+        String message = mEditMessage.getText().toString();
+        if(TextUtils.isEmpty(message)) {
             return;
         }
 
-        if(!isSendingMessagesEnabled()) {
-            Toast.makeText(getActivity(), R.string.you_cannot_send_three_messages_without_reply, Toast.LENGTH_SHORT).show();
-            return;
-        }
+        sendMessage(ChatMessage.Types.TYPE_MESSAGE, message, null, null);
+    }
 
-        String accessToken = getSession().getUserDetails().get(SessionManager.KEY_ACCESS_TOCKEN);
-        String input = inputText.getText().toString().trim();
+    private void sendLikeProfileMessage() {
+        String userName = mChat.getCurrentUser().getName();
+        String formatMessage = (userName != null ? userName : "") + " " + getString(R.string.likes_the_profile);
 
-        if (!input.equals("")) {
-            HttpClientManager.getInstance().chat(mUserFromId, mUserToId, input, ChatMessage.Types.TYPE_MESSAGE, accessToken, new HttpClientManager.OnResultReady() {
-                @Override
-                public void onReady(Object result, boolean failed) {
+        sendMessage(ChatMessage.Types.TYPE_SMILE, formatMessage, null, null);
+    }
 
-                }
-            });
+    private void sendShareLocationMessage() {
+        android.location.Location currentLocation = LocationCheckinHelper.getInstance().getCurrentLocation();
 
-            ChatMessage myNewMessage = new ChatMessage();
-            myNewMessage.setMsg(input);
-            myNewMessage.setType(ChatMessage.Types.TYPE_MESSAGE);
-            myNewMessage.setIsMyMessage(true);
-            myNewMessage.setUserFrom(mChat.getCurrentUser().getId());
-            myNewMessage.setUserFromName(mChat.getCurrentUser().getName());
-            myNewMessage.setUserFromAvatar(mChat.getCurrentUser().getAvatar());
-            myNewMessage.setTime(System.currentTimeMillis());
-
-            mAdapter.add(myNewMessage);
-            inputText.setText("");
-
-            getView().findViewById(R.id.txtNoMessages).setVisibility(View.GONE);
-        }
+        sendMessage(ChatMessage.Types.TYPE_LOCATION, "", "" + currentLocation.getLatitude(), "" + currentLocation.getLongitude());
     }
 
     private void onShareContentClicked() {
@@ -316,13 +320,13 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
     private void onUserProfileClicked() {
         User receiver = mChat.getReceiver();
-        if(receiver == null) {
+        if (receiver == null) {
             return;
         }
 
-        KeyboardUtils.closeKeyboard(getActivity(), getView().findViewById(R.id.messageInput));
+        KeyboardUtils.closeKeyboard(getActivity(), mEditMessage);
 
-        if(mMode == MODE_OPEN_FROM_PROFILE) {
+        if (mMode == MODE_OPEN_FROM_PROFILE) {
             closeFragment();
         } else {
             Fragment fragment = ProfileFragment.newInstance(ChatFragment.this, receiver, ProfileFragment.OPEN_FROM_CHAT);
@@ -330,9 +334,31 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         }
     }
 
+    private void onLocationClicked(View view) {
+        if(view.getTag() == null) {
+            return;
+        }
+
+        Location location = (Location) view.getTag();
+        MapUtils.showLocationOnGoogleMapApp(getActivity(), location.getLat(), location.getLon());
+    }
+
+    private void onTakePhotoClicked() {
+        //TODO
+    }
+
+    private void onChoosePhotoClicked() {
+        //TODO
+    }
+
     private void loadConversation() {
+        final View view = getView();
+        if(view == null) {
+            return;
+        }
+
         if(!NetworkUtils.isOn(getActivity())) {
-            getView().findViewById(R.id.progressBar).setVisibility(View.GONE);
+            view.findViewById(R.id.progressBar).setVisibility(View.GONE);
             showToast(R.string.no_connection);
             return;
         }
@@ -343,11 +369,6 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
             @Override
             public void onReady(Object result, boolean failed) {
                 if (isDetached() || getActivity() == null || getActivity().isFinishing()) {
-                    return;
-                }
-
-                View view = getView();
-                if (view == null) {
                     return;
                 }
 
@@ -365,7 +386,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
                 List<BaseChatMessage> baseChatMessages = getChatsMessages(mChat.getConversation());
 
-                mAdapter = new ChatAdapter(getActivity().getApplicationContext(), R.layout.item_chat_left, baseChatMessages, ChatFragment.this);
+                mAdapter = new ChatAdapter(getActivity(), R.layout.item_chat_left, baseChatMessages, ChatFragment.this);
                 ListView listChat = (ListView) view.findViewById(R.id.listChat);
                 listChat.setAdapter(mAdapter);
                 listChat.setSelection(mChat.getConversation().size());
@@ -375,10 +396,6 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                 } else {
                     view.findViewById(R.id.txtNoMessages).setVisibility(View.GONE);
                 }
-
-//                inputText.requestFocus();
-//                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                imm.showSoftInput(inputText, InputMethodManager.SHOW_IMPLICIT);
 
                 HttpClientManager.getInstance().readMessages(
                         mChat.getCurrentUser().getId(),

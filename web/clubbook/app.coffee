@@ -256,7 +256,7 @@ app.get '/_s/obj/users/checkedin', handle_access_token, services.users_checkedin
 app.get '/_s/obj/users/around', handle_access_token, services.users_around
 
 # users news
-app.get '/_s/obj/user/:objectId/favorite/news', handle_access_token, services.news_favorite
+app.get '/_s/obj/user/favorite/news', handle_access_token, services.news_favorite
 
 # crud users
 app.get '/_s/obj/user/location/update', handle_access_token, services.update_user_location

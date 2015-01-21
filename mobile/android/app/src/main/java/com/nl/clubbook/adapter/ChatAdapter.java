@@ -1,6 +1,7 @@
 package com.nl.clubbook.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.datasource.BaseChatMessage;
 import com.nl.clubbook.datasource.ChatMessage;
+import com.nl.clubbook.datasource.Location;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.utils.CalendarUtils;
 import com.squareup.picasso.Picasso;
@@ -41,25 +43,29 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
     private List<BaseChatMessage> mMessages;
 
     private Context mContext;
-    private View.OnClickListener mUserProfileClickListener;
+    private View.OnClickListener mOnClickListener;
     private long mCurrentTimeWithoutHours;
     private long mDayTimeInMilliseconds;
     private String mToday;
     private String mYesterday;
 
-    public ChatAdapter(Context context, int textViewResourceId, List<BaseChatMessage> messages, View.OnClickListener userProfileClickListener) {
+    private int mLocationImageSize;
+
+    public ChatAdapter(Context context, int textViewResourceId, List<BaseChatMessage> messages, View.OnClickListener onClickListener) {
         super(context, textViewResourceId);
 
         mContext = context;
         mMessages = messages;
         mInflater = LayoutInflater.from(context);
 
-        mUserProfileClickListener = userProfileClickListener;
+        mOnClickListener = onClickListener;
 
         mCurrentTimeWithoutHours = CalendarUtils.getCurrentTimeWithoutHours();
         mDayTimeInMilliseconds = CalendarUtils.getDayTimeInMilliseconds();
         mToday = context.getString(R.string.today);
         mYesterday = context.getString(R.string.yesterday);
+
+        mLocationImageSize = (int) context.getResources().getDimension(R.dimen.size_location_image);
     }
 
     @Override
@@ -75,11 +81,18 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
             return initDateRow(message);
         }
 
+        ChatMessage chatMessage = (ChatMessage)message;
         int type = getItemViewType(position);
-        if (type == TYPE_DRINK) {
-            return initDrinkRow((ChatMessage)message);
-        } else {
-            return initMessageRow((ChatMessage)message);
+        switch (type) {
+            case TYPE_MESSAGE:
+                return initMessageRow(chatMessage);
+            case TYPE_LOCATION:
+                return initLocationRow(chatMessage);
+            case TYPE_DRINK:
+                return initDrinkRow(chatMessage);
+
+            default:
+                return initMessageRow(chatMessage);
         }
     }
 
@@ -160,6 +173,20 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         return row;
     }
 
+    private View initLocationRow(ChatMessage message) {
+        View row;
+
+        if(message.getIsMyMessage()) {
+            row = mInflater.inflate(R.layout.item_chat_location_right, null);
+        } else {
+            row = mInflater.inflate(R.layout.item_chat_location_left, null);
+        }
+
+        fillLocationRow(row, message);
+
+        return row;
+    }
+
     private View initDrinkRow(ChatMessage message) {
         View row;
 
@@ -198,9 +225,62 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         }
 
         if(!message.getIsMyMessage()) {
-            imgAvatar.setOnClickListener(mUserProfileClickListener);
+            imgAvatar.setOnClickListener(mOnClickListener);
         } else {
             imgAvatar.setOnClickListener(null);
         }
+    }
+
+    private void fillLocationRow(View row, ChatMessage message) {
+        TextView txtDate = (TextView) row.findViewById(R.id.txtDate);
+        ImageView imgAvatar = (ImageView) row.findViewById(R.id.imgAvatar);
+        ImageView imgLocation = (ImageView) row.findViewById(R.id.imgLocation);
+
+        long messageTime = message.getTime();
+        if(messageTime < mCurrentTimeWithoutHours) {
+            txtDate.setText(mDateMsgWithDay.format(messageTime));
+        } else {
+            txtDate.setText(mDateMsgToday.format(messageTime));
+        }
+
+        String avatarString = message.getUserFromAvatar();
+        String avatarUrl = ImageHelper.getUserListAvatar(avatarString);
+        if(avatarUrl != null && avatarUrl.length() > 0) {
+            Picasso.with(mContext).load(avatarUrl).error(R.drawable.ic_avatar_unknown).into(imgAvatar);
+        }
+
+        final Location location = message.getLocation();
+        if(location != null) {
+            String url = getLocationImageUrl(location);
+            Picasso.with(mContext).load(url).into(imgLocation);
+
+            imgLocation.setTag(location);
+            imgLocation.setOnClickListener(mOnClickListener);
+        } else {
+            imgLocation.setTag(null);
+            imgLocation.setOnClickListener(null);
+        }
+
+        if(!message.getIsMyMessage()) {
+            imgAvatar.setOnClickListener(mOnClickListener);
+        } else {
+            imgAvatar.setOnClickListener(null);
+        }
+    }
+
+    private String getLocationImageUrl(@NonNull Location location) {
+        StringBuilder url = new StringBuilder();
+        url.append("https://maps.googleapis.com/maps/api/staticmap?");
+        url.append("&size=");
+        url.append(mLocationImageSize);
+        url.append("x");
+        url.append(mLocationImageSize);
+        url.append("&zoom=16&maptype=roadmap");
+        url.append("&markers=color:red%7C");
+        url.append(location.getLat());
+        url.append(",");
+        url.append(location.getLon());
+
+        return url.toString();
     }
 }
