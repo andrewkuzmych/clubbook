@@ -130,11 +130,20 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     NewsPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:PhotoCellIdentifier forIndexPath:indexPath];
     int tag = (int)collectionView.tag;
     NewsData* news = [newsArray objectAtIndex:tag];
-    
-    CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
-    NSString * url = [news.photos objectAtIndex:indexPath.item];
-    NSString * imageUrl  = [cloudinary url:url options:@{}];
-    [cell.photoImageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"background"]];
+     
+    NSString *indexKey = [@(indexPath.item) stringValue];
+    UIImage* img = [news.tempDownlaodedPhotos objectForKey:indexKey];
+    if (img == nil) {
+        CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
+        NSString * url = [news.photos objectAtIndex:indexPath.item];
+        NSString * imageUrl  = [cloudinary url:url options:@{}];
+        
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]];
+        img = [[UIImage alloc] initWithData:data];
+        
+        [news.tempDownlaodedPhotos setObject:img forKey:indexKey];
+    }
+    [cell.photoImageView sd_setImageWithURL:[NSURL URLWithString:@""] placeholderImage:img];
 
     cell.photoImageView.contentMode = UIViewContentModeScaleAspectFill;
     return cell;
