@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.nl.clubbook.R;
-import com.nl.clubbook.adapter.NavDrawerItem;
+import com.nl.clubbook.ui.adapter.NavDrawerItem;
 
 import java.util.List;
 

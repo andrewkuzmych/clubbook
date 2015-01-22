@@ -10,7 +10,9 @@ import android.support.v4.app.TaskStackBuilder;
 import com.nl.clubbook.R;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import com.nl.clubbook.activity.MainActivity;
+
+import com.nl.clubbook.model.ClubbookPreferences;
+import com.nl.clubbook.ui.activity.MainActivity;
 import com.nl.clubbook.utils.L;
 
 import org.json.JSONException;
@@ -38,7 +40,7 @@ public class NotificationReceiver extends BroadcastReceiver {
             String uniqueId = json.getString("unique_id");
             String msg = json.getString("msg");
 
-            SessionManager session = SessionManager.getInstance();
+            ClubbookPreferences session = ClubbookPreferences.getInstance();
             String con = session.getConversationListener();
             if(con == null || !con.equalsIgnoreCase(uniqueId)) {
                 int notificationId = (uniqueId).hashCode();
@@ -58,7 +60,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                         .setContentText(message)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
-        if(SessionManager.getInstance().isNotificationVibrationEnabled()) {
+        if(ClubbookPreferences.getInstance().isNotificationVibrationEnabled()) {
             mBuilder.setVibrate(new long[] {1000, 1000, 1000});
         }
 

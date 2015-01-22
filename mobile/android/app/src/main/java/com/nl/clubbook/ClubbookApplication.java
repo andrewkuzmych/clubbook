@@ -6,7 +6,7 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.nl.clubbook.helper.FontHelper;
 import com.nl.clubbook.helper.LocationCheckinHelper;
-import com.nl.clubbook.helper.SessionManager;
+import com.nl.clubbook.model.ClubbookPreferences;
 import com.parse.Parse;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
@@ -49,7 +49,7 @@ public class ClubbookApplication extends Application {
 
         FontHelper.init(getApplicationContext());
 
-        SessionManager.init(getApplicationContext());
+        ClubbookPreferences.init(getApplicationContext());
         LocationCheckinHelper.init();
     }
 

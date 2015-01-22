@@ -9,12 +9,13 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.activity.BaseActivity;
-import com.nl.clubbook.activity.MainActivity;
-import com.nl.clubbook.activity.MainLoginActivity;
-import com.nl.clubbook.activity.NoLocationActivity;
-import com.nl.clubbook.datasource.HttpClientManager;
-import com.nl.clubbook.datasource.Place;
+import com.nl.clubbook.model.ClubbookPreferences;
+import com.nl.clubbook.ui.activity.BaseActivity;
+import com.nl.clubbook.ui.activity.MainActivity;
+import com.nl.clubbook.ui.activity.MainLoginActivity;
+import com.nl.clubbook.ui.activity.NoLocationActivity;
+import com.nl.clubbook.model.httpclient.HttpClientManager;
+import com.nl.clubbook.model.data.Place;
 import com.nl.clubbook.utils.L;
 
 import org.jetbrains.annotations.Nullable;
@@ -48,8 +49,8 @@ public class LocationCheckinHelper {
     public static void init() {
         mCheckInHelper = new LocationCheckinHelper();
 
-        SessionManager.getInstance().getCheckedInClubInfo();
-        mCheckInHelper.setCurrentClub(SessionManager.getInstance().getCheckedInClubInfo());
+        ClubbookPreferences.getInstance().getCheckedInClubInfo();
+        mCheckInHelper.setCurrentClub(ClubbookPreferences.getInstance().getCheckedInClubInfo());
     }
 
     public static LocationCheckinHelper getInstance() {
@@ -74,12 +75,12 @@ public class LocationCheckinHelper {
 
     public void setCurrentClub(Place currentPlace) {
         mCurrentPlace = currentPlace;
-        SessionManager.getInstance().putCheckedInClubInfo(currentPlace);
+        ClubbookPreferences.getInstance().putCheckedInClubInfo(currentPlace);
     }
 
     public void clearCheckedInClubInfo() {
         mCurrentPlace = null;
-        SessionManager.getInstance().clearCheckInClubInfo();
+        ClubbookPreferences.getInstance().clearCheckInClubInfo();
     }
 
     public Location getCurrentLocation() {
@@ -111,7 +112,7 @@ public class LocationCheckinHelper {
         }
 
         Double distance = distanceBwPoints(currentLocation.getLatitude(), currentLocation.getLongitude(), place.getLat(), place.getLon());
-        int maxCheckInDistance = SessionManager.getInstance().getCheckInMaxDistance();
+        int maxCheckInDistance = ClubbookPreferences.getInstance().getCheckInMaxDistance();
 
         return distance < maxCheckInDistance;
     }
@@ -120,7 +121,7 @@ public class LocationCheckinHelper {
      * Set current club
      */
     public void checkIn(final Context context, final Place place, final CheckInOutCallbackInterface callback) {
-        int maxCheckInDistance = SessionManager.getInstance().getCheckInMaxDistance();
+        int maxCheckInDistance = ClubbookPreferences.getInstance().getCheckInMaxDistance();
 
         // location validation
         final Location current_location = getCurrentLocation();
@@ -130,8 +131,8 @@ public class LocationCheckinHelper {
             return;
         }
 
-        SessionManager sessionManager = SessionManager.getInstance();
-        HttpClientManager.getInstance().checkin(place.getId(), sessionManager.getAccessToken(), new HttpClientManager.OnResultReady() {
+        ClubbookPreferences clubbookPreferences = ClubbookPreferences.getInstance();
+        HttpClientManager.getInstance().checkin(place.getId(), clubbookPreferences.getAccessToken(), new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (failed) {
@@ -155,8 +156,8 @@ public class LocationCheckinHelper {
     public void checkOut(final Context context, final CheckInOutCallbackInterface callback) {
         L.d("Try to Check out user");
 
-        SessionManager sessionManager = SessionManager.getInstance();
-        HttpClientManager.getInstance().checkout(mCurrentPlace.getId(), sessionManager.getAccessToken(),
+        ClubbookPreferences clubbookPreferences = ClubbookPreferences.getInstance();
+        HttpClientManager.getInstance().checkout(mCurrentPlace.getId(), clubbookPreferences.getAccessToken(),
                 new HttpClientManager.OnResultReady() {
 
                     @Override

@@ -3,7 +3,7 @@ package com.nl.clubbook.ui.drawer;
 import android.content.Context;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.adapter.NavDrawerItem;
+import com.nl.clubbook.ui.adapter.NavDrawerItem;
 
 import java.util.ArrayList;
 import java.util.List;

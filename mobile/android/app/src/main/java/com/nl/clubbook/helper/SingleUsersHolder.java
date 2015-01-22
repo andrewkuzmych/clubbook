@@ -1,6 +1,6 @@
 package com.nl.clubbook.helper;
 
-import com.nl.clubbook.datasource.User;
+import com.nl.clubbook.model.data.User;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.cloudinary.Cloudinary;
 import com.nl.clubbook.R;
-import com.nl.clubbook.activity.BaseActivity;
+import com.nl.clubbook.ui.activity.BaseActivity;
 import com.nl.clubbook.utils.L;
 
 import org.jetbrains.annotations.Nullable;
