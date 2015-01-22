@@ -149,9 +149,10 @@ public class PlacesFragment extends BaseRefreshFragment implements AdapterView.O
             return;
         }
 
-        String accessToken = getSession().getUserDetails().get(ClubbookPreferences.KEY_ACCESS_TOCKEN);
-        if(accessToken == null) {
-            L.i("accessToken = null");
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity());
+        String accessToken = preferences.getAccessToken();
+        if(accessToken.isEmpty()) {
+            L.i("accessToken is empty");
 
             setProgressViewsState(false, View.GONE, View.GONE);
 

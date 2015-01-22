@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import com.nl.clubbook.R;
+import com.nl.clubbook.model.ClubbookPreferences;
 import com.nl.clubbook.model.httpclient.HttpClientManager;
 import com.nl.clubbook.model.data.User;
 import com.nl.clubbook.helper.ImageUploader;
@@ -205,7 +206,7 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
                 }
 
                 User user = (User) result;
-                getSession().createLoginSession(user);
+                ClubbookPreferences.getInstance(getBaseContext()).createLoginSession(user);
 
                 sendBroadcast(new Intent(MainLoginActivity.ACTION_CLOSE_ACTIVITY));
 

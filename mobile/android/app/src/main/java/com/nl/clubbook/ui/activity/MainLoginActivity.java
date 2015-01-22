@@ -62,7 +62,8 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
         }
 
 
-        if (getSession().isLoggedIn()) {
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getBaseContext());
+        if (preferences.isLoggedIn()) {
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(i);
             finish();
@@ -188,7 +189,7 @@ public class MainLoginActivity extends BaseActivity implements View.OnClickListe
                 } else {
                     User user = (User) result;
 
-                    ClubbookPreferences clubbookPreferences = getSession();
+                    ClubbookPreferences clubbookPreferences = ClubbookPreferences.getInstance(getBaseContext());
                     clubbookPreferences.createLoginSession(user);
                     clubbookPreferences.setLoggedInByFacebook(true);
 

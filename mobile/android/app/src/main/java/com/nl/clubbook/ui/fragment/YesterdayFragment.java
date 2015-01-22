@@ -116,9 +116,10 @@ public class YesterdayFragment extends BaseRefreshFragment implements AdapterVie
             setProgressViewsState(false, View.GONE, View.VISIBLE);
         }
 
-        String accessToken = getSession().getUserDetails().get(ClubbookPreferences.KEY_ACCESS_TOCKEN);
-        if(accessToken == null) {
-            L.i("accessToken = null");
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity());
+        String accessToken = preferences.getAccessToken();
+        if(accessToken.isEmpty()) {
+            L.i("accessToken is empty");
 
             setProgressViewsState(false, View.GONE, View.GONE);
 

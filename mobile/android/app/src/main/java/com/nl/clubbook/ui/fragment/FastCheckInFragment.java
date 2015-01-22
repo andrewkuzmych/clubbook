@@ -136,8 +136,9 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
             progressBar.setVisibility(View.VISIBLE);
         }
 
-        String accessToken = getSession().getUserDetails().get(ClubbookPreferences.KEY_ACCESS_TOCKEN);
-        if(accessToken == null) {
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity().getBaseContext());
+        String accessToken = preferences.getAccessToken();
+        if(accessToken.isEmpty()) {
             mSwipeRefreshLayout.setRefreshing(false);
             progressBar.setVisibility(View.GONE);
             L.i("accessToken = null");
@@ -186,7 +187,8 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
 
         if(!LocationCheckinHelper.getInstance().canCheckInHere(mSelectedPlace)) {
             String messageTemplate = getString(R.string.you_need_to_be_within_m_in_order_to_check_in);
-            String dialogMessage = String.format(messageTemplate, ClubbookPreferences.getInstance().getCheckInMaxDistance());
+            int checkInMaxDistance = ClubbookPreferences.getInstance(getActivity().getBaseContext()).getCheckInMaxDistance();
+            String dialogMessage = String.format(messageTemplate, checkInMaxDistance);
 
             showMessageDialog(dialogMessage, getString(R.string.ok));
             return;
@@ -214,7 +216,8 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
         } else {
             showProgressDialog(getString(R.string.checking_in));
 
-            if(!getSession().isCheckInDialogShown()) {
+            ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity().getBaseContext());
+            if(!preferences.isCheckInDialogShown()) {
                 showMessageDialog(
                         FastCheckInFragment.this,
                         ACTION_ID_CHECK_IN_EXPLANATION,
@@ -224,7 +227,7 @@ public class FastCheckInFragment extends BaseRefreshFragment implements AdapterV
                         null
                 );
 
-                getSession().setCheckInDialogShown(true);
+                preferences.setCheckInDialogShown(true);
             } else {
                 checkIn(view);
             }

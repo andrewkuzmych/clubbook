@@ -92,7 +92,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     public void onStart() {
         super.onStart();
 
-        ClubbookPreferences session = ClubbookPreferences.getInstance();
+        ClubbookPreferences session = ClubbookPreferences.getInstance(getActivity());
         session.setConversationListener(mUserToId + "_" + mUserFromId);
     }
 
@@ -100,7 +100,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     public void onStop() {
         super.onStop();
 
-        ClubbookPreferences session = ClubbookPreferences.getInstance();
+        ClubbookPreferences session = ClubbookPreferences.getInstance(getActivity());
         session.setConversationListener(null);
     }
 
@@ -177,8 +177,9 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
             return;
         }
 
-        mUserFromId = getCurrentUserId();
-        mAccessToken = getSession().getUserDetails().get(ClubbookPreferences.KEY_ACCESS_TOCKEN);
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity());
+        mUserFromId = preferences.getUserId();
+        mAccessToken = preferences.getAccessToken();
 
         mEditMessage = (EditText) view.findViewById(R.id.editMessage);
         mEditMessage.setOnEditorActionListener(new TextView.OnEditorActionListener() {

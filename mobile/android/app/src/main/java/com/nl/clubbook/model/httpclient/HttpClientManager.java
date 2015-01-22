@@ -1628,7 +1628,7 @@ public class HttpClientManager {
         });
     }
 
-    public void getConfig(final OnResultReady onResultReady) {
+    public void getConfig(final Context context, final OnResultReady onResultReady) {
         ClubbookRestClient.getConfig(new JsonHttpResponseHandler() {
             private boolean failed = true;
 
@@ -1639,7 +1639,7 @@ public class HttpClientManager {
 
                     JSONObject jsonResult = responseJson.optJSONObject("result");
                     if(jsonResult != null) {
-                        ClubbookPreferences clubbookPreferences = ClubbookPreferences.getInstance();
+                        ClubbookPreferences clubbookPreferences = ClubbookPreferences.getInstance(context);
                         clubbookPreferences.setUpdateCheckInStatusInterval(jsonResult.optInt("update_checkin_status_interval"));
                         clubbookPreferences.setMaxFailedCheckInCount(jsonResult.optInt("max_failed_checkin_count"));
                         clubbookPreferences.setCheckInMaxDistance(jsonResult.optInt("chekin_max_distance"));

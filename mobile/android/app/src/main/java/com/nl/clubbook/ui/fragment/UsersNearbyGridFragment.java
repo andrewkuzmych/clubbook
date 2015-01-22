@@ -18,7 +18,6 @@ import com.nl.clubbook.helper.LocationCheckinHelper;
 import com.nl.clubbook.utils.NetworkUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -114,8 +113,9 @@ public class UsersNearbyGridFragment extends BaseRefreshFragment implements Adap
         }
 
         String requestType = getArguments().getString(ARG_REQUEST_TYPE, RequestTypes.AROUND);
-        final ClubbookPreferences session = ClubbookPreferences.getInstance();
-        final HashMap<String, String> user = session.getUserDetails();
+
+        final ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity().getBaseContext());
+        String accessToken = preferences.getAccessToken();
 
         Fragment targetFragment = getTargetFragment();
         String distanceKm = String.valueOf(UsersNearbyFragment.DISTANCES[UsersNearbyFragment.DEFAULT_DISTANCE]);
@@ -135,7 +135,7 @@ public class UsersNearbyGridFragment extends BaseRefreshFragment implements Adap
         HttpClientManager.getInstance().retrieveNearbyUsers(
                 requestType,
                 gender,
-                user.get(ClubbookPreferences.KEY_ACCESS_TOCKEN),
+                accessToken,
                 "" + location.getLatitude(),
                 "" + location.getLongitude(),
                 distanceKm,

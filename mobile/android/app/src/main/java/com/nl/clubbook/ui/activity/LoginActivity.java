@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.nl.clubbook.R;
+import com.nl.clubbook.model.ClubbookPreferences;
 import com.nl.clubbook.model.httpclient.HttpClientManager;
 import com.nl.clubbook.model.data.User;
 import com.nl.clubbook.helper.Validator;
@@ -113,7 +114,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 }
 
                 User user = (User) result;
-                getSession().createLoginSession(user);
+                ClubbookPreferences.getInstance(getBaseContext()).createLoginSession(user);
 
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(i);

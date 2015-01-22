@@ -32,7 +32,6 @@ import com.squareup.picasso.Target;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class EditProfileActivity extends BaseDateActivity implements View.OnClickListener,
@@ -175,23 +174,25 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
         //upload data
         showProgressDialog(getString(R.string.loading));
-        HttpClientManager.getInstance().updateUserProfile(getSession().getUserDetails().get(ClubbookPreferences.KEY_ACCESS_TOCKEN),
-                userName, gender, mServerFormat.format(mBirthDate), country, aboutMe, new HttpClientManager.OnResultReady() {
+
+        final ClubbookPreferences preferences = ClubbookPreferences.getInstance(getBaseContext());
+        HttpClientManager.getInstance().updateUserProfile(preferences.getAccessToken(), userName,
+                gender, mServerFormat.format(mBirthDate), country, aboutMe, new HttpClientManager.OnResultReady() {
                     @Override
                     public void onReady(Object result, boolean failed) {
+
                         hideProgressDialog();
                         if (failed) {
                             showToast(R.string.something_went_wrong_please_try_again);
                             return;
                         }
 
-                        ClubbookPreferences clubbookPreferences = getSession();
-                        clubbookPreferences.updateValue(ClubbookPreferences.KEY_NAME, userName);
-                        clubbookPreferences.updateValue(ClubbookPreferences.KEY_BIRTHDAY, birthDate);
-                        clubbookPreferences.updateValue(ClubbookPreferences.KEY_ABOUT_ME, aboutMe);
-                        clubbookPreferences.updateValue(ClubbookPreferences.KEY_GENDER, gender);
-                        clubbookPreferences.updateValue(ClubbookPreferences.KEY_AGE, strAge);
-                        clubbookPreferences.updateValue(ClubbookPreferences.KEY_COUNTRY, country);
+                        preferences.updateValue(ClubbookPreferences.KEY_NAME, userName);
+                        preferences.updateValue(ClubbookPreferences.KEY_BIRTHDAY, birthDate);
+                        preferences.updateValue(ClubbookPreferences.KEY_ABOUT_ME, aboutMe);
+                        preferences.updateValue(ClubbookPreferences.KEY_GENDER, gender);
+                        preferences.updateValue(ClubbookPreferences.KEY_AGE, strAge);
+                        preferences.updateValue(ClubbookPreferences.KEY_COUNTRY, country);
 
                         showToast(R.string.user_information_saved);
 
@@ -230,7 +231,8 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
         setLoading(true);
 
-        HttpClientManager.getInstance().retrieveUser(getSession().getUserDetails().get(ClubbookPreferences.KEY_ACCESS_TOCKEN), new HttpClientManager.OnResultReady() {
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getBaseContext());
+        HttpClientManager.getInstance().retrieveUser(preferences.getAccessToken(), new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (isFinishing()) {
@@ -251,7 +253,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                 EditText editName = (EditText) findViewById(R.id.editName);
                 EditText editAboutMe = (EditText) findViewById(R.id.editAboutMe);
 
-                String birthDate = profile.getDob();
+                String birthDate = profile.getBirthday();
                 if (birthDate != null && birthDate.length() > 0) {
                     parseBirthDate(birthDate);
 
@@ -261,7 +263,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                 UiHelper.createGenderSpinner((Spinner) findViewById(R.id.spinGender), EditProfileActivity.this, profile.getGender());
                 UiHelper.createCountrySpinner((Spinner) findViewById(R.id.spinCountry), EditProfileActivity.this, profile.getCountry());
                 editName.setText(profile.getName());
-                editAboutMe.setText(profile.getBio());
+                editAboutMe.setText(profile.getAboutMe());
 
                 drawImageManager(profile.getPhotos());
             }
@@ -305,9 +307,9 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
             showProgressDialog(getString(R.string.upload_new_image));
         }
 
-        HashMap<String, String> userDetails = getSession().getUserDetails();
-        String accessToken = userDetails.get(ClubbookPreferences.KEY_ACCESS_TOCKEN);
-        String userId = userDetails.get(ClubbookPreferences.KEY_ID);
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getBaseContext());
+        String accessToken = preferences.getAccessToken();
+        String userId = preferences.getUserId();
 
         HttpClientManager.getInstance().profileAddImage(accessToken, userId, imageJson, new HttpClientManager.OnResultReady() {
             @Override
@@ -332,9 +334,9 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
     private void removeImage() {
         showProgressDialog(getString(R.string.deleting_image));
 
-        HashMap<String, String> userDetails = getSession().getUserDetails();
-        String userId = userDetails.get(ClubbookPreferences.KEY_ID);
-        String accessToken = userDetails.get(ClubbookPreferences.KEY_ACCESS_TOCKEN);
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getBaseContext());
+        String accessToken = preferences.getAccessToken();
+        String userId = preferences.getUserId();
 
         HttpClientManager.getInstance().profileDeleteImage(EditProfileActivity.this, accessToken, userId, selectedImageDto.getId(), new HttpClientManager.OnResultReady() {
             @Override
@@ -366,9 +368,9 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
     private void setImageAsAvatar() {
         showProgressDialog(getString(R.string.loading));
 
-        HashMap<String, String> userDetails = getSession().getUserDetails();
-        String userId = userDetails.get(ClubbookPreferences.KEY_ID);
-        String accessToken = userDetails.get(ClubbookPreferences.KEY_ACCESS_TOCKEN);
+        final ClubbookPreferences preferences = ClubbookPreferences.getInstance(getBaseContext());
+        String accessToken = preferences.getAccessToken();
+        String userId = preferences.getUserId();
 
         HttpClientManager.getInstance().profileUpdateImage(accessToken, userId, selectedImageDto.getId(), true, new HttpClientManager.OnResultReady() {
 
@@ -385,7 +387,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                 drawImageManager(profile.getPhotos());
 
                 String url = selectedImageDto.getUrl();
-                getSession().updateValue(ClubbookPreferences.KEY_AVATAR, url);
+                preferences.updateValue(ClubbookPreferences.KEY_AVATAR, url);
 
                 setResult(RESULT_OK);
             }

@@ -27,8 +27,7 @@ import java.util.List;
  */
 public class LocationCheckinHelper {
 
-//    private ScheduledExecutorService scheduleTaskExecutor;
-//    private int failedCheckInCount = 0;
+    private Context mContext;
 
     // current user location, updated every 10sec
     private Location currentLocation;
@@ -46,11 +45,10 @@ public class LocationCheckinHelper {
     /*
      * Call this method in Application.onCreate()
      */
-    public static void init() {
-        mCheckInHelper = new LocationCheckinHelper();
+    public static void init(Context context) {
+        mCheckInHelper = new LocationCheckinHelper(context);
 
-        ClubbookPreferences.getInstance().getCheckedInClubInfo();
-        mCheckInHelper.setCurrentClub(ClubbookPreferences.getInstance().getCheckedInClubInfo());
+        mCheckInHelper.setCurrentClub(ClubbookPreferences.getInstance(context).getCheckedInClubInfo());
     }
 
     public static LocationCheckinHelper getInstance() {
@@ -65,7 +63,8 @@ public class LocationCheckinHelper {
         mCheckInHelper.clearCheckedInClubInfo();
     }
 
-    private LocationCheckinHelper() {
+    private LocationCheckinHelper(Context context) {
+        mContext = context;
     }
 
     @Nullable
@@ -75,12 +74,12 @@ public class LocationCheckinHelper {
 
     public void setCurrentClub(Place currentPlace) {
         mCurrentPlace = currentPlace;
-        ClubbookPreferences.getInstance().putCheckedInClubInfo(currentPlace);
+        ClubbookPreferences.getInstance(mContext).putCheckedInClubInfo(currentPlace);
     }
 
     public void clearCheckedInClubInfo() {
         mCurrentPlace = null;
-        ClubbookPreferences.getInstance().clearCheckInClubInfo();
+        ClubbookPreferences.getInstance(mContext).clearCheckInClubInfo();
     }
 
     public Location getCurrentLocation() {
@@ -112,7 +111,7 @@ public class LocationCheckinHelper {
         }
 
         Double distance = distanceBwPoints(currentLocation.getLatitude(), currentLocation.getLongitude(), place.getLat(), place.getLon());
-        int maxCheckInDistance = ClubbookPreferences.getInstance().getCheckInMaxDistance();
+        int maxCheckInDistance = ClubbookPreferences.getInstance(mContext).getCheckInMaxDistance();
 
         return distance < maxCheckInDistance;
     }
@@ -121,7 +120,7 @@ public class LocationCheckinHelper {
      * Set current club
      */
     public void checkIn(final Context context, final Place place, final CheckInOutCallbackInterface callback) {
-        int maxCheckInDistance = ClubbookPreferences.getInstance().getCheckInMaxDistance();
+        int maxCheckInDistance = ClubbookPreferences.getInstance(mContext).getCheckInMaxDistance();
 
         // location validation
         final Location current_location = getCurrentLocation();
@@ -131,7 +130,7 @@ public class LocationCheckinHelper {
             return;
         }
 
-        ClubbookPreferences clubbookPreferences = ClubbookPreferences.getInstance();
+        ClubbookPreferences clubbookPreferences = ClubbookPreferences.getInstance(mContext);
         HttpClientManager.getInstance().checkin(place.getId(), clubbookPreferences.getAccessToken(), new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
@@ -156,7 +155,7 @@ public class LocationCheckinHelper {
     public void checkOut(final Context context, final CheckInOutCallbackInterface callback) {
         L.d("Try to Check out user");
 
-        ClubbookPreferences clubbookPreferences = ClubbookPreferences.getInstance();
+        ClubbookPreferences clubbookPreferences = ClubbookPreferences.getInstance(mContext);
         HttpClientManager.getInstance().checkout(mCurrentPlace.getId(), clubbookPreferences.getAccessToken(),
                 new HttpClientManager.OnResultReady() {
 

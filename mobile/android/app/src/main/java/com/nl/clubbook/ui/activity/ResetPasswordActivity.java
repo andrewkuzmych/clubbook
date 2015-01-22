@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.nl.clubbook.R;
+import com.nl.clubbook.model.ClubbookPreferences;
 import com.nl.clubbook.model.httpclient.HttpClientManager;
 import com.nl.clubbook.utils.NetworkUtils;
 
@@ -78,7 +79,8 @@ public class ResetPasswordActivity extends BaseActivity {
             return;
         }
 
-        String accessToken = getSession().getAccessToken();
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getBaseContext());
+        String accessToken = preferences.getAccessToken();
 
         showProgressDialog(getString(R.string.changing_password));
         HttpClientManager.getInstance().resetPassword(oldPassword, newPassword, accessToken, new HttpClientManager.OnResultReady() {

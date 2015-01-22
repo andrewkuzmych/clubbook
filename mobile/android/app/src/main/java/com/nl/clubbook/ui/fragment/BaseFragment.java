@@ -15,8 +15,6 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.nl.clubbook.ClubbookApplication;
 import com.nl.clubbook.R;
-import com.nl.clubbook.model.ClubbookPreferences;
-import com.nl.clubbook.ui.activity.BaseActivity;
 import com.nl.clubbook.ui.fragment.dialog.MessageDialog;
 import com.nl.clubbook.ui.fragment.dialog.ProgressDialog;
 import com.squareup.picasso.Picasso;
@@ -73,14 +71,6 @@ public class BaseFragment extends Fragment {
     public void sendScreenStatistic(String stringName) {
         mTracker.setScreenName(stringName);
         mTracker.send(new HitBuilders.AppViewBuilder().build());
-    }
-
-    protected ClubbookPreferences getSession() {
-        return ((BaseActivity) getActivity()).getSession();
-    }
-
-    protected String getCurrentUserId() {
-        return ((BaseActivity) getActivity()).getCurrentUserId();
     }
 
     protected void openFragment(Fragment fragment, Class fragmentClass) {

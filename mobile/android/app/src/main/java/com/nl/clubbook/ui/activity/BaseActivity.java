@@ -25,7 +25,6 @@ import com.nl.clubbook.ui.fragment.dialog.ProgressDialog;
  * To change this template use File | Settings | File Templates.
  */
 public class BaseActivity extends ActionBarActivity {
-    private ClubbookPreferences mSession;
     protected Tracker mTracker;
 
     private boolean isProgressShow = false;
@@ -34,7 +33,6 @@ public class BaseActivity extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mSession = ClubbookPreferences.getInstance();
         mTracker = ((ClubbookApplication)getApplicationContext()).getTracker();
     }
 
@@ -54,14 +52,6 @@ public class BaseActivity extends ActionBarActivity {
 
     public boolean isProgressShow() {
         return isProgressShow;
-    }
-
-    public ClubbookPreferences getSession() {
-        return mSession;
-    }
-
-    public String getCurrentUserId() {
-        return mSession.getUserId();
     }
 
     public void showProgressDialog(String message) {

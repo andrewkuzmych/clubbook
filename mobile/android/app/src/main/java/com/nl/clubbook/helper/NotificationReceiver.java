@@ -32,7 +32,7 @@ public class NotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
-             String action = intent.getAction();
+            String action = intent.getAction();
             String channel = intent.getExtras().getString("com.parse.Channel");
             JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
             String type = json.getString("type");
@@ -40,8 +40,8 @@ public class NotificationReceiver extends BroadcastReceiver {
             String uniqueId = json.getString("unique_id");
             String msg = json.getString("msg");
 
-            ClubbookPreferences session = ClubbookPreferences.getInstance();
-            String con = session.getConversationListener();
+            ClubbookPreferences clubbookPreferences = ClubbookPreferences.getInstance(context);
+            String con = clubbookPreferences.getConversationListener();
             if(con == null || !con.equalsIgnoreCase(uniqueId)) {
                 int notificationId = (uniqueId).hashCode();
                 generateNotification(context, R.drawable.icon_play, header, msg, type, notificationId);
@@ -60,7 +60,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                         .setContentText(message)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
-        if(ClubbookPreferences.getInstance().isNotificationVibrationEnabled()) {
+        if(ClubbookPreferences.getInstance(context).isNotificationVibrationEnabled()) {
             mBuilder.setVibrate(new long[] {1000, 1000, 1000});
         }
 

@@ -23,7 +23,6 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class ProfileFragment extends BaseInnerFragment implements View.OnClickListener,
@@ -140,7 +139,10 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
 
         View btnChat = view.findViewById(R.id.btnChat);
         View btnBlockUser = view.findViewById(R.id.txtBlockUser);
-        if(mUser != null && mUser.getId() != null && mUser.getId().equalsIgnoreCase(getSession().getUserDetails().get(ClubbookPreferences.KEY_ID))) {
+
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity().getBaseContext());
+        String userId = preferences.getUserId();
+        if(mUser != null && mUser.getId() != null && mUser.getId().equalsIgnoreCase(userId)) {
             btnChat.setVisibility(View.GONE);
             btnBlockUser.setVisibility(View.GONE);
         } else {
@@ -218,7 +220,8 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             mBtnAddFriendMode = BtnAddFriendModes.MODE_ADD;
         }
 
-        String currentUserId = getSession().getUserId();
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity().getBaseContext());
+        String currentUserId = preferences.getUserId();
         if(currentUserId.equalsIgnoreCase(mUser.getId())) {
             view.findViewById(R.id.holderButtons).setVisibility(View.GONE);
             view.findViewById(R.id.txtAddFriend).setVisibility(View.GONE);
@@ -246,12 +249,13 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             return;
         }
 
-        final ClubbookPreferences session = ClubbookPreferences.getInstance();
-        final HashMap<String, String> user = session.getUserDetails();
+        final ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity().getBaseContext());
+        String userId = preferences.getUserId();
+        String accessToken = preferences.getAccessToken();
 
         showProgress(getString(R.string.loading));
 
-        HttpClientManager.getInstance().addFriendRequest(user.get(ClubbookPreferences.KEY_ID), mUser.getId(), user.get(ClubbookPreferences.KEY_ACCESS_TOCKEN),
+        HttpClientManager.getInstance().addFriendRequest(userId, mUser.getId(), accessToken,
                 new HttpClientManager.OnResultReady() {
 
                     @Override
@@ -279,12 +283,13 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             return;
         }
 
-        final ClubbookPreferences session = ClubbookPreferences.getInstance();
-        final HashMap<String, String> user = session.getUserDetails();
+        final ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity().getBaseContext());
+        String userId = preferences.getUserId();
+        String accessToken = preferences.getAccessToken();
 
         showProgress(getString(R.string.loading));
 
-        HttpClientManager.getInstance().acceptFriendRequest(user.get(ClubbookPreferences.KEY_ID), mUser.getId(), user.get(ClubbookPreferences.KEY_ACCESS_TOCKEN),
+        HttpClientManager.getInstance().acceptFriendRequest(userId, mUser.getId(), accessToken,
                 new HttpClientManager.OnResultReady() {
 
                     @Override
@@ -311,12 +316,13 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             return;
         }
 
-        final ClubbookPreferences session = ClubbookPreferences.getInstance();
-        final HashMap<String, String> user = session.getUserDetails();
+        final ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity().getBaseContext());
+        String userId = preferences.getUserId();
+        String accessToken = preferences.getAccessToken();
 
         showProgress(getString(R.string.canceling));
 
-        HttpClientManager.getInstance().cancelFriendRequest(user.get(ClubbookPreferences.KEY_ID), mUser.getId(), user.get(ClubbookPreferences.KEY_ACCESS_TOCKEN),
+        HttpClientManager.getInstance().cancelFriendRequest(userId, mUser.getId(), accessToken,
                 new HttpClientManager.OnResultReady() {
 
                     @Override
@@ -370,10 +376,12 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     }
 
     private void blockUser() {
-        ClubbookPreferences clubbookPreferences = getSession();
+        final ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity().getBaseContext());
+        String userId = preferences.getUserId();
+        String accessToken = preferences.getAccessToken();
 
         showProgress(getString(R.string.block_user_process));
-        HttpClientManager.getInstance().blockUserRequest(clubbookPreferences.getUserId(), mUser.getId(), clubbookPreferences.getAccessToken(),
+        HttpClientManager.getInstance().blockUserRequest(userId, mUser.getId(), accessToken,
                 new HttpClientManager.OnResultReady() {
 
                     @Override
@@ -397,10 +405,12 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
     }
 
     private void unblockUser() {
-        ClubbookPreferences clubbookPreferences = getSession();
+        final ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity().getBaseContext());
+        String userId = preferences.getUserId();
+        String accessToken = preferences.getAccessToken();
 
         showProgress(getString(R.string.unblock_user_process));
-        HttpClientManager.getInstance().unblockUserRequest(clubbookPreferences.getUserId(), mUser.getId(), clubbookPreferences.getAccessToken(),
+        HttpClientManager.getInstance().unblockUserRequest(userId, mUser.getId(), accessToken,
                 new HttpClientManager.OnResultReady() {
 
                     @Override
@@ -463,13 +473,11 @@ public class ProfileFragment extends BaseInnerFragment implements View.OnClickLi
             return;
         }
 
-        final ClubbookPreferences session = ClubbookPreferences.getInstance();
-        final HashMap<String, String> user = session.getUserDetails();
+        final ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity().getBaseContext());
+        String userId = preferences.getUserId();
+        String accessToken = preferences.getAccessToken();
 
         showProgress(getString(R.string.removing_friend));
-
-        String userId = user.get(ClubbookPreferences.KEY_ID);
-        String accessToken = user.get(ClubbookPreferences.KEY_ACCESS_TOCKEN);
 
         HttpClientManager.getInstance().unfriendRequest(accessToken, userId, mUser.getId(), new HttpClientManager.OnResultReady() {
             @Override

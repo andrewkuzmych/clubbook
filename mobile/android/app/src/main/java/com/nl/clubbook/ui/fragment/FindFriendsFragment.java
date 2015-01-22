@@ -172,7 +172,7 @@ public class FindFriendsFragment extends BaseFragment implements View.OnClickLis
 
         getView().findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 
-        ClubbookPreferences clubbookPreferences = getSession();
+        ClubbookPreferences clubbookPreferences = ClubbookPreferences.getInstance(getActivity());
         String accessToken = clubbookPreferences.getAccessToken();
 
         HttpClientManager.getInstance().getFacebookFriendsOnClubbook(accessToken, ids, new HttpClientManager.OnResultReady() {
@@ -240,7 +240,7 @@ public class FindFriendsFragment extends BaseFragment implements View.OnClickLis
             return;
         }
 
-        ClubbookPreferences clubbookPreferences = getSession();
+        ClubbookPreferences clubbookPreferences = ClubbookPreferences.getInstance(getActivity());
         String userId = clubbookPreferences.getUserId();
         String accessToken = clubbookPreferences.getAccessToken();
 

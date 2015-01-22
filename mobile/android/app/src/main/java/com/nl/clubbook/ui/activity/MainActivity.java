@@ -103,7 +103,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         setupToolBar();
         initReceivers();
 
-        if (!getSession().isLoggedIn()) {
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getBaseContext());
+        if (!preferences.isLoggedIn()) {
             Intent intent = new Intent(getApplicationContext(), MainLoginActivity.class);
             startActivity(intent);
             finish();
@@ -279,7 +280,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onLogOut() {
         unsubscribePubnup();
-        getSession().logoutUser();
+
+        ClubbookPreferences.getInstance(getBaseContext()).logoutUser();
 
         LocationCheckinHelper.clear();
 
@@ -345,7 +347,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void fillNavDrawerHeader() {
-        HashMap<String, String> user = getSession().getUserDetails();
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getBaseContext());
+        HashMap<String, String> user = preferences.getUserDetails();
 
         ImageView imgAvatar = (ImageView) mNavDrawerHeaderView.findViewById(R.id.imgAvatar);
         TextView txtProfileName = (TextView) mNavDrawerHeaderView.findViewById(R.id.txtProfileName);
@@ -381,8 +384,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 String userTo = data.optString("user_to");
                 String userFrom = data.optString("user_from");
 
-                ClubbookPreferences session = ClubbookPreferences.getInstance();
-                if (session.getConversationListener() != null && session.getConversationListener().equalsIgnoreCase(userFrom + "_" + userTo)) {
+                ClubbookPreferences preferences = ClubbookPreferences.getInstance(getBaseContext());
+                if (preferences.getConversationListener() != null && preferences.getConversationListener().equalsIgnoreCase(userFrom + "_" + userTo)) {
                     ChatMessage lastMessage = JSONConverter.newChatMessage(data.optJSONObject("last_message"));
                     chatFragment.receiveComment(lastMessage);
                 } else {
@@ -397,17 +400,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void unsubscribePubnup() {
-        ClubbookPreferences session = ClubbookPreferences.getInstance();
-        HashMap<String, String> user = session.getUserDetails();
-        String userId = user.get(ClubbookPreferences.KEY_ID);
-        NotificationHelper.pubnub.unsubscribe("message_" + userId);
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getBaseContext());
+        NotificationHelper.pubnub.unsubscribe("message_" + preferences.getUserId());
     }
 
     private void subscribePubnup() {
-        ClubbookPreferences session = ClubbookPreferences.getInstance();
-        HashMap<String, String> user = session.getUserDetails();
-        String userId = user.get(ClubbookPreferences.KEY_ID);
-        subscribeToChannel("message_" + userId);
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getBaseContext());
+        subscribeToChannel("message_" + preferences.getUserId());
     }
 
     private void displayDefaultView() {
@@ -434,7 +433,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
 
         // retrieve the count of not read messages and update UI
-        HttpClientManager.getInstance().getNotifications(getSession().getUserDetails().get(ClubbookPreferences.KEY_ACCESS_TOCKEN), new HttpClientManager.OnResultReady() {
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getBaseContext());
+        HttpClientManager.getInstance().getNotifications(preferences.getAccessToken(), new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (!failed) {
@@ -483,7 +483,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             return;
         }
 
-        HttpClientManager.getInstance().getConfig(new HttpClientManager.OnResultReady() {
+        HttpClientManager.getInstance().getConfig(getBaseContext(), new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
             }

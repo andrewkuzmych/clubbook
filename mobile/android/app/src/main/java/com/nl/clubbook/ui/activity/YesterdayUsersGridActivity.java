@@ -16,7 +16,6 @@ import com.nl.clubbook.model.data.User;
 import com.nl.clubbook.helper.SingleUsersHolder;
 import com.nl.clubbook.utils.NetworkUtils;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -70,7 +69,7 @@ public class YesterdayUsersGridActivity extends BaseActivity implements AdapterV
             return;
         }
 
-        final HashMap<String, String> user = this.getSession().getUserDetails();
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getBaseContext());
 
         final View progressBar = findViewById(R.id.progressBar);
         final View txtYouHaventAccess = findViewById(R.id.txtYouHaventAccess);
@@ -79,7 +78,7 @@ public class YesterdayUsersGridActivity extends BaseActivity implements AdapterV
 
         progressBar.setVisibility(View.VISIBLE);
 
-        HttpClientManager.getInstance().retrieveClubYesterdayCheckedInUsers(clubId, user.get(ClubbookPreferences.KEY_ACCESS_TOCKEN), new HttpClientManager.OnResultReady() {
+        HttpClientManager.getInstance().retrieveClubYesterdayCheckedInUsers(clubId, preferences.getAccessToken(), new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 if (isFinishing()) {

@@ -48,9 +48,7 @@ public class ClubbookApplication extends Application {
         SimpleFacebook.setConfiguration(configuration);
 
         FontHelper.init(getApplicationContext());
-
-        ClubbookPreferences.init(getApplicationContext());
-        LocationCheckinHelper.init();
+        LocationCheckinHelper.init(getBaseContext());
     }
 
     public synchronized Tracker getTracker() {

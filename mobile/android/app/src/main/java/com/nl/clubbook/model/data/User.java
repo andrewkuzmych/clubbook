@@ -28,11 +28,11 @@ public class User implements Parcelable {
     protected String email;
     protected String password;
     protected String gender;
-    protected String dob;
+    protected String birthday;
     protected String age;
     protected String avatar;
     protected String country;
-    protected String bio;
+    protected String aboutMe;
     private String friendStatus;
     protected boolean isNotificationEnabled;
     protected boolean isVisibleNearby;
@@ -51,11 +51,11 @@ public class User implements Parcelable {
         email = in.readString();
         password = in.readString();
         gender = in.readString();
-        dob = in.readString();
+        birthday = in.readString();
         age = in.readString();
         avatar = in.readString();
         country = in.readString();
-        bio = in.readString();
+        aboutMe = in.readString();
         friendStatus = in.readString();
         isNotificationEnabled = ConvertUtils.intToBoolean(in.readInt());
         isVisibleNearby = ConvertUtils.intToBoolean(in.readInt());
@@ -76,10 +76,10 @@ public class User implements Parcelable {
         name = userJson.optString("name");
         email = userJson.optString("email");
         gender = userJson.optString("gender");
-        dob = userJson.optString("dob_format");
+        birthday = userJson.optString("dob_format");
         age = userJson.optString("age");
         country = userJson.optString("country");
-        bio = userJson.optString("bio");
+        aboutMe = userJson.optString("bio");
         accessToken = userJson.optString("access_token");
         isNotificationEnabled = userJson.optBoolean("push", true);
         isVisibleNearby = userJson.optBoolean("is_visible_nearby", true);
@@ -162,12 +162,12 @@ public class User implements Parcelable {
         this.gender = gender;
     }
 
-    public String getDob() {
-        return dob;
+    public String getBirthday() {
+        return birthday;
     }
 
-    public void setDob(String dob) {
-        this.dob = dob;
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 
     public String getAge() {
@@ -197,12 +197,12 @@ public class User implements Parcelable {
         this.country = country;
     }
 
-    public String getBio() {
-        return bio;
+    public String getAboutMe() {
+        return aboutMe;
     }
 
-    public void setBio(String bio) {
-        this.bio = bio;
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
     }
 
     public CheckIn getLastCheckIn() {
@@ -267,11 +267,11 @@ public class User implements Parcelable {
         dest.writeString(email);
         dest.writeString(password);
         dest.writeString(gender);
-        dest.writeString(dob);
+        dest.writeString(birthday);
         dest.writeString(age);
         dest.writeString(avatar);
         dest.writeString(country);
-        dest.writeString(bio);
+        dest.writeString(aboutMe);
         dest.writeString(friendStatus);
         dest.writeInt(ConvertUtils.booleanToInt(isNotificationEnabled));
         dest.writeInt(ConvertUtils.booleanToInt(isVisibleNearby));

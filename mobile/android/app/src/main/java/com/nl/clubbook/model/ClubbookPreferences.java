@@ -29,22 +29,16 @@ public class ClubbookPreferences {
 
     private static final String PREF_NAME = "com.nl.clubbook.preferences";
 
-    private static ClubbookPreferences mSessionManaged;
+    private static ClubbookPreferences sInstance;
     private final SharedPreferences mPreferences;
     private final Context mContext;
 
-    public static void init(Context context) {
-        if(mSessionManaged == null) {
-            mSessionManaged = new ClubbookPreferences(context);
-        }
-    }
-
-    public static ClubbookPreferences getInstance() {
-        if(mSessionManaged == null) {
-            throw new IllegalArgumentException(ClubbookPreferences.class.getSimpleName() + " is not initialized, call init() method in your application class!");
+    public static ClubbookPreferences getInstance(Context context) {
+        if(sInstance == null) {
+            sInstance = new ClubbookPreferences(context);
         }
 
-        return mSessionManaged;
+        return sInstance;
     }
 
     private ClubbookPreferences(Context context) {
@@ -137,8 +131,8 @@ public class ClubbookPreferences {
         editor.putString(KEY_EMAIL, user.getEmail());
         editor.putString(KEY_GENDER, user.getGender());
         editor.putString(KEY_COUNTRY, user.getCountry());
-        editor.putString(KEY_BIRTHDAY, user.getDob());
-        editor.putString(KEY_ABOUT_ME, user.getBio());
+        editor.putString(KEY_BIRTHDAY, user.getBirthday());
+        editor.putString(KEY_ABOUT_ME, user.getAboutMe());
         editor.putString(KEY_AGE, user.getAge());
         editor.putString(KEY_AVATAR, user.getAvatar());
         editor.putString(KEY_ACCESS_TOCKEN, user.getAccessToken());
@@ -146,6 +140,25 @@ public class ClubbookPreferences {
         editor.putBoolean(KEY_IS_VISIBLE_NEARBY, user.isVisibleNearby());
 
         editor.commit();
+    }
+
+    public User getUser() {
+        User user = new User();
+
+        user.setId(mPreferences.getString(KEY_ID, ""));
+        user.setName(mPreferences.getString(KEY_NAME, ""));
+        user.setEmail(mPreferences.getString(KEY_EMAIL, ""));
+        user.setGender(mPreferences.getString(KEY_GENDER, ""));
+        user.setCountry(mPreferences.getString(KEY_COUNTRY, ""));
+        user.setBirthday(mPreferences.getString(KEY_BIRTHDAY, ""));
+        user.setAboutMe(mPreferences.getString(KEY_ABOUT_ME, ""));
+        user.setAge(mPreferences.getString(KEY_AGE, ""));
+        user.setAvatar(mPreferences.getString(KEY_AVATAR, ""));
+        user.setAccessToken(mPreferences.getString(KEY_ACCESS_TOCKEN, ""));
+        user.setNotificationEnabled(mPreferences.getBoolean(KEY_IS_NOTIFICATION_ENABLE, true));
+        user.setVisibleNearby(mPreferences.getBoolean(KEY_IS_VISIBLE_NEARBY, true));
+
+        return user;
     }
 
     public void setConversationListener(String currentConversation) {
@@ -212,7 +225,7 @@ public class ClubbookPreferences {
 
     public void logoutUser() {
         // unsubscribe from parse
-    	PushService.unsubscribe(mContext, "user_" + getUserDetails().get(KEY_ID));
+    	PushService.unsubscribe(mContext, "user_" + getUserId());
 
         Editor editor = mPreferences.edit();
         editor.clear();
@@ -281,10 +294,6 @@ public class ClubbookPreferences {
 
     public boolean isLoggedIn() {
         return mPreferences.getBoolean(KEY_IS_LOGIN, false);
-    }
-
-    public String getValueByKey(String key) {
-        return mPreferences.getString(key, "");
     }
 
     public void setLoggedInByFacebook(boolean isLoggedInByFacebook) {

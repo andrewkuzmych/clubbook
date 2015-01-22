@@ -119,21 +119,21 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
             return;
         }
 
-        ClubbookPreferences session = getSession();
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity());
 
         CheckBox cbPushNotifications = (CheckBox) view.findViewById(R.id.cbPushNotifications);
-        cbPushNotifications.setChecked(session.isNotificationEnabled());
+        cbPushNotifications.setChecked(preferences.isNotificationEnabled());
         cbPushNotifications.setOnCheckedChangeListener(this);
 
         CheckBox cbPushVibrations = (CheckBox) view.findViewById(R.id.cbPushVibrations);
-        cbPushVibrations.setChecked(session.isNotificationVibrationEnabled());
+        cbPushVibrations.setChecked(preferences.isNotificationVibrationEnabled());
         cbPushVibrations.setOnCheckedChangeListener(this);
 
         CheckBox cbUserVisibleNearby = (CheckBox) view.findViewById(R.id.cbUserVisibleNearby);
-        cbUserVisibleNearby.setChecked(session.isVisibleNearby());
+        cbUserVisibleNearby.setChecked(preferences.isVisibleNearby());
         cbUserVisibleNearby.setOnCheckedChangeListener(this);
 
-        if(!getSession().isNotificationEnabled()) {
+        if(!preferences.isNotificationEnabled()) {
             view.findViewById(R.id.holderNotificationVibration).setEnabled(false);
             view.findViewById(R.id.cbPushVibrations).setEnabled(false);
         }
@@ -147,7 +147,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         mSimpleFacebook = SimpleFacebook.getInstance(getActivity());
 
-        if(getSession().isLoggedInByFacebook()) {
+        if(preferences.isLoggedInByFacebook()) {
             view.findViewById(R.id.txtResetPassword).setOnClickListener(null);
             view.findViewById(R.id.txtResetPassword).setVisibility(View.GONE);
             view.findViewById(R.id.dividerResetPassword).setVisibility(View.GONE);
@@ -163,7 +163,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         showProgress(getString(R.string.uploading));
 
-        final String accessToken = getSession().getAccessToken();
+        final ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity());
+        String accessToken = preferences.getAccessToken();
 
         HttpClientManager.getInstance().updateNotificationEnabling(accessToken, String.valueOf(isEnable), new HttpClientManager.OnResultReady() {
             @Override
@@ -184,13 +185,14 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
                 view.findViewById(R.id.holderNotificationVibration).setEnabled(isEnable);
                 view.findViewById(R.id.cbPushVibrations).setEnabled(isEnable);
-                getSession().setNotificationEnabled(isEnable);
+                preferences.setNotificationEnabled(isEnable);
             }
         });
     }
 
     private void onPushVibrationCheckedChanged(boolean isEnabled) {
-        getSession().setNotificationVibrationEnabled(isEnabled);
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity());
+        preferences.setNotificationVibrationEnabled(isEnabled);
     }
 
     private void onTxtPrivacyPolicyClicked() {
@@ -208,7 +210,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         showProgress(getString(R.string.uploading));
 
-        final String accessToken = getSession().getAccessToken();
+        final ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity());
+        String accessToken = preferences.getAccessToken();
 
         HttpClientManager.getInstance().updateVisibleNearby(accessToken, String.valueOf(isVisible), new HttpClientManager.OnResultReady() {
             @Override
@@ -227,7 +230,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                     return;
                 }
 
-                getSession().setVisibleNearby(isVisible);
+                preferences.setVisibleNearby(isVisible);
             }
         });
     }
@@ -281,7 +284,9 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         showProgress(getString(R.string.deleting_profile));
 
-        String accessToken = getSession().getAccessToken();
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity());
+        String accessToken = preferences.getAccessToken();
+
         HttpClientManager.getInstance().deleteProfile(getActivity(), accessToken, new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {

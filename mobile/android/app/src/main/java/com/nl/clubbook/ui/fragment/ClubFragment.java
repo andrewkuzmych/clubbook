@@ -39,7 +39,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -210,13 +209,14 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
             return;
         }
 
-        final HashMap<String, String> user = this.getSession().getUserDetails();
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity());
+        String accessToken = preferences.getAccessToken();
 
         setProgressViewState(true);
         view.findViewById(R.id.txtNoUsers).setVisibility(View.GONE);
         view.findViewById(R.id.gridUsers).setVisibility(View.GONE);
 
-        HttpClientManager.getInstance().retrieveClubCheckedInUsers(mPlace.getId(), user.get(ClubbookPreferences.KEY_ACCESS_TOCKEN), new HttpClientManager.OnResultReady() {
+        HttpClientManager.getInstance().retrieveClubCheckedInUsers(mPlace.getId(), accessToken, new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 View view = getView();
@@ -366,7 +366,8 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
     private void onCheckInBtnClicked(final View view) {
         if(!mCanCheckInHere) {
             String messageTemplate = getString(R.string.you_need_to_be_within_m_in_order_to_check_in);
-            String dialogMessage = String.format(messageTemplate, ClubbookPreferences.getInstance().getCheckInMaxDistance());
+            int checkInMaxDistance = ClubbookPreferences.getInstance(getActivity()).getCheckInMaxDistance();
+            String dialogMessage = String.format(messageTemplate, checkInMaxDistance);
 
             showMessageDialog(ClubFragment.this,
                     ACTION_ID_CAN_NOT_CHECK_IN,
@@ -400,7 +401,8 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         } else {
             showProgressDialog(getString(R.string.checking_in));
 
-            if(!getSession().isCheckInDialogShown()) {
+            ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity().getBaseContext());
+            if(!preferences.isCheckInDialogShown()) {
                 showMessageDialog(ClubFragment.this,
                         ACTION_ID_CHECK_IN_EXPLANATION,
                         getString(R.string.app_name),
@@ -409,7 +411,7 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
                         null
                 );
 
-                getSession().setCheckInDialogShown(true);
+                preferences.setCheckInDialogShown(true);
             } else {
                 checkIn(view);
             }
@@ -504,7 +506,8 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
         txtCheckInCount.setText(mPlace.getActiveCheckIns() + "\n" + getString(R.string.checked_in));
         view.findViewById(R.id.txtNoUsers).setVisibility(View.GONE);
 
-        String currentUserId = getSession().getUserDetails().get(ClubbookPreferences.KEY_ID);
+        ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity().getBaseContext());
+        String currentUserId = preferences.getUserId();
         if(!LocationCheckinHelper.getInstance().isCheckIn()) {
             boolean isCheckedInHere = false;
 

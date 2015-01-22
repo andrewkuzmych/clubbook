@@ -16,7 +16,6 @@ import com.nl.clubbook.model.data.User;
 import com.nl.clubbook.utils.NetworkUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -86,8 +85,9 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
             return;
         }
 
-        final ClubbookPreferences session = ClubbookPreferences.getInstance();
-        final HashMap<String, String> user = session.getUserDetails();
+        final ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity().getBaseContext());
+        String userId = preferences.getUserId();
+        String accessToken = preferences.getAccessToken();
 
         if(isSwipeRefreshRefreshed) {
             mSwipeRefreshLayout.setRefreshing(true);
@@ -95,7 +95,7 @@ public class FriendListFragment extends BaseRefreshFragment implements AdapterVi
             view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
         }
 
-        HttpClientManager.getInstance().retrieveFriends(user.get(ClubbookPreferences.KEY_ID), user.get(ClubbookPreferences.KEY_ACCESS_TOCKEN),
+        HttpClientManager.getInstance().retrieveFriends(userId, accessToken,
                 new HttpClientManager.OnResultReady() {
 
                     @Override

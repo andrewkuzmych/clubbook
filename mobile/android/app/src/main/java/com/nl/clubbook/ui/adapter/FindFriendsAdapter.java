@@ -186,7 +186,7 @@ public class FindFriendsAdapter extends BaseAdapter {
             return;
         }
 
-        ClubbookPreferences session = ClubbookPreferences.getInstance();
+        ClubbookPreferences session = ClubbookPreferences.getInstance(mContext);
         String userId = session.getUserId();
         String accessToken = session.getAccessToken();
 
@@ -214,7 +214,7 @@ public class FindFriendsAdapter extends BaseAdapter {
             return;
         }
 
-        ClubbookPreferences session = ClubbookPreferences.getInstance();
+        ClubbookPreferences session = ClubbookPreferences.getInstance(mContext);
         String userId = session.getUserId();
         String accessToken = session.getAccessToken();
 

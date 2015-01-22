@@ -16,7 +16,6 @@ import com.nl.clubbook.model.data.User;
 import com.nl.clubbook.utils.NetworkUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -104,8 +103,9 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
             return;
         }
 
-        final ClubbookPreferences session = ClubbookPreferences.getInstance();
-        final HashMap<String, String> user = session.getUserDetails();
+        final ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity().getBaseContext());
+        String userId = preferences.getUserId();
+        String accessToken = preferences.getAccessToken();
 
         if(isSwipeToRefreshRefreshed) {
             mSwipeRefreshLayout.setRefreshing(true);
@@ -113,7 +113,7 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
             view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
         }
 
-        HttpClientManager.getInstance().retrievePendingFriends(user.get(ClubbookPreferences.KEY_ID), user.get(ClubbookPreferences.KEY_ACCESS_TOCKEN),
+        HttpClientManager.getInstance().retrievePendingFriends(userId, accessToken,
                 new HttpClientManager.OnResultReady() {
 
                     @Override
@@ -142,12 +142,13 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
             return;
         }
 
-        final ClubbookPreferences session = ClubbookPreferences.getInstance();
-        final HashMap<String, String> user = session.getUserDetails();
+        final ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity().getBaseContext());
+        String userId = preferences.getUserId();
+        String accessToken = preferences.getAccessToken();
 
         showProgress(getString(R.string.loading));
 
-        HttpClientManager.getInstance().acceptFriendRequest(user.get(ClubbookPreferences.KEY_ID), friendId, user.get(ClubbookPreferences.KEY_ACCESS_TOCKEN),
+        HttpClientManager.getInstance().acceptFriendRequest(userId, friendId, accessToken,
                 new HttpClientManager.OnResultReady() {
 
                     @Override
@@ -183,13 +184,11 @@ public class PendingFriendsFragment extends BaseRefreshFragment implements Adapt
             return;
         }
 
-        final ClubbookPreferences session = ClubbookPreferences.getInstance();
-        final HashMap<String, String> user = session.getUserDetails();
+        final ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity().getBaseContext());
+        String userId = preferences.getUserId();
+        String accessToken = preferences.getAccessToken();
 
         showProgress(getString(R.string.loading));
-
-        String userId = user.get(ClubbookPreferences.KEY_ID);
-        String accessToken = user.get(ClubbookPreferences.KEY_ACCESS_TOCKEN);
 
         HttpClientManager.getInstance().declineFriendRequest(accessToken, userId, friendId, new HttpClientManager.OnResultReady() {
             @Override

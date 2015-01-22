@@ -18,7 +18,6 @@ import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class MessagesFragment extends BaseRefreshFragment implements AdapterView.OnItemClickListener {
@@ -98,8 +97,9 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
             return;
         }
 
-        final ClubbookPreferences session = ClubbookPreferences.getInstance();
-        final HashMap<String, String> user = session.getUserDetails();
+        final ClubbookPreferences preferences = ClubbookPreferences.getInstance(getActivity().getBaseContext());
+        String userId = preferences.getUserId();
+        String accessToken = preferences.getAccessToken();
 
         if(isPullToRefreshRefreshed) {
             mSwipeRefreshLayout.setRefreshing(true);
@@ -107,7 +107,7 @@ public class MessagesFragment extends BaseRefreshFragment implements AdapterView
             view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
         }
 
-        HttpClientManager.getInstance().getConversations(user.get(ClubbookPreferences.KEY_ID), user.get(ClubbookPreferences.KEY_ACCESS_TOCKEN),
+        HttpClientManager.getInstance().getConversations(userId, accessToken,
                 new HttpClientManager.OnResultReady() {
 
                     @Override

@@ -52,10 +52,10 @@ public class JSONConverter {
         result.setName(jsonUser.optString("name"));
         result.setEmail(jsonUser.optString("email"));
         result.setGender(jsonUser.optString("gender"));
-        result.setDob(jsonUser.optString("dob_format"));
+        result.setBirthday(jsonUser.optString("dob_format"));
         result.setAge(jsonUser.optString("age"));
         result.setCountry(jsonUser.optString("country"));
-        result.setBio(jsonUser.optString("bio"));
+        result.setAboutMe(jsonUser.optString("bio"));
         result.setFriendStatus(jsonUser.optString("friend_status", ""));
         result.setBlocked(jsonUser.optBoolean("is_blocked", false));
 
