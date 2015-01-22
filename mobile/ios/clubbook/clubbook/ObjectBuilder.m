@@ -490,6 +490,8 @@
         [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
         newsObject.createDate = [dateFormat dateFromString:dateStr];
         
+        newsObject.tempDownlaodedPhotos = [[NSMutableDictionary alloc] init];
+        
         [news addObject:newsObject];
     }
     

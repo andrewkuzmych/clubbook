@@ -12,6 +12,7 @@
 
 @interface NewsFeedTableViewController : BaseTableViewController <UICollectionViewDataSource, UICollectionViewDelegate, EBPhotoPagesDelegate, EBPhotoPagesDataSource>
 
-@property (strong, nonatomic) Place* place;
+@property (strong, nonatomic) NSString* type;
+@property (strong, nonatomic) NSString* newsObjectId;
 
 @end

@@ -772,7 +772,14 @@ exports.clubs_yesterday = (req, res)->
                 )
               if theclub
                 theclub.active_friends_checkins = c.count
-
+            for club in club_objects
+              is_favorite_club = __.find(user.favorite_clubs, (c_res)->
+                      c_res.toString() == club._id.toString()
+                )
+              if is_favorite_club
+                club.is_favorite = true
+              else
+                club.is_favorite = false
             res.json
               status: "ok"
               clubs: club_objects
@@ -898,6 +905,7 @@ exports.remove_favorite_club = (req, res)->
       res.json
         status: 'ok'
         result: result
+
 
 exports.news = (req, res)->
   params =

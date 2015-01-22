@@ -26,10 +26,16 @@
         
         NSMutableDictionary *controllersArray = [[NSMutableDictionary alloc] init];
         
-        UIStoryboard *newsStoryboard = [UIStoryboard storyboardWithName:@"NewsFeedStoryboard" bundle: nil];
-        NewsFeedTableViewController *newsController  = [newsStoryboard instantiateInitialViewController];
-        newsController.place = self.place;
+        UIStoryboard *newsStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle: nil];
+        NewsFeedTableViewController *newsController  = [newsStoryboard instantiateViewControllerWithIdentifier:@"news"];
+        newsController.type = @"club";
+        newsController.newsObjectId = self.place.id;
         newsController.title = @"News";
+        
+        // Do any additional setup after loading the view.
+        newsController.edgesForExtendedLayout = UIRectEdgeNone;
+        newsController.extendedLayoutIncludesOpaqueBars = NO;
+        newsController.automaticallyAdjustsScrollViewInsets = NO;
         
         [controllersArray setObject:newsController forKey:@"news"];
         
@@ -72,14 +78,5 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

@@ -69,12 +69,8 @@
     [self.communicator retrieveUser:accessToken];
 }
 
-- (void)retrievePlaceNews:(NSString*) clubId accessToken:(NSString*) accessToken {
-    [self.communicator retrievePlaceNews:clubId accessToken:accessToken];
-}
-
-- (void)retrieveUserNews:(NSString*) userId accessToken:(NSString*) accessToken {
-    [self.communicator retrieveUserNews:userId accessToken:accessToken];
+- (void)retrieveNews:(NSString*)type withId:(NSString*)objectId accessToken:(NSString*) accessToken {
+    [self.communicator retrieveNews:type withId:objectId accessToken:accessToken];
 }
 
 - (void)retrieveFriend:(NSString *) friendId accessToken:(NSString *) accessToken
@@ -117,9 +113,9 @@
     [self.communicator readChat:fromUser toUser:toUser accessToken: accessToken];
 }
 
-- (void)unreadMessages:(NSString *) accessToken
+- (void)retrieveNotifications:(double) lat lon:(double) lon accessToken:(NSString *)accessToken
 {
-    [self.communicator retrieveNotifications:accessToken];
+    [self.communicator retrieveNotifications:lat lon:lon accessToken:accessToken];
 }
 
 - (void)addUserImage:(NSString *) userId avatar:(NSString *) avatar accessToken:(NSString *) accessToken
@@ -575,8 +571,7 @@
     }
 }
 
-
-- (void)receivedPlaceNewsJSON:(NSData *)objectNotation
+- (void)receivedNewsJSON:(NSData *)objectNotation
 {
     NSError *error = nil;
     NSArray *news = [ObjectBuilder newsFromJSON:objectNotation error:&error];
@@ -585,32 +580,7 @@
         [self.delegate  failedWithError:error];
         
     } else {
-        [self.delegate didReceivePlaceNews:news];
-    }
-}
-
-- (void)receivedUserNewsJSON:(NSData *)objectNotation
-{
-    NSError *error = nil;
-    NSArray *news = [ObjectBuilder newsFromJSON:objectNotation error:&error];
-    
-    if (error != nil) {
-        [self.delegate  failedWithError:error];
-        
-    } else {
-        [self.delegate didReceivePlaceNews:news];
-    }
-}
-
-- (void)receivedPlaceJSON:(NSData *)objectNotation {
-    NSError *error = nil;
-    Place *place = [ObjectBuilder placeFromJSON:objectNotation error:&error];
-    
-    if (error != nil) {
-        [self.delegate  failedWithError:error];
-        
-    } else {
-        [self.delegate didReceivePlace:place];
+        [self.delegate didReceiveNews:news];
     }
 }
 

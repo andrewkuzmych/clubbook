@@ -24,6 +24,8 @@
 #import "GlobalVars.h"
 #import "MainMenuCollectionViewCell.h"
 #import "MainViewController.h"
+#import "NewsFeedTableViewController.h"
+#import "LocationManagerSingleton.h"
 
 
 
@@ -48,7 +50,7 @@
     
     self.menuCollectionView.delaysContentTouches = NO;
     
-    _menuItems = @[@"goingout", @"usersnearby", @"yesterday", @"messages", @"friends", @"settings", @"profile", @"fastcheckin"];
+    _menuItems = @[@"goingout", @"usersnearby", @"yesterday", @"messages", @"friends", @"news", @"settings", @"profile", @"fastcheckin"];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -74,7 +76,11 @@
 
     [self.menuCollectionView reloadData];
     
-    [self._manager unreadMessages:accessToken];
+    CLLocation *userLocation = [LocationManagerSingleton sharedSingleton].locationManager.location;
+    double lon = userLocation.coordinate.longitude;
+    double lat = userLocation.coordinate.latitude;
+    
+    [self._manager retrieveNotifications:lat lon:lon accessToken:accessToken];
 }
 
 - (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message
@@ -100,16 +106,16 @@
 
 - (void) prepareForSegue: (UIStoryboardSegue *) segue sender: (id) sender
 {
-    if([[segue identifier] isEqualToString:@"onClub"]){
-        ClubUsersViewController *clubController = [segue destinationViewController];
-        Place *place = (Place*) sender;
-        clubController.hasBack = NO;
-        clubController.place = place;
-    }
- 
+
     if([[segue identifier] isEqualToString:@"yesterday"]){
         MainViewController *mainController = [segue destinationViewController];
         mainController.showYesterdayPlaces = YES;
+    }
+    
+    if([[segue identifier] isEqualToString:@"news"]){
+        NewsFeedTableViewController *newsController = [segue destinationViewController];
+        newsController.newsObjectId = @"";
+        newsController.type = @"user";
     }
     
     // Set the title of navigation bar by using the menu items
@@ -195,6 +201,9 @@
         }
         cell.menuLabel.text = @"Friends";
     }
+    else if ([currentItemId isEqualToString:@"news"]) {
+        cell.menuLabel.text = @"News";
+    }
     else if ([currentItemId isEqualToString:@"settings"]) {
         cell.menuLabel.text = @"Settings";
     }
@@ -218,8 +227,8 @@
     [cell highlightIcon];
     NSUInteger selectedItem = indexPath.item;
     NSString* segueId = [_menuItems objectAtIndex:selectedItem];
-    NSString* messegesID = @"messages";
-    if ([segueId isEqualToString:messegesID]) {
+
+    if ([segueId isEqualToString:@"messages"]) {
         unreadMessagesCount = 0;
     }
     [self performSegueWithIdentifier:segueId sender:self];

@@ -439,12 +439,12 @@
     });
 }
 
-- (void) retrieveNotifications:(NSString *) accessToken
+- (void) retrieveNotifications:(double) lat lon:(double) lon accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
         
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/me/notifications?access_token=%@", baseURL, accessToken];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/me/notifications?access_token=%@&user_lon=%f&user_lat=%f", baseURL, accessToken, lon, lat];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
@@ -688,30 +688,14 @@
     });
 }
 
-- (void)retrievePlaceNews:(NSString*) clubId accessToken:(NSString*) accessToken {
+- (void)retrieveNews:(NSString*)type withId:(NSString*) objectId accessToken:(NSString*) accessToken {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/club/%@/news?access_token=%@", baseURL, clubId, accessToken];
-        
-        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
-        
-        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (error) {
-                    [self.delegate failedWithError:error];
-                } else {
-                    [self.delegate receivedPlaceNewsJSON:data];
-                }
-            });
-        }];
-    });
-}
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/favorite/news?access_token=%@", baseURL, accessToken];
+        if ([type isEqualToString:@"club"]) {
+            urlAsString= [NSString stringWithFormat:@"%@obj/club/%@/news?access_token=%@", baseURL, objectId, accessToken];
+        }
 
-- (void)retrieveUserNews:(NSString*) userId accessToken:(NSString*) accessToken {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/%@/news?access_token=%@", baseURL, userId, accessToken];
-        
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
         [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
@@ -719,7 +703,7 @@
                 if (error) {
                     [self.delegate failedWithError:error];
                 } else {
-                    [self.delegate receivedUserNewsJSON:data];
+                    [self.delegate receivedNewsJSON:data];
                 }
             });
         }];

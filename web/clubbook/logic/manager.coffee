@@ -100,7 +100,6 @@ exports.list_club = (params, callback)->
   if match
     query = [{'$geoNear': geoNear}, {'$match': match}, {'$skip':params.skip}, {'$limit':params.take}]
   db_model.Venue.aggregate query,{}, (err, clubs)->
-    console.log err
     for club in clubs
       if club.club_working_hours
         for wh in club.club_working_hours
@@ -120,11 +119,18 @@ exports.list_club = (params, callback)->
             )
           if theclub
             theclub.active_friends_checkins = c.count
-
+        for club in clubs
+          is_favorite_club = __.find(user.favorite_clubs, (c_res)->
+                  c_res.toString() == club._id.toString()
+            )
+          if is_favorite_club
+            club.is_favorite = true
+          else
+            club.is_favorite = false
         query =  [{'$group':{_id: "$club_type", count: { '$sum': 1 } } }]
         db_model.Venue.aggregate query, {}, (err, types)->
           callback err, clubs, types 
-  
+
 exports.get_people_count_in_club = (club, callback)->
   console.log "METHOD - Manager get_people_count_in_club"
   db_model.User.count({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}}).exec callback
@@ -134,9 +140,16 @@ exports.find_club = (club_id, user_id, callback)->
   db_model.Venue.findById(club_id).exec (err, club)->
     if err
       callback err, null
-    else
-
+    else if club
       db_model.User.findById(user_id).exec (err, user)->
+        club_object = club.toObject()
+        is_favorite_club = __.find(user.favorite_clubs, (c_res)->
+                c_res.toString() == club_object._id.toString()
+          )
+        if is_favorite_club
+          club_object.is_favorite = true
+        else
+          club_object.is_favorite = false
         db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}, 'bloked_users': {'$ne': user._id}}, { checkin: 0 }).exec (err, users)->
         #get friends count
           db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}, "_id": {'$in': user.friends}, 'friends': user._id}).exec (err, friends)->
@@ -152,9 +165,11 @@ exports.find_club = (club_id, user_id, callback)->
                 user_object.is_friend = false
               user_objects.push user_object
 
-            club.active_friends_checkins = friends.length
+            club_object.active_friends_checkins = friends.length
 
-            callback null, club, user_objects, friends.length
+            callback null, club_object, user_objects, friends.length
+    else 
+      callback 'missing club with this id', null
 
 
 exports.create_club = (params, callback)->

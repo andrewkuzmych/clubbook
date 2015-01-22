@@ -727,7 +727,7 @@ static NSString * const SWSegueRightIdentifier = @"sw_right";
     
     // we set the current frontViewPosition to none before seting the
     // desired initial position, this will force proper controller reload
-    FrontViewPosition initialPosition = _frontViewPosition;
+    FrontViewPosition initialPosition = FrontViewPositionNone;
     _frontViewPosition = FrontViewPositionNone;
     _rearViewPosition = FrontViewPositionNone;
     _rightViewPosition = FrontViewPositionNone;

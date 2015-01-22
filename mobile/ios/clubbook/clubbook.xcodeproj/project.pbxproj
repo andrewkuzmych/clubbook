@@ -416,7 +416,6 @@
 		52C5FC961A3F439C000147E8 /* KICamera.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C5FC921A3F439C000147E8 /* KICamera.png */; };
 		52C5FC971A3F439C000147E8 /* KICamera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C5FC931A3F439C000147E8 /* KICamera@2x.png */; };
 		52C5FC981A3F439C000147E8 /* KIImagePager.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C5FC951A3F439C000147E8 /* KIImagePager.m */; };
-		52FBEC941A6E5C0400DE4BAA /* NewsFeedStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52FBEC931A6E5C0400DE4BAA /* NewsFeedStoryboard.storyboard */; };
 		F4EECF12177C99F400778578 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF11177C99F400778578 /* UIKit.framework */; };
 		F4EECF14177C99F400778578 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF13177C99F400778578 /* Foundation.framework */; };
 		F4EECF16177C99F400778578 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF15177C99F400778578 /* CoreGraphics.framework */; };
@@ -1198,7 +1197,6 @@
 		52C5FC931A3F439C000147E8 /* KICamera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "KICamera@2x.png"; sourceTree = "<group>"; };
 		52C5FC941A3F439C000147E8 /* KIImagePager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KIImagePager.h; sourceTree = "<group>"; };
 		52C5FC951A3F439C000147E8 /* KIImagePager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KIImagePager.m; sourceTree = "<group>"; };
-		52FBEC931A6E5C0400DE4BAA /* NewsFeedStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = NewsFeedStoryboard.storyboard; sourceTree = "<group>"; };
 		F4EECF0E177C99F400778578 /* Clubbook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clubbook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4EECF11177C99F400778578 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F4EECF13177C99F400778578 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -2356,7 +2354,6 @@
 				49E831431951B8F700D4A26C /* Helpers */,
 				F4EECF20177C99F400778578 /* AppDelegate.h */,
 				F4EECF21177C99F400778578 /* AppDelegate.m */,
-				52FBEC931A6E5C0400DE4BAA /* NewsFeedStoryboard.storyboard */,
 				F4EECF29177C99F400778578 /* MainStoryboard.storyboard */,
 				528C85941A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard */,
 				F4EECF34177C9A1E00778578 /* Library */,
@@ -2731,7 +2728,6 @@
 				49ABA1DB199524BF00B060D0 /* icon_userprofile_block@2x.png in Resources */,
 				4939074319503CCA003F2FF9 /* icon_c_list.png in Resources */,
 				4994786819D9D011006D38BE /* icon_info@2x.png in Resources */,
-				52FBEC941A6E5C0400DE4BAA /* NewsFeedStoryboard.storyboard in Resources */,
 				F4EECF6A177F4C0200778578 /* menu.png in Resources */,
 				5208977F1A407C6700E8DD06 /* JSQMessagesToolbarContentView.xib in Resources */,
 				49DDE8C319A1D26700B1DEB1 /* HelveticaBold.ttf in Resources */,

@@ -185,9 +185,9 @@
 
 - (void)pushToClub:(Place *)place
 {
-    UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle: nil];
-    ClubUsersViewController *clubController  = [mainStoryboard instantiateViewControllerWithIdentifier:@"club"];
-    clubController.place = place;//place.id;
+    UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"ClubProfileStoryboard" bundle: nil];
+    ClubUsersViewController *clubController  = [mainStoryboard instantiateInitialViewController];
+    clubController.place = place;
     clubController.hasBack = YES;
     //self.isLoaded = NO;
     // ClubUsersViewController *clubController =  [segue ClubUsersViewController];
