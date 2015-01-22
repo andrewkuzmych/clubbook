@@ -752,7 +752,6 @@ exports.clubs_yesterday = (req, res)->
         club_objects = []
         for club in clubs
           club_object = club.toObject()
-          club_object.is_favorite = false
           club_objects.push club_object
           if club_object.club_working_hours
             for wh in club.club_working_hours
@@ -773,12 +772,14 @@ exports.clubs_yesterday = (req, res)->
                 )
               if theclub
                 theclub.active_friends_checkins = c.count
-            for favorite in user.favorite_clubs
-              theclub = __.find(club_objects, (c_res)->
-                      c_res._id.toString() == favorite.toString()
+            for club in club_objects
+              is_favorite_club = __.find(user.favorite_clubs, (c_res)->
+                      c_res.toString() == club._id.toString()
                 )
-              if theclub
-                theclub.is_favorite = true
+              if is_favorite_club
+                club.is_favorite = true
+              else
+                club.is_favorite = false
             res.json
               status: "ok"
               clubs: club_objects

@@ -101,7 +101,6 @@ exports.list_club = (params, callback)->
     query = [{'$geoNear': geoNear}, {'$match': match}, {'$skip':params.skip}, {'$limit':params.take}]
   db_model.Venue.aggregate query,{}, (err, clubs)->
     for club in clubs
-      club.is_favorite = false
       if club.club_working_hours
         for wh in club.club_working_hours
           if wh.day == moment.utc().day()
@@ -120,12 +119,14 @@ exports.list_club = (params, callback)->
             )
           if theclub
             theclub.active_friends_checkins = c.count
-        for favorite in user.favorite_clubs
-          theclub = __.find(clubs, (c_res)->
-                  c_res._id.toString() == favorite.toString()
+        for club in clubs
+          is_favorite_club = __.find(user.favorite_clubs, (c_res)->
+                  c_res.toString() == club._id.toString()
             )
-          if theclub
-            theclub.is_favorite = true
+          if is_favorite_club
+            club.is_favorite = true
+          else
+            club.is_favorite = false
         query =  [{'$group':{_id: "$club_type", count: { '$sum': 1 } } }]
         db_model.Venue.aggregate query, {}, (err, types)->
           callback err, clubs, types 
