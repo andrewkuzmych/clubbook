@@ -53,7 +53,7 @@
 
 - (void)retrieveFriend:(NSString *) friendId accessToken:(NSString *) accessToken;
 
-- (void)retrieveNews:(NSString*)type withId:(NSString*) objectId accessToken:(NSString*) accessToken;
+- (void)retrieveNews:(NSString*)type withId:(NSString*) objectId accessToken:(NSString*) accessToken skip:(int)skip limit:(int) limit;
 
 - (void)changePass:(NSString *) oldPass newPass:(NSString *) newPass accessToken:(NSString *) accessToken;
 

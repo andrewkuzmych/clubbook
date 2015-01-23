@@ -478,10 +478,13 @@
     
     for (NSDictionary *newsDic in newsData) {
         NewsData *newsObject = [[NewsData alloc] init];
-        newsObject.title = [newsDic objectForKey:@"title"];
+        
         newsObject.newsDescription = [newsDic objectForKey:@"description"];
         newsObject.photos = [newsDic objectForKey:@"photos"];
         
+        NSMutableDictionary *venue = [newsDic objectForKey:@"venue"];
+        newsObject.title = [venue objectForKey:@"club_name"];
+        newsObject.avatarPath = [venue objectForKey:@"club_logo"];
         
         NSString* dateStr = [newsDic objectForKey:@"created_on"];
         // Convert string to date object

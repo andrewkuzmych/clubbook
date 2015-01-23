@@ -69,8 +69,8 @@
     [self.communicator retrieveUser:accessToken];
 }
 
-- (void)retrieveNews:(NSString*)type withId:(NSString*)objectId accessToken:(NSString*) accessToken {
-    [self.communicator retrieveNews:type withId:objectId accessToken:accessToken];
+- (void)retrieveNews:(NSString*)type withId:(NSString*)objectId accessToken:(NSString*) accessToken skip:(int)skip limit:(int)limit{
+    [self.communicator retrieveNews:type withId:objectId accessToken:accessToken skip:skip limit:limit];
 }
 
 - (void)retrieveFriend:(NSString *) friendId accessToken:(NSString *) accessToken

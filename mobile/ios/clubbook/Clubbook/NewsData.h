@@ -14,6 +14,7 @@
 @property (strong, nonatomic) NSDate* createDate;
 @property (strong, nonatomic) NSString* newsDescription;
 @property (strong, nonatomic) NSString* title;
+@property (strong, nonatomic) NSString* avatarPath;
 @property (strong, nonatomic) NSMutableArray* photos;
 @property (strong, nonatomic) NSMutableDictionary* tempDownlaodedPhotos;
 

@@ -13,8 +13,10 @@
 #import "DateHelper.h"
 #import "EBPhotoPagesController.h"
 #import "CLCloudinary.h"
+#import "CLTransformation.h"
 #import "Constants.h"
 #import "UIImageView+WebCache.h"
+#import "SVPullToRefresh.h"
 
 #define STATIC_HEIGHT 100
 
@@ -24,9 +26,14 @@
 
 @implementation NewsFeedTableViewController
 {
-    NSArray* newsArray;
+    NSMutableArray* newsArray;
     NSArray* photoSlideShowUrls;
     NSMutableDictionary* photoImages;
+    NSMutableDictionary* avatarImages;
+    UIImage* staticAvatar;
+    NSString *accessToken;
+    
+    BOOL isRefreshingNews;
 }
 
 static NSString* NewsFeedCellIdentifier = @"NewsFeedCell";
@@ -39,11 +46,28 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     
     [self.tableView setBackgroundColor:[UIColor colorWithRed:0.980 green:0.839 blue:1.000 alpha:1.000]];
     
+    avatarImages = [[NSMutableDictionary alloc] init];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *accessToken = [defaults objectForKey:@"accessToken"];
-     
-    [self._manager retrieveNews:self.type withId:self.newsObjectId accessToken:accessToken];
+    accessToken = [defaults objectForKey:@"accessToken"];
+    
+    __weak NewsFeedTableViewController *weakSelf = self;
+    // setup pull-to-refresh
+    [self.tableView addPullToRefreshWithActionHandler:^{
+        [weakSelf insertRowAtTop];
+    }];
+    
+    // setup infinite scrolling
+    [self.tableView addInfiniteScrollingWithActionHandler:^{
+        [weakSelf insertRowAtBottom];
+    }];
+    
+    [self loadNews:0 limit:5 refreshing:YES];
+}
+
+- (void) loadNews:(int)skip limit:(int)limit refreshing:(BOOL)refreshing {
+    isRefreshingNews = refreshing;
+   [self._manager retrieveNews:self.type withId:self.newsObjectId accessToken:accessToken skip:skip limit:limit];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -52,10 +76,24 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
 }
 
 - (void) didReceiveNews:(NSArray*) news {
-    newsArray = news;
-    if ([newsArray count] > 0) {
-        [self.tableView reloadData];
+    if ([news count] > 0) {
+        if (isRefreshingNews) {
+            newsArray = [news mutableCopy];
+            isRefreshingNews = NO;
+        }
+        else {
+            for (NewsData* newsObject in news) {
+                [newsArray addObject:newsObject];
+            }
+        }
+        
+        if ([newsArray count] > 0) {
+            [self.tableView reloadData];
+        }
     }
+    
+    [self.tableView.pullToRefreshView stopAnimating];
+    [self.tableView.infiniteScrollingView stopAnimating];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -79,9 +117,35 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     
     NewsData* news = [newsArray objectAtIndex:indexPath.row];
     
-    //[cell.avatarImage sd_setImageWithURL:[NSURL URLWithString:self.place.avatar] placeholderImage:[UIImage imageNamed:@"avatar_default.png"]];
-    [cell.nameLabel setText:@"TODO"];
+    if ([self.type isEqualToString:@"club"]) {
+        if (staticAvatar == nil) {
+            CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
+            CLTransformation *transformation = [CLTransformation transformation];
+            [transformation setParams: @{@"width": @60, @"height": @60}];
+            NSString * avatarUrl  = [cloudinary url:news.avatarPath options:@{@"transformation": transformation}];
+            
+            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:avatarUrl]];
+            staticAvatar = [[UIImage alloc] initWithData:data];
+        }
+        [cell.avatarImage sd_setImageWithURL:[NSURL URLWithString:@""] placeholderImage:staticAvatar];
+    }
+    else {
+        UIImage* avatar = [avatarImages objectForKey:news.title];
+        if (avatar == nil) {
+            CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
+            CLTransformation *transformation = [CLTransformation transformation];
+            [transformation setParams: @{@"width": @60, @"height": @60}];
+            NSString * avatarUrl  = [cloudinary url:news.avatarPath options:@{@"transformation": transformation}];
+            
+            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:avatarUrl]];
+            avatar = [[UIImage alloc] initWithData:data];
+            
+            [avatarImages setObject:avatar forKey:news.title];
+        }
+        [cell.avatarImage sd_setImageWithURL:[NSURL URLWithString:@""] placeholderImage:avatar];
+    }
     
+    [cell.nameLabel setText:news.title];
     NSString* date = [[DateHelper sharedSingleton] get24hTime:news.createDate];
     [cell.timeLabel setText:date];
     [cell.contentView setBackgroundColor:self.tableView.backgroundColor];
@@ -212,6 +276,15 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
 
 -(BOOL)photoPagesController:(EBPhotoPagesController *)photoPagesController shouldAllowMiscActionsForPhotoAtIndex:(NSInteger)index {
     return NO;
+}
+
+- (void)insertRowAtTop {
+    [self loadNews:0 limit:5 refreshing:YES];
+}
+
+- (void)insertRowAtBottom {
+    int countToSkip = (int)[newsArray count];
+    [self loadNews:countToSkip limit:3 refreshing:NO];
 }
 
 
