@@ -290,6 +290,7 @@ exports.news_edit = (req, res)->
         model.end_date_ = moment.utc(news.end_time).format("DD-MM-YYYY")
       else
         model.type_news = "news"  
+      model.data_time = moment().format("DD-MM-YYYY")
       model.cloudinary = cloudinary
       model.news = news
       model.club_id = req.params.club_id
