@@ -28,6 +28,7 @@
 
 @interface MainViewController ()<UINavigationControllerDelegate, UINavigationBarDelegate>{
     BOOL isInitialLoad;
+    BOOL firstTime;
     NSString* selectedClubType;
     
     BOOL isSearchBarShown;
@@ -96,10 +97,7 @@
         [self.filterTabBar setSelectedViewColor:[UIColor whiteColor]];
         [self.filterTabBar setSlideDelegate:self];
         [self.filterTabView addSubview:self.filterTabBar];
-        
-        NSString* allOption = [NSString stringWithFormat:@"%@", NSLocalizedString(@"all", nil)];
-        [self.filterTabBar addTabForTitle:allOption];
-        [self.filterTabBar setSelectedIndex:0];
+        firstTime = YES;
         
         //remove black line above filtertab
         UINavigationBar *navigationBar = self.navigationController.navigationBar;
@@ -130,13 +128,17 @@
     }
     
     //set view on first filter option
+    [self initEventsTable];
     selectedClubType = @"";
     [self loadAllTypeClubs];
 
+
 }
 
--(BOOL)shouldAutorotate {
-    return YES;
+- (void) initEventsTable {
+    self.eventsTable.type = @"user";
+    self.eventsTable.newsObjectId = @"";
+    self.eventsTable.parentViewController = (UIViewController*)self;
 }
 
 -(NSUInteger)supportedInterfaceOrientations {
@@ -225,6 +227,7 @@
                             [self.filterTabBar addTabForTitle:filterOption];
                         }
                     }
+                    [self.filterTabBar addTabForTitle:@"Events"];
                 }
             }
         } else {
@@ -253,6 +256,11 @@
         NSString *accessToken = [defaults objectForKey:@"accessToken"];
         
         [self._manager updateUserLocation:lat lon:lng accessToken:accessToken];
+        
+        if (firstTime) {
+            firstTime = NO;
+            [self.filterTabBar setSelectedIndex:0];
+        }
     });
 }
 
@@ -440,15 +448,20 @@
 
 -(void) filterForOption:(NSUInteger) index {
     [self.filterTabBar setSelectedIndex:index];
-    if (index == 0) {
-        selectedClubType = @"";
-        [self filterForType:selectedClubType];
+    NSString* typeString = [self.filterTabBar getButtonTitleAtIndex:index];
+    selectedClubType = [typeString lowercaseString];
+    if ([selectedClubType isEqualToString:@"events"]) {
+        [self.eventsTable setHidden:NO];
+        [self.clubTable setHidden:YES];
+        
+        [self.eventsTable initialLoadData];
     }
     else {
-        NSString* typeString = [self.filterTabBar getButtonTitleAtIndex:index];
-        selectedClubType = [typeString lowercaseString];
+        [self.eventsTable setHidden:YES];
+        [self.clubTable setHidden:NO];
         [self filterForType:selectedClubType];
     }
+
 }
 
 //search logic

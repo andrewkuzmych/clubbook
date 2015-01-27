@@ -85,13 +85,15 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     [manager retrieveNews:self.type withId:self.newsObjectId accessToken:accessToken skip:skip limit:limit];
 }
 
--(void) loadData {
-    manager = [[ClubbookManager alloc] init];
-    manager.communicator = [[ClubbookCommunicator alloc] init];
-    manager.communicator.delegate = manager;
-    manager.delegate = self;
-    
-    [self loadNews:0 limit:5 refreshing:YES];
+-(void) initialLoadData {
+    if (manager == nil) {
+        manager = [[ClubbookManager alloc] init];
+        manager.communicator = [[ClubbookCommunicator alloc] init];
+        manager.communicator.delegate = manager;
+        manager.delegate = self;
+        
+        [self loadNews:0 limit:5 refreshing:YES];
+    }
 }
 
 - (void) didReceiveNews:(NSArray*) news {
