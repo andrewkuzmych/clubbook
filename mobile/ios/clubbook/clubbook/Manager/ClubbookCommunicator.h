@@ -43,6 +43,8 @@
 
 - (void)retrievePlace:(NSString *) clubId accessToken:(NSString *) accessToken;
 
+- (void)makePlaceFavorite:(NSString *) сlubId accessToken:(NSString *)accessToken makeFavorite:(BOOL)makeFavorite;
+
 - (void)retrievePlaceUsers:(NSString *) clubId accessToken:(NSString *) accessToken;
 
 - (void)retrievePlaceUsersYesterday:(NSString *) clubId accessToken:(NSString *) accessToken;

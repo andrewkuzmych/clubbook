@@ -54,6 +54,10 @@
     [self.communicator retrievePlace:clubId accessToken:accessToken];
 }
 
+- (void)makePlaceFavorite:(NSString*) clubId accessToken:(NSString *)accessToken makeFavorite:(BOOL) makeFavorite {
+    [self.communicator makePlaceFavorite:clubId accessToken:accessToken makeFavorite:makeFavorite];
+}
+
 - (void)retrievePlaceUsers:(NSString *) clubId accessToken:(NSString *) accessToken
 {
     [self.communicator retrievePlaceUsers:clubId accessToken:accessToken];

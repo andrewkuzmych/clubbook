@@ -13,6 +13,9 @@
 @end
 
 @implementation ClubSubscribeSettingsTableViewController
+{
+    NSString* accessToken;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -22,6 +25,12 @@
     }
     self.tableView.allowsSelection = NO;
     self.tableView.scrollEnabled = NO;
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    accessToken = [defaults objectForKey:@"accessToken"];
+    
+    [self.favoriteButton setOn:self.place.isFavorite];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -32,6 +41,11 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 70;
+}
+- (IBAction)onFavoriteButtonValueChanged:(id)sender {
+    BOOL makeFavorite = [self.favoriteButton isOn];
+    self.place.isFavorite = makeFavorite;
+    [self._manager makePlaceFavorite:self.place.id accessToken:accessToken makeFavorite:makeFavorite];
 }
 
 @end

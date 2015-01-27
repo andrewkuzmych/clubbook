@@ -126,6 +126,12 @@
         place.countOfUsers = [[placeDic objectForKey:@"active_checkins"] intValue];
         place.friendsCount = [[placeDic objectForKey:@"active_friends_checkins"] intValue];
         
+        place.isFavorite = NO;
+        NSNumber *isFavorite = [placeDic objectForKey:@"is_favorite"];
+        if ([isFavorite intValue] > 0) {
+            place.isFavorite = YES;
+        }
+        
         //place.friendsCount = [[parsedObject objectForKey:@"friends_count"] intValue];
         
         NSMutableArray *photos = [[NSMutableArray alloc] init];
@@ -325,6 +331,12 @@
     place.lat = [[clubJson objectForKey:@"club_loc"] objectForKey:@"lat"];
     place.countOfUsers = [[clubJson objectForKey:@"active_checkins"] intValue];
     place.friendsCount = [[clubJson objectForKey:@"active_friends_checkins"] intValue];
+    
+    place.isFavorite = NO;
+    NSNumber *isFavorite = [clubJson objectForKey:@"is_favorite"];
+    if (isFavorite > 0) {
+        place.isFavorite = YES;
+    }
     
     //place.friendsCount = [[parsedObject objectForKey:@"friends_count"] intValue];
     
