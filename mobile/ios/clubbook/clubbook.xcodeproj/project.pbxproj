@@ -1628,7 +1628,7 @@
 		499247AD1976AF93008C74D0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				52FBEC921A6E5BD500DE4BAA /* NewsFeedStoryboard */,
+				52FBEC921A6E5BD500DE4BAA /* NewsFeed */,
 				528C85991A56EF0B00BBB148 /* ClubProfileStoryboard */,
 				499247B41976D940008C74D0 /* BaseViewControllerHelper.h */,
 				499247B51976D940008C74D0 /* BaseViewControllerHelper.m */,
@@ -2269,7 +2269,7 @@
 			path = KIImagePager;
 			sourceTree = "<group>";
 		};
-		52FBEC921A6E5BD500DE4BAA /* NewsFeedStoryboard */ = {
+		52FBEC921A6E5BD500DE4BAA /* NewsFeed */ = {
 			isa = PBXGroup;
 			children = (
 				520F38AA1A5E93B600FB1E65 /* NewsFeedViewController.h */,
@@ -2281,7 +2281,7 @@
 				526ABCCE1A6806820010F485 /* NewsPhotoLayout.h */,
 				526ABCCF1A6806820010F485 /* NewsPhotoLayout.m */,
 			);
-			name = NewsFeedStoryboard;
+			name = NewsFeed;
 			sourceTree = "<group>";
 		};
 		F4EECF05177C99F400778578 = {
