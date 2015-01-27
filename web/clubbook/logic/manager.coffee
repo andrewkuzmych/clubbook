@@ -251,8 +251,13 @@ exports.news = (params, callback)->
     if not news
       callback 'missing news for this club', null
     else
-      #news_object = news.toObject()
-      callback err, news
+      news_objects = []
+      for n in news
+        news_object = n.toObject()
+        news_object.created_on_formatted = moment.utc(news_object.created_on).format("YYYY-MM-DD, HH:mm:ss")
+        news_object.updated_on_formatted = moment.utc(news_object.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+        news_objects.push news_object
+      callback err, news_objects
 
 exports.news_favorite = (params, callback)->
   console.log "METHOD - News favorite club"
@@ -270,7 +275,14 @@ exports.news_favorite = (params, callback)->
         if not news
           callback 'news does not exist', null
         else
-          callback err, news
+          news_objects = []
+          for n in news
+            news_object = n.toObject()
+            news_object.created_on_formatted = moment.utc(news_object.created_on).format("YYYY-MM-DD, HH:mm:ss")
+            news_object.updated_on_formatted = moment.utc(news_object.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+            news_objects.push news_object
+          callback err, news_objects
+
       
 
 exports.checkin = (params, callback)->
