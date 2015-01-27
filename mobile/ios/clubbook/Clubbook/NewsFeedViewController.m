@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 clubbook. All rights reserved.
 //
 
-#import "NewsFeedTableViewController.h"
+#import "NewsFeedViewController.h"
 #import "NewsFeedCell.h"
 #import "NewsData.h"
 #import "NewsPhotoCell.h"
@@ -20,11 +20,11 @@
 
 #define STATIC_HEIGHT 100
 
-@interface NewsFeedTableViewController ()
+@interface NewsFeedViewController ()
 
 @end
 
-@implementation NewsFeedTableViewController
+@implementation NewsFeedViewController
 {
     NSMutableArray* newsArray;
     NSArray* photoSlideShowUrls;
@@ -51,7 +51,7 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     accessToken = [defaults objectForKey:@"accessToken"];
     
-    __weak NewsFeedTableViewController *weakSelf = self;
+    __weak NewsFeedViewController *weakSelf = self;
     // setup pull-to-refresh
     [self.tableView addPullToRefreshWithActionHandler:^{
         [weakSelf insertRowAtTop];

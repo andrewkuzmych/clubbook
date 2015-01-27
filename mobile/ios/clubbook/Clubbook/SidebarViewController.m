@@ -24,7 +24,7 @@
 #import "GlobalVars.h"
 #import "MainMenuCollectionViewCell.h"
 #import "MainViewController.h"
-#import "NewsFeedTableViewController.h"
+#import "NewsFeedViewController.h"
 #import "LocationManagerSingleton.h"
 
 
@@ -113,7 +113,7 @@
     }
     
     if([[segue identifier] isEqualToString:@"news"]){
-        NewsFeedTableViewController *newsController = [segue destinationViewController];
+        NewsFeedViewController *newsController = [segue destinationViewController];
         newsController.newsObjectId = @"";
         newsController.type = @"user";
     }

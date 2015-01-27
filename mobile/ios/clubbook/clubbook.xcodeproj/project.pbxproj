@@ -374,7 +374,7 @@
 		520897801A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 520897551A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.m */; };
 		520897811A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520897561A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.xib */; };
 		520897861A407C7F00E8DD06 /* JSQSystemSoundPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 520897851A407C7F00E8DD06 /* JSQSystemSoundPlayer.m */; };
-		520F38AC1A5E93B600FB1E65 /* NewsFeedTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520F38AB1A5E93B600FB1E65 /* NewsFeedTableViewController.m */; };
+		520F38AC1A5E93B600FB1E65 /* NewsFeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520F38AB1A5E93B600FB1E65 /* NewsFeedViewController.m */; };
 		5210474D1A48300A006DD319 /* DateHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5210474C1A48300A006DD319 /* DateHelper.m */; };
 		52188DAE1A51876E0020DD6F /* MainMenuCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52188DAD1A51876E0020DD6F /* MainMenuCollectionViewCell.m */; };
 		521BEC3F1A52F576003E7A27 /* gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 521BEC3C1A52F576003E7A27 /* gradient.png */; };
@@ -1110,8 +1110,8 @@
 		520897561A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JSQMessagesTypingIndicatorFooterView.xib; sourceTree = "<group>"; };
 		520897841A407C7F00E8DD06 /* JSQSystemSoundPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSQSystemSoundPlayer.h; sourceTree = "<group>"; };
 		520897851A407C7F00E8DD06 /* JSQSystemSoundPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSQSystemSoundPlayer.m; sourceTree = "<group>"; };
-		520F38AA1A5E93B600FB1E65 /* NewsFeedTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedTableViewController.h; sourceTree = "<group>"; };
-		520F38AB1A5E93B600FB1E65 /* NewsFeedTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedTableViewController.m; sourceTree = "<group>"; };
+		520F38AA1A5E93B600FB1E65 /* NewsFeedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedViewController.h; sourceTree = "<group>"; };
+		520F38AB1A5E93B600FB1E65 /* NewsFeedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedViewController.m; sourceTree = "<group>"; };
 		5210474B1A48300A006DD319 /* DateHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateHelper.h; sourceTree = "<group>"; };
 		5210474C1A48300A006DD319 /* DateHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateHelper.m; sourceTree = "<group>"; };
 		52188DAC1A51876E0020DD6F /* MainMenuCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenuCollectionViewCell.h; sourceTree = "<group>"; };
@@ -2272,8 +2272,8 @@
 		52FBEC921A6E5BD500DE4BAA /* NewsFeedStoryboard */ = {
 			isa = PBXGroup;
 			children = (
-				520F38AA1A5E93B600FB1E65 /* NewsFeedTableViewController.h */,
-				520F38AB1A5E93B600FB1E65 /* NewsFeedTableViewController.m */,
+				520F38AA1A5E93B600FB1E65 /* NewsFeedViewController.h */,
+				520F38AB1A5E93B600FB1E65 /* NewsFeedViewController.m */,
 				52520A751A66928B006399EF /* NewsFeedCell.h */,
 				52520A761A66928B006399EF /* NewsFeedCell.m */,
 				528D6CA11A66C7E800B2E6B0 /* NewsPhotoCell.h */,
@@ -2892,7 +2892,7 @@
 				49908F0519751C5C00DA68F2 /* UIButton+ALBlock.m in Sources */,
 				49ABA12C198A919C00B060D0 /* FriendCell.m in Sources */,
 				49895A6C1969980700484EA2 /* CbLabel.m in Sources */,
-				520F38AC1A5E93B600FB1E65 /* NewsFeedTableViewController.m in Sources */,
+				520F38AC1A5E93B600FB1E65 /* NewsFeedViewController.m in Sources */,
 				4934F76719D047B800BFFDB1 /* UIView+WebCacheOperation.m in Sources */,
 				520897691A407C6700E8DD06 /* JSQMessagesCollectionViewLayoutAttributes.m in Sources */,
 				522F75FC1A6524680095991F /* EBPhotoView.m in Sources */,

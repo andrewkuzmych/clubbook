@@ -6,13 +6,14 @@
 //  Copyright (c) 2015 clubbook. All rights reserved.
 //
 
-#import "BaseTableViewController.h"
+#import "BaseViewController.h"
 #import "EBPhotoPagesController.h"
 #import "Place.h"
 
-@interface NewsFeedTableViewController : BaseTableViewController <UICollectionViewDataSource, UICollectionViewDelegate, EBPhotoPagesDelegate, EBPhotoPagesDataSource>
+@interface NewsFeedViewController : BaseViewController <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDelegate, UITableViewDataSource, EBPhotoPagesDelegate, EBPhotoPagesDataSource>
 
 @property (strong, nonatomic) NSString* type;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSString* newsObjectId;
 
 @end
