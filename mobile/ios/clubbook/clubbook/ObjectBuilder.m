@@ -498,7 +498,7 @@
         newsObject.title = [venue objectForKey:@"club_name"];
         newsObject.avatarPath = [venue objectForKey:@"club_logo"];
         
-        NSString* dateStr = [newsDic objectForKey:@"created_on"];
+        NSString* dateStr = [newsDic objectForKey:@"created_on_formatted"];
         // Convert string to date object
         NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
         [dateFormat setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
