@@ -7,13 +7,14 @@
 //
 
 #import "BaseViewController.h"
+#import "NewsFeedTableView.h"
 #import "EBPhotoPagesController.h"
 #import "Place.h"
 
-@interface NewsFeedViewController : BaseViewController <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDelegate, UITableViewDataSource, EBPhotoPagesDelegate, EBPhotoPagesDataSource>
+@interface NewsFeedViewController : BaseViewController
 
+@property (weak, nonatomic) IBOutlet NewsFeedTableView *newsFeedTable;
 @property (strong, nonatomic) NSString* type;
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSString* newsObjectId;
 
 @end

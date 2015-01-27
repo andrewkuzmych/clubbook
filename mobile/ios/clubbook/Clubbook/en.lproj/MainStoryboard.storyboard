@@ -511,7 +511,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="341" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="F5h-Sr-YHg">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="341" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="F5h-Sr-YHg" customClass="NewsFeedTableView">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -645,10 +645,6 @@
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
-                                <connections>
-                                    <outlet property="dataSource" destination="mQY-UE-y4q" id="oRz-DR-1Op"/>
-                                    <outlet property="delegate" destination="mQY-UE-y4q" id="clD-qV-snI"/>
-                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -664,8 +660,8 @@
                         <barButtonItem key="leftBarButtonItem" image="menu.png" id="jCN-GC-cFj"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="sidebarButton" destination="jCN-GC-cFj" id="Dkv-gJ-X0y"/>
-                        <outlet property="tableView" destination="F5h-Sr-YHg" id="1er-hK-NtS"/>
+                        <outlet property="newsFeedTable" destination="F5h-Sr-YHg" id="nLX-po-Jfk"/>
+                        <outlet property="sidebarButton" destination="jCN-GC-cFj" id="xTo-ki-iIc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cZc-70-CF5" userLabel="First Responder" sceneMemberID="firstResponder"/>
