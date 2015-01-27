@@ -246,7 +246,8 @@ exports.club_news_create = (req, res)->
   create_base_model req, res, (model)->
     model.cloudinary = cloudinary
     model.news = {}
-    model.club_id = req.params.id
+    model.type_news = "news"
+    model.club_id = req.params.club_id
     res.render "pages/news_update", model
 
 exports.club_news_create_action = (req, res)->
@@ -255,21 +256,39 @@ exports.club_news_create_action = (req, res)->
       res.redirect "/venue/news_create?error=1"
     else
       news = new db_model.News
-        venue: mongoose.Types.ObjectId(req.params.id)
+        venue: mongoose.Types.ObjectId(req.params.club_id)
         title: req.body.title
         description: req.body.description
+        share: req.body.share 
+        buy_tickets: req.body.buy_tickets
+      if req.body.event_check
+        news.type = "event"
+        start_date_time = req.body.start_date + " " + req.body.start_time
+        news.start_time = new Date(moment.utc(start_date_time, "DD-MM-YYYY HH:mm"))
+        end_date_time = req.body.end_date + " " + req.body.end_time
+        news.end_time = moment.utc(end_date_time, "DD-MM-YYYY HH:mm")
+      else
+        news.type = "news"
       news.photos = []
       for photo in req.body.news_images.split(',')
         if photo
           news.photos.push photo
       news.save (err)->
         console.log 'SAVE'
-        res.redirect "/venue/club_news/#{req.params.id}"
+        res.redirect "/venue/club_news/#{req.params.club_id}"
 
 
 exports.news_edit = (req, res)->
   create_base_model req, res, (model)->
     db_model.News.findById(req.params.id).exec (err, news)->
+      if news.type == "event"
+        model.type_news = news.type
+        model.start_time_ = moment.utc(news.start_time).format("HH:mm")
+        model.start_date_ = moment.utc(news.start_time).format("DD-MM-YYYY")
+        model.end_time_ = moment.utc(news.end_time).format("HH:mm")
+        model.end_date_ = moment.utc(news.end_time).format("DD-MM-YYYY")
+      else
+        model.type_news = "news"  
       model.cloudinary = cloudinary
       model.news = news
       model.club_id = req.params.club_id
@@ -283,7 +302,17 @@ exports.news_edit_action = (req, res)->
       db_model.News.findById(req.params.id).exec (err, news)->
         news.title = req.body.title
         news.description = req.body.description
+        news.share = req.body.share
+        news.buy_tickets = req.body.buy_tickets
         news.photos = []
+        if req.body.event_check
+          news.type = "event"
+          start_date_time = req.body.start_date + " " + req.body.start_time
+          news.start_time = new Date(moment.utc(start_date_time, "DD-MM-YYYY HH:mm"))
+          end_date_time = req.body.end_date + " " + req.body.end_time
+          news.end_time = moment.utc(end_date_time, "DD-MM-YYYY HH:mm")
+        else
+          news.type = "news"
         for photo in req.body.news_images.split(',')
           if photo
             news.photos.push photo

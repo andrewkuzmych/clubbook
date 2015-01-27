@@ -147,12 +147,21 @@ NewsSchema = new mongoose.Schema
   venue: {type: mongoose.Schema.ObjectId, ref: 'Venue', required: true}
   image: {type: String, trim: true}
   title: {type: String, trim: true}
+  share: {type: String, trim: true}
+  type: {type: String, trim: true}
+  buy_tickets: {type: String, trim: true}
   description: {type: String, trim: true}
   is_favorite: {type: Boolean, default: false}
+  start_time: {type: Date}
+  end_time: {type: Date}
   photos: [
     {type: String, trim: true}
   ]
 
+###VenueSchema.virtual('updated_on_formated').get ()->
+  this.updated_on
+  return null
+###
 NewsSchema.pre 'save', (next, done) ->
   this.updated_on = new Date().toISOString()
   next()
