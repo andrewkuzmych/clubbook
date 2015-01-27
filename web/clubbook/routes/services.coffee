@@ -791,7 +791,7 @@ exports.club_users_yesterday = (req, res)->
     current_date_time = new Date()
     yesterday_data_time = new Date(new Date().getTime() - 48 * 60 * 60 * 1000);
     console.log yesterday_data_time
-    db_model.User.findOne({'_id': mongoose.Types.ObjectId(current_user_id), 'checkin': { '$elemMatch': { 'club' : club, 'time': {'$gte': yesterday_data_time}, 'time':{'$lte': current_date_time}}}}).exec (err, current_user)->
+    db_model.User.findOne({'_id': mongoose.Types.ObjectId(current_user_id), 'checkin': { '$elemMatch': { 'club' : club, 'time': {'$gte': yesterday_data_time, '$lte': current_date_time}}}}).exec (err, current_user)->
       if current_user
         db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'time': {'$gte': yesterday_data_time, '$lte': current_date_time}}}, 'bloked_users': {'$ne': current_user._id}}, { checkin: {$slice: -1} }).populate('checkin.club').exec (err, users)->
         
