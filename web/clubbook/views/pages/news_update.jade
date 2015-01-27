@@ -67,7 +67,57 @@ block content
                   .input-icon.right
                     i.fa
                     textarea.form-control(rows="5", placeholder="Enter news description", name="description") #{news.description?news.description:''}
-
+              .form-group
+                label.control-label.col-md-3 Share
+                .col-md-4
+                  .input-icon.right
+                    i.fa
+                    input.form-control(type='text', placeholder='Enter URL', class="aaa", name="share", value="#{news.share?news.share:''}")
+              .form-group
+                label.control-label.col-md-3 Buy tickets
+                .col-md-4
+                  .input-icon.right
+                    i.fa
+                    input.form-control(type='text', placeholder='Enter URL', name="buy_tickets", value="#{news.buy_tickets?news.buy_tickets:''}")
+              .form-group
+                .col-md-3 
+                .col-md-4
+                  if type_news == "event"
+                    input.form-control(type='checkbox' class="check" name='event_check' checked)
+                  else
+                    input.form-control(type='checkbox' class="check" name='event_check')
+                  label.control-label Event
+              .form-group.events
+                .form-group
+                  label.control-label.col-md-3 Start
+                  .col-md-3
+                    .input-group
+                      .input-group.date.date-picker(data-date-format='dd-mm-yyyy')
+                        input.form-control(type='text', name="start_date", value="#{start_date_?start_date_:''}")
+                        span.input-group-btn
+                          button.btn.default.date-set(type='button')
+                            i.fa.fa-calendar
+                  .col-md-3
+                    .input-group
+                      input.form-control.timepicker.timepicker-no-seconds(type='text', class='st_tm' name='start_time', data-default-time="", value="#{start_time_?start_time_:''}")
+                      span.input-group-btn
+                        button.btn.default(type='button')
+                            i.fa.fa-clock-o
+                .form-group
+                  label.control-label.col-md-3 End
+                  .col-md-3
+                    .input-group
+                      .input-group.date.date-picker(data-date-format='dd-mm-yyyy')
+                        input.form-control(type='text', name="end_date", value="#{end_date_?end_date_:''}")
+                        span.input-group-btn
+                          button.btn.default.date-set(type='button')
+                            i.fa.fa-calendar
+                  .col-md-3
+                    .input-group
+                      input.form-control.timepicker.timepicker-no-seconds(type='text', name='end_time', data-default-time="", value="#{end_time_?end_time_:''}")
+                      span.input-group-btn
+                        button.btn.default(type='button')
+                            i.fa.fa-clock-o
             .form-actions.right
               .row
                 .col-md-offset-3.col-md-9
@@ -76,13 +126,18 @@ block content
 
 block scripts
   script(src="/assets/admin/pages/scripts/update_news.js", type='text/javascript')
+  script(src="/assets/admin/pages/scripts/update_clubs.js", type='text/javascript')
+  script(src='/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js', type='text/javascript')
   script(type="text/javascript")
     // Configure Cloudinary
     $.cloudinary.config({ api_key: '!{api_key}', cloud_name: '!{cloud_name}' });
-
+    //$.(".events").hide()
     $('[tag=upload_images].cloudinary-fileupload').bind('fileuploadstart', function(e){
       //$('.preview').html('Upload started...');
       $('#upload_images_progress .bar').css('width', '0%');
+    });
+    $('.check').click(function () {
+      $(".events").toggle(this.checked);
     });
 
     $('[tag=upload_images].cloudinary-fileupload').bind('fileuploadprogress', function(e, data) { 
@@ -104,8 +159,19 @@ block scripts
     function updateClubImages() {
       $('[name=news_images]').val($('img.news_image').map(function() { return this.src; }).get().join());
     }
-
+    $(function () {
+      if("#{type_news}" == "news"){
+        $(".events").css("display", "none");
+      }
+      else{ 
+        $(".events").css("display", "block");
+        }
+      console.log("payment");
+      $('.date-picker').datepicker({
+        autoclose: true
+      });
+    });
 
     FormValidation.init();
-
+    ComponentsPickers.init();
 

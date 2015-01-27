@@ -251,6 +251,7 @@ exports.news = (params, callback)->
     if not news
       callback 'missing news for this club', null
     else
+      #news_object = news.toObject()
       callback err, news
 
 exports.news_favorite = (params, callback)->
