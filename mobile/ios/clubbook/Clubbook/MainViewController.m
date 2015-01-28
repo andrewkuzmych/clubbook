@@ -34,7 +34,8 @@
 
 @interface MainViewController ()<UINavigationControllerDelegate, UINavigationBarDelegate>{
     BOOL isRefreshing;
-    NSString* selectedClubType;
+    BOOL isWaitingForResponse;
+    NSString* selectedPlaceType;
     
     BOOL isSearchBarShown;
     CGFloat lastContentOffset;
@@ -80,13 +81,13 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     user_accessToken = [defaults objectForKey:@"accessToken"];
     
-    selectedClubType = CLUBS_TYPE;
+    selectedPlaceType = CLUBS_TYPE;
     [self.activityIndicator setHidden:NO];
-    [self loadAllTypeClubs];
+    [self loadRefreshTypePlaces];
 }
 
 - (void) initFilterTabBar {
-    selectedClubType = nil;
+    selectedPlaceType = nil;
     //setup filter tab bar
     self.filterTabBar = [[SPSlideTabBar alloc] initWithFrame:CGRectMake(0, 0, self.filterTabView.frame.size.width, self.filterTabView.frame.size.height)];
     [self.filterTabBar setAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth];
@@ -150,51 +151,18 @@
     self.navigationController.navigationBar.translucent = NO;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.translucent = NO;
-    
-    // Set outself as the navigation controller's delegate so we're asked for a transitioning object
-    self.navigationController.delegate = self;
-    // hide back button
-    [[UIBarButtonItem appearance] setBackButtonTitlePositionAdjustment:UIOffsetMake(0, -60)
-                                                         forBarMetrics:UIBarMetricsDefault];
-    
-    self.screenName = @"Main Screen";
-    
-    //Pubnub staff
-    PNConfiguration *myConfig = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"  publishKey: Constants.PubnabPubKay subscribeKey:Constants.PubnabSubKay secretKey:nil];
-    
-    [PubNub disconnect];
-    [PubNub setConfiguration:myConfig];
-    
-    [PubNub connectWithSuccessBlock:^(NSString *origin) {
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSString *userId = [defaults objectForKey:@"userId"];
-        NSString *channal = [NSString stringWithFormat:@"%message_%@", userId];
-        [PubNub subscribeOnChannel:[PNChannel channelWithName:channal shouldObservePresence:YES]];
-    }
-     
-                   errorBlock:^(PNError *connectionError) {
-                       if (connectionError.code == kPNClientConnectionFailedOnInternetFailureError) {
-                             PNLog(PNLogGeneralLevel, self, @"Connection will be established as soon as internet connection will be restored");
-                        }
-                             
-                   }];
- 
-    NSString *channal = [NSString stringWithFormat:@"checkin"];
-    [PubNub subscribeOnChannel:[PNChannel channelWithName:channal shouldObservePresence:YES]];
-    
-   }
+}
 
 - (void)insertRowAtTop {
-    [self loadClubType:selectedClubType take:10 skip:0 refreshing:YES];
+    [self loadPlaceType:selectedPlaceType take:10 skip:0 refreshing:YES];
 }
 
 - (void)insertRowAtBottom {
     int countToSkip = (int)[self.places count];
-    [self loadClubType:selectedClubType take:10 skip:countToSkip refreshing:NO];
+    [self loadPlaceType:selectedPlaceType take:10 skip:countToSkip refreshing:NO];
 }
 
 - (void)didReceivePlaces:(NSArray *)places andTypes:(NSArray *)types
@@ -221,6 +189,7 @@
         [self.clubTable.pullToRefreshView stopAnimating];
         [self.clubTable.infiniteScrollingView stopAnimating];
         [self.clubTable reloadData];
+        
     });
 }
 
@@ -228,8 +197,8 @@
 {
 }
 
-- (void) loadAllTypeClubs {
-    [self loadClubType:@"" take:10 skip:0 refreshing:YES];
+- (void) loadRefreshTypePlaces {
+    [self loadPlaceType:selectedPlaceType take:10 skip:0 refreshing:YES];
 }
 
 - (void) tableWillBeRefreshed {
@@ -246,10 +215,10 @@
 
 - (void) searchForWord:(NSString*) searchWord {
     [self tableWillBeRefreshed];
-    [self._manager retrievePlaces:user_lat lon:user_lon take:10 skip:0 distance:0 type:selectedClubType search:searchWord accessToken:user_accessToken];
+    [self._manager retrievePlaces:user_lat lon:user_lon take:10 skip:0 distance:0 type:selectedPlaceType search:searchWord accessToken:user_accessToken];
 }
 
-- (void)loadClubType:(NSString*) type take:(int)take skip:(int)skip refreshing:(BOOL) refreshing
+- (void)loadPlaceType:(NSString*) type take:(int)take skip:(int)skip refreshing:(BOOL) refreshing
 {
     isRefreshing = refreshing;
     [self._manager retrievePlaces:user_lat lon:user_lon take:take skip:skip distance:0 type:type search:@"" accessToken:user_accessToken];
@@ -333,16 +302,16 @@
     NSString* typeString = [self.filterTabBar getButtonTitleAtIndex:index];
     
     if ([typeString isEqualToString:CLUBS_STRING]) {
-        selectedClubType = CLUBS_TYPE;
+        selectedPlaceType = CLUBS_TYPE;
         [self.eventsTable setHidden:YES];
         [self.clubTable setHidden:NO];
-        [self filterForType:selectedClubType];
+        [self filterForType:selectedPlaceType];
     }
     else if ([typeString isEqualToString:BARS_STRING] ) {
-        selectedClubType = BARS_TYPE;
+        selectedPlaceType = BARS_TYPE;
         [self.eventsTable setHidden:YES];
         [self.clubTable setHidden:NO];
-        [self filterForType:selectedClubType];
+        [self filterForType:selectedPlaceType];
     }
     else if ([typeString isEqualToString:EVENTS_STRING]) {
         if (isSearchBarShown) {
@@ -371,7 +340,6 @@
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     [self.searchBar resignFirstResponder];
-    [self.filterTabBar setEnabled:YES];
     isSearchBarShown = NO;
     [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
     [self animateConstraints];
@@ -388,7 +356,15 @@
 
 - (void) searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
    NSString* searchWord = self.searchBar.text;
-  [self searchForWord:searchWord];
+   if ([searchWord isEmpty]) {
+       if (isRefreshing) {
+           return;
+       }
+       [self loadRefreshTypePlaces];
+   }
+   else {
+       [self searchForWord:searchWord];
+   }
 }
 
 - (void) changeSearchKeyboardButtonTitle {
