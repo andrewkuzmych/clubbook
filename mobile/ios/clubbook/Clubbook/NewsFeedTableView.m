@@ -53,6 +53,19 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     return self;
 }
 
+-(void) initializeNewsTableType:(NSString*) type objectId:(NSString*) objectId andParentViewCntroller:(UIViewController*) parent {
+    self.type = type;
+    self.newsObjectId = objectId;
+    self.parentViewController = parent;
+    
+    manager = [[ClubbookManager alloc] init];
+    manager.communicator = [[ClubbookCommunicator alloc] init];
+    manager.communicator.delegate = manager;
+    manager.delegate = self;
+    
+    [self loadNews:0 limit:5 refreshing:YES];
+}
+
 - (void) initData {
     newsArray = [[NSMutableArray alloc] init];
     
@@ -76,24 +89,11 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     
     self.delegate = self;
     self.dataSource = self;
-    
-
 }
 
 - (void) loadNews:(int)skip limit:(int)limit refreshing:(BOOL)refreshing {
     isRefreshingNews = refreshing;
     [manager retrieveNews:self.type withId:self.newsObjectId accessToken:accessToken skip:skip limit:limit];
-}
-
--(void) initialLoadData {
-    if (manager == nil) {
-        manager = [[ClubbookManager alloc] init];
-        manager.communicator = [[ClubbookCommunicator alloc] init];
-        manager.communicator.delegate = manager;
-        manager.delegate = self;
-        
-        [self loadNews:0 limit:5 refreshing:YES];
-    }
 }
 
 - (void) didReceiveNews:(NSArray*) news {

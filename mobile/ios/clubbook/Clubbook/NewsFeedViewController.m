@@ -12,11 +12,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.newsFeedTable.type = self.type;
-    self.newsFeedTable.newsObjectId = self.newsObjectId;
-    self.newsFeedTable.parentViewController = (UIViewController*)self;
-    [self.newsFeedTable initialLoadData];
+
+    [self.newsFeedTable initializeNewsTableType:self.type objectId:self.newsObjectId andParentViewCntroller:(UIViewController*)self];
 }
 
 - (void)didReceiveMemoryWarning {

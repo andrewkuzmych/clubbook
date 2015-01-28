@@ -521,6 +521,23 @@
     }
 }
 
+- (void)receivedPlaceJSON:(NSData *)objectNotation
+{
+    NSError *errorPlaces = nil;
+    NSError *errorTypes = nil;
+    Place* place = [ObjectBuilder placeFromJSON:objectNotation error:&errorPlaces];
+    
+    if (errorPlaces != nil) {
+        [self.delegate  failedWithError:errorPlaces];
+        
+    } else if (errorTypes != nil) {
+        [self.delegate  failedWithError:errorTypes];
+    }
+    else {
+        [self.delegate didReceivePlace:place];
+    }
+}
+
 - (void)receivedConversationJSON:(NSData *)objectNotation
 {
     NSError *error = nil;

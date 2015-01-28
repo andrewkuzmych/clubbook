@@ -492,6 +492,7 @@
                         <segue destination="GVb-UH-Luh" kind="custom" identifier="settings" customClass="SWRevealViewControllerSegue" id="Td7-oY-0he"/>
                         <segue destination="MzK-uN-iFg" kind="custom" identifier="profile" customClass="SWRevealViewControllerSegue" id="vLL-P8-d3f"/>
                         <segue destination="neh-Tw-cH0" kind="custom" identifier="yesterday" customClass="SWRevealViewControllerSegue" id="81c-4T-jgP"/>
+                        <segue destination="mQY-UE-y4q" kind="custom" identifier="news" customClass="SWRevealViewControllerSegue" id="WDG-JH-hUs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QUN-K5-YiA" userLabel="First Responder" sceneMemberID="firstResponder"/>

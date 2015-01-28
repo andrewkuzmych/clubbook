@@ -15,6 +15,6 @@
 @property (strong, nonatomic) NSString* type;
 @property (weak, nonatomic) UIViewController* parentViewController;
 
--(void) initialLoadData;
+-(void) initializeNewsTableType:(NSString*) type objectId:(NSString*) objectId andParentViewCntroller:(UIViewController*) parent;
 
 @end

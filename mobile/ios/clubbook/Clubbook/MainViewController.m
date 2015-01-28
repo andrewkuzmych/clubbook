@@ -26,21 +26,23 @@
 #import "ClubUsersYesterdayViewController.h"
 #import "ClubProfileTabBarViewController.h"
 
+#define CLUBS_STRING @"Clubs"
+#define CLUBS_TYPE  @"club"
+#define BARS_STRING @"Cafe/Bars"
+#define BARS_TYPE   @"bar"
+#define EVENTS_STRING @"Events"
+
 @interface MainViewController ()<UINavigationControllerDelegate, UINavigationBarDelegate>{
-    BOOL isInitialLoad;
-    BOOL firstTime;
+    BOOL isRefreshing;
     NSString* selectedClubType;
     
     BOOL isSearchBarShown;
-    
     CGFloat lastContentOffset;
-    UIView* blankView;
-
+    
+    double user_lat;
+    double user_lon;
+    NSString* user_accessToken;
 }
-
-@property (nonatomic) NSTimer* locationUpdateTimer;
-@property (nonatomic) BOOL isLoaded;
-
 @end
 
 @implementation MainViewController
@@ -68,6 +70,22 @@
         [weakSelf insertRowAtBottom];
     }];
     
+    [self initFilterTabBar];
+    [self initSearchBar];
+    [self.eventsTable initializeNewsTableType:@"news" objectId:@"" andParentViewCntroller:(UIViewController*) self];
+    
+    user_lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
+    user_lon = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    user_accessToken = [defaults objectForKey:@"accessToken"];
+    
+    selectedClubType = CLUBS_TYPE;
+    [self.activityIndicator setHidden:NO];
+    [self loadAllTypeClubs];
+}
+
+- (void) initFilterTabBar {
     selectedClubType = nil;
     //setup filter tab bar
     self.filterTabBar = [[SPSlideTabBar alloc] initWithFrame:CGRectMake(0, 0, self.filterTabView.frame.size.width, self.filterTabView.frame.size.height)];
@@ -79,51 +97,41 @@
     [self.filterTabBar setSelectedViewColor:[UIColor whiteColor]];
     [self.filterTabBar setSlideDelegate:self];
     [self.filterTabView addSubview:self.filterTabBar];
-    firstTime = YES;
-        
+    
     //remove black line above filtertab
     UINavigationBar *navigationBar = self.navigationController.navigationBar;
-        
+    
     [navigationBar setBackgroundImage:[UIImage new]
                        forBarPosition:UIBarPositionAny
                            barMetrics:UIBarMetricsDefault];
     
     [navigationBar setShadowImage:[UIImage new]];
-        
+    
+    [self.filterTabBar addTabForTitle:CLUBS_STRING];
+    [self.filterTabBar addTabForTitle:BARS_STRING];
+    [self.filterTabBar addTabForTitle:EVENTS_STRING];
+    [self.filterTabBar setSelectedIndex:0];
+}
+
+- (void) initSearchBar {
     //set up search field
     self.searchBar.barTintColor = self.filterTabBar.backgroundColor;
-        
+    
     //remove black line under searchbox
     self.searchBar.layer.borderWidth = 2;
     self.searchBar.layer.borderColor = [[UIColor colorWithRed:0.651 green:0 blue:0.867 alpha:1] CGColor];
-        
+    
     //set placeholder text
     self.searchBar.placeholder = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Search clubs, bars, events, etc. by name", nil)];
     [self changeSearchKeyboardButtonTitle];
-        
+    
     //hide searchbar
     [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
     isSearchBarShown = NO;
     self.searchBar.delegate = self;
-        
-    [self.view setBackgroundColor:self.filterTabBar.backgroundColor];
     
-    //set view on first filter option
-    [self initEventsTable];
-    selectedClubType = @"";
-    [self loadAllTypeClubs];
-
-
-}
-
-- (void) initEventsTable {
-    self.eventsTable.type = @"user";
-    self.eventsTable.newsObjectId = @"";
-    self.eventsTable.parentViewController = (UIViewController*)self;
-}
-
--(NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+    [self.view setBackgroundColor:self.filterTabBar.backgroundColor];
+ 
 }
 
 - (void)didGetConfig:(Config *)config {
@@ -181,12 +189,12 @@
    }
 
 - (void)insertRowAtTop {
-    [self loadClubType:selectedClubType take:10 skip:0];
+    [self loadClubType:selectedClubType take:10 skip:0 refreshing:YES];
 }
 
 - (void)insertRowAtBottom {
     int countToSkip = (int)[self.places count];
-    [self loadClubType:selectedClubType take:10 skip:countToSkip];
+    [self loadClubType:selectedClubType take:10 skip:countToSkip refreshing:NO];
 }
 
 - (void)didReceivePlaces:(NSArray *)places andTypes:(NSArray *)types
@@ -195,27 +203,14 @@
         [self hideProgress];
         [self.activityIndicator setHidden:YES];
         
-        if (isInitialLoad) {
+        if (isRefreshing) {
             _places = [places mutableCopy];
-            
-            if (types) {
-                if ([types count] != 0) {
-                    for (NSString* option in types) {
-                        if ([option isKindOfClass:[NSString class]]) {
-                            NSString* filterOption = [NSString stringWithFormat:@"%@", NSLocalizedString(option, nil)];
-                            filterOption = [option capitalizedString];
-                            
-                            [self.filterTabBar addTabForTitle:filterOption];
-                        }
-                    }
-                    [self.filterTabBar addTabForTitle:@"Events"];
-                }
-            }
-        } else {
+            isRefreshing = NO;
+        }
+        else {
             [_places addObjectsFromArray:places];
         }
-        
-        self.clubTable.hidden = NO;
+
         if ([_places count] > 0) {
             [self.noResultsLabel setHidden:YES];
         }
@@ -225,23 +220,7 @@
 
         [self.clubTable.pullToRefreshView stopAnimating];
         [self.clubTable.infiniteScrollingView stopAnimating];
-        CGPoint positin = self.clubTable.contentOffset;
         [self.clubTable reloadData];
-        [self.clubTable setContentOffset:positin animated:NO];
-
-        // update user location
-        double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
-        double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
-        
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSString *accessToken = [defaults objectForKey:@"accessToken"];
-        
-        [self._manager updateUserLocation:lat lon:lng accessToken:accessToken];
-        
-        if (firstTime) {
-            firstTime = NO;
-            [self.filterTabBar setSelectedIndex:0];
-        }
     });
 }
 
@@ -250,7 +229,7 @@
 }
 
 - (void) loadAllTypeClubs {
-    [self loadClubType:@"" take:10 skip:0];
+    [self loadClubType:@"" take:10 skip:0 refreshing:YES];
 }
 
 - (void) tableWillBeRefreshed {
@@ -262,55 +241,18 @@
 
 - (void) filterForType:(NSString*) type {
     [self tableWillBeRefreshed];
-    
-    self.isLoaded = YES;
-    double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
-    double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *accessToken = [defaults objectForKey:@"accessToken"];
-
-    [self._manager retrievePlaces:lat lon:lng take:10 skip:0 distance:0 type:type search:@"" accessToken:accessToken];
+    [self._manager retrievePlaces:user_lat lon:user_lon take:10 skip:0 distance:0 type:type search:@"" accessToken:user_accessToken];
 }
 
 - (void) searchForWord:(NSString*) searchWord {
     [self tableWillBeRefreshed];
-    
-    self.isLoaded = YES;
-    double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
-    double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *accessToken = [defaults objectForKey:@"accessToken"];
-    
-    [self._manager retrievePlaces:lat lon:lng take:10 skip:0 distance:0 type:@"" search:searchWord accessToken:accessToken];
+    [self._manager retrievePlaces:user_lat lon:user_lon take:10 skip:0 distance:0 type:selectedClubType search:searchWord accessToken:user_accessToken];
 }
 
-- (void)loadClubType:(NSString*) type take:(int)take skip:(int)skip
+- (void)loadClubType:(NSString*) type take:(int)take skip:(int)skip refreshing:(BOOL) refreshing
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *accessToken = [defaults objectForKey:@"accessToken"];
-    
-    isInitialLoad = NO;
-    if (skip == 0) {
-        isInitialLoad = YES;
-        if (_places.count == 0) {
-            if (self.isLoaded == YES)
-            {
-                [self.clubTable.pullToRefreshView stopAnimating];
-                [self.clubTable.infiniteScrollingView stopAnimating];
-                return;
-            }
-            [self showProgress:NO title:nil];
-        }
-
-    }
-    
-    self.isLoaded = YES;
-    double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
-    double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
-    
-    [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:0 type:type search:@"" accessToken:accessToken];
+    isRefreshing = refreshing;
+    [self._manager retrievePlaces:user_lat lon:user_lon take:take skip:skip distance:0 type:type search:@"" accessToken:user_accessToken];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -366,7 +308,6 @@
     ClubUsersViewController *clubController  = [clubProfileStoryboard instantiateViewControllerWithIdentifier:@"club"];
     clubController.place = place;
     clubController.hasBack = YES;
-    self.isLoaded = NO;
 
     [UIView beginAnimations:@"animation" context:nil];
     [UIView setAnimationDuration:0.5];
@@ -390,19 +331,26 @@
 -(void) filterForOption:(NSUInteger) index {
     [self.filterTabBar setSelectedIndex:index];
     NSString* typeString = [self.filterTabBar getButtonTitleAtIndex:index];
-    selectedClubType = [typeString lowercaseString];
-    if ([selectedClubType isEqualToString:@"events"]) {
-        [self.eventsTable setHidden:NO];
-        [self.clubTable setHidden:YES];
-        
-        [self.eventsTable initialLoadData];
-    }
-    else {
+    
+    if ([typeString isEqualToString:CLUBS_STRING]) {
+        selectedClubType = CLUBS_TYPE;
         [self.eventsTable setHidden:YES];
         [self.clubTable setHidden:NO];
         [self filterForType:selectedClubType];
     }
-
+    else if ([typeString isEqualToString:BARS_STRING] ) {
+        selectedClubType = BARS_TYPE;
+        [self.eventsTable setHidden:YES];
+        [self.clubTable setHidden:NO];
+        [self filterForType:selectedClubType];
+    }
+    else if ([typeString isEqualToString:EVENTS_STRING]) {
+        if (isSearchBarShown) {
+            [self handleSearchButton:nil];
+        }
+        [self.eventsTable setHidden:NO];
+        [self.clubTable setHidden:YES];
+    }
 }
 
 //search logic
@@ -410,16 +358,10 @@
     if(!isSearchBarShown) {
         isSearchBarShown = YES;
         [self searchTextFieldEnabled:YES];
-        [self.filterTabBar setEnabled:NO];
         [self replaceTopConstraintOnView:self.searchBar withConstant: 0];
-        //show all places to search
-        if ([self.filterTabBar selectedIndex] != 0) {
-            [self filterForOption:0];
-        }
         [self.searchBar becomeFirstResponder];
     } else {
         [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
-        [self.filterTabBar setEnabled:YES];
         [self searchTextFieldEnabled:NO];
         isSearchBarShown = NO;
         [self.searchBar resignFirstResponder];
