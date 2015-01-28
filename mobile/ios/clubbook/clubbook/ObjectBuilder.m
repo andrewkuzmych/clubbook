@@ -502,7 +502,7 @@
         // Convert string to date object
         NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
         [dateFormat setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-        [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        [dateFormat setDateFormat:@"yyyy-MM-dd, HH:mm:ss"];
         newsObject.createDate = [dateFormat dateFromString:dateStr];
         
         newsObject.tempDownlaodedPhotos = [[NSMutableDictionary alloc] init];
