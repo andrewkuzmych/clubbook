@@ -290,8 +290,9 @@ exports.news_edit = (req, res)->
         model.type_news = news.type
         model.start_time_ = moment.utc(news.start_time).format("HH:mm")
         model.start_date_ = moment.utc(news.start_time).format("DD-MM-YYYY")
-        model.end_time_ = moment.utc(news.end_time).format("HH:mm")
-        model.end_date_ = moment.utc(news.end_time).format("DD-MM-YYYY")
+        if news.end_time
+          model.end_time_ = moment.utc(news.end_time).format("HH:mm")
+          model.end_date_ = moment.utc(news.end_time).format("DD-MM-YYYY")
       else
         model.type_news = "news"  
       model.data_time = moment().format("DD-MM-YYYY")
@@ -315,8 +316,11 @@ exports.news_edit_action = (req, res)->
           news.type = "event"
           start_date_time = req.body.start_date + " " + req.body.start_time
           news.start_time = new Date(moment.utc(start_date_time, "DD-MM-YYYY HH:mm"))
-          end_date_time = req.body.end_date + " " + req.body.end_time
-          news.end_time = moment.utc(end_date_time, "DD-MM-YYYY HH:mm")
+          if req.body.end_date&&req.body.end_time
+            end_date_time = req.body.end_date + " " + req.body.end_time
+            news.end_time = moment.utc(end_date_time, "DD-MM-YYYY HH:mm")
+          else
+            news.end_time = null
         else
           news.type = "news"
         for photo in req.body.news_images.split(',')
