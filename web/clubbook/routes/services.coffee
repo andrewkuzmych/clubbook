@@ -923,6 +923,22 @@ exports.news = (req, res)->
         status: 'ok'
         news: news
 
+exports.events = (req, res)->
+  params =
+    club_id: req.params.objectId
+    skip: req.query.skip
+    limit: req.query.limit
+    
+  manager.events params, (err, events)->
+    if err
+      res.json
+        status: 'error'
+        error: err
+    else
+      res.json
+        status: 'ok'
+        events: events
+
 exports.news_favorite = (req, res)->
   params =
     user_id: req.params.me._id.toString()
@@ -938,6 +954,22 @@ exports.news_favorite = (req, res)->
       res.json
         status: 'ok'
         news: news
+
+exports.events_favorite = (req, res)->
+  params =
+    user_id: req.params.me._id.toString()
+    skip: req.query.skip
+    limit: req.query.limit
+
+  manager.events_favorite params, (err, events)->
+    if err
+      res.json
+        status: 'error'
+        error: err
+    else
+      res.json
+        status: 'ok'
+        events: events
 
 exports.checkin = (req, res)->
   params =
