@@ -8,6 +8,7 @@
 
 #import "NewsFeedCell.h"
 #import "NewsPhotoCell.h"
+#import <FacebookSDK/FacebookSDK.h>
 
 @implementation NewsFeedCell
 
@@ -32,6 +33,33 @@
     self.photosView.tag = index;
         
     [self.photosView reloadData];
+}
+
+- (IBAction)handleShareButton:(id)sender {
+    // Check if the Facebook app is installed and we can present the share dialog
+    FBLinkShareParams *params = [[FBLinkShareParams alloc] init];
+    params.link = [NSURL URLWithString:self.shareLink];
+    
+    // If the Facebook app is installed and we can present the share dialog
+    if ([FBDialogs canPresentShareDialogWithParams:params]) {
+        [FBDialogs presentShareDialogWithLink:params.link
+                                      handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
+                                          if(error) {
+                                              // An error occurred, we need to handle the error
+                                              // See: https://developers.facebook.com/docs/ios/errors
+                                              NSLog(@"Error publishing story: %@", error.description);
+                                          } else {
+                                              // Success
+                                              NSLog(@"result %@", results);
+                                          }
+                                      }];
+    } else {
+        // Present the feed dialog
+    }
+}
+
+- (IBAction)handleBuyButton:(id)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.buyLink]];
 }
 
 @end

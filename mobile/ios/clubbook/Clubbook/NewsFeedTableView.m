@@ -117,6 +117,36 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     [self.infiniteScrollingView stopAnimating];
 }
 
+- (UIImage*) getProperAvatarImage:(NSString*) type newsData:(NewsData*) news {
+    if ([type isEqualToString:@"club"]) {
+        if (staticAvatar == nil) {
+            CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
+            CLTransformation *transformation = [CLTransformation transformation];
+            [transformation setParams: @{@"width": @60, @"height": @60}];
+            NSString * avatarUrl  = [cloudinary url:news.avatarPath options:@{@"transformation": transformation}];
+            
+            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:avatarUrl]];
+            staticAvatar = [[UIImage alloc] initWithData:data];
+        }
+        return staticAvatar;
+    }
+    else {
+        UIImage* avatar = [avatarImages objectForKey:news.title];
+        if (avatar == nil) {
+            CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
+            CLTransformation *transformation = [CLTransformation transformation];
+            [transformation setParams: @{@"width": @60, @"height": @60}];
+            NSString * avatarUrl  = [cloudinary url:news.avatarPath options:@{@"transformation": transformation}];
+            
+            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:avatarUrl]];
+            avatar = [[UIImage alloc] initWithData:data];
+            
+            [avatarImages setObject:avatar forKey:news.title];
+        }
+        return avatar;
+    }
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;    //count of section
@@ -137,43 +167,41 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     }
     
     NewsData* news = [newsArray objectAtIndex:indexPath.row];
+    UIImage* avatar = [self getProperAvatarImage:self.type newsData:news];
+    [cell.avatarImage sd_setImageWithURL:[NSURL URLWithString:@""] placeholderImage:avatar];
     
-    if ([self.type isEqualToString:@"club"]) {
-        if (staticAvatar == nil) {
-            CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
-            CLTransformation *transformation = [CLTransformation transformation];
-            [transformation setParams: @{@"width": @60, @"height": @60}];
-            NSString * avatarUrl  = [cloudinary url:news.avatarPath options:@{@"transformation": transformation}];
-            
-            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:avatarUrl]];
-            staticAvatar = [[UIImage alloc] initWithData:data];
-        }
-        [cell.avatarImage sd_setImageWithURL:[NSURL URLWithString:@""] placeholderImage:staticAvatar];
+    if ([news.type isEqualToString:@"event"]) {
+        NSString* title = [NSString stringWithFormat:@"EVENT: %@", news.title];
+        [cell.nameLabel setText:title];
+        NSString* startTime = [[DateHelper sharedSingleton] get24hTime:news.startTime];
+        NSString* endTime = [[DateHelper sharedSingleton] get24hTime:news.startTime];
+        
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"dd/MM"];
+        NSString* month = [formatter stringFromDate:news.startTime];
+        NSString* date = [NSString stringWithFormat:@"%@ Start:%@ End:%@", month, startTime, endTime];
+        [cell.timeLabel setText:date];
     }
     else {
-        UIImage* avatar = [avatarImages objectForKey:news.title];
-        if (avatar == nil) {
-            CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
-            CLTransformation *transformation = [CLTransformation transformation];
-            [transformation setParams: @{@"width": @60, @"height": @60}];
-            NSString * avatarUrl  = [cloudinary url:news.avatarPath options:@{@"transformation": transformation}];
-            
-            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:avatarUrl]];
-            avatar = [[UIImage alloc] initWithData:data];
-            
-            [avatarImages setObject:avatar forKey:news.title];
-        }
-        [cell.avatarImage sd_setImageWithURL:[NSURL URLWithString:@""] placeholderImage:avatar];
+        [cell.nameLabel setText:news.title];
+        NSString* date = [[DateHelper sharedSingleton] get24hTime:news.createDate];
+        [cell.timeLabel setText:date];
     }
     
-    [cell.nameLabel setText:news.title];
-    NSString* date = [[DateHelper sharedSingleton] get24hTime:news.createDate];
-    [cell.timeLabel setText:date];
     [cell.contentView setBackgroundColor:self.backgroundColor];
     [cell.newsText setText:news.newsDescription];
     [cell.photosView setHidden:YES];
     if ([news.photos count] > 0) {
         [cell.photosView setHidden:NO];
+    }
+    
+    if (news.shareLink != nil) {
+        [cell.shareButton setHidden:NO];
+        cell.shareLink = news.shareLink;
+    }
+    if (news.buyLink != nil) {
+        [cell.buyButton setHidden:NO];
+        cell.buyLink = news.buyLink;
     }
     
     return cell;

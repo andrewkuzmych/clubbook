@@ -18,4 +18,11 @@
 @property (strong, nonatomic) NSMutableArray* photos;
 @property (strong, nonatomic) NSMutableDictionary* tempDownlaodedPhotos;
 
+@property (strong, nonatomic) NSString* type;
+
+@property (strong, nonatomic) NSDate* startTime;
+@property (strong, nonatomic) NSDate* endTime;
+@property (strong, nonatomic) NSString* shareLink;
+@property (strong, nonatomic) NSString* buyLink;
+
 @end

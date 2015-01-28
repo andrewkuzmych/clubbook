@@ -491,6 +491,8 @@
     for (NSDictionary *newsDic in newsData) {
         NewsData *newsObject = [[NewsData alloc] init];
         
+        newsObject.type = [newsDic objectForKey:@"type"];
+        
         newsObject.newsDescription = [newsDic objectForKey:@"description"];
         newsObject.photos = [newsDic objectForKey:@"photos"];
         
@@ -498,12 +500,25 @@
         newsObject.title = [venue objectForKey:@"club_name"];
         newsObject.avatarPath = [venue objectForKey:@"club_logo"];
         
+        newsObject.buyLink = [newsDic objectForKey:@"buy_tickets"];
+        newsObject.shareLink = [newsDic objectForKey:@"share"];
+        
         NSString* dateStr = [newsDic objectForKey:@"created_on_formatted"];
         // Convert string to date object
         NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
         [dateFormat setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
         [dateFormat setDateFormat:@"yyyy-MM-dd, HH:mm:ss"];
         newsObject.createDate = [dateFormat dateFromString:dateStr];
+        
+        dateStr = [newsDic objectForKey:@"start_time"];
+        [dateFormat setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+        [dateFormat setDateFormat:@"yyyy-MM-dd, HH:mm:ss"];
+        newsObject.startTime = [dateFormat dateFromString:dateStr];
+        
+        dateStr = [newsDic objectForKey:@"end_time"];
+        [dateFormat setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+        [dateFormat setDateFormat:@"yyyy-MM-dd, HH:mm:ss"];
+        newsObject.endTime = [dateFormat dateFromString:dateStr];
         
         newsObject.tempDownlaodedPhotos = [[NSMutableDictionary alloc] init];
         
