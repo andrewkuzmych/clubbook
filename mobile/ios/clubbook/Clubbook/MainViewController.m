@@ -35,8 +35,7 @@
     
     CGFloat lastContentOffset;
     UIView* blankView;
-    
-    Place* placeToView;
+
 }
 
 @property (nonatomic) NSTimer* locationUpdateTimer;
@@ -70,62 +69,44 @@
     }];
     
     selectedClubType = nil;
+    //setup filter tab bar
+    self.filterTabBar = [[SPSlideTabBar alloc] initWithFrame:CGRectMake(0, 0, self.filterTabView.frame.size.width, self.filterTabView.frame.size.height)];
+    [self.filterTabBar setAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth];
+    [self.filterTabBar setBackgroundColor:[UIColor colorWithRed:0.651 green:0 blue:0.867 alpha:1]];
+    [self.filterTabBar setSeparatorStyle:SPSlideTabBarSeparatorStyleNone];
+    [self.filterTabBar setBarButtonTitleColor:[UIColor colorWithRed:192/255.0f green:154/255.0f blue:234/255.0f alpha:1.0f]];
+    [self.filterTabBar setSelectedButtonColor:[UIColor whiteColor]];
+    [self.filterTabBar setSelectedViewColor:[UIColor whiteColor]];
+    [self.filterTabBar setSlideDelegate:self];
+    [self.filterTabView addSubview:self.filterTabBar];
+    firstTime = YES;
+        
+    //remove black line above filtertab
+    UINavigationBar *navigationBar = self.navigationController.navigationBar;
+        
+    [navigationBar setBackgroundImage:[UIImage new]
+                       forBarPosition:UIBarPositionAny
+                           barMetrics:UIBarMetricsDefault];
     
-    if (self.showYesterdayPlaces) {
-        //hide searchbar and filter tab from view
-        placeToView = nil;
-        [self.filterTabBar setHidden:YES];
-        [self.searchBar setHidden:YES];
-        [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
-        [self replaceTopConstraintOnView:self.filterTabView withConstant: -self.filterTabView.frame.size.height];
+    [navigationBar setShadowImage:[UIImage new]];
         
-        UIBarButtonItem *tempButton = [[UIBarButtonItem alloc] init];
-        self.navigationItem.rightBarButtonItem = tempButton;
+    //set up search field
+    self.searchBar.barTintColor = self.filterTabBar.backgroundColor;
         
-        self.title = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Yesterday Check-ins", nil)];
+    //remove black line under searchbox
+    self.searchBar.layer.borderWidth = 2;
+    self.searchBar.layer.borderColor = [[UIColor colorWithRed:0.651 green:0 blue:0.867 alpha:1] CGColor];
         
-        self.noResultsLabel.text = @"You don`t have any check-ins from yesterday";
-    }
-    else {
-        //setup filter tab bar
-        self.filterTabBar = [[SPSlideTabBar alloc] initWithFrame:CGRectMake(0, 0, self.filterTabView.frame.size.width, self.filterTabView.frame.size.height)];
-        [self.filterTabBar setAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth];
-        [self.filterTabBar setBackgroundColor:[UIColor colorWithRed:0.651 green:0 blue:0.867 alpha:1]];
-        [self.filterTabBar setSeparatorStyle:SPSlideTabBarSeparatorStyleNone];
-        [self.filterTabBar setBarButtonTitleColor:[UIColor colorWithRed:192/255.0f green:154/255.0f blue:234/255.0f alpha:1.0f]];
-        [self.filterTabBar setSelectedButtonColor:[UIColor whiteColor]];
-        [self.filterTabBar setSelectedViewColor:[UIColor whiteColor]];
-        [self.filterTabBar setSlideDelegate:self];
-        [self.filterTabView addSubview:self.filterTabBar];
-        firstTime = YES;
+    //set placeholder text
+    self.searchBar.placeholder = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Search clubs, bars, events, etc. by name", nil)];
+    [self changeSearchKeyboardButtonTitle];
         
-        //remove black line above filtertab
-        UINavigationBar *navigationBar = self.navigationController.navigationBar;
+    //hide searchbar
+    [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
+    isSearchBarShown = NO;
+    self.searchBar.delegate = self;
         
-        [navigationBar setBackgroundImage:[UIImage new]
-                           forBarPosition:UIBarPositionAny
-                               barMetrics:UIBarMetricsDefault];
-        
-        [navigationBar setShadowImage:[UIImage new]];
-        
-        //set up search field
-        self.searchBar.barTintColor = self.filterTabBar.backgroundColor;
-        
-        //remove black line under searchbox
-        self.searchBar.layer.borderWidth = 2;
-        self.searchBar.layer.borderColor = [[UIColor colorWithRed:0.651 green:0 blue:0.867 alpha:1] CGColor];
-        
-        //set placeholder text
-        self.searchBar.placeholder = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Search clubs, bars, events, etc. by name", nil)];
-        [self changeSearchKeyboardButtonTitle];
-        
-        //hide searchbar
-        [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
-        isSearchBarShown = NO;
-        self.searchBar.delegate = self;
-        
-        [self.view setBackgroundColor:self.filterTabBar.backgroundColor];
-    }
+    [self.view setBackgroundColor:self.filterTabBar.backgroundColor];
     
     //set view on first filter option
     [self initEventsTable];
@@ -310,12 +291,6 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
     
-    if (_showYesterdayPlaces) {
-        isInitialLoad = YES;
-        [self._manager retrieveYesterdayPlacesAccessToken:accessToken];
-        return;
-    }
-    
     isInitialLoad = NO;
     if (skip == 0) {
         isInitialLoad = YES;
@@ -336,17 +311,6 @@
     double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
     
     [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:0 type:type search:@"" accessToken:accessToken];
-}
-
-- (IBAction)handleYesterdayButton:(id)sender {
-    CbButton* yesterDayButton = (CbButton *) sender;
-    placeToView = _places[yesterDayButton.tag];
-    
-    [self performSegueWithIdentifier: @"onYesterday" sender: self];
-}
-
-- (void) handleInfoButton {
-    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -389,17 +353,7 @@
     [cell.friendsCountLabel setText: [NSString stringWithFormat:@"%d", place.friendsCount]];
     
     [cell.clubAvatar sd_setImageWithURL:[NSURL URLWithString:place.avatar] placeholderImage:[UIImage imageNamed:@"avatar_default.png"]];
-    
-    if(_showYesterdayPlaces) {
-        [cell.distanceLabel setHidden:YES];
-        [cell.arrowImage setHidden:YES];
-        
-        [cell.viewYesterdayButton setHidden:NO];
-        
-        cell.viewYesterdayButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15];
-        [cell.viewYesterdayButton setMainState:NSLocalizedString(@"View", nil)];
-    }
-    
+  
     return cell;
 }
 
@@ -421,19 +375,6 @@
     [UIView commitAnimations];
     [self.clubTable deselectRowAtIndexPath:indexPath animated:NO];
 }
-
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(NSString *)sender
-{
-   if ([[segue identifier] isEqualToString:@"onYesterday"]) {
-        ClubUsersYesterdayViewController *yesterdayController =  [segue destinationViewController];
-        if (placeToView != nil) {
-            yesterdayController.place = placeToView;
-            yesterdayController.hasBack = YES;
-            placeToView = nil;
-        }
-    }
-}
-
 
 - (void)didReceiveMemoryWarning
 {
@@ -542,7 +483,7 @@
 }
 
 -(void) scrollViewDidScroll:(UIScrollView *)scrollView {
-    if(self.clubTable.pullToRefreshView.state || scrollView.contentOffset.y <= -10 || _showYesterdayPlaces) {
+    if(self.clubTable.pullToRefreshView.state || scrollView.contentOffset.y <= -10) {
        return;
     }
     //scrolled up
@@ -562,7 +503,7 @@
 
 
 -(void) scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    if ([self.searchBar isHidden] && ![[self navigationController] isNavigationBarHidden] && !self.showYesterdayPlaces) {
+    if ([self.searchBar isHidden] && ![[self navigationController] isNavigationBarHidden]) {
         [self.searchBar setHidden:NO];
     }
 }

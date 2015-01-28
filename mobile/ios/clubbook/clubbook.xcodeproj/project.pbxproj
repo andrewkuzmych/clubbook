@@ -377,6 +377,7 @@
 		520897861A407C7F00E8DD06 /* JSQSystemSoundPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 520897851A407C7F00E8DD06 /* JSQSystemSoundPlayer.m */; };
 		520F38AC1A5E93B600FB1E65 /* NewsFeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520F38AB1A5E93B600FB1E65 /* NewsFeedViewController.m */; };
 		5210474D1A48300A006DD319 /* DateHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5210474C1A48300A006DD319 /* DateHelper.m */; };
+		5216506F1A78E6AB007F16DE /* YesterdayPlacesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5216506E1A78E6AB007F16DE /* YesterdayPlacesViewController.m */; };
 		52188DAE1A51876E0020DD6F /* MainMenuCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52188DAD1A51876E0020DD6F /* MainMenuCollectionViewCell.m */; };
 		521BEC3F1A52F576003E7A27 /* gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 521BEC3C1A52F576003E7A27 /* gradient.png */; };
 		521BEC401A52F576003E7A27 /* gradient@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 521BEC3D1A52F576003E7A27 /* gradient@2x.png */; };
@@ -1117,6 +1118,8 @@
 		520F38AB1A5E93B600FB1E65 /* NewsFeedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedViewController.m; sourceTree = "<group>"; };
 		5210474B1A48300A006DD319 /* DateHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateHelper.h; sourceTree = "<group>"; };
 		5210474C1A48300A006DD319 /* DateHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateHelper.m; sourceTree = "<group>"; };
+		5216506D1A78E6AB007F16DE /* YesterdayPlacesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YesterdayPlacesViewController.h; sourceTree = "<group>"; };
+		5216506E1A78E6AB007F16DE /* YesterdayPlacesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YesterdayPlacesViewController.m; sourceTree = "<group>"; };
 		52188DAC1A51876E0020DD6F /* MainMenuCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenuCollectionViewCell.h; sourceTree = "<group>"; };
 		52188DAD1A51876E0020DD6F /* MainMenuCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainMenuCollectionViewCell.m; sourceTree = "<group>"; };
 		521BEC3C1A52F576003E7A27 /* gradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gradient.png; sourceTree = "<group>"; };
@@ -1685,6 +1688,8 @@
 				4994848E19FB95C400E906C0 /* ProfilePagesViewController.m */,
 				529048F31A373FF600F80DF9 /* RetrieveLocationViewController.h */,
 				529048F41A373FF600F80DF9 /* RetrieveLocationViewController.m */,
+				5216506D1A78E6AB007F16DE /* YesterdayPlacesViewController.h */,
+				5216506E1A78E6AB007F16DE /* YesterdayPlacesViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -2901,6 +2906,7 @@
 				520F38AC1A5E93B600FB1E65 /* NewsFeedViewController.m in Sources */,
 				4934F76719D047B800BFFDB1 /* UIView+WebCacheOperation.m in Sources */,
 				520897691A407C6700E8DD06 /* JSQMessagesCollectionViewLayoutAttributes.m in Sources */,
+				5216506F1A78E6AB007F16DE /* YesterdayPlacesViewController.m in Sources */,
 				522F75FC1A6524680095991F /* EBPhotoView.m in Sources */,
 				499929C019E99FF000B77A6E /* CustomNavigationController.m in Sources */,
 				522F75F41A6524680095991F /* EBCommentCell.m in Sources */,

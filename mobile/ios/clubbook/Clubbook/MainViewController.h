@@ -24,6 +24,4 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (weak, nonatomic) IBOutlet UILabel *noResultsLabel;
 
-@property (nonatomic) BOOL showYesterdayPlaces;
-
 @end

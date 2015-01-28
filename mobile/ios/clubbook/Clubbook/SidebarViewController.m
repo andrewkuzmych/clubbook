@@ -106,12 +106,6 @@
 
 - (void) prepareForSegue: (UIStoryboardSegue *) segue sender: (id) sender
 {
-
-    if([[segue identifier] isEqualToString:@"yesterday"]){
-        MainViewController *mainController = [segue destinationViewController];
-        mainController.showYesterdayPlaces = YES;
-    }
-    
     if([[segue identifier] isEqualToString:@"news"]){
         NewsFeedViewController *newsController = [segue destinationViewController];
         newsController.newsObjectId = @"";
