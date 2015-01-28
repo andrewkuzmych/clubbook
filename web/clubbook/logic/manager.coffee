@@ -276,6 +276,8 @@ exports.events = (params, callback)->
         news_object = n.toObject()
         news_object.created_on_formatted = moment.utc(news_object.created_on).format("YYYY-MM-DD, HH:mm:ss")
         news_object.updated_on_formatted = moment.utc(news_object.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+        news_object.start_time_formatted = moment.utc(news_object.start_time).format("YYYY-MM-DD, HH:mm:ss")
+        news_object.end_time_formatted = moment.utc(news_object.end_time).format("YYYY-MM-DD, HH:mm:ss")
         news_objects.push news_object
       callback err, news_objects
 
@@ -324,6 +326,8 @@ exports.events_favorite = (params, callback)->
             news_object = n.toObject()
             news_object.created_on_formatted = moment.utc(news_object.created_on).format("YYYY-MM-DD, HH:mm:ss")
             news_object.updated_on_formatted = moment.utc(news_object.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+            news_object.start_time_formatted = moment.utc(news_object.start_time).format("YYYY-MM-DD, HH:mm:ss")
+            news_object.end_time_formatted = moment.utc(news_object.end_time).format("YYYY-MM-DD, HH:mm:ss")
             news_objects.push news_object
           callback err, news_objects
       

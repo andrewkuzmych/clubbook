@@ -93,13 +93,13 @@ block content
                   .col-md-3
                     .input-group
                       .input-group.date.date-picker(data-date-format='dd-mm-yyyy')
-                        input.form-control(type='text', name="start_date", value="#{start_date_?start_date_:data_time}")
+                        input.form-control(type='text', name="start_date", value="#{start_date_?start_date_:data_time}" readonly)
                         span.input-group-btn
                           button.btn.default.date-set(type='button')
                             i.fa.fa-calendar
                   .col-md-3
                     .input-group
-                      input.form-control.timepicker.timepicker-no-seconds(type='text', class='st_tm' name='start_time', data-default-time="", value="#{start_time_?start_time_:'22:00'}")
+                      input.form-control.timepicker.timepicker-no-seconds(type='text', class='st_tm' name='start_time', data-default-time="", value="#{start_time_?start_time_:'22:00'}" readonly)
                       span.input-group-btn
                         button.btn.default(type='button')
                             i.fa.fa-clock-o
