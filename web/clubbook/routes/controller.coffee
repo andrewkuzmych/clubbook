@@ -147,7 +147,10 @@ exports.club_create_action = (req, res)->
         club_address : req.body.club_address
         club_age_restriction : req.body.club_age_restriction
         club_capacity : req.body.club_capacity
-        
+      if req.body.club_check
+        venue.club_types.push "club"
+      if req.body.bar_check
+        venue.club_types.push "bar"
       venue.club_loc = {lon:req.body.lng, lat: req.body.lat}
       venue.club_working_hours = []
       for day in [0..6]

@@ -127,7 +127,7 @@ exports.list_club = (params, callback)->
             club.is_favorite = true
           else
             club.is_favorite = false
-        query =  [{'$group':{_id: "$club_type", count: { '$sum': 1 } } }]
+        query =  [{'$group':{_id: "$club_types", count: { '$sum': 1 } } }]
         db_model.Venue.aggregate query, {}, (err, types)->
           callback err, clubs, types 
 

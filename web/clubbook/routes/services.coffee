@@ -825,7 +825,7 @@ exports.find_club = (req, res)->
 
 exports.club_types = (req, res)->
   console.log 'club types'
-  query =  [{'$group':{_id: "$club_type", count: { '$sum': 1 } } }]
+  query =  [{'$group':{_id: "$club_types", count: { '$sum': 1 } } }]
   console.log query
   #query = { 'club_loc':{ '$near' : [ params.lat,params.lon] }}
   db_model.Venue.aggregate query, {}, (err, result)->

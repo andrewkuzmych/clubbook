@@ -195,6 +195,9 @@ VenueSchema = new mongoose.Schema
   club_dress_code: {type: String, trim: true}
   club_age_restriction: {type: String, trim: true}
   club_capacity: {type: String}
+  club_types: [
+    {type: String, trim: true}
+  ]
   club_loc:
     lon: Number
     lat: Number

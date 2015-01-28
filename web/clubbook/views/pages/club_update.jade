@@ -57,6 +57,15 @@ block content
                     input.form-control(type='text', placeholder='Enter club name', name="club_name", value="#{club.club_name?club.club_name:''}")
 
               .form-group
+                .col-md-3
+                .col-md-5
+                  .input-icon.right
+                    i.fa
+                    input.check#check_club(type='checkbox' name='club_check' checked)
+                    label.control-label Club
+                    input.check#check_bar(type='checkbox' name='bar_check' checked)
+                    label.control-label Bar/Cafe
+              .form-group
                 label.control-label.col-md-3 Email
                   span.required *
                 .col-md-5
@@ -199,7 +208,20 @@ block scripts
       updateClubImages()
       return true;
     });
-
+    $('#check_club').click(function () {
+      if(!($('#check_club').is(':checked'))&&(!$('#check_bar').is(':checked'))){
+        alert("At least one type must be selected");
+        $('#check_club').prop('checked',true);
+        $.uniform.update('#check_club');
+        }
+    });
+    $('#check_bar').click(function () {
+      if(!($('#check_club').is(':checked'))&&(!$('#check_bar').is(':checked'))){
+        alert("At least one type must be selected");
+        $('#check_bar').prop('checked',true);
+        $.uniform.update('#check_bar');
+        }
+    });
     $('[tag=upload_avatar].cloudinary-fileupload').bind('fileuploadstart', function(e){
       //$('.preview').html('Upload started...');
       $('#upload_avatar_progress .bar').css('width', '0%');
