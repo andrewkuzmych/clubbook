@@ -147,7 +147,10 @@ exports.club_create_action = (req, res)->
         club_address : req.body.club_address
         club_age_restriction : req.body.club_age_restriction
         club_capacity : req.body.club_capacity
-        
+      if req.body.club_check
+        venue.club_types.push "club"
+      if req.body.bar_check
+        venue.club_types.push "bar"
       venue.club_loc = {lon:req.body.lng, lat: req.body.lat}
       venue.club_working_hours = []
       for day in [0..6]
@@ -247,6 +250,7 @@ exports.club_news_create = (req, res)->
     model.cloudinary = cloudinary
     model.news = {}
     model.type_news = "news"
+    model.data_time = moment().format("DD-MM-YYYY")
     model.club_id = req.params.club_id
     res.render "pages/news_update", model
 
@@ -289,6 +293,7 @@ exports.news_edit = (req, res)->
         model.end_date_ = moment.utc(news.end_time).format("DD-MM-YYYY")
       else
         model.type_news = "news"  
+      model.data_time = moment().format("DD-MM-YYYY")
       model.cloudinary = cloudinary
       model.news = news
       model.club_id = req.params.club_id
