@@ -269,8 +269,9 @@ exports.club_news_create_action = (req, res)->
         news.type = "event"
         start_date_time = req.body.start_date + " " + req.body.start_time
         news.start_time = new Date(moment.utc(start_date_time, "DD-MM-YYYY HH:mm"))
-        end_date_time = req.body.end_date + " " + req.body.end_time
-        news.end_time = moment.utc(end_date_time, "DD-MM-YYYY HH:mm")
+        if req.body.end_date&&req.body.end_time
+          end_date_time = req.body.end_date + " " + req.body.end_time
+          news.end_time = moment.utc(end_date_time, "DD-MM-YYYY HH:mm")
       else
         news.type = "news"
       news.photos = []
