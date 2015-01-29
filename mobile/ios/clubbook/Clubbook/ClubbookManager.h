@@ -36,6 +36,8 @@
 
 - (void)retrievePlace:(NSString *) clubId accessToken:(NSString *) accessToken;
 
+- (void)makePlaceFavorite:(NSString*) clubId accessToken:(NSString *)accessToken makeFavorite:(BOOL) makeFavorite;
+
 - (void)retrievePlaceUsers:(NSString *) clubId accessToken:(NSString *) accessToken;
 
 - (void)retrievePlaceUsersYesterday:(NSString *) clubId accessToken:(NSString *) accessToken;
@@ -44,7 +46,7 @@
 
 - (void)retrieveUser:(NSString *) accessToken;
 
-- (void)retrieveNews:(NSString*)type withId:(NSString*)objectId accessToken:(NSString*) accessToken;
+- (void)retrieveNews:(NSString*)type withId:(NSString*)objectId accessToken:(NSString*) accessToken skip:(int)skip limit:(int)limit;
 
 - (void)retrieveFriend:(NSString *) friendId accessToken:(NSString *) accessToken;
 

@@ -330,6 +330,7 @@
 		49E831E61959DA2800D4A26C /* green_color_selected.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 49E831E51959DA2800D4A26C /* green_color_selected.jpg */; };
 		49E831EA1959DE5200D4A26C /* user@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49E831E91959DE5200D4A26C /* user@2x.png */; };
 		49F2C675199C9A29006A3E21 /* Config.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F2C674199C9A29006A3E21 /* Config.m */; };
+		5202AFF81A77D142000EF534 /* NewsFeedTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5202AFF71A77D142000EF534 /* NewsFeedTableView.m */; };
 		520897571A407C6700E8DD06 /* JSQMessagesAssets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 520896EC1A407C6700E8DD06 /* JSQMessagesAssets.bundle */; };
 		520897581A407C6700E8DD06 /* JSQMessages.strings in Resources */ = {isa = PBXBuildFile; fileRef = 520896EE1A407C6700E8DD06 /* JSQMessages.strings */; };
 		520897591A407C6700E8DD06 /* JSQSystemSoundPlayer+JSQMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 520897001A407C6700E8DD06 /* JSQSystemSoundPlayer+JSQMessages.m */; };
@@ -374,8 +375,9 @@
 		520897801A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 520897551A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.m */; };
 		520897811A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520897561A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.xib */; };
 		520897861A407C7F00E8DD06 /* JSQSystemSoundPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 520897851A407C7F00E8DD06 /* JSQSystemSoundPlayer.m */; };
-		520F38AC1A5E93B600FB1E65 /* NewsFeedTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520F38AB1A5E93B600FB1E65 /* NewsFeedTableViewController.m */; };
+		520F38AC1A5E93B600FB1E65 /* NewsFeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520F38AB1A5E93B600FB1E65 /* NewsFeedViewController.m */; };
 		5210474D1A48300A006DD319 /* DateHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5210474C1A48300A006DD319 /* DateHelper.m */; };
+		5216506F1A78E6AB007F16DE /* YesterdayPlacesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5216506E1A78E6AB007F16DE /* YesterdayPlacesViewController.m */; };
 		52188DAE1A51876E0020DD6F /* MainMenuCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52188DAD1A51876E0020DD6F /* MainMenuCollectionViewCell.m */; };
 		521BEC3F1A52F576003E7A27 /* gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 521BEC3C1A52F576003E7A27 /* gradient.png */; };
 		521BEC401A52F576003E7A27 /* gradient@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 521BEC3D1A52F576003E7A27 /* gradient@2x.png */; };
@@ -1009,6 +1011,8 @@
 		49E831E91959DE5200D4A26C /* user@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "user@2x.png"; path = "Images/user@2x.png"; sourceTree = "<group>"; };
 		49F2C673199C9A29006A3E21 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Config.h; path = DTO/Config.h; sourceTree = "<group>"; };
 		49F2C674199C9A29006A3E21 /* Config.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Config.m; path = DTO/Config.m; sourceTree = "<group>"; };
+		5202AFF61A77D142000EF534 /* NewsFeedTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedTableView.h; sourceTree = "<group>"; };
+		5202AFF71A77D142000EF534 /* NewsFeedTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedTableView.m; sourceTree = "<group>"; };
 		520896EC1A407C6700E8DD06 /* JSQMessagesAssets.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = JSQMessagesAssets.bundle; sourceTree = "<group>"; };
 		520896EF1A407C6700E8DD06 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/JSQMessages.strings; sourceTree = "<group>"; };
 		520896F01A407C6700E8DD06 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JSQMessages.strings; sourceTree = "<group>"; };
@@ -1110,10 +1114,12 @@
 		520897561A407C6700E8DD06 /* JSQMessagesTypingIndicatorFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JSQMessagesTypingIndicatorFooterView.xib; sourceTree = "<group>"; };
 		520897841A407C7F00E8DD06 /* JSQSystemSoundPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSQSystemSoundPlayer.h; sourceTree = "<group>"; };
 		520897851A407C7F00E8DD06 /* JSQSystemSoundPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSQSystemSoundPlayer.m; sourceTree = "<group>"; };
-		520F38AA1A5E93B600FB1E65 /* NewsFeedTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedTableViewController.h; sourceTree = "<group>"; };
-		520F38AB1A5E93B600FB1E65 /* NewsFeedTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedTableViewController.m; sourceTree = "<group>"; };
+		520F38AA1A5E93B600FB1E65 /* NewsFeedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedViewController.h; sourceTree = "<group>"; };
+		520F38AB1A5E93B600FB1E65 /* NewsFeedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedViewController.m; sourceTree = "<group>"; };
 		5210474B1A48300A006DD319 /* DateHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateHelper.h; sourceTree = "<group>"; };
 		5210474C1A48300A006DD319 /* DateHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateHelper.m; sourceTree = "<group>"; };
+		5216506D1A78E6AB007F16DE /* YesterdayPlacesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YesterdayPlacesViewController.h; sourceTree = "<group>"; };
+		5216506E1A78E6AB007F16DE /* YesterdayPlacesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YesterdayPlacesViewController.m; sourceTree = "<group>"; };
 		52188DAC1A51876E0020DD6F /* MainMenuCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenuCollectionViewCell.h; sourceTree = "<group>"; };
 		52188DAD1A51876E0020DD6F /* MainMenuCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainMenuCollectionViewCell.m; sourceTree = "<group>"; };
 		521BEC3C1A52F576003E7A27 /* gradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gradient.png; sourceTree = "<group>"; };
@@ -1628,7 +1634,7 @@
 		499247AD1976AF93008C74D0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				52FBEC921A6E5BD500DE4BAA /* NewsFeedStoryboard */,
+				52FBEC921A6E5BD500DE4BAA /* NewsFeed */,
 				528C85991A56EF0B00BBB148 /* ClubProfileStoryboard */,
 				499247B41976D940008C74D0 /* BaseViewControllerHelper.h */,
 				499247B51976D940008C74D0 /* BaseViewControllerHelper.m */,
@@ -1682,6 +1688,8 @@
 				4994848E19FB95C400E906C0 /* ProfilePagesViewController.m */,
 				529048F31A373FF600F80DF9 /* RetrieveLocationViewController.h */,
 				529048F41A373FF600F80DF9 /* RetrieveLocationViewController.m */,
+				5216506D1A78E6AB007F16DE /* YesterdayPlacesViewController.h */,
+				5216506E1A78E6AB007F16DE /* YesterdayPlacesViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -2269,19 +2277,21 @@
 			path = KIImagePager;
 			sourceTree = "<group>";
 		};
-		52FBEC921A6E5BD500DE4BAA /* NewsFeedStoryboard */ = {
+		52FBEC921A6E5BD500DE4BAA /* NewsFeed */ = {
 			isa = PBXGroup;
 			children = (
-				520F38AA1A5E93B600FB1E65 /* NewsFeedTableViewController.h */,
-				520F38AB1A5E93B600FB1E65 /* NewsFeedTableViewController.m */,
+				520F38AA1A5E93B600FB1E65 /* NewsFeedViewController.h */,
+				520F38AB1A5E93B600FB1E65 /* NewsFeedViewController.m */,
 				52520A751A66928B006399EF /* NewsFeedCell.h */,
 				52520A761A66928B006399EF /* NewsFeedCell.m */,
 				528D6CA11A66C7E800B2E6B0 /* NewsPhotoCell.h */,
 				528D6CA21A66C7E800B2E6B0 /* NewsPhotoCell.m */,
 				526ABCCE1A6806820010F485 /* NewsPhotoLayout.h */,
 				526ABCCF1A6806820010F485 /* NewsPhotoLayout.m */,
+				5202AFF61A77D142000EF534 /* NewsFeedTableView.h */,
+				5202AFF71A77D142000EF534 /* NewsFeedTableView.m */,
 			);
-			name = NewsFeedStoryboard;
+			name = NewsFeed;
 			sourceTree = "<group>";
 		};
 		F4EECF05177C99F400778578 = {
@@ -2797,6 +2807,7 @@
 				4993F2151979194900A225BE /* MRMessageInterceptor.m in Sources */,
 				4993F2161979194900A225BE /* MRWeakProxy.m in Sources */,
 				F4EECF1E177C99F400778578 /* main.m in Sources */,
+				5202AFF81A77D142000EF534 /* NewsFeedTableView.m in Sources */,
 				520897671A407C6700E8DD06 /* JSQMessagesCollectionViewFlowLayout.m in Sources */,
 				52C5FC811A3F19F2000147E8 /* QMBParallaxScrollViewController.m in Sources */,
 				498A68DF196C4CFD00BC2859 /* PNAccessRightOptions.m in Sources */,
@@ -2892,9 +2903,10 @@
 				49908F0519751C5C00DA68F2 /* UIButton+ALBlock.m in Sources */,
 				49ABA12C198A919C00B060D0 /* FriendCell.m in Sources */,
 				49895A6C1969980700484EA2 /* CbLabel.m in Sources */,
-				520F38AC1A5E93B600FB1E65 /* NewsFeedTableViewController.m in Sources */,
+				520F38AC1A5E93B600FB1E65 /* NewsFeedViewController.m in Sources */,
 				4934F76719D047B800BFFDB1 /* UIView+WebCacheOperation.m in Sources */,
 				520897691A407C6700E8DD06 /* JSQMessagesCollectionViewLayoutAttributes.m in Sources */,
+				5216506F1A78E6AB007F16DE /* YesterdayPlacesViewController.m in Sources */,
 				522F75FC1A6524680095991F /* EBPhotoView.m in Sources */,
 				499929C019E99FF000B77A6E /* CustomNavigationController.m in Sources */,
 				522F75F41A6524680095991F /* EBCommentCell.m in Sources */,

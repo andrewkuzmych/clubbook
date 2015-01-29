@@ -54,6 +54,10 @@
     [self.communicator retrievePlace:clubId accessToken:accessToken];
 }
 
+- (void)makePlaceFavorite:(NSString*) clubId accessToken:(NSString *)accessToken makeFavorite:(BOOL) makeFavorite {
+    [self.communicator makePlaceFavorite:clubId accessToken:accessToken makeFavorite:makeFavorite];
+}
+
 - (void)retrievePlaceUsers:(NSString *) clubId accessToken:(NSString *) accessToken
 {
     [self.communicator retrievePlaceUsers:clubId accessToken:accessToken];
@@ -69,8 +73,8 @@
     [self.communicator retrieveUser:accessToken];
 }
 
-- (void)retrieveNews:(NSString*)type withId:(NSString*)objectId accessToken:(NSString*) accessToken {
-    [self.communicator retrieveNews:type withId:objectId accessToken:accessToken];
+- (void)retrieveNews:(NSString*)type withId:(NSString*)objectId accessToken:(NSString*) accessToken skip:(int)skip limit:(int)limit{
+    [self.communicator retrieveNews:type withId:objectId accessToken:accessToken skip:skip limit:limit];
 }
 
 - (void)retrieveFriend:(NSString *) friendId accessToken:(NSString *) accessToken
@@ -514,6 +518,23 @@
     }
     else {
         [self.delegate didReceivePlaces:places andTypes:types];
+    }
+}
+
+- (void)receivedPlaceJSON:(NSData *)objectNotation
+{
+    NSError *errorPlaces = nil;
+    NSError *errorTypes = nil;
+    Place* place = [ObjectBuilder placeFromJSON:objectNotation error:&errorPlaces];
+    
+    if (errorPlaces != nil) {
+        [self.delegate  failedWithError:errorPlaces];
+        
+    } else if (errorTypes != nil) {
+        [self.delegate  failedWithError:errorTypes];
+    }
+    else {
+        [self.delegate didReceivePlace:place];
     }
 }
 

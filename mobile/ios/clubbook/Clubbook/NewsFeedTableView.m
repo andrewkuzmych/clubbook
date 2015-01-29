@@ -1,60 +1,149 @@
 //
-//  NewsFeedTableViewController.m
+//  NewsFeedTableView.m
 //  Clubbook
 //
-//  Created by Anton Semenyuk on 1/8/15.
+//  Created by Anton Semenyuk on 1/27/15.
 //  Copyright (c) 2015 clubbook. All rights reserved.
 //
 
-#import "NewsFeedTableViewController.h"
+#import "NewsFeedViewController.h"
 #import "NewsFeedCell.h"
 #import "NewsData.h"
 #import "NewsPhotoCell.h"
 #import "DateHelper.h"
 #import "EBPhotoPagesController.h"
 #import "CLCloudinary.h"
+#import "CLTransformation.h"
 #import "Constants.h"
 #import "UIImageView+WebCache.h"
+#import "SVPullToRefresh.h"
 
 #define STATIC_HEIGHT 100
 
-@interface NewsFeedTableViewController ()
+#import "NewsFeedTableView.h"
 
-@end
-
-@implementation NewsFeedTableViewController
+@implementation NewsFeedTableView
 {
-    NSArray* newsArray;
+    NSMutableArray* newsArray;
     NSArray* photoSlideShowUrls;
     NSMutableDictionary* photoImages;
+    NSMutableDictionary* avatarImages;
+    UIImage* staticAvatar;
+    NSString *accessToken;
+    
+    BOOL isRefreshingNews;
 }
-
+static ClubbookManager* manager;
 static NSString* NewsFeedCellIdentifier = @"NewsFeedCell";
 static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
 
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    newsArray = [[NSMutableArray alloc] init];
-    
-    [self.tableView setBackgroundColor:[UIColor colorWithRed:0.980 green:0.839 blue:1.000 alpha:1.000]];
-    
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *accessToken = [defaults objectForKey:@"accessToken"];
-     
-    [self._manager retrieveNews:self.type withId:self.newsObjectId accessToken:accessToken];
+- (id) initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self initData];
+    }
+    return self;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (id) initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self initData];
+    }
+    return self;
+}
+
+-(void) initializeNewsTableType:(NSString*) type objectId:(NSString*) objectId andParentViewCntroller:(UIViewController*) parent {
+    self.type = type;
+    self.newsObjectId = objectId;
+    self.parentViewController = parent;
+    
+    manager = [[ClubbookManager alloc] init];
+    manager.communicator = [[ClubbookCommunicator alloc] init];
+    manager.communicator.delegate = manager;
+    manager.delegate = self;
+    
+    [self loadNews:0 limit:5 refreshing:YES];
+}
+
+- (void) initData {
+    newsArray = [[NSMutableArray alloc] init];
+    
+    [self setBackgroundColor:[UIColor colorWithRed:0.980 green:0.839 blue:1.000 alpha:1.000]];
+    
+    avatarImages = [[NSMutableDictionary alloc] init];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    accessToken = [defaults objectForKey:@"accessToken"];
+    
+    __weak NewsFeedTableView *weakSelf = self;
+    // setup pull-to-refresh
+    [self addPullToRefreshWithActionHandler:^{
+        [weakSelf insertRowAtTop];
+    }];
+    
+    // setup infinite scrolling
+    [self addInfiniteScrollingWithActionHandler:^{
+        [weakSelf insertRowAtBottom];
+    }];
+    
+    self.delegate = self;
+    self.dataSource = self;
+}
+
+- (void) loadNews:(int)skip limit:(int)limit refreshing:(BOOL)refreshing {
+    isRefreshingNews = refreshing;
+    [manager retrieveNews:self.type withId:self.newsObjectId accessToken:accessToken skip:skip limit:limit];
 }
 
 - (void) didReceiveNews:(NSArray*) news {
-    newsArray = news;
-    if ([newsArray count] > 0) {
-        [self.tableView reloadData];
+    if ([news count] > 0) {
+        if (isRefreshingNews) {
+            newsArray = [news mutableCopy];
+            isRefreshingNews = NO;
+        }
+        else {
+            for (NewsData* newsObject in news) {
+                [newsArray addObject:newsObject];
+            }
+        }
+        
+        if ([newsArray count] > 0) {
+            [self reloadData];
+        }
+    }
+    
+    [self.pullToRefreshView stopAnimating];
+    [self.infiniteScrollingView stopAnimating];
+}
+
+- (UIImage*) getProperAvatarImage:(NSString*) type newsData:(NewsData*) news {
+    if ([type isEqualToString:@"club"]) {
+        if (staticAvatar == nil) {
+            CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
+            CLTransformation *transformation = [CLTransformation transformation];
+            [transformation setParams: @{@"width": @60, @"height": @60}];
+            NSString * avatarUrl  = [cloudinary url:news.avatarPath options:@{@"transformation": transformation}];
+            
+            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:avatarUrl]];
+            staticAvatar = [[UIImage alloc] initWithData:data];
+        }
+        return staticAvatar;
+    }
+    else {
+        UIImage* avatar = [avatarImages objectForKey:news.title];
+        if (avatar == nil) {
+            CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
+            CLTransformation *transformation = [CLTransformation transformation];
+            [transformation setParams: @{@"width": @60, @"height": @60}];
+            NSString * avatarUrl  = [cloudinary url:news.avatarPath options:@{@"transformation": transformation}];
+            
+            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:avatarUrl]];
+            avatar = [[UIImage alloc] initWithData:data];
+            
+            [avatarImages setObject:avatar forKey:news.title];
+        }
+        return avatar;
     }
 }
 
@@ -78,17 +167,41 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     }
     
     NewsData* news = [newsArray objectAtIndex:indexPath.row];
+    UIImage* avatar = [self getProperAvatarImage:self.type newsData:news];
+    [cell.avatarImage sd_setImageWithURL:[NSURL URLWithString:@""] placeholderImage:avatar];
     
-    //[cell.avatarImage sd_setImageWithURL:[NSURL URLWithString:self.place.avatar] placeholderImage:[UIImage imageNamed:@"avatar_default.png"]];
-    [cell.nameLabel setText:@"TODO"];
+    if ([news.type isEqualToString:@"event"]) {
+        NSString* title = [NSString stringWithFormat:@"EVENT: %@", news.title];
+        [cell.nameLabel setText:title];
+        NSString* startTime = [[DateHelper sharedSingleton] get24hTime:news.startTime];
+        NSString* endTime = [[DateHelper sharedSingleton] get24hTime:news.startTime];
+        
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"dd/MM"];
+        NSString* month = [formatter stringFromDate:news.startTime];
+        NSString* date = [NSString stringWithFormat:@"%@ Start:%@ End:%@", month, startTime, endTime];
+        [cell.timeLabel setText:date];
+    }
+    else {
+        [cell.nameLabel setText:news.title];
+        NSString* date = [[DateHelper sharedSingleton] get24hTime:news.createDate];
+        [cell.timeLabel setText:date];
+    }
     
-    NSString* date = [[DateHelper sharedSingleton] get24hTime:news.createDate];
-    [cell.timeLabel setText:date];
-    [cell.contentView setBackgroundColor:self.tableView.backgroundColor];
+    [cell.contentView setBackgroundColor:self.backgroundColor];
     [cell.newsText setText:news.newsDescription];
     [cell.photosView setHidden:YES];
     if ([news.photos count] > 0) {
         [cell.photosView setHidden:NO];
+    }
+    
+    if (news.shareLink != nil) {
+        [cell.shareButton setHidden:NO];
+        cell.shareLink = news.shareLink;
+    }
+    if (news.buyLink != nil) {
+        [cell.buyButton setHidden:NO];
+        cell.buyLink = news.buyLink;
     }
     
     return cell;
@@ -100,7 +213,7 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     cell.newsText.text = news.newsDescription;
     CGSize maximumLabelSize = CGSizeMake(cell.newsText.frame.size.width, 9999);
     CGSize expectedLabelSize = [cell.newsText sizeThatFits:maximumLabelSize];
-
+    
     CGFloat height = STATIC_HEIGHT + expectedLabelSize.height;
     
     if ([news.photos count] > 0) {
@@ -130,7 +243,7 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     NewsPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:PhotoCellIdentifier forIndexPath:indexPath];
     int tag = (int)collectionView.tag;
     NewsData* news = [newsArray objectAtIndex:tag];
-     
+    
     NSString *indexKey = [@(indexPath.item) stringValue];
     UIImage* img = [news.tempDownlaodedPhotos objectForKey:indexKey];
     if (img == nil) {
@@ -144,7 +257,7 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
         [news.tempDownlaodedPhotos setObject:img forKey:indexKey];
     }
     [cell.photoImageView sd_setImageWithURL:[NSURL URLWithString:@""] placeholderImage:img];
-
+    
     cell.photoImageView.contentMode = UIViewContentModeScaleAspectFill;
     return cell;
     
@@ -158,9 +271,9 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     
     EBPhotoPagesController *photoPagesController = [[EBPhotoPagesController alloc]
                                                     initWithDataSource:self delegate:self photoAtIndex:itemClicked ];
-    
-    [self presentViewController:photoPagesController animated:YES completion:nil];
-    
+    if (self.parentViewController) {
+        [self.parentViewController presentViewController:photoPagesController animated:YES completion:nil];
+    }
 }
 
 #pragma mark - Image Datasource methods
@@ -184,7 +297,7 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
         NSString *inStr = [@(index) stringValue];
         [photoImages setObject:img forKey:inStr];
     }
-
+    
     return img;
 }
 
@@ -213,6 +326,16 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
 -(BOOL)photoPagesController:(EBPhotoPagesController *)photoPagesController shouldAllowMiscActionsForPhotoAtIndex:(NSInteger)index {
     return NO;
 }
+
+- (void)insertRowAtTop {
+    [self loadNews:0 limit:5 refreshing:YES];
+}
+
+- (void)insertRowAtBottom {
+    int countToSkip = (int)[newsArray count];
+    [self loadNews:countToSkip limit:3 refreshing:NO];
+}
+
 
 
 @end

@@ -127,7 +127,7 @@ exports.list_club = (params, callback)->
             club.is_favorite = true
           else
             club.is_favorite = false
-        query =  [{'$group':{_id: "$club_type", count: { '$sum': 1 } } }]
+        query =  [{'$group':{_id: "$club_types", count: { '$sum': 1 } } }]
         db_model.Venue.aggregate query, {}, (err, types)->
           callback err, clubs, types 
 
@@ -251,7 +251,35 @@ exports.news = (params, callback)->
     if not news
       callback 'missing news for this club', null
     else
-      callback err, news
+      news_objects = []
+      for n in news
+        news_object = n.toObject()
+        news_object.created_on_formatted = moment.utc(news_object.created_on).format("YYYY-MM-DD, HH:mm:ss")
+        news_object.updated_on_formatted = moment.utc(news_object.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+        news_objects.push news_object
+      callback err, news_objects
+
+exports.events = (params, callback)->
+  console.log "METHOD - Events"
+  console.log "Params: "
+  console.log params
+  if !params.skip
+    params.skip=0
+  if !params.limit
+    params.limit=10
+  db_model.News.find({'$and':[{'venue': params.club_id},{'type': 'event'}]}).populate('venue').sort( { updated_on: -1 } ).skip(params.skip).limit(params.limit).exec (err, news)-> 
+    if not news
+      callback 'missing news for this club', null
+    else
+      news_objects = []
+      for n in news
+        news_object = n.toObject()
+        news_object.created_on_formatted = moment.utc(news_object.created_on).format("YYYY-MM-DD, HH:mm:ss")
+        news_object.updated_on_formatted = moment.utc(news_object.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+        news_object.start_time_formatted = moment.utc(news_object.start_time).format("YYYY-MM-DD, HH:mm:ss")
+        news_object.end_time_formatted = moment.utc(news_object.end_time).format("YYYY-MM-DD, HH:mm:ss")
+        news_objects.push news_object
+      callback err, news_objects
 
 exports.news_favorite = (params, callback)->
   console.log "METHOD - News favorite club"
@@ -269,7 +297,39 @@ exports.news_favorite = (params, callback)->
         if not news
           callback 'news does not exist', null
         else
-          callback err, news
+          news_objects = []
+          for n in news
+            news_object = n.toObject()
+            news_object.created_on_formatted = moment.utc(news_object.created_on).format("YYYY-MM-DD, HH:mm:ss")
+            news_object.updated_on_formatted = moment.utc(news_object.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+            news_objects.push news_object
+          callback err, news_objects
+
+exports.events_favorite = (params, callback)->
+  console.log "METHOD - Events favorite club"
+  console.log "Params: "
+  console.log params
+  if !params.skip
+    params.skip=0
+  if !params.limit
+    params.limit=10
+  db_model.User.findById(params.user_id).exec (err, user)->
+    if not user
+      callback 'user does not exist', null
+    else
+      db_model.News.find({'$and':[{'venue': {'$in': user.favorite_clubs}},{'type': 'event'}]}).populate('venue').sort( { updated_on: -1 } ).skip(params.skip).limit(params.limit).exec (err, news)-> 
+        if not news
+          callback 'news does not exist', null
+        else
+          news_objects = []
+          for n in news
+            news_object = n.toObject()
+            news_object.created_on_formatted = moment.utc(news_object.created_on).format("YYYY-MM-DD, HH:mm:ss")
+            news_object.updated_on_formatted = moment.utc(news_object.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+            news_object.start_time_formatted = moment.utc(news_object.start_time).format("YYYY-MM-DD, HH:mm:ss")
+            news_object.end_time_formatted = moment.utc(news_object.end_time).format("YYYY-MM-DD, HH:mm:ss")
+            news_objects.push news_object
+          callback err, news_objects
       
 
 exports.checkin = (params, callback)->

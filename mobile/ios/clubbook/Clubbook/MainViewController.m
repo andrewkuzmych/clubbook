@@ -26,21 +26,24 @@
 #import "ClubUsersYesterdayViewController.h"
 #import "ClubProfileTabBarViewController.h"
 
+#define CLUBS_STRING @"Clubs"
+#define CLUBS_TYPE  @"club"
+#define BARS_STRING @"Cafe/Bars"
+#define BARS_TYPE   @"bar"
+#define EVENTS_STRING @"Events"
+
 @interface MainViewController ()<UINavigationControllerDelegate, UINavigationBarDelegate>{
-    BOOL isInitialLoad;
-    NSString* selectedClubType;
+    BOOL isRefreshing;
+    BOOL isWaitingForResponse;
+    NSString* selectedPlaceType;
     
     BOOL isSearchBarShown;
-    
     CGFloat lastContentOffset;
-    UIView* blankView;
     
-    Place* placeToView;
+    double user_lat;
+    double user_lon;
+    NSString* user_accessToken;
 }
-
-@property (nonatomic) NSTimer* locationUpdateTimer;
-@property (nonatomic) BOOL isLoaded;
-
 @end
 
 @implementation MainViewController
@@ -68,79 +71,68 @@
         [weakSelf insertRowAtBottom];
     }];
     
-    selectedClubType = nil;
+    [self initFilterTabBar];
+    [self initSearchBar];
+    [self.eventsTable initializeNewsTableType:@"news" objectId:@"" andParentViewCntroller:(UIViewController*) self];
     
-    if (self.showYesterdayPlaces) {
-        //hide searchbar and filter tab from view
-        placeToView = nil;
-        [self.filterTabBar setHidden:YES];
-        [self.searchBar setHidden:YES];
-        [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
-        [self replaceTopConstraintOnView:self.filterTabView withConstant: -self.filterTabView.frame.size.height];
-        
-        UIBarButtonItem *tempButton = [[UIBarButtonItem alloc] init];
-        self.navigationItem.rightBarButtonItem = tempButton;
-        
-        self.title = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Yesterday Check-ins", nil)];
-        
-        self.noResultsLabel.text = @"You don`t have any check-ins from yesterday";
-    }
-    else {
-        //setup filter tab bar
-        self.filterTabBar = [[SPSlideTabBar alloc] initWithFrame:CGRectMake(0, 0, self.filterTabView.frame.size.width, self.filterTabView.frame.size.height)];
-        [self.filterTabBar setAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth];
-        [self.filterTabBar setBackgroundColor:[UIColor colorWithRed:0.651 green:0 blue:0.867 alpha:1]];
-        [self.filterTabBar setSeparatorStyle:SPSlideTabBarSeparatorStyleNone];
-        [self.filterTabBar setBarButtonTitleColor:[UIColor colorWithRed:192/255.0f green:154/255.0f blue:234/255.0f alpha:1.0f]];
-        [self.filterTabBar setSelectedButtonColor:[UIColor whiteColor]];
-        [self.filterTabBar setSelectedViewColor:[UIColor whiteColor]];
-        [self.filterTabBar setSlideDelegate:self];
-        [self.filterTabView addSubview:self.filterTabBar];
-        
-        NSString* allOption = [NSString stringWithFormat:@"%@", NSLocalizedString(@"all", nil)];
-        [self.filterTabBar addTabForTitle:allOption];
-        [self.filterTabBar setSelectedIndex:0];
-        
-        //remove black line above filtertab
-        UINavigationBar *navigationBar = self.navigationController.navigationBar;
-        
-        [navigationBar setBackgroundImage:[UIImage new]
-                           forBarPosition:UIBarPositionAny
-                               barMetrics:UIBarMetricsDefault];
-        
-        [navigationBar setShadowImage:[UIImage new]];
-        
-        //set up search field
-        self.searchBar.barTintColor = self.filterTabBar.backgroundColor;
-        
-        //remove black line under searchbox
-        self.searchBar.layer.borderWidth = 2;
-        self.searchBar.layer.borderColor = [[UIColor colorWithRed:0.651 green:0 blue:0.867 alpha:1] CGColor];
-        
-        //set placeholder text
-        self.searchBar.placeholder = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Search clubs, bars, events, etc. by name", nil)];
-        [self changeSearchKeyboardButtonTitle];
-        
-        //hide searchbar
-        [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
-        isSearchBarShown = NO;
-        self.searchBar.delegate = self;
-        
-        [self.view setBackgroundColor:self.filterTabBar.backgroundColor];
-    }
+    user_lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
+    user_lon = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
     
-    //set view on first filter option
-    selectedClubType = @"";
-    [self loadAllTypeClubs];
-
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    user_accessToken = [defaults objectForKey:@"accessToken"];
+    
+    selectedPlaceType = CLUBS_TYPE;
+    [self.activityIndicator setHidden:NO];
+    [self loadRefreshTypePlaces];
 }
 
--(BOOL)shouldAutorotate {
-    return YES;
+- (void) initFilterTabBar {
+    selectedPlaceType = nil;
+    //setup filter tab bar
+    self.filterTabBar = [[SPSlideTabBar alloc] initWithFrame:CGRectMake(0, 0, self.filterTabView.frame.size.width, self.filterTabView.frame.size.height)];
+    [self.filterTabBar setAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth];
+    [self.filterTabBar setBackgroundColor:[UIColor colorWithRed:0.651 green:0 blue:0.867 alpha:1]];
+    [self.filterTabBar setSeparatorStyle:SPSlideTabBarSeparatorStyleNone];
+    [self.filterTabBar setBarButtonTitleColor:[UIColor colorWithRed:192/255.0f green:154/255.0f blue:234/255.0f alpha:1.0f]];
+    [self.filterTabBar setSelectedButtonColor:[UIColor whiteColor]];
+    [self.filterTabBar setSelectedViewColor:[UIColor whiteColor]];
+    [self.filterTabBar setSlideDelegate:self];
+    [self.filterTabView addSubview:self.filterTabBar];
+    
+    //remove black line above filtertab
+    UINavigationBar *navigationBar = self.navigationController.navigationBar;
+    
+    [navigationBar setBackgroundImage:[UIImage new]
+                       forBarPosition:UIBarPositionAny
+                           barMetrics:UIBarMetricsDefault];
+    
+    [navigationBar setShadowImage:[UIImage new]];
+    
+    [self.filterTabBar addTabForTitle:CLUBS_STRING];
+    [self.filterTabBar addTabForTitle:BARS_STRING];
+    [self.filterTabBar addTabForTitle:EVENTS_STRING];
+    [self.filterTabBar setSelectedIndex:0];
 }
 
--(NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+- (void) initSearchBar {
+    //set up search field
+    self.searchBar.barTintColor = self.filterTabBar.backgroundColor;
+    
+    //remove black line under searchbox
+    self.searchBar.layer.borderWidth = 2;
+    self.searchBar.layer.borderColor = [[UIColor colorWithRed:0.651 green:0 blue:0.867 alpha:1] CGColor];
+    
+    //set placeholder text
+    self.searchBar.placeholder = [NSString stringWithFormat:@"%@", NSLocalizedString(@"Search clubs, bars, events, etc. by name", nil)];
+    [self changeSearchKeyboardButtonTitle];
+    
+    //hide searchbar
+    [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
+    isSearchBarShown = NO;
+    self.searchBar.delegate = self;
+    
+    [self.view setBackgroundColor:self.filterTabBar.backgroundColor];
+ 
 }
 
 - (void)didGetConfig:(Config *)config {
@@ -159,51 +151,18 @@
     self.navigationController.navigationBar.translucent = NO;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.translucent = NO;
-    
-    // Set outself as the navigation controller's delegate so we're asked for a transitioning object
-    self.navigationController.delegate = self;
-    // hide back button
-    [[UIBarButtonItem appearance] setBackButtonTitlePositionAdjustment:UIOffsetMake(0, -60)
-                                                         forBarMetrics:UIBarMetricsDefault];
-    
-    self.screenName = @"Main Screen";
-    
-    //Pubnub staff
-    PNConfiguration *myConfig = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"  publishKey: Constants.PubnabPubKay subscribeKey:Constants.PubnabSubKay secretKey:nil];
-    
-    [PubNub disconnect];
-    [PubNub setConfiguration:myConfig];
-    
-    [PubNub connectWithSuccessBlock:^(NSString *origin) {
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSString *userId = [defaults objectForKey:@"userId"];
-        NSString *channal = [NSString stringWithFormat:@"%message_%@", userId];
-        [PubNub subscribeOnChannel:[PNChannel channelWithName:channal shouldObservePresence:YES]];
-    }
-     
-                   errorBlock:^(PNError *connectionError) {
-                       if (connectionError.code == kPNClientConnectionFailedOnInternetFailureError) {
-                             PNLog(PNLogGeneralLevel, self, @"Connection will be established as soon as internet connection will be restored");
-                        }
-                             
-                   }];
- 
-    NSString *channal = [NSString stringWithFormat:@"checkin"];
-    [PubNub subscribeOnChannel:[PNChannel channelWithName:channal shouldObservePresence:YES]];
-    
-   }
+}
 
 - (void)insertRowAtTop {
-    [self loadClubType:selectedClubType take:10 skip:0];
+    [self loadPlaceType:selectedPlaceType take:10 skip:0 refreshing:YES];
 }
 
 - (void)insertRowAtBottom {
     int countToSkip = (int)[self.places count];
-    [self loadClubType:selectedClubType take:10 skip:countToSkip];
+    [self loadPlaceType:selectedPlaceType take:10 skip:countToSkip refreshing:NO];
 }
 
 - (void)didReceivePlaces:(NSArray *)places andTypes:(NSArray *)types
@@ -212,26 +171,14 @@
         [self hideProgress];
         [self.activityIndicator setHidden:YES];
         
-        if (isInitialLoad) {
+        if (isRefreshing) {
             _places = [places mutableCopy];
-            
-            if (types) {
-                if ([types count] != 0) {
-                    for (NSString* option in types) {
-                        if ([option isKindOfClass:[NSString class]]) {
-                            NSString* filterOption = [NSString stringWithFormat:@"%@", NSLocalizedString(option, nil)];
-                            filterOption = [option capitalizedString];
-                            
-                            [self.filterTabBar addTabForTitle:filterOption];
-                        }
-                    }
-                }
-            }
-        } else {
+            isRefreshing = NO;
+        }
+        else {
             [_places addObjectsFromArray:places];
         }
-        
-        self.clubTable.hidden = NO;
+
         if ([_places count] > 0) {
             [self.noResultsLabel setHidden:YES];
         }
@@ -241,18 +188,8 @@
 
         [self.clubTable.pullToRefreshView stopAnimating];
         [self.clubTable.infiniteScrollingView stopAnimating];
-        CGPoint positin = self.clubTable.contentOffset;
         [self.clubTable reloadData];
-        [self.clubTable setContentOffset:positin animated:NO];
-
-        // update user location
-        double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
-        double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
         
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSString *accessToken = [defaults objectForKey:@"accessToken"];
-        
-        [self._manager updateUserLocation:lat lon:lng accessToken:accessToken];
     });
 }
 
@@ -260,8 +197,8 @@
 {
 }
 
-- (void) loadAllTypeClubs {
-    [self loadClubType:@"" take:10 skip:0];
+- (void) loadRefreshTypePlaces {
+    [self loadPlaceType:selectedPlaceType take:10 skip:0 refreshing:YES];
 }
 
 - (void) tableWillBeRefreshed {
@@ -273,72 +210,18 @@
 
 - (void) filterForType:(NSString*) type {
     [self tableWillBeRefreshed];
-    
-    self.isLoaded = YES;
-    double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
-    double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *accessToken = [defaults objectForKey:@"accessToken"];
-
-    [self._manager retrievePlaces:lat lon:lng take:10 skip:0 distance:0 type:type search:@"" accessToken:accessToken];
+    [self._manager retrievePlaces:user_lat lon:user_lon take:10 skip:0 distance:0 type:type search:@"" accessToken:user_accessToken];
 }
 
 - (void) searchForWord:(NSString*) searchWord {
     [self tableWillBeRefreshed];
-    
-    self.isLoaded = YES;
-    double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
-    double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *accessToken = [defaults objectForKey:@"accessToken"];
-    
-    [self._manager retrievePlaces:lat lon:lng take:10 skip:0 distance:0 type:@"" search:searchWord accessToken:accessToken];
+    [self._manager retrievePlaces:user_lat lon:user_lon take:10 skip:0 distance:0 type:selectedPlaceType search:searchWord accessToken:user_accessToken];
 }
 
-- (void)loadClubType:(NSString*) type take:(int)take skip:(int)skip
+- (void)loadPlaceType:(NSString*) type take:(int)take skip:(int)skip refreshing:(BOOL) refreshing
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *accessToken = [defaults objectForKey:@"accessToken"];
-    
-    if (_showYesterdayPlaces) {
-        isInitialLoad = YES;
-        [self._manager retrieveYesterdayPlacesAccessToken:accessToken];
-        return;
-    }
-    
-    isInitialLoad = NO;
-    if (skip == 0) {
-        isInitialLoad = YES;
-        if (_places.count == 0) {
-            if (self.isLoaded == YES)
-            {
-                [self.clubTable.pullToRefreshView stopAnimating];
-                [self.clubTable.infiniteScrollingView stopAnimating];
-                return;
-            }
-            [self showProgress:NO title:nil];
-        }
-
-    }
-    
-    self.isLoaded = YES;
-    double lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
-    double lng = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
-    
-    [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:0 type:type search:@"" accessToken:accessToken];
-}
-
-- (IBAction)handleYesterdayButton:(id)sender {
-    CbButton* yesterDayButton = (CbButton *) sender;
-    placeToView = _places[yesterDayButton.tag];
-    
-    [self performSegueWithIdentifier: @"onYesterday" sender: self];
-}
-
-- (void) handleInfoButton {
-    
+    isRefreshing = refreshing;
+    [self._manager retrievePlaces:user_lat lon:user_lon take:take skip:skip distance:0 type:type search:@"" accessToken:user_accessToken];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -381,17 +264,7 @@
     [cell.friendsCountLabel setText: [NSString stringWithFormat:@"%d", place.friendsCount]];
     
     [cell.clubAvatar sd_setImageWithURL:[NSURL URLWithString:place.avatar] placeholderImage:[UIImage imageNamed:@"avatar_default.png"]];
-    
-    if(_showYesterdayPlaces) {
-        [cell.distanceLabel setHidden:YES];
-        [cell.arrowImage setHidden:YES];
-        
-        [cell.viewYesterdayButton setHidden:NO];
-        
-        cell.viewYesterdayButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15];
-        [cell.viewYesterdayButton setMainState:NSLocalizedString(@"View", nil)];
-    }
-    
+  
     return cell;
 }
 
@@ -404,7 +277,6 @@
     ClubUsersViewController *clubController  = [clubProfileStoryboard instantiateViewControllerWithIdentifier:@"club"];
     clubController.place = place;
     clubController.hasBack = YES;
-    self.isLoaded = NO;
 
     [UIView beginAnimations:@"animation" context:nil];
     [UIView setAnimationDuration:0.5];
@@ -413,19 +285,6 @@
     [UIView commitAnimations];
     [self.clubTable deselectRowAtIndexPath:indexPath animated:NO];
 }
-
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(NSString *)sender
-{
-   if ([[segue identifier] isEqualToString:@"onYesterday"]) {
-        ClubUsersYesterdayViewController *yesterdayController =  [segue destinationViewController];
-        if (placeToView != nil) {
-            yesterdayController.place = placeToView;
-            yesterdayController.hasBack = YES;
-            placeToView = nil;
-        }
-    }
-}
-
 
 - (void)didReceiveMemoryWarning
 {
@@ -440,14 +299,26 @@
 
 -(void) filterForOption:(NSUInteger) index {
     [self.filterTabBar setSelectedIndex:index];
-    if (index == 0) {
-        selectedClubType = @"";
-        [self filterForType:selectedClubType];
+    NSString* typeString = [self.filterTabBar getButtonTitleAtIndex:index];
+    
+    if ([typeString isEqualToString:CLUBS_STRING]) {
+        selectedPlaceType = CLUBS_TYPE;
+        [self.eventsTable setHidden:YES];
+        [self.clubTable setHidden:NO];
+        [self filterForType:selectedPlaceType];
     }
-    else {
-        NSString* typeString = [self.filterTabBar getButtonTitleAtIndex:index];
-        selectedClubType = [typeString lowercaseString];
-        [self filterForType:selectedClubType];
+    else if ([typeString isEqualToString:BARS_STRING] ) {
+        selectedPlaceType = BARS_TYPE;
+        [self.eventsTable setHidden:YES];
+        [self.clubTable setHidden:NO];
+        [self filterForType:selectedPlaceType];
+    }
+    else if ([typeString isEqualToString:EVENTS_STRING]) {
+        if (isSearchBarShown) {
+            [self handleSearchButton:nil];
+        }
+        [self.eventsTable setHidden:NO];
+        [self.clubTable setHidden:YES];
     }
 }
 
@@ -456,16 +327,10 @@
     if(!isSearchBarShown) {
         isSearchBarShown = YES;
         [self searchTextFieldEnabled:YES];
-        [self.filterTabBar setEnabled:NO];
         [self replaceTopConstraintOnView:self.searchBar withConstant: 0];
-        //show all places to search
-        if ([self.filterTabBar selectedIndex] != 0) {
-            [self filterForOption:0];
-        }
         [self.searchBar becomeFirstResponder];
     } else {
         [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
-        [self.filterTabBar setEnabled:YES];
         [self searchTextFieldEnabled:NO];
         isSearchBarShown = NO;
         [self.searchBar resignFirstResponder];
@@ -475,7 +340,6 @@
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     [self.searchBar resignFirstResponder];
-    [self.filterTabBar setEnabled:YES];
     isSearchBarShown = NO;
     [self replaceTopConstraintOnView:self.searchBar withConstant: -self.searchBar.frame.size.height];
     [self animateConstraints];
@@ -492,7 +356,15 @@
 
 - (void) searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
    NSString* searchWord = self.searchBar.text;
-  [self searchForWord:searchWord];
+   if ([searchWord isEmpty]) {
+       if (isRefreshing) {
+           return;
+       }
+       [self loadRefreshTypePlaces];
+   }
+   else {
+       [self searchForWord:searchWord];
+   }
 }
 
 - (void) changeSearchKeyboardButtonTitle {
@@ -529,7 +401,7 @@
 }
 
 -(void) scrollViewDidScroll:(UIScrollView *)scrollView {
-    if(self.clubTable.pullToRefreshView.state || scrollView.contentOffset.y <= -10 || _showYesterdayPlaces) {
+    if(self.clubTable.pullToRefreshView.state || scrollView.contentOffset.y <= -10) {
        return;
     }
     //scrolled up
@@ -549,7 +421,7 @@
 
 
 -(void) scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    if ([self.searchBar isHidden] && ![[self navigationController] isNavigationBarHidden] && !self.showYesterdayPlaces) {
+    if ([self.searchBar isHidden] && ![[self navigationController] isNavigationBarHidden]) {
         [self.searchBar setHidden:NO];
     }
 }

@@ -580,6 +580,34 @@
     });
 }
 
+- (void)makePlaceFavorite:(NSString *) сlubId accessToken:(NSString *)accessToken makeFavorite:(BOOL)makeFavorite {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // switch to a background thread and perform your expensive operation
+        NSString *urlAsString;
+        if (makeFavorite) {
+            urlAsString = [NSString stringWithFormat:@"%@obj/club/%@/favorite/add?access_token=%@", baseURL, сlubId, accessToken];
+        }
+        else {
+            urlAsString = [NSString stringWithFormat:@"%@obj/club/%@/favorite/remove?access_token=%@", baseURL, сlubId, accessToken];
+        }
+
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
+        
+        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (error) {
+                    [self.delegate failedWithError:error];
+                } else {
+                    
+                }
+            });
+        }];
+    });
+
+}
+
 - (void)retrievePlaceUsers:(NSString *) clubId accessToken:(NSString *) accessToken
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -688,12 +716,12 @@
     });
 }
 
-- (void)retrieveNews:(NSString*)type withId:(NSString*) objectId accessToken:(NSString*) accessToken {
+- (void)retrieveNews:(NSString*)type withId:(NSString*) objectId accessToken:(NSString*) accessToken skip:(int)skip limit:(int) limit {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/favorite/news?access_token=%@", baseURL, accessToken];
+        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/favorite/news?access_token=%@&skip=%d&limit=%d", baseURL, accessToken, skip, limit];
         if ([type isEqualToString:@"club"]) {
-            urlAsString= [NSString stringWithFormat:@"%@obj/club/%@/news?access_token=%@", baseURL, objectId, accessToken];
+            urlAsString= [NSString stringWithFormat:@"%@obj/club/%@/news?access_token=%@&skip=%d&limit=%d", baseURL, objectId, accessToken, skip, limit];
         }
 
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];

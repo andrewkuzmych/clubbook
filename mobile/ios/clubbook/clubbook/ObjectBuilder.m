@@ -126,6 +126,12 @@
         place.countOfUsers = [[placeDic objectForKey:@"active_checkins"] intValue];
         place.friendsCount = [[placeDic objectForKey:@"active_friends_checkins"] intValue];
         
+        place.isFavorite = NO;
+        NSNumber *isFavorite = [placeDic objectForKey:@"is_favorite"];
+        if ([isFavorite intValue] > 0) {
+            place.isFavorite = YES;
+        }
+        
         //place.friendsCount = [[parsedObject objectForKey:@"friends_count"] intValue];
         
         NSMutableArray *photos = [[NSMutableArray alloc] init];
@@ -326,6 +332,12 @@
     place.countOfUsers = [[clubJson objectForKey:@"active_checkins"] intValue];
     place.friendsCount = [[clubJson objectForKey:@"active_friends_checkins"] intValue];
     
+    place.isFavorite = NO;
+    NSNumber *isFavorite = [clubJson objectForKey:@"is_favorite"];
+    if (isFavorite > 0) {
+        place.isFavorite = YES;
+    }
+    
     //place.friendsCount = [[parsedObject objectForKey:@"friends_count"] intValue];
     
     NSMutableArray *photos = [[NSMutableArray alloc] init];
@@ -478,17 +490,35 @@
     
     for (NSDictionary *newsDic in newsData) {
         NewsData *newsObject = [[NewsData alloc] init];
-        newsObject.title = [newsDic objectForKey:@"title"];
+        
+        newsObject.type = [newsDic objectForKey:@"type"];
+        
         newsObject.newsDescription = [newsDic objectForKey:@"description"];
         newsObject.photos = [newsDic objectForKey:@"photos"];
         
+        NSMutableDictionary *venue = [newsDic objectForKey:@"venue"];
+        newsObject.title = [venue objectForKey:@"club_name"];
+        newsObject.avatarPath = [venue objectForKey:@"club_logo"];
         
-        NSString* dateStr = [newsDic objectForKey:@"created_on"];
+        newsObject.buyLink = [newsDic objectForKey:@"buy_tickets"];
+        newsObject.shareLink = [newsDic objectForKey:@"share"];
+        
+        NSString* dateStr = [newsDic objectForKey:@"created_on_formatted"];
         // Convert string to date object
         NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
         [dateFormat setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-        [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        [dateFormat setDateFormat:@"yyyy-MM-dd, HH:mm:ss"];
         newsObject.createDate = [dateFormat dateFromString:dateStr];
+        
+        dateStr = [newsDic objectForKey:@"start_time"];
+        [dateFormat setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+        [dateFormat setDateFormat:@"yyyy-MM-dd, HH:mm:ss"];
+        newsObject.startTime = [dateFormat dateFromString:dateStr];
+        
+        dateStr = [newsDic objectForKey:@"end_time"];
+        [dateFormat setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+        [dateFormat setDateFormat:@"yyyy-MM-dd, HH:mm:ss"];
+        newsObject.endTime = [dateFormat dateFromString:dateStr];
         
         newsObject.tempDownlaodedPhotos = [[NSMutableDictionary alloc] init];
         

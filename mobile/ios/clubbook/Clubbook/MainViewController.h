@@ -6,12 +6,14 @@
 #import <CoreLocation/CoreLocation.h>
 
 #import "BaseViewController.h"
+#import "NewsFeedTableView.h"
 #import "SPSlideTabBar.h"
 
 @interface MainViewController : BaseViewController<UITableViewDelegate, UITableViewDataSource, PNDelegate, SPSlideTabBarDelegate, UISearchBarDelegate, UIScrollViewDelegate>{
  CLLocationManager *locationManager;
 }
 @property (weak, nonatomic) IBOutlet UITableView *clubTable;
+@property (weak, nonatomic) IBOutlet NewsFeedTableView *eventsTable;
 @property (weak, nonatomic) IBOutlet UISlider *sliderControl;
 @property (strong, nonatomic) NSMutableArray *places;
 
@@ -21,7 +23,5 @@
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (weak, nonatomic) IBOutlet UILabel *noResultsLabel;
-
-@property (nonatomic) BOOL showYesterdayPlaces;
 
 @end

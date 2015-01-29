@@ -14,7 +14,5 @@
 @property (strong, nonatomic) Place* place;
 @property (weak, nonatomic) IBOutlet UILabel *clubTitleLabel;
 @property (weak, nonatomic) IBOutlet UISwitch *favoriteButton;
-@property (weak, nonatomic) IBOutlet UISwitch *newsPushButton;
-@property (weak, nonatomic) IBOutlet UISwitch *promotionsPushButton;
 
 @end

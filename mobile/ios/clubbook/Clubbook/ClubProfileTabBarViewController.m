@@ -10,7 +10,7 @@
 #import "ClubViewParallaxControllerViewController.h"
 #import "ClubSubscribeSettingsTableViewController.h"
 #import "ClubPhotGalleryCollectionViewController.h"
-#import "NewsFeedTableViewController.h"
+#import "NewsFeedViewController.h"
 
 @interface ClubProfileTabBarViewController ()
 
@@ -27,15 +27,10 @@
         NSMutableDictionary *controllersArray = [[NSMutableDictionary alloc] init];
         
         UIStoryboard *newsStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle: nil];
-        NewsFeedTableViewController *newsController  = [newsStoryboard instantiateViewControllerWithIdentifier:@"news"];
+        NewsFeedViewController *newsController  = [newsStoryboard instantiateViewControllerWithIdentifier:@"news"];
         newsController.type = @"club";
         newsController.newsObjectId = self.place.id;
         newsController.title = @"News";
-        
-        // Do any additional setup after loading the view.
-        newsController.edgesForExtendedLayout = UIRectEdgeNone;
-        newsController.extendedLayoutIncludesOpaqueBars = NO;
-        newsController.automaticallyAdjustsScrollViewInsets = NO;
         
         [controllersArray setObject:newsController forKey:@"news"];
         

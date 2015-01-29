@@ -791,7 +791,7 @@ exports.club_users_yesterday = (req, res)->
     current_date_time = new Date()
     yesterday_data_time = new Date(new Date().getTime() - 48 * 60 * 60 * 1000);
     console.log yesterday_data_time
-    db_model.User.findOne({'_id': mongoose.Types.ObjectId(current_user_id), 'checkin': { '$elemMatch': { 'club' : club, 'time': {'$gte': yesterday_data_time}, 'time':{'$lte': current_date_time}}}}).exec (err, current_user)->
+    db_model.User.findOne({'_id': mongoose.Types.ObjectId(current_user_id), 'checkin': { '$elemMatch': { 'club' : club, 'time': {'$gte': yesterday_data_time, '$lte': current_date_time}}}}).exec (err, current_user)->
       if current_user
         db_model.User.find({'checkin': { '$elemMatch': { 'club' : club, 'time': {'$gte': yesterday_data_time, '$lte': current_date_time}}}, 'bloked_users': {'$ne': current_user._id}}, { checkin: {$slice: -1} }).populate('checkin.club').exec (err, users)->
         
@@ -825,7 +825,7 @@ exports.find_club = (req, res)->
 
 exports.club_types = (req, res)->
   console.log 'club types'
-  query =  [{'$group':{_id: "$club_type", count: { '$sum': 1 } } }]
+  query =  [{'$group':{_id: "$club_types", count: { '$sum': 1 } } }]
   console.log query
   #query = { 'club_loc':{ '$near' : [ params.lat,params.lon] }}
   db_model.Venue.aggregate query, {}, (err, result)->
@@ -923,6 +923,22 @@ exports.news = (req, res)->
         status: 'ok'
         news: news
 
+exports.events = (req, res)->
+  params =
+    club_id: req.params.objectId
+    skip: req.query.skip
+    limit: req.query.limit
+    
+  manager.events params, (err, events)->
+    if err
+      res.json
+        status: 'error'
+        error: err
+    else
+      res.json
+        status: 'ok'
+        events: events
+
 exports.news_favorite = (req, res)->
   params =
     user_id: req.params.me._id.toString()
@@ -938,6 +954,22 @@ exports.news_favorite = (req, res)->
       res.json
         status: 'ok'
         news: news
+
+exports.events_favorite = (req, res)->
+  params =
+    user_id: req.params.me._id.toString()
+    skip: req.query.skip
+    limit: req.query.limit
+
+  manager.events_favorite params, (err, events)->
+    if err
+      res.json
+        status: 'error'
+        error: err
+    else
+      res.json
+        status: 'ok'
+        events: events
 
 exports.checkin = (req, res)->
   params =

@@ -31,5 +31,6 @@
 @property (strong, nonatomic) NSString *ageRestriction;
 @property (strong, nonatomic) NSString *dressCode;
 @property (assign, nonatomic) double distance;
+@property (assign, nonatomic) BOOL isFavorite;
 
 @end

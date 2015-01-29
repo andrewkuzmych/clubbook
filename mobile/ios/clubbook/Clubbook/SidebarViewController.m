@@ -24,7 +24,7 @@
 #import "GlobalVars.h"
 #import "MainMenuCollectionViewCell.h"
 #import "MainViewController.h"
-#import "NewsFeedTableViewController.h"
+#import "NewsFeedViewController.h"
 #import "LocationManagerSingleton.h"
 
 
@@ -106,14 +106,8 @@
 
 - (void) prepareForSegue: (UIStoryboardSegue *) segue sender: (id) sender
 {
-
-    if([[segue identifier] isEqualToString:@"yesterday"]){
-        MainViewController *mainController = [segue destinationViewController];
-        mainController.showYesterdayPlaces = YES;
-    }
-    
     if([[segue identifier] isEqualToString:@"news"]){
-        NewsFeedTableViewController *newsController = [segue destinationViewController];
+        NewsFeedViewController *newsController = [segue destinationViewController];
         newsController.newsObjectId = @"";
         newsController.type = @"user";
     }
