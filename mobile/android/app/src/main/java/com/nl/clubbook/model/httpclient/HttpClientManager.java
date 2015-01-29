@@ -14,6 +14,7 @@ import com.nl.clubbook.model.data.Place;
 import com.nl.clubbook.model.data.User;
 import com.nl.clubbook.model.data.UserPhoto;
 import com.nl.clubbook.ui.fragment.PlacesFragment;
+import com.nl.clubbook.utils.CalendarUtils;
 import com.nl.clubbook.utils.L;
 
 import org.apache.http.Header;
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by Andrew on 5/19/2014.
@@ -1368,9 +1370,12 @@ public class HttpClientManager {
                         final Chat chat;
 
                         if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
+                            int TimeDifferenceFromUTC = CalendarUtils.getTimeDifferenceFromUTC();
+
                             JSONObject jsonResult = responseJson.optJSONObject("result");
-                            chat = JSONConverter.newChatDto(jsonResult);
+                            chat = JSONConverter.newChatDto(jsonResult, TimeDifferenceFromUTC);
                             failed = false;
+
                         } else {
                             failed = true;
                             chat = null;
@@ -1425,7 +1430,7 @@ public class HttpClientManager {
                     if ("ok".equalsIgnoreCase(responseJson.getString("status"))) {
                         JSONArray chatsJson = responseJson.getJSONObject("result").getJSONArray("chats");
                         for (int i = 0; i < chatsJson.length(); i++) {
-                            chats.add(JSONConverter.newChatDto(chatsJson.optJSONObject(i)));
+                            chats.add(JSONConverter.newChatDto(chatsJson.optJSONObject(i), 0));
                         }
                         failed = false;
                     } else {

@@ -390,7 +390,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                 mAdapter = new ChatAdapter(getActivity(), R.layout.item_chat_left, baseChatMessages, ChatFragment.this);
                 ListView listChat = (ListView) view.findViewById(R.id.listChat);
                 listChat.setAdapter(mAdapter);
-                listChat.setSelection(mChat.getConversation().size());
+                listChat.setStackFromBottom(true);
 
                 if (baseChatMessages.isEmpty()) {
                     view.findViewById(R.id.txtNoMessages).setVisibility(View.VISIBLE);

@@ -53,6 +53,7 @@ import com.nl.clubbook.helper.NotificationHelper;
 import com.nl.clubbook.ui.drawer.NavDrawerData;
 import com.nl.clubbook.ui.drawer.NavDrawerListAdapter;
 import com.nl.clubbook.ui.view.CustomToolBar;
+import com.nl.clubbook.utils.CalendarUtils;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.pubnub.api.Callback;
@@ -64,6 +65,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created with IntelliJ IDEA.
@@ -384,7 +386,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
                 ClubbookPreferences preferences = ClubbookPreferences.getInstance(getBaseContext());
                 if (preferences.getConversationListener() != null && preferences.getConversationListener().equalsIgnoreCase(userFrom + "_" + userTo)) {
-                    ChatMessage lastMessage = JSONConverter.newChatMessage(data.optJSONObject("last_message"));
+                    int timeDifferenceFromUTC = CalendarUtils.getTimeDifferenceFromUTC();
+
+                    ChatMessage lastMessage = JSONConverter.newChatMessage(data.optJSONObject("last_message"), timeDifferenceFromUTC);
                     chatFragment.receiveComment(lastMessage);
                 } else {
                     updateMessagesCount();
