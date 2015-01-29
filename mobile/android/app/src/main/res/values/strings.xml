@@ -209,6 +209,12 @@
     <string name="take_photo">Take photo</string>
     <string name="choose_existing_photo">Choose existing photo</string>
     <string name="share_your_location">Share your location</string>
+    <string name="you_dont_have_any_check_ins_from_yesterday">You don\'t have any check-ins from yesterday</string>
+    <string name="news">News</string>
+    <string name="photos">Photos</string>
+    <string name="favorite">Favorite</string>
+    <string name="add_to_favorite">Add to Favorite</string>
+    <string name="no_photos">No Photos</string>
 
     <!--For Google Analytics-->
     <string name="sidebar_screen_android">Sidebar Screen Android</string>

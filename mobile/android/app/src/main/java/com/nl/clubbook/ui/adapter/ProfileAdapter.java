@@ -107,7 +107,7 @@ public class ProfileAdapter extends BaseAdapter {
         }
     }
 
-    static class ViewHolder {
+    private class ViewHolder {
         TextView txtFriendIndicator;
         ImageView imgAvatar;
     }

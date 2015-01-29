@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Created by Volodymyr on 06.01.2015.
  */
-public class YesterdayFragment extends BaseRefreshFragment implements AdapterView.OnItemClickListener {
+public class YesterdayPlacesFragment extends BaseRefreshFragment implements AdapterView.OnItemClickListener {
 
     private YesterdayPlacesAdapter mPlacesAdapter;
 
@@ -60,7 +60,7 @@ public class YesterdayFragment extends BaseRefreshFragment implements AdapterVie
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Fragment fragment = ClubFragment.newInstance(YesterdayFragment.this, mPlacesAdapter.getItem(position));
+        Fragment fragment = ClubFragment.newInstance(YesterdayPlacesFragment.this, mPlacesAdapter.getItem(position));
         openFragment(fragment, ClubFragment.class);
     }
 
@@ -131,7 +131,9 @@ public class YesterdayFragment extends BaseRefreshFragment implements AdapterVie
 
             @Override
             public void onReady(Object result, boolean failed) {
-                if (isDetached() || getActivity() == null) {
+                View view = getView();
+
+                if (isDetached() || getActivity() == null || view == null) {
                     L.i("fragment_is_detached");
                     return;
                 }
@@ -149,6 +151,12 @@ public class YesterdayFragment extends BaseRefreshFragment implements AdapterVie
                     mPlacesAdapter.updateData(places);
                 } else {
                     mPlacesAdapter.addData(places);
+                }
+
+                if(mPlacesAdapter.getCount() == 0) {
+                    view.findViewById(R.id.txtNoCheckIns).setVisibility(View.VISIBLE);
+                } else {
+                    view.findViewById(R.id.txtNoCheckIns).setVisibility(View.GONE);
                 }
             }
         });

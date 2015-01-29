@@ -1,27 +1,21 @@
 package com.nl.clubbook.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nl.clubbook.R;
-import com.nl.clubbook.ui.activity.ImagesGalleryActivity;
-import com.nl.clubbook.ui.adapter.ClubPhotoPagerAdapter;
 import com.nl.clubbook.model.data.Place;
 import com.nl.clubbook.model.data.ClubWorkingHours;
-import com.nl.clubbook.model.data.JSONConverter;
 import com.nl.clubbook.helper.LocationCheckinHelper;
-import com.nl.clubbook.ui.view.ViewPagerBulletIndicatorView;
 import com.nl.clubbook.utils.L;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -31,18 +25,14 @@ import java.util.List;
 /**
  * Created by Volodymyr on 15.08.2014.
  */
-public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
+public class ClubInfoFragment extends BaseFragment {
 
-    private static final String ARG_JSON_CLUB = "ARG_JSON_CLUB";
+    private Place mPlace;
 
-    private ViewPagerBulletIndicatorView mBulletIndicator;
+    public static Fragment newInstance(Place place) {
+        ClubInfoFragment fragment = new ClubInfoFragment();
 
-    public static Fragment newInstance(String jsonClub) {
-        Fragment fragment = new ClubInfoFragment();
-
-        Bundle args = new Bundle();
-        args.putString(ARG_JSON_CLUB, jsonClub);
-        fragment.setArguments(args);
+        fragment.setPlace(place);
 
         return fragment;
     }
@@ -62,17 +52,8 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
         initView();
     }
 
-    @Override
-    public void onPageScrolled(int i, float v, int i2) {
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int i) {
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        mBulletIndicator.setSelectedView(position);
+    private void setPlace(Place place) {
+        mPlace = place;
     }
 
     private void initView() {
@@ -81,35 +62,32 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
             return;
         }
 
-        Bundle args = getArguments();
-        if(args == null) {
-            L.i("args = null");
-            return;
-        }
-
-        String jsonClub = args.getString(ARG_JSON_CLUB);
-        Place place = JSONConverter.newPlace(jsonClub);
-        if(place == null) {
-            L.i("club = null");
-            return;
-        }
-
-        fillView(view, place);
+        fillView(view);
     }
 
-    private void fillView(@NotNull View view, @NotNull Place place) {
-        initViewPager(view, place.getPhotos());
+    private void fillView(@NotNull View view) {
+        if(mPlace == null) {
+            view.findViewById(R.id.parallaxScrollView).setVisibility(View.GONE);
+            return;
+        }
 
-        String info = place.getInfo();
+        List<String> photos = mPlace.getPhotos();
+        if(photos != null && !photos.isEmpty()) {
+            ImageView imgClubPhoto = (ImageView) view.findViewById(R.id.imgClubPhoto);
+            String url = photos.get(0);
+            Picasso.with(getActivity()).load(url).error(R.drawable.ic_club_avatar_default).into(imgClubPhoto);
+        }
+
+        String info = mPlace.getInfo();
         if(!setTextToTextView(view, info, R.id.txtAbout)) {
             view.findViewById(R.id.dividerInfo).setVisibility(View.GONE);
             view.findViewById(R.id.txtLabelAbout).setVisibility(View.GONE);
         }
 
-        fillLocationHolder(view, place);
-        fillClubRequirementsHolder(view, place);
-        fillContactHolder(view, place);
-        fillWorkingHoursHolder(view, place);
+        fillLocationHolder(view, mPlace);
+        fillClubRequirementsHolder(view, mPlace);
+        fillContactHolder(view, mPlace);
+        fillWorkingHoursHolder(view, mPlace);
     }
 
     private void fillContactHolder(View view, Place place) {
@@ -279,46 +257,6 @@ public class ClubInfoFragment extends BaseFragment implements ViewPager.OnPageCh
             view.findViewById(textViewId).setVisibility(View.GONE);
             return false;
         }
-    }
-
-    private void initViewPager(View view, List<String> photos) {
-        mBulletIndicator = (ViewPagerBulletIndicatorView)view.findViewById(R.id.indicatorPhotos);
-        if(photos == null) {
-            L.i("photos == null");
-            mBulletIndicator.setVisibility(View.GONE);
-            return;
-        }
-        mBulletIndicator.setBulletViewCount(photos.size());
-        if(photos.size() <= 1) {
-            mBulletIndicator.setVisibility(View.GONE);
-        }
-
-        final String[] photosUrls = new String[photos.size()];
-        photos.toArray(photosUrls);
-
-        final ViewPager pagerImage = (ViewPager) view.findViewById(R.id.pagerPhoto);
-        ClubPhotoPagerAdapter adapter = new ClubPhotoPagerAdapter(getChildFragmentManager(), photosUrls);
-        pagerImage.setAdapter(adapter);
-        pagerImage.setOnPageChangeListener(this);
-
-        final GestureDetector tapGestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
-            @Override
-            public boolean onSingleTapConfirmed(MotionEvent e) {
-                Intent intent = new Intent(getActivity(), ImagesGalleryActivity.class);
-                intent.putExtra(ImagesGalleryActivity.EXTRA_PHOTOS_URLS, photosUrls);
-                intent.putExtra(ImagesGalleryActivity.EXTRA_SELECTED_PHOTO, pagerImage.getCurrentItem());
-                startActivity(intent);
-
-                return false;
-            }
-        });
-
-        pagerImage.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                tapGestureDetector.onTouchEvent(event);
-                return false;
-            }
-        });
     }
 
     private String getDayNameByDayNumber(int day) {

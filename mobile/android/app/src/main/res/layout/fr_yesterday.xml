@@ -25,4 +25,16 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <com.nl.clubbook.ui.view.HelveticaRegularTextView
+        android:id="@+id/txtNoCheckIns"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/you_dont_have_any_check_ins_from_yesterday"
+        android:textSize="@dimen/text_size_medium"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:visibility="gone"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"/>
+
 </RelativeLayout>
