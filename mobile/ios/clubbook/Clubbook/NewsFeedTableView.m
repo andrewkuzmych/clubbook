@@ -258,25 +258,32 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NewsPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:PhotoCellIdentifier forIndexPath:indexPath];
     int tag = (int)collectionView.tag;
-    NewsData* news = [newsArray objectAtIndex:tag];
+    __block NewsData* news = [newsArray objectAtIndex:tag];
     
-    NSString *indexKey = [@(indexPath.item) stringValue];
-    UIImage* img = [news.tempDownlaodedPhotos objectForKey:indexKey];
-    if (img == nil) {
-        CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
-        NSString * url = [news.photos objectAtIndex:indexPath.item];
-        NSString * imageUrl  = [cloudinary url:url options:@{}];
+    dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(concurrentQueue, ^{
+        NSString *indexKey = [@(indexPath.item) stringValue];
+        __block UIImage* img = [news.tempDownlaodedPhotos objectForKey:indexKey];
         
-        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]];
-        img = [[UIImage alloc] initWithData:data];
+        if (img == nil) {
+            dispatch_sync(concurrentQueue, ^{
+                CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
+                NSString * url = [news.photos objectAtIndex:indexPath.item];
+                NSString * imageUrl  = [cloudinary url:url options:@{}];
+                
+                NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]];
+                img = [[UIImage alloc] initWithData:data];
+                
+                [news.tempDownlaodedPhotos setObject:img forKey:indexKey];
+            });
+        }
         
-        [news.tempDownlaodedPhotos setObject:img forKey:indexKey];
-    }
-    [cell.photoImageView sd_setImageWithURL:[NSURL URLWithString:@""] placeholderImage:img];
-    
-    cell.photoImageView.contentMode = UIViewContentModeScaleAspectFill;
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [cell.photoImageView setImage:img];
+            cell.photoImageView.contentMode = UIViewContentModeScaleAspectFill;
+        });
+    });
     return cell;
-    
 }
 
 -(void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
