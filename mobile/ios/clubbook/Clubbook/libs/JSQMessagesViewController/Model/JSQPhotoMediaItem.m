@@ -52,6 +52,24 @@
 
 #pragma mark - Setters
 
+- (void) setImageWithURL:(NSString*)url withCompletionBlock:(JSQPhotoMediaItemCompletionBlock)completion {
+    dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(concurrentQueue, ^{
+        __block UIImage *image = nil;
+        
+        dispatch_sync(concurrentQueue, ^{
+            
+            NSData* data = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:url]];
+            image = [[UIImage alloc] initWithData:data];
+            
+        });
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self setImage:image];
+            completion();
+        });
+    });
+}
+
 - (void)setImage:(UIImage *)image
 {
     _image = [UIImage imageWithCGImage:image.CGImage];

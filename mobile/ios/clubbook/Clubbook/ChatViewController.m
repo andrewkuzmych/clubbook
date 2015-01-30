@@ -22,6 +22,7 @@
 @interface ChatViewController (){
     bool canChat;
     Chat *_chat;
+    NSString* accessToken;
 }
 
 @end
@@ -44,22 +45,30 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    accessToken = [defaults objectForKey:@"accessToken"];
+    self.senderId = [defaults objectForKey:@"userId"];;
+    
     [PubNub setDelegate:self];
     // Do any additional setup after loading the view.
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSString *userFrom = [defaults objectForKey:@"userId"];
-        NSString *accessToken = [defaults objectForKey:@"accessToken"];
-        
-        self.senderId = userFrom;
-        
-        // retreve conversation
-        [self._manager retrieveConversation:userFrom toUser:self.userTo accessToken:accessToken];
-        [self showProgress:YES title:nil];
-    });
+    [self initToolbarButtons];
     
+    picker = [[UIImagePickerController alloc] init];
+    picker.delegate = self;
+    
+    _docController = nil;
+    
+    // chat bubbles
+    JSQMessagesBubbleImageFactory* factory = [[JSQMessagesBubbleImageFactory alloc] init];
+    self.companionBubble = [factory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
+    self.userBubble = [factory outgoingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleGreenColor]];
+    
+    [self._manager retrieveConversation:self.senderId toUser:self.userTo accessToken:accessToken];
+    [self showProgress:YES title:nil];
+}
+
+- (void) initToolbarButtons {
     //input toolbar cuztomize
     UIButton* locationButton = [[UIButton alloc] init];
     UIImage* locationImage = [UIImage imageNamed:@"map"];
@@ -74,11 +83,6 @@
     [self.inputToolbar.contentView setMiddleBarButtonItem:photoButton];
     
     self.inputToolbar.contentView.backgroundColor = [UIColor colorWithRed:52/255.0 green:3/255.0 blue:69/255.0 alpha:1.0];
-    
-    picker = [[UIImagePickerController alloc] init];
-    picker.delegate = self;
-    
-    _docController = nil;
 }
 
 - (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message {
@@ -91,14 +95,12 @@
     NSString *url = [messageJson valueForKey:@"url"];
     NSDictionary* location = [messageJson valueForKey:@"location"];
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *accessToken = [defaults objectForKey:@"accessToken"];
-    
     if ([user_to isEqualToString:self.senderId] && [user_from isEqualToString:self.userTo]) {
         canChat = YES;
         [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
-        [self putMessage:msg type:type url:url location:location sender:user_from];
+        [self loadMessage:user_from displayName:user_from date:[NSDate date] message:msg type:type url:url location:location];
         [self._manager readChat:_chat.currentUser.id toUser:_chat.receiver.id accessToken:accessToken];
+        [self finishReceivingMessage];
     }
 }
 
@@ -112,13 +114,13 @@
         
         // get user to avatar
         CGFloat incomingDiameter = self.collectionView.collectionViewLayout.incomingAvatarViewSize.width;
-        CGFloat outgoingDiameter = self.collectionView.collectionViewLayout.outgoingAvatarViewSize.width;
+        CGFloat outgoingDiameter = incomingDiameter;
         
         dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(concurrentQueue, ^{
             __block UIImage* userImg;
             __block UIImage* compImg;
-            dispatch_async(concurrentQueue, ^{
+            dispatch_sync(concurrentQueue, ^{
                 CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
                 CLTransformation *transformation = [CLTransformation transformation];
                 [transformation setParams: @{@"width": @256, @"height": @256, @"crop": @"thumb", @"gravity": @"face"}];
@@ -126,19 +128,19 @@
                 NSString * receiverUserUrl  = [cloudinary url: [chat.receiver.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
                 NSURL *receiverUserUrlImageURL = [NSURL URLWithString:receiverUserUrl];
                 NSData *receiverUserData = [NSData dataWithContentsOfURL:receiverUserUrlImageURL];
-                userImg = [UIImage imageWithData:receiverUserData];
+                compImg = [UIImage imageWithData:receiverUserData];
                 
                 NSString * senderUserUrl  = [cloudinary url: [chat.currentUser.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
                 NSURL *senderUserUrlImageURL = [NSURL URLWithString:senderUserUrl];
                 NSData *senderUserData = [NSData dataWithContentsOfURL:senderUserUrlImageURL];
-                compImg = [UIImage imageWithData:senderUserData];
+                userImg = [UIImage imageWithData:senderUserData];
             });
-            dispatch_async(dispatch_get_main_queue(), ^{
+            dispatch_sync(dispatch_get_main_queue(), ^{
                 self.companionAvatar =  [JSQMessagesAvatarImageFactory avatarImageWithImage:compImg diameter:incomingDiameter];
                 self.userAvatar =  [JSQMessagesAvatarImageFactory avatarImageWithImage:userImg diameter:outgoingDiameter];
                 
                 // set user to photo button
-                UIImage *image =  self.userAvatar.avatarImage;
+                UIImage *image =  self.companionAvatar.avatarImage;
                 UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
                 button.bounds = CGRectMake( 0, 0, image.size.width, image.size.height );
                 [button setImage:image forState:UIControlStateNormal];
@@ -153,16 +155,9 @@
         }
         
         [self setCanChat];
-
-        // chat bubbles
-        JSQMessagesBubbleImageFactory* factory = [[JSQMessagesBubbleImageFactory alloc] init];
-        self.companionBubble = [factory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
-        self.userBubble = [factory outgoingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleGreenColor]];
         [self finishReceivingMessage];
         
-        // mark chat as read
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSString *accessToken = [defaults objectForKey:@"accessToken"];
+        
         [self._manager readChat:chat.currentUser.id toUser:chat.receiver.id accessToken:accessToken];
         
     });
@@ -186,7 +181,6 @@
     }
 }
 
-
 - (void)setCanChat
 {
     if ([self.messages count] < 3) {
@@ -200,7 +194,6 @@
             return;
         }
     }
-    
     canChat = false;
 }
 
@@ -214,25 +207,6 @@
            value:@"Chat Screen"];
     [tracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-
-    self.collectionView.collectionViewLayout.springinessEnabled = NO;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 #pragma mark - Actions
 
 - (void)sendMessage:(NSString *)message url:(NSString*)url type:(NSString *)type location:(NSDictionary*)location
@@ -246,74 +220,105 @@
         return;
     }
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *accessToken = [defaults objectForKey:@"accessToken"];
-    
-    [JSQSystemSoundPlayer jsq_playMessageSentSound];
-    [self putMessage:message type:type url:url location:location sender:self.senderId];
     NSString* trimMessage = [message stringByTrimmingCharactersInSet:
                                [NSCharacterSet whitespaceCharacterSet]];
     // send to server
     [self._manager chat:self.senderId user_to:self.userTo msg:trimMessage msg_type:type url:url location:location accessToken:accessToken];
+    [self setCanChat];
 }
 
 - (void)loadMessage:(NSString*) sender displayName:(NSString*)displayName date:(NSDate*)date message:(NSString*)message type:(NSString*)type url:(NSString*)url location:(NSDictionary*) location{
     if ([type isEqualToString:@"photo"]) {
-        // transform avatar
-       
-        NSData* data = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:url]];
-        UIImage* image = [[UIImage alloc] initWithData:data];
-
-        JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:image andFilePath:url];
-        if([sender isEqualToString:self.senderId]) {
-            [photoItem setAppliesMediaViewMaskAsOutgoing:YES];
-        }
-        else {
-            [photoItem setAppliesMediaViewMaskAsOutgoing:NO];
-        }
-        JSQMessage *photoMessage = [JSQMessage messageWithSenderId:sender
-                                                       displayName:displayName
-                                                             media:photoItem];
-       
-        
-        [self.messages addObject:photoMessage];
-        [self.collectionView reloadData];
+        [self loadPhotoMessage:sender displayName:displayName date:date url:url];
     }
-    if ([type isEqualToString:@"location"]) {
-        // transform avatar
-        
-        __weak UICollectionView *weakView = self.collectionView;
-        NSNumber* lat = [location objectForKey:@"lat"];
-        NSNumber* lon = [location objectForKey:@"lon"];
-
-        CLLocation *userLocation = [[CLLocation alloc] initWithLatitude:[lat doubleValue] longitude:[lon doubleValue]];
-        
-        JSQLocationMediaItem *locationItem = [[JSQLocationMediaItem alloc] init];
-        if([sender isEqualToString:self.senderId]) {
-            [locationItem setAppliesMediaViewMaskAsOutgoing:YES];
-        }
-        else {
-            [locationItem setAppliesMediaViewMaskAsOutgoing:NO];
-        }
-        [locationItem setLocation:userLocation withCompletionHandler:^{
-            [weakView reloadData];
-        }];
-        
-        JSQMessage *locationMessage = [JSQMessage messageWithSenderId:sender
-                                                          displayName:displayName
-                                                                media:locationItem];
-        [self.messages addObject:locationMessage];
+    else if ([type isEqualToString:@"location"]) {
+        [self loadLocationMessage:sender displayName:displayName date:date location:location];
     }
     else {
-        JSQMessage *jsqmessage = [[JSQMessage alloc] initWithSenderId:sender senderDisplayName:displayName date:date text:message];
-        [self.messages addObject:jsqmessage];
+        [self loadTextMessage:sender displayName:displayName date:date message:message];
     }
 }
 
-- (void)putMessage:(NSString *)message type:(NSString *)type url:(NSString*)url location:(NSDictionary*)location sender:(NSString *) sender {
-    [self loadMessage:sender displayName:self.senderDisplayName date:[NSDate date] message:message type:type url:url location:location];
-    [self setCanChat];
+- (void) loadPhotoMessage:(NSString*) sender displayName:(NSString*)displayName date:(NSDate*)date url:(NSString*)url {
+    JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:nil andFilePath:url];
+    
+    __weak UICollectionView *weakView = self.collectionView;
+    [photoItem setImageWithURL:url withCompletionBlock:^{
+        [weakView reloadData];
+    }];
+    
+    if([sender isEqualToString:self.senderId]) {
+        [photoItem setAppliesMediaViewMaskAsOutgoing:YES];
+    }
+    else {
+        [photoItem setAppliesMediaViewMaskAsOutgoing:NO];
+    }
+    JSQMessage *photoMessage = [[JSQMessage alloc] initWithSenderId:sender senderDisplayName:displayName date:date media:photoItem];
+    
+    
+    [self.messages addObject:photoMessage];
+}
+
+- (void) uploadPhotoMessage:(UIImage*) image {
+    __block JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:nil andFilePath:nil];
+    // Get PNG data from following method
+    [photoItem setAppliesMediaViewMaskAsOutgoing:YES];
+    
+    JSQMessage *photoMessage = [[JSQMessage alloc] initWithSenderId:self.senderId senderDisplayName:self.senderDisplayName date:[NSDate date] media:photoItem];
+
+    [self.messages addObject:photoMessage];
     [self finishReceivingMessage];
+    [self scrollToBottomAnimated:YES];
+    
+    UIImage* fixedImage = [image fixOrientation];
+    
+    NSData *myData = UIImageJPEGRepresentation(fixedImage, 0);
+    // upload image to coudinary
+    CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
+    CLUploader* uploader = [[CLUploader alloc] init:cloudinary delegate:self];
+    
+    [uploader upload:myData options:@{} withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
+        if (successResult) {
+            __weak UICollectionView *weakView = self.collectionView;
+            NSString *photoResult = [successResult objectForKey:@"url"];
+            [self sendMessage:@"Check my photo!" url:photoResult type:@"photo" location:nil];
+            [photoItem setImageWithURL:photoResult withCompletionBlock:^{
+                [weakView reloadData];
+            }];
+            
+        }
+    } andProgress:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite, id context) {
+        NSLog(@"Block upload progress: %ld/%ld (+%ld)", (long)totalBytesWritten, (long)totalBytesExpectedToWrite, (long)bytesWritten);
+    }];
+    
+
+}
+
+- (void) loadLocationMessage:(NSString*) sender displayName:(NSString*)displayName date:(NSDate*)date location:(NSDictionary*) location {
+    __weak UICollectionView *weakView = self.collectionView;
+    NSNumber* lat = [location objectForKey:@"lat"];
+    NSNumber* lon = [location objectForKey:@"lon"];
+    
+    CLLocation *userLocation = [[CLLocation alloc] initWithLatitude:[lat doubleValue] longitude:[lon doubleValue]];
+    
+    JSQLocationMediaItem *locationItem = [[JSQLocationMediaItem alloc] init];
+    if([sender isEqualToString:self.senderId]) {
+        [locationItem setAppliesMediaViewMaskAsOutgoing:YES];
+    }
+    else {
+        [locationItem setAppliesMediaViewMaskAsOutgoing:NO];
+    }
+    [locationItem setLocation:userLocation withCompletionHandler:^{
+        [weakView reloadData];
+    }];
+    
+    JSQMessage *locationMessage = [[JSQMessage alloc] initWithSenderId:sender senderDisplayName:displayName date:date media:locationItem];
+    [self.messages addObject:locationMessage];
+}
+
+- (void) loadTextMessage:(NSString*) sender displayName:(NSString*)displayName date:(NSDate*)date message:(NSString*)message {
+    JSQMessage *jsqmessage = [[JSQMessage alloc] initWithSenderId:sender senderDisplayName:displayName date:date text:message];
+    [self.messages addObject:jsqmessage];
 }
 
 #pragma mark - JSQMessagesViewController method overrides
@@ -324,14 +329,7 @@
          senderDisplayName:(NSString *)senderDisplayName
                       date:(NSDate *)date
 {
-    /**
-     *  Sending a message. Your implementation of this method should do *at least* the following:
-     *
-     *  1. Play sound (optional)
-     *  2. Add new id<JSQMessageData> object to your data source
-     *  3. Call `finishSendingMessage`
-     */
-
+    [JSQSystemSoundPlayer jsq_playMessageSentSound];
     [self sendMessage:text url:@"" type:@"message" location:nil];
     [self finishSendingMessage];
 }
@@ -339,7 +337,6 @@
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
 }
-
 
 
 #pragma mark - JSQMessages CollectionView DataSource
@@ -350,18 +347,8 @@
 }
 
 - (id<JSQMessageBubbleImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView messageBubbleImageDataForItemAtIndexPath:(NSIndexPath *)indexPath {
-    /**
-     *  You may return nil here if you do not want bubbles.
-     *  In this case, you should set the background color of your collection view cell's textView.
-     */
-    
-    /**
-     *  Reuse created bubble images, but create new imageView to add to each cell
-     *  Otherwise, each cell would be referencing the same imageView and bubbles would disappear from cells
-     */
-    
+
     JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
-    
     if([message.senderId isEqualToString:self.userTo]) {
         return self.companionBubble;
     }
@@ -371,30 +358,7 @@
 
 - (id<JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath;
 {
-    /**
-     *  Return `nil` here if you do not want avatars.
-     *  If you do return `nil`, be sure to do the following in `viewDidLoad`:
-     *
-     *  self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
-     *  self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
-     *
-     *  It is possible to have only outgoing avatars or only incoming avatars, too.
-     */
-    
-    /**
-     *  Reuse created avatar images, but create new imageView to add to each cell
-     *  Otherwise, each cell would be referencing the same imageView and avatars would disappear from cells
-     *
-     *  Note: these images will be sized according to these values:
-     *
-     *  self.collectionView.collectionViewLayout.incomingAvatarViewSize
-     *  self.collectionView.collectionViewLayout.outgoingAvatarViewSize
-     *
-     *  Override the defaults in `viewDidLoad`
-     */
-    
     JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
-    
     JSQMessagesAvatarImage *avatarImage = self.userAvatar;
 
     if([message.senderId isEqualToString:self.userTo])
@@ -405,28 +369,19 @@
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    /**
-     *  This logic should be consistent with what you return from `heightForCellTopLabelAtIndexPath:`
-     *  The other label text delegate methods should follow a similar pattern.
-     *
-     *  Show a timestamp for every 3rd message
-     */
     if ([self previousMessageHaveDifferentDate:indexPath.item]) {
         JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
         NSString* dateOnly = [[JSQMessagesTimestampFormatter sharedFormatter] relativeDateForDate:message.date];
         return [[NSAttributedString alloc] initWithString:dateOnly];
     }
-    
     return nil;
 }
 
-- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
-{
+- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath {
      return nil;
 }
 
-- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
-{
+- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath {
     JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
     NSString* timeOnly;
     
@@ -449,24 +404,7 @@
 
 - (UICollectionViewCell *)collectionView:(JSQMessagesCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    /**
-     *  Override point for customizing cells
-     */
     JSQMessagesCollectionViewCell *cell = (JSQMessagesCollectionViewCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
-    
-    /**
-     *  Configure almost *anything* on the cell
-     *
-     *  Text colors, label text, label colors, etc.
-     *
-     *
-     *  DO NOT set `cell.textView.font` !
-     *  Instead, you need to set `self.collectionView.collectionViewLayout.messageBubbleFont` to the font you want in `viewDidLoad`
-     *
-     *
-     *  DO NOT manipulate cell layout information!
-     *  Instead, override the properties you want on `self.collectionView.collectionViewLayout` from `viewDidLoad`
-     */
     
     if (cell.textView != nil) {
         cell.textView.textColor = [UIColor whiteColor];
@@ -510,16 +448,6 @@
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    /**
-     *  Each label in a cell has a `height` delegate method that corresponds to its text dataSource method
-     */
-    
-    /**
-     *  This logic should be consistent with what you return from `attributedTextForCellTopLabelAtIndexPath:`
-     *  The other label height delegate methods should follow similarly
-     *
-     *  Show a timestamp for every 3rd message
-     */
     if ([self previousMessageHaveDifferentDate:indexPath.item]) {
         return kJSQMessagesCollectionViewCellLabelHeightDefault;
     }
@@ -551,7 +479,6 @@
 -(void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
     JSQMessage* message = [self.messages objectAtIndex:indexPath.item];
 
-    
     if (message) {
         if (message.isMediaMessage) {
             id mediaItem = message.media;
@@ -657,8 +584,9 @@
     [location setObject:lon forKey:@"lon"];
     [location setObject:lat forKey:@"lat"];
     
-    [self sendMessage:@"" url:@"" type:@"location" location:location];
-    
+    [self sendMessage:@"Check my location!" url:@"" type:@"location" location:location];
+    [self loadMessage:self.senderId displayName:self.senderDisplayName date:[NSDate date] message:@"" type:@"location" url:@"" location:location];
+    [self finishReceivingMessage];
 }
 
 - (void) takePhoto {
@@ -682,27 +610,10 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     UIImage *tempImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-    UIImage *image = [tempImage fixOrientation];
-    
-    // Get PNG data from following method
-    NSData *myData = UIImageJPEGRepresentation(image, 0);
-    // upload image to coudinary
-    CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
-    CLUploader* uploader = [[CLUploader alloc] init:cloudinary delegate:self];
-    
-     [uploader upload:myData options:@{} withCompletion:^(NSDictionary *successResult, NSString *errorResult, NSInteger code, id context) {
-        if (successResult) {
-
-            NSString *photoResult = [successResult objectForKey:@"url"];
-            [self sendMessage:@"" url:photoResult type:@"photo" location:nil];
-            [self.collectionView reloadData];
-            [self scrollToBottomAnimated:YES];
-        } 
-    } andProgress:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite, id context) {
-        NSLog(@"Block upload progress: %ld/%ld (+%ld)", (long)totalBytesWritten, (long)totalBytesExpectedToWrite, (long)bytesWritten);
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self uploadPhotoMessage:tempImage];
     }];
     
-    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
@@ -710,15 +621,10 @@
 }
 
 - (void) didChat:(NSString*)status {
-
 }
 
 - (UIViewController *) documentInteractionControllerViewControllerForPreview: (UIDocumentInteractionController *) controller {
     return self;
-}
-
-- (void) canRotate {
-    
 }
 
 #pragma mark - Image Datasource methods
