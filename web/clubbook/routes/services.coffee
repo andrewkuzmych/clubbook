@@ -835,6 +835,45 @@ exports.club_types = (req, res)->
       status: 'ok'
       result: result
 
+exports.list_events = (req, res)->
+  console.log req.params
+
+  skip = 0
+  if req.query.skip
+    skip = parseInt(req.query.skip)
+  
+  take = 300
+  if req.query.take
+    take = parseInt(req.query.take)
+
+  params =
+    #distance: req.query.distance
+    lat: req.query.user_lat
+    lon: req.query.user_lon
+    user_id: req.params.me._id.toString()
+    type: req.query.type
+    search: req.query.search
+
+  
+  if req.query.distance
+    params.distance = parseInt(req.query.distance)
+
+  params.skip = skip
+  params.take = take
+  
+  console.log params
+  manager.list_events params, (err, news)->
+    if err
+      res.json
+        status: 'error'
+        error: err
+    else
+      # get people who checkin in these clubs
+      res.json
+        status: 'ok'
+        news: news
+
+
 exports.list_club = (req, res)->
   console.log req.params
 

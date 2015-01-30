@@ -239,6 +239,7 @@ app.get '/_s/obj/club/:objectId/favorite/add', handle_access_token, services.add
 #news
 app.get '/_s/obj/club/:objectId/news', handle_access_token, services.news
 app.get '/_s/obj/club/:objectId/events', handle_access_token, services.events
+app.get '/_s/obj/events', handle_access_token, services.list_events
 
 # users news
 app.get '/_s/obj/user/favorite/news', handle_access_token, services.news_favorite
