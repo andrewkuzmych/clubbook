@@ -154,12 +154,13 @@ exports.list_events = (params, callback)->
       events_objects = []
       for even in events
         events_object = even.toObject()
-        if events_object.end_time&&(moment.utc(events_object.end_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss'))
-          events_objects.push events_object
-          events_object.created_on_formatted = moment.utc(events_object.created_on).format("YYYY-MM-DD, HH:mm:ss")
-          events_object.updated_on_formatted = moment.utc(events_object.updated_on).format("YYYY-MM-DD, HH:mm:ss")
-          events_object.start_time_formatted = moment.utc(events_object.start_time).format("YYYY-MM-DD, HH:mm:ss")
-          events_object.end_time_formatted = moment.utc(events_object.end_time).format("YYYY-MM-DD, HH:mm:ss")
+        if events_object.end_time
+          if moment.utc(events_object.end_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')
+            events_objects.push events_object
+            events_object.created_on_formatted = moment.utc(events_object.created_on).format("YYYY-MM-DD, HH:mm:ss")
+            events_object.updated_on_formatted = moment.utc(events_object.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+            events_object.start_time_formatted = moment.utc(events_object.start_time).format("YYYY-MM-DD, HH:mm:ss")
+            events_object.end_time_formatted = moment.utc(events_object.end_time).format("YYYY-MM-DD, HH:mm:ss")
         else if moment.utc(events_object.start_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')
           events_objects.push events_object
           events_object.created_on_formatted = moment.utc(events_object.created_on).format("YYYY-MM-DD, HH:mm:ss")
