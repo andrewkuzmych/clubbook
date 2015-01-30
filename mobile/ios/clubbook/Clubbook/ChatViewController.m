@@ -31,7 +31,6 @@
     UIImagePickerController* picker;
     UIImage* chatShowImage;
 }
-#pragma mark - Demo setup
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -103,14 +102,6 @@
     }
 }
 
--(NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskAll;
-}
-
-- (BOOL)shouldAutorotate {
-    return YES;
-}
-
 - (void)didReceiveConversation:(Chat *)chat
 {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -123,29 +114,40 @@
         CGFloat incomingDiameter = self.collectionView.collectionViewLayout.incomingAvatarViewSize.width;
         CGFloat outgoingDiameter = self.collectionView.collectionViewLayout.outgoingAvatarViewSize.width;
         
-        CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
-        CLTransformation *transformation = [CLTransformation transformation];
-        [transformation setParams: @{@"width": @256, @"height": @256, @"crop": @"thumb", @"gravity": @"face"}];
-        
-        NSString * receiverUserUrl  = [cloudinary url: [chat.receiver.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
-        NSURL *receiverUserUrlImageURL = [NSURL URLWithString:receiverUserUrl];
-        NSData *receiverUserData = [NSData dataWithContentsOfURL:receiverUserUrlImageURL];
-        self.companionAvatar =  [JSQMessagesAvatarImageFactory avatarImageWithImage:[UIImage imageWithData:receiverUserData] diameter:incomingDiameter];
-        
-        NSString * senderUserUrl  = [cloudinary url: [chat.currentUser.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
-        NSURL *senderUserUrlImageURL = [NSURL URLWithString:senderUserUrl];
-        NSData *senderUserData = [NSData dataWithContentsOfURL:senderUserUrlImageURL];
-        self.userAvatar =  [JSQMessagesAvatarImageFactory avatarImageWithImage:[UIImage imageWithData:senderUserData] diameter:outgoingDiameter];
-        
-        // set user to photo button
-        UIImage *image =  [JSQMessagesAvatarImageFactory avatarImageWithImage:[UIImage imageWithData:receiverUserData] diameter:incomingDiameter].avatarImage;
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.bounds = CGRectMake( 0, 0, image.size.width, image.size.height );
-        [button setImage:image forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(onUser:) forControlEvents:UIControlEventTouchUpInside];
-        UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-        self.navigationItem.rightBarButtonItem = barButtonItem;
-       
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_async(concurrentQueue, ^{
+            __block UIImage* userImg;
+            __block UIImage* compImg;
+            dispatch_async(concurrentQueue, ^{
+                CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
+                CLTransformation *transformation = [CLTransformation transformation];
+                [transformation setParams: @{@"width": @256, @"height": @256, @"crop": @"thumb", @"gravity": @"face"}];
+                
+                NSString * receiverUserUrl  = [cloudinary url: [chat.receiver.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
+                NSURL *receiverUserUrlImageURL = [NSURL URLWithString:receiverUserUrl];
+                NSData *receiverUserData = [NSData dataWithContentsOfURL:receiverUserUrlImageURL];
+                userImg = [UIImage imageWithData:receiverUserData];
+                
+                NSString * senderUserUrl  = [cloudinary url: [chat.currentUser.avatar valueForKey:@"public_id"] options:@{@"transformation": transformation}];
+                NSURL *senderUserUrlImageURL = [NSURL URLWithString:senderUserUrl];
+                NSData *senderUserData = [NSData dataWithContentsOfURL:senderUserUrlImageURL];
+                compImg = [UIImage imageWithData:senderUserData];
+            });
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.companionAvatar =  [JSQMessagesAvatarImageFactory avatarImageWithImage:compImg diameter:incomingDiameter];
+                self.userAvatar =  [JSQMessagesAvatarImageFactory avatarImageWithImage:userImg diameter:outgoingDiameter];
+                
+                // set user to photo button
+                UIImage *image =  self.userAvatar.avatarImage;
+                UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+                button.bounds = CGRectMake( 0, 0, image.size.width, image.size.height );
+                [button setImage:image forState:UIControlStateNormal];
+                [button addTarget:self action:@selector(onUser:) forControlEvents:UIControlEventTouchUpInside];
+                UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+                self.navigationItem.rightBarButtonItem = barButtonItem;
+            });
+        });
+
         for(Conversation * conf in chat.conversations) {
             [self loadMessage:conf.user_from displayName:conf.user_from date:conf.time message:conf.msg type:conf.type url:conf.url location:conf.location];
         }
@@ -154,15 +156,11 @@
 
         // chat bubbles
         JSQMessagesBubbleImageFactory* factory = [[JSQMessagesBubbleImageFactory alloc] init];
-        
         self.companionBubble = [factory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
-        
         self.userBubble = [factory outgoingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleGreenColor]];
-        
         [self finishReceivingMessage];
         
         // mark chat as read
-        
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSString *accessToken = [defaults objectForKey:@"accessToken"];
         [self._manager readChat:chat.currentUser.id toUser:chat.receiver.id accessToken:accessToken];
@@ -685,24 +683,6 @@
 {
     UIImage *tempImage = [info objectForKey:UIImagePickerControllerOriginalImage];
     UIImage *image = [tempImage fixOrientation];
-    
-    /* save to device photo part
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
-                                                         NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"hh-mm-dd-MM"];
-    NSString *dateFromString = [dateFormatter stringFromDate:[NSDate date]];
-    NSString *fileName = [NSString stringWithFormat:@"clubbook_photo_%@.jpg", dateFromString, nil];
-    
-    NSString *filePath =  [documentsDirectory stringByAppendingPathComponent:fileName];
-    NSLog (@"New photo file = %@", filePath);
-    
-    // Get PNG data from following method
-    NSData *myData = UIImageJPEGRepresentation(image, 0);
-    // It is better to get JPEG data because jpeg data will store the location and other related information of image.
-    [myData writeToFile:filePath atomically:YES];*/
     
     // Get PNG data from following method
     NSData *myData = UIImageJPEGRepresentation(image, 0);

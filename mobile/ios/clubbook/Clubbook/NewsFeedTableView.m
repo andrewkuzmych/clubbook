@@ -273,8 +273,9 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
                 
                 NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]];
                 img = [[UIImage alloc] initWithData:data];
-                
-                [news.tempDownlaodedPhotos setObject:img forKey:indexKey];
+                if (img != nil) {
+                    [news.tempDownlaodedPhotos setObject:img forKey:indexKey];
+                }
             });
         }
         
