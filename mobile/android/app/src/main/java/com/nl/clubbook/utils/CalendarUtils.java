@@ -1,6 +1,7 @@
 package com.nl.clubbook.utils;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  * Created by User on 23.08.2014.
@@ -24,5 +25,9 @@ public class CalendarUtils {
 
     public static int getDayTimeInMilliseconds() {
         return 24 * 60 * 60 * 1000;
+    }
+
+    public static int getTimeDifferenceFromUTC() {
+        return TimeZone.getDefault().getRawOffset();
     }
 }

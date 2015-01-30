@@ -101,9 +101,9 @@ exports.home = (req, res)->
 exports.clubs = (req, res)->
   create_base_model req, res, (model)->
     #req.params.venue_id
-    db_model.Venue.find().exec (err, venues)->
-        model.clubs = venues
-        res.render "pages/clubs", model
+    db_model.Venue.find(model.my_venues).exec (err, venues)->
+      model.clubs = venues
+      res.render "pages/clubs", model
 
 exports.users = (req, res)->
   console.log 'Users'
@@ -290,8 +290,9 @@ exports.news_edit = (req, res)->
         model.type_news = news.type
         model.start_time_ = moment.utc(news.start_time).format("HH:mm")
         model.start_date_ = moment.utc(news.start_time).format("DD-MM-YYYY")
-        model.end_time_ = moment.utc(news.end_time).format("HH:mm")
-        model.end_date_ = moment.utc(news.end_time).format("DD-MM-YYYY")
+        if news.end_time
+          model.end_time_ = moment.utc(news.end_time).format("HH:mm")
+          model.end_date_ = moment.utc(news.end_time).format("DD-MM-YYYY")
       else
         model.type_news = "news"  
       model.data_time = moment().format("DD-MM-YYYY")
@@ -315,8 +316,11 @@ exports.news_edit_action = (req, res)->
           news.type = "event"
           start_date_time = req.body.start_date + " " + req.body.start_time
           news.start_time = new Date(moment.utc(start_date_time, "DD-MM-YYYY HH:mm"))
-          end_date_time = req.body.end_date + " " + req.body.end_time
-          news.end_time = moment.utc(end_date_time, "DD-MM-YYYY HH:mm")
+          if req.body.end_date&&req.body.end_time
+            end_date_time = req.body.end_date + " " + req.body.end_time
+            news.end_time = moment.utc(end_date_time, "DD-MM-YYYY HH:mm")
+          else
+            news.end_time = null
         else
           news.type = "news"
         for photo in req.body.news_images.split(',')
@@ -412,6 +416,6 @@ create_base_model = (req, res, callback)->
     model.has_error = true
   else
     model.has_error = false
-
-
+  if req.user
+    model.my_venues = if req.user.is_admin then {} else {"club_admin": req.user._id}
   callback model

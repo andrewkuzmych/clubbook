@@ -15,7 +15,9 @@
 
     <string-array name="club_info_titles">
         <item>@string/info</item>
-        <item>@string/wall</item>
+        <item>@string/news</item>
+        <item>@string/photos</item>
+        <item>@string/favorite</item>
     </string-array>
 
     <string-array name="users_nearby_titles">

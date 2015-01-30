@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import com.nl.clubbook.R;
 import com.nl.clubbook.ui.adapter.ClubPhotoPagerAdapter;
 
+import java.util.List;
+
 /**
  * Created by Volodymyr on 29.09.2014.
  */
@@ -46,7 +48,7 @@ public class ImagesGalleryActivity extends BaseActivity {
 
     private void initView() {
         Intent intent = getIntent();
-        String[] photoUrls = intent.getStringArrayExtra(EXTRA_PHOTOS_URLS);
+        List<String> photoUrls = intent.getStringArrayListExtra(EXTRA_PHOTOS_URLS);
         int selectedPhoto = intent.getIntExtra(EXTRA_SELECTED_PHOTO, 0);
 
         if(photoUrls != null) {

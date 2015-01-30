@@ -312,13 +312,13 @@ public class JSONConverter {
         return jsonWorkingHours;
     }
 
-    public static Chat newChatDto(@NotNull JSONObject jsonChatDto) {
+    public static Chat newChatDto(@NotNull JSONObject jsonChatDto, int timeZoneTime) {
         Chat result = new Chat();
 
         result.setChatId(jsonChatDto.optString("chat_id"));
 
         JSONArray jsonConversation = jsonChatDto.optJSONArray("conversation");
-        List<ChatMessage> conversations = newChatMessagesList(jsonConversation);
+        List<ChatMessage> conversations = newChatMessagesList(jsonConversation, timeZoneTime);
         result.setConversation(conversations);
 
         JSONObject jsonCurrentUser = jsonChatDto.optJSONObject("current_user");
@@ -334,7 +334,7 @@ public class JSONConverter {
         return result;
     }
 
-    public static List<ChatMessage> newChatMessagesList(@Nullable JSONArray jsonArray) {
+    public static List<ChatMessage> newChatMessagesList(@Nullable JSONArray jsonArray, int timeZomeTime) {
         if(jsonArray == null) {
             return null;
         }
@@ -342,14 +342,14 @@ public class JSONConverter {
         List<ChatMessage> result = new ArrayList<ChatMessage>();
         for(int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonChatMessage = jsonArray.optJSONObject(i);
-            ChatMessage chatMessage = newChatMessage(jsonChatMessage);
+            ChatMessage chatMessage = newChatMessage(jsonChatMessage, timeZomeTime);
             result.add(chatMessage);
         }
 
         return result;
     }
 
-    public static ChatMessage newChatMessage(@NotNull JSONObject jsonChatMessage) {
+    public static ChatMessage newChatMessage(@NotNull JSONObject jsonChatMessage, int timeZoneTime) {
         ChatMessage result = new ChatMessage();
 
         result.setMsg(jsonChatMessage.optString("msg"));
@@ -373,7 +373,7 @@ public class JSONConverter {
 
         String date = jsonChatMessage.optString("time");
         try {
-            result.setTime(FORMAT_DATE.parse(date).getTime());
+            result.setTime(FORMAT_DATE.parse(date).getTime() + timeZoneTime);
             result.setTimeWithoutHours(FORMAT_DATE_WITHOUT_HOURS.parse(date).getTime());
         } catch (ParseException e) {
             L.i("" + e);

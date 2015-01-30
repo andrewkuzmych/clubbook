@@ -175,9 +175,7 @@ exports.News = mongoose.model 'News', NewsSchema
 VenueSchema = new mongoose.Schema
   created_on: { type: Date, 'default': Date.now }
   updated_on: { type: Date, 'default': Date.now }
-  club_admin: [
-    {type: String, trim: true}
-  ]
+  club_admin: [{ type: mongoose.Schema.ObjectId, ref: 'Admin' }]
   club_password: [
     {type: String, trim: true}
   ]

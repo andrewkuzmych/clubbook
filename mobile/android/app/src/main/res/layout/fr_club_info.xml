@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.nirhart.parallaxscroll.views.ParallaxScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:parallaxlib="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parallaxScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="none"
@@ -12,25 +13,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/holderPagerAvatars"
+        <ImageView
+            android:id="@+id/imgClubPhoto"
             android:layout_width="match_parent"
-            android:background="@color/bg_screen_grey_light"
-            android:layout_height="230dp">
-
-            <com.nl.clubbook.ui.view.CustomViewPager
-                android:id="@+id/pagerPhoto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <com.nl.clubbook.ui.view.ViewPagerBulletIndicatorView
-                android:id="@+id/indicatorPhotos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="8dp" />
-        </RelativeLayout>
+            android:layout_height="230dp"
+            android:scaleType="fitCenter"
+            android:background="@android:color/black"/>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -82,14 +82,12 @@ block content
               .form-group
                 .col-md-3 
                 .col-md-4
-                  if type_news == "event"
-                    input.form-control(type='checkbox' class="check" name='event_check' checked)
-                  else
-                    input.form-control(type='checkbox' class="check" name='event_check')
+                  input.form-control.check#check_event(type='checkbox' name='event_check')
                   label.control-label Event
               .form-group.events
                 .form-group
                   label.control-label.col-md-3 Start
+                    span.required *
                   .col-md-3
                     .input-group
                       .input-group.date.date-picker(data-date-format='dd-mm-yyyy')
@@ -108,13 +106,13 @@ block content
                   .col-md-3
                     .input-group
                       .input-group.date.date-picker(data-date-format='dd-mm-yyyy')
-                        input.form-control(type='text', name="end_date", value="#{end_date_?end_date_:data_time}")
+                        input.form-control(type='text', name="end_date", value="#{end_date_?end_date_:''}")
                         span.input-group-btn
                           button.btn.default.date-set(type='button')
                             i.fa.fa-calendar
                   .col-md-3
                     .input-group
-                      input.form-control.timepicker.timepicker-no-seconds(type='text', name='end_time', data-default-time="", value="#{end_time_?end_time_:'22:00'}")
+                      input.form-control.timepicker.timepicker-no-seconds(type='text', name='end_time', data-default-time="", value="#{end_time_?end_time_:''}")
                       span.input-group-btn
                         button.btn.default(type='button')
                             i.fa.fa-clock-o
@@ -164,6 +162,8 @@ block scripts
       }
       else{ 
         $(".events").css("display", "block");
+        $('#check_event').prop('checked',true);
+        $.uniform.update('#check_event');
         }
       console.log("payment");
       $('.date-picker').datepicker({

@@ -43,7 +43,7 @@ import com.nl.clubbook.ui.fragment.GoingOutFragment;
 import com.nl.clubbook.ui.fragment.MessagesFragment;
 import com.nl.clubbook.ui.fragment.SettingsFragment;
 import com.nl.clubbook.ui.fragment.UsersNearbyFragment;
-import com.nl.clubbook.ui.fragment.YesterdayFragment;
+import com.nl.clubbook.ui.fragment.YesterdayPlacesFragment;
 import com.nl.clubbook.ui.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.CheckInOutCallbackInterface;
 import com.nl.clubbook.helper.ImageHelper;
@@ -53,6 +53,7 @@ import com.nl.clubbook.helper.NotificationHelper;
 import com.nl.clubbook.ui.drawer.NavDrawerData;
 import com.nl.clubbook.ui.drawer.NavDrawerListAdapter;
 import com.nl.clubbook.ui.view.CustomToolBar;
+import com.nl.clubbook.utils.CalendarUtils;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.pubnub.api.Callback;
@@ -64,6 +65,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created with IntelliJ IDEA.
@@ -146,8 +148,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     protected void onDestroy() {
-        L.e("onDestroy");
-
         fragmentMap.clear();
 
         unregisterReceiver(mCheckInCheckOutReceiver);
@@ -386,7 +386,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
                 ClubbookPreferences preferences = ClubbookPreferences.getInstance(getBaseContext());
                 if (preferences.getConversationListener() != null && preferences.getConversationListener().equalsIgnoreCase(userFrom + "_" + userTo)) {
-                    ChatMessage lastMessage = JSONConverter.newChatMessage(data.optJSONObject("last_message"));
+                    int timeDifferenceFromUTC = CalendarUtils.getTimeDifferenceFromUTC();
+
+                    ChatMessage lastMessage = JSONConverter.newChatMessage(data.optJSONObject("last_message"), timeDifferenceFromUTC);
                     chatFragment.receiveComment(lastMessage);
                 } else {
                     updateMessagesCount();
@@ -474,7 +476,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         fragmentMap.put(NavDrawerData.MESSAGES_POSITION, new MessagesFragment());
         fragmentMap.put(NavDrawerData.FAST_CHECK_IN, new FastCheckInFragment());
         fragmentMap.put(NavDrawerData.USERS_NEARBY, new UsersNearbyFragment());
-        fragmentMap.put(NavDrawerData.YESTERDAY, new YesterdayFragment());
+        fragmentMap.put(NavDrawerData.YESTERDAY, new YesterdayPlacesFragment());
         fragmentMap.put(NavDrawerData.FRIENDS_POSITION, new FriendsFragment());
     }
 

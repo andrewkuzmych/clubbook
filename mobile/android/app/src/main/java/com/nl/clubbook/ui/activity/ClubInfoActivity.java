@@ -7,6 +7,8 @@ import android.view.MenuItem;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.nl.clubbook.R;
+import com.nl.clubbook.model.data.JSONConverter;
+import com.nl.clubbook.model.data.Place;
 import com.nl.clubbook.ui.adapter.ClubInfoPagerAdapter;
 
 /**
@@ -41,12 +43,18 @@ public class ClubInfoActivity extends BaseActivity {
         String screenTitle = intent.getStringExtra(EXTRA_TITLE);
         String jsonClub = intent.getStringExtra(EXTRA_CLUB);
 
+        Place place = JSONConverter.newPlace(jsonClub);
+        if(place == null) {
+            return;
+        }
+
         initActionBar(screenTitle);
 
         //init ViewPager
         String[] titles = getResources().getStringArray(R.array.club_info_titles);
-        ClubInfoPagerAdapter mClubInfoPagerAdapter = new ClubInfoPagerAdapter(getSupportFragmentManager(), titles, jsonClub);
+        ClubInfoPagerAdapter mClubInfoPagerAdapter = new ClubInfoPagerAdapter(getSupportFragmentManager(), titles, place);
         ViewPager viewPager = (ViewPager)findViewById(R.id.viewPager);
+        viewPager.setOffscreenPageLimit(ClubInfoPagerAdapter.FRAGMENT_COUNT);
         viewPager.setAdapter(mClubInfoPagerAdapter);
 
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);

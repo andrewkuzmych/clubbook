@@ -31,5 +31,6 @@
 
     <dimen name="default_btn_corners_radius">2dp</dimen>
     <dimen name="size_location_image">200dp</dimen>
+    <dimen name="default_settings_item_size">64dp</dimen>
 
 </resources>
