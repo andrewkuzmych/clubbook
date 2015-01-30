@@ -32,6 +32,9 @@
     NSString *accessToken;
     
     BOOL isRefreshingNews;
+    
+    double userLon;
+    double userLat;
 }
 static ClubbookManager* manager;
 static NSString* NewsFeedCellIdentifier = @"NewsFeedCell";
@@ -57,7 +60,6 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     self.type = type;
     self.newsObjectId = objectId;
     self.parentViewController = parent;
-    
     manager = [[ClubbookManager alloc] init];
     manager.communicator = [[ClubbookCommunicator alloc] init];
     manager.communicator.delegate = manager;
@@ -93,7 +95,7 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
 
 - (void) loadNews:(int)skip limit:(int)limit refreshing:(BOOL)refreshing {
     isRefreshingNews = refreshing;
-    [manager retrieveNews:self.type withId:self.newsObjectId accessToken:accessToken skip:skip limit:limit];
+    [manager retrieveNews:self.type withId:self.newsObjectId accessToken:accessToken skip:skip limit:limit userLon:userLon userLat:userLat];
 }
 
 - (void) didReceiveNews:(NSArray*) news {
@@ -165,11 +167,20 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
     if (cell == nil) {
         cell = [[NewsFeedCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NewsFeedCellIdentifier];
     }
-    
     NewsData* news = [newsArray objectAtIndex:indexPath.row];
-    UIImage* avatar = [self getProperAvatarImage:self.type newsData:news];
-    [cell.avatarImage sd_setImageWithURL:[NSURL URLWithString:@""] placeholderImage:avatar];
-    
+    dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(concurrentQueue, ^{
+        __block UIImage *image = nil;
+        
+        dispatch_sync(concurrentQueue, ^{
+            image = [self getProperAvatarImage:self.type newsData:news];
+        });
+        
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [cell.avatarImage setImage:image];
+        });
+    });
+
     if ([news.type isEqualToString:@"event"]) {
         NSString* title = [NSString stringWithFormat:@"EVENT: %@", news.title];
         [cell.nameLabel setText:title];

@@ -46,7 +46,7 @@
 
 - (void)retrieveUser:(NSString *) accessToken;
 
-- (void)retrieveNews:(NSString*)type withId:(NSString*)objectId accessToken:(NSString*) accessToken skip:(int)skip limit:(int)limit;
+- (void)retrieveNews:(NSString*)type withId:(NSString*)objectId accessToken:(NSString*) accessToken skip:(int)skip limit:(int)limit userLon:(double) lon userLat:(double) lat;
 
 - (void)retrieveFriend:(NSString *) friendId accessToken:(NSString *) accessToken;
 
