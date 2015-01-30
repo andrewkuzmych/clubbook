@@ -17,6 +17,7 @@
 #import "Constants.h"
 #import "UIImageView+WebCache.h"
 #import "SVPullToRefresh.h"
+#import "LocationManagerSingleton.h"
 
 #define STATIC_HEIGHT 100
 
@@ -95,6 +96,10 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
 
 - (void) loadNews:(int)skip limit:(int)limit refreshing:(BOOL)refreshing {
     isRefreshingNews = refreshing;
+    if ([self.type isEqualToString:@"events"]) {
+        userLat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
+        userLon = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
+    }
     [manager retrieveNews:self.type withId:self.newsObjectId accessToken:accessToken skip:skip limit:limit userLon:userLon userLat:userLat];
 }
 
