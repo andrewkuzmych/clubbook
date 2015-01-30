@@ -131,6 +131,43 @@ exports.list_club = (params, callback)->
         db_model.Venue.aggregate query, {}, (err, types)->
           callback err, clubs, types 
 
+exports.list_events = (params, callback)->
+  console.log "METHOD - Manager list_events"
+  geoNear = 
+      near: [parseFloat(params.lon), parseFloat(params.lat)],
+      distanceField: "distance",
+      spherical: true,
+      distanceMultiplier: 6371  
+  if params.distance
+    geoNear.maxDistance = params.distance/6371 
+  query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take}]
+  db_model.Venue.aggregate query,{}, (err, clubs)->
+    club_ids = []
+    for club in clubs
+      club_ids.push club._id
+      if club.club_working_hours
+        for wh in club.club_working_hours
+          if wh.day == moment.utc().day()
+            club.id = club._id
+            club.club_today_working_hours = wh
+    db_model.News.find({"venue": {'$in': club_ids}, 'type': "event"}).exec (err, events)-> 
+      events_objects = []
+      for even in events
+        events_object = even.toObject()
+        if events_object.end_time&&(moment.utc(events_object.end_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss'))
+          events_objects.push events_object
+          events_object.created_on_formatted = moment.utc(events_object.created_on).format("YYYY-MM-DD, HH:mm:ss")
+          events_object.updated_on_formatted = moment.utc(events_object.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+          events_object.start_time_formatted = moment.utc(events_object.start_time).format("YYYY-MM-DD, HH:mm:ss")
+          events_object.end_time_formatted = moment.utc(events_object.end_time).format("YYYY-MM-DD, HH:mm:ss")
+        else if moment.utc(events_object.start_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')
+          events_objects.push events_object
+          events_object.created_on_formatted = moment.utc(events_object.created_on).format("YYYY-MM-DD, HH:mm:ss")
+          events_object.updated_on_formatted = moment.utc(events_object.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+          events_object.start_time_formatted = moment.utc(events_object.start_time).format("YYYY-MM-DD, HH:mm:ss")
+          events_object.end_time_formatted = moment.utc(events_object.end_time).format("YYYY-MM-DD, HH:mm:ss")
+      callback err, events_objects
+
 exports.get_people_count_in_club = (club, callback)->
   console.log "METHOD - Manager get_people_count_in_club"
   db_model.User.count({'checkin': { '$elemMatch': { 'club' : club, 'active': true}}}).exec callback
