@@ -23,6 +23,7 @@
     bool canChat;
     Chat *_chat;
     NSString* accessToken;
+    NSMutableArray* conversations;
 }
 
 @end
@@ -66,6 +67,8 @@
     
     [self._manager retrieveConversation:self.senderId toUser:self.userTo accessToken:accessToken];
     [self showProgress:YES title:nil];
+    
+    conversations = [[NSMutableArray alloc] init];
 }
 
 - (void) initToolbarButtons {
@@ -85,6 +88,29 @@
     self.inputToolbar.contentView.backgroundColor = [UIColor colorWithRed:52/255.0 green:3/255.0 blue:69/255.0 alpha:1.0];
 }
 
+- (void) displayAdditionalMessages:(int) count {
+    NSMutableArray *tempMessageArray = [[NSMutableArray alloc] init];
+    int currentMessagesCount = [self.messages count];
+    
+    int rangeBottom = [conversations count] - currentMessagesCount;
+    int rangeTop = rangeBottom - count;
+    if (rangeTop < 0) rangeTop = 0;
+    
+    for (int i = rangeTop; i < rangeBottom; ++i) {
+        Conversation* conf = [conversations objectAtIndex:i];
+        JSQMessage* msg = [self loadMessage:conf.user_from displayName:conf.user_from date:conf.time message:conf.msg type:conf.type url:conf.url location:conf.location];
+        [tempMessageArray addObject:msg];
+    }
+    
+    NSMutableArray* newArrayOfMessages = [[NSMutableArray alloc] init];
+    [newArrayOfMessages addObjectsFromArray:tempMessageArray];
+    
+    for (JSQMessage* msg in self.messages) {
+        [newArrayOfMessages addObject:msg];
+    }
+    self.messages = newArrayOfMessages;
+}
+
 - (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message {
     NSDictionary *dataJson = [message.message valueForKey:@"data"];
     NSDictionary *messageJson = [dataJson valueForKey:@"last_message"];
@@ -98,7 +124,8 @@
     if ([user_to isEqualToString:self.senderId] && [user_from isEqualToString:self.userTo]) {
         canChat = YES;
         [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
-        [self loadMessage:user_from displayName:user_from date:[NSDate date] message:msg type:type url:url location:location];
+        JSQMessage* jMsg = [self loadMessage:user_from displayName:user_from date:[NSDate date] message:msg type:type url:url location:location];
+        [self.messages addObject:jMsg];
         [self._manager readChat:_chat.currentUser.id toUser:_chat.receiver.id accessToken:accessToken];
         [self finishReceivingMessage];
     }
@@ -151,13 +178,15 @@
         });
 
         for(Conversation * conf in chat.conversations) {
-            [self loadMessage:conf.user_from displayName:conf.user_from date:conf.time message:conf.msg type:conf.type url:conf.url location:conf.location];
+            [conversations addObject:conf];
         }
+        
+        [self displayAdditionalMessages:10];
         
         [self setCanChat];
         [self finishReceivingMessage];
-        
-        
+        [self scrollToBottomAnimated:YES];
+
         [self._manager readChat:chat.currentUser.id toUser:chat.receiver.id accessToken:accessToken];
         
     });
@@ -227,19 +256,22 @@
     [self setCanChat];
 }
 
-- (void)loadMessage:(NSString*) sender displayName:(NSString*)displayName date:(NSDate*)date message:(NSString*)message type:(NSString*)type url:(NSString*)url location:(NSDictionary*) location{
+- (JSQMessage*)loadMessage:(NSString*) sender displayName:(NSString*)displayName date:(NSDate*)date message:(NSString*)message type:(NSString*)type url:(NSString*)url location:(NSDictionary*) location{
+    JSQMessage* jsqMessage;
+    
     if ([type isEqualToString:@"photo"]) {
-        [self loadPhotoMessage:sender displayName:displayName date:date url:url];
+        jsqMessage = [self loadPhotoMessage:sender displayName:displayName date:date url:url];
     }
     else if ([type isEqualToString:@"location"]) {
-        [self loadLocationMessage:sender displayName:displayName date:date location:location];
+        jsqMessage = [self loadLocationMessage:sender displayName:displayName date:date location:location];
     }
     else {
-        [self loadTextMessage:sender displayName:displayName date:date message:message];
+        jsqMessage = [self loadTextMessage:sender displayName:displayName date:date message:message];
     }
+    return jsqMessage;
 }
 
-- (void) loadPhotoMessage:(NSString*) sender displayName:(NSString*)displayName date:(NSDate*)date url:(NSString*)url {
+- (JSQMessage*) loadPhotoMessage:(NSString*) sender displayName:(NSString*)displayName date:(NSDate*)date url:(NSString*)url {
     JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:nil andFilePath:url];
     
     __weak UICollectionView *weakView = self.collectionView;
@@ -256,7 +288,7 @@
     JSQMessage *photoMessage = [[JSQMessage alloc] initWithSenderId:sender senderDisplayName:displayName date:date media:photoItem];
     
     
-    [self.messages addObject:photoMessage];
+    return photoMessage;
 }
 
 - (void) uploadPhotoMessage:(UIImage*) image {
@@ -294,7 +326,7 @@
 
 }
 
-- (void) loadLocationMessage:(NSString*) sender displayName:(NSString*)displayName date:(NSDate*)date location:(NSDictionary*) location {
+- (JSQMessage*) loadLocationMessage:(NSString*) sender displayName:(NSString*)displayName date:(NSDate*)date location:(NSDictionary*) location {
     __weak UICollectionView *weakView = self.collectionView;
     NSNumber* lat = [location objectForKey:@"lat"];
     NSNumber* lon = [location objectForKey:@"lon"];
@@ -313,12 +345,12 @@
     }];
     
     JSQMessage *locationMessage = [[JSQMessage alloc] initWithSenderId:sender senderDisplayName:displayName date:date media:locationItem];
-    [self.messages addObject:locationMessage];
+    return locationMessage;
 }
 
-- (void) loadTextMessage:(NSString*) sender displayName:(NSString*)displayName date:(NSDate*)date message:(NSString*)message {
+- (JSQMessage*) loadTextMessage:(NSString*) sender displayName:(NSString*)displayName date:(NSDate*)date message:(NSString*)message {
     JSQMessage *jsqmessage = [[JSQMessage alloc] initWithSenderId:sender senderDisplayName:displayName date:date text:message];
-    [self.messages addObject:jsqmessage];
+    return jsqmessage;
 }
 
 #pragma mark - JSQMessagesViewController method overrides
@@ -442,6 +474,15 @@
     }
 }
 
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+    JSQMessagesLoadEarlierHeaderView* headerView = [self.collectionView dequeueLoadEarlierMessagesViewHeaderForIndexPath:indexPath];
+    return headerView;
+}
+
+- (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
+    return CGSizeMake(60.0f, 30.0f);
+}
+
 
 #pragma mark - JSQMessages collection view flow layout delegate
 
@@ -531,7 +572,7 @@
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView
                 header:(JSQMessagesLoadEarlierHeaderView *)headerView didTapLoadEarlierMessagesButton:(UIButton *)sender
 {
-    NSLog(@"Load earlier messages!");
+    [self displayAdditionalMessages:10];
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
@@ -585,7 +626,8 @@
     [location setObject:lat forKey:@"lat"];
     
     [self sendMessage:@"Check my location!" url:@"" type:@"location" location:location];
-    [self loadMessage:self.senderId displayName:self.senderDisplayName date:[NSDate date] message:@"" type:@"location" url:@"" location:location];
+    JSQMessage* locMsg = [self loadMessage:self.senderId displayName:self.senderDisplayName date:[NSDate date] message:@"" type:@"location" url:@"" location:location];
+    [self.messages addObject:locMsg];
     [self finishReceivingMessage];
 }
 
