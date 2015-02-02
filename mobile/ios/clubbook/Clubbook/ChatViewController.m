@@ -24,6 +24,7 @@
     Chat *_chat;
     NSString* accessToken;
     NSMutableArray* conversations;
+    JSQMessagesLoadEarlierHeaderView* headerView;
 }
 
 @end
@@ -67,8 +68,7 @@
     
     [self._manager retrieveConversation:self.senderId toUser:self.userTo accessToken:accessToken];
     [self showProgress:YES title:nil];
-    
-    conversations = [[NSMutableArray alloc] init];
+
 }
 
 - (void) initToolbarButtons {
@@ -108,7 +108,15 @@
     for (JSQMessage* msg in self.messages) {
         [newArrayOfMessages addObject:msg];
     }
-    self.messages = newArrayOfMessages;
+    self.messages = [[NSMutableArray alloc] initWithArray:newArrayOfMessages];
+    
+    currentMessagesCount = [self.messages count];
+    
+    if (currentMessagesCount == [conversations count] && headerView != nil) {
+        [headerView setHidden:YES];
+        return;
+    }
+
 }
 
 - (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message {
@@ -174,9 +182,14 @@
                 [button addTarget:self action:@selector(onUser:) forControlEvents:UIControlEventTouchUpInside];
                 UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
                 self.navigationItem.rightBarButtonItem = barButtonItem;
+                [self.collectionView reloadData];
             });
         });
 
+        
+        conversations = [[NSMutableArray alloc] init];
+
+        
         for(Conversation * conf in chat.conversations) {
             [conversations addObject:conf];
         }
@@ -363,6 +376,8 @@
 {
     [JSQSystemSoundPlayer jsq_playMessageSentSound];
     [self sendMessage:text url:@"" type:@"message" location:nil];
+    JSQMessage* msg = [self loadTextMessage:senderId displayName:senderDisplayName date:date message:text];
+    [self.messages addObject:msg];
     [self finishSendingMessage];
 }
 
@@ -475,7 +490,7 @@
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    JSQMessagesLoadEarlierHeaderView* headerView = [self.collectionView dequeueLoadEarlierMessagesViewHeaderForIndexPath:indexPath];
+    headerView = [self.collectionView dequeueLoadEarlierMessagesViewHeaderForIndexPath:indexPath];
     return headerView;
 }
 
@@ -573,6 +588,7 @@
                 header:(JSQMessagesLoadEarlierHeaderView *)headerView didTapLoadEarlierMessagesButton:(UIButton *)sender
 {
     [self displayAdditionalMessages:10];
+    [self.collectionView reloadData];
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
