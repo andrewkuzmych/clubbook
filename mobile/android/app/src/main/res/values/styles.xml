@@ -2,19 +2,14 @@
 <resources>
 
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-
         <item name="colorPrimary">@color/main_background_color</item>
         <item name="colorPrimaryDark">@color/main_background_color</item>
 
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+        <item name="windowActionModeOverlay">true</item>
 
-        <!--<item name="actionBarStyle">@style/AppActionBar</item>-->
-        <!--<item name="android:seekBarStyle">@style/SeekBarAppTheme</item>-->
-        <!--<item name="android:editTextStyle">@style/EditTextAppTheme</item>-->
-        <!--<item name="android:checkboxStyle">@style/CheckBoxAppTheme</item>-->
-        <!--<item name="android:spinnerStyle">@style/SpinnerAppTheme</item>-->
-        <!--<item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemAppTheme</item>-->
+        <item name="actionModeBackground">@color/bg_action_mode</item>
     </style>
 
     <style name="AppBlackTheme" parent="@style/AppTheme">
@@ -30,12 +25,12 @@
     <style name="SeekBarAppTheme" parent="android:Widget.SeekBar">
         <item name="android:progressDrawable">@drawable/apptheme_scrubber_progress_horizontal_holo_light</item>
         <item name="android:indeterminateDrawable">@drawable/apptheme_scrubber_progress_horizontal_holo_light</item>
-        <item name="android:minHeight">13dip</item>
-        <item name="android:maxHeight">13dip</item>
+        <item name="android:minHeight">13dp</item>
+        <item name="android:maxHeight">13dp</item>
         <item name="android:thumb">@drawable/apptheme_scrubber_control_selector_holo_light</item>
-        <item name="android:thumbOffset">16dip</item>
-        <item name="android:paddingLeft">16dip</item>
-        <item name="android:paddingRight">16dip</item>
+        <item name="android:thumbOffset">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
     </style>
 
     <style name="EditTextAppTheme" parent="android:Widget.EditText">

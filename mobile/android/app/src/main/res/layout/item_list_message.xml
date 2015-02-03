@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/selector_bg_btn_white"
+    android:background="@drawable/selector_list_item"
     android:orientation="horizontal"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
@@ -10,11 +10,25 @@
     android:paddingBottom="8dp"
     android:gravity="center_vertical">
 
-    <com.nl.clubbook.ui.view.CircleImageView
-        android:id="@+id/imgAvatar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:scaleType="centerCrop"/>
+    <RelativeLayout
+        android:layout_width="40dp"
+        android:layout_height="40dp">
+
+        <ImageView
+            android:id="@+id/imgSelection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/circle_grey"
+            android:src="@drawable/ic_done_white"
+            android:scaleType="centerInside"/>
+
+        <com.nl.clubbook.ui.view.CircleImageView
+            android:id="@+id/imgAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="0dp"

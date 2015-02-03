@@ -2,5 +2,8 @@
 <resources>
 
     <integer name="grid_users_column_count">3</integer>
+
+    <integer name="card_flip_time_full">300</integer>
+    <integer name="card_flip_time_half">150</integer>
     
 </resources>

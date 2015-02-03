@@ -8,12 +8,9 @@
 
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+        <item name="windowActionModeOverlay">true</item>
 
-        <!--<item name="android:actionBarStyle">@style/AppActionBar</item>-->
-        <!--<item name="android:seekBarStyle">@style/SeekBarAppTheme</item>-->
-        <!--<item name="android:editTextBackground">@drawable/apptheme_edit_text_holo_light</item>-->
-        <!--<item name="android:listChoiceIndicatorMultiple">@drawable/apptheme_btn_check_holo_light</item>-->
-        <!--<item name="android:dropDownSpinnerStyle">@style/SpinnerAppTheme</item>-->
+        <item name="actionModeBackground">@color/bg_action_mode</item>
     </style>
 
     <style name="AppBlackTheme" parent="AppTheme">
