@@ -82,6 +82,7 @@
 - (void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position
 {
     self.view.userInteractionEnabled = (revealController.frontViewPosition == FrontViewPositionRight ? FALSE : TRUE);
+    [[self navigationController] setNavigationBarHidden:NO animated:NO];
 }
 
 

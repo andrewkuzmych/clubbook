@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BaseViewController.h"
 
 @class QMBParallaxScrollViewController;
 
@@ -52,7 +53,7 @@ typedef NS_ENUM(NSUInteger, QMBParallaxGesture) {
 
 
 
-@interface QMBParallaxScrollViewController : UIViewController<UIGestureRecognizerDelegate, UIScrollViewDelegate>
+@interface QMBParallaxScrollViewController : BaseViewController<UIGestureRecognizerDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, strong) id<QMBParallaxScrollViewControllerDelegate> delegate;
 
@@ -94,6 +95,7 @@ typedef NS_ENUM(NSUInteger, QMBParallaxGesture) {
 
 // inits
 -(void) setupWithTopViewController:(UIViewController *)topViewController andTopHeight:(CGFloat)height andBottomViewController:(UIViewController *)bottomViewController;
+
 
 
 // configs

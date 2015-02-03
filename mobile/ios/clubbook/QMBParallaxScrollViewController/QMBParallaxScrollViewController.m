@@ -325,4 +325,8 @@
     self.initialMinHeightBorder = minHeightBorder;
 }
 
+- (void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position {
+    [[self navigationController] setNavigationBarHidden:NO animated:NO];
+}
+
 @end
