@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/circle_grey"
             android:src="@drawable/ic_done_white"
-            android:scaleType="centerInside"/>
+            android:scaleType="center"/>
 
         <com.nl.clubbook.ui.view.CircleImageView
             android:id="@+id/imgAvatar"
