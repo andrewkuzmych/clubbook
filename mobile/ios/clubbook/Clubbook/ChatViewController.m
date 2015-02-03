@@ -170,7 +170,7 @@
                 NSData *senderUserData = [NSData dataWithContentsOfURL:senderUserUrlImageURL];
                 userImg = [UIImage imageWithData:senderUserData];
             });
-            dispatch_sync(dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
                 self.companionAvatar =  [JSQMessagesAvatarImageFactory avatarImageWithImage:compImg diameter:incomingDiameter];
                 self.userAvatar =  [JSQMessagesAvatarImageFactory avatarImageWithImage:userImg diameter:outgoingDiameter];
                 
