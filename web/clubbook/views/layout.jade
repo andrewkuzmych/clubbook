@@ -155,11 +155,12 @@ html(lang='en')
                     i.icon-bubble
                     span.title News
                     span.selected
-                li(class=req_path.indexOf("/users") != -1 ? "active":"")
-                  a(href='/venue/users')
-                    i.icon-users
-                    span.title Users
-                    span.selected
+                if current_user.is_admin
+                  li(class=req_path.indexOf("/users") != -1 ? "active":"")
+                    a(href='/venue/users')
+                      i.icon-users
+                      span.title Users
+                      span.selected
                 li
                   a(href='#')
                     i.icon-bar-chart

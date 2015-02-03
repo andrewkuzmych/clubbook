@@ -45,8 +45,6 @@
         [FBDialogs presentShareDialogWithLink:params.link
                                       handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
                                           if(error) {
-                                              // An error occurred, we need to handle the error
-                                              // See: https://developers.facebook.com/docs/ios/errors
                                               NSLog(@"Error publishing story: %@", error.description);
                                           } else {
                                               // Success

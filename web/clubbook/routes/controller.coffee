@@ -101,9 +101,9 @@ exports.home = (req, res)->
 exports.clubs = (req, res)->
   create_base_model req, res, (model)->
     #req.params.venue_id
-    db_model.Venue.find().exec (err, venues)->
-        model.clubs = venues
-        res.render "pages/clubs", model
+    db_model.Venue.find(model.my_venues).exec (err, venues)->
+      model.clubs = venues
+      res.render "pages/clubs", model
 
 exports.users = (req, res)->
   console.log 'Users'
@@ -416,6 +416,6 @@ create_base_model = (req, res, callback)->
     model.has_error = true
   else
     model.has_error = false
-
-
+  if req.user
+    model.my_venues = if req.user.is_admin then {} else {"club_admin": req.user._id}
   callback model

@@ -716,11 +716,14 @@
     });
 }
 
-- (void)retrieveNews:(NSString*)type withId:(NSString*) objectId accessToken:(NSString*) accessToken skip:(int)skip limit:(int) limit {
+- (void)retrieveNews:(NSString*)type withId:(NSString*) objectId accessToken:(NSString*) accessToken skip:(int)skip limit:(int) limit userLon:(double) lon userLat:(double) lat {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
         NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/favorite/news?access_token=%@&skip=%d&limit=%d", baseURL, accessToken, skip, limit];
-        if ([type isEqualToString:@"club"]) {
+        if ([type isEqualToString:@"events"]) {
+            urlAsString = [NSString stringWithFormat:@"%@obj/user/favorite/events?user_lat=%f&user_lon=%f&access_token=%@&skip=%d&limit=%d", baseURL, lat, lon, accessToken, skip, limit];
+        }
+        else if ([type isEqualToString:@"club"]) {
             urlAsString= [NSString stringWithFormat:@"%@obj/club/%@/news?access_token=%@&skip=%d&limit=%d", baseURL, objectId, accessToken, skip, limit];
         }
 

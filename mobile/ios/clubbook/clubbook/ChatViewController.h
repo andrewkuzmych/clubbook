@@ -40,6 +40,4 @@
 
 @property (nonatomic, retain) UIDocumentInteractionController *docController;
 
-- (void)canRotate;
-
 @end

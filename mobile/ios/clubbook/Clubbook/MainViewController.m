@@ -73,7 +73,7 @@
     
     [self initFilterTabBar];
     [self initSearchBar];
-    [self.eventsTable initializeNewsTableType:@"news" objectId:@"" andParentViewCntroller:(UIViewController*) self];
+    [self.eventsTable initializeNewsTableType:@"events" objectId:@"" andParentViewCntroller:(UIViewController*) self];
     
     user_lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
     user_lon = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;

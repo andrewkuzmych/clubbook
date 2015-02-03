@@ -73,8 +73,8 @@
     [self.communicator retrieveUser:accessToken];
 }
 
-- (void)retrieveNews:(NSString*)type withId:(NSString*)objectId accessToken:(NSString*) accessToken skip:(int)skip limit:(int)limit{
-    [self.communicator retrieveNews:type withId:objectId accessToken:accessToken skip:skip limit:limit];
+- (void)retrieveNews:(NSString*)type withId:(NSString*)objectId accessToken:(NSString*) accessToken skip:(int)skip limit:(int)limit userLon:(double) lon userLat:(double) lat {
+    [self.communicator retrieveNews:type withId:objectId accessToken:accessToken skip:skip limit:limit userLon:lon userLat:lat];
 }
 
 - (void)retrieveFriend:(NSString *) friendId accessToken:(NSString *) accessToken

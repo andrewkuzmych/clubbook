@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import <Parse/Parse.h>
 #import "GAI.h"
+#import "Constants.h"
 #import "SidebarViewController.h"
 #import "MessagesViewController.h"
 #import "ChatViewController.h"
@@ -99,6 +100,30 @@
     
     // Perform check for new version of your app
     [[Harpy sharedInstance] checkVersion];
+    
+    //Pubnub staff
+    PNConfiguration *myConfig = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"  publishKey: Constants.PubnabPubKay subscribeKey:Constants.PubnabSubKay secretKey:nil];
+    
+    [PubNub disconnect];
+    [PubNub setConfiguration:myConfig];
+    
+    [PubNub connectWithSuccessBlock:^(NSString *origin) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *userId = [defaults objectForKey:@"userId"];
+        NSString *channal = [NSString stringWithFormat:@"%message_%@", userId];
+        [PubNub subscribeOnChannel:[PNChannel channelWithName:channal shouldObservePresence:YES]];
+    }
+     
+                         errorBlock:^(PNError *connectionError) {
+                             if (connectionError.code == kPNClientConnectionFailedOnInternetFailureError) {
+                                 PNLog(PNLogGeneralLevel, self, @"Connection will be established as soon as internet connection will be restored");
+                             }
+                             
+                         }];
+    
+    NSString *channal = [NSString stringWithFormat:@"checkin"];
+    [PubNub subscribeOnChannel:[PNChannel channelWithName:channal shouldObservePresence:YES]];
+
     
     return YES;
 }

@@ -26,6 +26,8 @@
  */
 @interface JSQPhotoMediaItem : JSQMediaItem <JSQMessageMediaData, NSCoding, NSCopying>
 
+typedef void (^JSQPhotoMediaItemCompletionBlock)(void);
+
 /**
  *  The image for the photo media item. The default value is `nil`.
  */
@@ -44,5 +46,5 @@
  *  Once the image has been retrieved, you can then set the image property.
  */
 - (instancetype)initWithImage:(UIImage *)image andFilePath:(NSString*)url;
-
+- (void) setImageWithURL:(NSString*)url withCompletionBlock:(JSQPhotoMediaItemCompletionBlock)completion;
 @end
