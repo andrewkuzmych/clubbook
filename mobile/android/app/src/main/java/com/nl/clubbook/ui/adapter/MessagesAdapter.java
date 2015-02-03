@@ -1,6 +1,9 @@
 package com.nl.clubbook.ui.adapter;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +28,9 @@ public class MessagesAdapter extends BaseAdapter {
     private Context mContext;
     private List<Chat> mChats = null;
     private LayoutInflater mInflater;
+
+    private View mCurrentSelectedView;
+    private int mCurrentSelectedPosition = -1;
 
     public MessagesAdapter(Context context, List<Chat> chats) {
         mContext = context;
@@ -82,6 +88,44 @@ public class MessagesAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void deleteItem(@Nullable Chat chatToRemove) {
+        if(chatToRemove == null) {
+            return;
+        }
+
+        mChats.remove(chatToRemove);
+        notifyDataSetChanged();
+    }
+
+    public void setSelection(View view, int position) {
+        mCurrentSelectedPosition = position;
+
+        if(mCurrentSelectedView != null) {
+            mCurrentSelectedView.setSelected(false);
+            animatedUserAvatarOut();
+        }
+
+        mCurrentSelectedView = view;
+
+        mCurrentSelectedView.setSelected(true);
+        animateUserAvatarIn();
+    }
+
+    public void removeSelection() {
+        if(mCurrentSelectedView == null) {
+            return;
+        }
+
+        mCurrentSelectedView.setSelected(false);
+        mCurrentSelectedPosition = -1;
+        animatedUserAvatarOut();
+        mCurrentSelectedView = null;
+    }
+
+    public int getCurrentSelectedPosition() {
+        return mCurrentSelectedPosition;
+    }
+
     private void fillView(MessageItemHolder holder, Chat messageItem) {
         if(messageItem == null) {
             return;
@@ -117,6 +161,41 @@ public class MessagesAdapter extends BaseAdapter {
         } else {
             holder.imgAvatar.setTag("");
         }
+    }
+
+    private void animateUserAvatarIn() {
+        if(mCurrentSelectedView == null) {
+            return;
+        }
+
+        View imgAvatar = mCurrentSelectedView.findViewById(R.id.imgAvatar);
+        View imgSelection = mCurrentSelectedView.findViewById(R.id.imgSelection);
+        imgSelection.setVisibility(View.VISIBLE);
+
+        AnimatorSet animAvatar = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.card_flip_right_out);
+        animAvatar.setTarget(imgAvatar);
+        animAvatar.start();
+
+        AnimatorSet animSelection = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.card_flip_left_in);
+        animSelection.setTarget(imgSelection);
+        animSelection.start();
+    }
+
+    private void animatedUserAvatarOut() {
+        if(mCurrentSelectedView == null) {
+            return;
+        }
+
+        View imgAvatar = mCurrentSelectedView.findViewById(R.id.imgAvatar);
+        View imgSelection = mCurrentSelectedView.findViewById(R.id.imgSelection);
+
+        AnimatorSet animAvatar = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.card_flip_right_in);
+        animAvatar.setTarget(imgAvatar);
+        animAvatar.start();
+
+        AnimatorSet animSelection = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.card_flip_left_out);
+        animSelection.setTarget(imgSelection);
+        animSelection.start();
     }
 
     static class MessageItemHolder {

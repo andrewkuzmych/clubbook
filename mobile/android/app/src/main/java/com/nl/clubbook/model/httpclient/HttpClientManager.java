@@ -1409,6 +1409,42 @@ public class HttpClientManager {
         });
     }
 
+    public void deleteConversation(String currentUserId, String receiverUserId, String accessToken, final OnResultReady onResultReady) {
+        RequestParams params = new RequestParams();
+        params.put("access_token", accessToken);
+
+        ClubbookRestClient.deleteConversation(currentUserId, receiverUserId, params, new JsonHttpResponseHandler() {
+            private boolean failed = true;
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final JSONObject responseJson) {
+
+                if ("ok".equalsIgnoreCase(responseJson.optString("status"))) {
+                    failed = false;
+                } else {
+                    failed = true;
+                }
+
+                onResultReady.onReady(null, failed);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONObject errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, java.lang.Throwable throwable, final JSONArray errorResponse) {
+                onResultReady.onReady(null, true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+    }
+
     /**
      * Get all conversation one person have with all people
      *

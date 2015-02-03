@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="list_item_title">#000000</color>
     <color name="list_background">#FFF</color>
     <color name="list_background_pressed">#55592B5C</color>
-    <color name="counter_text_bg">#F58711</color>
-    <color name="counter_text_color">#c5c4c4</color>
-    <color name="title_background">#FFFFFF</color>
-    <color name="title">#FFFFFF</color>
     <color name="blue_light">#00abea</color>
-    <color name="white">#ffffff</color>
 
     <color name="main_background_light_color">#592B5C</color>
     <color name="main_background_color">#340345</color>
     <color name="main_background_light_color_2">#331635</color>
     <color name="main_font_color">#FFFFFF</color>
+
+    <color name="bg_action_mode">#757575</color>
 
     <color name="grey_disabled">#ced0d0</color>
     <color name="grey_txt_selected">#C2C2C2</color>
@@ -29,9 +25,10 @@
     <color name="red_light_semitransparent">#88D61114</color>
     <color name="red_light">#F72320</color>
     <color name="selector">#55592B5C</color>
+    <!--<color name="selector_list_item">#D1C4E9</color>-->
+    <color name="selector_list_item">#EDE7F6</color>
     <color name="white_semitransparent">#55FFFFFF</color>
     <color name="blue">#1C73DA</color>
-    <color name="bg_item_share_content">#F5F5F5</color>
     <color name="color_text_item_share_content">#616161</color>
 
     <color name="btn_green">#4CAF50</color>

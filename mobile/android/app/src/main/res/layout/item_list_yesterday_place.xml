@@ -79,7 +79,7 @@
         android:layout_gravity="center_vertical"
         android:background="@drawable/selector_btn_green"
         android:textSize="@dimen/text_size_intermediate"
-        android:textColor="@color/white"
+        android:textColor="@android:color/white"
         android:paddingRight="10dp"
         android:paddingLeft="10dp"
         android:paddingTop="8dp"
