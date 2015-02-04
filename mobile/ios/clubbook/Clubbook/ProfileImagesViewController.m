@@ -18,7 +18,7 @@
 #import "TransitionFromUserToClubUsers.h"
 #import "ClubUsersViewController.h"
 #import "ClubUsersYesterdayViewController.h"
-#import "UserCheckinsViewController.h"
+#import "UserNearbyViewController.h"
 
 @interface ProfileImagesViewController (){
     // User *_user;

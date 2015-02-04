@@ -18,7 +18,7 @@
 #import "TransitionFromUserToClubUsers.h"
 #import "ClubUsersViewController.h"
 #import "ClubUsersYesterdayViewController.h"
-#import "UserCheckinsViewController.h"
+#import "UserNearbyViewController.h"
 #import "ProfileImagesViewController.h"
 
 @interface UserProfileViewController ()<UINavigationControllerDelegate>{
@@ -231,7 +231,7 @@
         return [[TransitionFromUserToClubUsers alloc] init];
     } else if (fromVC == self && [toVC isKindOfClass:[ClubUsersYesterdayViewController class]]) {
         return [[TransitionFromUserToClubUsers alloc] init];
-    } else if (fromVC == self && [toVC isKindOfClass:[UserCheckinsViewController class]]) {
+    } else if (fromVC == self && [toVC isKindOfClass:[UserNearbyViewController class]]) {
         return [[TransitionFromUserToClubUsers alloc] init];
     }
     else {

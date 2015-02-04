@@ -6,18 +6,18 @@
 //  Copyright (c) 2015 clubbook. All rights reserved.
 //
 
-#import "YesterdayPlacesViewController.h"
+#import "HistoryViewController.h"
 #import "CbButton.h"
 #import "ClubCell.h"
 #import "UIImageView+WebCache.h"
 #import "ClubUsersViewController.h"
 #import "ClubUsersYesterdayViewController.h"
 
-@interface YesterdayPlacesViewController ()
+@interface HistoryViewController ()
 
 @end
 
-@implementation YesterdayPlacesViewController {
+@implementation HistoryViewController {
     Place* placeToView;
 }
 

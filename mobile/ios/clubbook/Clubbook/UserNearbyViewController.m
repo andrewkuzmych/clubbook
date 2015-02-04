@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 clubbook. All rights reserved.
 //
 
-#import "UserCheckinsViewController.h"
+#import "UserNearbyViewController.h"
 #import "HeaderView.h"
 #import "ClubFooterView.h"
 #import "LocationManagerSingleton.h"
@@ -26,7 +26,7 @@
 
 #define FilterCellHeight 40
 
-@interface UserCheckinsViewController ()<UINavigationControllerDelegate>{
+@interface UserNearbyViewController ()<UINavigationControllerDelegate>{
     BOOL isInitialLoad;
     NSMutableArray *_users;
     NSArray* filterOptions;
@@ -40,7 +40,7 @@
 @property (nonatomic) BOOL isLoaded;
 @end
 
-@implementation UserCheckinsViewController
+@implementation UserNearbyViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -81,7 +81,7 @@
     
     self.clubFooterView.footerInfoLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:18];
    
-    __weak UserCheckinsViewController *weakSelf = self;
+    __weak UserNearbyViewController *weakSelf = self;
     
     // setup pull-to-refresh
     [self.profileCollection addPullToRefreshWithActionHandler:^{
@@ -111,7 +111,6 @@
 
 - (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message
 {
-    
     if ([message.channel.name isEqualToString:@"checkin"] ) {
         self.isLoaded = NO;
         [self loadUsers:30 skip:0];

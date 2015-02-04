@@ -155,7 +155,7 @@
 		4994786619D9D011006D38BE /* icon_hours@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4994786219D9D011006D38BE /* icon_hours@2x.png */; };
 		4994786719D9D011006D38BE /* icon_info.png in Resources */ = {isa = PBXBuildFile; fileRef = 4994786319D9D011006D38BE /* icon_info.png */; };
 		4994786819D9D011006D38BE /* icon_info@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4994786419D9D011006D38BE /* icon_info@2x.png */; };
-		4994848519F92E7400E906C0 /* UserCheckinsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4994848419F92E7400E906C0 /* UserCheckinsViewController.m */; };
+		4994848519F92E7400E906C0 /* UserNearbyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4994848419F92E7400E906C0 /* UserNearbyViewController.m */; };
 		4994848819FB7DBD00E906C0 /* FastCheckinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4994848719FB7DBD00E906C0 /* FastCheckinViewController.m */; };
 		4994848C19FB959C00E906C0 /* SwipeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4994848B19FB959C00E906C0 /* SwipeView.m */; };
 		4994848F19FB95C400E906C0 /* ProfilePagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4994848E19FB95C400E906C0 /* ProfilePagesViewController.m */; };
@@ -377,7 +377,7 @@
 		520897861A407C7F00E8DD06 /* JSQSystemSoundPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 520897851A407C7F00E8DD06 /* JSQSystemSoundPlayer.m */; };
 		520F38AC1A5E93B600FB1E65 /* NewsFeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520F38AB1A5E93B600FB1E65 /* NewsFeedViewController.m */; };
 		5210474D1A48300A006DD319 /* DateHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5210474C1A48300A006DD319 /* DateHelper.m */; };
-		5216506F1A78E6AB007F16DE /* YesterdayPlacesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5216506E1A78E6AB007F16DE /* YesterdayPlacesViewController.m */; };
+		5216506F1A78E6AB007F16DE /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5216506E1A78E6AB007F16DE /* HistoryViewController.m */; };
 		52188DAE1A51876E0020DD6F /* MainMenuCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52188DAD1A51876E0020DD6F /* MainMenuCollectionViewCell.m */; };
 		521BEC3F1A52F576003E7A27 /* gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 521BEC3C1A52F576003E7A27 /* gradient.png */; };
 		521BEC401A52F576003E7A27 /* gradient@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 521BEC3D1A52F576003E7A27 /* gradient@2x.png */; };
@@ -768,8 +768,8 @@
 		4994786219D9D011006D38BE /* icon_hours@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_hours@2x.png"; path = "Images/icon_hours@2x.png"; sourceTree = "<group>"; };
 		4994786319D9D011006D38BE /* icon_info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_info.png; path = Images/icon_info.png; sourceTree = "<group>"; };
 		4994786419D9D011006D38BE /* icon_info@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_info@2x.png"; path = "Images/icon_info@2x.png"; sourceTree = "<group>"; };
-		4994848319F92E7400E906C0 /* UserCheckinsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCheckinsViewController.h; sourceTree = "<group>"; };
-		4994848419F92E7400E906C0 /* UserCheckinsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCheckinsViewController.m; sourceTree = "<group>"; };
+		4994848319F92E7400E906C0 /* UserNearbyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserNearbyViewController.h; sourceTree = "<group>"; };
+		4994848419F92E7400E906C0 /* UserNearbyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserNearbyViewController.m; sourceTree = "<group>"; };
 		4994848619FB7DBD00E906C0 /* FastCheckinViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FastCheckinViewController.h; sourceTree = "<group>"; };
 		4994848719FB7DBD00E906C0 /* FastCheckinViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FastCheckinViewController.m; sourceTree = "<group>"; };
 		4994848A19FB959C00E906C0 /* SwipeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwipeView.h; sourceTree = "<group>"; };
@@ -1117,8 +1117,8 @@
 		520F38AB1A5E93B600FB1E65 /* NewsFeedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedViewController.m; sourceTree = "<group>"; };
 		5210474B1A48300A006DD319 /* DateHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateHelper.h; sourceTree = "<group>"; };
 		5210474C1A48300A006DD319 /* DateHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateHelper.m; sourceTree = "<group>"; };
-		5216506D1A78E6AB007F16DE /* YesterdayPlacesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YesterdayPlacesViewController.h; sourceTree = "<group>"; };
-		5216506E1A78E6AB007F16DE /* YesterdayPlacesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YesterdayPlacesViewController.m; sourceTree = "<group>"; };
+		5216506D1A78E6AB007F16DE /* HistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryViewController.h; sourceTree = "<group>"; };
+		5216506E1A78E6AB007F16DE /* HistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryViewController.m; sourceTree = "<group>"; };
 		52188DAC1A51876E0020DD6F /* MainMenuCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenuCollectionViewCell.h; sourceTree = "<group>"; };
 		52188DAD1A51876E0020DD6F /* MainMenuCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainMenuCollectionViewCell.m; sourceTree = "<group>"; };
 		521BEC3C1A52F576003E7A27 /* gradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gradient.png; sourceTree = "<group>"; };
@@ -1671,8 +1671,8 @@
 				499247AB1976AB7F008C74D0 /* ProfileViewController.m */,
 				498975AF19ED2BA70067A5E4 /* ClubUsersYesterdayViewController.h */,
 				498975B019ED2BA70067A5E4 /* ClubUsersYesterdayViewController.m */,
-				4994848319F92E7400E906C0 /* UserCheckinsViewController.h */,
-				4994848419F92E7400E906C0 /* UserCheckinsViewController.m */,
+				4994848319F92E7400E906C0 /* UserNearbyViewController.h */,
+				4994848419F92E7400E906C0 /* UserNearbyViewController.m */,
 				49ABA12D198A932A00B060D0 /* FriendsViewController.h */,
 				49ABA12E198A932A00B060D0 /* FriendsViewController.m */,
 				49ABA133198F9B6900B060D0 /* SettingsViewController.h */,
@@ -1685,8 +1685,8 @@
 				4994848E19FB95C400E906C0 /* ProfilePagesViewController.m */,
 				529048F31A373FF600F80DF9 /* RetrieveLocationViewController.h */,
 				529048F41A373FF600F80DF9 /* RetrieveLocationViewController.m */,
-				5216506D1A78E6AB007F16DE /* YesterdayPlacesViewController.h */,
-				5216506E1A78E6AB007F16DE /* YesterdayPlacesViewController.m */,
+				5216506D1A78E6AB007F16DE /* HistoryViewController.h */,
+				5216506E1A78E6AB007F16DE /* HistoryViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -2786,7 +2786,7 @@
 				498A68E3196C4CFD00BC2859 /* PNChannelEvents.m in Sources */,
 				499247BB1977C81D008C74D0 /* CountryPickerView.m in Sources */,
 				498A68F7196C4CFD00BC2859 /* UIApplication+PNAdditions.m in Sources */,
-				4994848519F92E7400E906C0 /* UserCheckinsViewController.m in Sources */,
+				4994848519F92E7400E906C0 /* UserNearbyViewController.m in Sources */,
 				498A68FB196C4CFD00BC2859 /* PNBaseRequest.m in Sources */,
 				522F75FF1A6524680095991F /* EBTagPopover.m in Sources */,
 				520897651A407C6700E8DD06 /* JSQMessagesTimestampFormatter.m in Sources */,
@@ -2901,7 +2901,7 @@
 				520F38AC1A5E93B600FB1E65 /* NewsFeedViewController.m in Sources */,
 				4934F76719D047B800BFFDB1 /* UIView+WebCacheOperation.m in Sources */,
 				520897691A407C6700E8DD06 /* JSQMessagesCollectionViewLayoutAttributes.m in Sources */,
-				5216506F1A78E6AB007F16DE /* YesterdayPlacesViewController.m in Sources */,
+				5216506F1A78E6AB007F16DE /* HistoryViewController.m in Sources */,
 				522F75FC1A6524680095991F /* EBPhotoView.m in Sources */,
 				499929C019E99FF000B77A6E /* CustomNavigationController.m in Sources */,
 				522F75F41A6524680095991F /* EBCommentCell.m in Sources */,

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="x35-er-2Fh">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -919,10 +918,10 @@
             </objects>
             <point key="canvasLocation" x="-3439" y="-1212"/>
         </scene>
-        <!--Yesterday Places View Controller-->
+        <!--History View Controller-->
         <scene sceneID="57t-d0-mTJ">
             <objects>
-                <viewController id="neh-Tw-cH0" customClass="YesterdayPlacesViewController" sceneMemberID="viewController">
+                <viewController id="neh-Tw-cH0" customClass="HistoryViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="4wu-Oa-jdy"/>
                         <viewControllerLayoutGuide type="bottom" id="GiY-mI-890"/>
@@ -2339,10 +2338,10 @@
             </objects>
             <point key="canvasLocation" x="-5335" y="-613"/>
         </scene>
-        <!--User Checkins View Controller-->
+        <!--User Nearby View Controller-->
         <scene sceneID="A0G-pV-PsE">
             <objects>
-                <viewController id="CNM-cn-JgE" customClass="UserCheckinsViewController" sceneMemberID="viewController">
+                <viewController id="CNM-cn-JgE" customClass="UserNearbyViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="FgS-DY-3vl"/>
                         <viewControllerLayoutGuide type="bottom" id="5eU-j6-MEG"/>

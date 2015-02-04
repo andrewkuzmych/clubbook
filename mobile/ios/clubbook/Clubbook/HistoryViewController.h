@@ -8,7 +8,7 @@
 
 #import "BaseViewController.h"
 
-@interface YesterdayPlacesViewController : BaseViewController <UITableViewDelegate, UITableViewDataSource>
+@interface HistoryViewController : BaseViewController <UITableViewDelegate, UITableViewDataSource>
 
 @property (weak, nonatomic) IBOutlet UITableView *placesTable;
 @property (strong, nonatomic) NSArray *places;
