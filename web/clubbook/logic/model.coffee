@@ -144,7 +144,10 @@ exports.USER_PUBLIC_INFO = '_id photos name gender dob country push'
 NewsSchema = new mongoose.Schema
   created_on: { type: Date, 'default': Date.now }
   updated_on: { type: Date, 'default': Date.now }
-  venue: {type: mongoose.Schema.ObjectId, ref: 'Venue', required: true}
+  venue: {type: mongoose.Schema.ObjectId, ref: 'Venue'}
+  venue: {type: mongoose.Schema.ObjectId, ref: 'Venue'}
+  venue: {type: mongoose.Schema.ObjectId, ref: 'Venue'}
+  venue_type: {type: String, trim: true}
   image: {type: String, trim: true}
   title: {type: String, trim: true}
   share: {type: String, trim: true}
@@ -157,6 +160,10 @@ NewsSchema = new mongoose.Schema
   photos: [
     {type: String, trim: true}
   ]
+  loc:
+    lon: Number
+    lat: Number
+  address: {type: String, trim: true}
 
 ###VenueSchema.virtual('updated_on_formated').get ()->
   this.updated_on
