@@ -43,7 +43,9 @@
         [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             
             if (error) {
-                [self.delegate failedWithError:error];
+                if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                   [self.delegate failedWithError:error];
+                   }
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.delegate fbLoginJSON:data];
@@ -70,7 +72,9 @@
         [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             
             if (error) {
-                [self.delegate failedWithError:error];
+                if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                }
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.delegate addUserImageJSON:data];
@@ -98,7 +102,9 @@
         [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             
             if (error) {
-                [self.delegate failedWithError:error];
+                if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                }
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.delegate changePassJSON:data];
@@ -125,7 +131,9 @@
         [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             
             if (error) {
-                [self.delegate failedWithError:error];
+                if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                }
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.delegate updateUserImageJSON:data];
@@ -151,7 +159,9 @@
         [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             
             if (error) {
-                [self.delegate failedWithError:error];
+                if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                }
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.delegate deleteUserImageJSON:data];
@@ -179,7 +189,9 @@
         [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             
             if (error) {
-                [self.delegate failedWithError:error];
+                if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                }
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.delegate changeUserVisibleNearbyJSON:data];
@@ -207,7 +219,9 @@
         [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             
             if (error) {
-                [self.delegate failedWithError:error];
+                if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                }
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.delegate changeUserPushJSON:data];
@@ -239,7 +253,9 @@
         [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             
             if (error) {
-                [self.delegate failedWithError:error];
+                if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                }
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.delegate updateUserJSON:data];
@@ -266,7 +282,9 @@
         [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             
             if (error) {
-                [self.delegate failedWithError:error];
+                if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                }
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.delegate deleteUserJSON:data];
@@ -304,7 +322,9 @@
         [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             
             if (error) {
-                [self.delegate failedWithError:error];
+                if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                }
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.delegate signupJSON:data];
@@ -332,7 +352,9 @@
         [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             
             if (error) {
-                [self.delegate failedWithError:error];
+                if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                }
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.delegate signinJSON:data];
@@ -369,7 +391,9 @@
         [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             
             if (error) {
-                [self.delegate failedWithError:error];
+                if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                }
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.delegate chatJSON:data];
@@ -390,7 +414,9 @@
         [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate updateUserLocationJSON:data];
                 }
@@ -410,7 +436,9 @@
         [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate receivedConversationJSON:data];
                 }
@@ -430,7 +458,9 @@
         [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate readChatJSON:data];
                 }
@@ -451,7 +481,9 @@
         [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate notificationsJSON:data];
                 }
@@ -471,7 +503,9 @@
         [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate receivedConversationsJSON:data];
                 }
@@ -493,7 +527,9 @@
         [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate deleteConversationJSON:data];
                 }
@@ -521,7 +557,9 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate receivedPlacesJSON:data];
                 }
@@ -545,7 +583,9 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate receivedPlacesJSON:data];
                 }
@@ -569,7 +609,9 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate receivedPlaceJSON:data];
                 }
@@ -598,7 +640,9 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     
                 }
@@ -621,7 +665,9 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate receivedPlaceUsersJSON:data];
                 }
@@ -644,7 +690,9 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate receivedPlaceUsersYesterdayJSON:data];
                 }
@@ -667,7 +715,9 @@
         [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate receivedUsersCheckedinJSON:data];
                 }
@@ -687,7 +737,9 @@
         [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate receivedUserJSON:data];
                 }
@@ -707,7 +759,9 @@
         [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate receivedFriendJSON:data];
                 }
@@ -732,7 +786,9 @@
         [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate receivedNewsJSON:data];
                 }
@@ -754,7 +810,9 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate checkinJSON:data userInfo:userInfo];
                 }
@@ -776,7 +834,8 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 //if (error) {
-                //    [self.delegate failedWithError:error];
+                //    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
                 //} else {
                     [self.delegate checkoutJSON:data userInfo:userInfo];
                 //}
@@ -798,7 +857,9 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate updateCheckinJSON:data];
                 }
@@ -820,7 +881,9 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate sendFriendJSON:data];
                 }
@@ -841,7 +904,9 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate confirmFriendJSON:data];
                 }
@@ -862,7 +927,9 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate removeFriendJSON:data];
                 }
@@ -883,7 +950,9 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate removeFriendRequestJSON:data];
                 }
@@ -904,7 +973,9 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate receivedFriendsJSON:data];
                 }
@@ -925,7 +996,9 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate receivedPendingFriendsJSON:data];
                 }
@@ -948,7 +1021,9 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate getConfigJSON:data];
                 }
@@ -970,7 +1045,9 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate blockUserJSON:data];
                 }
@@ -992,7 +1069,9 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
-                    [self.delegate failedWithError:error];
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
                 } else {
                     [self.delegate unblockUserJSON:data];
                 }
@@ -1020,7 +1099,9 @@
         [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             
             if (error) {
-                [self.delegate failedWithError:error];
+                if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                }
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.delegate inviteFbFriendsJSON:data];
@@ -1049,7 +1130,9 @@
         [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             
             if (error) {
-                [self.delegate failedWithError:error];
+                if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                }
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.delegate findFbFriendsJSON:data];

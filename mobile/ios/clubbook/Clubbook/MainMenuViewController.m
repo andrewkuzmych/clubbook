@@ -13,32 +13,27 @@
 #import "GAIDictionaryBuilder.h"
 #import "GAI.h"
 
-#import "SidebarViewController.h"
+#import "MainMenuViewController.h"
 #import "SWRevealViewController.h"
-#import "MenuCell.h"
-#import "Cloudinary.h"
-#import "Constants.h"
-#import "UIImageView+WebCache.h"
-#import "LocationHelper.h"
-#import "ClubUsersViewController.h"
-#import "GlobalVars.h"
 #import "MainMenuCollectionViewCell.h"
-#import "MainViewController.h"
+#import "PlacesViewController.h"
 #import "NewsFeedViewController.h"
 #import "LocationManagerSingleton.h"
 
 
-
-@interface SidebarViewController (){
+@interface MainMenuViewController (){
     int unreadMessagesCount;
     int pendingFriendsCount;
     int fastCheckinPlaces;
+    NSString* accessToken;
+    double userLat;
+    double userLon;
 }
 
 @property (nonatomic, strong) NSArray *menuItems;
 @end
 
-@implementation SidebarViewController
+@implementation MainMenuViewController
 
 - (void)viewDidLoad
 {
@@ -50,7 +45,8 @@
     
     self.menuCollectionView.delaysContentTouches = NO;
     
-    _menuItems = @[@"goingout", @"usersnearby", @"yesterday", @"messages", @"friends", @"news", @"settings", @"profile", @"fastcheckin"];
+    _menuItems = @[@"places", @"usersnearby", @"news", @"messages", @"friends", @"history", @"profile",  @"settings", @"checkin"];
+    [self.revealViewController setDelegate:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -66,32 +62,22 @@
     //Pubnub staff
     [PubNub setDelegate:self];
    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    accessToken = [defaults objectForKey:@"accessToken"];
+    CLLocation *userLocation = [LocationManagerSingleton sharedSingleton].locationManager.location;
+    userLon = userLocation.coordinate.longitude;
+    userLat = userLocation.coordinate.latitude;
+
     [self loadData];
 }
 
 - (void)loadData
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *accessToken = [defaults objectForKey:@"accessToken"];
-
-    [self.menuCollectionView reloadData];
-    
-    CLLocation *userLocation = [LocationManagerSingleton sharedSingleton].locationManager.location;
-    double lon = userLocation.coordinate.longitude;
-    double lat = userLocation.coordinate.latitude;
-    
-    [self._manager retrieveNotifications:lat lon:lon accessToken:accessToken];
+    [self._manager retrieveNotifications:userLat lon:userLon accessToken:accessToken];
 }
 
 - (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message
 {
-    //PNLog(PNLogGeneralLevel, self, @"PubNub client received message: %@", message);
-    
-    /*NSString *msg = [message.message valueForKey:@"msg"];
-    NSString *type = [message.message valueForKey:@"type"];
-    NSString *user_from = [message.message valueForKey:@"user_from"];
-    NSString *user_to = [message.message valueForKey:@"user_to"];*/
-    
     [self loadData];
 }
 
@@ -119,7 +105,7 @@
     UINavigationController *destViewController = (UINavigationController*)segue.destinationViewController;
     destViewController.title = selectedItem.menuLabel.text;
 
-    if ( [segue isKindOfClass: [SWRevealViewControllerSegue class]] ) {
+    if ([segue isKindOfClass: [SWRevealViewControllerSegue class]] ) {
         SWRevealViewControllerSegue *swSegue = (SWRevealViewControllerSegue*) segue;
         
         swSegue.performBlock = ^(SWRevealViewControllerSegue* rvc_segue, UIViewController* svc, UIViewController* dvc) {
@@ -166,14 +152,14 @@
     NSUInteger item = indexPath.item;
     NSString* currentItemId = [_menuItems objectAtIndex:item];
   
-    if ([currentItemId isEqualToString:@"goingout"]) {
-        cell.menuLabel.text = @"Going Out";
+    if ([currentItemId isEqualToString:@"places"]) {
+        cell.menuLabel.text = @"Places to Go";
     }
     else if ([currentItemId isEqualToString:@"usersnearby"]) {
         cell.menuLabel.text = @"Users Nearby";
     }
-    else if ([currentItemId isEqualToString:@"yesterday"]) {
-        cell.menuLabel.text = @"Yesterday";
+    else if ([currentItemId isEqualToString:@"history"]) {
+        cell.menuLabel.text = @"History";
     }
     else if ([currentItemId isEqualToString:@"messages"]) {
         if (unreadMessagesCount > 0) {
@@ -204,13 +190,13 @@
     else if ([currentItemId isEqualToString:@"profile"]) {
         cell.menuLabel.text = @"Profile";
     }
-    else if ([currentItemId isEqualToString:@"fastcheckin"]) {
+    else if ([currentItemId isEqualToString:@"checkin"]) {
         [cell.bigNotificationNumber setHidden:NO];
         NSString* number = [NSString stringWithFormat:@"%d", fastCheckinPlaces];
         [cell.bigNotificationNumber setText:number];
         [cell.icon setBackgroundColor:[UIColor clearColor]];
         [cell.icon.layer setBorderColor:[UIColor whiteColor].CGColor];
-        cell.menuLabel.text = @"Fast Checkin";
+        cell.menuLabel.text = @"Check-in/out";
     }
     
     return cell;
@@ -222,11 +208,14 @@
     NSUInteger selectedItem = indexPath.item;
     NSString* segueId = [_menuItems objectAtIndex:selectedItem];
 
-    if ([segueId isEqualToString:@"messages"]) {
-        unreadMessagesCount = 0;
-    }
     [self performSegueWithIdentifier:segueId sender:self];
     
+}
+
+-(void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position {
+    if (position == FrontViewPositionRight) {
+        [self loadData];
+    }
 }
 
 @end

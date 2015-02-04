@@ -44,8 +44,6 @@
     self._manager.communicator = [[ClubbookCommunicator alloc] init];
     self._manager.communicator.delegate = self._manager;
     self._manager.delegate = self;
-    self.revealViewController.delegate = self;
-    [self.revealViewController.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
 }
 
 
@@ -78,13 +76,6 @@
     [self presentViewController:purchaseContr animated:NO completion:nil];
 */
 }
-
-- (void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position
-{
-    self.view.userInteractionEnabled = (revealController.frontViewPosition == FrontViewPositionRight ? FALSE : TRUE);
-    [[self navigationController] setNavigationBarHidden:NO animated:NO];
-}
-
 
 /*
 #pragma mark - Navigation

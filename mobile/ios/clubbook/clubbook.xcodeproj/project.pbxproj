@@ -400,7 +400,6 @@
 		52343D9B1A430CF400F47A36 /* UIImage+FixOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 52343D9A1A430CF400F47A36 /* UIImage+FixOrientation.m */; };
 		5245DC621A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5245DC611A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m */; };
 		5245DC651A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5245DC641A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.m */; };
-		524B225A1A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 524B22591A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.m */; };
 		52520A781A66928B006399EF /* NewsFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52520A761A66928B006399EF /* NewsFeedCell.m */; };
 		52520A801A66B022006399EF /* NewsData.m in Sources */ = {isa = PBXBuildFile; fileRef = 52520A7F1A66B022006399EF /* NewsData.m */; };
 		526ABCD01A6806820010F485 /* NewsPhotoLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 526ABCCF1A6806820010F485 /* NewsPhotoLayout.m */; };
@@ -428,8 +427,8 @@
 		F4EECF26177C99F400778578 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F4EECF25177C99F400778578 /* Default@2x.png */; };
 		F4EECF28177C99F400778578 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F4EECF27177C99F400778578 /* Default-568h@2x.png */; };
 		F4EECF2B177C99F400778578 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4EECF29177C99F400778578 /* MainStoryboard.storyboard */; };
-		F4EECF2E177C99F400778578 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4EECF2D177C99F400778578 /* MainViewController.m */; };
-		F4EECF4A177DF87700778578 /* SidebarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4EECF49177DF87700778578 /* SidebarViewController.m */; };
+		F4EECF2E177C99F400778578 /* PlacesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4EECF2D177C99F400778578 /* PlacesViewController.m */; };
+		F4EECF4A177DF87700778578 /* MainMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4EECF49177DF87700778578 /* MainMenuViewController.m */; };
 		F4EECF5E177F384900778578 /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = F4EECF57177F384900778578 /* map.png */; };
 		F4EECF5F177F384900778578 /* news.png in Resources */ = {isa = PBXBuildFile; fileRef = F4EECF58177F384900778578 /* news.png */; };
 		F4EECF60177F384900778578 /* photo.png in Resources */ = {isa = PBXBuildFile; fileRef = F4EECF59177F384900778578 /* photo.png */; };
@@ -1170,8 +1169,6 @@
 		5245DC611A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubPhotGalleryCollectionViewController.m; sourceTree = "<group>"; };
 		5245DC631A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubPhotoGalleryCollectionViewCell.h; sourceTree = "<group>"; };
 		5245DC641A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubPhotoGalleryCollectionViewCell.m; sourceTree = "<group>"; };
-		524B22581A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubSubscribeSettingsTableViewController.h; sourceTree = "<group>"; };
-		524B22591A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubSubscribeSettingsTableViewController.m; sourceTree = "<group>"; };
 		52520A751A66928B006399EF /* NewsFeedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedCell.h; sourceTree = "<group>"; };
 		52520A761A66928B006399EF /* NewsFeedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedCell.m; sourceTree = "<group>"; };
 		52520A7E1A66B022006399EF /* NewsData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsData.h; sourceTree = "<group>"; };
@@ -1217,10 +1214,10 @@
 		F4EECF25177C99F400778578 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		F4EECF27177C99F400778578 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		F4EECF2A177C99F400778578 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
-		F4EECF2C177C99F400778578 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
-		F4EECF2D177C99F400778578 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
-		F4EECF48177DF87700778578 /* SidebarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SidebarViewController.h; sourceTree = "<group>"; };
-		F4EECF49177DF87700778578 /* SidebarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SidebarViewController.m; sourceTree = "<group>"; };
+		F4EECF2C177C99F400778578 /* PlacesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlacesViewController.h; sourceTree = "<group>"; };
+		F4EECF2D177C99F400778578 /* PlacesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlacesViewController.m; sourceTree = "<group>"; };
+		F4EECF48177DF87700778578 /* MainMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenuViewController.h; sourceTree = "<group>"; };
+		F4EECF49177DF87700778578 /* MainMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainMenuViewController.m; sourceTree = "<group>"; };
 		F4EECF57177F384900778578 /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map.png; sourceTree = "<group>"; };
 		F4EECF58177F384900778578 /* news.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = news.png; sourceTree = "<group>"; };
 		F4EECF59177F384900778578 /* photo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photo.png; sourceTree = "<group>"; };
@@ -1646,12 +1643,12 @@
 				498A1BAD196BD90F00824E64 /* BaseMessagesViewController.m */,
 				49E831301950CD8E00D4A26C /* MainLoginViewController.h */,
 				49E831311950CD8E00D4A26C /* MainLoginViewController.m */,
-				F4EECF2C177C99F400778578 /* MainViewController.h */,
-				F4EECF2D177C99F400778578 /* MainViewController.m */,
+				F4EECF2C177C99F400778578 /* PlacesViewController.h */,
+				F4EECF2D177C99F400778578 /* PlacesViewController.m */,
 				4994848619FB7DBD00E906C0 /* FastCheckinViewController.h */,
 				4994848719FB7DBD00E906C0 /* FastCheckinViewController.m */,
-				F4EECF48177DF87700778578 /* SidebarViewController.h */,
-				F4EECF49177DF87700778578 /* SidebarViewController.m */,
+				F4EECF48177DF87700778578 /* MainMenuViewController.h */,
+				F4EECF49177DF87700778578 /* MainMenuViewController.m */,
 				49E831BE19543D9E00D4A26C /* RegViewController.h */,
 				49E831BF19543D9E00D4A26C /* RegViewController.m */,
 				49E831DA19583B2A00D4A26C /* LoginViewController.h */,
@@ -2238,8 +2235,6 @@
 				528C85971A56E3AC00BBB148 /* ClubProfileTabBarViewController.m */,
 				49D8D3131986AA8100015052 /* ClubUsersViewController.h */,
 				49D8D3141986AA8100015052 /* ClubUsersViewController.m */,
-				524B22581A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.h */,
-				524B22591A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.m */,
 			);
 			name = ClubProfileStoryboard;
 			sourceTree = "<group>";
@@ -2837,7 +2832,7 @@
 				49E831D91955993600D4A26C /* BaseTableViewController.m in Sources */,
 				5208975D1A407C6700E8DD06 /* UIImage+JSQMessages.m in Sources */,
 				49908EE71971604B00DA68F2 /* MessagesViewController.m in Sources */,
-				F4EECF2E177C99F400778578 /* MainViewController.m in Sources */,
+				F4EECF2E177C99F400778578 /* PlacesViewController.m in Sources */,
 				5208976E1A407C6700E8DD06 /* JSQMessagesBubbleImage.m in Sources */,
 				498A68CC196C4CFD00BC2859 /* PNWriteBuffer.m in Sources */,
 				498A68CE196C4CFD00BC2859 /* PNChannelPresence.m in Sources */,
@@ -2920,13 +2915,12 @@
 				4994849219FE671C00E906C0 /* ProfileImagesViewController.m in Sources */,
 				4934F75B19D047B800BFFDB1 /* SDWebImageCompat.m in Sources */,
 				498A690F196C4CFD00BC2859 /* PNConnection.m in Sources */,
-				F4EECF4A177DF87700778578 /* SidebarViewController.m in Sources */,
+				F4EECF4A177DF87700778578 /* MainMenuViewController.m in Sources */,
 				498A68E0196C4CFD00BC2859 /* PNAccessRightsCollection.m in Sources */,
 				498A6904196C4CFD00BC2859 /* PNMessagePostRequest.m in Sources */,
 				49E8317F1953018E00D4A26C /* ClubbookManager.m in Sources */,
 				498A68EE196C4CFD00BC2859 /* PNResponse.m in Sources */,
 				493E0EEF19D4549800B5ADEC /* ChangePassViewController.m in Sources */,
-				524B225A1A5AB6EA00AC35E8 /* ClubSubscribeSettingsTableViewController.m in Sources */,
 				49D8D3121982A0D500015052 /* ClubFooterView.m in Sources */,
 				498A68E1196C4CFD00BC2859 /* PNAccessRightsInformation.m in Sources */,
 				49E8316E1952EF3F00D4A26C /* ClubbookCommunicator.m in Sources */,

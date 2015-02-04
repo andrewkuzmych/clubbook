@@ -10,7 +10,7 @@
 #import <Parse/Parse.h>
 #import "GAI.h"
 #import "Constants.h"
-#import "SidebarViewController.h"
+#import "MainMenuViewController.h"
 #import "MessagesViewController.h"
 #import "ChatViewController.h"
 #import "FriendsViewController.h"

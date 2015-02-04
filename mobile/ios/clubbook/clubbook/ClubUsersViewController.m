@@ -50,9 +50,7 @@
 {
     [super viewDidLoad];
 
-    if (self.hasBack) {
-        self.navigationItem.leftBarButtonItem = nil;
-    }
+    self.navigationItem.leftBarButtonItem = nil;
     
     self.title = NSLocalizedString(@"clubProfile", nil);
     

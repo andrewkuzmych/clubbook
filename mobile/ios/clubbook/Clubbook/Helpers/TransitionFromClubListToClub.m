@@ -8,13 +8,13 @@
 
 #import "TransitionFromClubListToClub.h"
 
-#import "MainViewController.h"
+#import "PlacesViewController.h"
 #import "ClubUsersViewController.h"
 #import "ClubCell.h"
 
 @implementation TransitionFromClubListToClub
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
-    MainViewController *fromViewController = (MainViewController*)[transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    PlacesViewController *fromViewController = (PlacesViewController*)[transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     ClubUsersViewController *toViewController = (ClubUsersViewController*)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     
     UIView *containerView = [transitionContext containerView];

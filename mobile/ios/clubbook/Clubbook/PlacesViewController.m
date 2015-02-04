@@ -4,7 +4,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "MainViewController.h"
+#import "PlacesViewController.h"
 #import "SWRevealViewController.h"
 #import "ClubCell.h"
 #import "Place.h"
@@ -30,11 +30,9 @@
 #define CLUBS_TYPE  @"club"
 #define BARS_STRING @"Cafe/Bars"
 #define BARS_TYPE   @"bar"
-#define EVENTS_STRING @"Events"
 
-@interface MainViewController ()<UINavigationControllerDelegate, UINavigationBarDelegate>{
+@interface PlacesViewController ()<UINavigationControllerDelegate, UINavigationBarDelegate>{
     BOOL isRefreshing;
-    BOOL isWaitingForResponse;
     NSString* selectedPlaceType;
     
     BOOL isSearchBarShown;
@@ -46,7 +44,7 @@
 }
 @end
 
-@implementation MainViewController
+@implementation PlacesViewController
 
 - (void)viewDidLoad
 {
@@ -59,7 +57,7 @@
     
     [self._manager getConfig];
     
-    __weak MainViewController *weakSelf = self;
+    __weak PlacesViewController *weakSelf = self;
     
     // setup pull-to-refresh
     [self.clubTable addPullToRefreshWithActionHandler:^{
@@ -73,7 +71,6 @@
     
     [self initFilterTabBar];
     [self initSearchBar];
-    [self.eventsTable initializeNewsTableType:@"events" objectId:@"" andParentViewCntroller:(UIViewController*) self];
     
     user_lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
     user_lon = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
@@ -110,7 +107,6 @@
     
     [self.filterTabBar addTabForTitle:CLUBS_STRING];
     [self.filterTabBar addTabForTitle:BARS_STRING];
-    [self.filterTabBar addTabForTitle:EVENTS_STRING];
     [self.filterTabBar setSelectedIndex:0];
 }
 
@@ -274,9 +270,8 @@
     Place *place = _places[selectedIndexPath.row];
     
     UIStoryboard *clubProfileStoryboard = [UIStoryboard storyboardWithName:@"ClubProfileStoryboard" bundle: nil];
-    ClubUsersViewController *clubController  = [clubProfileStoryboard instantiateViewControllerWithIdentifier:@"club"];
+    ClubProfileTabBarViewController *clubController  = [clubProfileStoryboard instantiateInitialViewController];
     clubController.place = place;
-    clubController.hasBack = YES;
 
     [UIView beginAnimations:@"animation" context:nil];
     [UIView setAnimationDuration:0.5];
@@ -303,22 +298,11 @@
     
     if ([typeString isEqualToString:CLUBS_STRING]) {
         selectedPlaceType = CLUBS_TYPE;
-        [self.eventsTable setHidden:YES];
-        [self.clubTable setHidden:NO];
         [self filterForType:selectedPlaceType];
     }
     else if ([typeString isEqualToString:BARS_STRING] ) {
         selectedPlaceType = BARS_TYPE;
-        [self.eventsTable setHidden:YES];
-        [self.clubTable setHidden:NO];
         [self filterForType:selectedPlaceType];
-    }
-    else if ([typeString isEqualToString:EVENTS_STRING]) {
-        if (isSearchBarShown) {
-            [self handleSearchButton:nil];
-        }
-        [self.eventsTable setHidden:NO];
-        [self.clubTable setHidden:YES];
     }
 }
 
@@ -398,35 +382,6 @@
     [UIView animateWithDuration:0.5 animations:^{
         [self.view layoutIfNeeded];
     }];
-}
-
--(void) scrollViewDidScroll:(UIScrollView *)scrollView {
-    if(self.clubTable.pullToRefreshView.state || scrollView.contentOffset.y <= -10) {
-       return;
-    }
-    //scrolled up
-    if (lastContentOffset < scrollView.contentOffset.y - 10) {
-        [self.searchBar setHidden:YES];
-        if (isSearchBarShown) {
-           [self handleSearchButton:nil];
-        }
-        [[self navigationController] setNavigationBarHidden:YES animated:YES];
-    }
-    //scrolled down
-    else if (lastContentOffset > scrollView.contentOffset.y + 5)  {
-        [[self navigationController] setNavigationBarHidden:NO animated:YES];
-     }
-    lastContentOffset = scrollView.contentOffset.y;
-}
-
-
--(void) scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    if ([self.searchBar isHidden] && ![[self navigationController] isNavigationBarHidden]) {
-        [self.searchBar setHidden:NO];
-    }
-}
-- (void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position {
-    [[self navigationController] setNavigationBarHidden:NO animated:NO];
 }
 
 @end

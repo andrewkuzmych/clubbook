@@ -11,7 +11,7 @@
 #import "BaseViewController.h"
 #import "PubNub.h"
 
-@interface SidebarViewController : BaseViewController <UICollectionViewDelegate, UICollectionViewDataSource, PNDelegate>
+@interface MainMenuViewController : BaseViewController <UICollectionViewDelegate, UICollectionViewDataSource, PNDelegate, SWRevealViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *gradientImageView;
 @property (weak, nonatomic) IBOutlet UICollectionView *menuCollectionView;
 @property (weak, nonatomic) IBOutlet UIImageView *backgroundImageView;
