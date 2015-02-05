@@ -37,7 +37,6 @@
 		493E0EEF19D4549800B5ADEC /* ChangePassViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 493E0EEE19D4549800B5ADEC /* ChangePassViewController.m */; };
 		49836B211961969F00F2A2C6 /* ClubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49836B201961969F00F2A2C6 /* ClubViewController.m */; };
 		49836B271961999C00F2A2C6 /* ProfileCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49836B261961999C00F2A2C6 /* ProfileCell.m */; };
-		49836B2A1961A64C00F2A2C6 /* HeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 49836B291961A64C00F2A2C6 /* HeaderView.m */; };
 		49895A6C1969980700484EA2 /* CbLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 49895A6B1969980700484EA2 /* CbLabel.m */; };
 		498975A719EC60150067A5E4 /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 498975A619EC60150067A5E4 /* UserProfileViewController.m */; };
 		498975AE19ED25B70067A5E4 /* UsersYesterday.m in Sources */ = {isa = PBXBuildFile; fileRef = 498975AD19ED25B70067A5E4 /* UsersYesterday.m */; };
@@ -282,8 +281,7 @@
 		49D8D301197D6C8F00015052 /* UIView+StringTagAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 49D8D300197D6C8F00015052 /* UIView+StringTagAdditions.m */; };
 		49D8D30B197FE27500015052 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 49D8D30A197FE27500015052 /* Reachability.m */; };
 		49D8D30F197FEC5900015052 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 49D8D30E197FEC5900015052 /* background.png */; };
-		49D8D3121982A0D500015052 /* ClubFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 49D8D3111982A0D500015052 /* ClubFooterView.m */; };
-		49D8D3151986AA8200015052 /* ClubUsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49D8D3141986AA8100015052 /* ClubUsersViewController.m */; };
+		49D8D3151986AA8200015052 /* ClubCheckinsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49D8D3141986AA8100015052 /* ClubCheckinsViewController.m */; };
 		49DDE8C319A1D26700B1DEB1 /* HelveticaBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 49DDE8C119A1D26600B1DEB1 /* HelveticaBold.ttf */; };
 		49DDE8C619A1D7F700B1DEB1 /* helvetica-s-regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 49DDE8C519A1D7F700B1DEB1 /* helvetica-s-regular.ttf */; };
 		49DDE8C819A2339E00B1DEB1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49DDE8C719A2339E00B1DEB1 /* Images.xcassets */; };
@@ -403,6 +401,8 @@
 		52520A781A66928B006399EF /* NewsFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52520A761A66928B006399EF /* NewsFeedCell.m */; };
 		52520A801A66B022006399EF /* NewsData.m in Sources */ = {isa = PBXBuildFile; fileRef = 52520A7F1A66B022006399EF /* NewsData.m */; };
 		526ABCD01A6806820010F485 /* NewsPhotoLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 526ABCCF1A6806820010F485 /* NewsPhotoLayout.m */; };
+		526E6EF91A8288C800257652 /* ClubFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 526E6EF61A8288C800257652 /* ClubFooterView.m */; };
+		526E6EFA1A8288C800257652 /* HeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 526E6EF81A8288C800257652 /* HeaderView.m */; };
 		528C85951A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 528C85941A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard */; };
 		528C85981A56E3AC00BBB148 /* ClubProfileTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 528C85971A56E3AC00BBB148 /* ClubProfileTabBarViewController.m */; };
 		528D6CA41A66C7E800B2E6B0 /* NewsPhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 528D6CA21A66C7E800B2E6B0 /* NewsPhotoCell.m */; };
@@ -493,8 +493,6 @@
 		49836B201961969F00F2A2C6 /* ClubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubViewController.m; sourceTree = "<group>"; };
 		49836B251961999C00F2A2C6 /* ProfileCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileCell.h; sourceTree = "<group>"; };
 		49836B261961999C00F2A2C6 /* ProfileCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileCell.m; sourceTree = "<group>"; };
-		49836B281961A64C00F2A2C6 /* HeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HeaderView.h; path = Controls/HeaderView.h; sourceTree = "<group>"; };
-		49836B291961A64C00F2A2C6 /* HeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HeaderView.m; path = Controls/HeaderView.m; sourceTree = "<group>"; };
 		49895A6A1969980700484EA2 /* CbLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CbLabel.h; path = Controls/CbLabel.h; sourceTree = "<group>"; };
 		49895A6B1969980700484EA2 /* CbLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CbLabel.m; path = Controls/CbLabel.m; sourceTree = "<group>"; };
 		498975A519EC60150067A5E4 /* UserProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileViewController.h; sourceTree = "<group>"; };
@@ -926,10 +924,8 @@
 		49D8D309197FE27500015052 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		49D8D30A197FE27500015052 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		49D8D30E197FEC5900015052 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
-		49D8D3101982A0D500015052 /* ClubFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClubFooterView.h; path = Controls/ClubFooterView.h; sourceTree = "<group>"; };
-		49D8D3111982A0D500015052 /* ClubFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ClubFooterView.m; path = Controls/ClubFooterView.m; sourceTree = "<group>"; };
-		49D8D3131986AA8100015052 /* ClubUsersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubUsersViewController.h; sourceTree = "<group>"; };
-		49D8D3141986AA8100015052 /* ClubUsersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubUsersViewController.m; sourceTree = "<group>"; };
+		49D8D3131986AA8100015052 /* ClubCheckinsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubCheckinsViewController.h; sourceTree = "<group>"; };
+		49D8D3141986AA8100015052 /* ClubCheckinsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubCheckinsViewController.m; sourceTree = "<group>"; };
 		49DDE8C119A1D26600B1DEB1 /* HelveticaBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaBold.ttf; sourceTree = "<group>"; };
 		49DDE8C519A1D7F700B1DEB1 /* helvetica-s-regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "helvetica-s-regular.ttf"; sourceTree = "<group>"; };
 		49DDE8C719A2339E00B1DEB1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -1175,6 +1171,10 @@
 		52520A7F1A66B022006399EF /* NewsData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsData.m; sourceTree = "<group>"; };
 		526ABCCE1A6806820010F485 /* NewsPhotoLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsPhotoLayout.h; sourceTree = "<group>"; };
 		526ABCCF1A6806820010F485 /* NewsPhotoLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsPhotoLayout.m; sourceTree = "<group>"; };
+		526E6EF51A8288C800257652 /* ClubFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClubFooterView.h; path = Controls/ClubFooterView.h; sourceTree = "<group>"; };
+		526E6EF61A8288C800257652 /* ClubFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ClubFooterView.m; path = Controls/ClubFooterView.m; sourceTree = "<group>"; };
+		526E6EF71A8288C800257652 /* HeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HeaderView.h; path = Controls/HeaderView.h; sourceTree = "<group>"; };
+		526E6EF81A8288C800257652 /* HeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HeaderView.m; path = Controls/HeaderView.m; sourceTree = "<group>"; };
 		528C85941A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ClubProfileStoryboard.storyboard; sourceTree = "<group>"; };
 		528C85961A56E3AC00BBB148 /* ClubProfileTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubProfileTabBarViewController.h; sourceTree = "<group>"; };
 		528C85971A56E3AC00BBB148 /* ClubProfileTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubProfileTabBarViewController.m; sourceTree = "<group>"; };
@@ -1867,12 +1867,14 @@
 		49E831471951CEFA00D4A26C /* Controls */ = {
 			isa = PBXGroup;
 			children = (
+				526E6EF51A8288C800257652 /* ClubFooterView.h */,
+				526E6EF61A8288C800257652 /* ClubFooterView.m */,
+				526E6EF71A8288C800257652 /* HeaderView.h */,
+				526E6EF81A8288C800257652 /* HeaderView.m */,
 				49E831DD1958715200D4A26C /* ClubCell.h */,
 				49E831DE1958715200D4A26C /* ClubCell.m */,
 				49836B251961999C00F2A2C6 /* ProfileCell.h */,
 				49836B261961999C00F2A2C6 /* ProfileCell.m */,
-				49836B281961A64C00F2A2C6 /* HeaderView.h */,
-				49836B291961A64C00F2A2C6 /* HeaderView.m */,
 				4996E0C319669ED0000C721F /* CbButton.h */,
 				4996E0C419669ED0000C721F /* CbButton.m */,
 				49ABA127198A188200B060D0 /* AddFriendButton.h */,
@@ -1885,8 +1887,6 @@
 				499247BA1977C81D008C74D0 /* CountryPickerView.m */,
 				49D8D2FF197D6C8F00015052 /* UIView+StringTagAdditions.h */,
 				49D8D300197D6C8F00015052 /* UIView+StringTagAdditions.m */,
-				49D8D3101982A0D500015052 /* ClubFooterView.h */,
-				49D8D3111982A0D500015052 /* ClubFooterView.m */,
 				49ABA12A198A919C00B060D0 /* FriendCell.h */,
 				49ABA12B198A919C00B060D0 /* FriendCell.m */,
 				4939074E195086AA003F2FF9 /* MenuCell.h */,
@@ -2233,8 +2233,8 @@
 				52C5FC8F1A3F29E1000147E8 /* ClubImagesPageViewController.m */,
 				528C85961A56E3AC00BBB148 /* ClubProfileTabBarViewController.h */,
 				528C85971A56E3AC00BBB148 /* ClubProfileTabBarViewController.m */,
-				49D8D3131986AA8100015052 /* ClubUsersViewController.h */,
-				49D8D3141986AA8100015052 /* ClubUsersViewController.m */,
+				49D8D3131986AA8100015052 /* ClubCheckinsViewController.h */,
+				49D8D3141986AA8100015052 /* ClubCheckinsViewController.m */,
 			);
 			name = ClubProfileStoryboard;
 			sourceTree = "<group>";
@@ -2783,6 +2783,7 @@
 				498A68DD196C4CFD00BC2859 /* PNTimeTokenResponseParser.m in Sources */,
 				49836B211961969F00F2A2C6 /* ClubViewController.m in Sources */,
 				49E831781952F89700D4A26C /* User.m in Sources */,
+				526E6EFA1A8288C800257652 /* HeaderView.m in Sources */,
 				498A68E3196C4CFD00BC2859 /* PNChannelEvents.m in Sources */,
 				499247BB1977C81D008C74D0 /* CountryPickerView.m in Sources */,
 				498A68F7196C4CFD00BC2859 /* UIApplication+PNAdditions.m in Sources */,
@@ -2845,7 +2846,7 @@
 				4934F75A19D047B800BFFDB1 /* SDImageCache.m in Sources */,
 				49E831C31954A9B900D4A26C /* Validator.m in Sources */,
 				522F75FD1A6524680095991F /* EBPhotoViewController.m in Sources */,
-				49D8D3151986AA8200015052 /* ClubUsersViewController.m in Sources */,
+				49D8D3151986AA8200015052 /* ClubCheckinsViewController.m in Sources */,
 				498A68D2196C4CFD00BC2859 /* PNActionResponseParser.m in Sources */,
 				49908EED1973C08000DA68F2 /* SessionHelper.m in Sources */,
 				498975AE19ED25B70067A5E4 /* UsersYesterday.m in Sources */,
@@ -2905,7 +2906,6 @@
 				522F75FC1A6524680095991F /* EBPhotoView.m in Sources */,
 				499929C019E99FF000B77A6E /* CustomNavigationController.m in Sources */,
 				522F75F41A6524680095991F /* EBCommentCell.m in Sources */,
-				49836B2A1961A64C00F2A2C6 /* HeaderView.m in Sources */,
 				4934F75C19D047B800BFFDB1 /* SDWebImageDecoder.m in Sources */,
 				498A68CA196C4CFD00BC2859 /* PNObservationCenter.m in Sources */,
 				522F75F71A6524680095991F /* EBPhotoPagesController.m in Sources */,
@@ -2921,7 +2921,6 @@
 				49E8317F1953018E00D4A26C /* ClubbookManager.m in Sources */,
 				498A68EE196C4CFD00BC2859 /* PNResponse.m in Sources */,
 				493E0EEF19D4549800B5ADEC /* ChangePassViewController.m in Sources */,
-				49D8D3121982A0D500015052 /* ClubFooterView.m in Sources */,
 				498A68E1196C4CFD00BC2859 /* PNAccessRightsInformation.m in Sources */,
 				49E8316E1952EF3F00D4A26C /* ClubbookCommunicator.m in Sources */,
 				498A6903196C4CFD00BC2859 /* PNMessageHistoryRequest.m in Sources */,
@@ -2997,6 +2996,7 @@
 				520897781A407C6700E8DD06 /* JSQMessagesComposerTextView.m in Sources */,
 				522F75F31A6524680095991F /* EBCaptionView.m in Sources */,
 				5208976A1A407C6700E8DD06 /* JSQLocationMediaItem.m in Sources */,
+				526E6EF91A8288C800257652 /* ClubFooterView.m in Sources */,
 				498A68CB196C4CFD00BC2859 /* PubNub.m in Sources */,
 				498A68FC196C4CFD00BC2859 /* PNChangeAccessRightsRequest.m in Sources */,
 				520897701A407C6700E8DD06 /* JSQVideoMediaItem.m in Sources */,

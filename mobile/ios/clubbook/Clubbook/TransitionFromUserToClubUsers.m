@@ -8,7 +8,7 @@
 
 #import "TransitionFromUserToClubUsers.h"
 
-#import "ClubUsersViewController.h"
+#import "ClubCheckinsViewController.h"
 #import "UserProfileViewController.h"
 #import "ProfileCell.h"
 
@@ -16,7 +16,7 @@
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
     UserProfileViewController *fromViewController = (UserProfileViewController*)[transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-    ClubUsersViewController *toViewController = (ClubUsersViewController*)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+    ClubCheckinsViewController *toViewController = (ClubCheckinsViewController*)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
 
     UIView *containerView = [transitionContext containerView];
     NSTimeInterval duration = [self transitionDuration:transitionContext];

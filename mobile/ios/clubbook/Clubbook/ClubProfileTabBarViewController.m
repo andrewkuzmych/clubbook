@@ -7,7 +7,7 @@
 //
 
 #import "ClubProfileTabBarViewController.h"
-#import "ClubUsersViewController.h"
+#import "ClubCheckinsViewController.h"
 #import "ClubViewParallaxControllerViewController.h"
 #import "ClubPhotGalleryCollectionViewController.h"
 #import "NewsFeedViewController.h"
@@ -34,13 +34,13 @@
                 NewsFeedViewController *newsController =  (NewsFeedViewController *)v;
                 newsController.title = @"News";
             }
-            else if ([v isKindOfClass:[ClubUsersViewController class]]) {
-                ClubUsersViewController *clubController =  (ClubUsersViewController *)v;
+            else if ([v isKindOfClass:[ClubCheckinsViewController class]]) {
+                ClubCheckinsViewController *clubController =  (ClubCheckinsViewController *)v;
                 clubController.title = @"Checked-in";
+                clubController.place = self.place;
             }
         }
 
-        
         [[UITabBar appearance] setBarTintColor:[UIColor whiteColor]];
     }
 }

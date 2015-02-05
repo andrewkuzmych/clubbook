@@ -48,18 +48,19 @@
 }
 
 - (void)dealloc{
-    if ([[_backgroundView gestureRecognizers] containsObject:self.topViewGestureRecognizer]){
-        [_backgroundView removeGestureRecognizer:self.topViewGestureRecognizer];
+    if (_backgroundView != nil && _foregroundView != nil) {
+        if ([[_backgroundView gestureRecognizers] containsObject:self.topViewGestureRecognizer]){
+            [_backgroundView removeGestureRecognizer:self.topViewGestureRecognizer];
+        }
+        
+        // Remove Observer
+        if ([_foregroundView isKindOfClass:[UIScrollView class]]){
+            UIScrollView *foregroundScrollView = (UIScrollView *)_foregroundView;
+            [foregroundScrollView removeObserver:self forKeyPath:@"contentSize"];
+        }
+        
+        [self.view removeObserver:self forKeyPath:@"frame"];
     }
-    
-    // Remove Observer
-    if ([_foregroundView isKindOfClass:[UIScrollView class]]){
-        UIScrollView *foregroundScrollView = (UIScrollView *)_foregroundView;
-        [foregroundScrollView removeObserver:self forKeyPath:@"contentSize"];
-    }
-    
-    [self.view removeObserver:self forKeyPath:@"frame"];
-    
 }
 
 #pragma mark - QMBParallaxScrollViewController Methods

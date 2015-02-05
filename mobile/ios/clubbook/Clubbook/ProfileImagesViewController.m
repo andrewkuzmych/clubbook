@@ -16,7 +16,7 @@
 #import "CSNotificationView.h"
 #import "LocationHelper.h"
 #import "TransitionFromUserToClubUsers.h"
-#import "ClubUsersViewController.h"
+#import "ClubCheckinsViewController.h"
 #import "ClubUsersYesterdayViewController.h"
 #import "UserNearbyViewController.h"
 

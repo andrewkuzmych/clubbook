@@ -12,7 +12,7 @@
 #import "GAITrackedViewController.h"
 #import "SWRevealViewController.h"
 
-@interface BaseViewController : GAITrackedViewController
+@interface BaseViewController : GAITrackedViewController <ClubbookManagerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sidebarButton;
 @property (strong, nonatomic) ClubbookManager *_manager;

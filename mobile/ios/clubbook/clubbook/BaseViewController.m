@@ -67,14 +67,6 @@
 - (void)failedWithError:(NSError *)error
 {
     [baseViewControllerHelper showError];
-   // [CSNotificationView showInViewController:self
-     //                                  style:CSNotificationViewStyleSuccess
-      //                               message:@"User information saved."];
-
-/*    ErrorViewController *purchaseContr = (ErrorViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"error"];
-    purchaseContr.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentViewController:purchaseContr animated:NO completion:nil];
-*/
 }
 
 /*

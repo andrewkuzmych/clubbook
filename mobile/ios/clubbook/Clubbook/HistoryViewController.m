@@ -10,7 +10,7 @@
 #import "CbButton.h"
 #import "ClubCell.h"
 #import "UIImageView+WebCache.h"
-#import "ClubUsersViewController.h"
+#import "ClubCheckinsViewController.h"
 #import "ClubUsersYesterdayViewController.h"
 
 @interface HistoryViewController ()
@@ -116,7 +116,7 @@
     Place *place = _places[selectedIndexPath.row];
     
     UIStoryboard *clubProfileStoryboard = [UIStoryboard storyboardWithName:@"ClubProfileStoryboard" bundle: nil];
-    ClubUsersViewController *clubController  = [clubProfileStoryboard instantiateViewControllerWithIdentifier:@"club"];
+    ClubCheckinsViewController *clubController  = [clubProfileStoryboard instantiateViewControllerWithIdentifier:@"club"];
     clubController.place = place;
     clubController.hasBack = YES;
 

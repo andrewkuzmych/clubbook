@@ -9,13 +9,13 @@
 #import "TransitionFromClubListToClub.h"
 
 #import "PlacesViewController.h"
-#import "ClubUsersViewController.h"
+#import "ClubCheckinsViewController.h"
 #import "ClubCell.h"
 
 @implementation TransitionFromClubListToClub
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
     PlacesViewController *fromViewController = (PlacesViewController*)[transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-    ClubUsersViewController *toViewController = (ClubUsersViewController*)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+    ClubCheckinsViewController *toViewController = (ClubCheckinsViewController*)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     
     UIView *containerView = [transitionContext containerView];
     NSTimeInterval duration = [self transitionDuration:transitionContext];

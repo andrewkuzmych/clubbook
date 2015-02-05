@@ -31,7 +31,7 @@
         <!--Club Profile-->
         <scene sceneID="zCY-1L-3fd">
             <objects>
-                <viewController storyboardIdentifier="club" id="ZjF-WR-zDq" userLabel="Club Profile" customClass="ClubUsersViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="club" title="Checked-in" id="ZjF-WR-zDq" userLabel="Club Profile" customClass="ClubCheckinsViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="IbS-L6-b3F"/>
                         <viewControllerLayoutGuide type="bottom" id="IWs-sF-kYc"/>
@@ -40,13 +40,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="dUm-p8-azL">
-                                <rect key="frame" x="1" y="0.0" width="318" height="568"/>
+                            <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="dUm-p8-azL">
+                                <rect key="frame" x="0.0" y="53" width="320" height="466"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="466" id="02B-Io-GZE"/>
+                                </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="uCY-Zu-pfN">
                                     <size key="itemSize" width="106" height="106"/>
-                                    <size key="headerReferenceSize" width="50" height="144"/>
-                                    <size key="footerReferenceSize" width="50" height="361"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
@@ -57,179 +60,38 @@
                                             <rect key="frame" x="0.0" y="0.0" width="106" height="106"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fij-Kk-lNS">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Fij-Kk-lNS">
                                                     <rect key="frame" x="0.0" y="0.0" width="106" height="106"/>
                                                 </imageView>
-                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_avatar_friend.png" translatesAutoresizingMaskIntoConstraints="NO" id="c5N-kp-QcP">
+                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_avatar_friend.png" translatesAutoresizingMaskIntoConstraints="NO" id="c5N-kp-QcP">
                                                     <rect key="frame" x="81" y="0.0" width="25" height="25"/>
                                                 </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <constraints>
+                                            <constraint firstAttribute="bottomMargin" secondItem="c5N-kp-QcP" secondAttribute="bottom" constant="73" id="4zN-oz-lQ5"/>
+                                            <constraint firstItem="Fij-Kk-lNS" firstAttribute="top" secondItem="c5N-kp-QcP" secondAttribute="top" id="6we-aH-S1i"/>
+                                            <constraint firstAttribute="trailing" secondItem="Fij-Kk-lNS" secondAttribute="trailing" id="C9U-bf-IGD"/>
+                                            <constraint firstItem="Fij-Kk-lNS" firstAttribute="leading" secondItem="LEU-XX-upF" secondAttribute="leading" id="Fqd-aq-xS3"/>
+                                            <constraint firstItem="c5N-kp-QcP" firstAttribute="leading" secondItem="LEU-XX-upF" secondAttribute="leadingMargin" constant="73" id="OWx-fc-ZAK"/>
+                                            <constraint firstAttribute="bottom" secondItem="Fij-Kk-lNS" secondAttribute="bottom" id="Rt9-iW-awR"/>
+                                            <constraint firstItem="Fij-Kk-lNS" firstAttribute="trailing" secondItem="c5N-kp-QcP" secondAttribute="trailing" id="jLK-8N-JSX"/>
+                                            <constraint firstItem="c5N-kp-QcP" firstAttribute="top" secondItem="LEU-XX-upF" secondAttribute="top" id="vgk-xG-E2i"/>
+                                        </constraints>
                                         <connections>
                                             <outlet property="friendIcon" destination="c5N-kp-QcP" id="42l-hU-5zt"/>
                                             <outlet property="profileAvatar" destination="Fij-Kk-lNS" id="Opk-pY-nql"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
-                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="header" id="BHX-fA-Lsc" customClass="HeaderView">
-                                    <rect key="frame" x="0.0" y="64" width="318" height="144"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_clubview_ckeckedin.png" translatesAutoresizingMaskIntoConstraints="NO" id="Nn8-Y3-mh7">
-                                            <rect key="frame" x="8" y="102" width="30" height="33"/>
-                                        </imageView>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_clubview_friends.png" translatesAutoresizingMaskIntoConstraints="NO" id="rGZ-pL-VaX">
-                                            <rect key="frame" x="97" y="102" width="30" height="33"/>
-                                        </imageView>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="25" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hWS-jg-4gF">
-                                            <rect key="frame" x="36" y="104" width="37" height="17"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <color key="textColor" red="0.38431372549999998" green="0.38431372549999998" blue="0.38431372549999998" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="4" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IGe-Xm-bm1">
-                                            <rect key="frame" x="126" y="104" width="31" height="17"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <color key="textColor" red="0.38431372549999998" green="0.38431372549999998" blue="0.38431372549999998" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jvu-ja-kJg">
-                                            <rect key="frame" x="11" y="14" width="70" height="70"/>
-                                        </imageView>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h4i-4x-ob9">
-                                            <rect key="frame" x="87" y="17" width="219" height="23"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" red="0.38431372549999998" green="0.38431372549999998" blue="0.38431372549999998" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mn7-pL-NjP">
-                                            <rect key="frame" x="9" y="93" width="295" height="1"/>
-                                            <color key="backgroundColor" red="0.78985969389999999" green="0.78985969389999999" blue="0.78985969389999999" alpha="0.5" colorSpace="calibratedRGB"/>
-                                        </view>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Closed" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RVh-Gd-ina">
-                                            <rect key="frame" x="111" y="43" width="136" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <color key="textColor" red="0.54085618619999998" green="0.54085618619999998" blue="0.54085618619999998" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="checked in" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gNJ-Dv-HiK">
-                                            <rect key="frame" x="36" y="116" width="62" height="18"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <color key="textColor" red="0.38431372549999998" green="0.38431372549999998" blue="0.38431372549999998" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="friends" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hpl-Z7-Gpl">
-                                            <rect key="frame" x="126" y="116" width="42" height="18"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <color key="textColor" red="0.38431372549999998" green="0.38431372549999998" blue="0.38431372549999998" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mcP-07-uLo">
-                                            <rect key="frame" x="8" y="9" width="234" height="81"/>
-                                            <state key="normal">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                            <connections>
-                                                <action selector="onClubInfoPressed:" destination="ZjF-WR-zDq" eventType="touchUpInside" id="47S-1p-oXg"/>
-                                            </connections>
-                                        </button>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Info &amp; Wall" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L2e-RK-hti">
-                                            <rect key="frame" x="111" y="61" width="81" height="26"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <color key="textColor" red="0.38431372549999998" green="0.38431372549999998" blue="0.38431372549999998" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_info.png" translatesAutoresizingMaskIntoConstraints="NO" id="RLT-o9-Bmv">
-                                            <rect key="frame" x="78" y="63" width="36" height="21"/>
-                                        </imageView>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_hours.png" translatesAutoresizingMaskIntoConstraints="NO" id="3yG-N5-n9H">
-                                            <rect key="frame" x="87" y="46" width="16" height="16"/>
-                                        </imageView>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_clubview_guide.png" translatesAutoresizingMaskIntoConstraints="NO" id="MS2-kY-qkm">
-                                            <rect key="frame" x="268" y="41" width="25" height="25"/>
-                                        </imageView>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="123 m" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B4F-y7-DwQ">
-                                            <rect key="frame" x="242" y="65" width="74" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" red="0.25098039220000001" green="0.81960784310000001" blue="0.070588235289999995" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aSu-dM-Xl2">
-                                            <rect key="frame" x="248" y="37" width="56" height="58"/>
-                                            <state key="normal">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                            <connections>
-                                                <action selector="directionAction:" destination="ZjF-WR-zDq" eventType="touchUpInside" id="k1k-47-kLX"/>
-                                            </connections>
-                                        </button>
-                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5HL-Xc-Sbt" customClass="AddFriendButton">
-                                            <rect key="frame" x="176" y="104" width="128" height="30"/>
-                                            <inset key="contentEdgeInsets" minX="30" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                            <state key="normal" title="Yesterday">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                        </button>
-                                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="yesterday_icon.png" translatesAutoresizingMaskIntoConstraints="NO" id="oul-5M-i0b">
-                                            <rect key="frame" x="188" y="107" width="23" height="23"/>
-                                        </imageView>
-                                    </subviews>
-                                    <connections>
-                                        <outlet property="checkinButton" destination="nmo-RL-wuy" id="CPJ-jd-sde"/>
-                                        <outlet property="checkinCountLabel" destination="hWS-jg-4gF" id="Aos-X3-jkf"/>
-                                        <outlet property="checkinCountTitleLabel" destination="gNJ-Dv-HiK" id="eAS-cD-JMo"/>
-                                        <outlet property="clubAvatarImage" destination="jvu-ja-kJg" id="JNN-RR-Xk1"/>
-                                        <outlet property="clubDistanceText" destination="B4F-y7-DwQ" id="Z6W-gO-vf7"/>
-                                        <outlet property="clubNameText" destination="h4i-4x-ob9" id="THp-a2-KaJ"/>
-                                        <outlet property="friendsCountLabel" destination="IGe-Xm-bm1" id="EAQ-FJ-8Ea"/>
-                                        <outlet property="friendsCountTitleLabel" destination="hpl-Z7-Gpl" id="TCo-Nu-1HM"/>
-                                        <outlet property="infoWallLabel" destination="L2e-RK-hti" id="VOR-p1-Ito"/>
-                                        <outlet property="workingHoursLabel" destination="RVh-Gd-ina" id="Jw3-Op-Gc3"/>
-                                        <outlet property="yesterdayButton" destination="5HL-Xc-Sbt" id="EAj-h4-fny"/>
-                                    </connections>
-                                </collectionReusableView>
-                                <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="footer" id="K4m-HW-tIt" customClass="ClubFooterView">
-                                    <rect key="frame" x="0.0" y="314" width="318" height="361"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="xsr-v7-FSi">
-                                            <rect key="frame" x="149" y="18" width="20" height="20"/>
-                                            <color key="color" red="0.66757015310000001" green="0.66757015310000001" blue="0.66757015310000001" alpha="1" colorSpace="calibratedRGB"/>
-                                        </activityIndicatorView>
-                                        <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Z8-Y0-qsz">
-                                            <rect key="frame" x="24" y="46" width="270" height="113"/>
-                                            <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Checked-in" textAlignment="center" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Llb-Ao-rtX">
-                                                    <rect key="frame" x="0.0" y="32" width="270" height="31"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.38431372549999998" green="0.38431372549999998" blue="0.38431372549999998" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="No Users" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="270" translatesAutoresizingMaskIntoConstraints="NO" id="56j-r1-chf">
-                                                    <rect key="frame" x="0.0" y="-4" width="270" height="46"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <color key="textColor" red="0.38431372549999998" green="0.38431372549999998" blue="0.38431372549999998" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                        </view>
-                                    </subviews>
-                                    <connections>
-                                        <outlet property="checkinLabel" destination="Llb-Ao-rtX" id="RwP-YR-7uD"/>
-                                        <outlet property="clubUsersLabel" destination="56j-r1-chf" id="Cjp-bT-uIo"/>
-                                        <outlet property="footerContainer" destination="3Z8-Y0-qsz" id="lie-dj-CwI"/>
-                                        <outlet property="loadingIndicator" destination="xsr-v7-FSi" id="mKx-gS-gCA"/>
-                                    </connections>
-                                </collectionReusableView>
                             </collectionView>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nmo-RL-wuy" customClass="CbButton">
-                                <rect key="frame" x="70" y="518" width="180" height="40"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nmo-RL-wuy">
+                                <rect key="frame" x="215" y="411" width="100" height="100"/>
                                 <color key="backgroundColor" red="0.78985969389999999" green="0.78985969389999999" blue="0.78985969389999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="180" id="SGT-pD-51S"/>
-                                    <constraint firstAttribute="height" constant="40" id="mvi-ck-Hi2"/>
+                                    <constraint firstAttribute="width" constant="100" id="SGT-pD-51S"/>
+                                    <constraint firstAttribute="height" constant="100" id="mvi-ck-Hi2"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <state key="normal" title="Checkin">
@@ -239,15 +101,105 @@
                                     <action selector="checkinAction:" destination="ZjF-WR-zDq" eventType="touchUpInside" id="DjX-4u-v1D"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Di1-lb-ig1">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="53"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Closed" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="43V-fR-1n2">
+                                        <rect key="frame" x="8" y="8" width="68" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" red="0.1485171666" green="0.61600378789999999" blue="0.2476059723" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bfG-iH-gbg">
+                                        <rect key="frame" x="79" y="2" width="150" height="50"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TTc-4H-okb">
+                                                <rect key="frame" x="81" y="2" width="61" height="45"/>
+                                                <subviews>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_clubview_friends.png" translatesAutoresizingMaskIntoConstraints="NO" id="dP0-31-VlY">
+                                                        <rect key="frame" x="31" y="12" width="30" height="33"/>
+                                                    </imageView>
+                                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="4" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2m2-5B-8og">
+                                                        <rect key="frame" x="4" y="15" width="31" height="28"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                                        <color key="textColor" red="0.38431372549999998" green="0.38431372549999998" blue="0.38431372549999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Friends" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mbg-GE-G3F">
+                                                        <rect key="frame" x="-10" y="0.0" width="71" height="18"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                        <color key="textColor" red="0.38431372549999998" green="0.38431372549999998" blue="0.38431372549999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </view>
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VCc-rI-d2Y">
+                                                <rect key="frame" x="0.0" y="3" width="73" height="44"/>
+                                                <subviews>
+                                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Checked in" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z2A-sL-Kls">
+                                                        <rect key="frame" x="2" y="0.0" width="71" height="18"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                        <color key="textColor" red="0.38431372549999998" green="0.38431372549999998" blue="0.38431372549999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="25" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fkm-GS-9M8">
+                                                        <rect key="frame" x="0.0" y="13" width="50" height="30"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                                        <color key="textColor" red="0.38431372549999998" green="0.38431372549999998" blue="0.38431372549999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_clubview_ckeckedin.png" translatesAutoresizingMaskIntoConstraints="NO" id="ahY-OJ-LpR">
+                                                        <rect key="frame" x="43" y="11" width="30" height="33"/>
+                                                    </imageView>
+                                                </subviews>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="21:00 - 5:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RYh-H0-l1P">
+                                        <rect key="frame" x="8" y="24" width="81" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <color key="textColor" red="0.1985085227" green="0.1985085227" blue="0.1985085227" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vkn-H8-P8N">
+                                        <rect key="frame" x="264" y="5" width="27" height="27"/>
+                                        <state key="normal" image="icon_clubview_guide.png">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="directionAction:" destination="ZjF-WR-zDq" eventType="touchUpInside" id="2Js-KP-pKO"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="123 m" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XpL-TO-Yq3">
+                                        <rect key="frame" x="245" y="30" width="64" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                        <color key="textColor" red="0.3865806502525253" green="0.3865806502525253" blue="0.3865806502525253" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="IWs-sF-kYc" firstAttribute="top" secondItem="nmo-RL-wuy" secondAttribute="bottom" constant="10" id="2NR-32-jjm"/>
-                            <constraint firstItem="dUm-p8-azL" firstAttribute="leading" secondItem="LZ5-32-HWK" secondAttribute="leadingMargin" constant="-15" id="EdJ-zY-3mS"/>
-                            <constraint firstItem="nmo-RL-wuy" firstAttribute="leading" secondItem="LZ5-32-HWK" secondAttribute="leadingMargin" constant="54" id="dnI-e3-0tN"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="dUm-p8-azL" secondAttribute="trailing" constant="-15" id="fId-jP-Dle"/>
-                            <constraint firstItem="IWs-sF-kYc" firstAttribute="top" secondItem="dUm-p8-azL" secondAttribute="bottom" id="gIZ-cm-qAI"/>
-                            <constraint firstItem="dUm-p8-azL" firstAttribute="top" secondItem="LZ5-32-HWK" secondAttribute="topMargin" id="moW-Pm-VqE"/>
+                            <constraint firstItem="Di1-lb-ig1" firstAttribute="top" secondItem="LZ5-32-HWK" secondAttribute="topMargin" id="8PM-Px-zlh"/>
+                            <constraint firstItem="IWs-sF-kYc" firstAttribute="top" secondItem="dUm-p8-azL" secondAttribute="bottom" id="9ee-5F-eei"/>
+                            <constraint firstItem="dUm-p8-azL" firstAttribute="top" secondItem="Di1-lb-ig1" secondAttribute="bottom" id="G6U-PV-n22"/>
+                            <constraint firstItem="Di1-lb-ig1" firstAttribute="top" secondItem="LZ5-32-HWK" secondAttribute="topMargin" id="Id1-Rj-D3h"/>
+                            <constraint firstItem="Di1-lb-ig1" firstAttribute="leading" secondItem="LZ5-32-HWK" secondAttribute="leading" id="RBM-fo-u5U"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="dUm-p8-azL" secondAttribute="trailing" constant="-16" id="RBb-7T-LJI"/>
+                            <constraint firstItem="IWs-sF-kYc" firstAttribute="top" secondItem="dUm-p8-azL" secondAttribute="bottom" id="Vet-dk-5ue"/>
+                            <constraint firstItem="dUm-p8-azL" firstAttribute="leading" secondItem="LZ5-32-HWK" secondAttribute="leadingMargin" constant="-16" id="W5k-ff-6Yj"/>
+                            <constraint firstItem="dUm-p8-azL" firstAttribute="top" secondItem="Di1-lb-ig1" secondAttribute="bottom" id="bKW-B4-VvO"/>
+                            <constraint firstAttribute="trailing" secondItem="Di1-lb-ig1" secondAttribute="trailing" id="crB-hA-QJs"/>
+                            <constraint firstItem="Di1-lb-ig1" firstAttribute="top" secondItem="LZ5-32-HWK" secondAttribute="top" id="fKe-2n-pB0"/>
+                            <constraint firstItem="IWs-sF-kYc" firstAttribute="top" secondItem="nmo-RL-wuy" secondAttribute="bottom" constant="8" symbolic="YES" id="ldK-Nv-XLT"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="nmo-RL-wuy" secondAttribute="trailing" constant="-11" id="ohe-Qg-5ik"/>
+                            <constraint firstItem="dUm-p8-azL" firstAttribute="leading" secondItem="LZ5-32-HWK" secondAttribute="leadingMargin" constant="-16" id="wY7-xP-DFd"/>
+                            <constraint firstItem="dUm-p8-azL" firstAttribute="trailing" secondItem="LZ5-32-HWK" secondAttribute="trailingMargin" constant="16" id="ysn-g4-oAq"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" id="a78-Uq-mqo"/>
@@ -256,13 +208,19 @@
                     </navigationItem>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
+                        <outlet property="checkinButton" destination="nmo-RL-wuy" id="MjJ-uk-WV7"/>
+                        <outlet property="checkinCount" destination="Fkm-GS-9M8" id="UeV-iQ-Xiv"/>
+                        <outlet property="distanceLabel" destination="XpL-TO-Yq3" id="jiA-L8-nYf"/>
+                        <outlet property="friendsCount" destination="2m2-5B-8og" id="4Lo-YD-V07"/>
+                        <outlet property="hoursLabel" destination="RYh-H0-l1P" id="CAf-gG-NaZ"/>
+                        <outlet property="openCloseLabel" destination="43V-fR-1n2" id="2sd-O1-u1h"/>
                         <outlet property="profileCollection" destination="dUm-p8-azL" id="FLQ-26-qWR"/>
                         <outlet property="sidebarButton" destination="uwA-6W-BtF" id="74N-EN-QpA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ACi-tg-Xxh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-113" y="35"/>
+            <point key="canvasLocation" x="-920" y="-1754"/>
         </scene>
         <!--Photo Gallery-->
         <scene sceneID="xZ1-uc-YKY">
@@ -365,7 +323,7 @@
         <!--Parallax-->
         <scene sceneID="stG-PH-Lqn">
             <objects>
-                <viewController id="m8T-Jj-ixX" userLabel="Parallax" customClass="ClubViewParallaxControllerViewController" sceneMemberID="viewController">
+                <viewController title="About" id="m8T-Jj-ixX" userLabel="Parallax" customClass="ClubViewParallaxControllerViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Dwm-1U-qpb"/>
                         <viewControllerLayoutGuide type="bottom" id="OAj-Br-FHj"/>
@@ -380,7 +338,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="us5-4Z-F66" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-11" y="-1621"/>
+            <point key="canvasLocation" x="-7" y="-1637"/>
         </scene>
         <!--Club View Controller-->
         <scene sceneID="Y2c-mf-WqM">
@@ -713,10 +671,10 @@
             </objects>
             <point key="canvasLocation" x="824" y="-1532"/>
         </scene>
-        <!--Item-->
+        <!--NewsFeed-->
         <scene sceneID="Q6a-fI-0IE">
             <objects>
-                <viewController storyboardIdentifier="news" id="Zmr-z4-vJn" customClass="NewsFeedViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="news" title="News" id="Zmr-z4-vJn" userLabel="NewsFeed" customClass="NewsFeedViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="3dN-4Y-80o"/>
                         <viewControllerLayoutGuide type="bottom" id="76q-ZX-QNb"/>
@@ -905,7 +863,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rci-AI-YrX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-953" y="-68"/>
+            <point key="canvasLocation" x="27" y="68"/>
         </scene>
     </scenes>
     <resources>
@@ -918,9 +876,6 @@
         <image name="icon_clubview_ckeckedin.png" width="32" height="32"/>
         <image name="icon_clubview_friends.png" width="32" height="32"/>
         <image name="icon_clubview_guide.png" width="32" height="32"/>
-        <image name="icon_hours.png" width="18" height="18"/>
-        <image name="icon_info.png" width="48" height="48"/>
         <image name="menu.png" width="28" height="20"/>
-        <image name="yesterday_icon.png" width="20" height="21"/>
     </resources>
 </document>

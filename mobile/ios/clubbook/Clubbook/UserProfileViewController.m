@@ -16,7 +16,7 @@
 #import "CSNotificationView.h"
 #import "LocationHelper.h"
 #import "TransitionFromUserToClubUsers.h"
-#import "ClubUsersViewController.h"
+#import "ClubCheckinsViewController.h"
 #import "ClubUsersYesterdayViewController.h"
 #import "UserNearbyViewController.h"
 #import "ProfileImagesViewController.h"
@@ -227,7 +227,7 @@
                                                fromViewController:(UIViewController *)fromVC
                                                  toViewController:(UIViewController *)toVC {
     // Check if we're transitioning from this view controller to a DSLFirstViewController
-    if (fromVC == self && [toVC isKindOfClass:[ClubUsersViewController class]]) {
+    if (fromVC == self && [toVC isKindOfClass:[ClubCheckinsViewController class]]) {
         return [[TransitionFromUserToClubUsers alloc] init];
     } else if (fromVC == self && [toVC isKindOfClass:[ClubUsersYesterdayViewController class]]) {
         return [[TransitionFromUserToClubUsers alloc] init];
@@ -610,7 +610,7 @@
 - (IBAction)placeCheckinAction:(id)sender {
     
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle: nil];
-    ClubUsersViewController *clubController  = [mainStoryboard instantiateViewControllerWithIdentifier:@"club"];
+    ClubCheckinsViewController *clubController  = [mainStoryboard instantiateViewControllerWithIdentifier:@"club"];
     clubController.place = self.currentPlace;//place.id;
     clubController.hasBack = YES;
     // ClubUsersViewController *clubController =  [segue ClubUsersViewController];
