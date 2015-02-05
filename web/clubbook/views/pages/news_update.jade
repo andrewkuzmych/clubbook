@@ -90,14 +90,14 @@ block content
                     span.required *
                   .col-md-3
                     .input-group
-                      .input-group.date.date-picker(data-date-format='dd-mm-yyyy')
+                      .input-group.date.date-picker.start_d(data-date-format='dd-mm-yyyy')
                         input.form-control(type='text', name="start_date", value="#{start_date_?start_date_:data_time}" readonly)
                         span.input-group-btn
                           button.btn.default.date-set(type='button')
                             i.fa.fa-calendar
                   .col-md-3
                     .input-group
-                      input.form-control.timepicker.timepicker-no-seconds(type='text', class='st_tm' name='start_time', data-default-time="", value="#{start_time_?start_time_:'22:00'}" readonly)
+                      input.form-control.timepicker.timepicker-no-seconds.start_t(type='text' name='start_time', data-default-time="", value="#{start_time_?start_time_:'22:00'}" readonly)
                       span.input-group-btn
                         button.btn.default(type='button')
                             i.fa.fa-clock-o
@@ -105,14 +105,14 @@ block content
                   label.control-label.col-md-3 End
                   .col-md-3
                     .input-group
-                      .input-group.date.date-picker(data-date-format='dd-mm-yyyy')
-                        input.form-control(type='text', name="end_date", value="#{end_date_?end_date_:''}")
+                      .input-group.date.date-picker.end_d(data-date-format='dd-mm-yyyy')
+                        input.form-control.end_form(type='text', name="end_date", value="#{end_date_?end_date_:''}")
                         span.input-group-btn
                           button.btn.default.date-set(type='button')
                             i.fa.fa-calendar
                   .col-md-3
                     .input-group
-                      input.form-control.timepicker.timepicker-no-seconds(type='text', name='end_time', data-default-time="", value="#{end_time_?end_time_:''}")
+                      input.form-control.timepicker.timepicker-no-seconds.end_t(type='text', name='end_time', data-default-time="", value="#{end_time_?end_time_:''}")
                       span.input-group-btn
                         button.btn.default(type='button')
                             i.fa.fa-clock-o
@@ -152,6 +152,37 @@ block scripts
       $(this).closest('tr').remove();  
       updateClubImages();
     });
+    $('.start_d').on("change", function(){
+      $('.end_d').datepicker('setStartDate',$('.start_d').datepicker('getFormattedDate'));
+    });
+
+    $('.end_d').on("change", function(){
+      if(!$('.end_form').val()){
+        $('.start_d').datepicker('setEndDate',Infinity);
+      }
+      else{
+        $('.start_d').datepicker('setEndDate',$('.end_form').val());
+      }
+      if(($('.start_d').datepicker('getFormattedDate')==$('.end_d').datepicker('getFormattedDate'))&&($('.end_form').val())){
+        $('.end_t').data("timepicker").setTime($('.start_t').data("timepicker").getTime());
+      }
+      });
+    $('.timepicker-no-seconds').on("change", function(){
+      if($('.start_d').datepicker('getFormattedDate')==$('.end_d').datepicker('getFormattedDate')){
+        if(($('.start_t').data("timepicker"))&&($('.end_t').data("timepicker"))) {
+          var startTime = $('.start_t').data("timepicker").getTime();
+          var endTime = $('.end_t').data("timepicker").getTime();
+          var startTimeArray = startTime.split(':');
+          var endTimeArray = endTime.split(':');
+          if(parseInt(startTimeArray[0])>parseInt(endTimeArray[0])){
+            $('.end_t').data("timepicker").setTime($('.start_t').data("timepicker").getTime());
+          }
+          else if((parseInt(startTimeArray[0])==parseInt(endTimeArray[0]))&&(parseInt(startTimeArray[1])>parseInt(endTimeArray[1]))){
+            $('.end_t').data("timepicker").setTime($('.start_t').data("timepicker").getTime());
+          }
+        }
+      }
+    });
 
     function updateClubImages() {
       $('[name=news_images]').val($('img.news_image').map(function() { return this.src; }).get().join());
@@ -169,6 +200,9 @@ block scripts
       $('.date-picker').datepicker({
         autoclose: true
       });
+      $('.start_d').datepicker('setStartDate',"#{data_time}");
+      $('.end_d').datepicker('setStartDate',$('.start_d').datepicker('getFormattedDate'));
+
     });
 
     FormValidation.init();
