@@ -4,19 +4,19 @@ block content
   //
      BEGIN PAGE HEADER
   h3.page-title
-    | Clubs
+    | DJ's
   .page-bar
     ul.page-breadcrumb
       li
         i.fa.fa-home
-        a(href='/venue/clubs') Clubs
+        a(href='/venue/clubs') DJ's
   //
      END PAGE HEADER
   //
      BEGIN PAGE CONTENT
   .row
     .col-md-12
-      table#clubs.table.table-bordered.table-striped.table-condensed.flip-content
+      table#djs.table.table-bordered.table-striped.table-condensed.flip-content
         thead.flip-content
           tr
             th(width='20%')
@@ -29,33 +29,33 @@ block content
               | Email
             th
         tbody
-          for club in clubs
+          for dj in djs
             tr
               td(style="vertical-align: middle;")
-                if club.club_logo
-                  img(src='#{club.club_logo}', alt='#{club.club_name}', height="50")
+                if dj.dj_logo
+                  img(src='#{dj.dj_logo}', alt='#{dj.dj_name}', height="50")
               td(style="vertical-align: middle;")
-                | #{club.club_name} 
+                | #{dj.dj_name} 
               td(style="vertical-align: middle;")
-                | #{club.club_phone} 
+                | #{dj.dj_phone} 
               td(style="vertical-align: middle;")
-                | #{club.club_email} 
+                | #{dj.dj_email} 
               td(style="vertical-align: middle;")
-                a.edit-btn.btn.default.yellow(href='/venue/club_edit/#{club._id}', style="margin:3px")
+                a.edit-btn.btn.default.yellow(href='/venue/dj_edit/#{dj._id}', style="margin:3px")
                   i.fa.fa-edit
                     &nbsp;
                     | edit
-                a.btn.default.black(href='/venue/club_delete/#{club._id}', style="margin:3px", onclick="return confirm('Are you sure you want to delete club?')")
+                a.btn.default.black(href='/venue/dj_delete/#{dj._id}', style="margin:3px", onclick="return confirm('Are you sure you want to delete DJ?')")
                   i.fa.fa-edit
                     &nbsp;
                     | delete
-                a.btn.default.blue(href='/venue/club/news/#{club._id}', style="margin:3px")
+                a.btn.default.blue(href='/venue/dj/news/#{dj._id}', style="margin:3px")
                     i.fa.fa-book
                       &nbsp;
                       | news
 
       div
-        a.btn.btn-primary(href="/venue/club_create") Add Club
+        a.btn.btn-primary(href="/venue/dj_create") Add DJ
 
 
   //
@@ -75,7 +75,7 @@ block scripts
   script(type="text/javascript")
     $(function () {
 
-      var table = $('#clubs');
+      var table = $('#djs');
       table.dataTable({
           "bStateSave": true, // save datatable state(pagination, sort, etc) in cookie.
 

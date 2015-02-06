@@ -36,7 +36,6 @@ block content
             th
         tbody
           for the_news in news
-
             tr
               td(style="vertical-align: middle;")
                 if the_news.photos[0]
@@ -49,14 +48,13 @@ block content
               td(style="vertical-align: middle;")
                 | #{the_news.updated_on} 
               td(style="vertical-align: middle;")
-                a.edit-btn.btn.default.yellow(href='/venue/news_edit/#{the_news._id}/#{_id}', style="margin:3px")
-                  i.fa.fa-edit
-                    &nbsp;
-                    | edit
-                a.btn.default.black(href='/venue/news_delete/#{the_news._id}/#{_id}', style="margin:3px", onclick="return confirm('Are you sure you want to delete this news?')")
-                  i.fa.fa-edit
-                    &nbsp;
-                    | delete
-
+                  a.edit-btn.btn.default.yellow(href='/venue/#{type}/news_edit/#{_id}/#{the_news._id}', style="margin:3px")
+                    i.fa.fa-edit
+                      &nbsp;
+                      | edit
+                  a.btn.default.black(href='/venue/#{type}/news_delete/#{_id}/#{the_news._id}', style="margin:3px", onclick="return confirm('Are you sure you want to delete this news?')")
+                    i.fa.fa-edit
+                      &nbsp;
+                      | delete
       div
-        a.btn.btn-primary(href="/venue/club_news_create/#{_id}") Add News
+        a.btn.btn-primary(href="/venue/#{type}/news_create/#{_id}") Add News

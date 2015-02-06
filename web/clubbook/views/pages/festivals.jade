@@ -4,19 +4,19 @@ block content
   //
      BEGIN PAGE HEADER
   h3.page-title
-    | Clubs
+    | Festivals
   .page-bar
     ul.page-breadcrumb
       li
         i.fa.fa-home
-        a(href='/venue/clubs') Clubs
+        a(href='/venue/festivals') Festivals
   //
      END PAGE HEADER
   //
      BEGIN PAGE CONTENT
   .row
     .col-md-12
-      table#clubs.table.table-bordered.table-striped.table-condensed.flip-content
+      table#festivals.table.table-bordered.table-striped.table-condensed.flip-content
         thead.flip-content
           tr
             th(width='20%')
@@ -29,33 +29,33 @@ block content
               | Email
             th
         tbody
-          for club in clubs
+          for festival in festivals
             tr
               td(style="vertical-align: middle;")
-                if club.club_logo
-                  img(src='#{club.club_logo}', alt='#{club.club_name}', height="50")
+                if festival.fest_logo
+                  img(src='#{festival.fest_logo}', alt='#{festival.fest_name}', height="50")
               td(style="vertical-align: middle;")
-                | #{club.club_name} 
+                | #{festival.fest_name} 
               td(style="vertical-align: middle;")
-                | #{club.club_phone} 
+                | #{festival.fest_phone} 
               td(style="vertical-align: middle;")
-                | #{club.club_email} 
+                | #{festival.fest_email} 
               td(style="vertical-align: middle;")
-                a.edit-btn.btn.default.yellow(href='/venue/club_edit/#{club._id}', style="margin:3px")
+                a.edit-btn.btn.default.yellow(href='/venue/festival_edit/#{festival._id}', style="margin:3px")
                   i.fa.fa-edit
                     &nbsp;
                     | edit
-                a.btn.default.black(href='/venue/club_delete/#{club._id}', style="margin:3px", onclick="return confirm('Are you sure you want to delete club?')")
+                a.btn.default.black(href='/venue/festival_delete/#{festival._id}', style="margin:3px", onclick="return confirm('Are you sure you want to delete festival?')")
                   i.fa.fa-edit
                     &nbsp;
                     | delete
-                a.btn.default.blue(href='/venue/club/news/#{club._id}', style="margin:3px")
+                a.btn.default.blue(href='/venue/festival/news/#{festival._id}', style="margin:3px")
                     i.fa.fa-book
                       &nbsp;
                       | news
 
       div
-        a.btn.btn-primary(href="/venue/club_create") Add Club
+        a.btn.btn-primary(href="/venue/festival_create") Add Festival
 
 
   //
@@ -75,7 +75,7 @@ block scripts
   script(type="text/javascript")
     $(function () {
 
-      var table = $('#clubs');
+      var table = $('#festivals');
       table.dataTable({
           "bStateSave": true, // save datatable state(pagination, sort, etc) in cookie.
 

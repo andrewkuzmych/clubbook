@@ -105,6 +105,22 @@ exports.clubs = (req, res)->
       model.clubs = venues
       res.render "pages/clubs", model
 
+exports.festivals = (req, res)->
+  create_base_model req, res, (model)->
+    #req.params.venue_id
+    db_model.Festival.find(model.my_festivals).exec (err, venues)->
+      model.festivals = venues
+      console.log venues
+      res.render "pages/festivals", model
+
+exports.djs = (req, res)->
+  create_base_model req, res, (model)->
+    #req.params.venue_id
+    db_model.Dj.find(model.my_djs).exec (err, venues)->
+      model.djs = venues
+      console.log venues
+      res.render "pages/djs", model
+
 exports.users = (req, res)->
   console.log 'Users'
   create_base_model req, res, (model)->
@@ -178,17 +194,130 @@ exports.club_create_action = (req, res)->
         console.log 1111111111
         console.log err
         res.redirect "/venue/clubs" 
- 
-exports.club_news = (req, res)->
+
+exports.dj_create = (req, res)->
   create_base_model req, res, (model)->
-    db_model.News.find({'venue': req.params.id}).exec (err, news)-> 
-      if not news
-        console.log  'missing news for this club'
-        res.redirect "/venue/club_news/#{req.params.id}"        
-      else
-        model._id = req.params.id
-        model.news = news
-        res.render "pages/club_news", model
+    console.log 'DJ'
+    model.cloudinary = cloudinary
+    model.dj = {}
+    res.render "pages/dj_update", model
+
+exports.dj_create_action = (req, res)->
+  validate_club_model req, null, (validation)->
+    if validation.has_error
+      res.redirect "/venue/dj_create?error=1"
+    else
+      dj = new db_model.Dj
+        dj_email : req.body.dj_email
+        dj_logo : req.body.dj_logo
+        dj_name : req.body.dj_name
+        dj_phone : req.body.dj_phone
+        dj_site : req.body.dj_site
+        dj_info : req.body.dj_info
+        dj_music : req.body.dj_music
+      dj.dj_photos = [];
+      if req.body.dj_photos
+        for dj_photo in req.body.dj_photos.split(',')
+          dj.dj_photos.push dj_photo
+      dj.save (err)->
+        console.log err
+        res.redirect "/venue/djs" 
+
+exports.dj_edit = (req, res)->
+  create_base_model req, res, (model)->
+    db_model.Dj.findById(req.params.id).exec (err, venue)->
+      model.cloudinary = cloudinary
+      model.dj = venue
+      res.render "pages/dj_update", model
+
+exports.dj_edit_action = (req, res)->
+  validate_club_model req, null, (validation)->
+    if validation.has_error
+      res.redirect "/venue/dj_create?error=1"
+    else
+      db_model.Dj.findById(req.params.id).exec (err, dj)->
+        dj.dj_email = req.body.dj_email
+        dj.dj_name = req.body.dj_name
+        dj.dj_phone = req.body.dj_phone
+        dj.dj_site = req.body.dj_site
+        dj.dj_info = req.body.dj_info
+        dj.dj_music = req.body.dj_music
+        dj.dj_logo = req.body.dj_logo
+        dj.dj_photos = [];
+        if req.body.dj_photos
+          for dj_photo in req.body.dj_photos.split(',')
+            dj.dj_photos.push dj_photo
+        dj.save (err)->
+          console.log err
+          res.redirect "/venue/djs"
+
+exports.dj_delete_action = (req, res)->
+  db_model.Dj.findByIdAndRemove(req.params.id).exec (err)->
+    db_model.News.remove {"dj":req.params.id}, (err)->
+      res.redirect "/venue/djs"
+
+exports.festival_create = (req, res)->
+  create_base_model req, res, (model)->
+    console.log 'Festival'
+    model.cloudinary = cloudinary
+    model.festival = {}
+    res.render "pages/festival_update", model
+
+exports.festival_create_action = (req, res)->
+  validate_club_model req, null, (validation)->
+    if validation.has_error
+      res.redirect "/venue/festival_create?error=1"
+    else
+      festival = new db_model.Festival
+        fest_email : req.body.fest_email
+        fest_logo : req.body.fest_logo
+        fest_name : req.body.fest_name
+        fest_phone : req.body.fest_phone
+        fest_site : req.body.fest_site
+        fest_info : req.body.fest_info
+        fest_address : req.body.fest_address
+      festival.fest_loc = {lon:req.body.lng, lat: req.body.lat}    
+      festival.fest_photos = [];
+      if req.body.fest_photos
+        for fest_photo in req.body.fest_photos.split(',')
+          festival.fest_photos.push fest_photo
+      festival.save (err)->
+        console.log err
+        res.redirect "/venue/festivals" 
+
+exports.festival_edit = (req, res)->
+  create_base_model req, res, (model)->
+    db_model.Festival.findById(req.params.id).exec (err, venue)->
+      model.cloudinary = cloudinary
+      model.festival = venue
+      res.render "pages/festival_update", model
+
+exports.festival_edit_action = (req, res)->
+  validate_club_model req, null, (validation)->
+    if validation.has_error
+      res.redirect "/venue/festival_create?error=1"
+    else
+      db_model.Festival.findById(req.params.id).exec (err, venue)->
+        venue.fest_email = req.body.fest_email
+        venue.fest_name = req.body.fest_name
+        venue.fest_phone = req.body.fest_phone
+        venue.fest_site = req.body.fest_site
+        venue.fest_info = req.body.fest_info
+        venue.fest_address = req.body.fest_address
+        venue.fest_loc = {lon:req.body.lng, lat: req.body.lat}
+        venue.fest_logo = req.body.fest_logo
+        venue.fest_photos = [];
+        if req.body.fest_photos
+          for fest_photo in req.body.fest_photos.split(',')
+            venue.fest_photos.push fest_photo
+        venue.save (err)->
+          console.log err
+          res.redirect "/venue/festivals"
+
+exports.festival_delete_action = (req, res)->
+  db_model.Festival.findByIdAndRemove(req.params.id).exec (err)->
+    db_model.News.remove {"festival":req.params.id}, (err)->
+      res.redirect "/venue/festivals"
 
 exports.club_edit = (req, res)->
   create_base_model req, res, (model)->
@@ -245,47 +374,92 @@ exports.club_delete_action = (req, res)->
     db_model.News.remove {"venue":req.params.id}, (err)->
       res.redirect "/venue/clubs"
 
-exports.club_news_create = (req, res)->
+
+exports.news_delete_action = (req, res)->
+  db_model.News.findByIdAndRemove(req.params.news_id).exec (err)->
+    res.redirect "/venue/#{req.params.type}/news/#{req.params.id}"
+
+exports.news = (req, res)->
+  create_base_model req, res, (model)->
+    if req.params.type == "festival"
+      db_model.News.find({'festival': req.params.id}).exec (err, news)-> 
+        if not news
+          console.log  'missing news'
+          if req.params.type == "festival"
+            res.redirect "/venue/festivals"         
+        else
+          model._id = req.params.id
+          model.news = news
+          model.type = req.params.type
+          res.render "pages/news", model
+    if req.params.type == "club"
+      db_model.News.find({'club': req.params.id}).exec (err, news)-> 
+        if not news
+          console.log  'missing news'      
+          if req.params.type == "club"
+            res.redirect "/venue/clubs"      
+        else
+          model._id = req.params.id
+          model.news = news
+          model.type = req.params.type
+          res.render "pages/news", model
+    if req.params.type == "dj"
+      db_model.News.find({'dj': req.params.id}).exec (err, news)-> 
+        if not news
+          console.log  'missing news'  
+          if req.params.type == "dj"
+            res.redirect "/venue/djs"   
+        else
+          model._id = req.params.id
+          model.news = news
+          model.type = req.params.type
+          res.render "pages/news", model
+
+exports.news_create = (req, res)->
   create_base_model req, res, (model)->
     model.cloudinary = cloudinary
     model.news = {}
     model.type_news = "news"
     model.data_time = moment().format("DD-MM-YYYY")
-    model.club_id = req.params.club_id
+    model.id = req.params.id
+    model.type = req.params.type
     res.render "pages/news_update", model
 
-exports.club_news_create_action = (req, res)->
-  validate_news_model req, null, (validation)->
-    if validation.has_error
-      res.redirect "/venue/news_create?error=1"
-    else
-      news = new db_model.News
-        venue: mongoose.Types.ObjectId(req.params.club_id)
-        title: req.body.title
-        description: req.body.description
-        share: req.body.share 
-        buy_tickets: req.body.buy_tickets
-      if req.body.event_check
-        news.type = "event"
-        start_date_time = req.body.start_date + " " + req.body.start_time
-        news.start_time = new Date(moment.utc(start_date_time, "DD-MM-YYYY HH:mm"))
-        if req.body.end_date&&req.body.end_time
-          end_date_time = req.body.end_date + " " + req.body.end_time
-          news.end_time = moment.utc(end_date_time, "DD-MM-YYYY HH:mm")
-      else
-        news.type = "news"
-      news.photos = []
-      for photo in req.body.news_images.split(',')
-        if photo
-          news.photos.push photo
-      news.save (err)->
-        console.log 'SAVE'
-        res.redirect "/venue/club_news/#{req.params.club_id}"
-
+exports.news_create_action = (req, res)->
+  news = new db_model.News
+    title: req.body.title
+    description: req.body.description
+    share: req.body.share 
+    buy_tickets: req.body.buy_tickets
+  if req.body.event_check
+    news.type = "event"
+    start_date_time = req.body.start_date + " " + req.body.start_time
+    news.start_time = new Date(moment.utc(start_date_time, "DD-MM-YYYY HH:mm"))
+    if req.body.end_date&&req.body.end_time
+      end_date_time = req.body.end_date + " " + req.body.end_time
+      news.end_time = moment.utc(end_date_time, "DD-MM-YYYY HH:mm")
+  else
+    news.type = "news"
+  news.photos = []
+  for photo in req.body.news_images.split(',')
+    if photo
+      news.photos.push photo
+  if req.params.type == "festival"
+    news.festival = mongoose.Types.ObjectId(req.params.id)
+  if req.params.type == "club"
+    news.club = mongoose.Types.ObjectId(req.params.id)
+  if req.params.type == "dj"
+    news.dj = mongoose.Types.ObjectId(req.params.id)
+  news.save (err)->
+    console.log 'SAVE'
+  res.redirect "/venue/#{req.params.type}/news/#{req.params.id}"
 
 exports.news_edit = (req, res)->
   create_base_model req, res, (model)->
-    db_model.News.findById(req.params.id).exec (err, news)->
+    db_model.News.findById(req.params.news_id).exec (err, news)->
+      console.log 55555
+      console.log req.params.news_id
+      console.log news
       if news.type == "event"
         model.type_news = news.type
         model.start_time_ = moment.utc(news.start_time).format("HH:mm")
@@ -298,41 +472,33 @@ exports.news_edit = (req, res)->
       model.data_time = moment().format("DD-MM-YYYY")
       model.cloudinary = cloudinary
       model.news = news
-      model.club_id = req.params.club_id
+      model.id = req.params.id
+      model.type = req.params.type
       res.render "pages/news_update", model
 
 exports.news_edit_action = (req, res)->
-  validate_news_model req, null, (validation)->
-    if validation.has_error
-      res.redirect "/venue/news_edit/#{req.params.id}?error=1"
+  db_model.News.findById(req.params.news_id).exec (err, news)->
+    news.title = req.body.title
+    news.description = req.body.description
+    news.share = req.body.share
+    news.buy_tickets = req.body.buy_tickets
+    news.photos = []
+    if req.body.event_check
+      news.type = "event"
+      start_date_time = req.body.start_date + " " + req.body.start_time
+      news.start_time = new Date(moment.utc(start_date_time, "DD-MM-YYYY HH:mm"))
+      if req.body.end_date&&req.body.end_time
+        end_date_time = req.body.end_date + " " + req.body.end_time
+        news.end_time = moment.utc(end_date_time, "DD-MM-YYYY HH:mm")
+      else
+        news.end_time = null
     else
-      db_model.News.findById(req.params.id).exec (err, news)->
-        news.title = req.body.title
-        news.description = req.body.description
-        news.share = req.body.share
-        news.buy_tickets = req.body.buy_tickets
-        news.photos = []
-        if req.body.event_check
-          news.type = "event"
-          start_date_time = req.body.start_date + " " + req.body.start_time
-          news.start_time = new Date(moment.utc(start_date_time, "DD-MM-YYYY HH:mm"))
-          if req.body.end_date&&req.body.end_time
-            end_date_time = req.body.end_date + " " + req.body.end_time
-            news.end_time = moment.utc(end_date_time, "DD-MM-YYYY HH:mm")
-          else
-            news.end_time = null
-        else
-          news.type = "news"
-        for photo in req.body.news_images.split(',')
-          if photo
-            news.photos.push photo
-        news.save (err)->
-          res.redirect "/venue/club_news/#{req.params.club_id}" 
-
-exports.news_delete_action = (req, res)->
-  db_model.News.findByIdAndRemove(req.params.id).exec (err)->
-    res.redirect "/venue/club_news/#{req.params.club_id}"
-
+      news.type = "news"
+    for photo in req.body.news_images.split(',')
+      if photo
+        news.photos.push photo
+    news.save (err)->
+    res.redirect "/venue/#{req.params.type}/news/#{req.params.id}" 
 
 exports.reset_pass = (req, res)->
   create_base_model req, res, (model)->
@@ -418,4 +584,7 @@ create_base_model = (req, res, callback)->
     model.has_error = false
   if req.user
     model.my_venues = if req.user.is_admin then {} else {"club_admin": req.user._id}
+    model.my_festivals = if req.user.is_admin then {} else {"fest_admin": req.user._id}
+    model.my_djs = if req.user.is_admin then {} else {"dj_admin": req.user._id}
   callback model
+
