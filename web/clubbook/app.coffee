@@ -196,20 +196,40 @@ app.post '/reset_pass', controller.reset_pass_action
 app.post '/cloudinary_upload', controller.cloudinary_upload
 
 app.get '/home', require_role("user"), local_user, controller.home
-app.get '/venue/clubs', require_role("user"), local_user, controller.clubs
 app.get '/venue/users', require_role("user"), local_user, controller.users
+
+#clubs
+app.get '/venue/clubs', require_role("user"), local_user, controller.clubs
 app.get '/venue/club_create', require_role("user"), local_user, controller.club_create
 app.post '/venue/club_create', require_role("user"), local_user, controller.club_create_action
 app.get '/venue/club_edit/:id', require_role("user"), local_user, controller.club_edit
 app.post '/venue/club_edit/:id', require_role("user"), local_user, controller.club_edit_action
 app.get '/venue/club_delete/:id', require_role("user"), local_user, controller.club_delete_action
-app.get '/venue/club_news/:id', require_role("user"), local_user, controller.club_news
 
+app.get '/venue/club_news/:id', require_role("user"), local_user, controller.club_news
 app.get '/venue/club_news_create/:club_id', require_role("user"), local_user, controller.club_news_create
 app.post '/venue/club_news_create/:club_id', require_role("user"), local_user, controller.club_news_create_action
-app.get '/venue/news_edit/:id/:club_id', require_role("user"), local_user, controller.news_edit
-app.post '/venue/news_edit/:id/:club_id', require_role("user"), local_user, controller.news_edit_action
+app.get '/venue/news_edit/:id/:club_id', require_role("user"), local_user, controller.club_news_edit
+app.post '/venue/news_edit/:id/:club_id', require_role("user"), local_user, controller.club_news_edit_action
 app.get '/venue/news_delete/:id/:club_id', require_role("user"), local_user, controller.news_delete_action
+
+# festivals
+app.get '/venue/festivals', require_role("user"), local_user, controller.festivals
+app.get '/venue/festival_create', require_role("user"), local_user, controller.festival_create
+app.post '/venue/festival_create', require_role("user"), local_user, controller.festival_create_action
+app.get '/venue/festival_edit/:id', require_role("user"), local_user, controller.festival_edit
+app.post '/venue/festival_edit/:id', require_role("user"), local_user, controller.festival_edit_action
+app.get '/venue/festival_delete/:id', require_role("user"), local_user, controller.festival_delete_action
+
+app.get '/venue/festival_news/:id', require_role("user"), local_user, controller.festival_news
+app.get '/venue/festival_news_create/:fest_id', require_role("user"), local_user, controller.festival_news_create
+app.post '/venue/festival_news_create/:fest_id', require_role("user"), local_user, controller.festival_news_create_action
+app.get '/venue/festival_news_edit/:id/:fest_id', require_role("user"), local_user, controller.festival_news_edit
+app.post '/venue/festival_news_edit/:id/:fest_id', require_role("user"), local_user, controller.festival_news_edit_action
+app.get '/venue/festival_news_delete/:id/:fest_id', require_role("user"), local_user, controller.festival_news_delete_action
+
+#dj
+
 
 #--------------------------------------------------------------------------------
 # Mobile API

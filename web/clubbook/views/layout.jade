@@ -150,10 +150,10 @@ html(lang='en')
                     i.icon-home
                     span.title My Clubs
                     span.selected
-                //li(class=req_path.indexOf("/news") != -1 ? "active":"")
-                  a(href='/venue/news')
+                li(class=req_path.indexOf("/news") != -1 ? "active":"")
+                  a(href='/venue/festivals')
                     i.icon-bubble
-                    span.title News
+                    span.title Festivals
                     span.selected
                 if current_user.is_admin
                   li(class=req_path.indexOf("/users") != -1 ? "active":"")

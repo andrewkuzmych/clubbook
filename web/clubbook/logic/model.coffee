@@ -145,8 +145,8 @@ NewsSchema = new mongoose.Schema
   created_on: { type: Date, 'default': Date.now }
   updated_on: { type: Date, 'default': Date.now }
   venue: {type: mongoose.Schema.ObjectId, ref: 'Venue'}
-  venue: {type: mongoose.Schema.ObjectId, ref: 'Venue'}
-  venue: {type: mongoose.Schema.ObjectId, ref: 'Venue'}
+  festival: {type: mongoose.Schema.ObjectId, ref: 'Festival'}
+  #venue: {type: mongoose.Schema.ObjectId, ref: 'Venue'}
   venue_type: {type: String, trim: true}
   image: {type: String, trim: true}
   title: {type: String, trim: true}
@@ -176,6 +176,33 @@ NewsSchema.pre 'save', (next, done) ->
 NewsSchema.set('toJSON', { getters: true, virtuals: true })
 exports.News = mongoose.model 'News', NewsSchema
 
+#-------------------------------------------------------------------------------------
+#  Festivals
+#-------------------------------------------------------------------------------------
+FestivalSchema = new mongoose.Schema
+  created_on: { type: Date, 'default': Date.now }
+  updated_on: { type: Date, 'default': Date.now }
+  fest_name: {type: String, trim: true}
+  fest_email: {type: String, trim: true}
+  fest_photos: [
+    {type: String, trim: true}
+  ]
+  fest_admin: [{ type: mongoose.Schema.ObjectId, ref: 'Admin' }]
+  fest_logo: {type: String, trim: true}
+  fest_phone: {type: String, trim: true}
+  fest_address: {type: String, trim: true, required: true}
+  fest_site: {type: String, trim: true}
+  fest_info: {type: String, trim: true, required: true}
+  fest_loc:
+    lon: Number
+    lat: Number
+
+FestivalSchema.pre 'save', (next, done) ->
+  this.updated_on = new Date().toISOString()
+  next()
+
+FestivalSchema.set('toJSON', { getters: true, virtuals: true })
+exports.Festival = mongoose.model 'Festival', FestivalSchema
 #-------------------------------------------------------------------------------------
 #  Venue
 #-------------------------------------------------------------------------------------
