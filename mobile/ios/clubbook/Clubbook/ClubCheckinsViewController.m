@@ -26,8 +26,8 @@
 @interface ClubCheckinsViewController ()<UINavigationControllerDelegate>
 {
     NSArray *_users;
+    BOOL isCheckedIn;
 }
-
 
 @end
 
@@ -58,11 +58,12 @@
     [PubNub setDelegate:self];
     self.profileCollection.dataSource = self;
     self.profileCollection.delegate = self;
-    [self populateData];
-    
+    [self.checkinButton setHidden:YES];
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.extendedLayoutIncludesOpaqueBars = NO;
     self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    [self populateData];
 }
 
 - (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message {
@@ -77,8 +78,40 @@
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)populateData {
+    CLLocation *loc = [[CLLocation alloc] initWithLatitude:[self.place.lat doubleValue] longitude:[self.place.lon doubleValue]];
+    
+    CLLocationDistance distance = [[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc];
+    self.place.distance = distance;
+    WorkingHour *hours = self.place.todayWorkingHours;
+    if (hours != nil) {
+        if ([hours.status isEqualToString:@"opened"] ) {
+            self.openCloseLabel.text = NSLocalizedString(@"Open", nil);
+        }
+        else {
+            self.openCloseLabel.text = NSLocalizedString(@"Closed", nil);
+        }
+        if (hours.startTime && hours.endTime) {
+            self.hoursLabel.text = [NSString stringWithFormat:@"%@ - %@", hours.startTime, hours.endTime];
+        }
+    }
+    else {
+        self.openCloseLabel.text = @"";
+        self.hoursLabel.text = NSLocalizedString(@"unknown", nil);
+    }
+    
+    int disatanceInt = (int)self.place.distance;
+    self.distanceLabel.text = [LocationHelper convertDistance:disatanceInt];
+    
+    BOOL check = [LocationHelper isCheckinHere:self.place];
+    [self.checkinButton changeStatus:check];
+    [self.checkinButton setHidden:NO];
+    
+    self.checkinCount.text = [NSString stringWithFormat:@"%d",self.place.countOfUsers];
+    self.friendsCount.text = [NSString stringWithFormat:@"%d",self.place.friendsCount];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
      self.navigationController.delegate = self;
     
@@ -113,26 +146,12 @@
         _users = users;
         int friendsCount = 0;
 
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSString *userId = [defaults objectForKey:@"userId"];
-        BOOL isCheckin = NO;
         for (User *user in users) {
-            if([user.id isEqualToString:userId])
-            {
-                isCheckin = YES;
-            }
-            
             if (user.isFriend) {
                  friendsCount++;
             }
         }
-        
-        if (isCheckin) {
-            [self addCheckin];
-        } else {
-            [self removeCheckin];
-        }
-        
+       
         self.checkinCount.text = [NSString stringWithFormat:@"%lu",(unsigned long)users.count];
         self.friendsCount.text = [NSString stringWithFormat:@"%d",friendsCount];
         
@@ -188,26 +207,12 @@
     return cell;
 }
 
-- (void)addCheckin
-{
-    [self.checkinButton setHidden:NO];
-    [LocationHelper addCheckin:_place];
-}
-
-- (void)removeCheckin
-{
-    [self.checkinButton setHidden:YES];
-    if ([LocationHelper isCheckinHere:self.place]) {
-        [LocationHelper removeCheckin];
-    }
-}
-
 - (void)didCheckin:(User *) user userInfo:(NSObject *)userInfo
 {
     [self hideProgress];
     [self._manager retrievePlaceUsers:self.place.id accessToken:accessToken];
     
-    [self addCheckin];
+    [self checkinStatus:YES];
 }
 
 - (void)didCheckout:(User *) user userInfo:(NSObject *)userInfo
@@ -215,45 +220,54 @@
     [self hideProgress];
     [self._manager retrievePlaceUsers:self.place.id accessToken:accessToken];
     
-    [self removeCheckin];
+    [self checkinStatus:NO];
+}
+
+- (void) checkinStatus:(BOOL) status {
+    [self.checkinButton changeStatus:status];
+    if (status) {
+       [LocationHelper addCheckin:_place];
+    }
+    else {
+        if ([LocationHelper isCheckinHere:self.place]) {
+            [LocationHelper removeCheckin];
+        }
+    }
 }
 
 - (IBAction)checkinAction:(UIButton *)sender {
    CLLocation *loc = [[CLLocation alloc] initWithLatitude:[_place.lat doubleValue] longitude:[_place.lon doubleValue]];
    
-   /*if (checkinButton.isCheckin) {
+   if(self.checkinButton.statusOn) {
       [self showProgress:NO title:NSLocalizedString(@"checking_out", nil)];
       [self._manager checkout:_place.id accessToken:accessToken userInfo:sender];
-   }*/
-   //else {
+   }
+   else {
         if([GlobalVars getInstance].MaxCheckinRadius  > (int)[[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc]) {
-            
-        if([[NSUserDefaults standardUserDefaults] boolForKey:@"checkinInfoDisplayed"] == FALSE) {
-           [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"checkinInfoDisplayed"];
-           [[NSUserDefaults standardUserDefaults] synchronize];
-           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@""
-                                                           message:NSLocalizedString(@"checkinInfo", nil)
-                                                          delegate:self
-                                                 cancelButtonTitle:NSLocalizedString(@"gotCheckinInfo", nil)
-                                                 otherButtonTitles:nil];
-           [alert show];
+            if([[NSUserDefaults standardUserDefaults] boolForKey:@"checkinInfoDisplayed"] == FALSE) {
+                [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"checkinInfoDisplayed"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@""
+                                                                message:NSLocalizedString(@"checkinInfo", nil)
+                                                               delegate:self
+                                                      cancelButtonTitle:NSLocalizedString(@"gotCheckinInfo", nil)
+                                                      otherButtonTitles:nil];
+                [alert show];
+            }
+            else {
+                [self showProgress:NO title:NSLocalizedString(@"checking_in", nil)];
+                [self._manager checkin:_place.id accessToken:accessToken userInfo:nil];
+            }
         }
         else {
-           [self showProgress:NO title:NSLocalizedString(@"checking_in", nil)];
-           [self._manager checkin:_place.id accessToken:accessToken userInfo:nil];
-        }
-    }
-    else {
-        //[checkinButton setMainState:NSLocalizedString(@"checkin", nil)];
-        
-        NSString *message = NSLocalizedString(@"checkin_distance", nil);
-        [CSNotificationView showInViewController:self
+            NSString *message = NSLocalizedString(@"checkin_distance", nil);
+            [CSNotificationView showInViewController:self
                                        tintColor:[UIColor colorWithRed:153/255.0f green:0/255.0f blue:217/255.0f alpha:1]
                                            image:nil
                                          message:message
                                         duration:kCSNotificationViewDefaultShowDuration];
         }
-  //  }
+    }
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -286,48 +300,6 @@
     else {
         return nil;
     }
-}
-
-- (IBAction)onUserAction:(id)sender
-{
-}
-
-- (void)populateData
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        CLLocation *loc = [[CLLocation alloc] initWithLatitude:[self.place.lat doubleValue] longitude:[self.place.lon doubleValue]];
-        
-        CLLocationDistance distance = [[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc];
-        self.place.distance = distance;
-        
-        if (self.place.todayWorkingHours != nil) {
-            if ([self.place.todayWorkingHours.status isEqualToString:@"opened"] ) {
-                self.openCloseLabel.text = NSLocalizedString(@"opened", nil);
-            }
-            else {
-                self.openCloseLabel.text = NSLocalizedString(@"closed", nil);
-            }
-            self.hoursLabel.text = [NSString stringWithFormat:@"%@ - %@", self.place.todayWorkingHours.startTime, self.place.todayWorkingHours.endTime];
-        }
-        else {
-            self.openCloseLabel.text = @"";
-            self.hoursLabel.text = NSLocalizedString(@"unknown", nil);
-        }
-        
-        int disatanceInt = (int)self.place.distance;
-        self.distanceLabel.text = [LocationHelper convertDistance:disatanceInt];
-
-        BOOL isCheckinHere = [LocationHelper isCheckinHere:self.place];
-        
-        if(isCheckinHere){
-            //[self.checkinButton setSecondState:NSLocalizedString(@"checkout", nil)];
-        } else {
-            //[self.checkinButton setMainState:NSLocalizedString(@"checkin", nil)];
-        }
-        
-        self.checkinCount.text = [NSString stringWithFormat:@"%d",self.place.countOfUsers];
-        self.friendsCount.text = [NSString stringWithFormat:@"%d",self.place.friendsCount];
-    });
 }
 
 #pragma mark

@@ -833,12 +833,12 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                //if (error) {
-                //    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                if (error) {
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)])
                         [self.delegate failedWithError:error];
-                //} else {
+                } else {
                     [self.delegate checkoutJSON:data userInfo:userInfo];
-                //}
+                }
             });
         }];
     });
