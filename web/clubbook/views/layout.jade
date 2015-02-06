@@ -145,15 +145,20 @@ html(lang='en')
 
                 //
                    END FRONTEND THEME LINKS 
-                li.start(class=req_path.indexOf("/clubs") != -1 ? "active":"")
+                li.start(class=req_path.indexOf("/club") != -1 ? "active":"")
                   a(href='/venue/clubs')
                     i.icon-home
                     span.title My Clubs
                     span.selected
-                li(class=req_path.indexOf("/news") != -1 ? "active":"")
+                li(class=req_path.indexOf("/festival") != -1 ? "active":"")
                   a(href='/venue/festivals')
-                    i.icon-bubble
+                    i.icon-star
                     span.title Festivals
+                    span.selected
+                li(class=req_path.indexOf("/dj") != -1 ? "active":"")
+                  a(href='/venue/djs')
+                    i.icon-star
+                    span.title DJ's
                     span.selected
                 if current_user.is_admin
                   li(class=req_path.indexOf("/users") != -1 ? "active":"")
