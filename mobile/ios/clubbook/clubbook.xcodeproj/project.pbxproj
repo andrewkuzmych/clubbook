@@ -381,6 +381,7 @@
 		521BEC401A52F576003E7A27 /* gradient@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 521BEC3D1A52F576003E7A27 /* gradient@2x.png */; };
 		521BEC411A52F576003E7A27 /* gradient@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 521BEC3E1A52F576003E7A27 /* gradient@3x.png */; };
 		5225FF2C1A84CB8A00B32487 /* FloatingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225FF2B1A84CB8A00B32487 /* FloatingButton.m */; };
+		5225FF2E1A85104700B32487 /* LoginStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5225FF2D1A85104700B32487 /* LoginStoryboard.storyboard */; };
 		522ACCDF1A32084F006789EB /* SPSlideTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDC1A32084F006789EB /* SPSlideTabBar.m */; };
 		522ACCE01A32084F006789EB /* SPSlideTabButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDE1A32084F006789EB /* SPSlideTabButton.m */; };
 		522F75F31A6524680095991F /* EBCaptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 522F75D11A6524680095991F /* EBCaptionView.m */; };
@@ -1123,6 +1124,7 @@
 		521BEC3E1A52F576003E7A27 /* gradient@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gradient@3x.png"; sourceTree = "<group>"; };
 		5225FF2A1A84CB8A00B32487 /* FloatingButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FloatingButton.h; sourceTree = "<group>"; };
 		5225FF2B1A84CB8A00B32487 /* FloatingButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FloatingButton.m; sourceTree = "<group>"; };
+		5225FF2D1A85104700B32487 /* LoginStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LoginStoryboard.storyboard; sourceTree = "<group>"; };
 		522ACCDB1A32084F006789EB /* SPSlideTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPSlideTabBar.h; path = SPSlideTabBar/SPSlideTabBar.h; sourceTree = "<group>"; };
 		522ACCDC1A32084F006789EB /* SPSlideTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPSlideTabBar.m; path = SPSlideTabBar/SPSlideTabBar.m; sourceTree = "<group>"; };
 		522ACCDD1A32084F006789EB /* SPSlideTabButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPSlideTabButton.h; path = SPSlideTabBar/SPSlideTabButton.h; sourceTree = "<group>"; };
@@ -1634,6 +1636,7 @@
 		499247AD1976AF93008C74D0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				5225FF2F1A8514D800B32487 /* LoginStoryboard */,
 				52FBEC921A6E5BD500DE4BAA /* NewsFeed */,
 				528C85991A56EF0B00BBB148 /* ClubProfileStoryboard */,
 				499247B41976D940008C74D0 /* BaseViewControllerHelper.h */,
@@ -1644,18 +1647,12 @@
 				49E831D81955993600D4A26C /* BaseTableViewController.m */,
 				498A1BAC196BD90F00824E64 /* BaseMessagesViewController.h */,
 				498A1BAD196BD90F00824E64 /* BaseMessagesViewController.m */,
-				49E831301950CD8E00D4A26C /* MainLoginViewController.h */,
-				49E831311950CD8E00D4A26C /* MainLoginViewController.m */,
 				F4EECF2C177C99F400778578 /* PlacesViewController.h */,
 				F4EECF2D177C99F400778578 /* PlacesViewController.m */,
 				4994848619FB7DBD00E906C0 /* FastCheckinViewController.h */,
 				4994848719FB7DBD00E906C0 /* FastCheckinViewController.m */,
 				F4EECF48177DF87700778578 /* MainMenuViewController.h */,
 				F4EECF49177DF87700778578 /* MainMenuViewController.m */,
-				49E831BE19543D9E00D4A26C /* RegViewController.h */,
-				49E831BF19543D9E00D4A26C /* RegViewController.m */,
-				49E831DA19583B2A00D4A26C /* LoginViewController.h */,
-				49E831DB19583B2A00D4A26C /* LoginViewController.m */,
 				493E0EED19D4549800B5ADEC /* ChangePassViewController.h */,
 				493E0EEE19D4549800B5ADEC /* ChangePassViewController.m */,
 				498975A519EC60150067A5E4 /* UserProfileViewController.h */,
@@ -1668,8 +1665,6 @@
 				49908EE61971604B00DA68F2 /* MessagesViewController.m */,
 				49908EEE197435FA00DA68F2 /* ErrorViewController.h */,
 				49908EEF197435FA00DA68F2 /* ErrorViewController.m */,
-				49908EF1197501B400DA68F2 /* NoLocationViewController.h */,
-				49908EF2197501B400DA68F2 /* NoLocationViewController.m */,
 				499247AA1976AB7F008C74D0 /* ProfileViewController.h */,
 				499247AB1976AB7F008C74D0 /* ProfileViewController.m */,
 				498975AF19ED2BA70067A5E4 /* ClubUsersYesterdayViewController.h */,
@@ -2160,6 +2155,21 @@
 			path = Classes;
 			sourceTree = "<group>";
 		};
+		5225FF2F1A8514D800B32487 /* LoginStoryboard */ = {
+			isa = PBXGroup;
+			children = (
+				49E831301950CD8E00D4A26C /* MainLoginViewController.h */,
+				49E831311950CD8E00D4A26C /* MainLoginViewController.m */,
+				49E831BE19543D9E00D4A26C /* RegViewController.h */,
+				49E831BF19543D9E00D4A26C /* RegViewController.m */,
+				49E831DA19583B2A00D4A26C /* LoginViewController.h */,
+				49E831DB19583B2A00D4A26C /* LoginViewController.m */,
+				49908EF1197501B400DA68F2 /* NoLocationViewController.h */,
+				49908EF2197501B400DA68F2 /* NoLocationViewController.m */,
+			);
+			name = LoginStoryboard;
+			sourceTree = "<group>";
+		};
 		522ACCE11A320852006789EB /* SPSlideTabBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -2365,6 +2375,7 @@
 				F4EECF20177C99F400778578 /* AppDelegate.h */,
 				F4EECF21177C99F400778578 /* AppDelegate.m */,
 				F4EECF29177C99F400778578 /* MainStoryboard.storyboard */,
+				5225FF2D1A85104700B32487 /* LoginStoryboard.storyboard */,
 				528C85941A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard */,
 				F4EECF34177C9A1E00778578 /* Library */,
 				F4EECF18177C99F400778578 /* Supporting Files */,
@@ -2682,6 +2693,7 @@
 				49ABA1761995239E00B060D0 /* icon_clubview_details.png in Resources */,
 				49ABA16C1995239E00B060D0 /* icon_back.png in Resources */,
 				528C85951A56DC5E00BBB148 /* ClubProfileStoryboard.storyboard in Resources */,
+				5225FF2E1A85104700B32487 /* LoginStoryboard.storyboard in Resources */,
 				49ABA17F1995239E00B060D0 /* icon_menu_clublist.png in Resources */,
 				49ABA1711995239E00B060D0 /* icon_clubdetails_phone.png in Resources */,
 				49ABA1681995239E00B060D0 /* avatar_invisible.png in Resources */,

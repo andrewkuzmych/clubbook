@@ -22,7 +22,7 @@
 #import "Constants.h"
 #import "LocationManagerSingleton.h"
 #import "GlobalVars.h"
-#import "ClubCheckinsViewController.h"
+#import "ClubProfileTabBarViewController.h"
 #import "CSNotificationView.h"
 
 @interface FastCheckinViewController (){
@@ -186,11 +186,9 @@
 - (void)pushToClub:(Place *)place
 {
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"ClubProfileStoryboard" bundle: nil];
-    ClubCheckinsViewController *clubController  = [mainStoryboard instantiateInitialViewController];
+    ClubProfileTabBarViewController *clubController  = [mainStoryboard instantiateInitialViewController];
     clubController.place = place;
-    clubController.hasBack = YES;
-    //self.isLoaded = NO;
-    // ClubUsersViewController *clubController =  [segue ClubUsersViewController];
+
     [UIView beginAnimations:@"animation" context:nil];
     [UIView setAnimationDuration:0.5];
     [self.navigationController pushViewController: clubController animated:NO];

@@ -52,7 +52,7 @@
     
     if([userId length] > 0)
     {
-        [self performSegueWithIdentifier: @"onLogin" sender: self];
+        [self moveToMainStoryboard];
     }
     
     self.sloganLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];
@@ -95,6 +95,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void) moveToMainStoryboard {
+    UIStoryboard *storyBoard;
+    
+    storyBoard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    UIViewController *initialViewController = [storyBoard instantiateInitialViewController];
+    [self.navigationController pushViewController:initialViewController animated:NO];
+}
 
 - (IBAction)termsAction:(id)sender {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:NSLocalizedString(@"termsUrl", nil)]];
@@ -241,7 +248,7 @@
     [self hideProgress];
     [SessionHelper StoreUser:_user];
 
-    [self performSegueWithIdentifier: @"onLogin" sender: self];
+    [self moveToMainStoryboard];
     
 }
 
