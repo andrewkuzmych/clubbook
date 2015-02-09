@@ -153,12 +153,12 @@ html(lang='en')
                 li(class=req_path.indexOf("/festival") != -1 ? "active":"")
                   a(href='/venue/festivals')
                     i.icon-star
-                    span.title Festivals
+                    span.title My Festivals
                     span.selected
                 li(class=req_path.indexOf("/dj") != -1 ? "active":"")
                   a(href='/venue/djs')
-                    i.icon-star
-                    span.title DJ's
+                    i.icon-volume-2
+                    span.title My DJ's
                     span.selected
                 if current_user.is_admin
                   li(class=req_path.indexOf("/users") != -1 ? "active":"")

@@ -140,6 +140,8 @@ exports.list_events = (params, callback)->
       distanceMultiplier: 6371  
   if params.distance
     geoNear.maxDistance = params.distance/6371 
+  else
+    geoNear.maxDistance = 20/6371 
   query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take}]
   db_model.Venue.aggregate query,{}, (err, clubs)->
     club_ids = []

@@ -384,9 +384,8 @@ exports.news = (req, res)->
     if req.params.type == "festival"
       db_model.News.find({'festival': req.params.id}).exec (err, news)-> 
         if not news
-          console.log  'missing news'
-          if req.params.type == "festival"
-            res.redirect "/venue/festivals"         
+          console.log  'missing news for festivals'
+          res.redirect "/venue/festivals"         
         else
           model._id = req.params.id
           model.news = news
@@ -395,9 +394,8 @@ exports.news = (req, res)->
     if req.params.type == "club"
       db_model.News.find({'club': req.params.id}).exec (err, news)-> 
         if not news
-          console.log  'missing news'      
-          if req.params.type == "club"
-            res.redirect "/venue/clubs"      
+          console.log  'missing news for club'      
+          res.redirect "/venue/clubs"      
         else
           model._id = req.params.id
           model.news = news
@@ -406,9 +404,8 @@ exports.news = (req, res)->
     if req.params.type == "dj"
       db_model.News.find({'dj': req.params.id}).exec (err, news)-> 
         if not news
-          console.log  'missing news'  
-          if req.params.type == "dj"
-            res.redirect "/venue/djs"   
+          console.log  'missing news for djs'  
+          res.redirect "/venue/djs"   
         else
           model._id = req.params.id
           model.news = news
