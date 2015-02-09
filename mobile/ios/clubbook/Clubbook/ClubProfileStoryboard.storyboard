@@ -311,10 +311,20 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="216"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="cpb-bL-4If">
+                                <rect key="frame" x="8" y="28" width="70" height="70"/>
+                                <color key="backgroundColor" red="0.55904750631313127" green="0.0" blue="0.50420395722007516" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="70" id="eq5-wV-jNq"/>
+                                    <constraint firstAttribute="width" constant="70" id="paZ-qf-18i"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="cpb-bL-4If" firstAttribute="leading" secondItem="EvR-ev-ny9" secondAttribute="leading" constant="8" id="BFG-2u-i9n"/>
                             <constraint firstItem="OEG-Iv-vPJ" firstAttribute="leading" secondItem="EvR-ev-ny9" secondAttribute="leading" id="Frm-re-5Nb"/>
+                            <constraint firstItem="cpb-bL-4If" firstAttribute="top" secondItem="FmB-US-oAG" secondAttribute="bottom" constant="8" id="YdB-o7-rxt"/>
                             <constraint firstAttribute="trailing" secondItem="OEG-Iv-vPJ" secondAttribute="trailing" id="d4h-Pd-dUG"/>
                             <constraint firstItem="0Il-dp-WVP" firstAttribute="top" secondItem="OEG-Iv-vPJ" secondAttribute="bottom" id="fdn-XH-j6l"/>
                             <constraint firstItem="OEG-Iv-vPJ" firstAttribute="top" secondItem="EvR-ev-ny9" secondAttribute="top" id="vir-nC-YOW"/>
@@ -325,6 +335,7 @@
                     <size key="freeformSize" width="320" height="216"/>
                     <connections>
                         <outlet property="imageView" destination="OEG-Iv-vPJ" id="wg9-kp-hqa"/>
+                        <outlet property="placeAvatar" destination="cpb-bL-4If" id="kR5-qp-ppk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uQL-Ld-zvG" userLabel="First Responder" sceneMemberID="firstResponder"/>

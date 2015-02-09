@@ -15,5 +15,6 @@
 @interface ClubImagesPageViewController : UIViewController <KIImagePagerDelegate, KIImagePagerDataSource>
 
 @property (weak, nonatomic) IBOutlet KIImagePager *imageView;
+@property (weak, nonatomic) IBOutlet UIImageView *placeAvatar;
 @property (strong, nonatomic) Place *place;
 @end

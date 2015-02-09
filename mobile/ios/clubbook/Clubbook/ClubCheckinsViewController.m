@@ -109,6 +109,8 @@
     
     self.checkinCount.text = [NSString stringWithFormat:@"%d",self.place.countOfUsers];
     self.friendsCount.text = [NSString stringWithFormat:@"%d",self.place.friendsCount];
+    
+    [self.checkinButton setOnTitle:@"Check-in" andOffTitle:@"Check-out"];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

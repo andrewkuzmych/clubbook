@@ -11,7 +11,10 @@
 @interface FloatingButton : UIButton
 
 @property BOOL statusOn;
+@property (strong, nonatomic) NSString* onTitle;
+@property (strong, nonatomic) NSString* offTitle;
 
 - (void) changeStatus:(BOOL) isOn;
+- (void) setOnTitle:(NSString *)onTitle andOffTitle:(NSString*)offTitle;
 
 @end

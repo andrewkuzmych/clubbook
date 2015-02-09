@@ -35,7 +35,7 @@
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="m9o-4Q-kIt" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController storyboardIdentifier="main" definesPresentationContext="YES" id="7Jj-jG-TCf" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" backIndicatorImage="3FD1CEB4-B97E-449E-A48F-58162145EC1F" backIndicatorTransitionMaskImage="F09E1D8A-B9E3-4E32-A3B0-F3BF2A120627" id="Ajy-7P-25J">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" backIndicatorImage="F632A731-DA9E-41CD-95A9-B0C0F4B12709" backIndicatorTransitionMaskImage="CFC77770-87FD-4C51-B433-2137CC42B83B" id="Ajy-7P-25J">
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.20392156859999999" green="0.01176470588" blue="0.27058823529999998" alpha="1" colorSpace="calibratedRGB"/>
                         <textAttributes key="titleTextAttributes">
@@ -87,7 +87,7 @@
                                     <action selector="fbAction:" destination="xYc-bH-6RQ" eventType="touchUpInside" id="hy2-i1-3YL"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mys-vx-1wZ">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mys-vx-1wZ">
                                 <rect key="frame" x="30" y="375" width="540" height="40"/>
                                 <color key="backgroundColor" red="0.55294117649999996" green="0.0" blue="0.54901960780000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -106,7 +106,7 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ki4-zM-Ygl">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ki4-zM-Ygl">
                                 <rect key="frame" x="30" y="423" width="540" height="40"/>
                                 <color key="backgroundColor" red="0.55294117649999996" green="0.0" blue="0.54901960780000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -522,7 +522,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="3FD1CEB4-B97E-449E-A48F-58162145EC1F" width="60" height="60">
+        <image name="CFC77770-87FD-4C51-B433-2137CC42B83B" width="60" height="60">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOzxYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBMU
 GR4fJSYsLzU4VSRudWxs1QkKCwwNDg8QERJWTlNTaXplViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBz
@@ -538,7 +538,7 @@ AZ4BpgGzAbgBugG8AcEByQHMAdEB2QHcAe4B8QH2AAAAAAAAAgEAAAAAAAAAPwAAAAAAAAAAAAAAAAAA
 Afg
 </mutableData>
         </image>
-        <image name="F09E1D8A-B9E3-4E32-A3B0-F3BF2A120627" width="60" height="60">
+        <image name="F632A731-DA9E-41CD-95A9-B0C0F4B12709" width="60" height="60">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOzxYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBMU
 GR4fJSYsLzU4VSRudWxs1QkKCwwNDg8QERJWTlNTaXplViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBz

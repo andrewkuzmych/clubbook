@@ -40,6 +40,10 @@
              }
          }];
     }
+    
+    //download place avatar
+    [self.placeAvatar sd_setImageWithURL:[NSURL URLWithString:self.place.avatar] placeholderImage:[UIImage imageNamed:@"avatar_default.png"]];
+    
     self.imageView.delegate = self;
     self.imageView.dataSource = self;
 }

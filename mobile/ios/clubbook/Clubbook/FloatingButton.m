@@ -39,6 +39,9 @@
     self.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     self.layer.shadowRadius = 7;
     self.layer.shadowOffset = CGSizeMake(7.0f, 7.0f);
+    
+    self.onTitle = @"On";
+    self.offTitle = @"Off";
 }
 
 - (void) changeStatus:(BOOL) isOn {
@@ -48,16 +51,21 @@
         
         dispatch_async(q, ^{
            [self setBackgroundColor:[UIColor colorWithRed:0.698 green:0.000 blue:0.000 alpha:1.000]];
-           [self.titleLabel setText:@"Check-out"];
+           [self.titleLabel setText:self.offTitle];
         });
     }
     else {
         
         dispatch_async(q, ^{
            [self setBackgroundColor:[UIColor colorWithRed:0.000 green:0.643 blue:0.000 alpha:1.000]];
-           [self.titleLabel setText:@"Check-in"];
+           [self.titleLabel setText:self.onTitle];
         });
     }
+}
+
+- (void) setOnTitle:(NSString *)onTitle andOffTitle:(NSString*)offTitle {
+    self.onTitle = onTitle;
+    self.offTitle = offTitle;
 }
 
 /*
