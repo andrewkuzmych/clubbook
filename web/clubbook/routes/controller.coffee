@@ -375,14 +375,11 @@ exports.club_delete_action = (req, res)->
       res.redirect "/venue/clubs"
 
 
-exports.news_delete_action = (req, res)->
-  db_model.News.findByIdAndRemove(req.params.news_id).exec (err)->
-    res.redirect "/venue/#{req.params.type}/news/#{req.params.id}"
-
 exports.news = (req, res)->
   create_base_model req, res, (model)->
-    if req.params.type == "festival"
-      db_model.News.find({'festival': req.params.id}).exec (err, news)-> 
+    if req.params.type is "festival"
+      query = JSON.parse('{ "'+ req.params.type + '":"' + req.params.id+'" }')
+      db_model.News.find(query).exec (err, news)-> 
         if not news
           console.log  'missing news for festivals'
           res.redirect "/venue/festivals"         
@@ -420,7 +417,20 @@ exports.news_create = (req, res)->
     model.data_time = moment().format("DD-MM-YYYY")
     model.id = req.params.id
     model.type = req.params.type
-    res.render "pages/news_update", model
+    if req.params.type == "festival"
+      db_model.Festival.findById(req.params.id).exec (err, result)-> 
+        model.news.address = result.fest_address
+        model.news.loc_name = result.fest_name
+        model.news.loc = result.fest_loc
+        res.render "pages/news_update", model
+    if req.params.type == "club"
+      db_model.Venue.findById(req.params.id).exec (err, result)-> 
+        model.news.address = result.club_address
+        model.news.loc_name = result.club_name  
+        model.news.loc = result.club_loc 
+        res.render "pages/news_update", model
+    if req.params.type == "dj"
+      res.render "pages/news_update", model
 
 exports.news_create_action = (req, res)->
   news = new db_model.News
@@ -428,6 +438,9 @@ exports.news_create_action = (req, res)->
     description: req.body.description
     share: req.body.share 
     buy_tickets: req.body.buy_tickets
+    loc_name: req.body.loc_name
+    address: req.body.news_address
+    loc: {lon:req.body.lng, lat: req.body.lat}
   if req.body.event_check
     news.type = "event"
     start_date_time = req.body.start_date + " " + req.body.start_time
@@ -454,9 +467,6 @@ exports.news_create_action = (req, res)->
 exports.news_edit = (req, res)->
   create_base_model req, res, (model)->
     db_model.News.findById(req.params.news_id).exec (err, news)->
-      console.log 55555
-      console.log req.params.news_id
-      console.log news
       if news.type == "event"
         model.type_news = news.type
         model.start_time_ = moment.utc(news.start_time).format("HH:mm")
@@ -479,6 +489,9 @@ exports.news_edit_action = (req, res)->
     news.description = req.body.description
     news.share = req.body.share
     news.buy_tickets = req.body.buy_tickets
+    news.loc_name = req.body.loc_name
+    news.address = req.body.news_address
+    news.loc = {lon:req.body.lng, lat: req.body.lat}
     news.photos = []
     if req.body.event_check
       news.type = "event"
@@ -496,6 +509,10 @@ exports.news_edit_action = (req, res)->
         news.photos.push photo
     news.save (err)->
     res.redirect "/venue/#{req.params.type}/news/#{req.params.id}" 
+
+exports.news_delete_action = (req, res)->
+  db_model.News.findByIdAndRemove(req.params.news_id).exec (err)->
+    res.redirect "/venue/#{req.params.type}/news/#{req.params.id}"
 
 exports.reset_pass = (req, res)->
   create_base_model req, res, (model)->

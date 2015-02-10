@@ -160,6 +160,7 @@ NewsSchema = new mongoose.Schema
   photos: [
     {type: String, trim: true}
   ]
+  loc_name: {type: String, trim: true}
   loc:
     lon: Number
     lat: Number
@@ -233,7 +234,7 @@ DjSchema.set('toJSON', { getters: true, virtuals: true })
 exports.Dj = mongoose.model 'Dj', DjSchema
 
 #-------------------------------------------------------------------------------------
-#  Venue
+#  Venue and Festivals
 #-------------------------------------------------------------------------------------
 VenueSchema = new mongoose.Schema
   created_on: { type: Date, 'default': Date.now }
