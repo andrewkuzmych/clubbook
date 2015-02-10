@@ -32,14 +32,14 @@ block content
           for festival in festivals
             tr
               td(style="vertical-align: middle;")
-                if festival.fest_logo
-                  img(src='#{festival.fest_logo}', alt='#{festival.fest_name}', height="50")
+                if festival.club_logo
+                  img(src='#{festival.club_logo}', alt='#{festival.club_name}', height="50")
               td(style="vertical-align: middle;")
-                | #{festival.fest_name} 
+                | #{festival.club_name} 
               td(style="vertical-align: middle;")
-                | #{festival.fest_phone} 
+                | #{festival.club_phone} 
               td(style="vertical-align: middle;")
-                | #{festival.fest_email} 
+                | #{festival.club_email} 
               td(style="vertical-align: middle;")
                 a.edit-btn.btn.default.yellow(href='/venue/festival_edit/#{festival._id}', style="margin:3px")
                   i.fa.fa-edit
@@ -53,6 +53,10 @@ block content
                     i.fa.fa-book
                       &nbsp;
                       | news
+                a.btn.default.green(href='/venue/festival/events/#{festival._id}', style="margin:3px")
+                    i.fa.fa-book
+                      &nbsp;
+                      | events
 
       div
         a.btn.btn-primary(href="/venue/festival_create") Add Festival

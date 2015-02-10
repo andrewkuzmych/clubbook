@@ -147,11 +147,38 @@ NewsSchema = new mongoose.Schema
   club: {type: mongoose.Schema.ObjectId, ref: 'Venue'}
   festival: {type: mongoose.Schema.ObjectId, ref: 'Festival'}
   dj: {type: mongoose.Schema.ObjectId, ref: 'Dj'}
-  venue_type: {type: String, trim: true}
-  image: {type: String, trim: true}
   title: {type: String, trim: true}
   share: {type: String, trim: true}
-  type: {type: String, trim: true}
+  buy_tickets: {type: String, trim: true}
+  description: {type: String, trim: true}
+  is_favorite: {type: Boolean, default: false}
+  photos: [
+    {type: String, trim: true}
+  ]
+
+###VenueSchema.virtual('updated_on_formated').get ()->
+  this.updated_on
+  return null
+###
+NewsSchema.pre 'save', (next, done) ->
+  this.updated_on = new Date().toISOString()
+  next()
+
+NewsSchema.set('toJSON', { getters: true, virtuals: true })
+exports.News = mongoose.model 'News', NewsSchema
+
+
+#-------------------------------------------------------------------------------------
+#  Events
+#-------------------------------------------------------------------------------------
+EventSchema = new mongoose.Schema
+  created_on: { type: Date, 'default': Date.now }
+  updated_on: { type: Date, 'default': Date.now }
+  club: {type: mongoose.Schema.ObjectId, ref: 'Venue'}
+  festival: {type: mongoose.Schema.ObjectId, ref: 'Festival'}
+  dj: {type: mongoose.Schema.ObjectId, ref: 'Dj'}
+  title: {type: String, trim: true}
+  share: {type: String, trim: true}
   buy_tickets: {type: String, trim: true}
   description: {type: String, trim: true}
   is_favorite: {type: Boolean, default: false}
@@ -170,40 +197,13 @@ NewsSchema = new mongoose.Schema
   this.updated_on
   return null
 ###
-NewsSchema.pre 'save', (next, done) ->
+EventSchema.pre 'save', (next, done) ->
   this.updated_on = new Date().toISOString()
   next()
 
-NewsSchema.set('toJSON', { getters: true, virtuals: true })
-exports.News = mongoose.model 'News', NewsSchema
+EventSchema.set('toJSON', { getters: true, virtuals: true })
+exports.Events = mongoose.model 'Events', EventSchema
 
-#-------------------------------------------------------------------------------------
-#  Festivals
-#-------------------------------------------------------------------------------------
-FestivalSchema = new mongoose.Schema
-  created_on: { type: Date, 'default': Date.now }
-  updated_on: { type: Date, 'default': Date.now }
-  fest_name: {type: String, trim: true}
-  fest_email: {type: String, trim: true}
-  fest_photos: [
-    {type: String, trim: true}
-  ]
-  fest_admin: [{ type: mongoose.Schema.ObjectId, ref: 'Admin' }]
-  fest_logo: {type: String, trim: true}
-  fest_phone: {type: String, trim: true}
-  fest_address: {type: String, trim: true, required: true}
-  fest_site: {type: String, trim: true}
-  fest_info: {type: String, trim: true, required: true}
-  fest_loc:
-    lon: Number
-    lat: Number
-
-FestivalSchema.pre 'save', (next, done) ->
-  this.updated_on = new Date().toISOString()
-  next()
-
-FestivalSchema.set('toJSON', { getters: true, virtuals: true })
-exports.Festival = mongoose.model 'Festival', FestivalSchema
 
 #-------------------------------------------------------------------------------------
 #  DJs
@@ -263,6 +263,7 @@ VenueSchema = new mongoose.Schema
   club_loc:
     lon: Number
     lat: Number
+  category: {type: String, trim: true}
   active_checkins: {type: Number, default: 0, min: 0}
   active_friends_checkins: {type: Number, default: 0, min: 0}
   club_working_hours: [

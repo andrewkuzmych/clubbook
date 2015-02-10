@@ -30,7 +30,7 @@ block content
                   button.close(data-close="alert")
                   | Incorrect data!!!
               .form-group
-                  label.col-md-3.control-label Cover Image
+                  label.col-md-3.control-label Cover Images
                   .col-md-4
                     //.preview
                       if news.image
@@ -79,60 +79,6 @@ block content
                   .input-icon.right
                     i.fa
                     input.form-control(type='text', placeholder='Enter URL', name="buy_tickets", value="#{news.buy_tickets?news.buy_tickets:''}")
-              .form-group
-                .col-md-3 
-                .col-md-4
-                  input.form-control.check#check_event(type='checkbox' name='event_check')
-                  label.control-label Event
-              .form-group.events
-                .form-group
-                  label.control-label.col-md-3 Location Name
-                    span.required *
-                  .col-md-4
-                    .input-icon.right
-                      i.fa
-                      input.form-control.location(type='text', placeholder='Enter name', name="loc_name", value="#{news.loc_name?news.loc_name:''}")
-                .form-group
-                  label.col-md-3.control-label Address
-                    span.required *
-                  .col-md-5
-                    .input-icon.right
-                      i.fa
-                      input.form-control.location#select_address(type="text", placeholder="Address", name="news_address", value="#{news.address?news.address:''}")
-                      input(type="hidden", name="lat", value="#{news.loc?news.loc.lat:''}")
-                      input(type="hidden", name="lng", value="#{news.loc?news.loc.lon:''}")
-                      div#location_image.map_image(style="height:150px;")
-                .form-group
-                  label.control-label.col-md-3 Start
-                    span.required *
-                  .col-md-3
-                    .input-group
-                      .input-group.date.date-picker.start_d(data-date-format='dd-mm-yyyy')
-                        input.form-control(type='text', name="start_date", value="#{start_date_?start_date_:data_time}" readonly)
-                        span.input-group-btn
-                          button.btn.default.date-set(type='button')
-                            i.fa.fa-calendar
-                  .col-md-3
-                    .input-group
-                      input.form-control.timepicker.timepicker-no-seconds.start_t(type='text' name='start_time', data-default-time="", value="#{start_time_?start_time_:'22:00'}" readonly)
-                      span.input-group-btn
-                        button.btn.default(type='button')
-                            i.fa.fa-clock-o
-                .form-group
-                  label.control-label.col-md-3 End
-                  .col-md-3
-                    .input-group
-                      .input-group.date.date-picker.end_d(data-date-format='dd-mm-yyyy')
-                        input.form-control.end_form(type='text', name="end_date", value="#{end_date_?end_date_:''}")
-                        span.input-group-btn
-                          button.btn.default.date-set(type='button')
-                            i.fa.fa-calendar
-                  .col-md-3
-                    .input-group
-                      input.form-control.timepicker.timepicker-no-seconds.end_t(type='text', name='end_time', data-default-time="", value="#{end_time_?end_time_:''}")
-                      span.input-group-btn
-                        button.btn.default(type='button')
-                            i.fa.fa-clock-o
             .form-actions.right
               .row
                 .col-md-offset-3.col-md-9
@@ -175,52 +121,13 @@ block scripts
       $('[name=news_images]').val($('img.news_image').map(function() { return this.src; }).get().join());
     }
     $(function () {
-      if("#{type_news}" == "news"){
-        $(".events").css("display", "none");
-      }
-      else{ 
-        $(".events").css("display", "block");
-        $('#check_event').prop('checked',true);
-        $.uniform.update('#check_event');
-        }
-
       if("#{type}" == "dj"){
         $('.location').attr('readonly', false);
       }
       else{
         $('.location').attr('readonly', true);
       }
-
-      $('.date-picker').datepicker({
-        autoclose: true
-      });
-      $('.start_d').datepicker('setStartDate',"#{data_time}");
-      $('.end_d').datepicker('setStartDate',$('.start_d').datepicker('getFormattedDate'));
-
     });
-
-    var geocomplete_options;
-
-    if ($("#select_address").length > 0) {
-      geocomplete_options = {
-        map: "#location_image",
-        markerOptions: {
-          draggable: true
-        },
-        details: "form"
-      };
-
-      if ($("input[name=lat]").val() && $("input[name=lng]").val()) {
-        geocomplete_options["location"] = [$("input[name=lat]").val(), $("input[name=lng]").val()];
-      }
-      $("#select_address").geocomplete(geocomplete_options);
-      $("#select_address").bind("geocode:dragged", function(event, latLng) {
-        console.log(latLng);
-        
-        $("input[name=lat]").val(latLng.lat());
-        return $("input[name=lng]").val(latLng.lng());
-      });
-    }
 
     FormValidation.init();
     ComponentsPickers.init();

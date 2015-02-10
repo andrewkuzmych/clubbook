@@ -37,15 +37,15 @@ block content
                     .input-icon.right
                     i.fa
                     .preview
-                        if festival.fest_logo
-                          img(border='0', src='#{festival.fest_logo}', height='100')
+                        if festival.club_logo
+                          img(border='0', src='#{festival.club_logo}', height='100')
                     div.fileUpload.btn.btn-default
                       span Upload
                       !=cloudinary.uploader.image_upload_tag('image', {html: { class: "upload", tag:"upload_avatar" }})
                     div#upload_avatar_progress
                       div.bar(style="width:0%;height:18px;background: green;")
 
-                    input.form-control(type="hidden", name="fest_logo", value="#{festival.fest_logo?festival.fest_logo:''}")     
+                    input.form-control(type="hidden", name="club_logo", value="#{festival.club_logo?festival.club_logo:''}")     
 
             .form-group
               label.control-label.col-md-3 Name
@@ -53,14 +53,14 @@ block content
               .col-md-5
                 .input-icon.right
                   i.fa
-                  input.form-control(type='text', placeholder='Enter name', name="fest_name", value="#{festival.fest_name?festival.fest_name:''}")
+                  input.form-control(type='text', placeholder='Enter name', name="club_name", value="#{festival.club_name?festival.club_name:''}")
             .form-group
               label.control-label.col-md-3 Email
                 span.required *
               .col-md-5
                 .input-icon.right
                   i.fa
-                  input.form-control(type='text', placeholder='Enter email', name="fest_email", value="#{festival.fest_email?festival.fest_email:''}")
+                  input.form-control(type='text', placeholder='Enter email', name="club_email", value="#{festival.club_email?festival.club_email:''}")
 
             .form-group
                 label.control-label.col-md-3 Site
@@ -68,7 +68,7 @@ block content
                 .col-md-5
                   .input-icon.right
                     i.fa
-                    input.form-control(type='text', placeholder='Enter site', name="fest_site", value="#{festival.fest_site?festival.fest_site:''}")
+                    input.form-control(type='text', placeholder='Enter site', name="club_site", value="#{festival.club_site?festival.club_site:''}")
 
             .form-group
                 label.control-label.col-md-3 Phone
@@ -76,7 +76,7 @@ block content
                 .col-md-5
                   .input-icon.right
                     i.fa
-                    input.form-control(type='text', placeholder='Enter phone', name="fest_phone", value="#{festival.fest_phone?festival.fest_phone:''}")
+                    input.form-control(type='text', placeholder='Enter phone', name="club_phone", value="#{festival.club_phone?festival.club_phone:''}")
             
             .form-group
               label.col-md-3.control-label Address
@@ -84,9 +84,9 @@ block content
               .col-md-5
                 .input-icon.right
                   i.fa
-                  input.form-control#select_address(type="text", placeholder="Enter address", name="fest_address", value="#{festival.fest_address?festival.fest_address:''}")
-                  input(type="hidden", name="lat", value="#{festival.loc?festival.loc.lat:''}")
-                  input(type="hidden", name="lng", value="#{festival.loc?festival.loc.lon:''}")
+                  input.form-control#select_address(type="text", placeholder="Enter address", name="club_address", value="#{festival.club_address?festival.club_address:''}")
+                  input(type="hidden", name="lat", value="#{festival.club_loc?festival.club_loc.lat:''}")
+                  input(type="hidden", name="lng", value="#{festival.club_loc?festival.club_loc.lon:''}")
                   div#location_image.map_image(style="height:150px;")
 
             .form-group
@@ -95,18 +95,18 @@ block content
                 .col-md-5
                   .input-icon.right
                     i.fa
-                    textarea.form-control(type='text', placeholder='Enter info', name="fest_info") #{festival.fest_info?festival.fest_info:''}
+                    textarea.form-control(type='text', placeholder='Enter info', name="club_info") #{festival.club_info?festival.club_info:''}
           
             .form-group.last
                     label.col-md-3.control-label Cover Images
                         span.required *
                     .col-md-4
                       table.table
-                        if festival.fest_photos
-                          for photo in festival.fest_photos
+                        if festival.club_photos
+                          for photo in festival.club_photos
                             tr
                               td(style="vertical-align: middle;")
-                                img.fest_image(border='0', src='#{photo}', height='200')
+                                img.club_image(border='0', src='#{photo}', height='200')
                               td(style="vertical-align: middle;")
                                 a.btn.red.delete delete
 
@@ -116,7 +116,7 @@ block content
                       div#upload_images_progress
                         div.bar(style="width:0%;height:18px;background: green;")
 
-                      input(type="hidden", name="fest_photos", value="#{festival.fest_photos?festival.fest_photos.join():''}")
+                      input(type="hidden", name="club_photos", value="#{festival.club_photos?festival.club_photos.join():''}")
 
             .form-actions.right
               .row
@@ -142,7 +142,7 @@ block scripts
     });
     // Upload finished
     $('[tag=upload_images].cloudinary-fileupload').bind('cloudinarydone', function(e, data){
-      $( "table.table" ).prepend( "<tr><td style='vertical-align: middle;'><img class='fest_image' src='" + $.cloudinary.url(data.result.public_id) + "' height='200'></td><td style='vertical-align: middle;'><a class='btn red delete'>delete</a></td></tr>");
+      $( "table.table" ).prepend( "<tr><td style='vertical-align: middle;'><img class='club_image' src='" + $.cloudinary.url(data.result.public_id) + "' height='200'></td><td style='vertical-align: middle;'><a class='btn red delete'>delete</a></td></tr>");
       $('#upload_images_progress .bar').css('width', '0%');
       updateFestImages()
       return true;
@@ -157,7 +157,7 @@ block scripts
     });
 
     $('[tag=upload_avatar].cloudinary-fileupload').bind('cloudinarydone', function(e, data){
-      $('[name=fest_logo]').val($.cloudinary.url(data.result.public_id));
+      $('[name=club_logo]').val($.cloudinary.url(data.result.public_id));
       $('.preview').html(
         $.cloudinary.image(data.result.public_id, { format: data.result.format, version: data.result.version,  height: 100 })
       );
@@ -171,7 +171,7 @@ block scripts
     });
 
     function updateFestImages() {
-      $('[name=fest_photos]').val($('img.fest_image').map(function() { return this.src; }).get().join());
+      $('[name=club_photos]').val($('img.club_image').map(function() { return this.src; }).get().join());
     }
 
     var geocomplete_options;

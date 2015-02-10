@@ -223,13 +223,20 @@ app.post '/venue/dj_edit/:id', require_role("user"), local_user, controller.dj_e
 app.get '/venue/dj_delete/:id', require_role("user"), local_user, controller.dj_delete_action
 
 #news
-
 app.get '/venue/:type/news/:id', require_role("user"), local_user, controller.news
 app.get '/venue/:type/news_create/:id', require_role("user"), local_user, controller.news_create
 app.post '/venue/:type/news_create/:id', require_role("user"), local_user, controller.news_create_action
 app.get '/venue/:type/news_edit/:id/:news_id', require_role("user"), local_user, controller.news_edit
 app.post '/venue/:type/news_edit/:id/:news_id', require_role("user"), local_user, controller.news_edit_action
 app.get '/venue/:type/news_delete/:id/:news_id', require_role("user"), local_user, controller.news_delete_action
+
+#events
+app.get '/venue/:type/events/:id', require_role("user"), local_user, controller.events
+app.get '/venue/:type/events_create/:id', require_role("user"), local_user, controller.events_create
+app.post '/venue/:type/events_create/:id', require_role("user"), local_user, controller.events_create_action
+app.get '/venue/:type/events_edit/:id/:events_id', require_role("user"), local_user, controller.events_edit
+app.post '/venue/:type/events_edit/:id/:events_id', require_role("user"), local_user, controller.events_edit_action
+app.get '/venue/:type/events_delete/:id/:events_id', require_role("user"), local_user, controller.events_delete_action
 
 #--------------------------------------------------------------------------------
 # Mobile API
