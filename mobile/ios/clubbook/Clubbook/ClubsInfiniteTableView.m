@@ -12,16 +12,10 @@
 #import "UIImageView+WebCache.h"
 
 @implementation ClubsInfiniteTableView
-{
-    BOOL isRefreshing;
-}
 
 - (id)initWithFrame:(CGRect)frame userLat:(double)userLat userLon:(double)userLon accessToken:(NSString *)accessToken{
     self = [super initWithFrame:frame userLat:userLat userLon:userLon accessToken:accessToken];
     if (self) {
-        self.delegate = self;
-        self.dataSource = self;
-        
         UINib *nib = [UINib nibWithNibName:@"PlaceCell" bundle:nil];
         [self registerNib:nib forCellReuseIdentifier:@"PlaceCell"];
     }
@@ -29,66 +23,33 @@
     return self;
 }
 
-- (void)insertRowAtTop {
-    [super insertRowAtTop];
-    [self loadPlaceType:@"" take:10 skip:0 refreshing:YES];
+- (void) refreshData {
+    [super refreshData];
+    [self loadPlaceType:@"" take:10 skip:0];
 }
 
-- (void)insertRowAtBottom {
-    [super insertRowAtBottom];
-    int countToSkip = (int)[self.places count];
-    [self loadPlaceType:@"" take:10 skip:countToSkip refreshing:NO];
+- (void) loadMoreData {
+    [super loadMoreData];
+    int countToSkip = (int)[self.dataArray count];
+    [self loadPlaceType:@"" take:10 skip:countToSkip];
 }
 
-- (void) refreshPlaces {
-    [self loadPlaceType:@"" take:10 skip:0 refreshing:YES];
-}
-
-- (void)loadPlaceType:(NSString*) type take:(int)take skip:(int)skip refreshing:(BOOL) refreshing
+- (void)loadPlaceType:(NSString*) type take:(int)take skip:(int)skip
 {
-    isRefreshing = refreshing;
     [self.manager retrievePlaces:self.userLat lon:self.userLon take:take skip:skip distance:0 search:@"" accessToken:self.accessToken];
-}
-
-- (void) makeInitialLoad {
-    [super makeInitialLoad];
-    [self refreshPlaces];
 }
 
 - (void)didReceivePlaces:(NSArray *)places
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (isRefreshing) {
-            self.places = [places mutableCopy];
-            isRefreshing = NO;
-        }
-        else {
-            [self.places addObjectsFromArray:places];
-        }
- 
-        BOOL loadedEmpty = [_places count] > 0;
-        
-        if (loadedEmpty) {
-            [self setHidden:NO];
-        }
-        [self tableLoadedEmpty:loadedEmpty];
-       
-        [self stopAnimation];
-        [self reloadData];
+        [self updateTableWithData:places];
     });
-}
-
-
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return self.places.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     PlaceCell *cell = [self dequeueReusableCellWithIdentifier:@"PlaceCell" forIndexPath:indexPath];
-    Place *place = self.places[indexPath.row];
+    Place *place = self.dataArray[indexPath.row];
     
     [cell.clubNameText setText:place.title];
     
@@ -124,10 +85,6 @@
      [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:NO];
      [UIView commitAnimations];
      //[self.clubTable deselectRowAtIndexPath:indexPath animated:NO];*/
-}
-
-- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 75.0f;
 }
 
 @end

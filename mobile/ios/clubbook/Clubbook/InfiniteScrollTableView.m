@@ -37,6 +37,11 @@
          [self addInfiniteScrollingWithActionHandler:^{
          [weakSelf insertRowAtBottom];
          }];
+        
+        self.dataArray = [[NSMutableArray alloc] init];
+        self.delegate = self;
+        self.dataSource = self;
+        
     }
     return self;
 }
@@ -52,15 +57,46 @@
     }
 }
 
+- (void) updateTableWithData:(NSArray*) data {
+    if (self.isRefreshing) {
+        self.dataArray = [data mutableCopy];
+        self.isRefreshing = NO;
+    }
+    else {
+        [self.dataArray addObjectsFromArray:data];
+    }
+    
+    BOOL loadedEmpty = [self.dataArray count] <= 0;
+    
+    if (!loadedEmpty) {
+        [self setHidden:NO];
+    }
+    [self tableLoadedEmpty:loadedEmpty];
+    
+    [self stopAnimation];
+    [self reloadData];
+}
+
 - (void) insertRowAtTop {
+    [self refreshData];
 }
 
 - (void) insertRowAtBottom {
+    self.isRefreshing = NO;
+    [self loadMoreData];
 }
 
 - (void) makeInitialLoad {
     [self tableIsInitialLoading];
     [self setHidden:YES];
+    [self refreshData];
+}
+
+- (void) loadMoreData {
+}
+
+- (void) refreshData {
+    self.isRefreshing = YES;
 }
 
 - (void) tableLoadedEmpty:(BOOL)empty {
@@ -73,6 +109,27 @@
             [self.infiniteDelegate tableNotEmpty]; }
     }
 }
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.dataArray.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell* cell = [[UITableViewCell alloc] init];
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+}
+
+- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 75.0f;
+}
+
 
 /*
 // Only override drawRect: if you perform custom drawing.

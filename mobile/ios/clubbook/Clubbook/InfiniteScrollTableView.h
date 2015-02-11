@@ -15,22 +15,28 @@
 - (void) tableNotEmpty;
 @end //end protocol
 
-@interface InfiniteScrollTableView : UITableView <ClubbookManagerDelegate>
+@interface InfiniteScrollTableView : UITableView <ClubbookManagerDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, weak) id <InfiniteScrollTableViewDelegate> infiniteDelegate;
 @property (strong, nonatomic) ClubbookManager* manager;
 @property double userLat;
 @property double userLon;
 @property (strong, nonatomic) NSString* accessToken;
+@property BOOL isRefreshing;
+
+@property (strong, nonatomic) NSMutableArray *dataArray;
 
 - (id)initWithFrame:(CGRect)frame userLat:(double)userLat userLon:(double)userLon accessToken:(NSString*) accessToken;
 - (void) stopAnimation;
 - (void) tableLoadedEmpty:(BOOL)empty;
 - (void) tableIsInitialLoading;
-
-//overload this methods
+- (void) updateTableWithData:(NSArray*) data;
 - (void) insertRowAtTop;
 - (void) insertRowAtBottom;
+
+//overload this methods
 - (void) makeInitialLoad;
+- (void) refreshData;
+- (void) loadMoreData;
 
 @end

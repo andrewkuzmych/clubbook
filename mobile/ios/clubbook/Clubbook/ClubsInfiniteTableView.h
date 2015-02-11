@@ -8,14 +8,11 @@
 
 #import "InfiniteScrollTableView.h"
 
-@interface ClubsInfiniteTableView : InfiniteScrollTableView <UITableViewDelegate, UITableViewDataSource>
-
-@property (strong, nonatomic) NSMutableArray *places;
+@interface ClubsInfiniteTableView : InfiniteScrollTableView
 
 - (id)initWithFrame:(CGRect)frame userLat:(double)userLat userLon:(double)userLon accessToken:(NSString *)accessToken;
 
-- (void) insertRowAtTop;
-- (void) insertRowAtBottom;
-- (void) makeInitialLoad;
+- (void) refreshData;
+- (void) loadMoreData;
 
 @end
