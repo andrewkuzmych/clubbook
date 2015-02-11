@@ -3,24 +3,22 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <CoreLocation/CoreLocation.h>
 
 #import "BaseViewController.h"
-#import "NewsFeedTableView.h"
-#import "SPSlideTabBar.h"
+#import "SPSlideTabView.h"
+#import "ClubsInfiniteTableView.h"
 
-@interface PlacesViewController : BaseViewController<UITableViewDelegate, UITableViewDataSource, PNDelegate, SPSlideTabBarDelegate, UISearchBarDelegate, UIScrollViewDelegate>{
- CLLocationManager *locationManager;
-}
-@property (weak, nonatomic) IBOutlet UITableView *clubTable;
-@property (weak, nonatomic) IBOutlet UISlider *sliderControl;
-@property (strong, nonatomic) NSMutableArray *places;
+@interface PlacesViewController : BaseViewController<PNDelegate, UISearchBarDelegate>
 
-@property (weak, nonatomic) IBOutlet UIScrollView *filterTabView;
-@property (strong, nonatomic) IBOutlet SPSlideTabBar *filterTabBar;
+@property (weak, nonatomic) IBOutlet SPSlideTabView *slideTabBarView;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (weak, nonatomic) IBOutlet UILabel *noResultsLabel;
+
+@property (strong, nonatomic) ClubsInfiniteTableView* clubTable;
+@property (strong, nonatomic) ClubsInfiniteTableView* barsTable;
+@property (strong, nonatomic) ClubsInfiniteTableView* djTable;
+@property (strong, nonatomic) ClubsInfiniteTableView* eventsTable;
 
 @end

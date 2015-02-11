@@ -104,13 +104,13 @@
     self.distanceLabel.text = [LocationHelper convertDistance:disatanceInt];
     
     BOOL check = [LocationHelper isCheckinHere:self.place];
-    [self.checkinButton changeStatus:check];
     [self.checkinButton setHidden:NO];
     
     self.checkinCount.text = [NSString stringWithFormat:@"%d",self.place.countOfUsers];
     self.friendsCount.text = [NSString stringWithFormat:@"%d",self.place.friendsCount];
     
-    [self.checkinButton setOnTitle:@"Check-in" andOffTitle:@"Check-out"];
+    [self.checkinButton setMainState:@"Check-in"];
+    [self.checkinButton setSecondState:@"Check-out"];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -226,7 +226,6 @@
 }
 
 - (void) checkinStatus:(BOOL) status {
-    [self.checkinButton changeStatus:status];
     if (status) {
        [LocationHelper addCheckin:_place];
     }

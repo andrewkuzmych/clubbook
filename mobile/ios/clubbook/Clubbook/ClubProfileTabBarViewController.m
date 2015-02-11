@@ -43,6 +43,7 @@
 
         [[UITabBar appearance] setBarTintColor:[UIColor whiteColor]];
     }
+    self.delegate = self;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -50,5 +51,8 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void) tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
+    [self.navigationController setNavigationBarHidden:NO animated:NO];
+}
 
 @end

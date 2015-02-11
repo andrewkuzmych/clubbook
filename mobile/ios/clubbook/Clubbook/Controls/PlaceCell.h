@@ -10,7 +10,7 @@
 #import "CbButton.h"
 #import "AddFriendButton.h"
 
-@interface ClubCell : UITableViewCell
+@interface PlaceCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *clubNameText;
 @property (weak, nonatomic) IBOutlet UIImageView *clubAvatar;
 @property (weak, nonatomic) IBOutlet UILabel *distanceLabel;

@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 clubbook. All rights reserved.
 //
 
-#import "ClubCell.h"
+#import "PlaceCell.h"
 
-@implementation ClubCell
+@implementation PlaceCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

@@ -30,7 +30,6 @@
 }
 
 - (void) initButton {
-    [self changeStatus:NO];
     self.layer.masksToBounds = NO;
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     self.layer.cornerRadius = 40;
@@ -39,33 +38,41 @@
     self.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     self.layer.shadowRadius = 7;
     self.layer.shadowOffset = CGSizeMake(7.0f, 7.0f);
-    
-    self.onTitle = @"On";
-    self.offTitle = @"Off";
 }
 
-- (void) changeStatus:(BOOL) isOn {
-    self.statusOn = isOn;
-    dispatch_queue_t q = dispatch_get_main_queue();
-    if (self.statusOn) {
-        
-        dispatch_async(q, ^{
-           [self setBackgroundColor:[UIColor colorWithRed:0.698 green:0.000 blue:0.000 alpha:1.000]];
-           [self.titleLabel setText:self.offTitle];
-        });
+- (void) setMainState:(NSString*) text
+{
+    normalColor = [UIColor colorWithRed:63/255.0 green:210/255.0 blue:18/255.0 alpha:1.0];
+    self.backgroundColor = normalColor;
+    highlightedColor = [UIColor colorWithRed:41/255.0 green:13/255.0 blue:52/255.0 alpha:1.0];
+    
+    [self setTitle:text forState:UIControlStateNormal];
+    self.statusOn = NO;
+}
+
+- (void) setSecondState:(NSString*) text
+{
+    [self setTitle:text forState:UIControlStateNormal];
+    normalColor = [UIColor colorWithRed:161/255.0 green:23/255.0 blue:24/255.0 alpha:1.0];
+    self.backgroundColor = normalColor;
+    highlightedColor = [UIColor colorWithRed:245/255.0 green:35/255.0 blue:36/255.0 alpha:1.0];
+    self.statusOn = YES;
+}
+
+- (UIColor*) backgroundColorForState:(UIControlState) _state {
+    return [backgroundStates objectForKey:[NSNumber numberWithInt:_state]];
+}
+
+
+- (void) setHighlighted:(BOOL)highlighted {
+    [super setHighlighted:highlighted];
+    
+    if (highlighted) {
+        self.backgroundColor = [UIColor colorWithRed:0.698 green:0.000 blue:0.000 alpha:1.000];
     }
     else {
-        
-        dispatch_async(q, ^{
-           [self setBackgroundColor:[UIColor colorWithRed:0.000 green:0.643 blue:0.000 alpha:1.000]];
-           [self.titleLabel setText:self.onTitle];
-        });
+        self.backgroundColor = [UIColor colorWithRed:0.000 green:0.643 blue:0.000 alpha:1.000];
     }
-}
-
-- (void) setOnTitle:(NSString *)onTitle andOffTitle:(NSString*)offTitle {
-    self.onTitle = onTitle;
-    self.offTitle = offTitle;
 }
 
 /*

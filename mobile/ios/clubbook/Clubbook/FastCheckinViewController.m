@@ -9,7 +9,7 @@
 #import "FastCheckinViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "SWRevealViewController.h"
-#import "ClubCell.h"
+#import "PlaceCell.h"
 #import "Place.h"
 #import "UIImageView+WebCache.h"
 #import "ClubCheckinsViewController.h"
@@ -100,7 +100,7 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
     
-    [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:1 type:@"" search:@"" accessToken:accessToken];
+    [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:1 search:@"" accessToken:accessToken];
 }
 
 - (void)didReceivePlaces:(NSArray *)places andTypes:(NSArray *)types
@@ -132,7 +132,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ClubCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    PlaceCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     Place *place = _places[indexPath.row];
     
     cell.clubNameText.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];

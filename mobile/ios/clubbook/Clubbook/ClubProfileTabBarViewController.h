@@ -10,7 +10,7 @@
 
 #import "Place.h"
 
-@interface ClubProfileTabBarViewController : UITabBarController
+@interface ClubProfileTabBarViewController : UITabBarController <UITabBarControllerDelegate>
 
 @property (strong, nonatomic) Place* place;
 

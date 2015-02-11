@@ -15,17 +15,14 @@
 
 @property (strong, nonatomic) Place *place;
 @property (weak, nonatomic) IBOutlet UILabel *clubDescLabel;
-@property (weak, nonatomic) IBOutlet UILabel *ageRestrictionTitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *ageRestrictionLabel;
-@property (weak, nonatomic) IBOutlet UILabel *dressCodeTitleLabel;
-@property (weak, nonatomic) IBOutlet UILabel *dressCodeLabel;
-@property (weak, nonatomic) IBOutlet UILabel *capacityTitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *capacityLabel;
+@property (weak, nonatomic) IBOutlet UILabel *addressLabel;
 @property (weak, nonatomic) IBOutlet UIButton *addressButton;
+@property (weak, nonatomic) IBOutlet UILabel *dressCodeLabel;
 @property (weak, nonatomic) IBOutlet UIButton *phoneButton;
 @property (weak, nonatomic) IBOutlet UIButton *siteButton;
 @property (weak, nonatomic) IBOutlet UIButton *emailButton;
-@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *monTitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *monHoursLabel;
 @property (weak, nonatomic) IBOutlet UILabel *tueTitleLabel;
@@ -40,7 +37,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *satHoursLabel;
 @property (weak, nonatomic) IBOutlet UILabel *sanTitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *sanHoursLabel;
-@property (weak, nonatomic) IBOutlet UILabel *addressLabel;
 @property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
 - (IBAction)distanceAction:(id)sender;
 - (IBAction)phoneAction:(id)sender;

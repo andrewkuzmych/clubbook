@@ -40,9 +40,9 @@
     [self.communicator chat:user_from user_to:user_to msg:msg msg_type:msg_type url:url location:location accessToken:accessToken];
 }
 
-- (void)retrievePlaces:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance type:(NSString*) type search:(NSString*) search accessToken:(NSString *) accessToken;
+- (void)retrievePlaces:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken;
 {
-    [self.communicator retrievePlaces:lat lon:lon take:take skip:skip distance:distance type:type search:search accessToken:accessToken];
+    [self.communicator retrievePlaces:lat lon:lon take:take skip:skip distance:distance search:search accessToken:accessToken];
 }
 
 - (void) retrieveYesterdayPlacesAccessToken:(NSString*) accessToken {
@@ -508,7 +508,6 @@
     NSError *errorPlaces = nil;
     NSError *errorTypes = nil;
     NSArray *places = [ObjectBuilder placesFromJSON:objectNotation error:&errorPlaces];
-    NSArray *types = [ObjectBuilder typesFromJSON:objectNotation error:&errorTypes];
     
     if (errorPlaces != nil) {
         [self.delegate  failedWithError:errorPlaces];
@@ -517,7 +516,7 @@
         [self.delegate  failedWithError:errorTypes];
     }
     else {
-        [self.delegate didReceivePlaces:places andTypes:types];
+        [self.delegate didReceivePlaces:places];
     }
 }
 

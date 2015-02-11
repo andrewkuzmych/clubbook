@@ -136,15 +136,6 @@
 
 #pragma mark - Public
 - (void)addTabForTitle:(NSString *)title {
-    //check if we have already this title
-    NSArray* buttonsArray = [self buttons];
-    for (SPSlideTabButton* but in buttonsArray) {
-        NSString* buttonTitle = [but.titleLabel text];
-        if ([buttonTitle compare:title] == NSOrderedSame) {
-            return;
-        }
-    }
-    
     SPSlideTabButton *button = [[SPSlideTabButton alloc] initWithTitle:title WithHeight:self.frame.size.height];
     [button setTitleColor:[self barButtonTitleColor] forState:UIControlStateNormal];
     button.titleLabel.font = [self barButtonTitleFont];
@@ -224,17 +215,11 @@
     }
 }
 
-- (NSString*)getButtonTitleAtIndex:(NSUInteger) index {
-    SPSlideTabButton* button = [[self barButtons] objectAtIndex:index];
-    if (button) {
-        return [button.titleLabel text];
-    }
-    return nil;
-}
-
 #pragma private
 - (void)fixSelectedView {
+    
     if ([self selectedButton]) {
+    
         [UIView animateWithDuration:0.2 animations:^(void) {
 
             self.selectedView.frame = [self selectionFrameForBarButton:[self selectedButton]];
@@ -244,7 +229,6 @@
             [UIView animateWithDuration:0.2 animations:^(void) {
         
                 [self scrollRectToVisible:[self selectedButton].frame animated:NO];
-                [self.selectedButton setTitleColor:self.selectedButtonColor forState:UIControlStateNormal];
             }];
         }];
     }
@@ -270,7 +254,7 @@
 
 #pragma mark - getter / setter
 - (void)setSelectedIndex:(NSUInteger)selectedIndex {
-    [[self selectedButton] setTitleColor:self.barButtonTitleColor forState:UIControlStateNormal];
+    
     _selectedIndex = selectedIndex;
     
     [self fixSelectedView];
@@ -423,13 +407,6 @@
         
         [self setNeedsLayout];
     }
-}
-
-- (void)setEnabled:(BOOL)enabled {
-    NSArray* buttonsArray = [self buttons];
-    for (SPSlideTabButton* but in buttonsArray) {
-        [but setEnabled:enabled];
-        }
 }
 
 @end

@@ -175,28 +175,6 @@
     return places;
 }
 
-+ (NSArray *)typesFromJSON:(NSData *)objectNotation error:(NSError **)error
-{
-    NSError *localError = nil;
-    NSDictionary *parsedObject = [NSJSONSerialization JSONObjectWithData:objectNotation options:0 error:&localError];
-    
-    if (localError != nil) {
-        *error = localError;
-        return nil;
-    }
-    
-    NSMutableArray *types = [[NSMutableArray alloc] init];
-    
-    NSArray *venues = [parsedObject objectForKey:@"types"];
-    
-    for (NSDictionary *typeDic in venues) {
-        NSString* typeId = typeDic[@"_id"];
-        [types addObject:typeId];
-    }
-    
-    return types;
-}
-
 + (FriendsResult *)friendsJSON:(NSData *)objectNotation error:(NSError **)error
 {
     NSError *localError = nil;

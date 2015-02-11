@@ -48,11 +48,8 @@
     [super viewDidLoad];
     
     self.title = self.place.title;
-
-    [self styleUi];
     
     [self populateData];
-
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -68,11 +65,9 @@
 
 
 - (void)populateData
-{
-    self.nameLabel.text = NSLocalizedString(@"about", nil); //self.place.title;
-    
+{    
     if (self.place.address!= nil) {
-        self.addressLabel.text = self.place.address;
+        [self.addressLabel setText:self.place.address];
     } else {
         self.addressLabel.text = NSLocalizedString(@"unknown", nil);
     }
@@ -156,62 +151,6 @@
     
 }
 
-- (void)styleUi
-{
-    self.nameLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:19.0];
-    self.clubDescLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
-    self.ageRestrictionTitleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
-    self.ageRestrictionTitleLabel.text = NSLocalizedString(@"ageRestiction", nil);
-    
-    self.dressCodeTitleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
-    self.dressCodeTitleLabel.text = NSLocalizedString(@"dressCode", nil);
-    
-    self.capacityTitleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
-    self.capacityTitleLabel.text = NSLocalizedString(@"capacity", nil);
-    
-    self.ageRestrictionLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:14.0];
-    
-    self.dressCodeLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15.0];
-    
-    self.capacityLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:15.0];
-
-    
-    self.addressLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
-    self.distanceLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:11.0];
-    self.addressButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
-    
-    self.siteButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
-    
-    self.emailButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
-    
-    self.phoneButton.titleLabel.font = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0];
-    
-    UIFont *workingHoursFont = [UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:13.0];
-    self.monTitleLabel.font = workingHoursFont;
-    self.monHoursLabel.font = workingHoursFont;
-    self.tueTitleLabel.font = workingHoursFont;
-    self.tueHoursLabel.font = workingHoursFont;
-    self.wedTitleLabel.font = workingHoursFont;
-    self.wedHoursLabel.font = workingHoursFont;
-    self.thoTitleLabel.font = workingHoursFont;
-    self.thoHoursLabel.font = workingHoursFont;
-    self.friTitleLabel.font = workingHoursFont;
-    self.friHoursLabel.font = workingHoursFont;
-    self.satTitleLabel.font = workingHoursFont;
-    self.satHoursLabel.font = workingHoursFont;
-    self.sanTitleLabel.font = workingHoursFont;
-    self.sanHoursLabel.font = workingHoursFont;
-
-    self.monTitleLabel.text = NSLocalizedString(@"mon", nil);
-    self.tueTitleLabel.text = NSLocalizedString(@"tue", nil);
-    self.wedTitleLabel.text = NSLocalizedString(@"wed", nil);
-    self.thoTitleLabel.text = NSLocalizedString(@"tho", nil);
-    self.friTitleLabel.text = NSLocalizedString(@"fri", nil);
-    self.satTitleLabel.text = NSLocalizedString(@"sat", nil);
-    self.sanTitleLabel.text = NSLocalizedString(@"san", nil);
-
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -227,6 +166,7 @@
     
     if (workingHour.day == self.place.todayWorkingHours.day) {
         label.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:13.0];
+        [label setTextColor:[UIColor colorWithRed:0.000 green:0.571 blue:0.000 alpha:1.000]];
     }
 }
 
@@ -235,8 +175,10 @@
     UITableViewCell *cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
     float height = cell.frame.size.height;
     
-    
-    if (indexPath.row == 0) {
+    /*if (indexPath.row == 0) {
+        height = 140.0f;
+    }
+    else*/ if (indexPath.row == 5) {
         CGSize maximumLabelSize = CGSizeMake(280,9999);
         
         UILabel *gettingSizeLabel = [[UILabel alloc] init];
@@ -251,7 +193,7 @@
         CGRect newFrame = self.clubDescLabel.frame;
         newFrame.size.height = expectedLabelSize.height;
         self.clubDescLabel.frame = newFrame;
-        height = newFrame.origin.y + expectedLabelSize.height;
+        height = newFrame.origin.y + expectedLabelSize.height + 10;
     
         [self.clubDescLabel sizeToFit];
     }

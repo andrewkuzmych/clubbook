@@ -38,14 +38,11 @@ typedef enum {
 @property (assign, nonatomic) CGFloat separatorLineInsetTop;
 @property (strong, nonatomic) UIColor *barButtonTitleColor;
 @property (strong, nonatomic) UIFont *barButtonTitleFont;
-@property (strong, nonatomic) UIColor *selectedButtonColor;
 
 @property (weak, nonatomic) id<SPSlideTabBarDelegate> slideDelegate;
 
 - (void)addTabForTitle:(NSString *)title;
-- (void)setEnabled:(BOOL)enabled;
 - (void)removeAllTabs;
 - (void)setScrollOffsetPercentage:(CGFloat)percentage;
-- (NSString*)getButtonTitleAtIndex:(NSUInteger) index;
 
 @end

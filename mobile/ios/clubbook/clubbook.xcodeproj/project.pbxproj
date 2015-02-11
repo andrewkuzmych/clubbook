@@ -322,7 +322,7 @@
 		49E831D619558D4200D4A26C /* Convertor.m in Sources */ = {isa = PBXBuildFile; fileRef = 49E831D519558D4200D4A26C /* Convertor.m */; };
 		49E831D91955993600D4A26C /* BaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49E831D81955993600D4A26C /* BaseTableViewController.m */; };
 		49E831DC19583B2A00D4A26C /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49E831DB19583B2A00D4A26C /* LoginViewController.m */; };
-		49E831DF1958715200D4A26C /* ClubCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49E831DE1958715200D4A26C /* ClubCell.m */; };
+		49E831DF1958715200D4A26C /* PlaceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49E831DE1958715200D4A26C /* PlaceCell.m */; };
 		49E831E2195877C200D4A26C /* Place.m in Sources */ = {isa = PBXBuildFile; fileRef = 49E831E1195877C200D4A26C /* Place.m */; };
 		49E831E41959D8FA00D4A26C /* green_color.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 49E831E31959D8F900D4A26C /* green_color.jpg */; };
 		49E831E61959DA2800D4A26C /* green_color_selected.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 49E831E51959DA2800D4A26C /* green_color_selected.jpg */; };
@@ -419,6 +419,12 @@
 		52C5FC961A3F439C000147E8 /* KICamera.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C5FC921A3F439C000147E8 /* KICamera.png */; };
 		52C5FC971A3F439C000147E8 /* KICamera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C5FC931A3F439C000147E8 /* KICamera@2x.png */; };
 		52C5FC981A3F439C000147E8 /* KIImagePager.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C5FC951A3F439C000147E8 /* KIImagePager.m */; };
+		52D108AC1A8B5E3900649598 /* SPSlideTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D108AB1A8B5E3900649598 /* SPSlideTabView.m */; };
+		52D108AE1A8B614D00649598 /* PlaceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52D108AD1A8B614D00649598 /* PlaceCell.xib */; };
+		52D108B21A8B68F600649598 /* InfiniteScrollTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D108B11A8B68F600649598 /* InfiniteScrollTableView.m */; };
+		52D108B51A8B8ECE00649598 /* PlacesTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D108B41A8B8ECE00649598 /* PlacesTabView.m */; };
+		52D108B71A8B8ED900649598 /* PlaceTabView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52D108B61A8B8ED900649598 /* PlaceTabView.xib */; };
+		52D108BA1A8B99EB00649598 /* ClubsInfiniteTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D108B91A8B99EB00649598 /* ClubsInfiniteTableView.m */; };
 		F4EECF12177C99F400778578 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF11177C99F400778578 /* UIKit.framework */; };
 		F4EECF14177C99F400778578 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF13177C99F400778578 /* Foundation.framework */; };
 		F4EECF16177C99F400778578 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF15177C99F400778578 /* CoreGraphics.framework */; };
@@ -999,8 +1005,8 @@
 		49E831D81955993600D4A26C /* BaseTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseTableViewController.m; sourceTree = "<group>"; };
 		49E831DA19583B2A00D4A26C /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		49E831DB19583B2A00D4A26C /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
-		49E831DD1958715200D4A26C /* ClubCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClubCell.h; path = Controls/ClubCell.h; sourceTree = "<group>"; };
-		49E831DE1958715200D4A26C /* ClubCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ClubCell.m; path = Controls/ClubCell.m; sourceTree = "<group>"; };
+		49E831DD1958715200D4A26C /* PlaceCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlaceCell.h; path = Controls/PlaceCell.h; sourceTree = "<group>"; };
+		49E831DE1958715200D4A26C /* PlaceCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlaceCell.m; path = Controls/PlaceCell.m; sourceTree = "<group>"; };
 		49E831E0195877C200D4A26C /* Place.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Place.h; path = DTO/Place.h; sourceTree = "<group>"; };
 		49E831E1195877C200D4A26C /* Place.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Place.m; path = DTO/Place.m; sourceTree = "<group>"; };
 		49E831E31959D8F900D4A26C /* green_color.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = green_color.jpg; sourceTree = "<group>"; };
@@ -1205,6 +1211,16 @@
 		52C5FC931A3F439C000147E8 /* KICamera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "KICamera@2x.png"; sourceTree = "<group>"; };
 		52C5FC941A3F439C000147E8 /* KIImagePager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KIImagePager.h; sourceTree = "<group>"; };
 		52C5FC951A3F439C000147E8 /* KIImagePager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KIImagePager.m; sourceTree = "<group>"; };
+		52D108AA1A8B5E3900649598 /* SPSlideTabView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPSlideTabView.h; path = SPSlideTabBar/SPSlideTabView.h; sourceTree = "<group>"; };
+		52D108AB1A8B5E3900649598 /* SPSlideTabView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPSlideTabView.m; path = SPSlideTabBar/SPSlideTabView.m; sourceTree = "<group>"; };
+		52D108AD1A8B614D00649598 /* PlaceCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaceCell.xib; sourceTree = "<group>"; };
+		52D108B01A8B68F600649598 /* InfiniteScrollTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfiniteScrollTableView.h; sourceTree = "<group>"; };
+		52D108B11A8B68F600649598 /* InfiniteScrollTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfiniteScrollTableView.m; sourceTree = "<group>"; };
+		52D108B31A8B8ECE00649598 /* PlacesTabView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlacesTabView.h; sourceTree = "<group>"; };
+		52D108B41A8B8ECE00649598 /* PlacesTabView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlacesTabView.m; sourceTree = "<group>"; };
+		52D108B61A8B8ED900649598 /* PlaceTabView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaceTabView.xib; sourceTree = "<group>"; };
+		52D108B81A8B99EB00649598 /* ClubsInfiniteTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubsInfiniteTableView.h; sourceTree = "<group>"; };
+		52D108B91A8B99EB00649598 /* ClubsInfiniteTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubsInfiniteTableView.m; sourceTree = "<group>"; };
 		F4EECF0E177C99F400778578 /* Clubbook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clubbook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4EECF11177C99F400778578 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F4EECF13177C99F400778578 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1636,6 +1652,7 @@
 		499247AD1976AF93008C74D0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				52D108AF1A8B683400649598 /* PlacesView */,
 				5225FF2F1A8514D800B32487 /* LoginStoryboard */,
 				52FBEC921A6E5BD500DE4BAA /* NewsFeed */,
 				528C85991A56EF0B00BBB148 /* ClubProfileStoryboard */,
@@ -1647,8 +1664,6 @@
 				49E831D81955993600D4A26C /* BaseTableViewController.m */,
 				498A1BAC196BD90F00824E64 /* BaseMessagesViewController.h */,
 				498A1BAD196BD90F00824E64 /* BaseMessagesViewController.m */,
-				F4EECF2C177C99F400778578 /* PlacesViewController.h */,
-				F4EECF2D177C99F400778578 /* PlacesViewController.m */,
 				4994848619FB7DBD00E906C0 /* FastCheckinViewController.h */,
 				4994848719FB7DBD00E906C0 /* FastCheckinViewController.m */,
 				F4EECF48177DF87700778578 /* MainMenuViewController.h */,
@@ -1869,8 +1884,6 @@
 				526E6EF61A8288C800257652 /* ClubFooterView.m */,
 				526E6EF71A8288C800257652 /* HeaderView.h */,
 				526E6EF81A8288C800257652 /* HeaderView.m */,
-				49E831DD1958715200D4A26C /* ClubCell.h */,
-				49E831DE1958715200D4A26C /* ClubCell.m */,
 				49836B251961999C00F2A2C6 /* ProfileCell.h */,
 				49836B261961999C00F2A2C6 /* ProfileCell.m */,
 				4996E0C319669ED0000C721F /* CbButton.h */,
@@ -2173,6 +2186,8 @@
 		522ACCE11A320852006789EB /* SPSlideTabBar */ = {
 			isa = PBXGroup;
 			children = (
+				52D108AA1A8B5E3900649598 /* SPSlideTabView.h */,
+				52D108AB1A8B5E3900649598 /* SPSlideTabView.m */,
 				522ACCDB1A32084F006789EB /* SPSlideTabBar.h */,
 				522ACCDC1A32084F006789EB /* SPSlideTabBar.m */,
 				522ACCDD1A32084F006789EB /* SPSlideTabButton.h */,
@@ -2285,6 +2300,25 @@
 				52C5FC951A3F439C000147E8 /* KIImagePager.m */,
 			);
 			path = KIImagePager;
+			sourceTree = "<group>";
+		};
+		52D108AF1A8B683400649598 /* PlacesView */ = {
+			isa = PBXGroup;
+			children = (
+				49E831DD1958715200D4A26C /* PlaceCell.h */,
+				49E831DE1958715200D4A26C /* PlaceCell.m */,
+				52D108AD1A8B614D00649598 /* PlaceCell.xib */,
+				F4EECF2C177C99F400778578 /* PlacesViewController.h */,
+				F4EECF2D177C99F400778578 /* PlacesViewController.m */,
+				52D108B01A8B68F600649598 /* InfiniteScrollTableView.h */,
+				52D108B11A8B68F600649598 /* InfiniteScrollTableView.m */,
+				52D108B31A8B8ECE00649598 /* PlacesTabView.h */,
+				52D108B41A8B8ECE00649598 /* PlacesTabView.m */,
+				52D108B61A8B8ED900649598 /* PlaceTabView.xib */,
+				52D108B81A8B99EB00649598 /* ClubsInfiniteTableView.h */,
+				52D108B91A8B99EB00649598 /* ClubsInfiniteTableView.m */,
+			);
+			name = PlacesView;
 			sourceTree = "<group>";
 		};
 		52FBEC921A6E5BD500DE4BAA /* NewsFeed */ = {
@@ -2649,6 +2683,7 @@
 				49ABA1C2199524BF00B060D0 /* icon_clubdetails_map@2x.png in Resources */,
 				49ABA1BC199524BF00B060D0 /* icon_addphoto@2x.png in Resources */,
 				49ABA1E0199524BF00B060D0 /* slider_activedot@2x.png in Resources */,
+				52D108B71A8B8ED900649598 /* PlaceTabView.xib in Resources */,
 				499682BB1A1115D40097AED5 /* icon_checkedin@2x.png in Resources */,
 				49ABA1831995239E00B060D0 /* icon_menu_share.png in Resources */,
 				49ABA1701995239E00B060D0 /* icon_clubdetails_map.png in Resources */,
@@ -2705,6 +2740,7 @@
 				49E8313D1951A49400D4A26C /* login_color_selected.jpg in Resources */,
 				49ABA1D0199524BF00B060D0 /* icon_menu_checkout@2x.png in Resources */,
 				49ABA1C7199524BF00B060D0 /* icon_clubview_ckeckedin@2x.png in Resources */,
+				52D108AE1A8B614D00649598 /* PlaceCell.xib in Resources */,
 				49ABA16E1995239E00B060D0 /* icon_clubdetails_capacity.png in Resources */,
 				499682B21A11059F0097AED5 /* Harpy.bundle in Resources */,
 				49ABA18E1995239E00B060D0 /* slider_activedot.png in Resources */,
@@ -2932,6 +2968,7 @@
 				526ABCD01A6806820010F485 /* NewsPhotoLayout.m in Sources */,
 				4994849219FE671C00E906C0 /* ProfileImagesViewController.m in Sources */,
 				4934F75B19D047B800BFFDB1 /* SDWebImageCompat.m in Sources */,
+				52D108BA1A8B99EB00649598 /* ClubsInfiniteTableView.m in Sources */,
 				498A690F196C4CFD00BC2859 /* PNConnection.m in Sources */,
 				F4EECF4A177DF87700778578 /* MainMenuViewController.m in Sources */,
 				498A68E0196C4CFD00BC2859 /* PNAccessRightsCollection.m in Sources */,
@@ -2950,13 +2987,14 @@
 				4994848819FB7DBD00E906C0 /* FastCheckinViewController.m in Sources */,
 				498A68E8196C4CFD00BC2859 /* PNHereNow.m in Sources */,
 				4999299D19E92FE900B77A6E /* TransitionFromClubUsersToUser.m in Sources */,
-				49E831DF1958715200D4A26C /* ClubCell.m in Sources */,
+				49E831DF1958715200D4A26C /* PlaceCell.m in Sources */,
 				499929A319E949A900B77A6E /* TransitionFromClubListToClub.m in Sources */,
 				498A68D0196C4CFD00BC2859 /* PNCryptoHelper.m in Sources */,
 				522F75F81A6524680095991F /* EBPhotoPagesFactory.m in Sources */,
 				498A68D1196C4CFD00BC2859 /* PNAccessRightsResponseParser.m in Sources */,
 				4934F75F19D047B800BFFDB1 /* SDWebImageManager.m in Sources */,
 				4993F2131979194900A225BE /* MRProgressOverlayView.m in Sources */,
+				52D108B21A8B68F600649598 /* InfiniteScrollTableView.m in Sources */,
 				4934F76619D047B800BFFDB1 /* UIImageView+WebCache.m in Sources */,
 				498A68F8196C4CFD00BC2859 /* PNHelper.m in Sources */,
 				498A6902196C4CFD00BC2859 /* PNLeaveRequest.m in Sources */,
@@ -3011,6 +3049,7 @@
 				49ABA132198CE5C700B060D0 /* ClubbookNotifications.m in Sources */,
 				498975A719EC60150067A5E4 /* UserProfileViewController.m in Sources */,
 				498A68FF196C4CFD00BC2859 /* PNHeartbeatRequest.m in Sources */,
+				52D108AC1A8B5E3900649598 /* SPSlideTabView.m in Sources */,
 				520897781A407C6700E8DD06 /* JSQMessagesComposerTextView.m in Sources */,
 				522F75F31A6524680095991F /* EBCaptionView.m in Sources */,
 				5208976A1A407C6700E8DD06 /* JSQLocationMediaItem.m in Sources */,
@@ -3022,6 +3061,7 @@
 				522F75FE1A6524680095991F /* EBShadedView.m in Sources */,
 				5208975F1A407C6700E8DD06 /* JSQMessagesKeyboardController.m in Sources */,
 				498A68D7196C4CFD00BC2859 /* PNErrorResponseParser.m in Sources */,
+				52D108B51A8B8ECE00649598 /* PlacesTabView.m in Sources */,
 				4993F2101979194900A225BE /* MRCircularProgressView.m in Sources */,
 				4996E0C519669ED0000C721F /* CbButton.m in Sources */,
 				522F75FA1A6524680095991F /* EBPhotoPagesState.m in Sources */,

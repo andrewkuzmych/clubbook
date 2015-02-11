@@ -7,12 +7,16 @@
 //
 
 #import "ClubViewParallaxControllerViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface ClubViewParallaxControllerViewController ()
 
 @end
 
 @implementation ClubViewParallaxControllerViewController
+{
+    NSString* accessToken;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -31,6 +35,21 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.extendedLayoutIncludesOpaqueBars = NO;
     self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    [self.followButton setMainState:@"Follow"];
+    [self.followButton setSecondState:@"UnFollow"];
+    
+    [self.view insertSubview:self.followButton aboveSubview:self.clubView.view];
+    
+    [self setMaxHeight:400.0];
+    
+    NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
+    accessToken = [userDefaults objectForKey:@"accessToken"];
+    
+    //check if place is followed
+    if (self.place.isFavorite) {
+        //[self.followButton setS
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -43,8 +62,7 @@
 - (void)parallaxScrollViewController:(QMBParallaxScrollViewController *)controller didChangeState:(QMBParallaxState)state{
     if (self.state == QMBParallaxStateFullSize){
         [self.navigationController setNavigationBarHidden:YES animated:YES];
-        
-    }else {
+    } else {
         [self.navigationController setNavigationBarHidden:NO animated:YES];
         
     }
@@ -54,6 +72,16 @@
     [super viewWillDisappear:animated];
 }
 
+- (IBAction)handleFollowButton:(id)sender {
+    if (self.followButton.statusOn) {
+        self.place.isFavorite = YES;
+        [self._manager makePlaceFavorite:self.place.id accessToken:accessToken makeFavorite:YES];
+    }
+    else {
+        self.place.isFavorite = NO;
+        [self._manager makePlaceFavorite:self.place.id accessToken:accessToken makeFavorite:NO];
+    }
+}
 
 /*
 #pragma mark - Navigation

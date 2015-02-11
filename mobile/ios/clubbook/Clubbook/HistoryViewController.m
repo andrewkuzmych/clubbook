@@ -8,7 +8,7 @@
 
 #import "HistoryViewController.h"
 #import "CbButton.h"
-#import "ClubCell.h"
+#import "PlaceCell.h"
 #import "UIImageView+WebCache.h"
 #import "ClubCheckinsViewController.h"
 #import "ClubUsersYesterdayViewController.h"
@@ -77,7 +77,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ClubCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    PlaceCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     Place *place = _places[indexPath.row];
     
     cell.clubNameText.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:17];

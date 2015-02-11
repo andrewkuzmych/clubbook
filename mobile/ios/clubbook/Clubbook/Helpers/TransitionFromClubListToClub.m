@@ -10,7 +10,7 @@
 
 #import "PlacesViewController.h"
 #import "ClubCheckinsViewController.h"
-#import "ClubCell.h"
+#import "PlaceCell.h"
 
 @implementation TransitionFromClubListToClub
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
@@ -21,7 +21,7 @@
     NSTimeInterval duration = [self transitionDuration:transitionContext];
     
     // Get a snapshot of the thing cell we're transitioning from
-     ClubCell *cell = [fromViewController.clubTable dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:[fromViewController.clubTable indexPathForSelectedRow]];
+     PlaceCell *cell = [fromViewController.clubTable dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:[fromViewController.clubTable indexPathForSelectedRow]];
   //  ClubCell *cell = (ClubCell*)[fromViewController.clubTable cellForItemAtIndexPath:[fromViewController.clubTable indexPathForSelectedRow] ];
     UIView *cellImageSnapshot = [cell.clubAvatar snapshotViewAfterScreenUpdates:NO];
     

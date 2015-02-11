@@ -10,11 +10,18 @@
 
 @interface FloatingButton : UIButton
 
-@property BOOL statusOn;
-@property (strong, nonatomic) NSString* onTitle;
-@property (strong, nonatomic) NSString* offTitle;
+{
+@private
+    NSMutableDictionary *backgroundStates;
+    UIColor * highlightedColor;
+    UIColor * normalColor;
+    
+@public
+}
 
-- (void) changeStatus:(BOOL) isOn;
-- (void) setOnTitle:(NSString *)onTitle andOffTitle:(NSString*)offTitle;
+@property(nonatomic) BOOL statusOn;
 
-@end
+- (void) setMainState:(NSString*) text;
+- (void) setSecondState:(NSString*) text;
+
+- (UIColor*) backgroundColorForState:(UIControlState) _state;@end
