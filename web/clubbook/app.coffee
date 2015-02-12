@@ -250,8 +250,13 @@ app.post '/_s/signup', services.signup
 app.post '/_s/signinmail', services.signinmail
 
 # retrieve clubs
-app.get '/_s/obj/club', handle_access_token, services.list_club
+app.get '/_s/obj/club', handle_access_token, services.list_club #
 app.get '/_s/obj/club_types', handle_access_token, services.club_types
+
+#infinite scroll for club, festival, dj, news, event
+app.get '/_s/obj/events', handle_access_token, services.list_events
+app.get '/_s/obj/dj/events', handle_access_token, services.list_dj_events
+app.get '/_s/obj/:type/list', handle_access_token, services.list_venue
 
 
 app.get '/_s/obj/club/:objectId', handle_access_token, services.find_club
@@ -266,7 +271,6 @@ app.get '/_s/obj/club/:objectId/favorite/add', handle_access_token, services.add
 #news
 app.get '/_s/obj/club/:objectId/news', handle_access_token, services.news
 app.get '/_s/obj/club/:objectId/events', handle_access_token, services.events
-app.get '/_s/obj/events', handle_access_token, services.list_events
 
 # users news
 app.get '/_s/obj/user/favorite/news', handle_access_token, services.news_favorite

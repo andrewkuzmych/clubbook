@@ -425,6 +425,7 @@ exports.events_create_action = (req, res)->
 exports.events_edit = (req, res)->
   create_base_model req, res, (model)->
     db_model.Events.findById(req.params.events_id).exec (err, news)->
+      console.log news
       model.start_time_ = moment.utc(news.start_time).format("HH:mm")
       model.start_date_ = moment.utc(news.start_time).format("DD-MM-YYYY")
       if news.end_time
@@ -432,10 +433,10 @@ exports.events_edit = (req, res)->
         model.end_date_ = moment.utc(news.end_time).format("DD-MM-YYYY")  
       model.data_time = moment().format("DD-MM-YYYY")
       model.cloudinary = cloudinary
-      model.news = news
+      model.events = news
       model.id = req.params.id
       model.type = req.params.type
-      res.render "pages/news_update", model
+      res.render "pages/events_update", model
 
 exports.events_edit_action = (req, res)->
   db_model.Events.findById(req.params.events_id).exec (err, news)->

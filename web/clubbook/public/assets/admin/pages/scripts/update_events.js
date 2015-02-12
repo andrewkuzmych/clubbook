@@ -1,4 +1,69 @@
 
+var ComponentsPickers = function () {
+
+
+    var handleTimePickers = function () {
+
+        if (jQuery().timepicker) {
+
+            $('.timepicker-no-seconds').timepicker({
+                autoclose: true,
+                minuteStep: 5,
+                showSeconds: false,
+                showMeridian: false
+            });
+
+            // handle input group button click
+            $('.timepicker').parent('.input-group').on('click', '.input-group-btn', function(e){
+                e.preventDefault();
+                $(this).parent('.input-group').find('.timepicker').timepicker('showWidget');
+            });
+        }
+
+    $('.start_d').on("change", function(){
+      $('.end_d').datepicker('setStartDate',$('.start_d').datepicker('getFormattedDate'));
+    });
+
+    $('.end_d').on("change", function(){
+      if(!$('.end_form').val()){
+        $('.start_d').datepicker('setEndDate',Infinity);
+      }
+      else{
+        $('.start_d').datepicker('setEndDate',$('.end_form').val());
+      }
+      if(($('.start_d').datepicker('getFormattedDate')==$('.end_d').datepicker('getFormattedDate'))&&($('.end_form').val())){
+        $('.end_t').data("timepicker").setTime($('.start_t').data("timepicker").getTime());
+      }
+      });
+    $('.timepicker-no-seconds').on("change", function(){
+      if($('.start_d').datepicker('getFormattedDate')==$('.end_d').datepicker('getFormattedDate')){
+        if(($('.start_t').data("timepicker"))&&($('.end_t').data("timepicker"))) {
+          var startTime = $('.start_t').data("timepicker").getTime();
+          var endTime = $('.end_t').data("timepicker").getTime();
+          var startTimeArray = startTime.split(':');
+          var endTimeArray = endTime.split(':');
+          if(parseInt(startTimeArray[0])>parseInt(endTimeArray[0])){
+            $('.end_t').data("timepicker").setTime($('.start_t').data("timepicker").getTime());
+          }
+          else if((parseInt(startTimeArray[0])==parseInt(endTimeArray[0]))&&(parseInt(startTimeArray[1])>parseInt(endTimeArray[1]))){
+            $('.end_t').data("timepicker").setTime($('.start_t').data("timepicker").getTime());
+          }
+        }
+      }
+    });
+    }
+
+    return {
+        //main function to initiate the module
+        init: function () {
+            handleTimePickers();
+        }
+    };
+
+}();
+
+
+
 var FormValidation = function () {
 
     // validation using icons
@@ -23,6 +88,12 @@ var FormValidation = function () {
                       required: true
                     },
                     description: {
+                      required: true,
+                    },
+                    loc_name: {
+                      required: true,
+                    },
+                    events_address: {
                       required: true,
                     }
 
