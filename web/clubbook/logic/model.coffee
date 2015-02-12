@@ -202,6 +202,7 @@ EventSchema.pre 'save', (next, done) ->
   next()
 
 EventSchema.set('toJSON', { getters: true, virtuals: true })
+EventSchema.index({ loc: "2d" })
 exports.Events = mongoose.model 'Events', EventSchema
 
 

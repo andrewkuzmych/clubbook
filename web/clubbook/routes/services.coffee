@@ -836,39 +836,61 @@ exports.club_types = (req, res)->
       result: result
 
 exports.list_events = (req, res)->
-  console.log req.params
-
   skip = 0
   if req.query.skip
     skip = parseInt(req.query.skip)
-  
   take = 300
   if req.query.take
     take = parseInt(req.query.take)
 
   params =
-    #distance: req.query.distance
     lat: req.query.user_lat
     lon: req.query.user_lon
     user_id: req.params.me._id.toString()
-    type: req.query.type
     search: req.query.search
 
-  
   if req.query.distance
     params.distance = parseInt(req.query.distance)
 
   params.skip = skip
   params.take = take
-  
-  console.log params
+
   manager.list_events params, (err, news)->
     if err
       res.json
         status: 'error'
         error: err
     else
-      # get people who checkin in these clubs
+      res.json
+        status: 'ok'
+        news: news
+
+exports.list_dj_events = (req, res)->
+  skip = 0
+  if req.query.skip
+    skip = parseInt(req.query.skip)
+  take = 300
+  if req.query.take
+    take = parseInt(req.query.take)
+
+  params =
+    lat: req.query.user_lat
+    lon: req.query.user_lon
+    user_id: req.params.me._id.toString()
+    search: req.query.search
+
+  if req.query.distance
+    params.distance = parseInt(req.query.distance)
+
+  params.skip = skip
+  params.take = take
+
+  manager.list_dj_events params, (err, news)->
+    if err
+      res.json
+        status: 'error'
+        error: err
+    else
       res.json
         status: 'ok'
         news: news
@@ -912,6 +934,33 @@ exports.list_club = (req, res)->
         status: 'ok'
         clubs: clubs
         types: types
+
+exports.list_venue = (req, res)->
+  skip = 0
+  if req.query.skip
+    skip = parseInt(req.query.skip)
+  take = 10
+  if req.query.take
+    take = parseInt(req.query.take)
+  params =
+    type_venue: req.params.type.toString()
+    lat: req.query.user_lat
+    lon: req.query.user_lon
+    user_id: req.params.me._id.toString()
+    search: req.query.search
+  if req.query.distance
+    params.distance = parseInt(req.query.distance)
+  params.skip = skip
+  params.take = take
+  manager.list_venue params, (err, clubs, types)->
+    if err
+      res.json
+        status: 'error'
+        error: err
+    else
+      res.json
+        status: 'ok'
+        clubs: clubs
 
 exports.add_favorite_club = (req, res)->
   params = 

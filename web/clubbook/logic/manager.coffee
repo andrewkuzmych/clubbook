@@ -133,43 +133,86 @@ exports.list_club = (params, callback)->
 
 exports.list_events = (params, callback)->
   console.log "METHOD - Manager list_events"
-  geoNear = 
+  db_model.Events.count().exec (err, count)->
+    geoNear = 
+        near: [parseFloat(params.lon), parseFloat(params.lat)],
+        distanceField: "distance",
+        spherical: true,
+        limit: count,
+        distanceMultiplier: 6371  
+    if params.distance
+      geoNear.maxDistance = params.distance/6371 
+    query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take}]
+    list_event_metod query, (events)->
+      callback err, events
+
+exports.list_dj_events = (params, callback)->
+  console.log "METHOD - Manager list_events"
+  db_model.Events.count({"dj":{'$exists': true}}).exec (err, count)->
+    geoNear = 
+        near: [parseFloat(params.lon), parseFloat(params.lat)],
+        distanceField: "distance",
+        spherical: true,
+        limit: count,
+        distanceMultiplier: 6371  
+        query: {"dj":{'$exists': true}}
+    if params.distance
+      geoNear.maxDistance = params.distance/6371 
+    query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take}]
+    list_event_metod query, (events)->
+      callback err, events
+
+exports.list_venue = (params, callback)->
+  console.log "METHOD - Manager list_club"
+  db_model.Venue.count().exec (err, count)->
+    geoNear = 
       near: [parseFloat(params.lon), parseFloat(params.lat)],
       distanceField: "distance",
       spherical: true,
-      distanceMultiplier: 6371  
-  if params.distance
-    geoNear.maxDistance = params.distance/6371 
-  else
-    geoNear.maxDistance = 20/6371 
-  query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take}]
-  db_model.Venue.aggregate query,{}, (err, clubs)->
-    club_ids = []
-    for club in clubs
-      club_ids.push club._id
-      if club.club_working_hours
-        for wh in club.club_working_hours
-          if wh.day == moment.utc().day()
-            club.id = club._id
-            club.club_today_working_hours = wh
-    db_model.News.find({"venue": {'$in': club_ids}, 'type': "event"}).exec (err, events)-> 
-      events_objects = []
-      for even in events
-        events_object = even.toObject()
-        if events_object.end_time
-          if moment.utc(events_object.end_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')
-            events_objects.push events_object
-            events_object.created_on_formatted = moment.utc(events_object.created_on).format("YYYY-MM-DD, HH:mm:ss")
-            events_object.updated_on_formatted = moment.utc(events_object.updated_on).format("YYYY-MM-DD, HH:mm:ss")
-            events_object.start_time_formatted = moment.utc(events_object.start_time).format("YYYY-MM-DD, HH:mm:ss")
-            events_object.end_time_formatted = moment.utc(events_object.end_time).format("YYYY-MM-DD, HH:mm:ss")
-        else if moment.utc(events_object.start_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')
-          events_objects.push events_object
-          events_object.created_on_formatted = moment.utc(events_object.created_on).format("YYYY-MM-DD, HH:mm:ss")
-          events_object.updated_on_formatted = moment.utc(events_object.updated_on).format("YYYY-MM-DD, HH:mm:ss")
-          events_object.start_time_formatted = moment.utc(events_object.start_time).format("YYYY-MM-DD, HH:mm:ss")
-          events_object.end_time_formatted = moment.utc(events_object.end_time).format("YYYY-MM-DD, HH:mm:ss")
-      callback err, events_objects
+      limit: count,
+      distanceMultiplier: 6371
+    if params.distance
+      geoNear.maxDistance = params.distance/6371 
+    if params.type_venue is "festival"
+      geoNear.query = {"category": "festival"}
+    else
+      geoNear.query = {"category": "club", "club_types": params.type_venue}
+    query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take}]
+    match = {}
+    if params.search
+      search = params.search.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")
+      match.club_name =  { '$regex': search, '$options': 'i' }
+    if match
+      query = [{'$geoNear': geoNear}, {'$match': match}, {'$skip':params.skip}, {'$limit':params.take}]
+    db_model.Venue.aggregate query,{}, (err, clubs)->
+      if params.type_venue != "festival"
+        for club in clubs
+          if club.club_working_hours
+            for wh in club.club_working_hours
+              if wh.day == moment.utc().day()
+                club.id = club._id
+                club.club_today_working_hours = wh
+      db_model.User.findById(params.user_id).exec (err, user)->
+        match_pre =  {"_id": {'$in': user.friends}, 'bloked_users': {'$ne': user._id}, 'friends': user._id, 'checkin.active': true }
+        match_post =  {'checkin.active': true}
+        group = { _id: "$checkin.club", count: { $sum: 1 }}
+        query = [ { '$match': match_pre}, { '$unwind': "$checkin" }, { '$match': match_post }, {'$group': group} ]
+        db_model.User.aggregate query, {}, (err, result)->
+          for c in result
+            theclub = __.find(clubs, (c_res)->
+                    c_res._id.toString() == c._id.toString()
+              )
+            if theclub
+              theclub.active_friends_checkins = c.count
+          for club in clubs
+            is_favorite_club = __.find(user.favorite_clubs, (c_res)->
+                    c_res.toString() == club._id.toString()
+              )
+            if is_favorite_club
+              club.is_favorite = true
+            else
+              club.is_favorite = false
+          callback err, clubs
 
 exports.get_people_count_in_club = (club, callback)->
   console.log "METHOD - Manager get_people_count_in_club"
@@ -729,7 +772,23 @@ exports.radius_to_km = (distance)->
 
   return distance/75
 
-
+list_event_metod = (query, callback)->
+  db_model.Events.aggregate query,{}, (err, events)->
+      events_upcoming = []
+      for even in events
+        if even.end_time
+          if moment.utc(even.end_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')
+            even.created_on_formatted = moment.utc(even.created_on).format("YYYY-MM-DD, HH:mm:ss")
+            even.updated_on_formatted = moment.utc(even.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+            even.start_time_formatted = moment.utc(even.start_time).format("YYYY-MM-DD, HH:mm:ss")
+            even.end_time_formatted = moment.utc(even.end_time).format("YYYY-MM-DD, HH:mm:ss")
+            events_upcoming.push even
+        else if moment.utc(even.start_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')
+          even.created_on_formatted = moment.utc(even.created_on).format("YYYY-MM-DD, HH:mm:ss")
+          even.updated_on_formatted = moment.utc(even.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+          even.start_time_formatted = moment.utc(even.start_time).format("YYYY-MM-DD, HH:mm:ss")
+          events_upcoming.push even
+      callback events_upcoming
 
 
 
