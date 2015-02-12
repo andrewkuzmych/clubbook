@@ -28,7 +28,7 @@
 
 - (void)chat:(NSString *) user_from user_to:(NSString *) user_to msg:(NSString *) msg msg_type:(NSString *) msg_type url:(NSString*) url location:(NSDictionary*) location accessToken:(NSString *) accessToken;
 
-- (void)retrievePlaces:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken;
+- (void)retrievePlaces:(NSString*) type lat:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken;
 
 - (void) retrieveYesterdayPlacesAccessToken:(NSString*) accessToken;
 

@@ -10,7 +10,9 @@
 
 @interface ClubsInfiniteTableView : InfiniteScrollTableView
 
-- (id)initWithFrame:(CGRect)frame userLat:(double)userLat userLon:(double)userLon accessToken:(NSString *)accessToken;
+@property (strong, nonatomic)NSString* type;
+
+- (id)initWithFrame:(CGRect)frame type:(NSString*) type userLat:(double)userLat userLon:(double)userLon accessToken:(NSString *)accessToken;
 
 - (void) refreshData;
 - (void) loadMoreData;

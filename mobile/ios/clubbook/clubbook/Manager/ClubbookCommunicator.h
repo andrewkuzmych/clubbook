@@ -37,7 +37,7 @@
 
 - (void)readChat:(NSString *) fromUser toUser:(NSString *) toUser accessToken:(NSString *) accessToken;
 
-- (void)retrievePlaces:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken;
+- (void)retrievePlaces:(NSString*) type lat:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken;
 
 - (void)retrieveYesterdayPlacesAccessToken:(NSString*) accessToken;
 

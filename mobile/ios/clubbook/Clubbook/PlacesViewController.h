@@ -18,7 +18,6 @@
 
 @property (strong, nonatomic) ClubsInfiniteTableView* clubTable;
 @property (strong, nonatomic) ClubsInfiniteTableView* barsTable;
-@property (strong, nonatomic) ClubsInfiniteTableView* djTable;
-@property (strong, nonatomic) ClubsInfiniteTableView* eventsTable;
+@property (strong, nonatomic) ClubsInfiniteTableView* festivalsTable;
 
 @end

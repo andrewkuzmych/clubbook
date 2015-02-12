@@ -100,7 +100,7 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
     
-    [self._manager retrievePlaces:lat lon:lng take:take skip:skip distance:1 search:@"" accessToken:accessToken];
+    [self._manager retrievePlaces:@"club" lat:lat lon:lng take:take skip:skip distance:1 search:@"" accessToken:accessToken];
 }
 
 - (void)didReceivePlaces:(NSArray *)places andTypes:(NSArray *)types

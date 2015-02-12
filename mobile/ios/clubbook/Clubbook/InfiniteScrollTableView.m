@@ -105,6 +105,10 @@
     self.isRefreshing = YES;
 }
 
+- (void) failedWithError:(NSError *)error {
+    [self tableLoadedEmpty:YES];
+}
+
 - (void) tableLoadedEmpty:(BOOL)empty {
     if (empty) {
         if([[self infiniteDelegate] respondsToSelector:@selector(tableIsEmpty)]) {

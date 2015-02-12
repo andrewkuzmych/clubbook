@@ -40,9 +40,9 @@
     [self.communicator chat:user_from user_to:user_to msg:msg msg_type:msg_type url:url location:location accessToken:accessToken];
 }
 
-- (void)retrievePlaces:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken;
+- (void)retrievePlaces:(NSString*) type lat:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken;
 {
-    [self.communicator retrievePlaces:lat lon:lon take:take skip:skip distance:distance search:search accessToken:accessToken];
+    [self.communicator retrievePlaces:type lat:lat lon:lon take:take skip:skip distance:distance search:search accessToken:accessToken];
 }
 
 - (void) retrieveYesterdayPlacesAccessToken:(NSString*) accessToken {

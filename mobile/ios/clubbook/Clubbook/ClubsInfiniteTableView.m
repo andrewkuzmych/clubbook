@@ -14,9 +14,10 @@
 
 @implementation ClubsInfiniteTableView
 
-- (id)initWithFrame:(CGRect)frame userLat:(double)userLat userLon:(double)userLon accessToken:(NSString *)accessToken{
+- (id)initWithFrame:(CGRect)frame type:(NSString*) type userLat:(double)userLat userLon:(double)userLon accessToken:(NSString *)accessToken{
     self = [super initWithFrame:frame userLat:userLat userLon:userLon accessToken:accessToken];
     if (self) {
+        self.type = type;
         UINib *nib = [UINib nibWithNibName:@"PlaceCell" bundle:nil];
         [self registerNib:nib forCellReuseIdentifier:@"PlaceCell"];
     }
@@ -26,18 +27,18 @@
 
 - (void) refreshData {
     [super refreshData];
-    [self loadPlaceType:@"" take:10 skip:0];
+    [self loadPlaceTypeTake:10 skip:0];
 }
 
 - (void) loadMoreData {
     [super loadMoreData];
     int countToSkip = (int)[self.dataArray count];
-    [self loadPlaceType:@"" take:10 skip:countToSkip];
+    [self loadPlaceTypeTake:10 skip:countToSkip];
 }
 
-- (void)loadPlaceType:(NSString*) type take:(int)take skip:(int)skip
+- (void)loadPlaceTypeTake:(int)take skip:(int)skip
 {
-    [self.manager retrievePlaces:self.userLat lon:self.userLon take:take skip:skip distance:0 search:@"" accessToken:self.accessToken];
+    [self.manager retrievePlaces:self.type lat:self.userLat lon:self.userLon take:take skip:skip distance:0 search:@"" accessToken:self.accessToken];
 }
 
 - (void)didReceivePlaces:(NSArray *)places

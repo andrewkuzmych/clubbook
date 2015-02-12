@@ -539,7 +539,7 @@
 }
 
 
-- (void)retrievePlaces:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken;
+- (void)retrievePlaces:(NSString*) type lat:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken;
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
@@ -548,8 +548,18 @@
             distanceTemp = 100000;
         }
         //make base url
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/club?user_lat=%f&user_lon=%f&type=%@&search=%@&skip=%d&take=%d&distance=%d&access_token=%@", baseURL, lat, lon, @"", search, skip, take, distanceTemp, accessToken];
+        NSString* urlAsString;
         
+        if ([type isEqualToString:@"bar"]) {
+           urlAsString = [NSString stringWithFormat:@"%@obj/bar?user_lat=%f&user_lon=%f&skip=%d&search=%@&take=%d&distance=%d&access_token=%@", baseURL, lat, lon, skip, search, take, distanceTemp, accessToken];
+        }
+        else if ([type isEqualToString:@"festival"]) {
+           urlAsString = [NSString stringWithFormat:@"%@obj/festival?user_lat=%f&user_lon=%f&skip=%d&search=%@&take=%d&distance=%d&access_token=%@", baseURL, lat, lon, skip, search, take, distanceTemp, accessToken];
+        }
+        else {
+          urlAsString = [NSString stringWithFormat:@"%@obj/club?user_lat=%f&user_lon=%f&skip=%d&search=%@&take=%d&distance=%d&access_token=%@", baseURL, lat, lon, skip, search, take, distanceTemp, accessToken];
+        }
+
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
         [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
