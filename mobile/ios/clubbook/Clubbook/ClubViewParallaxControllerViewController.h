@@ -9,14 +9,14 @@
 #import "QMBParallaxScrollViewController.h"
 #import "ClubImagesPageViewController.h"
 #import "ClubViewController.h"
-#import "FloatingButton.h"
+#import "TMFloatingButton.h"
 
 @interface ClubViewParallaxControllerViewController : QMBParallaxScrollViewController <QMBParallaxScrollViewControllerDelegate>
 
 @property (weak, nonatomic) ClubImagesPageViewController* clubImages;
 @property (weak, nonatomic) ClubViewController* clubView;
-@property (weak, nonatomic) IBOutlet FloatingButton *followButton;
 
+@property (strong, nonatomic) TMFloatingButton *followButton;
 @property (strong, nonatomic) Place* place;
 
 @end

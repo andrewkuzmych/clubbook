@@ -9,7 +9,7 @@
 #import "User.h"
 #import "ProfileCell.h"
 #import "BaseViewController.h"
-#import "FloatingButton.h"
+#import "TMFloatingButton.h"
 
 @interface ClubCheckinsViewController : BaseViewController <UICollectionViewDelegate, UICollectionViewDataSource, UIAlertViewDelegate, PNDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *profileCollection;
@@ -21,10 +21,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *checkinCount;
 @property (weak, nonatomic) IBOutlet UILabel *friendsCount;
 @property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
-@property (weak, nonatomic) IBOutlet FloatingButton *checkinButton;
+@property (strong, nonatomic) TMFloatingButton *checkinButton;
 
 - (ProfileCell*)collectionViewCellForThing:(User *)user;
-- (IBAction)checkinAction:(UIButton *)sender;
-
-
 @end

@@ -36,8 +36,21 @@
     self.extendedLayoutIncludesOpaqueBars = NO;
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    [self.followButton setMainState:@"Follow"];
-    [self.followButton setSecondState:@"UnFollow"];
+    self.followButton = [[TMFloatingButton alloc] initWithWidth:60.0f withMargin:8.0f andPosition:FloatingButtonPositionBottomRight andHideDirection:FloatingButtonHideDirectionUp andSuperView:self.view];
+    TMFloatingButtonState* stateOn = [[TMFloatingButtonState alloc] initWithText:@"Follow" andBackgroundColor:[UIColor colorWithRed:0.000 green:0.698 blue:0.000 alpha:1.000] forButton:self.followButton];
+    TMFloatingButtonState* stateOff = [[TMFloatingButtonState alloc] initWithText:@"UnFollow" andBackgroundColor:[UIColor colorWithRed:0.913 green:0.131 blue:0.029 alpha:1.000] forButton:self.followButton];
+    
+    [self.followButton addTarget:self action:@selector(handleFollowButton) forControlEvents:UIControlEventTouchUpInside];
+    
+    if (self.place.isFavorite) {
+        [self.followButton addState:stateOn forName:@"stateOn"];
+        [self.followButton addAndApplyState:stateOff forName:@"stateOff"];
+    }
+    else {
+        [self.followButton addAndApplyState:stateOn forName:@"stateOn"];
+        [self.followButton addState:stateOff forName:@"stateOff"];
+    }
+
     
     [self.view insertSubview:self.followButton aboveSubview:self.clubView.view];
     
@@ -72,14 +85,16 @@
     [super viewWillDisappear:animated];
 }
 
-- (IBAction)handleFollowButton:(id)sender {
-    if (self.followButton.statusOn) {
+- (void) handleFollowButton {
+    if (!self.place.isFavorite) {
         self.place.isFavorite = YES;
         [self._manager makePlaceFavorite:self.place.id accessToken:accessToken makeFavorite:YES];
+        [self.followButton setButtonState:@"stateOff"];
     }
     else {
         self.place.isFavorite = NO;
         [self._manager makePlaceFavorite:self.place.id accessToken:accessToken makeFavorite:NO];
+        [self.followButton setButtonState:@"stateOn"];
     }
 }
 

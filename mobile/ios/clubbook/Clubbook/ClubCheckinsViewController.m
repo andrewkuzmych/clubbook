@@ -62,7 +62,7 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.extendedLayoutIncludesOpaqueBars = NO;
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
+
     [self populateData];
 }
 
@@ -103,14 +103,28 @@
     int disatanceInt = (int)self.place.distance;
     self.distanceLabel.text = [LocationHelper convertDistance:disatanceInt];
     
-    BOOL check = [LocationHelper isCheckinHere:self.place];
+    isCheckedIn = [LocationHelper isCheckinHere:self.place];
     [self.checkinButton setHidden:NO];
     
     self.checkinCount.text = [NSString stringWithFormat:@"%d",self.place.countOfUsers];
     self.friendsCount.text = [NSString stringWithFormat:@"%d",self.place.friendsCount];
     
-    [self.checkinButton setMainState:@"Check-in"];
-    [self.checkinButton setSecondState:@"Check-out"];
+    
+    self.checkinButton = [[TMFloatingButton alloc] initWithWidth:60.0f withMargin:8.0f andPosition:FloatingButtonPositionBottomRight andHideDirection:FloatingButtonHideDirectionUp andSuperView:self.view];
+    [self.view bringSubviewToFront:self.checkinButton];
+    TMFloatingButtonState* stateOn = [[TMFloatingButtonState alloc] initWithText:@"Check-in" andBackgroundColor:[UIColor colorWithRed:0.000 green:0.698 blue:0.000 alpha:1.000] forButton:self.checkinButton];
+    TMFloatingButtonState* stateOff = [[TMFloatingButtonState alloc] initWithText:@"Check-out" andBackgroundColor:[UIColor colorWithRed:0.913 green:0.131 blue:0.029 alpha:1.000] forButton:self.checkinButton];
+    
+    [self.checkinButton addTarget:self action:@selector(checkinAction) forControlEvents:UIControlEventTouchUpInside];
+    
+    if (isCheckedIn) {
+        [self.checkinButton addState:stateOn forName:@"stateOn"];
+        [self.checkinButton addAndApplyState:stateOff forName:@"stateOff"];
+    }
+    else {
+        [self.checkinButton addAndApplyState:stateOn forName:@"stateOn"];
+        [self.checkinButton addState:stateOff forName:@"stateOff"];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -226,22 +240,25 @@
 }
 
 - (void) checkinStatus:(BOOL) status {
+    isCheckedIn = status;
     if (status) {
        [LocationHelper addCheckin:_place];
+        [self.checkinButton setButtonState:@"stateOff"];
     }
     else {
         if ([LocationHelper isCheckinHere:self.place]) {
             [LocationHelper removeCheckin];
+            [self.checkinButton setButtonState:@"stateOn"];
         }
     }
 }
 
-- (IBAction)checkinAction:(UIButton *)sender {
+- (void)checkinAction {
    CLLocation *loc = [[CLLocation alloc] initWithLatitude:[_place.lat doubleValue] longitude:[_place.lon doubleValue]];
    
-   if(self.checkinButton.statusOn) {
+    if(isCheckedIn) {
       [self showProgress:NO title:NSLocalizedString(@"checking_out", nil)];
-      [self._manager checkout:_place.id accessToken:accessToken userInfo:sender];
+      [self._manager checkout:_place.id accessToken:accessToken userInfo:nil];
    }
    else {
         if([GlobalVars getInstance].MaxCheckinRadius  > (int)[[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc]) {

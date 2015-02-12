@@ -398,6 +398,8 @@
 		522F75FE1A6524680095991F /* EBShadedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 522F75EF1A6524680095991F /* EBShadedView.m */; };
 		522F75FF1A6524680095991F /* EBTagPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 522F75F11A6524680095991F /* EBTagPopover.m */; };
 		52343D9B1A430CF400F47A36 /* UIImage+FixOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 52343D9A1A430CF400F47A36 /* UIImage+FixOrientation.m */; };
+		5243FB671A8CCF220020C8A3 /* buttonImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5243FB641A8CCF220020C8A3 /* buttonImages.xcassets */; };
+		5243FB681A8CCF220020C8A3 /* TMFloatingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5243FB661A8CCF220020C8A3 /* TMFloatingButton.m */; };
 		5245DC621A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5245DC611A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m */; };
 		5245DC651A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5245DC641A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.m */; };
 		52520A781A66928B006399EF /* NewsFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52520A761A66928B006399EF /* NewsFeedCell.m */; };
@@ -1172,6 +1174,9 @@
 		522F75F21A6524680095991F /* EBTagPopoverDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EBTagPopoverDelegate.h; sourceTree = "<group>"; };
 		52343D991A430CF400F47A36 /* UIImage+FixOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FixOrientation.h"; sourceTree = "<group>"; };
 		52343D9A1A430CF400F47A36 /* UIImage+FixOrientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FixOrientation.m"; sourceTree = "<group>"; };
+		5243FB641A8CCF220020C8A3 /* buttonImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = buttonImages.xcassets; sourceTree = "<group>"; };
+		5243FB651A8CCF220020C8A3 /* TMFloatingButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMFloatingButton.h; sourceTree = "<group>"; };
+		5243FB661A8CCF220020C8A3 /* TMFloatingButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMFloatingButton.m; sourceTree = "<group>"; };
 		5245DC601A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubPhotGalleryCollectionViewController.h; sourceTree = "<group>"; };
 		5245DC611A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubPhotGalleryCollectionViewController.m; sourceTree = "<group>"; };
 		5245DC631A5BF17400CC0B1B /* ClubPhotoGalleryCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubPhotoGalleryCollectionViewCell.h; sourceTree = "<group>"; };
@@ -1973,6 +1978,7 @@
 		49E8319119534EBB00D4A26C /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				5243FB631A8CCF220020C8A3 /* TMFloatingButton */,
 				522F75CF1A6524680095991F /* EBPhotoPagesController */,
 				520897821A407C7F00E8DD06 /* JSQSystemSoundPlayer */,
 				520896EA1A407C6700E8DD06 /* JSQMessagesViewController */,
@@ -2236,6 +2242,16 @@
 				522F75F21A6524680095991F /* EBTagPopoverDelegate.h */,
 			);
 			path = EBPhotoPagesController;
+			sourceTree = "<group>";
+		};
+		5243FB631A8CCF220020C8A3 /* TMFloatingButton */ = {
+			isa = PBXGroup;
+			children = (
+				5243FB641A8CCF220020C8A3 /* buttonImages.xcassets */,
+				5243FB651A8CCF220020C8A3 /* TMFloatingButton.h */,
+				5243FB661A8CCF220020C8A3 /* TMFloatingButton.m */,
+			);
+			path = TMFloatingButton;
 			sourceTree = "<group>";
 		};
 		5245DC5F1A5BEF1500CC0B1B /* PhotoGallery */ = {
@@ -2707,6 +2723,7 @@
 				F4EECF28177C99F400778578 /* Default-568h@2x.png in Resources */,
 				49ABA1D9199524BF00B060D0 /* icon_twitter@2x.png in Resources */,
 				521BEC3F1A52F576003E7A27 /* gradient.png in Resources */,
+				5243FB671A8CCF220020C8A3 /* buttonImages.xcassets in Resources */,
 				49ABA1671995239E00B060D0 /* avatar_empty.png in Resources */,
 				49ABA1891995239E00B060D0 /* icon_userprofile_block.png in Resources */,
 				52C5FC971A3F439C000147E8 /* KICamera@2x.png in Resources */,
@@ -2969,6 +2986,7 @@
 				4994849219FE671C00E906C0 /* ProfileImagesViewController.m in Sources */,
 				4934F75B19D047B800BFFDB1 /* SDWebImageCompat.m in Sources */,
 				52D108BA1A8B99EB00649598 /* ClubsInfiniteTableView.m in Sources */,
+				5243FB681A8CCF220020C8A3 /* TMFloatingButton.m in Sources */,
 				498A690F196C4CFD00BC2859 /* PNConnection.m in Sources */,
 				F4EECF4A177DF87700778578 /* MainMenuViewController.m in Sources */,
 				498A68E0196C4CFD00BC2859 /* PNAccessRightsCollection.m in Sources */,

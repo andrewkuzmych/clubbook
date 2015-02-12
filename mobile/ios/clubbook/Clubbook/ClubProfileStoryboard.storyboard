@@ -177,44 +177,18 @@
                                     </mask>
                                 </variation>
                             </collectionView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nmo-RL-wuy" customClass="FloatingButton">
-                                <rect key="frame" x="224" y="423" width="80" height="80"/>
-                                <color key="backgroundColor" red="0.15682481784040711" green="0.78961489901111115" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="80" id="SGT-pD-51S"/>
-                                    <constraint firstAttribute="height" constant="80" id="mvi-ck-Hi2"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <state key="normal" title="Check-in">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="checkinAction:" destination="ZjF-WR-zDq" eventType="touchUpInside" id="DjX-4u-v1D"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="IWs-sF-kYc" firstAttribute="top" secondItem="nmo-RL-wuy" secondAttribute="bottom" constant="20" id="1hd-Wr-iyU"/>
-                            <constraint firstAttribute="trailing" secondItem="nmo-RL-wuy" secondAttribute="trailing" constant="16" id="2dU-a5-WsW"/>
                             <constraint firstItem="Di1-lb-ig1" firstAttribute="top" secondItem="IbS-L6-b3F" secondAttribute="bottom" id="4W1-fe-PA8"/>
                             <constraint firstAttribute="trailing" secondItem="dUm-p8-azL" secondAttribute="trailing" id="8vU-sW-nyd"/>
                             <constraint firstItem="dUm-p8-azL" firstAttribute="leading" secondItem="LZ5-32-HWK" secondAttribute="leading" id="CLd-7b-Mp4"/>
                             <constraint firstItem="IWs-sF-kYc" firstAttribute="top" secondItem="dUm-p8-azL" secondAttribute="bottom" id="J3E-IT-dHO"/>
                             <constraint firstItem="Di1-lb-ig1" firstAttribute="leading" secondItem="LZ5-32-HWK" secondAttribute="leading" id="Jfd-ty-O3a"/>
-                            <constraint firstItem="IWs-sF-kYc" firstAttribute="top" secondItem="nmo-RL-wuy" secondAttribute="bottom" constant="16" id="Nas-6L-1NQ"/>
                             <constraint firstItem="dUm-p8-azL" firstAttribute="top" secondItem="Di1-lb-ig1" secondAttribute="bottom" id="bqw-ia-hCt"/>
                             <constraint firstAttribute="trailing" secondItem="Di1-lb-ig1" secondAttribute="trailing" id="enR-tF-PEv"/>
                             <constraint firstItem="dUm-p8-azL" firstAttribute="top" secondItem="Di1-lb-ig1" secondAttribute="top" constant="50" id="mD0-py-0SQ"/>
-                            <constraint firstAttribute="trailing" secondItem="nmo-RL-wuy" secondAttribute="trailing" constant="16" id="xjd-Wo-XnG"/>
-                            <constraint firstItem="IWs-sF-kYc" firstAttribute="top" secondItem="nmo-RL-wuy" secondAttribute="bottom" constant="18" id="zgQ-2b-erf"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="1hd-Wr-iyU"/>
-                                <exclude reference="zgQ-2b-erf"/>
-                            </mask>
-                        </variation>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" id="a78-Uq-mqo"/>
                     <navigationItem key="navigationItem" id="SJ4-0F-X23">
@@ -222,7 +196,6 @@
                     </navigationItem>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
-                        <outlet property="checkinButton" destination="nmo-RL-wuy" id="MjJ-uk-WV7"/>
                         <outlet property="checkinCount" destination="Fkm-GS-9M8" id="UeV-iQ-Xiv"/>
                         <outlet property="distanceLabel" destination="XpL-TO-Yq3" id="jiA-L8-nYf"/>
                         <outlet property="friendsCount" destination="2m2-5B-8og" id="4Lo-YD-V07"/>
@@ -356,42 +329,10 @@
                     <view key="view" contentMode="scaleToFill" id="GMj-3R-2Ve">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z8R-qT-Xcr" customClass="FloatingButton">
-                                <rect key="frame" x="224" y="423" width="80" height="80"/>
-                                <color key="backgroundColor" red="0.15682481779999999" green="0.78961489900000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="80" id="Ijs-NN-hlW"/>
-                                    <constraint firstAttribute="height" constant="80" id="yYx-Mm-tRQ"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <state key="normal" title="Follow">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="handleFollowButton:" destination="m8T-Jj-ixX" eventType="touchUpInside" id="4ip-1j-oGH"/>
-                                </connections>
-                            </button>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="trailing" secondItem="z8R-qT-Xcr" secondAttribute="trailing" constant="6" id="57P-hB-BgS"/>
-                            <constraint firstItem="OAj-Br-FHj" firstAttribute="top" secondItem="z8R-qT-Xcr" secondAttribute="bottom" constant="8" id="L1L-yH-aDa"/>
-                            <constraint firstAttribute="trailing" secondItem="z8R-qT-Xcr" secondAttribute="trailing" constant="16" id="rT8-eC-xRQ"/>
-                            <constraint firstItem="OAj-Br-FHj" firstAttribute="top" secondItem="z8R-qT-Xcr" secondAttribute="bottom" constant="16" id="yEu-Ps-ed8"/>
-                        </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="57P-hB-BgS"/>
-                                <exclude reference="L1L-yH-aDa"/>
-                            </mask>
-                        </variation>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" id="ZaG-Xb-LZs"/>
                     <navigationItem key="navigationItem" id="B7u-hn-En3"/>
-                    <connections>
-                        <outlet property="followButton" destination="z8R-qT-Xcr" id="BWm-oO-0oW"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="us5-4Z-F66" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
