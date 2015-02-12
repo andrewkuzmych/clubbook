@@ -58,11 +58,6 @@
     
     NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
     accessToken = [userDefaults objectForKey:@"accessToken"];
-    
-    //check if place is followed
-    if (self.place.isFavorite) {
-        //[self.followButton setS
-    }
 }
 
 - (void)didReceiveMemoryWarning {

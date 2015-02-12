@@ -380,7 +380,6 @@
 		521BEC3F1A52F576003E7A27 /* gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 521BEC3C1A52F576003E7A27 /* gradient.png */; };
 		521BEC401A52F576003E7A27 /* gradient@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 521BEC3D1A52F576003E7A27 /* gradient@2x.png */; };
 		521BEC411A52F576003E7A27 /* gradient@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 521BEC3E1A52F576003E7A27 /* gradient@3x.png */; };
-		5225FF2C1A84CB8A00B32487 /* FloatingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5225FF2B1A84CB8A00B32487 /* FloatingButton.m */; };
 		5225FF2E1A85104700B32487 /* LoginStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5225FF2D1A85104700B32487 /* LoginStoryboard.storyboard */; };
 		522ACCDF1A32084F006789EB /* SPSlideTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDC1A32084F006789EB /* SPSlideTabBar.m */; };
 		522ACCE01A32084F006789EB /* SPSlideTabButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 522ACCDE1A32084F006789EB /* SPSlideTabButton.m */; };
@@ -1130,8 +1129,6 @@
 		521BEC3C1A52F576003E7A27 /* gradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gradient.png; sourceTree = "<group>"; };
 		521BEC3D1A52F576003E7A27 /* gradient@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gradient@2x.png"; sourceTree = "<group>"; };
 		521BEC3E1A52F576003E7A27 /* gradient@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gradient@3x.png"; sourceTree = "<group>"; };
-		5225FF2A1A84CB8A00B32487 /* FloatingButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FloatingButton.h; sourceTree = "<group>"; };
-		5225FF2B1A84CB8A00B32487 /* FloatingButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FloatingButton.m; sourceTree = "<group>"; };
 		5225FF2D1A85104700B32487 /* LoginStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LoginStoryboard.storyboard; sourceTree = "<group>"; };
 		522ACCDB1A32084F006789EB /* SPSlideTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPSlideTabBar.h; path = SPSlideTabBar/SPSlideTabBar.h; sourceTree = "<group>"; };
 		522ACCDC1A32084F006789EB /* SPSlideTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPSlideTabBar.m; path = SPSlideTabBar/SPSlideTabBar.m; sourceTree = "<group>"; };
@@ -2279,8 +2276,6 @@
 				528C85971A56E3AC00BBB148 /* ClubProfileTabBarViewController.m */,
 				49D8D3131986AA8100015052 /* ClubCheckinsViewController.h */,
 				49D8D3141986AA8100015052 /* ClubCheckinsViewController.m */,
-				5225FF2A1A84CB8A00B32487 /* FloatingButton.h */,
-				5225FF2B1A84CB8A00B32487 /* FloatingButton.m */,
 			);
 			name = ClubProfileStoryboard;
 			sourceTree = "<group>";
@@ -2963,7 +2958,6 @@
 				498A68F3196C4CFD00BC2859 /* NSDictionary+PNAdditions.m in Sources */,
 				5208977E1A407C6700E8DD06 /* JSQMessagesToolbarContentView.m in Sources */,
 				4934F75819D047B800BFFDB1 /* MKAnnotationView+WebCache.m in Sources */,
-				5225FF2C1A84CB8A00B32487 /* FloatingButton.m in Sources */,
 				499247AC1976AB7F008C74D0 /* ProfileViewController.m in Sources */,
 				5208975C1A407C6700E8DD06 /* UIDevice+JSQMessages.m in Sources */,
 				5297358F1A39B002009943C3 /* PulsingHaloLayer.m in Sources */,
