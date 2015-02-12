@@ -15,9 +15,14 @@
 - (void) tableNotEmpty;
 @end //end protocol
 
+@protocol InfiniteScrollTableViewTransitionDelegate <NSObject>
+- (void) transitToNewController:(UIViewController*) controller;
+@end
+
 @interface InfiniteScrollTableView : UITableView <ClubbookManagerDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, weak) id <InfiniteScrollTableViewDelegate> infiniteDelegate;
+@property (nonatomic, weak) id <InfiniteScrollTableViewTransitionDelegate> transitionDelegate;
 @property (strong, nonatomic) ClubbookManager* manager;
 @property double userLat;
 @property double userLon;
@@ -33,6 +38,7 @@
 - (void) updateTableWithData:(NSArray*) data;
 - (void) insertRowAtTop;
 - (void) insertRowAtBottom;
+- (void) transitToController:(UIViewController*) controller;
 
 //overload this methods
 - (void) makeInitialLoad;

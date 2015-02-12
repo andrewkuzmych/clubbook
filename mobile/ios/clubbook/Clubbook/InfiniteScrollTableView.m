@@ -86,6 +86,12 @@
     [self loadMoreData];
 }
 
+- (void) transitToController:(UIViewController *)controller {
+    if([[self transitionDelegate] respondsToSelector:@selector(transitToNewController:)]) {
+        [self.transitionDelegate transitToNewController:controller];
+    }
+}
+
 - (void) makeInitialLoad {
     [self tableIsInitialLoading];
     [self setHidden:YES];

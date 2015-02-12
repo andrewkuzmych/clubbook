@@ -8,7 +8,7 @@
 #import "SPSlideTabView.h"
 #import "ClubsInfiniteTableView.h"
 
-@interface PlacesViewController : BaseViewController<PNDelegate, UISearchBarDelegate>
+@interface PlacesViewController : BaseViewController<PNDelegate, UISearchBarDelegate, InfiniteScrollTableViewTransitionDelegate>
 
 @property (weak, nonatomic) IBOutlet SPSlideTabView *slideTabBarView;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;

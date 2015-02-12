@@ -10,6 +10,7 @@
 #import "PlaceCell.h"
 #import "LocationHelper.h"
 #import "UIImageView+WebCache.h"
+#import "ClubProfileTabBarViewController.h"
 
 @implementation ClubsInfiniteTableView
 
@@ -72,19 +73,16 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    /*NSIndexPath *selectedIndexPath = [self.clubTable indexPathForSelectedRow];
-     Place *place = _places[selectedIndexPath.row];
+     NSIndexPath *selectedIndexPath = [self indexPathForSelectedRow];
+     Place *place = self.dataArray[selectedIndexPath.row];
      
      UIStoryboard *clubProfileStoryboard = [UIStoryboard storyboardWithName:@"ClubProfileStoryboard" bundle: nil];
      ClubProfileTabBarViewController *clubController  = [clubProfileStoryboard instantiateInitialViewController];
      clubController.place = place;
-     
-     [UIView beginAnimations:@"animation" context:nil];
-     [UIView setAnimationDuration:0.5];
-     [self.navigationController pushViewController: clubController animated:NO];
-     [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:NO];
-     [UIView commitAnimations];
-     //[self.clubTable deselectRowAtIndexPath:indexPath animated:NO];*/
+    
+    [self transitToController:clubController];
+    
+    [self deselectRowAtIndexPath:indexPath animated:NO];
 }
 
 @end

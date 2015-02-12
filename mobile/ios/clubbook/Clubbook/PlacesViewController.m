@@ -55,11 +55,13 @@
 
     PlacesTabView *clubView = [[PlacesTabView alloc] init];
     self.clubTable = [[ClubsInfiniteTableView alloc] initWithFrame:CGRectZero userLat:user_lat userLon:user_lon accessToken:user_accessToken];
+    self.clubTable.transitionDelegate = self;
     [clubView addTableToTheView:self.clubTable];
     [self.slideTabBarView addPageView:clubView ForTitle:@"Clubs"];
     
     PlacesTabView *barsView = [[PlacesTabView alloc] init];
     self.barsTable = [[ClubsInfiniteTableView alloc] initWithFrame:CGRectZero userLat:user_lat userLon:user_lon accessToken:user_accessToken];
+    self.barsTable.transitionDelegate = self;
     [barsView addTableToTheView:self.barsTable];
     [self.slideTabBarView addPageView:barsView ForTitle:@"Bars"];
 }
@@ -171,6 +173,14 @@
             }
         }
     }
+}
+
+- (void) transitToNewController:(UIViewController *)controller {
+    [UIView beginAnimations:@"animation" context:nil];
+    [UIView setAnimationDuration:0.5];
+    [self.navigationController pushViewController:controller animated:NO];
+    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:NO];
+    [UIView commitAnimations];
 }
 
 //animation logic
