@@ -37,15 +37,15 @@ block content
                     .input-icon.right
                     i.fa
                     .preview
-                        if dj.dj_logo
-                          img(border='0', src='#{dj.dj_logo}', height='100')
+                        if dj.logo
+                          img(border='0', src='#{dj.logo}', height='100')
                     div.fileUpload.btn.btn-default
                       span Upload
                       !=cloudinary.uploader.image_upload_tag('image', {html: { class: "upload", tag:"upload_avatar" }})
                     div#upload_avatar_progress
                       div.bar(style="width:0%;height:18px;background: green;")
 
-                    input.form-control(type="hidden", name="dj_logo", value="#{dj.dj_logo?dj.dj_logo:''}")     
+                    input.form-control(type="hidden", name="logo", value="#{dj.logo?dj.logo:''}")     
 
             .form-group
               label.control-label.col-md-3 Name
@@ -53,14 +53,14 @@ block content
               .col-md-5
                 .input-icon.right
                   i.fa
-                  input.form-control(type='text', placeholder='Enter name', name="dj_name", value="#{dj.dj_name?dj.dj_name:''}")
+                  input.form-control(type='text', placeholder='Enter name', name="name", value="#{dj.name?dj.name:''}")
             .form-group
               label.control-label.col-md-3 Email
                 span.required *
               .col-md-5
                 .input-icon.right
                   i.fa
-                  input.form-control(type='text', placeholder='Enter email', name="dj_email", value="#{dj.dj_email?dj.dj_email:''}")
+                  input.form-control(type='text', placeholder='Enter email', name="email", value="#{dj.email?dj.email:''}")
 
             .form-group
                 label.control-label.col-md-3 Site
@@ -68,7 +68,7 @@ block content
                 .col-md-5
                   .input-icon.right
                     i.fa
-                    input.form-control(type='text', placeholder='Enter site', name="dj_site", value="#{dj.dj_site?dj.dj_site:''}")
+                    input.form-control(type='text', placeholder='Enter site', name="site", value="#{dj.site?dj.site:''}")
 
             .form-group
                 label.control-label.col-md-3 Phone
@@ -76,7 +76,7 @@ block content
                 .col-md-5
                   .input-icon.right
                     i.fa
-                    input.form-control(type='text', placeholder='Enter phone', name="dj_phone", value="#{dj.dj_phone?dj.dj_phone:''}")
+                    input.form-control(type='text', placeholder='Enter phone', name="phone", value="#{dj.phone?dj.phone:''}")
 
             .form-group
                 label.control-label.col-md-3 Type of music
@@ -84,7 +84,7 @@ block content
                 .col-md-5
                   .input-icon.right
                     i.fa
-                    input.form-control(type='text', placeholder='Enter type of music', name="dj_music", value="#{dj.dj_music?dj.dj_music:''}")
+                    input.form-control(type='text', placeholder='Enter type of music', name="music", value="#{dj.music?dj.music:''}")
 
             .form-group
                 label.control-label.col-md-3 Info
@@ -92,15 +92,15 @@ block content
                 .col-md-5
                   .input-icon.right
                     i.fa
-                    textarea.form-control(type='text', placeholder='Enter info', name="dj_info") #{dj.dj_info?dj.dj_info:''}
+                    textarea.form-control(type='text', placeholder='Enter info', name="info") #{dj.info?dj.info:''}
           
             .form-group.last
                     label.col-md-3.control-label Cover Images
                         span.required *
                     .col-md-4
                       table.table
-                        if dj.dj_photos
-                          for photo in dj.dj_photos
+                        if dj.photos
+                          for photo in dj.photos
                             tr
                               td(style="vertical-align: middle;")
                                 img.dj_image(border='0', src='#{photo}', height='200')
@@ -113,7 +113,7 @@ block content
                       div#upload_images_progress
                         div.bar(style="width:0%;height:18px;background: green;")
 
-                      input(type="hidden", name="dj_photos", value="#{dj.dj_photos?dj.dj_photos.join():''}")
+                      input(type="hidden", name="photos", value="#{dj.photos?dj.photos.join():''}")
 
             .form-actions.right
               .row
@@ -154,7 +154,7 @@ block scripts
     });
 
     $('[tag=upload_avatar].cloudinary-fileupload').bind('cloudinarydone', function(e, data){
-      $('[name=dj_logo]').val($.cloudinary.url(data.result.public_id));
+      $('[name=logo]').val($.cloudinary.url(data.result.public_id));
       $('.preview').html(
         $.cloudinary.image(data.result.public_id, { format: data.result.format, version: data.result.version,  height: 100 })
       );
@@ -168,7 +168,7 @@ block scripts
     });
 
     function updateDjImages() {
-      $('[name=dj_photos]').val($('img.dj_image').map(function() { return this.src; }).get().join());
+      $('[name=photos]').val($('img.dj_image').map(function() { return this.src; }).get().join());
     }
 
     var geocomplete_options;

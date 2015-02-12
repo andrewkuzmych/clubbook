@@ -143,8 +143,9 @@ exports.list_events = (params, callback)->
     if params.distance
       geoNear.maxDistance = params.distance/6371 
     query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take}]
-    list_event_metod query, (events)->
-      callback err, events
+    db_model.Events.aggregate query,{}, (err, events)->
+      format_date_metod events, (events_updated)->
+        callback err, events_updated
 
 exports.list_dj_events = (params, callback)->
   console.log "METHOD - Manager list_events"
@@ -159,8 +160,18 @@ exports.list_dj_events = (params, callback)->
     if params.distance
       geoNear.maxDistance = params.distance/6371 
     query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take}]
-    list_event_metod query, (events)->
-      callback err, events
+    db_model.Events.aggregate query,{}, (err, events)->
+      format_date_metod events, (events_updated)->
+        events_ids = []
+        for e in events_updated
+          events_ids.push e.dj
+        db_model.Dj.find({"_id": {'$in': events_ids}}).exec (err, djs)->
+          for the_event in events_updated
+            the_dj = __.find(djs, (c_res)->
+                    c_res._id.toString() == the_event.dj.toString()
+              )
+            the_event.dj = the_dj
+          callback err, events_updated
 
 exports.list_venue = (params, callback)->
   console.log "METHOD - Manager list_club"
@@ -772,23 +783,22 @@ exports.radius_to_km = (distance)->
 
   return distance/75
 
-list_event_metod = (query, callback)->
-  db_model.Events.aggregate query,{}, (err, events)->
-      events_upcoming = []
-      for even in events
-        if even.end_time
-          if moment.utc(even.end_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')
-            even.created_on_formatted = moment.utc(even.created_on).format("YYYY-MM-DD, HH:mm:ss")
-            even.updated_on_formatted = moment.utc(even.updated_on).format("YYYY-MM-DD, HH:mm:ss")
-            even.start_time_formatted = moment.utc(even.start_time).format("YYYY-MM-DD, HH:mm:ss")
-            even.end_time_formatted = moment.utc(even.end_time).format("YYYY-MM-DD, HH:mm:ss")
-            events_upcoming.push even
-        else if moment.utc(even.start_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')
-          even.created_on_formatted = moment.utc(even.created_on).format("YYYY-MM-DD, HH:mm:ss")
-          even.updated_on_formatted = moment.utc(even.updated_on).format("YYYY-MM-DD, HH:mm:ss")
-          even.start_time_formatted = moment.utc(even.start_time).format("YYYY-MM-DD, HH:mm:ss")
-          events_upcoming.push even
-      callback events_upcoming
+format_date_metod = (events, callback)->
+  events_upcoming = []
+  for even in events
+    if even.end_time
+      if moment.utc(even.end_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')
+        even.created_on_formatted = moment.utc(even.created_on).format("YYYY-MM-DD, HH:mm:ss")
+        even.updated_on_formatted = moment.utc(even.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+        even.start_time_formatted = moment.utc(even.start_time).format("YYYY-MM-DD, HH:mm:ss")
+        even.end_time_formatted = moment.utc(even.end_time).format("YYYY-MM-DD, HH:mm:ss")
+        events_upcoming.push even
+    else if moment.utc(even.start_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')
+      even.created_on_formatted = moment.utc(even.created_on).format("YYYY-MM-DD, HH:mm:ss")
+      even.updated_on_formatted = moment.utc(even.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+      even.start_time_formatted = moment.utc(even.start_time).format("YYYY-MM-DD, HH:mm:ss")
+      events_upcoming.push even
+  callback events_upcoming
 
 
 

@@ -32,14 +32,14 @@ block content
           for dj in djs
             tr
               td(style="vertical-align: middle;")
-                if dj.dj_logo
-                  img(src='#{dj.dj_logo}', alt='#{dj.dj_name}', height="50")
+                if dj.logo
+                  img(src='#{dj.logo}', alt='#{dj.name}', height="50")
               td(style="vertical-align: middle;")
-                | #{dj.dj_name} 
+                | #{dj.name} 
               td(style="vertical-align: middle;")
-                | #{dj.dj_phone} 
+                | #{dj.phone} 
               td(style="vertical-align: middle;")
-                | #{dj.dj_email} 
+                | #{dj.email} 
               td(style="vertical-align: middle;")
                 a.edit-btn.btn.default.yellow(href='/venue/dj_edit/#{dj._id}', style="margin:3px")
                   i.fa.fa-edit

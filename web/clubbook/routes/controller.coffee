@@ -201,7 +201,8 @@ exports.club_edit_action = (req, res)->
 exports.club_delete_action = (req, res)->
   db_model.Venue.findByIdAndRemove(req.params.id).exec (err)->
     db_model.News.remove {"venue":req.params.id}, (err)->
-      res.redirect "/venue/clubs"
+      db_model.Events.remove {"venue":req.params.id}, (err)->
+        res.redirect "/venue/clubs"
 
 exports.festival_create = (req, res)->
   create_base_model req, res, (model)->
@@ -242,7 +243,8 @@ exports.festival_edit_action = (req, res)->
 exports.festival_delete_action = (req, res)->
   db_model.Venue.findByIdAndRemove(req.params.id).exec (err)->
     db_model.News.remove {"venue":req.params.id}, (err)->
-      res.redirect "/venue/festivals"
+      db_model.Events.remove {"venue":req.params.id}, (err)->
+        res.redirect "/venue/festivals"
 
 exports.dj_create = (req, res)->
   create_base_model req, res, (model)->
@@ -257,17 +259,17 @@ exports.dj_create_action = (req, res)->
       res.redirect "/venue/dj_create?error=1"
     else
       dj = new db_model.Dj
-        dj_email : req.body.dj_email
-        dj_logo : req.body.dj_logo
-        dj_name : req.body.dj_name
-        dj_phone : req.body.dj_phone
-        dj_site : req.body.dj_site
-        dj_info : req.body.dj_info
-        dj_music : req.body.dj_music
-      dj.dj_photos = [];
-      if req.body.dj_photos
-        for dj_photo in req.body.dj_photos.split(',')
-          dj.dj_photos.push dj_photo
+        email : req.body.email
+        logo : req.body.logo
+        name : req.body.name
+        phone : req.body.phone
+        site : req.body.site
+        info : req.body.info
+        music : req.body.music
+      dj.photos = [];
+      if req.body.photos
+        for photo in req.body.photos.split(',')
+          dj.photos.push photo
       dj.save (err)->
         console.log err
         res.redirect "/venue/djs" 
@@ -285,17 +287,17 @@ exports.dj_edit_action = (req, res)->
       res.redirect "/venue/dj_create?error=1"
     else
       db_model.Dj.findById(req.params.id).exec (err, dj)->
-        dj.dj_email = req.body.dj_email
-        dj.dj_name = req.body.dj_name
-        dj.dj_phone = req.body.dj_phone
-        dj.dj_site = req.body.dj_site
-        dj.dj_info = req.body.dj_info
-        dj.dj_music = req.body.dj_music
-        dj.dj_logo = req.body.dj_logo
-        dj.dj_photos = [];
-        if req.body.dj_photos
-          for dj_photo in req.body.dj_photos.split(',')
-            dj.dj_photos.push dj_photo
+        dj.email = req.body.email
+        dj.name = req.body.name
+        dj.phone = req.body.phone
+        dj.site = req.body.site
+        dj.info = req.body.info
+        dj.music = req.body.music
+        dj.logo = req.body.logo
+        dj.photos = [];
+        if req.body.photos
+          for photo in req.body.photos.split(',')
+            dj.photos.push photo
         dj.save (err)->
           console.log err
           res.redirect "/venue/djs"
@@ -303,7 +305,8 @@ exports.dj_edit_action = (req, res)->
 exports.dj_delete_action = (req, res)->
   db_model.Dj.findByIdAndRemove(req.params.id).exec (err)->
     db_model.News.remove {"dj":req.params.id}, (err)->
-      res.redirect "/venue/djs"
+      db_model.Events.remove {"dj":req.params.id}, (err)->
+        res.redirect "/venue/djs"
 
 exports.news = (req, res)->
   create_base_model req, res, (model)->
