@@ -100,20 +100,23 @@ exports.home = (req, res)->
 
 exports.clubs = (req, res)->
   create_base_model req, res, (model)->
-    db_model.Venue.find(model.my_venues).exec (err, venues)->
-      model.clubs = venues
+    #db_model.Venue.find(model.my_venues).exec (err, venues)->
+      #model.clubs = venues
+    create_base_model req, res, (model)->
       res.render "pages/clubs", model
 
 exports.festivals = (req, res)->
   create_base_model req, res, (model)->
-    db_model.Venue.find(model.my_festivals).exec (err, venues)->
-      model.festivals = venues
+    #db_model.Venue.find(model.my_festivals).exec (err, venues)->
+      #model.festivals = venues
+    create_base_model req, res, (model)->
       res.render "pages/festivals", model
 
 exports.djs = (req, res)->
   create_base_model req, res, (model)->
-    db_model.Dj.find(model.my_djs).exec (err, venues)->
-      model.djs = venues
+    #db_model.Dj.find(model.my_djs).exec (err, venues)->
+     # model.djs = venues
+    create_base_model req, res, (model)->  
       res.render "pages/djs", model
 
 exports.users = (req, res)->

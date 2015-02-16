@@ -29,34 +29,7 @@ block content
               | Email
             th
         tbody
-          for dj in djs
-            tr
-              td(style="vertical-align: middle;")
-                if dj.logo
-                  img(src='#{dj.logo}', alt='#{dj.name}', height="50")
-              td(style="vertical-align: middle;")
-                | #{dj.name} 
-              td(style="vertical-align: middle;")
-                | #{dj.phone} 
-              td(style="vertical-align: middle;")
-                | #{dj.email} 
-              td(style="vertical-align: middle;")
-                a.edit-btn.btn.default.yellow(href='/venue/dj_edit/#{dj._id}', style="margin:3px")
-                  i.fa.fa-edit
-                    &nbsp;
-                    | edit
-                a.btn.default.black(href='/venue/dj_delete/#{dj._id}', style="margin:3px", onclick="return confirm('Are you sure you want to delete DJ?')")
-                  i.fa.fa-edit
-                    &nbsp;
-                    | delete
-                a.btn.default.blue(href='/venue/dj/news/#{dj._id}', style="margin:3px")
-                    i.fa.fa-book
-                      &nbsp;
-                      | news
-                a.btn.default.green(href='/venue/dj/events/#{dj._id}', style="margin:3px")
-                    i.fa.fa-book
-                      &nbsp;
-                      | events
+          
 
       div
         a.btn.btn-primary(href="/venue/dj_create") Add DJ
@@ -79,26 +52,25 @@ block scripts
   script(type="text/javascript")
     $(function () {
 
-      var table = $('#djs');
-      table.dataTable({
-          "bStateSave": true, // save datatable state(pagination, sort, etc) in cookie.
+          $('#djs').dataTable({
+            "scrollX": false,
+            "aoColumns": [
+                      null,
+                      null,
+                      null,
+                      null,
+                      null
+                    ],
 
-          "lengthMenu": [
-              [10, 20, 50, -1],
-              [10, 20, 50, "All"] // change per page values here
-          ],
-          "iDisplayLength": 20,
-          // set the initial value
-          "pageLength": 20,
-          "language": {
-              "lengthMenu": " _MENU_ records",
-              "paging": {
-                  "previous": "Prev",
-                  "next": "Next"
-              }
-          },
-          "order": [
-              [1, "asc"]
-          ] // set first column as a default sort by asc
+            "aLengthMenu": [
+                [10, 25, 50, 100],
+                [10, 25, 50, 100]
+            ],
+            "bFilter": false,
+
+            "iDisplayLength": 25,
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": "/_a/dj/list"
       });
     });

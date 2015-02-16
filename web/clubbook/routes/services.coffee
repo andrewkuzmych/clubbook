@@ -81,6 +81,87 @@ exports.user_list = (req, res)->
             iTotalDisplayRecords: user_count
             aaData: data
 
+exports.venue_list = (req, res)->
+  console.log 'CLUB LIST'
+  echo = req.query.sEcho + 1
+
+  if req.query.sSortDir_0 == 'asc'
+    sort_order = 1
+  else
+    sort_order = -1
+
+  switch req.query.iSortCol_0
+     when '0' then sort_users = { created_on: sort_order }
+     when '1' then sort_users = { club_name: sort_order }
+     when '2' then sort_users = { club_phone: sort_order }
+     when '3' then sort_users = { club_email: sort_order}
+     when '4' then sort_users = { created_on: sort_order}
+     else sort_users = { created_on: -1 }
+    query = { 'category': req.params.type }
+  db_model.Venue.count(query).exec (err, user_count)->
+    db_model.Venue.find(query).sort(sort_users).skip(parseInt( req.query.iDisplayStart, 0)).limit(parseInt(req.query.iDisplayLength, 0 )).exec (err, clubs)->
+      data = []
+      for club in clubs        
+        avatar = "<img border='1', src='" + club.club_logo + "', alt='Pulpit rock', width='50', height='50'/>"
+        title = "<span>" + club.club_name + "</span>"
+        email = "<a href='mailto:" + club.club_email + "'>" + club.club_email + "</a>"
+        phone = "<span>" + club.club_phone + "</span>"
+        a = req.params.type
+        replay = """
+          <a href="/venue/#{req.params.type}_edit/#{club._id}" style="margin:3px" class="edit-btn btn default yellow"><i class="fa fa-edit">&nbsp;edit</i></a>
+          <a href="/venue/#{req.params.type}_delete/#{club._id}" style="margin:3px" onclick="return confirm('Are you sure you want to delete club?')" class="btn default black"><i class="fa fa-edit">&nbsp;delete</i></a>
+          <a href="/venue/#{req.params.type}/news/#{club._id}" style="margin:3px" class="btn default blue"><i class="fa fa-book">&nbsp;news</i></a>
+          <a href="/venue/#{req.params.type}/events/#{club._id}" style="margin:3px" class="btn default green"><i class="fa fa-book">&nbsp;events</i></a>
+        """
+
+        data.push [avatar, title, phone, email, replay]
+      
+      res.json
+        sEcho: echo
+        iTotalRecords: user_count
+        iTotalDisplayRecords: user_count
+        aaData: data
+
+exports.dj_list = (req, res)->
+  console.log 'CLUB LIST'
+  echo = req.query.sEcho + 1
+
+  if req.query.sSortDir_0 == 'asc'
+    sort_order = 1
+  else
+    sort_order = -1
+
+  switch req.query.iSortCol_0
+     when '0' then sort_users = { created_on: sort_order }
+     when '1' then sort_users = { club_name: sort_order }
+     when '2' then sort_users = { club_phone: sort_order }
+     when '3' then sort_users = { club_email: sort_order}
+     when '4' then sort_users = { created_on: sort_order}
+     else sort_users = { created_on: -1 }
+  db_model.Dj.count().exec (err, user_count)->
+    db_model.Dj.find().sort(sort_users).skip(parseInt( req.query.iDisplayStart, 0)).limit(parseInt(req.query.iDisplayLength, 0 )).exec (err, djs)->
+      data = []
+      for dj in djs        
+        avatar = "<img border='1', src='" + dj.logo + "', alt='Pulpit rock', width='50', height='50'/>"
+        title = "<span>" + dj.name + "</span>"
+        email = "<a href='mailto:" + dj.email + "'>" + dj.email + "</a>"
+        phone = "<span>" + dj.phone + "</span>"
+        replay = """
+          <a href="/venue/dj_edit/#{dj._id}" style="margin:3px" class="edit-btn btn default yellow"><i class="fa fa-edit">&nbsp;edit</i></a>
+          <a href="/venue/dj_delete/#{dj._id}" style="margin:3px" onclick="return confirm('Are you sure you want to delete Dj?')" class="btn default black"><i class="fa fa-edit">&nbsp;delete</i></a>
+          <a href="/venue/dj/news/#{dj._id}" style="margin:3px" class="btn default blue"><i class="fa fa-book">&nbsp;news</i></a>
+          <a href="/venue/dj/events/#{dj._id}" style="margin:3px" class="btn default green"><i class="fa fa-book">&nbsp;events</i></a>
+        """
+
+        data.push [avatar, title, phone, email, replay]
+      
+      res.json
+        sEcho: echo
+        iTotalRecords: user_count
+        iTotalDisplayRecords: user_count
+        aaData: data
+
+
 exports.fb_signin = (req, res)->
   errors = {}
   # validate empty fields
@@ -838,7 +919,6 @@ exports.club_types = (req, res)->
 
 exports.list_events = (req, res)->
   set_params req, (params)->
-    console.log req.query.sort_by
     params.sort_by = req.query.sort_by
     manager.list_events params, (err, events)->
       if err
