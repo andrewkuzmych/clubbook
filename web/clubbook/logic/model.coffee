@@ -145,7 +145,7 @@ NewsSchema = new mongoose.Schema
   created_on: { type: Date, 'default': Date.now }
   updated_on: { type: Date, 'default': Date.now }
   club: {type: mongoose.Schema.ObjectId, ref: 'Venue'}
-  festival: {type: mongoose.Schema.ObjectId, ref: 'Festival'}
+  festival: {type: mongoose.Schema.ObjectId, ref: 'Venue'}
   dj: {type: mongoose.Schema.ObjectId, ref: 'Dj'}
   title: {type: String, trim: true}
   share: {type: String, trim: true}
@@ -175,7 +175,7 @@ EventSchema = new mongoose.Schema
   created_on: { type: Date, 'default': Date.now }
   updated_on: { type: Date, 'default': Date.now }
   club: {type: mongoose.Schema.ObjectId, ref: 'Venue'}
-  festival: {type: mongoose.Schema.ObjectId, ref: 'Festival'}
+  festival: {type: mongoose.Schema.ObjectId, ref: 'Venue'}
   dj: {type: mongoose.Schema.ObjectId, ref: 'Dj'}
   title: {type: String, trim: true}
   share: {type: String, trim: true}

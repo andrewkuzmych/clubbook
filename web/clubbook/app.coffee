@@ -254,10 +254,16 @@ app.get '/_s/obj/club', handle_access_token, services.list_club #
 app.get '/_s/obj/club_types', handle_access_token, services.club_types
 
 #infinite scroll for clubs, festivals, bars, dj events, events
-app.get '/_s/obj/events', handle_access_token, services.list_events
-app.get '/_s/obj/dj/events', handle_access_token, services.list_dj_events
+app.get '/_s/obj/events/list', handle_access_token, services.list_events
+app.get '/_s/obj/dj_events/list', handle_access_token, services.list_dj_events
 app.get '/_s/obj/:type/list', handle_access_token, services.list_venue
 app.get '/_s/obj/list', handle_access_token, services.get_all_lists
+
+#events
+app.get '/_s/obj/:type/:objectId/events', handle_access_token, services.venue_events
+
+#news
+app.get '/_s/obj/:type/:objectId/news', handle_access_token, services.venue_news
 
 app.get '/_s/obj/club/:objectId', handle_access_token, services.find_club
 app.get '/_s/obj/club/:objectId/users', handle_access_token, services.club_users
@@ -269,8 +275,8 @@ app.get '/_s/obj/club/:objectId/favorite/remove', handle_access_token, services.
 app.get '/_s/obj/club/:objectId/favorite/add', handle_access_token, services.add_favorite_club
 
 #news
-app.get '/_s/obj/club/:objectId/news', handle_access_token, services.news
-app.get '/_s/obj/club/:objectId/events', handle_access_token, services.events
+app.get '/_s/obj/club/:objectId/news', handle_access_token, services.news #
+app.get '/_s/obj/club/:objectId/events', handle_access_token, services.events #
 
 # users news
 app.get '/_s/obj/user/favorite/news', handle_access_token, services.news_favorite

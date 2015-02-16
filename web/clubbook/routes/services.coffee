@@ -836,68 +836,28 @@ exports.club_types = (req, res)->
       result: result
 
 exports.list_events = (req, res)->
-  skip = 0
-  if req.query.skip
-    skip = parseInt(req.query.skip)
-  take = 300
-  if req.query.take
-    take = parseInt(req.query.take)
-
-  params =
-    lat: req.query.user_lat
-    lon: req.query.user_lon
-    user_id: req.params.me._id.toString()
-    search: req.query.search
-
-  if req.query.distance
-    params.distance = parseInt(req.query.distance)
-  else  
-    params.distance = 20
-
-  params.skip = skip
-  params.take = take
-
-  manager.list_events params, (err, news)->
-    if err
-      res.json
-        status: 'error'
-        error: err
-    else
-      res.json
-        status: 'ok'
-        news: news
+  set_params req, (params)->
+    manager.list_events params, (err, events)->
+      if err
+        res.json
+          status: 'error'
+          error: err
+      else
+        res.json
+          status: 'ok'
+          events: events
 
 exports.list_dj_events = (req, res)->
-  skip = 0
-  if req.query.skip
-    skip = parseInt(req.query.skip)
-  take = 300
-  if req.query.take
-    take = parseInt(req.query.take)
-
-  params =
-    lat: req.query.user_lat
-    lon: req.query.user_lon
-    user_id: req.params.me._id.toString()
-    search: req.query.search
-
-  if req.query.distance
-    params.distance = parseInt(req.query.distance)
-  else  
-    params.distance = 20
-
-  params.skip = skip
-  params.take = take
-
-  manager.list_dj_events params, (err, news)->
-    if err
-      res.json
-        status: 'error'
-        error: err
-    else
-      res.json
-        status: 'ok'
-        news: news
+  set_params req, (params)->
+    manager.list_dj_events params, (err, events)->
+      if err
+        res.json
+          status: 'error'
+          error: err
+      else
+        res.json
+          status: 'ok'
+          events: events
 
 
 exports.list_club = (req, res)->
@@ -907,7 +867,7 @@ exports.list_club = (req, res)->
   if req.query.skip
     skip = parseInt(req.query.skip)
   
-  take = 300
+  take = 10
   if req.query.take
     take = parseInt(req.query.take)
 
@@ -940,92 +900,95 @@ exports.list_club = (req, res)->
         types: types
 
 exports.list_venue = (req, res)->
-  skip = 0
-  if req.query.skip
-    skip = parseInt(req.query.skip)
-  take = 10
-  if req.query.take
-    take = parseInt(req.query.take)
-  params =
-    type_venue: req.params.type.toString()
-    lat: req.query.user_lat
-    lon: req.query.user_lon
+  set_params req, (params)->
+    params.type_venue = req.params.type.toString()
+    manager.list_venue params, (err, venue)->
+      if err
+        res.json
+          status: 'error'
+          error: err
+      else
+        res.json
+          status: 'ok'
+          venues: venue
+
+exports.get_all_lists = (req, res)->
+  set_params req, (params)->
+    params.type_venue = "club"
+    manager.list_venue params, (err, clubs)->
+      if err
+        res.json
+          status: 'error'
+          error: err
+      else
+        params.type_venue = "bar"
+        manager.list_venue params, (err, bars)->
+          if err
+            res.json
+              status: 'error'
+              error: err
+          else
+            params.type_venue = "festival"
+            manager.list_venue params, (err, festivals)->
+              if err
+                res.json
+                  status: 'error'
+                  error: err
+              else
+                manager.list_events params, (err, dj_events)->
+                  if err
+                    res.json
+                      status: 'error'
+                      error: err
+                  else
+                    manager.list_dj_events params, (err, events)->
+                      if err
+                        res.json
+                          status: 'error'
+                          error: err
+                      else
+                        res.json
+                          status: 'ok'
+                          clubs: clubs
+                          bars: bars
+                          festivals: festivals
+                          dj_events: dj_events
+                          events: events
+
+exports.venue_events = (req,res)->
+  params = 
     user_id: req.params.me._id.toString()
-    search: req.query.search
-  if req.query.distance
-    params.distance = parseInt(req.query.distance)
-  else  
-    params.distance = 20
-  params.skip = skip
-  params.take = take
-  manager.list_venue params, (err, clubs)->
+    objectId: req.params.objectId.toString()
+    type_venue: req.params.type.toString()
+ 
+  manager.venue_events params, (err, events)->
     if err
+      console.log err
       res.json
         status: 'error'
-        error: err
+        err: err
     else
       res.json
         status: 'ok'
-        clubs: clubs
+        events: events
 
-exports.get_all_lists = (req, res)->
-  skip = 0
-  if req.query.skip
-    skip = parseInt(req.query.skip)
-  take = 10
-  if req.query.take
-    take = parseInt(req.query.take)
-  params =
-    lat: req.query.user_lat
-    lon: req.query.user_lon
+exports.venue_news = (req,res)->
+  params = 
     user_id: req.params.me._id.toString()
-    search: req.query.search
-  if req.query.distance
-    params.distance = parseInt(req.query.distance)
-  else  
-    params.distance = 20
-  params.skip = skip
-  params.take = take
-  params.type_venue = "club"
-  manager.list_venue params, (err, clubs)->
+    objectId: req.params.objectId.toString()
+    type_venue: req.params.type.toString()
+ 
+  manager.venue_news params, (err, news)->
     if err
+      console.log err
       res.json
         status: 'error'
-        error: err
+        err: err
     else
-      params.type_venue = "bar"
-      manager.list_venue params, (err, bars)->
-        if err
-          res.json
-            status: 'error'
-            error: err
-        else
-          params.type_venue = "festival"
-          manager.list_venue params, (err, festivals)->
-            if err
-              res.json
-                status: 'error'
-                error: err
-            else
-              manager.list_events params, (err, dj_events)->
-                if err
-                  res.json
-                    status: 'error'
-                    error: err
-                else
-                  manager.list_dj_events params, (err, events)->
-                    if err
-                      res.json
-                        status: 'error'
-                        error: err
-                    else
-                      res.json
-                        status: 'ok'
-                        clubs: clubs
-                        bars: bars
-                        festivals: festivals
-                        dj_events: dj_events
-                        events: events
+      res.json
+        status: 'ok'
+        news: news
+
 
 exports.add_favorite_club = (req, res)->
   params = 
@@ -1493,6 +1456,28 @@ user_to_friend = (current_user, user)->
 
   return user
 
+set_params = (req, callback) ->
+  skip = 0
+  if req.query.skip
+    skip = parseInt(req.query.skip)
+  take = 10
+  if req.query.take
+    take = parseInt(req.query.take)
+
+  params =
+    lat: req.query.user_lat
+    lon: req.query.user_lon
+    user_id: req.params.me._id.toString()
+    search: req.query.search
+
+  if req.query.distance
+    params.distance = parseInt(req.query.distance)
+  else  
+    params.distance = 20
+
+  params.skip = skip
+  params.take = take
+  callback params
 
 send_push = (channel, msg, unique_id, header, type, alert, from_user_id)->
     #send push
