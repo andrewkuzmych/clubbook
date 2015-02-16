@@ -145,7 +145,7 @@ NewsSchema = new mongoose.Schema
   created_on: { type: Date, 'default': Date.now }
   updated_on: { type: Date, 'default': Date.now }
   club: {type: mongoose.Schema.ObjectId, ref: 'Venue'}
-  festival: {type: mongoose.Schema.ObjectId, ref: 'Festival'}
+  festival: {type: mongoose.Schema.ObjectId, ref: 'Venue'}
   dj: {type: mongoose.Schema.ObjectId, ref: 'Dj'}
   title: {type: String, trim: true}
   share: {type: String, trim: true}
@@ -175,7 +175,7 @@ EventSchema = new mongoose.Schema
   created_on: { type: Date, 'default': Date.now }
   updated_on: { type: Date, 'default': Date.now }
   club: {type: mongoose.Schema.ObjectId, ref: 'Venue'}
-  festival: {type: mongoose.Schema.ObjectId, ref: 'Festival'}
+  festival: {type: mongoose.Schema.ObjectId, ref: 'Venue'}
   dj: {type: mongoose.Schema.ObjectId, ref: 'Dj'}
   title: {type: String, trim: true}
   share: {type: String, trim: true}
@@ -212,18 +212,18 @@ exports.Events = mongoose.model 'Events', EventSchema
 DjSchema = new mongoose.Schema
   created_on: { type: Date, 'default': Date.now }
   updated_on: { type: Date, 'default': Date.now }
-  dj_name: {type: String, trim: true}
-  dj_email: {type: String, trim: true}
-  dj_photos: [
+  name: {type: String, trim: true}
+  email: {type: String, trim: true}
+  photos: [
     {type: String, trim: true}
   ]
-  dj_admin: [{ type: mongoose.Schema.ObjectId, ref: 'Admin' }]
-  dj_logo: {type: String, trim: true}
-  dj_phone: {type: String, trim: true}
-  dj_music: {type: String, trim: true, required: true}
-  dj_site: {type: String, trim: true}
-  dj_info: {type: String, trim: true, required: true}
-  dj_loc:
+  admin: [{ type: mongoose.Schema.ObjectId, ref: 'Admin' }]
+  logo: {type: String, trim: true}
+  phone: {type: String, trim: true}
+  music: {type: String, trim: true, required: true}
+  site: {type: String, trim: true}
+  info: {type: String, trim: true, required: true}
+  loc:
     lon: Number
     lat: Number
 

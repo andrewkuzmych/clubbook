@@ -19,27 +19,27 @@ var FormValidation = function () {
                 focusInvalid: false, // do not focus the last invalid input
                 ignore: "",  // validate all fields including form hidden input
                 rules: {
-                    dj_name: {
+                    name: {
                       minlength: 2,
                       required: true
                     },
-                    dj_email: {
+                    email: {
                       required: true,
                       email: true
                     },
-                    dj_site: {
+                    site: {
                       required: true
                     },
-                    dj_phone: {
+                    phone: {
                       required: true
                     },
-                    dj_info: {
+                    info: {
                       required: true, 
                     },
-                    dj_logo :{
+                    logo :{
                       required: true, 
                     },
-                    dj_music: {
+                    music: {
                       required: true
                     }
 

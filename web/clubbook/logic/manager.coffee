@@ -143,8 +143,34 @@ exports.list_events = (params, callback)->
     if params.distance
       geoNear.maxDistance = params.distance/6371 
     query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take}]
-    list_event_metod query, (events)->
-      callback err, events
+    db_model.Events.aggregate query,{}, (err, events)->
+      format_date_events events, (events_updated)->
+        dj_ids = []
+        venue_ids = []
+        for the_event in events_updated
+          if the_event.dj
+            dj_ids.push the_event.dj
+          else
+            if the_event.club
+              venue_ids.push the_event.club
+            else
+              venue_ids.push the_event.festival
+        db_model.Dj.find({"_id": {'$in': dj_ids}}).exec (err, djs)->
+          db_model.Venue.find({"_id": {'$in': venue_ids}}).exec (err, venues)->
+            for the_event in events_updated
+              if the_event.festival
+                venue = __.find(venues, (c_res)->
+                  c_res._id.toString() == the_event.festival.toString())
+                the_event.festival = venue
+              if the_event.club
+                venue = __.find(venues, (c_res)->
+                  c_res._id.toString() == the_event.club.toString())
+                the_event.club = venue
+              if the_event.dj
+                dj = __.find(djs, (c_res)->
+                  c_res._id.toString() == the_event.dj.toString())
+                the_event.dj = dj
+            callback err, events_updated
 
 exports.list_dj_events = (params, callback)->
   console.log "METHOD - Manager list_events"
@@ -159,8 +185,18 @@ exports.list_dj_events = (params, callback)->
     if params.distance
       geoNear.maxDistance = params.distance/6371 
     query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take}]
-    list_event_metod query, (events)->
-      callback err, events
+    db_model.Events.aggregate query,{}, (err, events)->
+      format_date_events events, (events_updated)->
+        events_ids = []
+        for e in events_updated
+          events_ids.push e.dj
+        db_model.Dj.find({"_id": {'$in': events_ids}}).exec (err, djs)->
+          for the_event in events_updated
+            the_dj = __.find(djs, (c_res)->
+                    c_res._id.toString() == the_event.dj.toString()
+              )
+            the_event.dj = the_dj
+          callback err, events_updated
 
 exports.list_venue = (params, callback)->
   console.log "METHOD - Manager list_club"
@@ -363,6 +399,29 @@ exports.events = (params, callback)->
         news_object.end_time_formatted = moment.utc(news_object.end_time).format("YYYY-MM-DD, HH:mm:ss")
         news_objects.push news_object
       callback err, news_objects
+
+exports.venue_events = (params, callback)->
+  console.log "METHOD - Events"
+  query = JSON.parse('{ "'+ params.type_venue + '":"' + params.objectId+'" }')
+  db_model.Events.find(query).populate(params.type_venue).exec (err, events)-> 
+    if not events
+      console.log  'missing events'       
+    else
+      events_objects = []
+      for events_object in events
+        events_objects.push events_object.toObject()
+      format_date_events events_objects, (events_updated)->
+        callback err, events_updated
+
+exports.venue_news = (params, callback)->
+  console.log "METHOD - News"
+  query = JSON.parse('{ "'+ params.type_venue + '":"' + params.objectId+'" }')
+  db_model.News.find(query).populate(params.type_venue).exec (err, news)-> 
+    if not news
+      console.log  'missing news'       
+    else
+      format_date_news news, (news_updated)->
+        callback err, news_updated
 
 exports.news_favorite = (params, callback)->
   console.log "METHOD - News favorite club"
@@ -772,26 +831,31 @@ exports.radius_to_km = (distance)->
 
   return distance/75
 
-list_event_metod = (query, callback)->
-  db_model.Events.aggregate query,{}, (err, events)->
-      events_upcoming = []
-      for even in events
-        if even.end_time
-          if moment.utc(even.end_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')
-            even.created_on_formatted = moment.utc(even.created_on).format("YYYY-MM-DD, HH:mm:ss")
-            even.updated_on_formatted = moment.utc(even.updated_on).format("YYYY-MM-DD, HH:mm:ss")
-            even.start_time_formatted = moment.utc(even.start_time).format("YYYY-MM-DD, HH:mm:ss")
-            even.end_time_formatted = moment.utc(even.end_time).format("YYYY-MM-DD, HH:mm:ss")
-            events_upcoming.push even
-        else if moment.utc(even.start_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')
-          even.created_on_formatted = moment.utc(even.created_on).format("YYYY-MM-DD, HH:mm:ss")
-          even.updated_on_formatted = moment.utc(even.updated_on).format("YYYY-MM-DD, HH:mm:ss")
-          even.start_time_formatted = moment.utc(even.start_time).format("YYYY-MM-DD, HH:mm:ss")
-          events_upcoming.push even
-      callback events_upcoming
+format_date_events = (events, callback)->
+  events_upcoming = []
+  for even in events
+    if even.end_time
+      if moment.utc(even.end_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')
+        even.created_on_formatted = moment.utc(even.created_on).format("YYYY-MM-DD, HH:mm:ss")
+        even.updated_on_formatted = moment.utc(even.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+        even.start_time_formatted = moment.utc(even.start_time).format("YYYY-MM-DD, HH:mm:ss")
+        even.end_time_formatted = moment.utc(even.end_time).format("YYYY-MM-DD, HH:mm:ss")
+        events_upcoming.push even
+    else if moment.utc(even.start_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')
+      even.created_on_formatted = moment.utc(even.created_on).format("YYYY-MM-DD, HH:mm:ss")
+      even.updated_on_formatted = moment.utc(even.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+      even.start_time_formatted = moment.utc(even.start_time).format("YYYY-MM-DD, HH:mm:ss")
+      events_upcoming.push even
+  callback events_upcoming
 
-
-
+format_date_news = (news, callback)->
+  news_objects = []
+  for news_object in news
+    news_objects.push news_object.toObject()
+  for the_news in news_objects
+    the_news.created_on_formatted = moment.utc(the_news.created_on).format("YYYY-MM-DD, HH:mm:ss")
+    the_news.updated_on_formatted = moment.utc(the_news.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+  callback news_objects
 
 
 
