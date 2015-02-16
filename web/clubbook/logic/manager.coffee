@@ -463,7 +463,10 @@ exports.events_favorite = (params, callback)->
         if not events
           callback 'events does not exist', null
         else
-          format_date_events events, (events_updated)->
+          events_objects = []
+          for even in events
+            events_objects.push even.toObject()
+          format_date_events events_objects, (events_updated)->
             callback err, events_updated
       
 
