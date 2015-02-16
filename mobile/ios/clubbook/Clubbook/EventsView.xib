@@ -1,15 +1,63 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB">
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="EventsView">
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="tBL-bv-oPs" customClass="EventsTableView">
+                    <rect key="frame" x="0.0" y="40" width="600" height="560"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Acm-ZW-0O7">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="41"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="ALC-Uj-lgT"/>
+                    </constraints>
+                    <segments>
+                        <segment title="Nearby"/>
+                        <segment title="Date/Time"/>
+                    </segments>
+                    <color key="tintColor" red="0.52156862749999999" green="0.0" blue="0.81568627449999997" alpha="1" colorSpace="calibratedRGB"/>
+                </segmentedControl>
+                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="Mgz-Uk-Nzv">
+                    <rect key="frame" x="290" y="290" width="20" height="20"/>
+                    <color key="color" red="0.60371371220000003" green="0.038118115629999998" blue="0.62296796089999995" alpha="1" colorSpace="calibratedRGB"/>
+                </activityIndicatorView>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Data" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Ha-4i-l7N">
+                    <rect key="frame" x="269" y="290" width="63" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.50370896460000003" green="0.50370896460000003" blue="0.50370896460000003" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="centerX" secondItem="5Ha-4i-l7N" secondAttribute="centerX" id="1w9-UD-QYZ"/>
+                <constraint firstAttribute="centerY" secondItem="5Ha-4i-l7N" secondAttribute="centerY" id="29K-tG-AgC"/>
+                <constraint firstAttribute="trailing" secondItem="tBL-bv-oPs" secondAttribute="trailing" id="4he-OM-PDC"/>
+                <constraint firstItem="tBL-bv-oPs" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="EuZ-J2-Ckh"/>
+                <constraint firstAttribute="centerX" secondItem="Mgz-Uk-Nzv" secondAttribute="centerX" id="LfR-nH-PK5"/>
+                <constraint firstAttribute="centerY" secondItem="Mgz-Uk-Nzv" secondAttribute="centerY" id="SfG-9U-xFH"/>
+                <constraint firstItem="Acm-ZW-0O7" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="VCW-Cl-W6a"/>
+                <constraint firstAttribute="bottom" secondItem="tBL-bv-oPs" secondAttribute="bottom" id="Xdl-Le-WFr"/>
+                <constraint firstItem="tBL-bv-oPs" firstAttribute="top" secondItem="Acm-ZW-0O7" secondAttribute="bottom" id="anL-hL-bA5"/>
+                <constraint firstItem="Acm-ZW-0O7" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="h1p-9k-bFA"/>
+                <constraint firstAttribute="trailing" secondItem="Acm-ZW-0O7" secondAttribute="trailing" id="p4G-Ps-f3Q"/>
+            </constraints>
+            <connections>
+                <outlet property="activityIndicator" destination="5Ha-4i-l7N" id="2u3-Vo-HLq"/>
+                <outlet property="eventsTable" destination="tBL-bv-oPs" id="SR3-xl-Qhr"/>
+                <outlet property="noDataLabel" destination="5Ha-4i-l7N" id="740-Lh-4Uq"/>
+                <outlet property="segmaentControl" destination="Acm-ZW-0O7" id="qTf-om-Q9K"/>
+            </connections>
+            <point key="canvasLocation" x="73" y="153"/>
         </view>
     </objects>
 </document>

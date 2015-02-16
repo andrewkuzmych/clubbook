@@ -6,6 +6,7 @@
 #import "LocationManagerSingleton.h"
 #import "GlobalVars.h"
 #import "PlacesTabView.h"
+#import "EventsView.h"
 #import "ClubsInfiniteTableView.h"
 
 @interface PlacesViewController ()<UINavigationControllerDelegate, UINavigationBarDelegate>{
@@ -70,6 +71,11 @@
     self.festivalsTable.transitionDelegate = self;
     [festivalsView addTableToTheView:self.festivalsTable];
     [self.slideTabBarView addPageView:festivalsView ForTitle:@"Festivals"];
+    
+    self.eventView = [[EventsView alloc] init];
+    [self.eventView customInit:user_lat userLon:user_lon accessTOken:user_accessToken];
+    self.eventView.eventsTable.transitionDelegate = self;
+    [self.slideTabBarView addPageView:self.eventView ForTitle:@"Events"];
 }
 
 - (void) initSearchBar {
@@ -160,9 +166,53 @@
 - (void) searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
    NSString* searchWord = self.searchBar.text;
    if ([searchWord isEmpty]) {
+       if ([self currentTableIsRefreshing]) {
+           return;
+       }
+       [self updateTableOnSearchWord:@""];
    }
    else {
+       [self updateTableOnSearchWord:searchWord];
    }
+}
+
+- (void) updateTableOnSearchWord:(NSString*) searchWord {
+    InfiniteScrollTableView* table = [self activeInfiniteScrollTable];
+    if (table) {
+        if ([searchWord isEqualToString:@""]) {
+            [table refreshData];
+        } else {
+           [table searchForWord:searchWord];
+        }
+        
+    }
+}
+
+- (BOOL) currentTableIsRefreshing {
+    InfiniteScrollTableView* table = [self activeInfiniteScrollTable];
+    if (table) {
+        return table.isRefreshing;
+    }
+    else {
+        return NO;
+    }
+}
+
+- (InfiniteScrollTableView*) activeInfiniteScrollTable {
+    NSUInteger index = self.slideTabBarView.selectedPageIndex;
+    if (index == 0) {
+        return self.clubTable;
+    }
+    else if (index == 1) {
+        return self.barsTable;
+    }
+    else if (index == 2) {
+        return self.festivalsTable;
+    }
+    else if (index == 3) {
+        return self.eventView.eventsTable;
+    }
+    return nil;
 }
 
 - (void) changeSearchKeyboardButtonTitle {

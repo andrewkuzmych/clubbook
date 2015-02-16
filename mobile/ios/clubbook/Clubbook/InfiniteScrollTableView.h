@@ -39,10 +39,12 @@
 - (void) insertRowAtTop;
 - (void) insertRowAtBottom;
 - (void) transitToController:(UIViewController*) controller;
+- (void) initData:(double)userLat userLon:(double)userLon accessToken:(NSString *)accessToken;
 
 //overload this methods
 - (void) makeInitialLoad;
 - (void) refreshData;
 - (void) loadMoreData;
+- (void) searchForWord:(NSString*) searchWord;
 
 @end

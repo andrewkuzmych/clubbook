@@ -45,6 +45,10 @@
     [self.communicator retrievePlaces:type lat:lat lon:lon take:take skip:skip distance:distance search:search accessToken:accessToken];
 }
 
+- (void)retrieveEvents:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken {
+    [self.communicator retrieveEvents:lat lon:lon take:take skip:skip distance:distance search:search accessToken:accessToken];
+}
+
 - (void) retrieveYesterdayPlacesAccessToken:(NSString*) accessToken {
     [self.communicator retrieveYesterdayPlacesAccessToken:accessToken];
 }
@@ -517,6 +521,23 @@
     }
     else {
         [self.delegate didReceivePlaces:places];
+    }
+}
+
+- (void)receivedEventsJSON:(NSData *)objectNotation
+{
+    NSError *errorPlaces = nil;
+    NSError *errorTypes = nil;
+    NSArray *events = [ObjectBuilder eventsFromJSON:objectNotation error:&errorPlaces];
+    
+    if (errorPlaces != nil) {
+        [self.delegate  failedWithError:errorPlaces];
+        
+    } else if (errorTypes != nil) {
+        [self.delegate  failedWithError:errorTypes];
+    }
+    else {
+        [self.delegate didReceiveEvents:events];
     }
 }
 

@@ -30,6 +30,8 @@
 
 - (void)retrievePlaces:(NSString*) type lat:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken;
 
+- (void)retrieveEvents:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken;
+
 - (void) retrieveYesterdayPlacesAccessToken:(NSString*) accessToken;
 
 - (void)updateUserLocation:(double) lat lon:(double) lon accessToken:(NSString *) accessToken;

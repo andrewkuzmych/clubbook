@@ -9,5 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface EventsCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UIImageView *avatarView;
+@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *placeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *statusLabel;
+@property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
 
 @end

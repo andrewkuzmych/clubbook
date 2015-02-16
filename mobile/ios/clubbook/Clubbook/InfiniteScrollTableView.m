@@ -17,33 +17,37 @@
     self = [super initWithFrame:frame];
     
     if (self) {
-        self.manager = [[ClubbookManager alloc] init];
-        self.manager.communicator = [[ClubbookCommunicator alloc] init];
-        self.manager.communicator.delegate = self.manager;
-        self.manager.delegate = self;
-                                 
-        self.userLat = userLat;
-        self.userLon = userLon;
-        self.accessToken = accessToken;
-        
-        __weak InfiniteScrollTableView *weakSelf = self;
-        
-        // setup pull-to-refresh
-         [self addPullToRefreshWithActionHandler:^{
-         [weakSelf insertRowAtTop];
-         }];
-         
-         // setup infinite scrolling
-         [self addInfiniteScrollingWithActionHandler:^{
-         [weakSelf insertRowAtBottom];
-         }];
-        
-        self.dataArray = [[NSMutableArray alloc] init];
-        self.delegate = self;
-        self.dataSource = self;
-        
+        [self initData:userLat userLon:userLon accessToken:accessToken];
     }
+    
     return self;
+}
+
+- (void) initData:(double)userLat userLon:(double)userLon accessToken:(NSString *)accessToken {
+    self.manager = [[ClubbookManager alloc] init];
+    self.manager.communicator = [[ClubbookCommunicator alloc] init];
+    self.manager.communicator.delegate = self.manager;
+    self.manager.delegate = self;
+    
+    self.userLat = userLat;
+    self.userLon = userLon;
+    self.accessToken = accessToken;
+    
+    __weak InfiniteScrollTableView *weakSelf = self;
+    
+    // setup pull-to-refresh
+    [self addPullToRefreshWithActionHandler:^{
+        [weakSelf insertRowAtTop];
+    }];
+    
+    // setup infinite scrolling
+    [self addInfiniteScrollingWithActionHandler:^{
+        [weakSelf insertRowAtBottom];
+    }];
+    
+    self.dataArray = [[NSMutableArray alloc] init];
+    self.delegate = self;
+    self.dataSource = self;
 }
 
 - (void) stopAnimation {
@@ -102,6 +106,10 @@
 }
 
 - (void) refreshData {
+    self.isRefreshing = YES;
+}
+
+- (void) searchForWord:(NSString *)searchWord {
     self.isRefreshing = YES;
 }
 

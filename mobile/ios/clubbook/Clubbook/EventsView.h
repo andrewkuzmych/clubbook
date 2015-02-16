@@ -7,7 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EventsTableView.h"
 
-@interface EventsView : UIView
+@interface EventsView : UIView <InfiniteScrollTableViewDelegate>
+@property (weak, nonatomic) IBOutlet UISegmentedControl *segmaentControl;
+@property (weak, nonatomic) IBOutlet EventsTableView *eventsTable;
+@property (weak, nonatomic) IBOutlet UILabel *activityIndicator;
+@property (weak, nonatomic) IBOutlet UILabel *noDataLabel;
 
+- (void) customInit:(double)userLat userLon:(double)userLon accessTOken:(NSString*)accessToken;
 @end

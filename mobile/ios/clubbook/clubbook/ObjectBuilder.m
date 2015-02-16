@@ -13,6 +13,7 @@
 #import "WorkingHour.h"
 #import "Config.h"
 #import "NewsData.h"
+#import "Event.h"
 
 @implementation ObjectBuilder
 
@@ -103,7 +104,7 @@
     
     NSMutableArray *places = [[NSMutableArray alloc] init];
     
-    NSArray *venues = [parsedObject objectForKey:@"clubs"];
+    NSArray *venues = [parsedObject objectForKey:@"venues"];
     
     for (NSDictionary *placeDic in venues) {
         Place *place = [[Place alloc] init];
@@ -173,6 +174,60 @@
     }
     
     return places;
+}
+
++ (NSArray *)eventsFromJSON:(NSData *)objectNotation error:(NSError **)error
+{
+    NSError *localError = nil;
+    NSDictionary *parsedObject = [NSJSONSerialization JSONObjectWithData:objectNotation options:0 error:&localError];
+    
+    if (localError != nil) {
+        *error = localError;
+        return nil;
+    }
+    
+    NSMutableArray *events = [[NSMutableArray alloc] init];
+    
+    NSArray *elements = [parsedObject objectForKey:@"events"];
+    
+    for (NSDictionary *eventDic in elements) {
+        Event *event = [[Event alloc] init];
+        
+        NSString* dateStr = [eventDic objectForKey:@"start_time_formatted"];
+        // Convert string to date object
+        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+        [dateFormat setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+        [dateFormat setDateFormat:@"yyyy-MM-dd, HH:mm:ss"];
+        event.startTime = [dateFormat dateFromString:dateStr];
+       
+        dateStr = [eventDic objectForKey:@"end_time_formatted"];
+        event.endTime = [dateFormat dateFromString:dateStr];
+        
+        event.title = [eventDic objectForKey:@"title"];
+        event.share = [eventDic objectForKey:@"share"];
+        event.buyTickets = [eventDic objectForKey:@"buy_tickets"];
+        event.eventDescription = [eventDic objectForKey:@"description"];
+        event.photos = [eventDic objectForKey:@"photo"];
+        event.locationName = [eventDic objectForKey:@"loc_name"];
+        event.location = [eventDic objectForKey:@"loc"];
+        event.address = [eventDic objectForKey:@"address"];
+        event.distance = [[eventDic objectForKey:@"distance"] doubleValue] * 1000;
+        
+        NSDictionary* venue = [eventDic objectForKey:@"club"];
+        if (venue == nil) {
+            venue = [eventDic objectForKey:@"festival"];
+        }
+        
+        event.place = nil;
+        if (venue != nil) {
+            event.place = [self getPlace:venue];
+        }
+        
+        
+        [events addObject:event];
+        }
+    
+    return events;
 }
 
 + (FriendsResult *)friendsJSON:(NSData *)objectNotation error:(NSError **)error

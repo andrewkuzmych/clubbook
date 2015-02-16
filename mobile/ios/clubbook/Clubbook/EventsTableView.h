@@ -10,4 +10,7 @@
 
 @interface EventsTableView : InfiniteScrollTableView
 
+- (void) refreshData;
+- (void) loadMoreData;
+
 @end

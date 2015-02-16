@@ -36,6 +36,11 @@
     [self loadPlaceTypeTake:10 skip:countToSkip];
 }
 
+- (void) searchForWord:(NSString*) searchWord {
+    [super searchForWord:searchWord];
+    [self.manager retrievePlaces:self.type lat:self.userLat lon:self.userLon take:10 skip:0 distance:0 search:searchWord accessToken:self.accessToken];
+}
+
 - (void)loadPlaceTypeTake:(int)take skip:(int)skip
 {
     [self.manager retrievePlaces:self.type lat:self.userLat lon:self.userLon take:take skip:skip distance:0 search:@"" accessToken:self.accessToken];
