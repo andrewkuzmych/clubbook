@@ -736,6 +736,7 @@ exports.club_users = (req, res)->
             status: "ok"
 
 exports.clubs_yesterday = (req, res)->
+    console.log "Metod: clubs_yesterday"
     current_user_id = req.params.me._id.toString()
     current_date_time = new Date()
     yesterday_data_time = new Date(new Date().getTime() - 48 * 60 * 60 * 1000);
@@ -837,6 +838,8 @@ exports.club_types = (req, res)->
 
 exports.list_events = (req, res)->
   set_params req, (params)->
+    console.log req.query.sort_by
+    params.sort_by = req.query.sort_by
     manager.list_events params, (err, events)->
       if err
         res.json

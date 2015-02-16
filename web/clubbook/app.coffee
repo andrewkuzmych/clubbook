@@ -260,10 +260,10 @@ app.get '/_s/obj/:type/list', handle_access_token, services.list_venue
 app.get '/_s/obj/list', handle_access_token, services.get_all_lists
 
 #events
-app.get '/_s/obj/:type/:objectId/events', handle_access_token, services.venue_events
+app.get '/_s/obj/:type/:objectId/events/list', handle_access_token, services.venue_events
 
 #news
-app.get '/_s/obj/:type/:objectId/news', handle_access_token, services.venue_news
+app.get '/_s/obj/:type/:objectId/news/list', handle_access_token, services.venue_news
 
 app.get '/_s/obj/club/:objectId', handle_access_token, services.find_club
 app.get '/_s/obj/club/:objectId/users', handle_access_token, services.club_users

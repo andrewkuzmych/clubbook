@@ -141,8 +141,13 @@ exports.list_events = (params, callback)->
         limit: count,
         distanceMultiplier: 6371  
     if params.distance
-      geoNear.maxDistance = params.distance/6371 
-    query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take}]
+      geoNear.maxDistance = params.distance/6371
+    console.log 111
+    console.log params.sort_by 
+    if params.sort_by == "date"  
+      query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take},{ '$sort': { "start_time": 1 } }]
+    else
+      query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take}]
     db_model.Events.aggregate query,{}, (err, events)->
       format_date_events events, (events_updated)->
         dj_ids = []
@@ -435,17 +440,12 @@ exports.news_favorite = (params, callback)->
     if not user
       callback 'user does not exist', null
     else
-      db_model.News.find({'venue': {'$in': user.favorite_clubs}}).populate('venue').sort( { updated_on: -1 } ).skip(params.skip).limit(params.limit).exec (err, news)-> 
+      db_model.News.find( { '$or': [{'club': {'$in': user.favorite_clubs}},{'festival': {'$in': user.favorite_clubs}}]}).populate('club').populate('festival').sort( { updated_on: -1 } ).skip(params.skip).limit(params.limit).exec (err, news)-> 
         if not news
           callback 'news does not exist', null
         else
-          news_objects = []
-          for n in news
-            news_object = n.toObject()
-            news_object.created_on_formatted = moment.utc(news_object.created_on).format("YYYY-MM-DD, HH:mm:ss")
-            news_object.updated_on_formatted = moment.utc(news_object.updated_on).format("YYYY-MM-DD, HH:mm:ss")
-            news_objects.push news_object
-          callback err, news_objects
+          format_date_news news, (news_updated)->
+            callback err, news_updated
 
 exports.events_favorite = (params, callback)->
   console.log "METHOD - Events favorite club"
@@ -459,19 +459,12 @@ exports.events_favorite = (params, callback)->
     if not user
       callback 'user does not exist', null
     else
-      db_model.News.find({'$and':[{'venue': {'$in': user.favorite_clubs}},{'type': 'event'}]}).populate('venue').sort( { updated_on: -1 } ).skip(params.skip).limit(params.limit).exec (err, news)-> 
-        if not news
-          callback 'news does not exist', null
+      db_model.Events.find({'$or':[{'club': {'$in': user.favorite_clubs}},{'festival': {'$in': user.favorite_clubs}}]}).populate('club').populate('festival').sort( { updated_on: -1 } ).skip(params.skip).limit(params.limit).exec (err, events)-> 
+        if not events
+          callback 'events does not exist', null
         else
-          news_objects = []
-          for n in news
-            news_object = n.toObject()
-            news_object.created_on_formatted = moment.utc(news_object.created_on).format("YYYY-MM-DD, HH:mm:ss")
-            news_object.updated_on_formatted = moment.utc(news_object.updated_on).format("YYYY-MM-DD, HH:mm:ss")
-            news_object.start_time_formatted = moment.utc(news_object.start_time).format("YYYY-MM-DD, HH:mm:ss")
-            news_object.end_time_formatted = moment.utc(news_object.end_time).format("YYYY-MM-DD, HH:mm:ss")
-            news_objects.push news_object
-          callback err, news_objects
+          format_date_events events, (events_updated)->
+            callback err, events_updated
       
 
 exports.checkin = (params, callback)->
