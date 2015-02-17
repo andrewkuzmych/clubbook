@@ -203,6 +203,11 @@ exports.list_dj_events = (params, callback)->
             the_event.dj = the_dj
           callback err, events_updated
 
+exports.list_dj = (params, callback)->
+  console.log "METHOD - Manager list_dj"
+  db_model.Dj.find().sort( { name: 1 } ).skip(params.skip).limit(params.take).exec (err, djs)-> 
+    callback err, djs
+
 exports.list_venue = (params, callback)->
   console.log "METHOD - Manager list_club"
   db_model.Venue.count().exec (err, count)->

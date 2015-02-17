@@ -19,27 +19,27 @@ var FormValidation = function () {
                 focusInvalid: false, // do not focus the last invalid input
                 ignore: "",  // validate all fields including form hidden input
                 rules: {
-                    fest_name: {
+                    club_name: {
                       minlength: 2,
                       required: true
                     },
-                    fest_email: {
+                    club_email: {
                       required: true,
                       email: true
                     },
-                    fest_site: {
+                    club_site: {
                       required: true
                     },
-                    fest_phone: {
+                    club_phone: {
                       required: true
                     },
-                    fest_info: {
+                    club_info: {
                       required: true, 
                     },
-                    fest_logo :{
+                    club_logo :{
                       required: true, 
                     },
-                    fest_address: {
+                    club_address: {
                       required: true
                     }
 

@@ -97,7 +97,10 @@ exports.venue_list = (req, res)->
      when '3' then sort_users = { club_email: sort_order}
      when '4' then sort_users = { created_on: sort_order}
      else sort_users = { created_on: -1 }
+  if req.user.is_admin
     query = { 'category': req.params.type }
+  else
+    query = {"club_admin": req.user._id, "category": req.params.type}
   db_model.Venue.count(query).exec (err, user_count)->
     db_model.Venue.find(query).sort(sort_users).skip(parseInt( req.query.iDisplayStart, 0)).limit(parseInt(req.query.iDisplayLength, 0 )).exec (err, clubs)->
       data = []
@@ -106,7 +109,6 @@ exports.venue_list = (req, res)->
         title = "<span>" + club.club_name + "</span>"
         email = "<a href='mailto:" + club.club_email + "'>" + club.club_email + "</a>"
         phone = "<span>" + club.club_phone + "</span>"
-        a = req.params.type
         replay = """
           <a href="/venue/#{req.params.type}_edit/#{club._id}" style="margin:3px" class="edit-btn btn default yellow"><i class="fa fa-edit">&nbsp;edit</i></a>
           <a href="/venue/#{req.params.type}_delete/#{club._id}" style="margin:3px" onclick="return confirm('Are you sure you want to delete club?')" class="btn default black"><i class="fa fa-edit">&nbsp;delete</i></a>
@@ -133,9 +135,9 @@ exports.dj_list = (req, res)->
 
   switch req.query.iSortCol_0
      when '0' then sort_users = { created_on: sort_order }
-     when '1' then sort_users = { club_name: sort_order }
-     when '2' then sort_users = { club_phone: sort_order }
-     when '3' then sort_users = { club_email: sort_order}
+     when '1' then sort_users = { name: sort_order }
+     when '2' then sort_users = { phone: sort_order }
+     when '3' then sort_users = { email: sort_order}
      when '4' then sort_users = { created_on: sort_order}
      else sort_users = { created_on: -1 }
   db_model.Dj.count().exec (err, user_count)->
@@ -981,6 +983,31 @@ exports.list_club = (req, res)->
         status: 'ok'
         clubs: clubs
         types: types
+
+exports.list_dj = (req, res)->
+  skip = 0
+  if req.query.skip
+    skip = parseInt(req.query.skip)
+  
+  take = 10
+  if req.query.take
+    take = parseInt(req.query.take)
+
+  params =
+    user_id: req.params.me._id.toString()
+    search: req.query.search
+
+  params.skip = skip
+  params.take = take
+  manager.list_dj params, (err, djs)->
+    if err
+      res.json
+        status: 'error'
+        error: err
+    else
+      res.json
+        status: 'ok'
+        djs: djs
 
 exports.list_venue = (req, res)->
   set_params req, (params)->

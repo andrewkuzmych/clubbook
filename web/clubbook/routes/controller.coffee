@@ -239,6 +239,9 @@ exports.festival_edit_action = (req, res)->
       res.redirect "/venue/festival_create?error=1"
     else
       edit_venue_model req, res, (venue)->
+        console.log 444
+        console.log req.params.id
+        #db_model.Events.find({"festival":})
         venue.save (err)->
           console.log err
           res.redirect "/venue/festivals"
