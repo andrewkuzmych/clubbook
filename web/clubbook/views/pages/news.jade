@@ -1,6 +1,10 @@
 extends ../layout
 
 block content
+  style(type='text/css')
+    th, td {
+      text-align: center;
+    }
   //
      BEGIN PAGE HEADER
   h3.page-title
@@ -25,7 +29,7 @@ block content
       table.table.table-bordered.table-striped.table-condensed.flip-content
         thead.flip-content
           tr
-            th(width='20%')
+            th(width='10%')
               | Photo
             th
               | Title

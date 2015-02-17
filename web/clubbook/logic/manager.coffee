@@ -413,7 +413,7 @@ exports.events = (params, callback)->
 exports.venue_events = (params, callback)->
   console.log "METHOD - Events"
   query = JSON.parse('{ "'+ params.type_venue + '":"' + params.objectId+'" }')
-  db_model.Events.find(query).populate(params.type_venue).exec (err, events)-> 
+  db_model.Events.find(query).populate(params.type_venue).skip(params.skip).limit(params.take).exec (err, events)-> 
     if not events
       console.log  'missing events'       
     else
@@ -425,8 +425,9 @@ exports.venue_events = (params, callback)->
 
 exports.venue_news = (params, callback)->
   console.log "METHOD - News"
+  console.log params.take
   query = JSON.parse('{ "'+ params.type_venue + '":"' + params.objectId+'" }')
-  db_model.News.find(query).populate(params.type_venue).exec (err, news)-> 
+  db_model.News.find(query).populate(params.type_venue).skip(params.skip).limit(params.take).exec (err, news)-> 
     if not news
       console.log  'missing news'       
     else

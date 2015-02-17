@@ -1070,6 +1070,8 @@ exports.venue_events = (req,res)->
     user_id: req.params.me._id.toString()
     objectId: req.params.objectId.toString()
     type_venue: req.params.type.toString()
+    skip: parseInt(req.query.skip)
+    take: parseInt(req.query.take)
  
   manager.venue_events params, (err, events)->
     if err
@@ -1087,7 +1089,8 @@ exports.venue_news = (req,res)->
     user_id: req.params.me._id.toString()
     objectId: req.params.objectId.toString()
     type_venue: req.params.type.toString()
- 
+    skip: parseInt(req.query.skip)
+    take: parseInt(req.query.take)
   manager.venue_news params, (err, news)->
     if err
       console.log err
