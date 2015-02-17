@@ -42,7 +42,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)didReceivePlaces:(NSArray *)places andTypes:(NSArray *)types
+- (void)didReceivePlaces:(NSArray *)places
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideProgress];

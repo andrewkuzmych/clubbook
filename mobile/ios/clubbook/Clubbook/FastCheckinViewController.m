@@ -103,7 +103,7 @@
     [self._manager retrievePlaces:@"club" lat:lat lon:lng take:take skip:skip distance:1 search:@"" accessToken:accessToken];
 }
 
-- (void)didReceivePlaces:(NSArray *)places andTypes:(NSArray *)types
+- (void)didReceivePlaces:(NSArray *)places
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideProgress];
