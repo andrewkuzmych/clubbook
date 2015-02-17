@@ -350,7 +350,8 @@ app.get '/_f/user/remove/:user_id', services.remove_user
 app.get '/_f/checkin/clean', services.checkin_clean
 
 app.get '/_a/user/list', services.user_list
-
+app.get '/_a/dj/list', services.dj_list
+app.get '/_a/:type/list', services.venue_list
 
 if config.is_test_server == "false"
   checkout_job = new cronJob(
