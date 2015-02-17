@@ -198,6 +198,13 @@ exports.club_edit_action = (req, res)->
               wh.status = 'N/A'
 
         venue.save (err)->
+          #change location and adrress events
+          db_model.Events.find({"club":req.params.id}).exec (err, events)->
+            for even in events
+              even.loc = venue.club_loc
+              even.loc_name = venue.club_name
+              even.address = venue.club_address
+              even.save (err)->
           console.log err
           res.redirect "/venue/clubs"
     
@@ -239,12 +246,16 @@ exports.festival_edit_action = (req, res)->
       res.redirect "/venue/festival_create?error=1"
     else
       edit_venue_model req, res, (venue)->
-        console.log 444
-        console.log req.params.id
-        #db_model.Events.find({"festival":})
         venue.save (err)->
-          console.log err
-          res.redirect "/venue/festivals"
+          #change location and adrress events
+          db_model.Events.find({"festival":req.params.id}).exec (err, events)->
+            for even in events
+              even.loc = venue.club_loc
+              even.loc_name = venue.club_name
+              even.address = venue.club_address
+              even.save (err)->
+                console.log err
+                res.redirect "/venue/festivals"
 
 exports.festival_delete_action = (req, res)->
   db_model.Venue.findByIdAndRemove(req.params.id).exec (err)->
