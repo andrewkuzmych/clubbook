@@ -38,5 +38,6 @@
 + (BOOL)changePassFromJSON:(NSData *)objectNotation error:(NSError **)error;
 + (ClubbookNotifications *)unreadMessagesFromJSON:(NSData *)objectNotation error:(NSError **)error;
 + (Config *)getConfigFromJSON:(NSData *)objectNotation error:(NSError **)error;
++ (NSArray*) djsAndBandsFromJSON:(NSData *)objectNotation error:(NSError **)error;
 
 @end

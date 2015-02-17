@@ -23,6 +23,7 @@
                         <segue destination="ZjF-WR-zDq" kind="relationship" relationship="viewControllers" id="34g-sZ-PpL"/>
                         <segue destination="m8T-Jj-ixX" kind="relationship" relationship="viewControllers" id="nFq-c4-8b3"/>
                         <segue destination="Zmr-z4-vJn" kind="relationship" relationship="viewControllers" id="9h3-hd-88d"/>
+                        <segue destination="dN6-Iy-c8J" kind="relationship" relationship="viewControllers" id="Bi2-dY-lc1"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qSV-Kx-oM3" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -945,6 +946,40 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZxE-q9-k5Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="633" y="-1379"/>
+        </scene>
+        <!--Item-->
+        <scene sceneID="DMx-1M-gaJ">
+            <objects>
+                <viewController id="dN6-Iy-c8J" customClass="EventsViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="FYK-uE-LsS"/>
+                        <viewControllerLayoutGuide type="bottom" id="DxW-OP-jhw"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="sum-9i-0CB">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Okg-6J-dFH" customClass="EventsView">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="519"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Okg-6J-dFH" secondAttribute="trailing" id="J3A-Zy-ele"/>
+                            <constraint firstItem="Okg-6J-dFH" firstAttribute="top" secondItem="sum-9i-0CB" secondAttribute="top" id="JZG-Bx-kbH"/>
+                            <constraint firstItem="Okg-6J-dFH" firstAttribute="leading" secondItem="sum-9i-0CB" secondAttribute="leading" id="XU0-7S-UHC"/>
+                            <constraint firstItem="DxW-OP-jhw" firstAttribute="top" secondItem="Okg-6J-dFH" secondAttribute="bottom" id="le1-7c-pQH"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="6Sz-JO-bDl"/>
+                    <connections>
+                        <outlet property="eventsView" destination="Okg-6J-dFH" id="p5C-rR-I5i"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MBa-iF-PIP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-979" y="2"/>
         </scene>
         <!--NewsFeed-->
         <scene sceneID="Q6a-fI-0IE">

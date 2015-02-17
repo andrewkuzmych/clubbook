@@ -25,6 +25,7 @@
 @property (strong, nonatomic) NSMutableArray *users;
 @property (strong, nonatomic) WorkingHour *todayWorkingHours;
 @property (strong, nonatomic) NSMutableArray *workingHours;
+@property (strong, nonatomic) NSString* category;
 @property (assign, nonatomic) int countOfUsers;
 @property (assign, nonatomic) int friendsCount;
 @property (assign, nonatomic) int capacity;

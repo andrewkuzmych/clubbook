@@ -611,6 +611,64 @@
 
 }
 
+- (void)retrieveEventsById:(NSString*)objectId type:(NSString*)type accessToken:(NSString *) accessToken; {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        //make base url
+        NSString* urlAsString = [NSString stringWithFormat:@"%@obj/%@/%@/events/list?access_token=%@", baseURL,  type, objectId, accessToken];
+        
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
+        
+        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (error) {
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
+                } else {
+                    [self.delegate receivedEventsJSON:data];
+                }
+            });
+            
+        }];
+        
+    });
+
+}
+
+- (void)retrieveDJsAndBands:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // switch to a background thread and perform your expensive operation
+        int distanceTemp = distance;
+        if (distanceTemp == 0) {
+            distanceTemp = 100000;
+        }
+        //make base url
+        NSString* urlAsString = [NSString stringWithFormat:@"%@obj/djs/list?user_lat=%f&user_lon=%f&skip=%d&search=%@&take=%d&distance=%d&access_token=%@", baseURL, lat, lon, skip, search, take, distanceTemp, accessToken];
+        
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
+        
+        [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (error) {
+                    if ([self.delegate respondsToSelector:@selector(failedWithError)]) {
+                        [self.delegate failedWithError:error];
+                    }
+                } else {
+                    [self.delegate receivedDJsAndBandsJSON:data];
+                }
+            });
+            
+        }];
+        
+    });
+    
+}
+
+
 - (void)retrieveYesterdayPlacesAccessToken:(NSString*) accessToken;
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

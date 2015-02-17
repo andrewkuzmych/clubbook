@@ -10,6 +10,10 @@
 
 @interface EventsTableView : InfiniteScrollTableView
 
+@property BOOL singlePlaceEvents;
+@property (strong, nonatomic) NSString* placeId;
+@property (strong, nonatomic) NSString* type;
+
 - (void) refreshData;
 - (void) loadMoreData;
 

@@ -48,7 +48,12 @@
 
 - (void)loadEventsTake:(int)take skip:(int)skip
 {
-    [self.manager retrieveEvents:self.userLat lon:self.userLon take:take skip:skip distance:0 search:@"" accessToken:self.accessToken];
+    if (!self.singlePlaceEvents) {
+       [self.manager retrieveEvents:self.userLat lon:self.userLon take:take skip:skip distance:0 search:@"" accessToken:self.accessToken];
+    }
+    else {
+       [self.manager retrieveEventsById:self.placeId type:self.type accessToken:self.accessToken];
+    }
 }
 
 - (void)didReceiveEvents:(NSArray *)events

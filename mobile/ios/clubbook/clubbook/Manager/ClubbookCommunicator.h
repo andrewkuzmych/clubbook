@@ -41,6 +41,10 @@
 
 - (void)retrieveEvents:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken;
 
+- (void)retrieveEventsById:(NSString*)objectId type:(NSString*)type accessToken:(NSString *) accessToken;
+
+- (void)retrieveDJsAndBands:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken;
+
 - (void)retrieveYesterdayPlacesAccessToken:(NSString*) accessToken;
 
 - (void)retrievePlace:(NSString *) clubId accessToken:(NSString *) accessToken;

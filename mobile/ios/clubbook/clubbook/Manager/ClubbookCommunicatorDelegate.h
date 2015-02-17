@@ -16,6 +16,7 @@
 - (void)signinJSON:(NSData *)objectNotation;
 - (void)receivedPlacesJSON:(NSData *)objectNotation;
 - (void)receivedEventsJSON:(NSData *)objectNotation;
+- (void)receivedDJsAndBandsJSON: (NSData *)objectNotation;
 - (void)receivedPlaceJSON:(NSData *)objectNotation;
 - (void)receivedPlaceUsersJSON:(NSData *)objectNotation;
 - (void)receivedPlaceUsersYesterdayJSON:(NSData *)objectNotation;

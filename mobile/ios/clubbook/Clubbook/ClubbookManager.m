@@ -45,8 +45,17 @@
     [self.communicator retrievePlaces:type lat:lat lon:lon take:take skip:skip distance:distance search:search accessToken:accessToken];
 }
 
+- (void)retrieveDjsAndBands:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken;
+{
+    [self.communicator retrieveDJsAndBands:lat lon:lon take:take skip:skip distance:distance search:search accessToken:accessToken];
+}
+
 - (void)retrieveEvents:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken {
     [self.communicator retrieveEvents:lat lon:lon take:take skip:skip distance:distance search:search accessToken:accessToken];
+}
+
+- (void)retrieveEventsById:(NSString*)objectId type:(NSString*)type accessToken:(NSString *) accessToken {
+    [self.communicator retrieveEventsById:objectId type:type accessToken:accessToken];
 }
 
 - (void) retrieveYesterdayPlacesAccessToken:(NSString*) accessToken {
@@ -526,19 +535,28 @@
 
 - (void)receivedEventsJSON:(NSData *)objectNotation
 {
-    NSError *errorPlaces = nil;
-    NSError *errorTypes = nil;
-    NSArray *events = [ObjectBuilder eventsFromJSON:objectNotation error:&errorPlaces];
+    NSError *error = nil;
+    NSArray *events = [ObjectBuilder eventsFromJSON:objectNotation error:&error];
     
-    if (errorPlaces != nil) {
-        [self.delegate  failedWithError:errorPlaces];
-        
-    } else if (errorTypes != nil) {
-        [self.delegate  failedWithError:errorTypes];
+    if (error != nil) {
+        [self.delegate  failedWithError:error];
     }
     else {
         [self.delegate didReceiveEvents:events];
     }
+}
+
+- (void) receivedDJsAndBandsJSON:(NSData *)objectNotation {
+    NSError *error = nil;
+    NSArray *djs = [ObjectBuilder djsAndBandsFromJSON:objectNotation error:&error];
+    
+    if (error != nil) {
+        [self.delegate  failedWithError:error];
+    }
+    else {
+        [self.delegate didReceiveDJsAndBands:djs];
+    }
+ 
 }
 
 - (void)receivedPlaceJSON:(NSData *)objectNotation

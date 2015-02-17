@@ -126,7 +126,7 @@
         place.lat = [[placeDic objectForKey:@"club_loc"] objectForKey:@"lat"];
         place.countOfUsers = [[placeDic objectForKey:@"active_checkins"] intValue];
         place.friendsCount = [[placeDic objectForKey:@"active_friends_checkins"] intValue];
-        
+        place.category = [placeDic objectForKey:@"category"];
         place.isFavorite = NO;
         NSNumber *isFavorite = [placeDic objectForKey:@"is_favorite"];
         if ([isFavorite intValue] > 0) {
@@ -228,6 +228,25 @@
         }
     
     return events;
+}
+
++ (NSArray*) djsAndBandsFromJSON:(NSData *)objectNotation error:(NSError **)error {
+    NSError *localError = nil;
+    NSDictionary *parsedObject = [NSJSONSerialization JSONObjectWithData:objectNotation options:0 error:&localError];
+    
+    if (localError != nil) {
+        *error = localError;
+        return nil;
+    }
+    
+    NSMutableArray *djs = [[NSMutableArray alloc] init];
+    
+    //NSArray *elements = [parsedObject objectForKey:@"events"];
+    
+    /*for (NSDictionary *djsDic in elements) {
+        
+    }*/
+    return djs;
 }
 
 + (FriendsResult *)friendsJSON:(NSData *)objectNotation error:(NSError **)error
@@ -364,6 +383,8 @@
     place.lat = [[clubJson objectForKey:@"club_loc"] objectForKey:@"lat"];
     place.countOfUsers = [[clubJson objectForKey:@"active_checkins"] intValue];
     place.friendsCount = [[clubJson objectForKey:@"active_friends_checkins"] intValue];
+    
+    place.category = [clubJson objectForKey:@"category"];
     
     place.isFavorite = NO;
     NSNumber *isFavorite = [clubJson objectForKey:@"is_favorite"];

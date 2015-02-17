@@ -436,6 +436,11 @@
 		52D108B51A8B8ECE00649598 /* PlacesTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D108B41A8B8ECE00649598 /* PlacesTabView.m */; };
 		52D108B71A8B8ED900649598 /* PlaceTabView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52D108B61A8B8ED900649598 /* PlaceTabView.xib */; };
 		52D108BA1A8B99EB00649598 /* ClubsInfiniteTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D108B91A8B99EB00649598 /* ClubsInfiniteTableView.m */; };
+		52F3DCC61A933B0E002BBB0F /* DjCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F3DCC41A933B0E002BBB0F /* DjCell.m */; };
+		52F3DCC71A933B0E002BBB0F /* DjCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52F3DCC51A933B0E002BBB0F /* DjCell.xib */; };
+		52F3DCCA1A934049002BBB0F /* DjTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F3DCC91A934049002BBB0F /* DjTableView.m */; };
+		52F3DCCD1A9347E1002BBB0F /* DJ.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F3DCCC1A9347E1002BBB0F /* DJ.m */; };
+		52F3DCD01A9356D9002BBB0F /* EventsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F3DCCF1A9356D9002BBB0F /* EventsViewController.m */; };
 		F4EECF12177C99F400778578 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF11177C99F400778578 /* UIKit.framework */; };
 		F4EECF14177C99F400778578 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF13177C99F400778578 /* Foundation.framework */; };
 		F4EECF16177C99F400778578 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EECF15177C99F400778578 /* CoreGraphics.framework */; };
@@ -1248,6 +1253,15 @@
 		52D108B61A8B8ED900649598 /* PlaceTabView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaceTabView.xib; sourceTree = "<group>"; };
 		52D108B81A8B99EB00649598 /* ClubsInfiniteTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubsInfiniteTableView.h; sourceTree = "<group>"; };
 		52D108B91A8B99EB00649598 /* ClubsInfiniteTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubsInfiniteTableView.m; sourceTree = "<group>"; };
+		52F3DCC31A933B0E002BBB0F /* DjCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DjCell.h; sourceTree = "<group>"; };
+		52F3DCC41A933B0E002BBB0F /* DjCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DjCell.m; sourceTree = "<group>"; };
+		52F3DCC51A933B0E002BBB0F /* DjCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DjCell.xib; sourceTree = "<group>"; };
+		52F3DCC81A934049002BBB0F /* DjTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DjTableView.h; sourceTree = "<group>"; };
+		52F3DCC91A934049002BBB0F /* DjTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DjTableView.m; sourceTree = "<group>"; };
+		52F3DCCB1A9347E1002BBB0F /* DJ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DJ.h; sourceTree = "<group>"; };
+		52F3DCCC1A9347E1002BBB0F /* DJ.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DJ.m; sourceTree = "<group>"; };
+		52F3DCCE1A9356D9002BBB0F /* EventsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventsViewController.h; sourceTree = "<group>"; };
+		52F3DCCF1A9356D9002BBB0F /* EventsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventsViewController.m; sourceTree = "<group>"; };
 		F4EECF0E177C99F400778578 /* Clubbook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clubbook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4EECF11177C99F400778578 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F4EECF13177C99F400778578 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1681,6 +1695,7 @@
 		499247AD1976AF93008C74D0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				52F3DCC21A933AE9002BBB0F /* DJs */,
 				525C33FA1A8CF51200EBAD0A /* Events */,
 				52D108AF1A8B683400649598 /* PlacesView */,
 				5225FF2F1A8514D800B32487 /* LoginStoryboard */,
@@ -1988,6 +2003,8 @@
 				498975AD19ED25B70067A5E4 /* UsersYesterday.m */,
 				525C34081A8D042400EBAD0A /* Event.h */,
 				525C34091A8D042400EBAD0A /* Event.m */,
+				52F3DCCB1A9347E1002BBB0F /* DJ.h */,
+				52F3DCCC1A9347E1002BBB0F /* DJ.m */,
 			);
 			name = DTO;
 			sourceTree = "<group>";
@@ -2307,6 +2324,8 @@
 				525C34051A8CF94600EBAD0A /* EventsCell.xib */,
 				52225DB51A8E419800B35205 /* EventDetailsViewController.h */,
 				52225DB61A8E419800B35205 /* EventDetailsViewController.m */,
+				52F3DCCE1A9356D9002BBB0F /* EventsViewController.h */,
+				52F3DCCF1A9356D9002BBB0F /* EventsViewController.m */,
 			);
 			name = Events;
 			sourceTree = "<group>";
@@ -2377,6 +2396,18 @@
 				52D108B91A8B99EB00649598 /* ClubsInfiniteTableView.m */,
 			);
 			name = PlacesView;
+			sourceTree = "<group>";
+		};
+		52F3DCC21A933AE9002BBB0F /* DJs */ = {
+			isa = PBXGroup;
+			children = (
+				52F3DCC31A933B0E002BBB0F /* DjCell.h */,
+				52F3DCC41A933B0E002BBB0F /* DjCell.m */,
+				52F3DCC51A933B0E002BBB0F /* DjCell.xib */,
+				52F3DCC81A934049002BBB0F /* DjTableView.h */,
+				52F3DCC91A934049002BBB0F /* DjTableView.m */,
+			);
+			name = DJs;
 			sourceTree = "<group>";
 		};
 		52FBEC921A6E5BD500DE4BAA /* NewsFeed */ = {
@@ -2828,6 +2859,7 @@
 				499929B919E97CB000B77A6E /* checkmark@2x.png in Resources */,
 				49ABA1661995239E00B060D0 /* avatar_default.png in Resources */,
 				49ABA1DE199524BF00B060D0 /* icon_userprofile_removefriend@2x.png in Resources */,
+				52F3DCC71A933B0E002BBB0F /* DjCell.xib in Resources */,
 				520897581A407C6700E8DD06 /* JSQMessages.strings in Resources */,
 				49ABA1861995239E00B060D0 /* icon_pending_cancel.png in Resources */,
 				4996E0B71962EE5C000C721F /* icon_arrow@2x.png in Resources */,
@@ -2985,6 +3017,7 @@
 				498A68F5196C4CFD00BC2859 /* NSMutableArray+PNAdditions.m in Sources */,
 				498A6906196C4CFD00BC2859 /* PNPushNotificationsRemoveRequest.m in Sources */,
 				49E831461951B92000D4A26C /* Constants.m in Sources */,
+				52F3DCD01A9356D9002BBB0F /* EventsViewController.m in Sources */,
 				49908EF0197435FA00DA68F2 /* ErrorViewController.m in Sources */,
 				5297358E1A39B002009943C3 /* MultiplePulsingHaloLayer.m in Sources */,
 				525C34061A8CF94600EBAD0A /* EventsCell.m in Sources */,
@@ -3019,6 +3052,7 @@
 				49908F0519751C5C00DA68F2 /* UIButton+ALBlock.m in Sources */,
 				49ABA12C198A919C00B060D0 /* FriendCell.m in Sources */,
 				49895A6C1969980700484EA2 /* CbLabel.m in Sources */,
+				52F3DCC61A933B0E002BBB0F /* DjCell.m in Sources */,
 				520F38AC1A5E93B600FB1E65 /* NewsFeedViewController.m in Sources */,
 				4934F76719D047B800BFFDB1 /* UIView+WebCacheOperation.m in Sources */,
 				520897691A407C6700E8DD06 /* JSQMessagesCollectionViewLayoutAttributes.m in Sources */,
@@ -3085,6 +3119,7 @@
 				5245DC621A5BF0E600CC0B1B /* ClubPhotGalleryCollectionViewController.m in Sources */,
 				52C5FC901A3F29E1000147E8 /* ClubImagesPageViewController.m in Sources */,
 				49908F0419751C5C00DA68F2 /* OBAlert.m in Sources */,
+				52F3DCCA1A934049002BBB0F /* DjTableView.m in Sources */,
 				498A68F4196C4CFD00BC2859 /* NSInvocation+PNAdditions.m in Sources */,
 				49D8D301197D6C8F00015052 /* UIView+StringTagAdditions.m in Sources */,
 				52520A781A66928B006399EF /* NewsFeedCell.m in Sources */,
@@ -3103,6 +3138,7 @@
 				498A68CD196C4CFD00BC2859 /* PNChannel.m in Sources */,
 				4994848F19FB95C400E906C0 /* ProfilePagesViewController.m in Sources */,
 				498A6909196C4CFD00BC2859 /* PNTimeTokenRequest.m in Sources */,
+				52F3DCCD1A9347E1002BBB0F /* DJ.m in Sources */,
 				498A1BA8196BD2B200824E64 /* Conversation.m in Sources */,
 				498A1B9B196ACF9100824E64 /* ChatViewController.m in Sources */,
 				49ABA138198F9D7F00B060D0 /* SettingsCell.m in Sources */,

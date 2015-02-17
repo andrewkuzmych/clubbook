@@ -26,6 +26,7 @@
   - (void)didChat:(NSString *)result;
   - (void)didReceivePlaces:(NSArray *)places;
   - (void)didReceiveEvents:(NSArray*) events;
+  - (void)didReceiveDJsAndBands:(NSArray*) djs;
   - (void)didReceivePlace:(Place *)place;
   - (void)didReceivePlaceUsers:(NSArray *)users;
   - (void)didReceivePlaceUsersYesterday:(UsersYesterday *)usersYesterday;
