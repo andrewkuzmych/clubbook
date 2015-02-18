@@ -72,14 +72,13 @@
     [festivalsView addTableToTheView:self.festivalsTable];
     [self.slideTabBarView addPageView:festivalsView ForTitle:@"Festivals"];
     
-    PlacesTabView *djsView = [[PlacesTabView alloc] init];
-    self.djsTable = [[DjTableView alloc] initWithFrame:CGRectZero userLat:user_lat userLon:user_lon accessToken:user_accessToken];
-    self.djsTable.transitionDelegate = self;
-    [djsView addTableToTheView:self.djsTable];
-    [self.slideTabBarView addPageView:djsView ForTitle:@"DJs & Bands"];
+    self.djsEventView = [[EventsView alloc] init];
+    [self.djsEventView customInitType:@"dj_events" userLat:user_lat userLon:user_lon accessTOken:user_accessToken];
+    self.djsEventView.eventsTable.transitionDelegate = self;
+    [self.slideTabBarView addPageView:self.djsEventView ForTitle:@"DJs & Bands"];
     
     self.eventView = [[EventsView alloc] init];
-    [self.eventView customInit:user_lat userLon:user_lon accessTOken:user_accessToken];
+    [self.eventView customInitType:@"events" userLat:user_lat userLon:user_lon accessTOken:user_accessToken];
     self.eventView.eventsTable.transitionDelegate = self;
     [self.slideTabBarView addPageView:self.eventView ForTitle:@"Events"];
 }
@@ -216,7 +215,7 @@
         return self.festivalsTable;
     }
     else if (index == 3) {
-        return self.djsTable;
+        return self.djsEventView.eventsTable;
     }
     else if (index == 4) {
         return self.eventView.eventsTable;

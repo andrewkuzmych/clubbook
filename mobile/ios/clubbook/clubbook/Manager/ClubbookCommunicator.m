@@ -580,7 +580,7 @@
     });
 }
 
-- (void)retrieveEvents:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken {
+- (void)retrieveEventsType:(NSString*)type sortBy:(NSString*)sortBy lat:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
         int distanceTemp = distance;
@@ -588,7 +588,7 @@
             distanceTemp = 100000;
         }
         //make base url
-        NSString* urlAsString = [NSString stringWithFormat:@"%@obj/events/list?user_lat=%f&user_lon=%f&skip=%d&search=%@&take=%d&distance=%d&access_token=%@", baseURL, lat, lon, skip, search, take, distanceTemp, accessToken];
+        NSString* urlAsString = [NSString stringWithFormat:@"%@obj/%@/list?sort_by=%@&user_lat=%f&user_lon=%f&skip=%d&search=%@&take=%d&distance=%d&access_token=%@", baseURL, type, sortBy, lat, lon, skip, search, take, distanceTemp, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
@@ -614,7 +614,7 @@
 - (void)retrieveEventsById:(NSString*)objectId type:(NSString*)type accessToken:(NSString *) accessToken; {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         //make base url
-        NSString* urlAsString = [NSString stringWithFormat:@"%@obj/%@/%@/events/list?access_token=%@", baseURL,  type, objectId, accessToken];
+        NSString* urlAsString = [NSString stringWithFormat:@"%@obj/%@/%@/events/list?skip=0&take=10&access_token=%@", baseURL,  type, objectId, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         

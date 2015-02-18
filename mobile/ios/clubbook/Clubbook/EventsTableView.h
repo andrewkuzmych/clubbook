@@ -12,7 +12,10 @@
 
 @property BOOL singlePlaceEvents;
 @property (strong, nonatomic) NSString* placeId;
-@property (strong, nonatomic) NSString* type;
+@property (strong, nonatomic) NSString* placeType;
+@property (strong, nonatomic) NSString* eventTypes;
+
+@property (strong, nonatomic) NSString* sortBy;
 
 - (void) refreshData;
 - (void) loadMoreData;

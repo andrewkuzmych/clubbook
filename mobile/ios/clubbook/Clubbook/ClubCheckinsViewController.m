@@ -15,7 +15,7 @@
 #import "Constants.h"
 #import "CSNotificationView.h"
 #import "Cloudinary.h"
-#import "ClubViewController.h"
+#import "InfoViewController.h"
 #import "GlobalVars.h"
 #import "TransitionFromClubUsersToUser.h"
 #import "ClubUsersYesterdayViewController.h"

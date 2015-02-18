@@ -35,7 +35,7 @@
 		4939074719503CCA003F2FF9 /* icon_share.png in Resources */ = {isa = PBXBuildFile; fileRef = 4939074019503CCA003F2FF9 /* icon_share.png */; };
 		49390750195086AA003F2FF9 /* MenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4939074F195086AA003F2FF9 /* MenuCell.m */; };
 		493E0EEF19D4549800B5ADEC /* ChangePassViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 493E0EEE19D4549800B5ADEC /* ChangePassViewController.m */; };
-		49836B211961969F00F2A2C6 /* ClubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49836B201961969F00F2A2C6 /* ClubViewController.m */; };
+		49836B211961969F00F2A2C6 /* InfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49836B201961969F00F2A2C6 /* InfoViewController.m */; };
 		49836B271961999C00F2A2C6 /* ProfileCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49836B261961999C00F2A2C6 /* ProfileCell.m */; };
 		49895A6C1969980700484EA2 /* CbLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 49895A6B1969980700484EA2 /* CbLabel.m */; };
 		498975A719EC60150067A5E4 /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 498975A619EC60150067A5E4 /* UserProfileViewController.m */; };
@@ -329,6 +329,8 @@
 		49E831EA1959DE5200D4A26C /* user@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49E831E91959DE5200D4A26C /* user@2x.png */; };
 		49F2C675199C9A29006A3E21 /* Config.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F2C674199C9A29006A3E21 /* Config.m */; };
 		5202AFF81A77D142000EF534 /* NewsFeedTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5202AFF71A77D142000EF534 /* NewsFeedTableView.m */; };
+		520552251A94924A00E215ED /* EventTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520552241A94924A00E215ED /* EventTabBarController.m */; };
+		520552321A94D12400E215ED /* InfoStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = 520552311A94D12400E215ED /* InfoStructure.m */; };
 		520897571A407C6700E8DD06 /* JSQMessagesAssets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 520896EC1A407C6700E8DD06 /* JSQMessagesAssets.bundle */; };
 		520897581A407C6700E8DD06 /* JSQMessages.strings in Resources */ = {isa = PBXBuildFile; fileRef = 520896EE1A407C6700E8DD06 /* JSQMessages.strings */; };
 		520897591A407C6700E8DD06 /* JSQSystemSoundPlayer+JSQMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 520897001A407C6700E8DD06 /* JSQSystemSoundPlayer+JSQMessages.m */; };
@@ -513,8 +515,8 @@
 		4939074F195086AA003F2FF9 /* MenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuCell.m; sourceTree = "<group>"; };
 		493E0EED19D4549800B5ADEC /* ChangePassViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangePassViewController.h; sourceTree = "<group>"; };
 		493E0EEE19D4549800B5ADEC /* ChangePassViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangePassViewController.m; sourceTree = "<group>"; };
-		49836B1F1961969F00F2A2C6 /* ClubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClubViewController.h; sourceTree = "<group>"; };
-		49836B201961969F00F2A2C6 /* ClubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClubViewController.m; sourceTree = "<group>"; };
+		49836B1F1961969F00F2A2C6 /* InfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoViewController.h; sourceTree = "<group>"; };
+		49836B201961969F00F2A2C6 /* InfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoViewController.m; sourceTree = "<group>"; };
 		49836B251961999C00F2A2C6 /* ProfileCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileCell.h; sourceTree = "<group>"; };
 		49836B261961999C00F2A2C6 /* ProfileCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileCell.m; sourceTree = "<group>"; };
 		49895A6A1969980700484EA2 /* CbLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CbLabel.h; path = Controls/CbLabel.h; sourceTree = "<group>"; };
@@ -1032,6 +1034,10 @@
 		49F2C674199C9A29006A3E21 /* Config.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Config.m; path = DTO/Config.m; sourceTree = "<group>"; };
 		5202AFF61A77D142000EF534 /* NewsFeedTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedTableView.h; sourceTree = "<group>"; };
 		5202AFF71A77D142000EF534 /* NewsFeedTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedTableView.m; sourceTree = "<group>"; };
+		520552231A94924A00E215ED /* EventTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventTabBarController.h; sourceTree = "<group>"; };
+		520552241A94924A00E215ED /* EventTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventTabBarController.m; sourceTree = "<group>"; };
+		520552301A94D12400E215ED /* InfoStructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoStructure.h; sourceTree = "<group>"; };
+		520552311A94D12400E215ED /* InfoStructure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoStructure.m; sourceTree = "<group>"; };
 		520896EC1A407C6700E8DD06 /* JSQMessagesAssets.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = JSQMessagesAssets.bundle; sourceTree = "<group>"; };
 		520896EF1A407C6700E8DD06 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/JSQMessages.strings; sourceTree = "<group>"; };
 		520896F01A407C6700E8DD06 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JSQMessages.strings; sourceTree = "<group>"; };
@@ -2326,6 +2332,8 @@
 				52225DB61A8E419800B35205 /* EventDetailsViewController.m */,
 				52F3DCCE1A9356D9002BBB0F /* EventsViewController.h */,
 				52F3DCCF1A9356D9002BBB0F /* EventsViewController.m */,
+				520552231A94924A00E215ED /* EventTabBarController.h */,
+				520552241A94924A00E215ED /* EventTabBarController.m */,
 			);
 			name = Events;
 			sourceTree = "<group>";
@@ -2334,8 +2342,8 @@
 			isa = PBXGroup;
 			children = (
 				5245DC5F1A5BEF1500CC0B1B /* PhotoGallery */,
-				49836B1F1961969F00F2A2C6 /* ClubViewController.h */,
-				49836B201961969F00F2A2C6 /* ClubViewController.m */,
+				49836B1F1961969F00F2A2C6 /* InfoViewController.h */,
+				49836B201961969F00F2A2C6 /* InfoViewController.m */,
 				52C5FC8B1A3F28A8000147E8 /* ClubViewParallaxControllerViewController.h */,
 				52C5FC8C1A3F28A8000147E8 /* ClubViewParallaxControllerViewController.m */,
 				52C5FC8E1A3F29E1000147E8 /* ClubImagesPageViewController.h */,
@@ -2344,6 +2352,8 @@
 				528C85971A56E3AC00BBB148 /* ClubProfileTabBarViewController.m */,
 				49D8D3131986AA8100015052 /* ClubCheckinsViewController.h */,
 				49D8D3141986AA8100015052 /* ClubCheckinsViewController.m */,
+				520552301A94D12400E215ED /* InfoStructure.h */,
+				520552311A94D12400E215ED /* InfoStructure.m */,
 			);
 			name = ClubProfileStoryboard;
 			sourceTree = "<group>";
@@ -2931,7 +2941,7 @@
 				498A68DB196C4CFD00BC2859 /* PNResponseDeserialize.m in Sources */,
 				498A68D6196C4CFD00BC2859 /* PNClientStateUpdateResponseParser.m in Sources */,
 				498A68DD196C4CFD00BC2859 /* PNTimeTokenResponseParser.m in Sources */,
-				49836B211961969F00F2A2C6 /* ClubViewController.m in Sources */,
+				49836B211961969F00F2A2C6 /* InfoViewController.m in Sources */,
 				49E831781952F89700D4A26C /* User.m in Sources */,
 				526E6EFA1A8288C800257652 /* HeaderView.m in Sources */,
 				498A68E3196C4CFD00BC2859 /* PNChannelEvents.m in Sources */,
@@ -2953,6 +2963,7 @@
 				49F2C675199C9A29006A3E21 /* Config.m in Sources */,
 				4993F2151979194900A225BE /* MRMessageInterceptor.m in Sources */,
 				4993F2161979194900A225BE /* MRWeakProxy.m in Sources */,
+				520552321A94D12400E215ED /* InfoStructure.m in Sources */,
 				F4EECF1E177C99F400778578 /* main.m in Sources */,
 				5202AFF81A77D142000EF534 /* NewsFeedTableView.m in Sources */,
 				520897671A407C6700E8DD06 /* JSQMessagesCollectionViewFlowLayout.m in Sources */,
@@ -2987,6 +2998,7 @@
 				F4EECF2E177C99F400778578 /* PlacesViewController.m in Sources */,
 				5208976E1A407C6700E8DD06 /* JSQMessagesBubbleImage.m in Sources */,
 				498A68CC196C4CFD00BC2859 /* PNWriteBuffer.m in Sources */,
+				520552251A94924A00E215ED /* EventTabBarController.m in Sources */,
 				498A68CE196C4CFD00BC2859 /* PNChannelPresence.m in Sources */,
 				49ABA126198922EE00B060D0 /* WorkingHour.m in Sources */,
 				522F75F91A6524680095991F /* EBPhotoPagesOperation.m in Sources */,

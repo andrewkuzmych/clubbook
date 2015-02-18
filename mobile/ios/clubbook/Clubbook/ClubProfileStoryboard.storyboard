@@ -23,7 +23,6 @@
                         <segue destination="ZjF-WR-zDq" kind="relationship" relationship="viewControllers" id="34g-sZ-PpL"/>
                         <segue destination="m8T-Jj-ixX" kind="relationship" relationship="viewControllers" id="nFq-c4-8b3"/>
                         <segue destination="Zmr-z4-vJn" kind="relationship" relationship="viewControllers" id="9h3-hd-88d"/>
-                        <segue destination="dN6-Iy-c8J" kind="relationship" relationship="viewControllers" id="Bi2-dY-lc1"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qSV-Kx-oM3" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -322,7 +321,7 @@
         <!--Parallax-->
         <scene sceneID="stG-PH-Lqn">
             <objects>
-                <viewController title="About" id="m8T-Jj-ixX" userLabel="Parallax" customClass="ClubViewParallaxControllerViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="parallax" title="About" id="m8T-Jj-ixX" userLabel="Parallax" customClass="ClubViewParallaxControllerViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Dwm-1U-qpb"/>
                         <viewControllerLayoutGuide type="bottom" id="OAj-Br-FHj"/>
@@ -339,10 +338,10 @@
             </objects>
             <point key="canvasLocation" x="-7" y="-1637"/>
         </scene>
-        <!--Club View Controller-->
+        <!--Info View Controller-->
         <scene sceneID="Y2c-mf-WqM">
             <objects>
-                <tableViewController storyboardIdentifier="ClubViewController" id="b78-dn-OGn" customClass="ClubViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="ClubViewController" id="b78-dn-OGn" customClass="InfoViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="TPR-TJ-uhf">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -945,7 +944,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZxE-q9-k5Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="633" y="-1379"/>
+            <point key="canvasLocation" x="797" y="-1417"/>
         </scene>
         <!--Item-->
         <scene sceneID="DMx-1M-gaJ">
@@ -956,11 +955,11 @@
                         <viewControllerLayoutGuide type="bottom" id="DxW-OP-jhw"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="sum-9i-0CB">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Okg-6J-dFH" customClass="EventsView">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="519"/>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Okg-6J-dFH" customClass="EventsView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="519"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                         </subviews>

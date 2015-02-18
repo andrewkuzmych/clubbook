@@ -8,15 +8,17 @@
 
 #import "QMBParallaxScrollViewController.h"
 #import "ClubImagesPageViewController.h"
-#import "ClubViewController.h"
+#import "InfoViewController.h"
 #import "TMFloatingButton.h"
+#import "DJ.h"
 
 @interface ClubViewParallaxControllerViewController : QMBParallaxScrollViewController <QMBParallaxScrollViewControllerDelegate>
 
 @property (weak, nonatomic) ClubImagesPageViewController* clubImages;
-@property (weak, nonatomic) ClubViewController* clubView;
+@property (weak, nonatomic) InfoViewController* clubView;
 
 @property (strong, nonatomic) TMFloatingButton *followButton;
 @property (strong, nonatomic) Place* place;
+@property (strong, nonatomic) DJ* dj;
 
 @end

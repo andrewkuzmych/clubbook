@@ -10,6 +10,7 @@
 
 @interface DJ : NSObject
 
+@property (strong, nonatomic) NSString* djId;
 @property (strong, nonatomic) NSString* avatar;
 @property (strong, nonatomic) NSString* name;
 @property (strong, nonatomic) NSString* email;

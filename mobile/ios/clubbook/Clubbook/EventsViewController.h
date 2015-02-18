@@ -9,11 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "BaseViewController.h"
 #import "EventsView.h"
-#import "Place.h"
+#import "Event.h"
 
 @interface EventsViewController : BaseViewController <InfiniteScrollTableViewTransitionDelegate>
-@property (weak, nonatomic) IBOutlet EventsView *eventsView;
 
-@property (strong, nonatomic) Place* place;
+@property (strong, nonatomic) IBOutlet UIView *mainView;
+@property (strong, nonatomic) EventsView *eventsView;
+@property (strong, nonatomic) Event* event;
 
 @end

@@ -15,5 +15,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *activityIndicator;
 @property (weak, nonatomic) IBOutlet UILabel *noDataLabel;
 
-- (void) customInit:(double)userLat userLon:(double)userLon accessTOken:(NSString*)accessToken;
+- (void) customInitType:(NSString*) eventsType userLat:(double)userLat userLon:(double)userLon accessTOken:(NSString*)accessToken;
 @end

@@ -223,6 +223,12 @@
             event.place = [self getPlace:venue];
         }
         
+        NSDictionary* dj = [eventDic objectForKey:@"dj"];
+        event.dj = nil;
+        if (dj != nil) {
+            event.dj = [self getDJAndBand:dj];
+        }
+        
         
         [events addObject:event];
         }
@@ -241,12 +247,38 @@
     
     NSMutableArray *djs = [[NSMutableArray alloc] init];
     
-    //NSArray *elements = [parsedObject objectForKey:@"events"];
+    NSArray *elements = [parsedObject objectForKey:@"events"];
     
-    /*for (NSDictionary *djsDic in elements) {
-        
-    }*/
+    for (NSDictionary *djsDic in elements) {
+        DJ* dj = [self getDJAndBand:djsDic];
+        [djs addObject:dj];
+    }
     return djs;
+}
+
++  (DJ*) getDJAndBand:(NSDictionary*) dict {
+    DJ *dj = [[DJ alloc] init];
+    
+    dj.djId = [dict objectForKey:@"_id"];
+    dj.avatar = [dict objectForKey:@"logo"];
+    dj.name = [dict objectForKey:@"name"];
+    dj.email = [dict objectForKey:@"email"];
+    dj.phone = [dict objectForKey:@"phone"];
+    dj.music = [dict objectForKey:@"music"];
+    dj.info = [dict objectForKey:@"info"];
+    dj.website = [dict objectForKey:@"site"];
+    
+    NSMutableArray *photos = [[NSMutableArray alloc] init];
+    
+    NSArray *dj_photos = [dict objectForKey:@"photos"];
+    
+    for (NSString *dj_photo in dj_photos) {
+        [photos addObject:dj_photo];
+    }
+    
+    dj.photos = photos;
+    
+    return dj;
 }
 
 + (FriendsResult *)friendsJSON:(NSData *)objectNotation error:(NSError **)error

@@ -10,7 +10,7 @@
 #import "EventsCell.h"
 #import "Event.h"
 #import "LocationHelper.h"
-#import "EventDetailsViewController.h"
+#import "EventTabBarController.h"
 
 @implementation EventsTableView
 
@@ -39,20 +39,21 @@
     [super initData:userLat userLon:userLon accessToken:accessToken];
     UINib *nib = [UINib nibWithNibName:@"EventsCell" bundle:nil];
     [self registerNib:nib forCellReuseIdentifier:@"EventsCell"];
+    self.sortBy = @"";
 }
 
 - (void) searchForWord:(NSString*) searchWord {
     [super searchForWord:searchWord];
-    [self.manager retrieveEvents:self.userLat lon:self.userLon take:10 skip:0 distance:0 search:searchWord accessToken:self.accessToken];
+    [self.manager retrieveEventsType:self.eventTypes sortBy:self.sortBy lat:self.userLat lon:self.userLon take:10 skip:0 distance:0 search:searchWord accessToken:self.accessToken];
 }
 
 - (void)loadEventsTake:(int)take skip:(int)skip
 {
     if (!self.singlePlaceEvents) {
-       [self.manager retrieveEvents:self.userLat lon:self.userLon take:take skip:skip distance:0 search:@"" accessToken:self.accessToken];
+       [self.manager retrieveEventsType:self.eventTypes sortBy:self.sortBy lat:self.userLat lon:self.userLon take:take skip:skip distance:0 search:@"" accessToken:self.accessToken];
     }
     else {
-       [self.manager retrieveEventsById:self.placeId type:self.type accessToken:self.accessToken];
+       [self.manager retrieveEventsById:self.placeId type:self.placeType accessToken:self.accessToken];
     }
 }
 
@@ -71,7 +72,10 @@
     NSTimeInterval daysStart = [event.startTime timeIntervalSinceReferenceDate];
     NSTimeInterval daysEnd = [event.endTime timeIntervalSinceReferenceDate];
     
-    if (daysNow >= daysStart && daysNow <= daysEnd) {
+    if (daysNow >= daysEnd) {
+        return @"Ended";
+    }
+    else if (daysNow >= daysStart && daysNow <= daysEnd) {
         return @"Started";
     }
     else {
@@ -100,7 +104,11 @@
     [cell.distanceLabel setText:[LocationHelper convertDistance:disatanceInt]];
     
     NSString* statusString = [self formatTimeToEventLabelText:event];
-    if ([statusString isEqualToString:@"Started"]) {
+    if ([statusString isEqualToString:@"Ended"]) {
+        [cell.statusLabel setTextColor:[UIColor colorWithRed:0.578 green:0.000 blue:0.000 alpha:1.000]];
+        [cell.statusLabel setText:statusString];
+    }
+    else if ([statusString isEqualToString:@"Started"]) {
         [cell.statusLabel setText:statusString];
     }
     else {
@@ -118,7 +126,7 @@
     Event *event = self.dataArray[selectedIndexPath.row];
     
     UIStoryboard *eventStoryboard = [UIStoryboard storyboardWithName:@"EventsStoryboard" bundle: nil];
-    EventDetailsViewController *eventController  = [eventStoryboard instantiateInitialViewController];
+    EventTabBarController *eventController  = [eventStoryboard instantiateInitialViewController];
     eventController.event = event;
     
     [self transitToController:eventController];

@@ -18,11 +18,26 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString* user_accessToken = [defaults objectForKey:@"accessToken"];
     
+    self.eventsView = [[EventsView alloc] init];
+    
     self.eventsView.eventsTable.transitionDelegate = self;
     self.eventsView.eventsTable.singlePlaceEvents = YES;
-    self.eventsView.eventsTable.placeId = self.place.id;
-    self.eventsView.eventsTable.type = self.place.category;
-    [self.eventsView customInit:user_lat userLon:user_lon accessTOken:user_accessToken];
+    
+    if (self.event.place != nil) {
+        self.eventsView.eventsTable.placeId = self.event.place.id;
+        self.eventsView.eventsTable.placeType = self.event.place.category;
+    }
+    
+    if (self.event.dj != nil) {
+        self.eventsView.eventsTable.placeId = self.event.dj.djId;
+        self.eventsView.eventsTable.placeType = @"dj";
+    }
+    
+    [self.eventsView customInitType:@"" userLat:user_lat userLon:user_lon accessTOken:user_accessToken];
+
+    self.eventsView.frame = CGRectMake(0, 0, self.mainView.frame.size.width, self.mainView.frame.size.height);
+    [self.eventsView.segmaentControl setHidden:YES];
+    [self.mainView addSubview:self.eventsView];
 }
 
 - (void) transitToNewController:(UIViewController *)controller {

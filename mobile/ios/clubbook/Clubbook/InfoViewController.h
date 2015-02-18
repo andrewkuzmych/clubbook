@@ -8,12 +8,15 @@
 
 #import "BaseTableViewController.h"
 #import "CbButton.h"
+#import "WorkingHour.h"
 #import "Place.h"
+#import "InfoStructure.h"
+#import "DJ.h"
 
-@interface ClubViewController : BaseTableViewController
+@interface InfoViewController : BaseTableViewController
 //@property (weak, nonatomic) IBOutlet CbButton *checkinButton;
 
-@property (strong, nonatomic) Place *place;
+@property (strong, nonatomic) InfoStructure *infoData;
 @property (weak, nonatomic) IBOutlet UILabel *clubDescLabel;
 @property (weak, nonatomic) IBOutlet UILabel *ageRestrictionLabel;
 @property (weak, nonatomic) IBOutlet UILabel *capacityLabel;
@@ -42,5 +45,8 @@
 - (IBAction)phoneAction:(id)sender;
 - (IBAction)siteAction:(id)sender;
 - (IBAction)emailAction:(id)sender;
+
+- (void) fillWithDJData:(DJ*) dj;
+- (void) fillWithPlaceData:(Place*) place;
 
 @end

@@ -50,8 +50,8 @@
     [self.communicator retrieveDJsAndBands:lat lon:lon take:take skip:skip distance:distance search:search accessToken:accessToken];
 }
 
-- (void)retrieveEvents:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken {
-    [self.communicator retrieveEvents:lat lon:lon take:take skip:skip distance:distance search:search accessToken:accessToken];
+- (void)retrieveEventsType:(NSString*)type sortBy:(NSString*)sortBy lat:(double) lat lon:(double) lon take:(int) take skip:(int) skip distance:(int) distance search:(NSString*) search accessToken:(NSString *) accessToken {
+    [self.communicator retrieveEventsType:type sortBy:sortBy lat:lat lon:lon take:take skip:skip distance:distance search:search accessToken:accessToken];
 }
 
 - (void)retrieveEventsById:(NSString*)objectId type:(NSString*)type accessToken:(NSString *) accessToken {

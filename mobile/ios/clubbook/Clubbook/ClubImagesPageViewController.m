@@ -16,7 +16,7 @@
 
 @implementation ClubImagesPageViewController
 {
-    NSMutableArray* photos;
+    NSMutableArray* photosAr;
 }
 
 - (void)viewDidLoad {
@@ -24,10 +24,10 @@
     // Do any additional setup after loading the view.
     self.imageView.indicatorDisabled = YES;
     
-    photos = [[NSMutableArray alloc] init];
-    for (int i = 0; i < [self.place.photos count]; i++) {
+    photosAr = [[NSMutableArray alloc] init];
+    for (int i = 0; i < [self.photos count]; i++) {
 
-        NSURL* url = [NSURL URLWithString:[self.place.photos objectAtIndex:i]];
+        NSURL* url = [NSURL URLWithString:[self.photos objectAtIndex:i]];
         
         [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize)
          {}
@@ -35,14 +35,14 @@
          {
              if (image)
              {
-                 [photos addObject:image];
+                 [photosAr addObject:image];
                  [self.imageView reloadData];
              }
          }];
     }
     
     //download place avatar
-    [self.placeAvatar sd_setImageWithURL:[NSURL URLWithString:self.place.avatar] placeholderImage:[UIImage imageNamed:@"avatar_default.png"]];
+    [self.placeAvatar sd_setImageWithURL:[NSURL URLWithString:self.avatar] placeholderImage:[UIImage imageNamed:@"avatar_default.png"]];
     
     self.imageView.delegate = self;
     self.imageView.dataSource = self;
@@ -60,7 +60,7 @@
 
 - (NSArray *) arrayWithImages
 {
-    return [[NSArray alloc] initWithArray: photos];
+    return [[NSArray alloc] initWithArray: photosAr];
 }
 
 - (UIViewContentMode) contentModeForImage:(NSUInteger)image

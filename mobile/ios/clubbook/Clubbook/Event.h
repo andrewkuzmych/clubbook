@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Place.h"
+#import "DJ.h"
 
 @interface Event : NSObject
 
@@ -22,6 +23,7 @@
 @property (strong, nonatomic) NSMutableDictionary* location;
 @property (strong, nonatomic) NSString* address;
 @property (strong, nonatomic) Place* place;
+@property (strong, nonatomic) DJ* dj;
 @property double distance;
 
 @end

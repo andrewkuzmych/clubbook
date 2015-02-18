@@ -34,10 +34,12 @@
 - (void) awakeFromNib {
 }
 
-- (void) customInit:(double)userLat userLon:(double)userLon accessTOken:(NSString*)accessToken {
+- (void) customInitType:(NSString*) eventsType userLat:(double)userLat userLon:(double)userLon accessTOken:(NSString*)accessToken {
     if (self.eventsTable) {
         self.eventsTable.infiniteDelegate = self;
         [self.eventsTable initData:userLat userLon:userLon accessToken:accessToken];
+        self.eventsTable.eventTypes = eventsType;
+        self.eventsTable.sortBy = @"";
         [self.eventsTable makeInitialLoad];
     }
 }
@@ -57,6 +59,15 @@
     [self.noDataLabel setHidden:YES];
 }
 
+- (IBAction)handleSortingChange:(id)sender {
+    if (self.segmaentControl.selectedSegmentIndex == 1) {
+        self.eventsTable.sortBy = @"date";
+    }
+    else {
+        self.eventsTable.sortBy = @"";
+    }
+    [self.eventsTable refreshData];
+}
 
 /*
 // Only override drawRect: if you perform custom drawing.

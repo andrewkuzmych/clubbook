@@ -46,7 +46,10 @@
     NSString* descText = self.event.eventDescription;
     
     [self.descriptionText setText:descText];
-        
+    
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    self.extendedLayoutIncludesOpaqueBars = NO;
+    self.automaticallyAdjustsScrollViewInsets = NO;
     // Do any additional setup after loading the view.
 }
 

@@ -16,5 +16,6 @@
 
 @property (weak, nonatomic) IBOutlet KIImagePager *imageView;
 @property (weak, nonatomic) IBOutlet UIImageView *placeAvatar;
-@property (strong, nonatomic) Place *place;
+@property (strong, nonatomic) NSMutableArray *photos;
+@property (strong, nonatomic) NSString* avatar;
 @end

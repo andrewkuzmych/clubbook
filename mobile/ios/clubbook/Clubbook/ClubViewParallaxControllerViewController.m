@@ -25,8 +25,17 @@
     self.clubImages = [self.storyboard instantiateViewControllerWithIdentifier:@"ClubImagesPageViewController"];
     self.clubView = [self.storyboard instantiateViewControllerWithIdentifier:@"ClubViewController"];
     
-    self.clubView.place = self.place;
-    self.clubImages.place = self.place;
+    if (self.place != nil) {
+        [self.clubView fillWithPlaceData:self.place];
+        self.clubImages.photos = self.place.photos;
+        self.clubImages.avatar = self.place.avatar;
+    }
+    
+    if (self.dj != nil) {
+        [self.clubView fillWithDJData:self.dj];
+        self.clubImages.photos = self.dj.photos;
+        self.clubImages.avatar = self.dj.avatar;
+    }
     
     self.delegate = self;
     

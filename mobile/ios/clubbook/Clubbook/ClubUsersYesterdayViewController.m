@@ -18,7 +18,7 @@
 #import "Constants.h"
 #import "CSNotificationView.h"
 #import "Cloudinary.h"
-#import "ClubViewController.h"
+#import "InfoViewController.h"
 #import "GlobalVars.h"
 #import "TransitionFromClubUsersToUser.h"
 #import "ProfilePagesViewController.h"
@@ -160,8 +160,8 @@
         profilePagesViewController.index = indexPath.row;
     }
     else if ([[segue identifier] isEqualToString:@"onClubInfo"]) {
-        ClubViewController *clubController =  [segue destinationViewController];
-        clubController.place = _place;
+        InfoViewController *clubController =  [segue destinationViewController];
+        [clubController fillWithPlaceData:self.place];
     }
 }
 

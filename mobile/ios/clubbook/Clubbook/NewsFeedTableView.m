@@ -72,8 +72,6 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
 - (void) initData {
     newsArray = [[NSMutableArray alloc] init];
     
-    [self setBackgroundColor:[UIColor colorWithRed:0.980 green:0.839 blue:1.000 alpha:1.000]];
-    
     avatarImages = [[NSMutableDictionary alloc] init];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -118,6 +116,9 @@ static NSString* PhotoCellIdentifier = @"NewsPhotoCell";
         if ([newsArray count] > 0) {
             [self reloadData];
         }
+    }
+    else {
+        [self setHidden:YES];
     }
     
     [self.pullToRefreshView stopAnimating];

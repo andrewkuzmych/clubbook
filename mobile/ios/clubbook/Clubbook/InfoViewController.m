@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 clubbook. All rights reserved.
 //
 
-#import "ClubViewController.h"
+#import "InfoViewController.h"
 #import "ProfileCell.h"
 #import "HeaderView.h"
 #import "ClubFooterView.h"
@@ -20,7 +20,7 @@
 #import "WorkingHour.h"
 #import <MapKit/MapKit.h>
 
-@interface ClubViewController (){
+@interface InfoViewController (){
     BOOL showAllUsers;
     int collapsedUserCount;
 }
@@ -30,7 +30,7 @@
 
 @end
 
-@implementation ClubViewController
+@implementation InfoViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -47,7 +47,7 @@
 {
     [super viewDidLoad];
     
-    self.title = self.place.title;
+    self.title = self.infoData.name;
     
     [self populateData];
 }
@@ -66,52 +66,52 @@
 
 - (void)populateData
 {    
-    if (self.place.address!= nil) {
-        [self.addressLabel setText:self.place.address];
+    if (self.infoData.adress != nil) {
+        [self.addressLabel setText: self.infoData.adress];
     } else {
         self.addressLabel.text = NSLocalizedString(@"unknown", nil);
     }
     
-    if (self.place.site!= nil) {
-        [self.siteButton setTitle:self.place.site forState:UIControlStateNormal];
+    if (self.infoData.webSite != nil) {
+        [self.siteButton setTitle:self.infoData.webSite forState:UIControlStateNormal];
     } else {
         [self.siteButton setTitle:NSLocalizedString(@"unknown", nil) forState:UIControlStateNormal];
     }
     
-    if (self.place.email!= nil) {
-        [self.emailButton setTitle:self.place.email forState:UIControlStateNormal];
+    if (self.infoData.email != nil) {
+        [self.emailButton setTitle:self.infoData.email forState:UIControlStateNormal];
     } else {
         [self.emailButton setTitle:NSLocalizedString(@"unknown", nil) forState:UIControlStateNormal];
     }
     
-    if (self.place.phone!= nil) {
-        [self.phoneButton setTitle:self.place.phone forState:UIControlStateNormal];
+    if (self.infoData.phone!= nil) {
+        [self.phoneButton setTitle:self.infoData.phone forState:UIControlStateNormal];
     } else {
         [self.phoneButton setTitle:NSLocalizedString(@"unknown", nil) forState:UIControlStateNormal];
     }
     
-    if (self.place.capacity!= 0) {
-        self.capacityLabel.text =  [NSString stringWithFormat:@"%d",self.place.capacity];
+    if (self.infoData.capacity!= 0) {
+        self.capacityLabel.text =  [NSString stringWithFormat:@"%d",self.infoData.capacity];
     } else {
         self.capacityLabel.text =  NSLocalizedString(@"unknown", nil);
     }
     
-    if (self.place.ageRestriction!= 0) {
-        self.ageRestrictionLabel.text = self.place.ageRestriction;
+    if (self.infoData.ageRestriction!= 0) {
+        self.ageRestrictionLabel.text = self.infoData.ageRestriction;
     } else {
         self.ageRestrictionLabel.text =  NSLocalizedString(@"zero_plus", nil);
     }
     
-    if (self.place.dressCode!= 0) {
-        self.dressCodeLabel.text = self.place.dressCode;
+    if (self.infoData.dressCode!= 0) {
+        self.dressCodeLabel.text = self.infoData.dressCode;
     } else {
         self.dressCodeLabel.text = NSLocalizedString(@"none", nil);
     }
     
-    int disatanceInt = (int)self.place.distance;
+    int disatanceInt = self.infoData.distance;
     self.distanceLabel.text = [LocationHelper convertDistance:disatanceInt];
     
-    self.clubDescLabel.text = self.place.info;
+    self.clubDescLabel.text = self.infoData.infoDescription;
     
     self.monHoursLabel.text = NSLocalizedString(@"unknown", nil);
     self.tueHoursLabel.text = NSLocalizedString(@"unknown", nil);
@@ -121,7 +121,7 @@
     self.satHoursLabel.text = NSLocalizedString(@"unknown", nil);
     self.sanHoursLabel.text = NSLocalizedString(@"unknown", nil);
     
-    for (WorkingHour *workingHour in self.place.workingHours) {
+    for (WorkingHour *workingHour in self.infoData.workingHours) {
         switch (workingHour.day) {
             case 1:
                 [self setWorkingHoursText:workingHour label:self.monHoursLabel];
@@ -164,7 +164,7 @@
     } else
         label.text = NSLocalizedString(@"closed", nil);
     
-    if (workingHour.day == self.place.todayWorkingHours.day) {
+    if (workingHour.day == self.infoData.todayWorkingHour.day) {
         label.font = [UIFont fontWithName:NSLocalizedString(@"fontBold", nil) size:13.0];
         [label setTextColor:[UIColor colorWithRed:0.000 green:0.571 blue:0.000 alpha:1.000]];
     }
@@ -198,13 +198,71 @@
         [self.clubDescLabel sizeToFit];
     }
     
+    if ([self.infoData.infoType isEqualToString:@"dj"]) {
+        for (NSNumber* cellToHide in self.infoData.cellsToHide) {
+            if ([cellToHide integerValue] == indexPath.row) {
+                [cell setHidden:YES];
+                return 0;
+            }
+        }
+    }
+    
     return height;
 }
 
+- (void) fillWithDJData:(DJ*) dj {
+    self.infoData = [[InfoStructure alloc] init];
+    
+    self.infoData.infoType = @"dj";
+    
+    self.infoData.infoDescription = dj.info;
+    self.infoData.phone = dj.phone ;
+    self.infoData.webSite = dj.website;
+    self.infoData.email = dj.email;
+    self.infoData.name = dj.name;
+    self.infoData.music = dj.music;
+    
+    
+    //hide unneeded information
+    self.infoData.cellsToHide = [[NSMutableArray alloc] init];
+    [self.infoData.cellsToHide addObject: [NSNumber numberWithInt:0]];
+    [self.infoData.cellsToHide addObject: [NSNumber numberWithInt:1]];
+    [self.infoData.cellsToHide addObject: [NSNumber numberWithInt:7]];
+    [self.infoData.cellsToHide addObject: [NSNumber numberWithInt:8]];
+    [self.infoData.cellsToHide addObject: [NSNumber numberWithInt:9]];
+    
+    
+}
+
+- (void) fillWithPlaceData:(Place*) place {
+    self.infoData = [[InfoStructure alloc] init];
+    
+    self.infoData.infoType = @"place";
+    
+    self.infoData.infoDescription = place.info;
+    self.infoData.ageRestriction = place.ageRestriction;
+    self.infoData.adress = place.address;
+    self.infoData.dressCode = place.dressCode;
+    self.infoData.phone = place.phone ;
+    self.infoData.webSite = place.site;
+    self.infoData.email = place.email;
+    self.infoData.name = place.title;
+    self.infoData.workingHours = place.workingHours;
+    self.infoData.todayWorkingHour = place.todayWorkingHours;
+    
+    self.infoData.lat= place.lat;
+    self.infoData.lon = place.lon;
+    self.infoData.capacity = place.capacity;
+    self.infoData.distance = place.distance;
+    
+    self.infoData.cellsToHide = [[NSMutableArray alloc] init];
+}
+
+
 - (IBAction)distanceAction:(id)sender {
-    MKPlacemark* place = [[MKPlacemark alloc] initWithCoordinate: CLLocationCoordinate2DMake([self.place.lat doubleValue], [self.place.lon doubleValue]) addressDictionary: nil];
+    MKPlacemark* place = [[MKPlacemark alloc] initWithCoordinate: CLLocationCoordinate2DMake([self.infoData.lat doubleValue], [self.infoData.lon doubleValue]) addressDictionary: nil];
     MKMapItem* destination = [[MKMapItem alloc] initWithPlacemark: place];
-    destination.name = self.place.title;
+    destination.name = self.infoData.name;
     NSArray* items = [[NSArray alloc] initWithObjects: destination, nil];
     NSDictionary* options = [[NSDictionary alloc] initWithObjectsAndKeys:
                              MKLaunchOptionsDirectionsModeWalking,
@@ -213,9 +271,9 @@
 }
 
 - (IBAction)addressAction:(id)sender {
-    MKPlacemark* place = [[MKPlacemark alloc] initWithCoordinate: CLLocationCoordinate2DMake([self.place.lat doubleValue], [self.place.lon doubleValue]) addressDictionary: nil];
+    MKPlacemark* place = [[MKPlacemark alloc] initWithCoordinate: CLLocationCoordinate2DMake([self.infoData.lat doubleValue], [self.infoData.lon doubleValue]) addressDictionary: nil];
     MKMapItem* destination = [[MKMapItem alloc] initWithPlacemark: place];
-    destination.name = self.place.title;
+    destination.name = self.infoData.name;
     NSArray* items = [[NSArray alloc] initWithObjects: destination, nil];
     NSDictionary* options = [[NSDictionary alloc] initWithObjectsAndKeys:
                              MKLaunchOptionsDirectionsModeWalking,
