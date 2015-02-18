@@ -203,6 +203,11 @@ exports.list_dj_events = (params, callback)->
             the_event.dj = the_dj
           callback err, events_updated
 
+exports.list_dj = (params, callback)->
+  console.log "METHOD - Manager list_dj"
+  db_model.Dj.find().sort( { name: 1 } ).skip(params.skip).limit(params.take).exec (err, djs)-> 
+    callback err, djs
+
 exports.list_venue = (params, callback)->
   console.log "METHOD - Manager list_club"
   db_model.Venue.count().exec (err, count)->
@@ -408,7 +413,7 @@ exports.events = (params, callback)->
 exports.venue_events = (params, callback)->
   console.log "METHOD - Events"
   query = JSON.parse('{ "'+ params.type_venue + '":"' + params.objectId+'" }')
-  db_model.Events.find(query).populate(params.type_venue).exec (err, events)-> 
+  db_model.Events.find(query).populate(params.type_venue).skip(params.skip).limit(params.take).exec (err, events)-> 
     if not events
       console.log  'missing events'       
     else
@@ -420,8 +425,9 @@ exports.venue_events = (params, callback)->
 
 exports.venue_news = (params, callback)->
   console.log "METHOD - News"
+  console.log params.take
   query = JSON.parse('{ "'+ params.type_venue + '":"' + params.objectId+'" }')
-  db_model.News.find(query).populate(params.type_venue).exec (err, news)-> 
+  db_model.News.find(query).populate(params.type_venue).skip(params.skip).limit(params.take).exec (err, news)-> 
     if not news
       console.log  'missing news'       
     else

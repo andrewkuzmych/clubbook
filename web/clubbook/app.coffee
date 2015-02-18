@@ -256,6 +256,7 @@ app.get '/_s/obj/club_types', handle_access_token, services.club_types
 #infinite scroll for clubs, festivals, bars, dj events, events
 app.get '/_s/obj/events/list', handle_access_token, services.list_events
 app.get '/_s/obj/dj_events/list', handle_access_token, services.list_dj_events
+app.get '/_s/obj/dj/list', handle_access_token, services.list_dj
 app.get '/_s/obj/:type/list', handle_access_token, services.list_venue
 app.get '/_s/obj/list', handle_access_token, services.get_all_lists
 
