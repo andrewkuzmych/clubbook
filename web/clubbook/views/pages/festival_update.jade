@@ -116,7 +116,7 @@ block content
                       div#upload_images_progress
                         div.bar(style="width:0%;height:18px;background: green;")
 
-                      input(type="hidden", name="club_photos", value="#{festival.club_photos?festival.club_photos.join():''}")
+                      input(type="hidden", name="club_images", value="#{festival.club_photos?festival.club_photos.join():''}")
 
             .form-actions.right
               .row
@@ -171,7 +171,7 @@ block scripts
     });
 
     function updateFestImages() {
-      $('[name=club_photos]').val($('img.club_image').map(function() { return this.src; }).get().join());
+      $('[name=club_images]').val($('img.club_image').map(function() { return this.src; }).get().join());
     }
 
     var geocomplete_options;

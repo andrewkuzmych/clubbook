@@ -205,7 +205,7 @@ exports.club_edit_action = (req, res)->
               even.loc_name = venue.club_name
               even.address = venue.club_address
               even.save (err)->
-          console.log err
+                console.log has_error
           res.redirect "/venue/clubs"
     
 exports.club_delete_action = (req, res)->
@@ -255,7 +255,7 @@ exports.festival_edit_action = (req, res)->
               even.address = venue.club_address
               even.save (err)->
                 console.log err
-                res.redirect "/venue/festivals"
+          res.redirect "/venue/festivals"
 
 exports.festival_delete_action = (req, res)->
   db_model.Venue.findByIdAndRemove(req.params.id).exec (err)->
