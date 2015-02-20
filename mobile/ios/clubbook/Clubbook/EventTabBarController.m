@@ -10,6 +10,7 @@
 #import "EventsViewController.h"
 #import "EventDetailsViewController.h"
 #import "ClubViewParallaxControllerViewController.h"
+#import "NewsFeedViewController.h"
 
 @interface EventTabBarController ()
 
@@ -32,9 +33,25 @@
         }
         if ([v isKindOfClass:[EventsViewController class]]) {
             EventsViewController* controller = (EventsViewController*)v;
-            controller.event = self.event;
-            controller.title = @"All Event";
+            controller.place = self.event.place;
+            controller.dj = self.event.dj;
+            controller.title = @"All Events";
             [controllersWithNames setValue:controller forKey:@"events"];
+        }
+        if ([v isKindOfClass:[NewsFeedViewController class]]) {
+            NewsFeedViewController* controller = (NewsFeedViewController*)v;
+            controller.title = @"All News";
+            
+            if (self.event.place) {
+                controller.type = self.event.place.category;
+                controller.newsObjectId = self.event.place.id;
+            }
+            else if (self.event.dj) {
+                controller.type = @"dj";
+                controller.newsObjectId = self.event.dj.djId;
+            }
+            
+            [controllersWithNames setValue:controller forKey:@"news"];
         }
     }
     
@@ -50,10 +67,11 @@
     [arrayOfControllers addObject:[controllersWithNames objectForKey:@"details"]];
     [arrayOfControllers addObject:[controllersWithNames objectForKey:@"profile"]];
     [arrayOfControllers addObject:[controllersWithNames objectForKey:@"events"]];
-    
+    [arrayOfControllers addObject:[controllersWithNames objectForKey:@"news"]];
     
     [self setViewControllers:arrayOfControllers];
 
+    self.title = self.event.title;
 }
 
 - (void)didReceiveMemoryWarning {

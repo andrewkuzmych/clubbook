@@ -7,13 +7,14 @@
 //
 
 #import "BaseViewController.h"
-#import "NewsFeedTableView.h"
-#import "EBPhotoPagesController.h"
-#import "Place.h"
+#import "NewsView.h"
 
-@interface NewsFeedViewController : BaseViewController
 
-@property (weak, nonatomic) IBOutlet NewsFeedTableView *newsFeedTable;
+@interface NewsFeedViewController : BaseViewController <InfiniteScrollTableViewTransitionDelegate>
+@property (strong, nonatomic) IBOutlet UIView *mainView;
+
+@property (strong, nonatomic) NewsView *newsView;
+
 @property (strong, nonatomic) NSString* type;
 @property (strong, nonatomic) NSString* newsObjectId;
 

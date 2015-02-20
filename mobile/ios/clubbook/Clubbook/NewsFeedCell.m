@@ -56,8 +56,4 @@
     }
 }
 
-- (IBAction)handleBuyButton:(id)sender {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.buyLink]];
-}
-
 @end

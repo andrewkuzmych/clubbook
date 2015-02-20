@@ -11,6 +11,7 @@
 #import "ClubViewParallaxControllerViewController.h"
 #import "ClubPhotGalleryCollectionViewController.h"
 #import "NewsFeedViewController.h"
+#import "EventsViewController.h"
 
 @interface ClubProfileTabBarViewController ()
 
@@ -33,11 +34,19 @@
             else if ([v isKindOfClass:[NewsFeedViewController class]]) {
                 NewsFeedViewController *newsController =  (NewsFeedViewController *)v;
                 newsController.title = @"News";
+                newsController.type = self.place.category;
+                newsController.newsObjectId = self.place.id;
             }
             else if ([v isKindOfClass:[ClubCheckinsViewController class]]) {
                 ClubCheckinsViewController *clubController =  (ClubCheckinsViewController *)v;
                 clubController.title = @"Checked-in";
                 clubController.place = self.place;
+            }
+            else if ([v isKindOfClass:[EventsViewController class]]) {
+                EventsViewController* controller = (EventsViewController*)v;
+                controller.place = self.place;
+                controller.dj = nil;
+                controller.title = @"Events";
             }
         }
 

@@ -11,6 +11,7 @@
 #import "Event.h"
 #import "LocationHelper.h"
 #import "EventTabBarController.h"
+#import "UIImageView+WebCache.h"
 
 @implementation EventsTableView
 
@@ -40,6 +41,7 @@
     UINib *nib = [UINib nibWithNibName:@"EventsCell" bundle:nil];
     [self registerNib:nib forCellReuseIdentifier:@"EventsCell"];
     self.sortBy = @"";
+
 }
 
 - (void) searchForWord:(NSString*) searchWord {
@@ -53,7 +55,7 @@
        [self.manager retrieveEventsType:self.eventTypes sortBy:self.sortBy lat:self.userLat lon:self.userLon take:take skip:skip distance:0 search:@"" accessToken:self.accessToken];
     }
     else {
-       [self.manager retrieveEventsById:self.placeId type:self.placeType accessToken:self.accessToken];
+        [self.manager retrieveEventsById:self.placeId type:self.placeType skip:skip take:take accessToken:self.accessToken];
     }
 }
 
@@ -80,9 +82,15 @@
     }
     else {
         NSDateComponentsFormatter *formatter = [[NSDateComponentsFormatter alloc] init];
-        formatter.allowedUnits = NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute;
-        formatter.unitsStyle = NSDateComponentsFormatterUnitsStyleShort;
-        NSString* string = [formatter stringFromDate:[NSDate date] toDate:event.endTime];
+        int timeToEvent = daysStart - daysNow;
+        if (timeToEvent > 86400) {
+           formatter.allowedUnits = NSCalendarUnitDay;
+        } else {
+            formatter.allowedUnits = NSCalendarUnitHour | NSCalendarUnitMinute;
+        }
+        
+        formatter.unitsStyle = NSDateComponentsFormatterUnitsStyleAbbreviated;
+        NSString* string = [formatter stringFromDate:[NSDate date] toDate:event.startTime];
         return string;
     }
     
@@ -107,14 +115,24 @@
     if ([statusString isEqualToString:@"Ended"]) {
         [cell.statusLabel setTextColor:[UIColor colorWithRed:0.578 green:0.000 blue:0.000 alpha:1.000]];
         [cell.statusLabel setText:statusString];
+        [cell.timeLeftLabel setHidden:YES];
     }
     else if ([statusString isEqualToString:@"Started"]) {
+        [cell.statusLabel setTextColor:[UIColor colorWithRed:0.209 green:0.811 blue:0.115 alpha:1.000]];
         [cell.statusLabel setText:statusString];
+        [cell.timeLeftLabel setHidden:YES];
     }
     else {
         [cell.statusLabel setTextColor:[UIColor grayColor]];
-        [cell.statusLabel setFont:[UIFont fontWithName:NSLocalizedString(@"fontRegular", nil) size:12.0]];
-        [cell.statusLabel setText:statusString];
+        [cell.statusLabel setText:@"Starting in:"];
+        [cell.timeLeftLabel setHidden:NO];
+        [cell.timeLeftLabel setText:statusString];
+        
+    }
+    
+    if ([event.photos count] > 0) {
+        NSString* firstPhoto = [event.photos objectAtIndex:0];
+        [cell.avatarView sd_setImageWithURL:[NSURL URLWithString:firstPhoto]];
     }
     
     return cell;

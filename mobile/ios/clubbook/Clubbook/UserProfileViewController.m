@@ -18,6 +18,7 @@
 #import "TransitionFromUserToClubUsers.h"
 #import "ClubCheckinsViewController.h"
 #import "ClubUsersYesterdayViewController.h"
+#import "ClubProfileTabBarViewController.h"
 #import "UserNearbyViewController.h"
 #import "ProfileImagesViewController.h"
 
@@ -45,7 +46,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     self.title = NSLocalizedString(@"userProfile", nil);
     
     [self populatedWithData];
@@ -609,10 +610,9 @@
 
 - (IBAction)placeCheckinAction:(id)sender {
     
-    UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle: nil];
-    ClubCheckinsViewController *clubController  = [mainStoryboard instantiateViewControllerWithIdentifier:@"club"];
-    clubController.place = self.currentPlace;//place.id;
-    clubController.hasBack = YES;
+    UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"ClubProfileStoryboard" bundle: nil];
+    ClubProfileTabBarViewController *clubController  = [mainStoryboard instantiateInitialViewController];
+    clubController.place = self.currentPlace;
     // ClubUsersViewController *clubController =  [segue ClubUsersViewController];
     [UIView beginAnimations:@"animation" context:nil];
     [UIView setAnimationDuration:0.5];

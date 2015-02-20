@@ -7,14 +7,15 @@
 //
 
 #import "EBPhotoPagesController.h"
+#import "InfiniteScrollTableView.h"
 #import <UIKit/UIKit.h>
 
-@interface NewsFeedTableView : UITableView <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDelegate, UITableViewDataSource, EBPhotoPagesDelegate, EBPhotoPagesDataSource, ClubbookManagerDelegate>
+@interface NewsFeedTableView : InfiniteScrollTableView <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDelegate, UITableViewDataSource, EBPhotoPagesDelegate, EBPhotoPagesDataSource, ClubbookManagerDelegate>
 
 @property (strong, nonatomic) NSString* newsObjectId;
 @property (strong, nonatomic) NSString* type;
 @property (weak, nonatomic) UIViewController* parentViewController;
 
--(void) initializeNewsTableType:(NSString*) type objectId:(NSString*) objectId andParentViewCntroller:(UIViewController*) parent;
+- (void) initializeNewsTableType:(double) userLat userLon:(double)userLon accessToken:(NSString*) accessToken type:(NSString*) type objectId:(NSString*) objectId andParentViewCntroller:(UIViewController*) parent;
 
 @end

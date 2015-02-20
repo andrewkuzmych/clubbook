@@ -54,8 +54,8 @@
     [self.communicator retrieveEventsType:type sortBy:sortBy lat:lat lon:lon take:take skip:skip distance:distance search:search accessToken:accessToken];
 }
 
-- (void)retrieveEventsById:(NSString*)objectId type:(NSString*)type accessToken:(NSString *) accessToken {
-    [self.communicator retrieveEventsById:objectId type:type accessToken:accessToken];
+- (void)retrieveEventsById:(NSString*)objectId type:(NSString*)type skip:(int) skip take:(int) take accessToken:(NSString *) accessToken {
+    [self.communicator retrieveEventsById:objectId type:type skip:skip take:take accessToken:accessToken];
 }
 
 - (void) retrieveYesterdayPlacesAccessToken:(NSString*) accessToken {

@@ -17,7 +17,7 @@
 #import "SWRevealViewController.h"
 #import "MainMenuCollectionViewCell.h"
 #import "PlacesViewController.h"
-#import "NewsFeedViewController.h"
+#import "UserNewsFeedViewController.h"
 #import "LocationManagerSingleton.h"
 
 
@@ -68,6 +68,8 @@
     userLon = userLocation.coordinate.longitude;
     userLat = userLocation.coordinate.latitude;
 
+    self.revealViewController.panGestureRecognizer.enabled = NO;
+    
     [self loadData];
 }
 
@@ -91,13 +93,7 @@
 }
 
 - (void) prepareForSegue: (UIStoryboardSegue *) segue sender: (id) sender
-{
-    if([[segue identifier] isEqualToString:@"news"]){
-        NewsFeedViewController *newsController = [segue destinationViewController];
-        newsController.newsObjectId = @"";
-        newsController.type = @"user";
-    }
-    
+{    
     // Set the title of navigation bar by using the menu items
     NSIndexPath *indexPath = [[self.menuCollectionView indexPathsForSelectedItems] objectAtIndex:0];
     MainMenuCollectionViewCell* selectedItem = (MainMenuCollectionViewCell*)[self.menuCollectionView cellForItemAtIndexPath:indexPath];

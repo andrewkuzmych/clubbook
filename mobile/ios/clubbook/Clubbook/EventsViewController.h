@@ -10,11 +10,15 @@
 #import "BaseViewController.h"
 #import "EventsView.h"
 #import "Event.h"
+#import "Place.h"
+#import "DJ.h"
 
 @interface EventsViewController : BaseViewController <InfiniteScrollTableViewTransitionDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *mainView;
 @property (strong, nonatomic) EventsView *eventsView;
-@property (strong, nonatomic) Event* event;
+
+@property (strong, nonatomic) Place* place;
+@property (strong, nonatomic) DJ* dj;
 
 @end

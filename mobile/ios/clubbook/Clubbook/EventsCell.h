@@ -14,5 +14,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *placeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
 @property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
+@property (weak, nonatomic) IBOutlet UILabel *timeLeftLabel;
 
 @end

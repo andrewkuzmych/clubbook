@@ -81,30 +81,40 @@
 - (void)populateData {
     CLLocation *loc = [[CLLocation alloc] initWithLatitude:[self.place.lat doubleValue] longitude:[self.place.lon doubleValue]];
     
-    CLLocationDistance distance = [[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc];
-    self.place.distance = distance;
-    WorkingHour *hours = self.place.todayWorkingHours;
-    if (hours != nil) {
-        if ([hours.status isEqualToString:@"opened"] ) {
-            self.openCloseLabel.text = NSLocalizedString(@"Open", nil);
-        }
-        else {
-            self.openCloseLabel.text = NSLocalizedString(@"Closed", nil);
-        }
-        if (hours.startTime && hours.endTime) {
-            self.hoursLabel.text = [NSString stringWithFormat:@"%@ - %@", hours.startTime, hours.endTime];
-        }
+    
+    self.hoursLabel.text = @"";
+    if ([self.place.category isEqualToString:@"festival"]) {
+        self.hoursLabel.text = @"";
+        self.openCloseLabel.text = NSLocalizedString(@"Festival", nil);
     }
     else {
-        self.openCloseLabel.text = @"";
-        self.hoursLabel.text = NSLocalizedString(@"unknown", nil);
+        WorkingHour *hours = self.place.todayWorkingHours;
+        if (hours != nil) {
+            if ([hours.status isEqualToString:@"opened"] ) {
+                self.openCloseLabel.text = NSLocalizedString(@"Open", nil);
+                [self.openCloseLabel setTextColor:[UIColor colorWithRed:0.000 green:0.664 blue:0.000 alpha:1.000]];
+            }
+            else {
+                self.openCloseLabel.text = NSLocalizedString(@"Closed", nil);
+                [self.openCloseLabel setTextColor:[UIColor colorWithRed:0.875 green:0.136 blue:0.229 alpha:1.000]];
+            }
+            if (hours.startTime && hours.endTime) {
+                self.hoursLabel.text = [NSString stringWithFormat:@"%@ - %@", hours.startTime, hours.endTime];
+            }
+        }
+        else {
+            self.openCloseLabel.text = @"";
+            self.hoursLabel.text = NSLocalizedString(@"unknown", nil);
+        }
     }
-    
+
+
+    CLLocationDistance distance = [[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc];
+    self.place.distance = distance;
     int disatanceInt = (int)self.place.distance;
     self.distanceLabel.text = [LocationHelper convertDistance:disatanceInt];
     
     isCheckedIn = [LocationHelper isCheckinHere:self.place];
-    [self.checkinButton setHidden:NO];
     
     self.checkinCount.text = [NSString stringWithFormat:@"%d",self.place.countOfUsers];
     self.friendsCount.text = [NSString stringWithFormat:@"%d",self.place.friendsCount];
@@ -125,6 +135,8 @@
         [self.checkinButton addAndApplyState:stateOn forName:@"stateOn"];
         [self.checkinButton addState:stateOff forName:@"stateOff"];
     }
+    
+    [self.checkinButton setHidden:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -161,10 +173,15 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         _users = users;
         int friendsCount = 0;
-
+        NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+        NSString *userId = [defaults objectForKey:@"userId"];
         for (User *user in users) {
             if (user.isFriend) {
                  friendsCount++;
+            }
+            
+            if ([user.id isEqualToString:userId]) {
+                [self checkinStatus:YES];
             }
         }
        
@@ -172,6 +189,14 @@
         self.friendsCount.text = [NSString stringWithFormat:@"%d",friendsCount];
         
         [self.profileCollection reloadData];
+        
+        if ([_users count] > 0) {
+            [self.noUsersLabel setHidden:YES];
+        }
+        else {
+            [self.noUsersLabel setHidden:NO];
+        }
+
     });
 }
 

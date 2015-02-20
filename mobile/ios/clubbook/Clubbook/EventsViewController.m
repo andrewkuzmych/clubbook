@@ -12,6 +12,7 @@
 @implementation EventsViewController
 
 - (void) viewDidLoad {
+    [super viewDidLoad];
     double user_lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
     double user_lon = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
     
@@ -23,13 +24,13 @@
     self.eventsView.eventsTable.transitionDelegate = self;
     self.eventsView.eventsTable.singlePlaceEvents = YES;
     
-    if (self.event.place != nil) {
-        self.eventsView.eventsTable.placeId = self.event.place.id;
-        self.eventsView.eventsTable.placeType = self.event.place.category;
+    if (self.place != nil) {
+        self.eventsView.eventsTable.placeId = self.place.id;
+        self.eventsView.eventsTable.placeType = self.place.category;
     }
     
-    if (self.event.dj != nil) {
-        self.eventsView.eventsTable.placeId = self.event.dj.djId;
+    if (self.dj != nil) {
+        self.eventsView.eventsTable.placeId = self.dj.djId;
         self.eventsView.eventsTable.placeType = @"dj";
     }
     

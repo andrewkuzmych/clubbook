@@ -123,7 +123,6 @@
     
     NSString *channal = [NSString stringWithFormat:@"checkin"];
     [PubNub subscribeOnChannel:[PNChannel channelWithName:channal shouldObservePresence:YES]];
-
     
     return YES;
 }

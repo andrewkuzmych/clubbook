@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "Place.h"
+#import "BaseViewController.h"
 
-@interface ProfilePagesViewController : UIViewController<UIPageViewControllerDataSource>
+@interface ProfilePagesViewController : BaseViewController<UIPageViewControllerDataSource>
 
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) NSArray *profiles;

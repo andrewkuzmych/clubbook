@@ -22,6 +22,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *friendsCount;
 @property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
 @property (strong, nonatomic) TMFloatingButton *checkinButton;
+@property (weak, nonatomic) IBOutlet UILabel *noUsersLabel;
 
 - (ProfileCell*)collectionViewCellForThing:(User *)user;
 @end

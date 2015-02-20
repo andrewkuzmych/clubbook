@@ -38,7 +38,7 @@
 }
 
 - (void) initFilterTabBar {
-    [self.slideTabBarView setTabBarHeight:40.0];
+    [self.slideTabBarView setTabBarHeight:60.0];
     [self.slideTabBarView setAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth];
     [self.slideTabBarView setTabBarBackgroundColor:[UIColor colorWithRed:0.651 green:0 blue:0.867 alpha:1]];
     [self.slideTabBarView setSeparatorStyle:SPSlideTabBarSeparatorStyleNone];

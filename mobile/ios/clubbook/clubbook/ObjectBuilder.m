@@ -109,7 +109,7 @@
     for (NSDictionary *placeDic in venues) {
         Place *place = [[Place alloc] init];
         
-        place.id  = [placeDic objectForKey:@"id"];
+        place.id  = [placeDic objectForKey:@"_id"];
         place.title = [placeDic objectForKey:@"club_name"];
         place.phone = [placeDic objectForKey:@"club_phone"];
         place.address = [placeDic objectForKey:@"club_address"];
@@ -207,11 +207,20 @@
         event.share = [eventDic objectForKey:@"share"];
         event.buyTickets = [eventDic objectForKey:@"buy_tickets"];
         event.eventDescription = [eventDic objectForKey:@"description"];
-        event.photos = [eventDic objectForKey:@"photo"];
+        
         event.locationName = [eventDic objectForKey:@"loc_name"];
         event.location = [eventDic objectForKey:@"loc"];
         event.address = [eventDic objectForKey:@"address"];
         event.distance = [[eventDic objectForKey:@"distance"] doubleValue] * 1000;
+        
+        NSMutableArray *photos = [[NSMutableArray alloc] init];
+        NSArray *event_photos = [eventDic objectForKey:@"photos"];
+        
+        for (NSString *event_photo in event_photos) {
+            [photos addObject:event_photo];
+        }
+        
+        event.photos = photos;
         
         NSDictionary* venue = [eventDic objectForKey:@"club"];
         if (venue == nil) {
@@ -582,10 +591,6 @@
         newsObject.newsDescription = [newsDic objectForKey:@"description"];
         newsObject.photos = [newsDic objectForKey:@"photos"];
         
-        NSMutableDictionary *venue = [newsDic objectForKey:@"venue"];
-        newsObject.title = [venue objectForKey:@"club_name"];
-        newsObject.avatarPath = [venue objectForKey:@"club_logo"];
-        
         newsObject.buyLink = [newsDic objectForKey:@"buy_tickets"];
         newsObject.shareLink = [newsDic objectForKey:@"share"];
         
@@ -608,6 +613,22 @@
         
         newsObject.tempDownlaodedPhotos = [[NSMutableDictionary alloc] init];
         
+        NSDictionary* venue = [newsDic objectForKey:@"club"];
+        if (venue == nil) {
+            venue = [newsDic objectForKey:@"festival"];
+        }
+        
+        newsObject.place = nil;
+        if (venue != nil) {
+            newsObject.place = [self getPlace:venue];
+        }
+        
+        NSDictionary* dj = [newsDic objectForKey:@"dj"];
+        newsObject.dj = nil;
+        if (dj != nil) {
+            newsObject.dj = [self getDJAndBand:dj];
+        }
+
         [news addObject:newsObject];
     }
     

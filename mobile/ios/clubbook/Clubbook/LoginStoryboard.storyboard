@@ -33,9 +33,8 @@
         <!--Navigation Controller-->
         <scene sceneID="sfN-FT-uJw">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="m9o-4Q-kIt" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController storyboardIdentifier="main" definesPresentationContext="YES" id="7Jj-jG-TCf" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" backIndicatorImage="F632A731-DA9E-41CD-95A9-B0C0F4B12709" backIndicatorTransitionMaskImage="CFC77770-87FD-4C51-B433-2137CC42B83B" id="Ajy-7P-25J">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" backIndicatorImage="B1DFF15A-76F6-4363-8B86-4DEC0AA941DB" backIndicatorTransitionMaskImage="D16EB3DB-C501-4E30-BE5B-91493E2A23E0" id="Ajy-7P-25J">
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.20392156859999999" green="0.01176470588" blue="0.27058823529999998" alpha="1" colorSpace="calibratedRGB"/>
                         <textAttributes key="titleTextAttributes">
@@ -50,6 +49,7 @@
                         <segue destination="xYc-bH-6RQ" kind="relationship" relationship="rootViewController" id="lSN-h5-jZa"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="m9o-4Q-kIt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-4368" y="-2472"/>
         </scene>
@@ -522,7 +522,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="CFC77770-87FD-4C51-B433-2137CC42B83B" width="60" height="60">
+        <image name="B1DFF15A-76F6-4363-8B86-4DEC0AA941DB" width="60" height="60">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOzxYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBMU
 GR4fJSYsLzU4VSRudWxs1QkKCwwNDg8QERJWTlNTaXplViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBz
@@ -538,7 +538,7 @@ AZ4BpgGzAbgBugG8AcEByQHMAdEB2QHcAe4B8QH2AAAAAAAAAgEAAAAAAAAAPwAAAAAAAAAAAAAAAAAA
 Afg
 </mutableData>
         </image>
-        <image name="F632A731-DA9E-41CD-95A9-B0C0F4B12709" width="60" height="60">
+        <image name="D16EB3DB-C501-4E30-BE5B-91493E2A23E0" width="60" height="60">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOzxYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBMU
 GR4fJSYsLzU4VSRudWxs1QkKCwwNDg8QERJWTlNTaXplViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBz

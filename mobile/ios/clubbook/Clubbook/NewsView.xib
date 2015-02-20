@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="NewsView">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="efc-5w-g76">
+                    <rect key="frame" x="290" y="290" width="20" height="20"/>
+                    <color key="color" red="0.60371371220000003" green="0.038118115629999998" blue="0.62296796089999995" alpha="1" colorSpace="calibratedRGB"/>
+                </activityIndicatorView>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Data" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gpe-Ht-Ptg">
+                    <rect key="frame" x="269" y="290" width="63" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.50370896460000003" green="0.50370896460000003" blue="0.50370896460000003" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="mXL-ws-QeW" customClass="NewsFeedTableView">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <color key="backgroundColor" red="0.97918639520202022" green="0.97918639520202022" blue="0.97918639520202022" alpha="1" colorSpace="calibratedRGB"/>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="centerX" secondItem="Gpe-Ht-Ptg" secondAttribute="centerX" id="Dui-hR-n6g"/>
+                <constraint firstAttribute="trailing" secondItem="mXL-ws-QeW" secondAttribute="trailing" id="Rd0-NU-1fR"/>
+                <constraint firstAttribute="centerX" secondItem="efc-5w-g76" secondAttribute="centerX" id="Rzd-Nr-KX0"/>
+                <constraint firstAttribute="centerY" secondItem="efc-5w-g76" secondAttribute="centerY" id="TDf-ba-egQ"/>
+                <constraint firstAttribute="centerY" secondItem="Gpe-Ht-Ptg" secondAttribute="centerY" id="dok-Ee-JjF"/>
+                <constraint firstItem="mXL-ws-QeW" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="eCa-xY-LpZ"/>
+                <constraint firstAttribute="bottom" secondItem="mXL-ws-QeW" secondAttribute="bottom" id="gga-fb-C56"/>
+                <constraint firstItem="mXL-ws-QeW" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="qyz-Kt-i5H"/>
+            </constraints>
+            <connections>
+                <outlet property="activityIndicator" destination="efc-5w-g76" id="rCe-Rg-40W"/>
+                <outlet property="newsTable" destination="mXL-ws-QeW" id="fyD-mq-lz1"/>
+                <outlet property="noDataLabel" destination="Gpe-Ht-Ptg" id="WbZ-rJ-Dii"/>
+            </connections>
+            <point key="canvasLocation" x="241" y="417"/>
+        </view>
+    </objects>
+</document>

@@ -48,6 +48,12 @@
     self.dataArray = [[NSMutableArray alloc] init];
     self.delegate = self;
     self.dataSource = self;
+    
+    self.separatorStyle = UITableViewCellSeparatorStyleNone;
+}
+
+- (void) dealloc {
+    [self.infiniteScrollingView setHidden:NO];
 }
 
 - (void) stopAnimation {
@@ -68,6 +74,13 @@
     }
     else {
         [self.dataArray addObjectsFromArray:data];
+    }
+    
+    if ([self.dataArray count] < 10) {
+        [self.infiniteScrollingView setHidden:YES];
+    }
+    else {
+        [self.infiniteScrollingView setHidden:NO];
     }
     
     BOOL loadedEmpty = [self.dataArray count] <= 0;

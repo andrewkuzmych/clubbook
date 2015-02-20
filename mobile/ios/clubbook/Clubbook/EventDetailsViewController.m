@@ -11,6 +11,8 @@
 #import <FacebookSDK/FacebookSDK.h>
 #import <EventKit/EventKit.h>
 #import "ClubProfileTabBarViewController.h"
+#import "UIImageView+WebCache.h"
+#import <MapKit/MapKit.h>
 
 @interface EventDetailsViewController ()
 
@@ -24,7 +26,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     [self.nameLabel setText:self.event.title];
     [self.placeNameLabel setText:self.event.locationName];
     
@@ -39,6 +41,11 @@
     }
     else {
         timeOnly = [[DateHelper sharedSingleton] get12hTime:self.event.startTime];
+    }
+    
+    if ([self.event.photos count] > 0) {
+        NSString* firstPhoto = [self.event.photos objectAtIndex:0];
+        [self.coverPhotoView sd_setImageWithURL:[NSURL URLWithString:firstPhoto]];
     }
     
     [self.timeLabel setText:timeOnly];
@@ -82,16 +89,18 @@
 - (IBAction)handleTicketsButton:(id)sender {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.event.buyTickets]];
 }
-
-- (void) handleWhereButton {
-    UIStoryboard *clubProfileStoryboard = [UIStoryboard storyboardWithName:@"ClubProfileStoryboard" bundle: nil];
-    ClubProfileTabBarViewController *clubController  = [clubProfileStoryboard instantiateInitialViewController];
-    clubController.place = self.event.place;
-    [UIView beginAnimations:@"animation" context:nil];
-    [UIView setAnimationDuration:0.5];
-    [self.navigationController pushViewController:clubController animated:NO];
-    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:NO];
-    [UIView commitAnimations];
+- (IBAction)handleLocationButton:(id)sender {
+    double lat = [[self.event.location objectForKey:@"lat"] doubleValue];
+    double lon = [[self.event.location objectForKey:@"lon"] doubleValue];
+    
+    MKPlacemark* place = [[MKPlacemark alloc] initWithCoordinate: CLLocationCoordinate2DMake(lat, lon) addressDictionary: nil];
+    MKMapItem* destination = [[MKMapItem alloc] initWithPlacemark: place];
+    destination.name = self.event.title;
+    NSArray* items = [[NSArray alloc] initWithObjects: destination, nil];
+    NSDictionary* options = [[NSDictionary alloc] initWithObjectsAndKeys:
+                             MKLaunchOptionsDirectionsModeWalking,
+                             MKLaunchOptionsDirectionsModeKey, nil];
+    [MKMapItem openMapsWithItems: items launchOptions: options];
 }
 
 - (EKEventStore *)eventStore {
@@ -157,12 +166,38 @@
         if (v == self.shareView) {
             [self handleShareButton];
         }
-        
-        if (v == self.whereView) {
-            [self handleWhereButton];
-        }
+
     }
 }
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    float height = 60.0;
+    if (indexPath.row == 0) {
+        height = 280.0;
+    }
+    if (indexPath.row == 1) {
+         CGSize maximumLabelSize = CGSizeMake(280,9999);
+         
+         UILabel *gettingSizeLabel = [[UILabel alloc] init];
+         gettingSizeLabel.font = self.descriptionText.font;
+         gettingSizeLabel.text = self.descriptionText.text;
+         gettingSizeLabel.numberOfLines = self.descriptionText.numberOfLines;
+         gettingSizeLabel.lineBreakMode = self.descriptionText.lineBreakMode;
+         
+         CGSize expectedLabelSize = [gettingSizeLabel sizeThatFits:maximumLabelSize];
+         
+         //adjust the label the the new height.
+         CGRect newFrame = self.descriptionText.frame;
+         newFrame.size.height = expectedLabelSize.height;
+         self.descriptionText.frame = newFrame;
+         height = newFrame.origin.y + expectedLabelSize.height + 10;
+         
+         [self.descriptionText sizeToFit];
+     }
+    
+    return height;
+}
+
 
 /*
 #pragma mark - Navigation

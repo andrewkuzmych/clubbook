@@ -193,17 +193,15 @@
         CGRect newFrame = self.clubDescLabel.frame;
         newFrame.size.height = expectedLabelSize.height;
         self.clubDescLabel.frame = newFrame;
-        height = newFrame.origin.y + expectedLabelSize.height + 10;
+        height = newFrame.origin.y + expectedLabelSize.height + 60;
     
         [self.clubDescLabel sizeToFit];
     }
     
-    if ([self.infoData.infoType isEqualToString:@"dj"]) {
-        for (NSNumber* cellToHide in self.infoData.cellsToHide) {
-            if ([cellToHide integerValue] == indexPath.row) {
-                [cell setHidden:YES];
-                return 0;
-            }
+    for (NSNumber* cellToHide in self.infoData.cellsToHide) {
+        if ([cellToHide integerValue] == indexPath.row) {
+            [cell setHidden:YES];
+            return 0;
         }
     }
     
@@ -230,8 +228,6 @@
     [self.infoData.cellsToHide addObject: [NSNumber numberWithInt:7]];
     [self.infoData.cellsToHide addObject: [NSNumber numberWithInt:8]];
     [self.infoData.cellsToHide addObject: [NSNumber numberWithInt:9]];
-    
-    
 }
 
 - (void) fillWithPlaceData:(Place*) place {
@@ -256,6 +252,7 @@
     self.infoData.distance = place.distance;
     
     self.infoData.cellsToHide = [[NSMutableArray alloc] init];
+    [self.infoData.cellsToHide addObject: [NSNumber numberWithInt:0]];
 }
 
 

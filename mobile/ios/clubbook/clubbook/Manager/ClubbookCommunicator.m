@@ -611,10 +611,10 @@
 
 }
 
-- (void)retrieveEventsById:(NSString*)objectId type:(NSString*)type accessToken:(NSString *) accessToken; {
+- (void)retrieveEventsById:(NSString*)objectId type:(NSString*)type skip:(int) skip take:(int) take accessToken:(NSString *) accessToken {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         //make base url
-        NSString* urlAsString = [NSString stringWithFormat:@"%@obj/%@/%@/events/list?skip=0&take=10&access_token=%@", baseURL,  type, objectId, accessToken];
+        NSString* urlAsString = [NSString stringWithFormat:@"%@obj/%@/%@/events/list?skip=%d&take=%d&access_token=%@", baseURL, type, objectId, skip, take, accessToken];
         
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
@@ -872,14 +872,14 @@
 - (void)retrieveNews:(NSString*)type withId:(NSString*) objectId accessToken:(NSString*) accessToken skip:(int)skip limit:(int) limit userLon:(double) lon userLat:(double) lat {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // switch to a background thread and perform your expensive operation
-        NSString *urlAsString = [NSString stringWithFormat:@"%@obj/user/favorite/news?access_token=%@&skip=%d&limit=%d", baseURL, accessToken, skip, limit];
-        if ([type isEqualToString:@"events"]) {
-            urlAsString = [NSString stringWithFormat:@"%@obj/events?user_lat=%f&user_lon=%f&skip=%d&take=%d&distance=1&access_token=%@", baseURL, lat, lon, skip, limit, accessToken];
+        NSString* urlAsString;
+        
+        if ([type isEqualToString:@"user"]) {
+            urlAsString = [NSString stringWithFormat:@"%@obj/user/favorite/news?access_token=%@&skip=%d&limit=%d", baseURL, accessToken, skip, limit];
         }
-        else if ([type isEqualToString:@"club"]) {
-            urlAsString= [NSString stringWithFormat:@"%@obj/club/%@/news?access_token=%@&skip=%d&limit=%d", baseURL, objectId, accessToken, skip, limit];
+        else {
+            urlAsString = [NSString stringWithFormat:@"%@obj/%@/%@/news/list?skip=%d&take=%d&access_token=%@", baseURL, type, objectId, skip, limit, accessToken];
         }
-
         NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlAsString]];
         
         [NSURLConnection sendAsynchronousRequest:urlRequest queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {

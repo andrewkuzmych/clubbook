@@ -49,7 +49,7 @@
     baseViewControllerHelper = [[BaseViewControllerHelper alloc] initBase:self sidebarButton:_sidebarButton];
     
     //[baseViewControllerHelper testInternetConnection];
-    
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     self._manager = [[ClubbookManager alloc] init];
     self._manager.communicator = [[ClubbookCommunicator alloc] init];
     self._manager.communicator.delegate = self._manager;

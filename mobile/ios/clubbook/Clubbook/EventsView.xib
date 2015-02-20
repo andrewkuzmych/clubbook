@@ -11,14 +11,11 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="tBL-bv-oPs" customClass="EventsTableView">
-                    <rect key="frame" x="0.0" y="40" width="600" height="560"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                </tableView>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Acm-ZW-0O7">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="41"/>
+                    <rect key="frame" x="0.0" y="560" width="600" height="41"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="40" id="ALC-Uj-lgT"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="nHJ-bD-Cz6"/>
                     </constraints>
                     <segments>
                         <segment title="Nearby"/>
@@ -39,20 +36,24 @@
                     <color key="textColor" red="0.50370896460000003" green="0.50370896460000003" blue="0.50370896460000003" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="tBL-bv-oPs" customClass="EventsTableView">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="560"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="centerX" secondItem="5Ha-4i-l7N" secondAttribute="centerX" id="1w9-UD-QYZ"/>
                 <constraint firstAttribute="centerY" secondItem="5Ha-4i-l7N" secondAttribute="centerY" id="29K-tG-AgC"/>
-                <constraint firstAttribute="trailing" secondItem="tBL-bv-oPs" secondAttribute="trailing" id="4he-OM-PDC"/>
-                <constraint firstItem="tBL-bv-oPs" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="EuZ-J2-Ckh"/>
+                <constraint firstAttribute="trailing" secondItem="Acm-ZW-0O7" secondAttribute="trailing" id="3Mc-2W-6PF"/>
+                <constraint firstAttribute="trailing" secondItem="tBL-bv-oPs" secondAttribute="trailing" id="7jY-su-HEI"/>
+                <constraint firstItem="Acm-ZW-0O7" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="8Uy-Gx-1V2"/>
+                <constraint firstItem="tBL-bv-oPs" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Afo-Y4-X6z"/>
+                <constraint firstItem="tBL-bv-oPs" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="CwK-S3-N2Q"/>
                 <constraint firstAttribute="centerX" secondItem="Mgz-Uk-Nzv" secondAttribute="centerX" id="LfR-nH-PK5"/>
                 <constraint firstAttribute="centerY" secondItem="Mgz-Uk-Nzv" secondAttribute="centerY" id="SfG-9U-xFH"/>
-                <constraint firstItem="Acm-ZW-0O7" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="VCW-Cl-W6a"/>
-                <constraint firstAttribute="bottom" secondItem="tBL-bv-oPs" secondAttribute="bottom" id="Xdl-Le-WFr"/>
-                <constraint firstItem="tBL-bv-oPs" firstAttribute="top" secondItem="Acm-ZW-0O7" secondAttribute="bottom" id="anL-hL-bA5"/>
-                <constraint firstItem="Acm-ZW-0O7" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="h1p-9k-bFA"/>
-                <constraint firstAttribute="trailing" secondItem="Acm-ZW-0O7" secondAttribute="trailing" id="p4G-Ps-f3Q"/>
+                <constraint firstAttribute="bottom" secondItem="Acm-ZW-0O7" secondAttribute="bottom" id="XcX-L2-EMU"/>
+                <constraint firstItem="Acm-ZW-0O7" firstAttribute="top" secondItem="tBL-bv-oPs" secondAttribute="bottom" id="zf0-BO-e7M"/>
             </constraints>
             <connections>
                 <outlet property="activityIndicator" destination="5Ha-4i-l7N" id="2u3-Vo-HLq"/>
