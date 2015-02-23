@@ -1106,6 +1106,27 @@ exports.venue_news = (req,res)->
         status: 'ok'
         news: news
 
+exports.news_around = (req, res)->
+  params = 
+    user_id: req.params.me._id.toString()
+    skip: parseInt(req.query.skip)
+    take: parseInt(req.query.take)
+    user_lon: req.query.user_lon
+    user_lat: req.query.user_lat
+  params.distance = 20 
+  if req.query.distance
+    params.distance = req.query.distance
+  manager.news_around params, (err, news)->
+    if err
+      console.log err
+      res.json
+        status: 'error'
+        err: err
+    else
+      res.json
+        status: 'ok'
+        news: news
+
 
 exports.add_favorite_club = (req, res)->
   params = 

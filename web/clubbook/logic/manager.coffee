@@ -441,6 +441,21 @@ exports.venue_news = (params, callback)->
       format_date_news news, (news_updated)->
         callback err, news_updated
 
+exports.news_around = (params, callback)->
+  console.log "METHOD - news_around"
+  console.log params
+  db_model.Venue.count().exec (err, count)->
+    db_model.Venue.find({club_loc: { '$near' : [params.user_lon, params.user_lat], '$maxDistance': params.distance/112 }}).limit(count).exec (err, venues)->
+      venue_ids = [] 
+      for venue in venues
+        venue_ids.push venue._id
+      db_model.News.find( { '$or': [{'club': {'$in': venue_ids}},{'festival': {'$in': venue_ids}}]}).populate('club').populate('festival').sort( { updated_on: -1 } ).skip(params.skip).limit(params.take).exec (err, news)-> 
+        if not news
+          console.log  'missing news'       
+        else
+          format_date_news news, (news_updated)->
+            callback err, news_updated
+
 exports.news_favorite = (params, callback)->
   console.log "METHOD - News favorite club"
   console.log "Params: "

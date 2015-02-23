@@ -265,6 +265,8 @@ app.get '/_s/obj/:type/:objectId/events/list', handle_access_token, services.ven
 
 #news
 app.get '/_s/obj/:type/:objectId/news/list', handle_access_token, services.venue_news
+app.get '/_s/obj/news/around', handle_access_token, services.news_around
+
 
 app.get '/_s/obj/club/:objectId', handle_access_token, services.find_club
 app.get '/_s/obj/club/:objectId/users', handle_access_token, services.club_users
