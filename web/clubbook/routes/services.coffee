@@ -1066,12 +1066,16 @@ exports.get_all_lists = (req, res)->
                           events: events
 
 exports.venue_events = (req,res)->
+  loc =
+    lon: req.query.lon
+    lat: req.query.lat
   params = 
     user_id: req.params.me._id.toString()
     objectId: req.params.objectId.toString()
     type_venue: req.params.type.toString()
     skip: parseInt(req.query.skip)
     take: parseInt(req.query.take)
+    loc: loc
  
   manager.venue_events params, (err, events)->
     if err
@@ -1185,10 +1189,14 @@ exports.news_favorite = (req, res)->
         news: news
 
 exports.events_favorite = (req, res)->
+  loc =
+    lon: req.query.lon
+    lat: req.query.lat
   params =
     user_id: req.params.me._id.toString()
     skip: req.query.skip
     limit: req.query.limit
+    loc: loc
 
   manager.events_favorite params, (err, events)->
     if err
