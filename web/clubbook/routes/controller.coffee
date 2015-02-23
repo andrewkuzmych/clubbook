@@ -11,6 +11,7 @@ path = require('path');
 crypto = require('crypto');
 cloudinary = require('cloudinary')
 fs = require('fs')
+timezoner = require('timezoner')
 
 exports.user_push = (req, res)->
   console.log 'user_' + req.params.user_id
@@ -282,7 +283,10 @@ exports.dj_create_action = (req, res)->
         phone : req.body.phone
         site : req.body.site
         info : req.body.info
-        music : req.body.music
+      dj.music = [];
+      if req.body.music
+        for type_music in req.body.music.split(',')
+          dj.music.push type_music
       dj.photos = [];
       if req.body.photos
         for photo in req.body.photos.split(',')
@@ -293,9 +297,9 @@ exports.dj_create_action = (req, res)->
 
 exports.dj_edit = (req, res)->
   create_base_model req, res, (model)->
-    db_model.Dj.findById(req.params.id).exec (err, venue)->
+    db_model.Dj.findById(req.params.id).exec (err, dj)->
       model.cloudinary = cloudinary
-      model.dj = venue
+      model.dj = dj
       res.render "pages/dj_update", model
 
 exports.dj_edit_action = (req, res)->
@@ -309,9 +313,12 @@ exports.dj_edit_action = (req, res)->
         dj.phone = req.body.phone
         dj.site = req.body.site
         dj.info = req.body.info
-        dj.music = req.body.music
         dj.logo = req.body.logo
         dj.photos = [];
+        dj.music = [];
+        if req.body.music
+          for type_music in req.body.music.split(',')
+            dj.music.push type_music
         if req.body.photos
           for photo in req.body.photos.split(',')
             dj.photos.push photo
@@ -419,38 +426,45 @@ exports.events_create = (req, res)->
       res.render "pages/events_update", model
 
 exports.events_create_action = (req, res)->
-  events = new db_model.Events
-    title: req.body.title
-    description: req.body.description
-    share: req.body.share 
-    buy_tickets: req.body.buy_tickets
-    loc_name: req.body.loc_name
-    address: req.body.events_address
-    loc: {lon:req.body.lng, lat: req.body.lat}
-  start_date_time = req.body.start_date + " " + req.body.start_time
-  events.start_time = new Date(moment.utc(start_date_time, "DD-MM-YYYY HH:mm"))
-  if req.body.end_date&&req.body.end_time
-    end_date_time = req.body.end_date + " " + req.body.end_time
-    events.end_time = moment.utc(end_date_time, "DD-MM-YYYY HH:mm")
-  events.photos = []
-  if req.body.events_images
-    for photo in req.body.events_images.split(',')
-      events.photos.push photo
-  type = req.params.type
-  events[type] = mongoose.Types.ObjectId(req.params.id)   
-  events.save (err)->
-    console.log 'SAVE'
-  res.redirect "/venue/#{req.params.type}/events/#{req.params.id}"
+  timezoner.getTimeZone req.body.lat, req.body.lng, (err, data) ->
+    if err
+      return next(err)
+    else
+      timeZoneSec = parseInt(data.rawOffset)
+      console.log timeZoneSec
+      events = new db_model.Events
+        time_zone: timeZoneSec
+        title: req.body.title
+        description: req.body.description
+        share: req.body.share 
+        buy_tickets: req.body.buy_tickets
+        loc_name: req.body.loc_name
+        address: req.body.events_address
+        loc: {lon:req.body.lng, lat: req.body.lat}
+      start_date_time = req.body.start_date + " " + req.body.start_time
+      events.start_time = moment.utc(start_date_time,"DD-MM-YYYY HH:mm").add(-1*timeZoneSec, 'seconds').toDate()
+      if req.body.end_date&&req.body.end_time
+        end_date_time = req.body.end_date + " " + req.body.end_time
+        events.end_time = moment.utc(end_date_time, "DD-MM-YYYY HH:mm").add(-1*timeZoneSec, 'seconds').toDate()
+      events.photos = []
+      if req.body.events_images
+        for photo in req.body.events_images.split(',')
+          events.photos.push photo
+      type = req.params.type
+      events[type] = mongoose.Types.ObjectId(req.params.id)   
+      events.save (err)->
+        console.log 'SAVE'
+      res.redirect "/venue/#{req.params.type}/events/#{req.params.id}"
 
 exports.events_edit = (req, res)->
   create_base_model req, res, (model)->
     db_model.Events.findById(req.params.events_id).exec (err, news)->
-      console.log news
-      model.start_time_ = moment.utc(news.start_time).format("HH:mm")
-      model.start_date_ = moment.utc(news.start_time).format("DD-MM-YYYY")
+      console.log moment.utc(news.start_time).add(-1*news.time_zone, 'seconds').toDate()
+      model.start_time_ = moment.utc(news.start_time).add(news.time_zone, 'seconds').format("HH:mm")
+      model.start_date_ = moment.utc(news.start_time).add(news.time_zone, 'seconds').format("DD-MM-YYYY")
       if news.end_time
-        model.end_time_ = moment.utc(news.end_time).format("HH:mm")
-        model.end_date_ = moment.utc(news.end_time).format("DD-MM-YYYY")  
+        model.end_time_ = moment.utc(news.end_time).add(news.time_zone, 'seconds').format("HH:mm")
+        model.end_date_ = moment.utc(news.end_time).add(news.time_zone, 'seconds').format("DD-MM-YYYY")  
       model.data_time = moment().format("DD-MM-YYYY")
       model.cloudinary = cloudinary
       model.events = news
@@ -459,27 +473,33 @@ exports.events_edit = (req, res)->
       res.render "pages/events_update", model
 
 exports.events_edit_action = (req, res)->
-  db_model.Events.findById(req.params.events_id).exec (err, news)->
-    news.title = req.body.title
-    news.description = req.body.description
-    news.share = req.body.share
-    news.buy_tickets = req.body.buy_tickets
-    news.loc_name = req.body.loc_name
-    news.address = req.body.news_address
-    news.loc = {lon:req.body.lng, lat: req.body.lat}
-    news.photos = []
-    start_date_time = req.body.start_date + " " + req.body.start_time
-    news.start_time = new Date(moment.utc(start_date_time, "DD-MM-YYYY HH:mm"))
-    if req.body.end_date&&req.body.end_time
-      end_date_time = req.body.end_date + " " + req.body.end_time
-      news.end_time = moment.utc(end_date_time, "DD-MM-YYYY HH:mm")
+  timezoner.getTimeZone req.body.lat, req.body.lng, (err, data) ->
+    if err
+      return next(err)
     else
-      news.end_time = null
-    if req.body.events_images
-      for photo in req.body.events_images.split(',')
-        news.photos.push photo
-    news.save (err)->
-    res.redirect "/venue/#{req.params.type}/events/#{req.params.id}" 
+      timeZoneSec = parseInt(data.rawOffset)
+      db_model.Events.findById(req.params.events_id).exec (err, news)->
+        news.time_zone = timeZoneSec
+        news.title = req.body.title
+        news.description = req.body.description
+        news.share = req.body.share
+        news.buy_tickets = req.body.buy_tickets
+        news.loc_name = req.body.loc_name
+        news.address = req.body.events_address
+        news.loc = {lon:req.body.lng, lat: req.body.lat}
+        news.photos = []
+        start_date_time = req.body.start_date + " " + req.body.start_time
+        news.start_time = moment.utc(start_date_time,"DD-MM-YYYY HH:mm").add(-1*timeZoneSec, 'seconds').toDate()
+        if req.body.end_date&&req.body.end_time
+          end_date_time = req.body.end_date + " " + req.body.end_time
+          news.end_time = moment.utc(end_date_time, "DD-MM-YYYY HH:mm").add(-1*timeZoneSec, 'seconds').toDate()
+        else
+          news.end_time = null
+        if req.body.events_images
+          for photo in req.body.events_images.split(',')
+            news.photos.push photo
+        news.save (err)->
+        res.redirect "/venue/#{req.params.type}/events/#{req.params.id}" 
 
 exports.events_delete_action = (req, res)->
   db_model.Events.findByIdAndRemove(req.params.events_id).exec (err)->
