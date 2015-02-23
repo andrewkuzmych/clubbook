@@ -1160,6 +1160,38 @@ exports.remove_favorite_club = (req, res)->
         status: 'ok'
         result: result
 
+exports.add_favorite_dj = (req, res)->
+  params = 
+    user_id: req.params.me._id.toString()
+    club_id: req.params.objectId
+
+  manager.add_favorite_dj params, (err, result)->
+    if err
+      console.log err
+      res.json
+        status: 'error'
+        err: err
+    else
+      res.json
+        status: 'ok'
+        result: result
+
+exports.remove_favorite_dj = (req, res)->
+  params = 
+    user_id: req.params.me._id.toString()
+    club_id: req.params.objectId
+
+  manager.remove_favorite_dj params, (err, result)->
+    if err
+      console.log err
+      res.json
+        status: 'error'
+        err: err
+    else
+      res.json
+        status: 'ok'
+        result: result
+
 
 exports.news = (req, res)->
   params =

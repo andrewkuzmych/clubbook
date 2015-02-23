@@ -55,6 +55,8 @@ UserSchema = new mongoose.Schema
 
   favorite_clubs: [type: mongoose.Schema.ObjectId, ref: 'Venue']
 
+  favorite_djs: [type: mongoose.Schema.ObjectId, ref: 'Dj']
+
   bloked_users: [type: mongoose.Schema.ObjectId, ref: 'User']
 
   state: {type: String, default: 'active', 'enum': ["active", "inactive", "invited"]}

@@ -370,6 +370,30 @@ exports.remove_favorite_club = (params, callback)->
     else
       callback 'club not favorite', null
 
+exports.add_favorite_dj = (params, callback)->
+  console.log "METHOD - Add favorite dj"
+  db_model.User.findById(params.user_id).exec (err, user)->
+    the_dj = __.find(user.favorite_djs, (c_res)->
+                  c_res.toString() == params.club_id.toString()
+            )
+    if !the_dj
+      user.favorite_djs.push params.club_id
+      db_model.save_or_update_user user, (err)-> callback err, user
+    else
+      callback 'dj already a favorite', null
+
+exports.remove_favorite_dj = (params, callback)->
+  console.log "METHOD - Remove favorite djs"
+  db_model.User.findById(params.user_id).exec (err, user)->
+    the_dj = __.find(user.favorite_djs, (c_res)->
+                c_res.toString() == params.club_id.toString()
+          )
+    if the_dj
+      user.favorite_djs.pull params.club_id
+      db_model.save_or_update_user user, (err)-> callback err, user
+    else
+      callback 'club not favorite', null
+
 exports.news = (params, callback)->
   console.log "METHOD - News"
   console.log "Params: "

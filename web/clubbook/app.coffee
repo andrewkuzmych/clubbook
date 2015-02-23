@@ -273,9 +273,11 @@ app.get '/_s/obj/club/:objectId/users', handle_access_token, services.club_users
 app.get '/_s/obj/club/:objectId/users/yesterday', handle_access_token, services.club_users_yesterday
 app.get '/_s/obj/clubs/yesterday', handle_access_token, services.clubs_yesterday
 
-# favorite_clubs
+# favorites
 app.get '/_s/obj/club/:objectId/favorite/remove', handle_access_token, services.remove_favorite_club
 app.get '/_s/obj/club/:objectId/favorite/add', handle_access_token, services.add_favorite_club
+app.get '/_s/obj/dj/:objectId/favorite/remove', handle_access_token, services.remove_favorite_dj
+app.get '/_s/obj/dj/:objectId/favorite/add', handle_access_token, services.add_favorite_dj
 
 #news
 app.get '/_s/obj/club/:objectId/news', handle_access_token, services.news #
