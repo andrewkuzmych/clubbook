@@ -187,6 +187,7 @@ EventSchema = new mongoose.Schema
   photos: [
     {type: String, trim: true}
   ]
+  time_zone: {type: Number}
   loc_name: {type: String, trim: true}
   loc:
     lon: Number
@@ -220,7 +221,9 @@ DjSchema = new mongoose.Schema
   admin: [{ type: mongoose.Schema.ObjectId, ref: 'Admin' }]
   logo: {type: String, trim: true}
   phone: {type: String, trim: true}
-  music: {type: String, trim: true, required: true}
+  music: [
+    {type: String, trim: true}
+  ]
   site: {type: String, trim: true}
   info: {type: String, trim: true, required: true}
   loc:

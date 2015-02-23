@@ -33,7 +33,8 @@
 		"cron": "1.0.3",
 		"pubnub": "3.6.4",
 		"parse": "1.2.17",
-		"cloudinary": "1.0.12"
+		"cloudinary": "1.0.12",
+		"timezoner": "0.1.9"
     },
     "engines": {
         "node": "0.10.x",

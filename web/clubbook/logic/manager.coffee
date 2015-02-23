@@ -142,12 +142,12 @@ exports.list_events = (params, callback)->
         distanceMultiplier: 6371  
     if params.distance
       geoNear.maxDistance = params.distance/6371
-    console.log 111
-    console.log params.sort_by 
+    currentData = new Date()
+    match = {'start_time': {'$gte': currentData}}
     if params.sort_by == "date"  
-      query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take},{ '$sort': { "start_time": 1 } }]
+      query =  [{'$geoNear': geoNear}, {'$match': match}, {'$skip':params.skip}, {'$limit':params.take},{ '$sort': { "start_time": 1 } }]
     else
-      query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take}]
+      query =  [{'$geoNear': geoNear}, {'$match': match}, {'$skip':params.skip}, {'$limit':params.take}]
     db_model.Events.aggregate query,{}, (err, events)->
       format_date_events events, (events_updated)->
         dj_ids = []
@@ -189,7 +189,9 @@ exports.list_dj_events = (params, callback)->
         query: {"dj":{'$exists': true}}
     if params.distance
       geoNear.maxDistance = params.distance/6371 
-    query =  [{'$geoNear': geoNear}, {'$skip':params.skip}, {'$limit':params.take}]
+    currentData = new Date()
+    match = {'start_time': {'$gte': currentData}}
+    query =  [{'$geoNear': geoNear}, {'$match': match}, {'$skip':params.skip}, {'$limit':params.take}]
     db_model.Events.aggregate query,{}, (err, events)->
       format_date_events events, (events_updated)->
         events_ids = []
@@ -412,14 +414,19 @@ exports.events = (params, callback)->
 
 exports.venue_events = (params, callback)->
   console.log "METHOD - Events"
+  currentData = new Date()
+  match = {'start_time': {'$gte': currentData}}
   query = JSON.parse('{ "'+ params.type_venue + '":"' + params.objectId+'" }')
-  db_model.Events.find(query).populate(params.type_venue).skip(params.skip).limit(params.take).exec (err, events)-> 
+  db_model.Events.find({ '$and': [query, {'start_time': {'$gte': currentData}}]}).populate(params.type_venue).skip(params.skip).limit(params.take).exec (err, events)-> 
     if not events
       console.log  'missing events'       
     else
       events_objects = []
-      for events_object in events
-        events_objects.push events_object.toObject()
+      for even in events
+        events_object = even.toObject()
+        calculate_distance even.loc, params.loc, (distance)->
+          events_object.distance = distance
+          events_objects.push events_object
       format_date_events events_objects, (events_updated)->
         callback err, events_updated
 
@@ -465,13 +472,18 @@ exports.events_favorite = (params, callback)->
     if not user
       callback 'user does not exist', null
     else
-      db_model.Events.find({'$or':[{'club': {'$in': user.favorite_clubs}},{'festival': {'$in': user.favorite_clubs}}]}).populate('club').populate('festival').sort( { updated_on: -1 } ).skip(params.skip).limit(params.limit).exec (err, events)-> 
+      currentData = new Date()
+      match = {'start_time': {'$gte': currentData}}
+      db_model.Events.find({'start_time': {'$gte': currentData},'$or':[{'club': {'$in': user.favorite_clubs}},{'festival': {'$in': user.favorite_clubs}}]}).populate('club').populate('festival').sort( { updated_on: -1 } ).skip(params.skip).limit(params.limit).exec (err, events)-> 
         if not events
           callback 'events does not exist', null
         else
           events_objects = []
           for even in events
-            events_objects.push even.toObject()
+            events_object = even.toObject()
+            calculate_distance even.loc, params.loc, (distance)->
+              events_object.distance = distance
+              events_objects.push events_object
           format_date_events events_objects, (events_updated)->
             callback err, events_updated
       
@@ -834,21 +846,13 @@ exports.radius_to_km = (distance)->
   return distance/75
 
 format_date_events = (events, callback)->
-  events_upcoming = []
   for even in events
+    even.created_on_formatted = moment.utc(even.created_on).format("YYYY-MM-DD, HH:mm:ss")
+    even.updated_on_formatted = moment.utc(even.updated_on).format("YYYY-MM-DD, HH:mm:ss")
+    even.start_time_formatted = moment.utc(even.start_time).format("YYYY-MM-DD, HH:mm:ss")
     if even.end_time
-      if moment.utc(even.end_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')
-        even.created_on_formatted = moment.utc(even.created_on).format("YYYY-MM-DD, HH:mm:ss")
-        even.updated_on_formatted = moment.utc(even.updated_on).format("YYYY-MM-DD, HH:mm:ss")
-        even.start_time_formatted = moment.utc(even.start_time).format("YYYY-MM-DD, HH:mm:ss")
-        even.end_time_formatted = moment.utc(even.end_time).format("YYYY-MM-DD, HH:mm:ss")
-        events_upcoming.push even
-    else if moment.utc(even.start_time).format('YYYY-MM-DD HH:mm:ss') > moment().format('YYYY-MM-DD HH:mm:ss')
-      even.created_on_formatted = moment.utc(even.created_on).format("YYYY-MM-DD, HH:mm:ss")
-      even.updated_on_formatted = moment.utc(even.updated_on).format("YYYY-MM-DD, HH:mm:ss")
-      even.start_time_formatted = moment.utc(even.start_time).format("YYYY-MM-DD, HH:mm:ss")
-      events_upcoming.push even
-  callback events_upcoming
+      even.end_time_formatted = moment.utc(even.end_time).format("YYYY-MM-DD, HH:mm:ss")
+  callback events
 
 format_date_news = (news, callback)->
   news_objects = []
@@ -859,6 +863,19 @@ format_date_news = (news, callback)->
     the_news.updated_on_formatted = moment.utc(the_news.updated_on).format("YYYY-MM-DD, HH:mm:ss")
   callback news_objects
 
+calculate_distance = (loc1, loc2, callback)->
+  R = 6371
+  φ1 = loc1.lat * Math.PI / 180
+  φ2 = loc2.lat * Math.PI / 180
+  Δφ = (loc2.lat-loc1.lat) * Math.PI / 180
+  Δλ = (loc2.lon-loc1.lon) * Math.PI / 180
+
+  a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+          Math.cos(φ1) * Math.cos(φ2) *
+          Math.sin(Δλ/2) * Math.sin(Δλ/2);
+  c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+  d = R * c
+  callback d
 
 
 

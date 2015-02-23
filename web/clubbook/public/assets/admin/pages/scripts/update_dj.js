@@ -99,3 +99,25 @@ var FormValidation = function () {
     };
 
 }();
+
+var ComponentsPickers = function () {
+
+    var handleTagsInput = function () {
+        if (!jQuery().tagsInput) {
+            return;
+        }
+
+        $('#type_music').tagsInput({
+            width: 'auto',
+            defaultText:'Add'
+        });
+    }
+
+    return {
+        //main function to initiate the module
+        init: function () {
+            handleTagsInput();
+        }
+    };
+
+}();

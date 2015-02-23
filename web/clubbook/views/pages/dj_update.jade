@@ -83,8 +83,7 @@ block content
                   span.required *
                 .col-md-5
                   .input-icon.right
-                    i.fa
-                    input.form-control(type='text', placeholder='Enter type of music', name="music", value="#{dj.music?dj.music:''}")
+                    input#type_music.form-control.tags(type='text', value="#{dj.music?dj.music:''}", name='music')
 
             .form-group
                 label.control-label.col-md-3 Info
@@ -124,6 +123,7 @@ block content
 block scripts
   script(type="text/javascript", src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDWlaBHVehLQeKiXQXbguAFIg6k-2Jk3Vw&sensor=false&libraries=places&language=#{locale}")
   script(type="text/javascript", src="/assets/javascripts/jquery.geocomplete.min.js")
+  script(src="/assets/global/plugins/jquery-tags-input/jquery.tagsinput.min.js" type="text/javascript")
   script(src="/assets/admin/pages/scripts/update_dj.js", type='text/javascript')
   script(type="text/javascript")
     // Configure Cloudinary
@@ -195,4 +195,10 @@ block scripts
     }
 
     FormValidation.init();
-    //ComponentsPickers.init();
+    ComponentsPickers.init();
+                // label.control-label.col-md-3 Type of music
+             //     span.required *
+             //   .col-md-5
+             //     .input-icon.right
+              //      i.fa
+              //      input.form-control(type='text', placeholder='Enter type of music', name="music", value="#{dj.music?dj.music:''}")
