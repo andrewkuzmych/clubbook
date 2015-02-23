@@ -833,20 +833,12 @@
     
     if ([userJson valueForKey:@"checkin"] != nil && [userJson valueForKey:@"checkin"] != [NSNull null]) {
         NSArray * checkins = [userJson objectForKey:@"checkin"];
-        if (checkins.count > 0) {
-           NSDictionary *checkinJson = [checkins objectAtIndex: 0];
-            
-           NSNumber * isActive = (NSNumber *)[checkinJson objectForKey: @"active"];
-            if(isActive && [isActive boolValue] == YES)
-            {
-                if ([[checkinJson objectForKey:@"club"] isKindOfClass:[NSDictionary class]]) {
-                    NSDictionary *clubJson = [checkinJson objectForKey:@"club"];
-                    
-                    user.place = [self getPlace:clubJson];
-                    user.currentCheckinClubName = [clubJson objectForKey:@"club_name"];
-                }
+        for (NSDictionary* checkin in checkins) {
+            NSNumber * active = (NSNumber *)[checkin objectForKey: @"active"];
+            BOOL isActive = (active && [active boolValue] == YES);
+            if (isActive) {
+                user.currentCheckinClubName = [checkin objectForKey:@"club"];
             }
-
         }
     }
     

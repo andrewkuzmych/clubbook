@@ -49,7 +49,7 @@
                 controller.title = @"Events";
             }
         }
-
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
         [[UITabBar appearance] setBarTintColor:[UIColor whiteColor]];
     }
     self.delegate = self;

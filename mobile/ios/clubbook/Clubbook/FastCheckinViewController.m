@@ -51,8 +51,6 @@
     self.noCheckinsLabel.text = NSLocalizedString(@"noClubCheckins", nil);
     self.noCheckinsLabel.hidden = YES;
     [self loadClub:10 skip:0];
-    //[self sortPlaces];
-    // Do any additional setup after loading the view.
 }
 
 
@@ -60,8 +58,7 @@
 {
     [super viewWillAppear:animated];
     isLoaded = NO;
-    //[LocationManagerSingleton sharedSingleton].delegate = self;
-    //[[LocationManagerSingleton sharedSingleton] startLocating];
+    [self.clubTable reloadData];
     
 }
 
@@ -74,18 +71,6 @@
     [self showProgress:NO title:NSLocalizedString(@"checking_in", nil)];
      [self._manager checkin:place.id accessToken:accessToken userInfo:tempButton];
 }
-
-/*- (void)didUpdateLocation
-{
-    //[self yesLocation];
-    [self loadClub:10 skip:0];
-}*/
-
-/*- (void)didFailUpdateLocation
-{
-    //[self noLocation];
-}
-*/
 
 - (void)loadClub:(int)take skip:(int)skip
 {
@@ -101,6 +86,7 @@
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
     
     [self._manager retrievePlaces:@"club" lat:lat lon:lng take:take skip:skip distance:1 search:@"" accessToken:accessToken];
+    [self._manager retrievePlaces:@"festival" lat:lat lon:lng take:take skip:skip distance:1 search:@"" accessToken:accessToken];
 }
 
 - (void)didReceivePlaces:(NSArray *)places
@@ -108,14 +94,10 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideProgress];
         
-        _places = [places mutableCopy];
-        
+        [_places addObjectsFromArray:places];
         [self.clubTable reloadData];
         
         self.noCheckinsLabel.hidden = _places.count > 0;
-
-        //[self sortPlaces];
-        //[self.clubTable reloadData];
     });
 }
 
@@ -146,16 +128,22 @@
     
     int disatanceInt = (int)place.distance;
     
-    [cell.distanceLabel setText:[LocationHelper convertDistance:disatanceInt]];
+    [cell.distanceLabel setText:[[LocationHelper sharedInstance] convertDistance:disatanceInt]];
  
     [cell.clubAvatar sd_setImageWithURL:[NSURL URLWithString:place.avatar] placeholderImage:[UIImage imageNamed:@"avatar_default.png"]];
     
-    BOOL isCheckinHere = [LocationHelper isCheckinHere:place];
+    BOOL isCheckinHere = [[LocationHelper sharedInstance] isCheckinHere:place];
     if(isCheckinHere){
         [cell.checkinButton setSecondState:NSLocalizedString(@"checkout", nil)];
     } else {
         [cell.checkinButton setMainState:NSLocalizedString(@"checkin", nil)];
     }
+    
+    NSString* checiknId = [LocationHelper sharedInstance].placeId;
+    if (checiknId != nil && [checiknId isEqualToString:place.id]) {
+        [cell.checkinButton setSecondState:NSLocalizedString(@"checkout", nil)];
+    }
+
     
     [cell.checkinButton setTag:indexPath.row];
     
@@ -251,11 +239,11 @@
     //NSString *accessToken = [defaults objectForKey:@"accessToken"];
     //[self._manager retrievePlaceUsers:self.place.id accessToken:accessToken];
     
-    //[checkinButton setSecondState:NSLocalizedString(@"checkout", nil)];
+    [checkinButton setSecondState:NSLocalizedString(@"checkout", nil)];
     
     //NSIndexPath *selectedIndexPath = [self.clubTable indexPathForSelectedRow];
     Place *place = _places[checkinButton.tag];
-    [LocationHelper addCheckin:place];
+    [[LocationHelper sharedInstance] addCheckin:place];
     
     [self pushToClub:place];
 }
@@ -270,7 +258,7 @@
     
    // CbButton* checkinButton = (CbButton *) self.headerView.checkinButton;
     [checkinButton setMainState:NSLocalizedString(@"checkin", nil)];
-    [LocationHelper removeCheckin];
+    [[LocationHelper sharedInstance] removeCheckin];
 }
 
 @end

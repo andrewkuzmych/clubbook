@@ -37,10 +37,12 @@
 - (void) customInitType:(double) userLat userLon:(double)userLon accessToken:(NSString*) accessToken type:(NSString*) type objectId:(NSString*) objectId andParentViewCntroller:(UIViewController*) parent {
     self.newsTable.infiniteDelegate = self;
     [self.newsTable setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    [self.noDataLabel setText:@"No News"];
     [self.newsTable initializeNewsTableType:userLat userLon:userLon accessToken:accessToken type:type objectId:objectId andParentViewCntroller:parent];
 }
 
 - (void)tableIsLoading {
+    [self.newsTable setHidden:YES];
     [self.activityIndicator setHidden:NO];
     [self.noDataLabel setHidden:YES];
 }

@@ -66,7 +66,7 @@
     
     int disatanceInt = (int)place.distance;
     
-    [cell.distanceLabel setText:[LocationHelper convertDistance:disatanceInt]];
+    [cell.distanceLabel setText:[[LocationHelper sharedInstance] convertDistance:disatanceInt]];
     
     [cell.userCountLabel setText: [NSString stringWithFormat:@"%d", place.countOfUsers]];
     

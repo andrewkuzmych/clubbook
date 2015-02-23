@@ -23,7 +23,7 @@
     
     NSMutableArray* arrayOfControllers = [[NSMutableArray alloc] init];
     NSMutableDictionary* controllersWithNames = [[NSMutableDictionary alloc] init];
-    
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     for (UIViewController *v in self.viewControllers) {
         if ([v isKindOfClass:[EventDetailsViewController class]]) {
             EventDetailsViewController* controller = (EventDetailsViewController*)v;

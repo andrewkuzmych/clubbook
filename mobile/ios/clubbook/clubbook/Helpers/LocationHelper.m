@@ -16,13 +16,25 @@
 
 @implementation LocationHelper
 static NSTimer* locationUpdateTimer;
+
 static ClubbookManager* manager;
 static int failedCheckinCount = 0;
 //static int maxFailedCheckin = 0;
 static Place * clubCheckin;
 //static CLLocationManager * locationManager;
 
-+ (NSString*) convertDistance:(NSInteger) distance;
++ (instancetype)sharedInstance
+{
+    static LocationHelper *sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[LocationHelper alloc] init];
+        // Do any other initialisation stuff here
+    });
+    return sharedInstance;
+}
+
+- (NSString*) convertDistance:(NSInteger) distance;
 {
     if (distance < 1000) {
         NSNumber *disatanceDouble = [NSNumber numberWithInt:(int)distance];
@@ -38,12 +50,12 @@ static Place * clubCheckin;
     }
 }
 
-+ (Place *) getCheckinClub
+- (Place *) getCheckinClub
 {
     return clubCheckin;
 }
 
-+ (BOOL) isCheckinHere:(Place *) club
+- (BOOL) isCheckinHere:(Place *) club
 {
     if(clubCheckin == nil || club == nil) {
         return NO;
@@ -55,7 +67,7 @@ static Place * clubCheckin;
     return NO;
 }
 
-+ (void)addCheckin:(Place *) club
+- (void)addCheckin:(Place *) club
 {
     /*manager = [[ClubbookManager alloc] init];
     manager.communicator = [[ClubbookCommunicator alloc] init];
@@ -66,6 +78,7 @@ static Place * clubCheckin;
     */
     
     clubCheckin = club;
+    self.placeId = club.id;
     /*NSTimeInterval time = [GlobalVars getInstance].CheckinUpdateTime;
 	locationUpdateTimer =
     [NSTimer scheduledTimerWithTimeInterval:time
@@ -76,7 +89,7 @@ static Place * clubCheckin;
 }
 
 
-+ (void)updateLocation:(NSTimer*)theTimer {
+- (void)updateLocation:(NSTimer*)theTimer {
     CLLocation *loc = [[CLLocation alloc] initWithLatitude:[clubCheckin.lat doubleValue] longitude:[clubCheckin.lon doubleValue]];
 
     if([GlobalVars getInstance].MaxCheckinRadius <  (int)[[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc])
@@ -91,7 +104,7 @@ static Place * clubCheckin;
     [manager updateCheckin:clubCheckin.id accessToken:accessToken];
 }
 
-+ (void)checkout {
+- (void)checkout {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [defaults objectForKey:@"accessToken"];
     [manager checkout:clubCheckin.id accessToken:accessToken userInfo:nil];
@@ -99,22 +112,23 @@ static Place * clubCheckin;
     [self removeCheckin];
 }
 
-+ (void)didCheckout:(User *) user userInfo:(NSObject *)userInfo
+- (void)didCheckout:(User *) user userInfo:(NSObject *)userInfo
 {
 
 }
 
-+ (void) removeCheckin{
+- (void) removeCheckin{
     clubCheckin = nil;
+    self.placeId = nil;
     //[locationUpdateTimer invalidate];
 }
 
-+ (void)didUpdateCheckin:(User *)user
+- (void)didUpdateCheckin:(User *)user
 {
     failedCheckinCount = 0;
 }
 
-+ (void)failedWithError:(NSError *)error
+- (void)failedWithError:(NSError *)error
 {
     failedCheckinCount +=1;
     if (failedCheckinCount >= [GlobalVars getInstance].MaxFailedCheckin) {

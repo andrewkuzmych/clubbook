@@ -36,7 +36,10 @@
 
     [defaults setObject:(user.push) ? @"true" : @"false" forKey:@"userPush"];
     [defaults setObject:(user.isVisibleNearby) ? @"true" : @"false" forKey:@"userVisible"];
-
+    
+    LocationHelper* locationHelper = [LocationHelper sharedInstance];
+    locationHelper.placeId = user.currentCheckinClubName;
+    
     if (user.age != nil) {
        [defaults setObject:user.age forKey:@"userAge"];
     }
@@ -60,7 +63,7 @@
     [defaults setObject:@"" forKey:@"userAge"];
     [defaults setObject:@"" forKey:@"accessToken"];
     
-    [LocationHelper removeCheckin];
+    [[LocationHelper sharedInstance] removeCheckin];
     
     [defaults synchronize];
 }

@@ -93,7 +93,6 @@
         NSString* string = [formatter stringFromDate:[NSDate date] toDate:event.startTime];
         return string;
     }
-    
     return timeToEvent;
 }
 
@@ -109,7 +108,7 @@
     [cell.placeLabel setText:placeString];
     
     int disatanceInt = (int)event.distance;
-    [cell.distanceLabel setText:[LocationHelper convertDistance:disatanceInt]];
+    [cell.distanceLabel setText:[[LocationHelper sharedInstance] convertDistance:disatanceInt]];
     
     NSString* statusString = [self formatTimeToEventLabelText:event];
     if ([statusString isEqualToString:@"Ended"]) {
@@ -127,7 +126,6 @@
         [cell.statusLabel setText:@"Starting in:"];
         [cell.timeLeftLabel setHidden:NO];
         [cell.timeLeftLabel setText:statusString];
-        
     }
     
     if ([event.photos count] > 0) {
@@ -148,7 +146,6 @@
     eventController.event = event;
     
     [self transitToController:eventController];
-    
     [self deselectRowAtIndexPath:indexPath animated:NO];
 }
 

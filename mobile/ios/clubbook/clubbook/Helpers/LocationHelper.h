@@ -12,10 +12,13 @@
 
 @interface LocationHelper : NSObject <ClubbookManagerDelegate>
 
-+ (NSString*) convertDistance:(NSInteger) distance;
-+ (void)addCheckin:(Place *) club;
-+ (void) removeCheckin;
-+ (BOOL) isCheckinHere:(Place *) club;
-+ (Place *) getCheckinClub;
+@property (strong, nonatomic) NSString* placeId;
+
++ (instancetype)sharedInstance;
+- (NSString*) convertDistance:(NSInteger) distance;
+- (void)addCheckin:(Place *) club;
+- (void) removeCheckin;
+- (BOOL) isCheckinHere:(Place *) club;
+- (Place *) getCheckinClub;
 
 @end

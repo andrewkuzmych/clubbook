@@ -11,21 +11,6 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Acm-ZW-0O7">
-                    <rect key="frame" x="0.0" y="560" width="600" height="41"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="40" id="ALC-Uj-lgT"/>
-                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="nHJ-bD-Cz6"/>
-                    </constraints>
-                    <segments>
-                        <segment title="Nearby"/>
-                        <segment title="Date/Time"/>
-                    </segments>
-                    <color key="tintColor" red="0.52156862749999999" green="0.0" blue="0.81568627449999997" alpha="1" colorSpace="calibratedRGB"/>
-                    <connections>
-                        <action selector="handleSortingChange:" destination="iN0-l3-epB" eventType="valueChanged" id="v9d-3A-cK1"/>
-                    </connections>
-                </segmentedControl>
                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="Mgz-Uk-Nzv">
                     <rect key="frame" x="290" y="290" width="20" height="20"/>
                     <color key="color" red="0.60371371220000003" green="0.038118115629999998" blue="0.62296796089999995" alpha="1" colorSpace="calibratedRGB"/>
@@ -40,26 +25,42 @@
                     <rect key="frame" x="0.0" y="0.0" width="600" height="560"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" highlighted="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="grX-Ms-AUI">
+                    <rect key="frame" x="160" y="564" width="280" height="29"/>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="28" id="AJ1-D8-m7a"/>
+                        <constraint firstAttribute="width" constant="280" id="aAh-Jm-FF1"/>
+                        <constraint firstAttribute="height" constant="28" id="iQj-bP-0Vs"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="280" id="uxu-zb-GUh"/>
+                    </constraints>
+                    <segments>
+                        <segment title="Nearby"/>
+                        <segment title="Date/Time"/>
+                    </segments>
+                    <color key="tintColor" red="0.34901960780000002" green="0.16862745100000001" blue="0.36078431370000003" alpha="1" colorSpace="calibratedRGB"/>
+                    <connections>
+                        <action selector="handleSortingChange:" destination="iN0-l3-epB" eventType="valueChanged" id="B3z-CQ-2nL"/>
+                    </connections>
+                </segmentedControl>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="centerX" secondItem="5Ha-4i-l7N" secondAttribute="centerX" id="1w9-UD-QYZ"/>
                 <constraint firstAttribute="centerY" secondItem="5Ha-4i-l7N" secondAttribute="centerY" id="29K-tG-AgC"/>
-                <constraint firstAttribute="trailing" secondItem="Acm-ZW-0O7" secondAttribute="trailing" id="3Mc-2W-6PF"/>
                 <constraint firstAttribute="trailing" secondItem="tBL-bv-oPs" secondAttribute="trailing" id="7jY-su-HEI"/>
-                <constraint firstItem="Acm-ZW-0O7" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="8Uy-Gx-1V2"/>
                 <constraint firstItem="tBL-bv-oPs" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Afo-Y4-X6z"/>
                 <constraint firstItem="tBL-bv-oPs" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="CwK-S3-N2Q"/>
                 <constraint firstAttribute="centerX" secondItem="Mgz-Uk-Nzv" secondAttribute="centerX" id="LfR-nH-PK5"/>
+                <constraint firstAttribute="bottom" secondItem="grX-Ms-AUI" secondAttribute="bottom" constant="8" id="Re0-Fy-397"/>
                 <constraint firstAttribute="centerY" secondItem="Mgz-Uk-Nzv" secondAttribute="centerY" id="SfG-9U-xFH"/>
-                <constraint firstAttribute="bottom" secondItem="Acm-ZW-0O7" secondAttribute="bottom" id="XcX-L2-EMU"/>
-                <constraint firstItem="Acm-ZW-0O7" firstAttribute="top" secondItem="tBL-bv-oPs" secondAttribute="bottom" id="zf0-BO-e7M"/>
+                <constraint firstItem="grX-Ms-AUI" firstAttribute="top" secondItem="tBL-bv-oPs" secondAttribute="bottom" constant="4" id="Y33-rn-5qt"/>
+                <constraint firstAttribute="centerX" secondItem="grX-Ms-AUI" secondAttribute="centerX" id="eKy-mr-sgs"/>
             </constraints>
             <connections>
                 <outlet property="activityIndicator" destination="5Ha-4i-l7N" id="2u3-Vo-HLq"/>
                 <outlet property="eventsTable" destination="tBL-bv-oPs" id="SR3-xl-Qhr"/>
                 <outlet property="noDataLabel" destination="5Ha-4i-l7N" id="740-Lh-4Uq"/>
-                <outlet property="segmaentControl" destination="Acm-ZW-0O7" id="qTf-om-Q9K"/>
+                <outlet property="segmaentControl" destination="grX-Ms-AUI" id="fGz-4O-C1b"/>
             </connections>
             <point key="canvasLocation" x="73" y="153"/>
         </view>

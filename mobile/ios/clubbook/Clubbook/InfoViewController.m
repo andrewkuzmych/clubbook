@@ -109,7 +109,7 @@
     }
     
     int disatanceInt = self.infoData.distance;
-    self.distanceLabel.text = [LocationHelper convertDistance:disatanceInt];
+    self.distanceLabel.text = [[LocationHelper sharedInstance] convertDistance:disatanceInt];
     
     self.clubDescLabel.text = self.infoData.infoDescription;
     

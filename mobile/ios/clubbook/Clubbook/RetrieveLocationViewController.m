@@ -12,17 +12,28 @@
 #import "CLTransformation.h"
 #import "Constants.h"
 #import "MultiplePulsingHaloLayer.h"
+#import "LocationHelper.h"
 
 @interface RetrieveLocationViewController ()
 
 @end
 
 @implementation RetrieveLocationViewController
+{
+    
+    BOOL locationReceived;
+    BOOL userReceiver;
+
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
+    
+    locationReceived = NO;
+    userReceiver = NO;
+    
     ///setup single halo layer
     MultiplePulsingHaloLayer *multiLayer = [[MultiplePulsingHaloLayer alloc] initWithHaloLayerNum:3 andStartInterval:1];
     self.halo = multiLayer;
@@ -36,7 +47,10 @@
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSDictionary *userAvatar = [defaults objectForKey:@"userAvatar"];
-    
+
+    NSString* accessToken = [defaults objectForKey:@"accessToken"];
+    [self._manager retrieveUser:accessToken];
+
     // transform avatar
     CLCloudinary *cloudinary = [[CLCloudinary alloc] initWithUrl: Constants.Cloudinary];
     CLTransformation *transformation = [CLTransformation transformation];
@@ -63,7 +77,7 @@
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-
+    
     [self startToLocate];
 }
 
@@ -98,12 +112,16 @@
 
 - (void)yesLocation
 {
-    [self performSegueWithIdentifier: @"onLocation" sender: self];
+    if (locationReceived && userReceiver) {
+        [self performSegueWithIdentifier: @"onLocation" sender: self];
+    }
+
 }
 
 
 - (void)didUpdateLocation
 {
+    locationReceived = YES;
     [self yesLocation];
 }
 
@@ -115,6 +133,17 @@
     [self startToLocate];
 }
 
+- (void)didReceiveUser:(User *)user
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self hideProgress];
+        
+        LocationHelper* helper = [LocationHelper sharedInstance];
+        helper.placeId = user.currentCheckinClubName;
+        userReceiver = YES;
+        [self yesLocation];
+    });
+}
 
 /*
 #pragma mark - Navigation

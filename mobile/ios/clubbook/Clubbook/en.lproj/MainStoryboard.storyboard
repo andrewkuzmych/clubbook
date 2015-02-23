@@ -515,33 +515,16 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3J3-5B-uJ7">
-                                        <rect key="frame" x="0.0" y="40" width="320" height="528"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Kmw-0t-AQB">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="41"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="nGc-WI-PDB"/>
-                                        </constraints>
-                                        <segments>
-                                            <segment title="All (20km)"/>
-                                            <segment title="Following"/>
-                                        </segments>
-                                        <color key="tintColor" red="0.52156862749999999" green="0.0" blue="0.81568627449999997" alpha="1" colorSpace="calibratedRGB"/>
-                                        <connections>
-                                            <action selector="handleSegmentChange:" destination="mQY-UE-y4q" eventType="valueChanged" id="RR5-n5-RZj"/>
-                                        </connections>
-                                    </segmentedControl>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="3J3-5B-uJ7" firstAttribute="leading" secondItem="Bld-vY-fT1" secondAttribute="leading" id="0rH-t4-7es"/>
-                                    <constraint firstItem="Kmw-0t-AQB" firstAttribute="leading" secondItem="Bld-vY-fT1" secondAttribute="leading" id="3TQ-cm-Oab"/>
-                                    <constraint firstItem="3J3-5B-uJ7" firstAttribute="top" secondItem="Kmw-0t-AQB" secondAttribute="bottom" id="CzX-SZ-CF7"/>
                                     <constraint firstAttribute="trailing" secondItem="3J3-5B-uJ7" secondAttribute="trailing" id="aBo-45-MHV"/>
-                                    <constraint firstAttribute="trailing" secondItem="Kmw-0t-AQB" secondAttribute="trailing" id="cWc-Rx-wZg"/>
-                                    <constraint firstItem="Kmw-0t-AQB" firstAttribute="top" secondItem="Bld-vY-fT1" secondAttribute="top" id="fri-VF-o0j"/>
                                     <constraint firstAttribute="bottom" secondItem="3J3-5B-uJ7" secondAttribute="bottom" id="gaB-JZ-RLt"/>
+                                    <constraint firstItem="3J3-5B-uJ7" firstAttribute="top" secondItem="Bld-vY-fT1" secondAttribute="top" id="jpH-Zs-CJS"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -559,7 +542,6 @@
                     </navigationItem>
                     <connections>
                         <outlet property="mainView" destination="3J3-5B-uJ7" id="ETu-ri-nV3"/>
-                        <outlet property="segmentControl" destination="Kmw-0t-AQB" id="vyp-Lm-zxU"/>
                         <outlet property="sidebarButton" destination="ZwG-hc-v0n" id="zKo-uk-fDd"/>
                     </connections>
                 </viewController>
@@ -579,7 +561,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="pNU-Ri-Y1l">
+                            <searchBar contentMode="redraw" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pNU-Ri-Y1l">
                                 <rect key="frame" x="0.0" y="64" width="320" height="44"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
@@ -593,7 +575,7 @@
                                 <color key="textColor" red="0.54551373106060608" green="0.54551373106060608" blue="0.54551373106060608" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vW4-H9-paU" customClass="SPSlideTabView">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vW4-H9-paU" customClass="SPSlideTabView">
                                 <rect key="frame" x="0.0" y="108" width="320" height="460"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>

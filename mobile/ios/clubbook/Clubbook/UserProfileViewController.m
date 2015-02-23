@@ -46,7 +46,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     self.title = NSLocalizedString(@"userProfile", nil);
     
     [self populatedWithData];
@@ -421,7 +421,7 @@
 
 - (void)changeSelectedImage:(UIButton*)button
 {
-    BOOL isCheckinHere = [LocationHelper isCheckinHere:self.currentPlace];
+    BOOL isCheckinHere = [[LocationHelper sharedInstance] isCheckinHere:self.currentPlace];
     User *user = [self.currentPlace.users objectAtIndex:button.tag];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *userId = [defaults objectForKey:@"userId"];

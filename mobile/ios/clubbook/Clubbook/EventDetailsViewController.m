@@ -57,6 +57,10 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.extendedLayoutIncludesOpaqueBars = NO;
     self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    if (self.event.buyTickets == nil) {
+        [self.ticketsButton setEnabled:NO];
+    }
     // Do any additional setup after loading the view.
 }
 

@@ -112,9 +112,9 @@
     CLLocationDistance distance = [[LocationManagerSingleton sharedSingleton].locationManager.location distanceFromLocation:loc];
     self.place.distance = distance;
     int disatanceInt = (int)self.place.distance;
-    self.distanceLabel.text = [LocationHelper convertDistance:disatanceInt];
+    self.distanceLabel.text = [[LocationHelper sharedInstance] convertDistance:disatanceInt];
     
-    isCheckedIn = [LocationHelper isCheckinHere:self.place];
+    isCheckedIn = [[LocationHelper sharedInstance] isCheckinHere:self.place];
     
     self.checkinCount.text = [NSString stringWithFormat:@"%d",self.place.countOfUsers];
     self.friendsCount.text = [NSString stringWithFormat:@"%d",self.place.friendsCount];
@@ -209,7 +209,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    BOOL isCheckinHere = [LocationHelper isCheckinHere:_place];
+    BOOL isCheckinHere = [[LocationHelper sharedInstance] isCheckinHere:_place];
     User *user = _users[indexPath.row];
    
     if (!isCheckinHere && !user.isFriend)
@@ -267,12 +267,12 @@
 - (void) checkinStatus:(BOOL) status {
     isCheckedIn = status;
     if (status) {
-       [LocationHelper addCheckin:_place];
+       [[LocationHelper sharedInstance] addCheckin:_place];
         [self.checkinButton setButtonState:@"stateOff"];
     }
     else {
-        if ([LocationHelper isCheckinHere:self.place]) {
-            [LocationHelper removeCheckin];
+        if ([[LocationHelper sharedInstance] isCheckinHere:self.place]) {
+            [[LocationHelper sharedInstance] removeCheckin];
             [self.checkinButton setButtonState:@"stateOn"];
         }
     }

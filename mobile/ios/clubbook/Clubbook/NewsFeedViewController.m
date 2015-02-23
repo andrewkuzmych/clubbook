@@ -12,6 +12,10 @@
 @implementation NewsFeedViewController
 
 - (void) viewDidLoad {
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    self.extendedLayoutIncludesOpaqueBars = NO;
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
     double user_lat = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.latitude;
     double user_lon = [LocationManagerSingleton sharedSingleton].locationManager.location.coordinate.longitude;
     

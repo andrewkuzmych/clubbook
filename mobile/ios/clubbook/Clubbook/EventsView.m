@@ -40,21 +40,25 @@
         [self.eventsTable initData:userLat userLon:userLon accessToken:accessToken];
         self.eventsTable.eventTypes = eventsType;
         self.eventsTable.sortBy = @"";
+        [self.noDataLabel setText:@"No Events"];
         [self.eventsTable makeInitialLoad];
     }
 }
 
 - (void)tableIsLoading {
+    [self.eventsTable setHidden:YES];
     [self.activityIndicator setHidden:NO];
     [self.noDataLabel setHidden:YES];
 }
 
 - (void) tableIsEmpty {
+    [self.eventsTable setHidden:YES];
     [self.activityIndicator setHidden:YES];
     [self.noDataLabel setHidden:NO];
 }
 
 - (void) tableNotEmpty {
+    [self.eventsTable setHidden:NO];
     [self.activityIndicator setHidden:YES];
     [self.noDataLabel setHidden:YES];
 }
