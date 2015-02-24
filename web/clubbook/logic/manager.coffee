@@ -340,33 +340,25 @@ exports.create_club = (params, callback)->
 
 exports.add_favorite_club = (params, callback)->
   console.log "METHOD - Add favorite clubs"
-  isClub = false
-  query =  [{'$match': {_id : mongoose.Types.ObjectId(params.user_id)}}, {'$unwind': '$favorite_clubs'}]
-  db_model.User.aggregate query, {}, (err, result)-> 
-    for r in result
-      if r.favorite_clubs.toString() == params.club_id.toString()
-        isClub = true
-    if !isClub
-      db_model.User.findById(params.user_id).exec (err, user)->
-        user.favorite_clubs.push params.club_id
-        db_model.save_or_update_user user, (err)-> callback err, user
+  db_model.User.findById(params.user_id).exec (err, user)->
+    the_club = __.find(user.favorite_clubs, (c_res)->
+                  c_res.toString() == params.club_id.toString()
+            )
+    if !the_club
+      user.favorite_clubs.push params.club_id
+      db_model.save_or_update_user user, (err)-> callback err, user
     else
       callback 'club already a favorite', null
 
 exports.remove_favorite_club = (params, callback)->
   console.log "METHOD - Remove favorite clubs"
-  console.log "Params: "
-  console.log params
-  isClub = false
-  query =  [{'$match': {_id : mongoose.Types.ObjectId(params.user_id)}}, {'$unwind': '$favorite_clubs'}]
-  db_model.User.aggregate query, {}, (err, result)-> 
-    for r in result
-      if r.favorite_clubs.toString() == params.club_id.toString()
-        isClub = true
-    if isClub
-      db_model.User.findById(params.user_id).exec (err, user)->
-        user.favorite_clubs.pull params.club_id
-        db_model.save_or_update_user user, (err)-> callback err, user
+  db_model.User.findById(params.user_id).exec (err, user)->
+    the_club = __.find(user.favorite_clubs, (c_res)->
+                c_res.toString() == params.club_id.toString()
+          )
+    if the_club
+      user.favorite_clubs.pull params.club_id
+      db_model.save_or_update_user user, (err)-> callback err, user
     else
       callback 'club not favorite', null
 
@@ -392,7 +384,7 @@ exports.remove_favorite_dj = (params, callback)->
       user.favorite_djs.pull params.club_id
       db_model.save_or_update_user user, (err)-> callback err, user
     else
-      callback 'club not favorite', null
+      callback 'dj not favorite', null
 
 exports.news = (params, callback)->
   console.log "METHOD - News"
