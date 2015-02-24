@@ -108,7 +108,7 @@ block content
 
                       div.fileUpload.btn.btn-default
                         span Add photo
-                        !=cloudinary.uploader.image_upload_tag('image', {html: { class: "upload", tag:"upload_images" }})
+                        !=cloudinary.uploader.image_upload_tag('image', {html: { class: "upload", tag:"upload_images" , multiple:1 }})
                       div#upload_images_progress
                         div.bar(style="width:0%;height:18px;background: green;")
 
