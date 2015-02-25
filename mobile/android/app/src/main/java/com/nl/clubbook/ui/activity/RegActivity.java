@@ -1,6 +1,5 @@
 package com.nl.clubbook.ui.activity;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -17,6 +16,7 @@ import com.nl.clubbook.helper.ImageUploader;
 import com.nl.clubbook.helper.UiHelper;
 import com.nl.clubbook.helper.UserEmailFetcher;
 import com.nl.clubbook.helper.Validator;
+import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.nl.clubbook.utils.ParseUtils;
 
@@ -135,12 +135,18 @@ public class RegActivity extends BaseDateActivity implements View.OnClickListene
                     doRegistration();
                 }
             }
+
+            @Override
+            public void onShowProgress() {
+                //TODO
+            }
         };
     }
 
     private void onAvatarClicked() {
-        final AlertDialog dialog = imageUploader.selectPhoto();
-        dialog.show();
+        L.e("Click ");
+//        final AlertDialog dialog = imageUploader.selectPhoto();
+//        dialog.show();
     }
 
     private void onBtnRegisterClicked() {

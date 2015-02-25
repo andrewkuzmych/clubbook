@@ -13,6 +13,7 @@ import com.nl.clubbook.model.data.Chat;
 import com.nl.clubbook.model.data.ChatMessage;
 import com.nl.clubbook.model.data.User;
 import com.nl.clubbook.helper.ImageHelper;
+import com.nl.clubbook.utils.CircleTransformation;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -157,7 +158,7 @@ public class MessagesAdapter extends BaseAdapter {
         String avatarUrl = receiver.getAvatar();
         if(avatarUrl != null && avatarUrl.length() != 0) {
             String imageUrl = ImageHelper.getUserListAvatar(avatarUrl);
-            Picasso.with(mContext).load(imageUrl).error(R.drawable.ic_avatar_unknown).into(holder.imgAvatar);
+            Picasso.with(mContext).load(imageUrl).transform(new CircleTransformation()).error(R.drawable.ic_avatar_unknown).into(holder.imgAvatar);
         } else {
             holder.imgAvatar.setTag("");
         }

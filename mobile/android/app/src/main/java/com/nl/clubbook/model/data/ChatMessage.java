@@ -14,6 +14,7 @@ public class ChatMessage extends BaseChatMessage {
     private String userFromAvatar;
     private String msg;
     private String type;
+    private String url;
     private Location location;
     private long time;
     private boolean isMyMessage;
@@ -22,15 +23,12 @@ public class ChatMessage extends BaseChatMessage {
     public String getFormatMessage(Context context){
         String result;
 
-        if(Types.TYPE_MESSAGE.equalsIgnoreCase(type)){
+        if(Types.TYPE_MESSAGE.equalsIgnoreCase(type)) {
             result = msg;
-
         } else if(Types.TYPE_SMILE.equalsIgnoreCase(type)) {
             result = userFromName + " " + context.getString(R.string.likes_the_profile);
-
         } else if(Types.TYPE_DRINK.equalsIgnoreCase(type)) {
             result = userFromName + " " + context.getString(R.string.invites_for_a_drink);
-
         } else {
             result = "";
         }
@@ -108,6 +106,14 @@ public class ChatMessage extends BaseChatMessage {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public interface Types {

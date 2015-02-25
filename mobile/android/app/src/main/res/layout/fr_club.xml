@@ -185,7 +185,6 @@
                 android:numColumns="@integer/grid_users_column_count"
                 android:scrollbars="none"/>
 
-
             <include
                 layout="@layout/view_progress_bar"
                 android:layout_height="@dimen/progress_bar_size"

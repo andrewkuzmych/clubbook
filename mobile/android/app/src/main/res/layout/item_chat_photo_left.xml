@@ -10,29 +10,29 @@
     android:paddingBottom="8dp"
     android:background="@android:color/transparent">
 
-    <com.nl.clubbook.ui.view.CircleImageView
+    <ImageView
         android:id="@+id/imgAvatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:scaleType="centerCrop"/>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/ic_chat_bubble_green_left"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp">
+        android:layout_marginLeft="8dp">
 
-        <com.nl.clubbook.ui.view.HelveticaRegularTextView
-            android:id="@+id/txtChatMessage"
-            android:layout_width="wrap_content"
+        <com.nl.clubbook.ui.view.SquareByWidthImageView
+            android:id="@+id/imgPhoto"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size_small"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="8dp"/>
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="6dp"
+            android:background="@android:color/white"
+            android:scaleType="centerCrop"/>
 
         <com.nl.clubbook.ui.view.HelveticaRegularTextView
             android:id="@+id/txtDate"
@@ -43,7 +43,7 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:gravity="center"
-            android:layout_below="@+id/txtChatMessage"
+            android:layout_below="@+id/imgPhoto"
             android:paddingBottom="8dp"/>
 
     </RelativeLayout>

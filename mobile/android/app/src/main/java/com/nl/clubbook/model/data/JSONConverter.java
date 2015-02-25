@@ -355,6 +355,7 @@ public class JSONConverter {
         result.setMsg(jsonChatMessage.optString("msg"));
         result.setType(jsonChatMessage.optString("type"));
         result.setUserFrom(jsonChatMessage.optString("from_who"));
+        result.setUrl(jsonChatMessage.optString("url"));
         result.setRead(jsonChatMessage.optBoolean("read"));
         result.setIsMyMessage(jsonChatMessage.optBoolean("is_my_message"));
         result.setUserFromName(jsonChatMessage.optString("from_who_name"));

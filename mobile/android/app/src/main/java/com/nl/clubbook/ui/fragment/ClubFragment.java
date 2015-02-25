@@ -224,9 +224,10 @@ public class ClubFragment extends BaseInnerFragment implements View.OnClickListe
                     return;
                 }
 
+                view.findViewById(R.id.progressBar).setVisibility(View.GONE);
+
                 if (failed) {
                     showToast(R.string.something_went_wrong_please_try_again);
-                    view.findViewById(R.id.progressBar).setVisibility(View.GONE);
                     view.findViewById(R.id.txtNoUsers).setVisibility(View.VISIBLE);
                     view.findViewById(R.id.gridUsers).setVisibility(View.GONE);
                     return;

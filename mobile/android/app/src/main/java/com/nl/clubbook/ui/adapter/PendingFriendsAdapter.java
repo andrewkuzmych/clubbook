@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.nl.clubbook.R;
 import com.nl.clubbook.model.data.User;
 import com.nl.clubbook.helper.ImageHelper;
+import com.nl.clubbook.utils.CircleTransformation;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -91,7 +92,7 @@ public class PendingFriendsAdapter extends BaseAdapter {
 
         if (user.getAvatar() != null) {
             String imageUrl = ImageHelper.getUserListAvatar(user.getAvatar());
-            Picasso.with(mContext).load(imageUrl).error(R.drawable.ic_avatar_unknown).into(holder.imgAvatar);
+            Picasso.with(mContext).load(imageUrl).transform(new CircleTransformation()).error(R.drawable.ic_avatar_unknown).into(holder.imgAvatar);
         }
 
         holder.imgAccept.setTag(user.getId());

@@ -2,6 +2,7 @@ package com.nl.clubbook.ui.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.nl.clubbook.model.data.ChatMessage;
 import com.nl.clubbook.model.data.Location;
 import com.nl.clubbook.helper.ImageHelper;
 import com.nl.clubbook.utils.CalendarUtils;
+import com.nl.clubbook.utils.CircleTransformation;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -30,13 +32,6 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
     private final SimpleDateFormat mDateMsgWithDay = new SimpleDateFormat("hh:mm aaa, d MMM", Locale.getDefault());
     private final SimpleDateFormat mDateMsgToday = new SimpleDateFormat("hh:mm aaa", Locale.getDefault());
 
-    private static final int TYPE_MESSAGE = 0;
-    private static final int TYPE_DRINK = 1;
-    private static final int TYPE_SMILE = 2;
-    private static final int TYPE_DATE = 3;
-    private static final int TYPE_LOCATION = 4;
-    private static final int TYPE_PHOTO = 5;
-
     private static final int TYPE_COUNT = 6; //date item
 
     private LayoutInflater mInflater;
@@ -49,7 +44,7 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
     private String mToday;
     private String mYesterday;
 
-    private int mLocationImageSize;
+    private int mImageSize;
 
     public ChatAdapter(Context context, int textViewResourceId, List<BaseChatMessage> messages, View.OnClickListener onClickListener) {
         super(context, textViewResourceId);
@@ -65,7 +60,7 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         mToday = context.getString(R.string.today);
         mYesterday = context.getString(R.string.yesterday);
 
-        mLocationImageSize = (int) context.getResources().getDimension(R.dimen.size_location_image);
+        mImageSize = (int) context.getResources().getDimension(R.dimen.size_chat_image);
     }
 
     @Override
@@ -76,24 +71,32 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        BaseChatMessage message = getItem(position);
-        if(message.isDateObject()) {
-            return initDateRow(message);
-        }
+        View row = convertView;
 
-        ChatMessage chatMessage = (ChatMessage)message;
+        BaseChatMessage message = mMessages.get(position);
         int type = getItemViewType(position);
         switch (type) {
-            case TYPE_MESSAGE:
-                return initMessageRow(chatMessage);
-            case TYPE_LOCATION:
-                return initLocationRow(chatMessage);
-            case TYPE_DRINK:
-                return initDrinkRow(chatMessage);
+            case Type.TYPE_DATE:
+                row = initDateRow(row, message);
+                break;
+            case Type.TYPE_MESSAGE:
+                row = initMessageRow((ChatMessage) message);
+                break;
+            case Type.TYPE_LOCATION:
+                row = initLocationRow((ChatMessage) message);
+                break;
+            case Type.TYPE_PHOTO:
+                row = initPhotoRow((ChatMessage) message);
+                break;
+            case Type.TYPE_DRINK:
+                row = initDrinkRow((ChatMessage) message);
+                break;
 
             default:
-                return initMessageRow(chatMessage);
+                row = initMessageRow((ChatMessage) message);
         }
+
+        return row;
     }
 
     @Override
@@ -120,22 +123,22 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
     public int getItemViewType(int position) {
         BaseChatMessage baseMessage = mMessages.get(position);
         if(baseMessage.isDateObject()) {
-            return TYPE_DATE;
+            return Type.TYPE_DATE;
         }
 
         ChatMessage chatMessage = (ChatMessage) baseMessage;
         String type = chatMessage.getType();
 
         if (ChatMessage.Types.TYPE_MESSAGE.equalsIgnoreCase(type)) {
-            return TYPE_MESSAGE;
+            return Type.TYPE_MESSAGE;
         } else if(ChatMessage.Types.TYPE_SMILE.equalsIgnoreCase(type)){
-            return TYPE_SMILE;
+            return Type.TYPE_SMILE;
         } else if(ChatMessage.Types.TYPE_LOCATION.equalsIgnoreCase(type))  {
-            return TYPE_LOCATION;
+            return Type.TYPE_LOCATION;
         } else if(ChatMessage.Types.TYPE_PHOTO.equalsIgnoreCase(type)) {
-            return TYPE_PHOTO;
+            return Type.TYPE_PHOTO;
         } else {
-            return TYPE_DRINK;
+            return Type.TYPE_DRINK;
         }
     }
 
@@ -143,18 +146,21 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         return mMessages;
     }
 
-    private View initDateRow(BaseChatMessage dateMessage) {
-        View row = mInflater.inflate(R.layout.item_date, null);
+    private View initDateRow(View row, BaseChatMessage dateMessage) {
+        DateViewHolder holder;
 
-        TextView txtDate = (TextView) row.findViewById(R.id.txtDate);
-        long messageTime = dateMessage.getTimeWithoutHours();
-        if(messageTime == mCurrentTimeWithoutHours) {
-            txtDate.setText(mToday);
-        } else if(messageTime == mCurrentTimeWithoutHours - mDayTimeInMilliseconds) {
-            txtDate.setText(mYesterday);
+        if(row == null) {
+            row = mInflater.inflate(R.layout.item_date, null);
+            holder = new DateViewHolder();
+
+            holder.txtDate = (TextView) row.findViewById(R.id.txtDate);
+
+            row.setTag(holder);
         } else {
-            txtDate.setText(mFormat.format(messageTime));
+            holder = (DateViewHolder) row.getTag();
         }
+
+        fillDateRow(holder, dateMessage);
 
         return row;
     }
@@ -163,10 +169,12 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         View row;
 
         if(message.getIsMyMessage()) {
-            row = mInflater.inflate(R.layout.item_chat_right, null);
+            row = mInflater.inflate(R.layout.item_chat_message_right, null);
         } else {
-            row = mInflater.inflate(R.layout.item_chat_left, null);
+            row = mInflater.inflate(R.layout.item_chat_message_left, null);
         }
+
+        
 
         fillMsgRow(row, message);
 
@@ -187,6 +195,20 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         return row;
     }
 
+    private View initPhotoRow(ChatMessage message) {
+        View row;
+
+        if(message.getIsMyMessage()) {
+            row = mInflater.inflate(R.layout.item_chat_photo_right, null);
+        } else {
+            row = mInflater.inflate(R.layout.item_chat_photo_left, null);
+        }
+
+        fillPhotoRow(row, message);
+
+        return row;
+    }
+
     private View initDrinkRow(ChatMessage message) {
         View row;
 
@@ -199,6 +221,17 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         fillMsgRow(row, message);
 
         return row;
+    }
+
+    private void fillDateRow(DateViewHolder holder, BaseChatMessage dateMessage) {
+        long messageTime = dateMessage.getTimeWithoutHours();
+        if(messageTime == mCurrentTimeWithoutHours) {
+            holder.txtDate.setText(mToday);
+        } else if(messageTime == mCurrentTimeWithoutHours - mDayTimeInMilliseconds) {
+            holder.txtDate.setText(mYesterday);
+        } else {
+            holder.txtDate.setText(mFormat.format(messageTime));
+        }
     }
 
     private void fillMsgRow(View row, ChatMessage message) {
@@ -216,7 +249,7 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         String avatarString = message.getUserFromAvatar();
         String avatarUrl = ImageHelper.getUserListAvatar(avatarString);
         if(avatarUrl != null && avatarUrl.length() > 0) {
-            Picasso.with(mContext).load(avatarUrl).error(R.drawable.ic_avatar_unknown).into(imgAvatar);
+            Picasso.with(mContext).load(avatarUrl).transform(new CircleTransformation()).error(R.drawable.ic_avatar_unknown).into(imgAvatar);
         }
 
         String msg = message.getMsg();
@@ -246,7 +279,7 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         String avatarString = message.getUserFromAvatar();
         String avatarUrl = ImageHelper.getUserListAvatar(avatarString);
         if(avatarUrl != null && avatarUrl.length() > 0) {
-            Picasso.with(mContext).load(avatarUrl).error(R.drawable.ic_avatar_unknown).into(imgAvatar);
+            Picasso.with(mContext).load(avatarUrl).transform(new CircleTransformation()).error(R.drawable.ic_avatar_unknown).into(imgAvatar);
         }
 
         final Location location = message.getLocation();
@@ -254,11 +287,47 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
             String url = getLocationImageUrl(location);
             Picasso.with(mContext).load(url).into(imgLocation);
 
-            imgLocation.setTag(location);
+//            imgLocation.setTag(location); //TODO
             imgLocation.setOnClickListener(mOnClickListener);
         } else {
-            imgLocation.setTag(null);
+//            imgLocation.setTag(null);
             imgLocation.setOnClickListener(null);
+        }
+
+        if(!message.getIsMyMessage()) {
+            imgAvatar.setOnClickListener(mOnClickListener);
+        } else {
+            imgAvatar.setOnClickListener(null);
+        }
+    }
+
+    private void fillPhotoRow(View row, ChatMessage message) {
+        TextView txtDate = (TextView) row.findViewById(R.id.txtDate);
+        ImageView imgAvatar = (ImageView) row.findViewById(R.id.imgAvatar);
+        ImageView imgPhoto = (ImageView) row.findViewById(R.id.imgPhoto);
+
+        long messageTime = message.getTime();
+        if(messageTime < mCurrentTimeWithoutHours) {
+            txtDate.setText(mDateMsgWithDay.format(messageTime));
+        } else {
+            txtDate.setText(mDateMsgToday.format(messageTime));
+        }
+
+        String avatarString = message.getUserFromAvatar();
+        String avatarUrl = ImageHelper.getUserListAvatar(avatarString);
+        if(avatarUrl != null && avatarUrl.length() > 0) {
+            Picasso.with(mContext).load(avatarUrl).transform(new CircleTransformation()).error(R.drawable.ic_avatar_unknown).into(imgAvatar);
+        }
+
+        String url = message.getUrl();
+        if(!TextUtils.isEmpty(url)) {
+            String generatedUrl = ImageHelper.getChatMessagePhotoUrl(url, mImageSize);
+            Picasso.with(mContext).load(generatedUrl).into(imgPhoto);
+
+            imgPhoto.setOnClickListener(mOnClickListener); //TODO
+        } else {
+            imgPhoto.setImageDrawable(null);
+            imgPhoto.setOnClickListener(null);
         }
 
         if(!message.getIsMyMessage()) {
@@ -272,9 +341,9 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         StringBuilder url = new StringBuilder();
         url.append("https://maps.googleapis.com/maps/api/staticmap?");
         url.append("&size=");
-        url.append(mLocationImageSize);
+        url.append(mImageSize);
         url.append("x");
-        url.append(mLocationImageSize);
+        url.append(mImageSize);
         url.append("&zoom=16&maptype=roadmap");
         url.append("&markers=color:red%7C");
         url.append(location.getLat());
@@ -282,5 +351,18 @@ public class ChatAdapter extends ArrayAdapter<BaseChatMessage> {
         url.append(location.getLon());
 
         return url.toString();
+    }
+
+    private class DateViewHolder {
+        TextView txtDate;
+    }
+
+    private interface Type {
+        public final int TYPE_MESSAGE = 0;
+        public final int TYPE_DRINK = 1;
+        public final int TYPE_SMILE = 2;
+        public final int TYPE_DATE = 3;
+        public final int TYPE_LOCATION = 4;
+        public final int TYPE_PHOTO = 5;
     }
 }

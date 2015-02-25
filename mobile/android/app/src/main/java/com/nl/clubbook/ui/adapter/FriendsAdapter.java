@@ -11,6 +11,7 @@ import com.nl.clubbook.R;
 import com.nl.clubbook.model.data.CheckIn;
 import com.nl.clubbook.model.data.User;
 import com.nl.clubbook.helper.ImageHelper;
+import com.nl.clubbook.utils.CircleTransformation;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -95,7 +96,7 @@ public class FriendsAdapter extends BaseAdapter {
             String imageUrl = ImageHelper.getUserListAvatar(user.getAvatar());
 
             holder.imgUserAvatar.setTag(imageUrl);
-            Picasso.with(mContext).load(imageUrl).error(R.drawable.ic_avatar_unknown).into(holder.imgUserAvatar);
+            Picasso.with(mContext).load(imageUrl).transform(new CircleTransformation()).error(R.drawable.ic_avatar_unknown).into(holder.imgUserAvatar);
         }
 
         CheckIn checkIn = user.getLastCheckIn();

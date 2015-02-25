@@ -19,6 +19,7 @@ import com.nl.clubbook.model.httpclient.HttpClientManager;
 import com.nl.clubbook.model.data.User;
 import com.nl.clubbook.ui.fragment.dialog.ProgressDialog;
 import com.nl.clubbook.helper.ImageHelper;
+import com.nl.clubbook.utils.CircleTransformation;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
@@ -107,7 +108,7 @@ public class FindFriendsAdapter extends BaseAdapter {
         if (user.getAvatar() != null) {
             String imageUrl = ImageHelper.getUserListAvatar(user.getAvatar());
 
-            Picasso.with(mContext).load(imageUrl).error(R.drawable.ic_avatar_unknown).into(holder.imgAvatar);
+            Picasso.with(mContext).load(imageUrl).transform(new CircleTransformation()).error(R.drawable.ic_avatar_unknown).into(holder.imgAvatar);
         }
 
         CheckIn checkIn = user.getLastCheckIn();

@@ -3,6 +3,7 @@ package com.nl.clubbook.helper;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
@@ -10,18 +11,23 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.widget.ArrayAdapter;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cloudinary.Cloudinary;
 import com.nl.clubbook.R;
-import com.nl.clubbook.ui.activity.BaseActivity;
 import com.nl.clubbook.utils.L;
 
 import org.jetbrains.annotations.Nullable;
@@ -37,6 +43,7 @@ import java.util.List;
 
 /**
  * Created by odats on 23/07/2014.
+ * Updated by Volodymyr on 3/02/2015.
  */
 public abstract class ImageUploader {
 
@@ -48,72 +55,21 @@ public abstract class ImageUploader {
     private static final int CROP_FROM_CAMERA = 2;
     private static final int PICK_FROM_FILE = 3;
 
-    private BaseActivity mActivity;
+    private Activity mActivity;
     private ImageIntentData mImageData = new ImageIntentData();
 
-    public Activity getActivity() {
-        return mActivity;
-    }
-
-    public void setActivity(BaseActivity activity) {
-        mActivity = activity;
-    }
-
-    public ImageUploader(BaseActivity activity) {
+    public ImageUploader(Activity activity) {
         mActivity = activity;
         cloudinary = new Cloudinary(mActivity.getApplicationContext());
     }
 
-    public abstract void startActivityForResultHolder(android.content.Intent intent, int requestCode);
+    public abstract void startActivityForResultHolder(Intent intent, int requestCode);
 
     public abstract void onImageSelected(@Nullable Bitmap bitmap);
 
     public abstract void onImageUploaded(@Nullable JSONObject imageObj);
 
-    public boolean isImageSelected() {
-        return mImageData.imgIntent != null;
-    }
-
-    public AlertDialog selectPhoto() {
-        final String[] items = new String[] {
-                mActivity.getString(R.string.take_from_camera),
-                mActivity.getString(R.string.select_from_gallery)
-        };
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mActivity, android.R.layout.select_dialog_item, items);
-        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-
-        builder.setTitle(mActivity.getString(R.string.select_image));
-        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                if (item == 0) {
-                    //pick from camera
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                    mImageCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
-                            "tmp_avatar_" + String.valueOf(System.currentTimeMillis()) + ".jpg"));
-
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
-                    intent.putExtra("return-data", true);
-                    startActivityForResultHolder(intent, PICK_FROM_CAMERA);
-
-                } else {
-                    //pick from gallery
-                    Intent intent = new Intent();
-
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-
-                    startActivityForResultHolder(
-                            Intent.createChooser(intent, mActivity.getString(R.string.complete_action_using)),
-                            PICK_FROM_FILE
-                    );
-                }
-            }
-        });
-
-        return builder.create();
-    }
+    public abstract void onShowProgress();
 
     public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         if (resultCode != Activity.RESULT_OK) {
@@ -135,17 +91,42 @@ public abstract class ImageUploader {
         }
     }
 
+    public void onPickFromCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        mImageCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
+                "tmp_avatar_" + String.valueOf(System.currentTimeMillis()) + ".jpg"));
+
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
+        intent.putExtra("return-data", true);
+        startActivityForResultHolder(intent, PICK_FROM_CAMERA);
+    }
+
+    public void onPickFromGallery() {
+        Intent intent = new Intent();
+
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+
+        startActivityForResultHolder(
+                Intent.createChooser(intent, mActivity.getString(R.string.complete_action_using)),
+                PICK_FROM_FILE
+        );
+    }
+
+    public boolean isImageSelected() {
+        return mImageData.imgIntent != null;
+    }
+
     private void doCrop() {
         final ArrayList<CropOption> cropOptions = new ArrayList<CropOption>();
 
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setType("image/*");
 
-        List<ResolveInfo> list = mActivity.getPackageManager().queryIntentActivities(intent, 0);
+        List<ResolveInfo> listResolvesInfo = mActivity.getPackageManager().queryIntentActivities(intent, 0);
 
-        int size = list.size();
-
-        if (size == 0) {
+        if (listResolvesInfo.isEmpty()) {
             Toast.makeText(mActivity, mActivity.getString(R.string.can_not_find_image_crop_app), Toast.LENGTH_SHORT).show();
         } else {
             intent.setData(mImageCaptureUri);
@@ -157,15 +138,15 @@ public abstract class ImageUploader {
             intent.putExtra("scale", true);
             intent.putExtra("return-data", true);
 
-            if (size == 1) {
+            if (listResolvesInfo.size() == 1) {
                 Intent i = new Intent(intent);
-                ResolveInfo res = list.get(0);
+                ResolveInfo res = listResolvesInfo.get(0);
 
                 i.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
 
                 startActivityForResultHolder(i, CROP_FROM_CAMERA);
             } else {
-                for (ResolveInfo res : list) {
+                for (ResolveInfo res : listResolvesInfo) {
                     final CropOption cropOption = new CropOption();
 
                     cropOption.title = mActivity.getPackageManager().getApplicationLabel(res.activityInfo.applicationInfo);
@@ -199,7 +180,6 @@ public abstract class ImageUploader {
                 });
 
                 AlertDialog alert = builder.create();
-
                 alert.show();
             }
         }
@@ -211,7 +191,7 @@ public abstract class ImageUploader {
             protected void onPreExecute() {
                 super.onPreExecute();
 
-                mActivity.showProgressDialog(mActivity.getString(R.string.upload_new_image));
+                onShowProgress();
             }
 
             @Override
@@ -244,51 +224,50 @@ public abstract class ImageUploader {
 
     private void cropFromCamera(Intent imageReturnedIntent) {
         final Bundle extras = imageReturnedIntent.getExtras();
-
-        if (extras != null) {
-
-            new AsyncTask<Void, Void, JSONObject>() {
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-
-                    mActivity.showProgressDialog(mActivity.getString(R.string.upload_new_image));
-                }
-
-                @Override
-                protected JSONObject doInBackground(Void... params) {
-                    Bitmap photo = extras.getParcelable("data");
-
-                    Bitmap scaled = getResizedBitmap(photo, 800);
-
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                    InputStream is = new ByteArrayInputStream(stream.toByteArray());
-
-                    JSONObject imageObj = null;
-
-                    try {
-                        imageObj = cloudinary.uploader().upload(is, Cloudinary.asMap("width", "1000", "height", "1000", "crop", "limit", "format", "jpg"));
-                    } catch (IOException e) {
-                        L.i("" + e);
-                    }
-
-                    return imageObj;
-                }
-
-                @Override
-                protected void onPostExecute(JSONObject result) {
-                    File f = new File(mImageCaptureUri.getPath());
-
-                    if (f.exists()) {
-                        f.delete();
-                    }
-
-                    onImageUploaded(result);
-                }
-            }.execute();
-
+        if(extras == null) {
+            return;
         }
+
+        new AsyncTask<Void, Void, JSONObject>() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+
+                onShowProgress();
+            }
+
+            @Override
+            protected JSONObject doInBackground(Void... params) {
+                Bitmap photo = extras.getParcelable("data");
+
+                Bitmap scaled = getResizedBitmap(photo, 800);
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                InputStream is = new ByteArrayInputStream(stream.toByteArray());
+
+                JSONObject imageObj = null;
+
+                try {
+                    imageObj = cloudinary.uploader().upload(is, Cloudinary.asMap("width", "1000", "height", "1000", "crop", "limit", "format", "jpg"));
+                } catch (IOException e) {
+                    L.i("" + e);
+                }
+
+                return imageObj;
+            }
+
+            @Override
+            protected void onPostExecute(JSONObject result) {
+                File f = new File(mImageCaptureUri.getPath());
+                if (f.exists()) {
+                    f.delete();
+                }
+
+                onImageUploaded(result);
+            }
+        }.execute();
     }
 
     private Bitmap getResizedBitmap(Bitmap image, int maxSize) {
@@ -309,8 +288,14 @@ public abstract class ImageUploader {
     private void decodeStream(final int requestCode, final Intent data) {
         new AsyncTask<Void, Void, Bitmap>() {
             @Override
-            protected Bitmap doInBackground(Void... params) {
+            protected void onPreExecute() {
+                super.onPreExecute();
 
+                onShowProgress();
+            }
+
+            @Override
+            protected Bitmap doInBackground(Void... params) {
                 if(requestCode == CROP_FROM_CAMERA) {
                     return getBitmapFromCamera(data);
                 } else {
@@ -370,7 +355,6 @@ public abstract class ImageUploader {
     }
 
     private Bitmap decodeSampledBitmapFromFile(String filePath, int reqWidth, int reqHeight) {
-
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -384,22 +368,20 @@ public abstract class ImageUploader {
         return BitmapFactory.decodeFile(filePath, options);
     }
 
-    private int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
 
-        if (height > reqHeight || width > reqWidth) {
+        if(height > reqHeight || width > reqWidth) {
 
             final int halfHeight = height / 2;
             final int halfWidth = width / 2;
 
             // Calculate the largest inSampleSize value that is a power of 2 and keeps both
             // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) > reqHeight
-                    && (halfWidth / inSampleSize) > reqWidth) {
+            while ((halfHeight / inSampleSize) > reqHeight && (halfWidth / inSampleSize) > reqWidth) {
                 inSampleSize *= 2;
             }
         }
@@ -423,8 +405,77 @@ public abstract class ImageUploader {
         return filePath;
     }
 
+    private class CropOptionAdapter extends BaseAdapter {
+        private ArrayList<CropOption> mOptions;
+        private LayoutInflater mInflater;
+
+        public CropOptionAdapter(Context context, ArrayList<CropOption> options) {
+            mOptions = options;
+            mInflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public int getCount() {
+            return mOptions.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mOptions.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup group) {
+            View row = convertView;
+            ViewHolder holder;
+
+            if (row == null) {
+                row = mInflater.inflate(R.layout.item_list_crop_chooser, null);
+                holder = new ViewHolder();
+
+                holder.imgAppIcon = (ImageView) row.findViewById(R.id.imgAppIcon);
+                holder.txtAppName = (TextView) row.findViewById(R.id.txtAppName);
+
+                row.setTag(holder);
+            } else {
+                holder = (ViewHolder) row.getTag();
+            }
+
+
+            CropOption item = mOptions.get(position);
+            fillRow(holder, item);
+
+            return row;
+        }
+
+        private void fillRow(ViewHolder holder, CropOption item) {
+            if(item == null) {
+                return;
+            }
+
+            holder.imgAppIcon.setImageDrawable(item.icon);
+            holder.txtAppName.setText(item.title);
+        }
+
+        private class ViewHolder {
+            ImageView imgAppIcon;
+            TextView txtAppName;
+        }
+    }
+
     private class ImageIntentData {
         int requestCode;
         Intent imgIntent;
+    }
+
+    private class CropOption {
+        public CharSequence title;
+        public Drawable icon;
+        public Intent appIntent;
     }
 }

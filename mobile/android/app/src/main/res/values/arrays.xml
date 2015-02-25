@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string-array name="select_image_dialog_items">
+        <item>@string/take_from_camera</item>
+        <item>@string/select_from_gallery</item>
+    </string-array>
+
     <string-array name="going_ouy_titles">
         <item>@string/all</item>
         <item>@string/clubs</item>

@@ -1,6 +1,8 @@
 package com.nl.clubbook.ui.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nl.clubbook.R;
+import com.nl.clubbook.helper.ImageUploader;
 import com.nl.clubbook.model.ClubbookPreferences;
 import com.nl.clubbook.ui.activity.MainActivity;
 import com.nl.clubbook.ui.adapter.ChatAdapter;
@@ -34,6 +37,9 @@ import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.MapUtils;
 import com.nl.clubbook.utils.NetworkUtils;
 
+import org.jetbrains.annotations.Nullable;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +55,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     private static final String ARG_USER_NAME = "ARG_USER_NAME";
     private static final String ARG_MODE = "ARG_MODE";
 
+    private ImageUploader mImageUploader;
     private ChatAdapter mAdapter;
     private EditText mEditMessage;
     private String mUserToId;
@@ -84,8 +91,9 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         initTarget();
 
         handleArgs();
+        initImageUploader();
         initView();
-        loadConversation();
+        doLoadConversation();
     }
 
     @Override
@@ -102,6 +110,19 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
         ClubbookPreferences session = ClubbookPreferences.getInstance(getActivity());
         session.setConversationListener(null);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == Activity.RESULT_OK) {
+            //TODO add handling result in fragment: show chat item with progress if everything is ok
+            L.e("added image item");
+            addPhotoItem();
+        }
+
+        mImageUploader.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -124,13 +145,13 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View v) { //TODO handle click on photo
         switch (v.getId()) {
             case R.id.txtLike:
-                sendLikeProfileMessage();
+                onSendLikeProfileMessage();
                 break;
             case R.id.txtSend:
-                sendTextMessage();
+                onSendTextMessage();
                 break;
             case R.id.imgShareContent:
                 onShareContentClicked();
@@ -154,7 +175,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                 onChoosePhotoClicked();
                 break;
             case ShareContentDialog.Position.SHARE_LOCATION:
-                sendShareLocationMessage();
+                onShareLocationMessage();
         }
     }
 
@@ -169,6 +190,30 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         String userName = args.getString(ARG_USER_NAME);
 
         initActionBarTitle(userName != null ? userName : "");
+    }
+
+    private void initImageUploader() {
+        mImageUploader = new ImageUploader(getActivity()) {
+            @Override
+            public void startActivityForResultHolder(Intent intent, int requestCode) {
+                startActivityForResult(intent, requestCode); //TODO
+            }
+
+            @Override
+            public void onImageUploaded(JSONObject imageObj) {
+//                addImage(imageObj);  //TODO
+            }
+
+            @Override
+            public void onImageSelected(@Nullable Bitmap bitmap) {
+                uploadImage(); //TODO
+            }
+
+            @Override
+            public void onShowProgress() {
+                //TODO
+            }
+        };
     }
 
     private void initView() {
@@ -186,7 +231,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 if (actionId == EditorInfo.IME_NULL && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-                    sendTextMessage();
+                    onSendTextMessage();
                 }
                 return true;
             }
@@ -212,7 +257,7 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         );
     }
 
-    private void sendMessage(String type, String message, String lat, String lon) {
+    private void doSendMessage(String type, String message, String lat, String lon) {
         if(!NetworkUtils.isOn(getActivity())) {
             showToast(R.string.no_connection);
             return;
@@ -257,66 +302,24 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         }
     }
 
-    private void sendTextMessage() {
+    private void addPhotoItem() {
+
+    }
+
+    private void onSendTextMessage() {
         String message = mEditMessage.getText().toString();
         if(TextUtils.isEmpty(message)) {
             return;
         }
 
-        sendMessage(ChatMessage.Types.TYPE_MESSAGE, message, null, null);
+        doSendMessage(ChatMessage.Types.TYPE_MESSAGE, message, null, null);
     }
 
-    private void sendLikeProfileMessage() {
+    private void onSendLikeProfileMessage() {
         String userName = mChat.getCurrentUser().getName();
         String formatMessage = (userName != null ? userName : "") + " " + getString(R.string.likes_the_profile);
 
-        sendMessage(ChatMessage.Types.TYPE_SMILE, formatMessage, null, null);
-    }
-
-    private void sendShareLocationMessage() {
-        android.location.Location currentLocation = LocationCheckinHelper.getInstance().getCurrentLocation();
-
-        sendMessage(ChatMessage.Types.TYPE_LOCATION, "", "" + currentLocation.getLatitude(), "" + currentLocation.getLongitude());
-    }
-
-    private void onShareContentClicked() {
-        Fragment shareContentDialog = ShareContentDialog.newInstance(ChatFragment.this);
-        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-        fragmentTransaction.add(shareContentDialog, ShareContentDialog.TAG);
-        fragmentTransaction.commitAllowingStateLoss();
-    }
-
-    private boolean isSendingMessagesEnabled() {
-        int maxSendMessagesCountWithoutReply = 3;
-
-        List<BaseChatMessage> messages = mAdapter.getMessages();
-
-        if(messages == null || messages.isEmpty()) {
-            return true;
-        }
-
-        int sendMessagesCount = 0;
-        for(BaseChatMessage baseMessage : messages) {
-            if(baseMessage instanceof ChatMessage) {
-                ChatMessage chatMessage = (ChatMessage) baseMessage;
-
-                if(chatMessage.getIsMyMessage()) {
-                    sendMessagesCount++;
-
-                    if(sendMessagesCount == (maxSendMessagesCountWithoutReply + 1)) {
-                        break;
-                    }
-                } else {
-                    return true;
-                }
-            }
-        }
-
-        if(sendMessagesCount >= maxSendMessagesCountWithoutReply) {
-            return false;
-        } else {
-            return true;
-        }
+        doSendMessage(ChatMessage.Types.TYPE_SMILE, formatMessage, null, null);
     }
 
     private void onUserProfileClicked() {
@@ -344,15 +347,28 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
         MapUtils.showLocationOnGoogleMapApp(getActivity(), location.getLat(), location.getLon());
     }
 
+    private void onShareLocationMessage() {
+        android.location.Location currentLocation = LocationCheckinHelper.getInstance().getCurrentLocation();
+
+        doSendMessage(ChatMessage.Types.TYPE_LOCATION, "", "" + currentLocation.getLatitude(), "" + currentLocation.getLongitude());
+    }
+
+    private void onShareContentClicked() {
+        Fragment shareContentDialog = ShareContentDialog.newInstance(ChatFragment.this);
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.add(shareContentDialog, ShareContentDialog.TAG);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
     private void onTakePhotoClicked() {
-        //TODO
+       mImageUploader.onPickFromCamera();
     }
 
     private void onChoosePhotoClicked() {
-        //TODO
+        mImageUploader.onPickFromGallery();
     }
 
-    private void loadConversation() {
+    private void doLoadConversation() {
         final View view = getView();
         if(view == null) {
             return;
@@ -387,10 +403,12 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
 
                 List<BaseChatMessage> baseChatMessages = getChatsMessages(mChat.getConversation());
 
-                mAdapter = new ChatAdapter(getActivity(), R.layout.item_chat_left, baseChatMessages, ChatFragment.this);
+                mAdapter = new ChatAdapter(getActivity(), R.layout.item_chat_message_left, baseChatMessages, ChatFragment.this);
                 ListView listChat = (ListView) view.findViewById(R.id.listChat);
                 listChat.setAdapter(mAdapter);
                 listChat.setStackFromBottom(true);
+
+                listChat.getLa
 
                 if (baseChatMessages.isEmpty()) {
                     view.findViewById(R.id.txtNoMessages).setVisibility(View.VISIBLE);
@@ -425,6 +443,39 @@ public class ChatFragment extends BaseInnerFragment implements View.OnClickListe
                 setLoading(false);
             }
         });
+    }
+
+    private boolean isSendingMessagesEnabled() {
+        int maxSendMessagesCountWithoutReply = 3;
+
+        List<BaseChatMessage> messages = mAdapter.getMessages();
+
+        if(messages == null || messages.isEmpty()) {
+            return true;
+        }
+
+        int sendMessagesCount = 0;
+        for(BaseChatMessage baseMessage : messages) {
+            if(baseMessage instanceof ChatMessage) {
+                ChatMessage chatMessage = (ChatMessage) baseMessage;
+
+                if(chatMessage.getIsMyMessage()) {
+                    sendMessagesCount++;
+
+                    if(sendMessagesCount == (maxSendMessagesCountWithoutReply + 1)) {
+                        break;
+                    }
+                } else {
+                    return true;
+                }
+            }
+        }
+
+        if(sendMessagesCount >= maxSendMessagesCountWithoutReply) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     //TODO move this operation to background

@@ -1,11 +1,12 @@
 package com.nl.clubbook.ui.activity;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.nl.clubbook.model.data.UserPhoto;
 import com.nl.clubbook.ui.fragment.dialog.MessageDialog;
 import com.nl.clubbook.helper.ImageUploader;
 import com.nl.clubbook.helper.UiHelper;
+import com.nl.clubbook.ui.fragment.dialog.SelectImageDialogFragment;
 import com.nl.clubbook.ui.view.HorizontalListView;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.nl.clubbook.utils.ParseUtils;
@@ -35,13 +37,13 @@ import org.json.JSONObject;
 import java.util.List;
 
 public class EditProfileActivity extends BaseDateActivity implements View.OnClickListener,
-        MessageDialog.MessageDialogListener, AdapterView.OnItemClickListener {
+        MessageDialog.MessageDialogListener, AdapterView.OnItemClickListener, SelectImageDialogFragment.OnPickOptionSelectedListener {
 
     public static final int REQUEST_CODE = 6364;
 
-    private UserPhoto selectedImageDto;
-    private ImageUploader imageUploader;
-    private User profile;
+    private UserPhoto mSelectedImageDto;
+    private ImageUploader mImageUploader;
+    private User mProfile;
     private UserPhotosAdapter mAdapter;
 
     @Override
@@ -60,7 +62,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        imageUploader.onActivityResult(requestCode, resultCode, data);
+        mImageUploader.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -118,6 +120,16 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
     @Override
     public void onNegativeButtonClick(MessageDialog dialogFragment) {
         dialogFragment.dismissAllowingStateLoss();
+    }
+
+    @Override
+    public void onPickFromCamera() {
+        mImageUploader.onPickFromCamera();
+    }
+
+    @Override
+    public void onPickFromGallery() {
+        mImageUploader.onPickFromGallery();
     }
 
     private void initView() {
@@ -204,7 +216,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
     }
 
     private void initImageHelpers() {
-        imageUploader = new ImageUploader(this) {
+        mImageUploader = new ImageUploader(this) {
             @Override
             public void startActivityForResultHolder(Intent intent, int requestCode) {
                 startActivityForResult(intent, requestCode);
@@ -218,6 +230,13 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
             @Override
             public void onImageSelected(@Nullable Bitmap bitmap) {
                 uploadImage();
+            }
+
+            @Override
+            public void onShowProgress() {
+                if(!isProgressShow()) {
+                    showProgressDialog(getString(R.string.upload_new_image));
+                }
             }
         };
     }
@@ -239,6 +258,8 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                     return;
                 }
 
+                findViewById(R.id.progressBar).setVisibility(View.GONE);
+
                 if (failed) {
                     showToast(R.string.something_went_wrong_please_try_again);
                     return;
@@ -246,26 +267,26 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
                 setLoading(false);
 
-                profile = (User) result;
+                mProfile = (User) result;
 
                 // update UI components
                 EditText editBirthDate = (EditText) findViewById(R.id.editBirthDate);
                 EditText editName = (EditText) findViewById(R.id.editName);
                 EditText editAboutMe = (EditText) findViewById(R.id.editAboutMe);
 
-                String birthDate = profile.getBirthday();
+                String birthDate = mProfile.getBirthday();
                 if (birthDate != null && birthDate.length() > 0) {
                     parseBirthDate(birthDate);
 
                     editBirthDate.setText(mDisplayFormat.format(mBirthDate));
                 }
 
-                UiHelper.createGenderSpinner((Spinner) findViewById(R.id.spinGender), EditProfileActivity.this, profile.getGender());
-                UiHelper.createCountrySpinner((Spinner) findViewById(R.id.spinCountry), EditProfileActivity.this, profile.getCountry());
-                editName.setText(profile.getName());
-                editAboutMe.setText(profile.getAboutMe());
+                UiHelper.createGenderSpinner((Spinner) findViewById(R.id.spinGender), EditProfileActivity.this, mProfile.getGender());
+                UiHelper.createCountrySpinner((Spinner) findViewById(R.id.spinCountry), EditProfileActivity.this, mProfile.getCountry());
+                editName.setText(mProfile.getName());
+                editAboutMe.setText(mProfile.getAboutMe());
 
-                drawImageManager(profile.getPhotos());
+                drawImageManager(mProfile.getPhotos());
             }
         });
     }
@@ -288,12 +309,12 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
     }
 
     private void displayImageBigPreview(UserPhoto imageDto) {
-        selectedImageDto = imageDto;
+        mSelectedImageDto = imageDto;
 
         ImageView imgAvatar = (ImageView) findViewById(R.id.imgAvatar);
         Picasso.with(getBaseContext()).load(imageDto.getUrl()).error(R.drawable.ic_avatar_unknown).into(imgAvatar);
 
-        if (selectedImageDto.getIsAvatar()) {
+        if (mSelectedImageDto.getIsAvatar()) {
             findViewById(R.id.txtSetAsDefault).setVisibility(View.GONE);
             findViewById(R.id.txtDeleteImage).setVisibility(View.GONE);
         } else {
@@ -303,10 +324,6 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
     }
 
     private void addImage(JSONObject imageJson) {
-        if(!isProgressShow()) {
-            showProgressDialog(getString(R.string.upload_new_image));
-        }
-
         ClubbookPreferences preferences = ClubbookPreferences.getInstance(getBaseContext());
         String accessToken = preferences.getAccessToken();
         String userId = preferences.getUserId();
@@ -338,7 +355,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         String accessToken = preferences.getAccessToken();
         String userId = preferences.getUserId();
 
-        HttpClientManager.getInstance().profileDeleteImage(EditProfileActivity.this, accessToken, userId, selectedImageDto.getId(), new HttpClientManager.OnResultReady() {
+        HttpClientManager.getInstance().profileDeleteImage(EditProfileActivity.this, accessToken, userId, mSelectedImageDto.getId(), new HttpClientManager.OnResultReady() {
             @Override
             public void onReady(Object result, boolean failed) {
                 hideProgressDialog();
@@ -349,18 +366,18 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
 
                 // remove from small preview
                 if (mAdapter != null) {
-                    mAdapter.removePhoto(selectedImageDto);
+                    mAdapter.removePhoto(mSelectedImageDto);
                 }
 
-                for (UserPhoto userPhoto : profile.getPhotos()) {
+                for (UserPhoto userPhoto : mProfile.getPhotos()) {
                     if (userPhoto.getIsAvatar()) {
-                        selectedImageDto = userPhoto;
+                        mSelectedImageDto = userPhoto;
                         break;
                     }
                 }
 
                 // update big preview
-                displayImageBigPreview(selectedImageDto);
+                displayImageBigPreview(mSelectedImageDto);
             }
         });
     }
@@ -372,7 +389,7 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
         String accessToken = preferences.getAccessToken();
         String userId = preferences.getUserId();
 
-        HttpClientManager.getInstance().profileUpdateImage(accessToken, userId, selectedImageDto.getId(), true, new HttpClientManager.OnResultReady() {
+        HttpClientManager.getInstance().profileUpdateImage(accessToken, userId, mSelectedImageDto.getId(), true, new HttpClientManager.OnResultReady() {
 
             @Override
             public void onReady(Object result, boolean failed) {
@@ -382,11 +399,11 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
                     return;
                 }
 
-                profile = (User) result;
+                mProfile = (User) result;
 
-                drawImageManager(profile.getPhotos());
+                drawImageManager(mProfile.getPhotos());
 
-                String url = selectedImageDto.getUrl();
+                String url = mSelectedImageDto.getUrl();
                 preferences.updateValue(ClubbookPreferences.KEY_AVATAR, url);
 
                 setResult(RESULT_OK);
@@ -405,8 +422,10 @@ public class EditProfileActivity extends BaseDateActivity implements View.OnClic
     }
 
     private void onAddNewPhotoClicked() {
-        AlertDialog dialog = imageUploader.selectPhoto();
-        dialog.show();
+        DialogFragment dialogFragment = new SelectImageDialogFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(dialogFragment, SelectImageDialogFragment.TAG);
+        fragmentTransaction.commitAllowingStateLoss();
     }
 
     private void onBirthDateClicked() {

@@ -54,6 +54,7 @@ import com.nl.clubbook.ui.drawer.NavDrawerData;
 import com.nl.clubbook.ui.drawer.NavDrawerListAdapter;
 import com.nl.clubbook.ui.view.CustomToolBar;
 import com.nl.clubbook.utils.CalendarUtils;
+import com.nl.clubbook.utils.CircleTransformation;
 import com.nl.clubbook.utils.L;
 import com.nl.clubbook.utils.NetworkUtils;
 import com.pubnub.api.Callback;
@@ -357,7 +358,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         String userAvatarUrl = user.get(ClubbookPreferences.KEY_AVATAR);
         if (userAvatarUrl != null) {
             userAvatarUrl = ImageHelper.getUserAvatar(userAvatarUrl);
-            Picasso.with(getBaseContext()).load(userAvatarUrl).error(R.drawable.ic_avatar_unknown).into(imgAvatar);
+            Picasso.with(getBaseContext()).load(userAvatarUrl).transform(new CircleTransformation()).error(R.drawable.ic_avatar_unknown).into(imgAvatar);
         }
 
         String profileName = user.get(ClubbookPreferences.KEY_NAME);

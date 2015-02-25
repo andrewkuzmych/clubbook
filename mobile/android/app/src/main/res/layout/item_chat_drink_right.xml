@@ -38,7 +38,7 @@
             android:paddingTop="4dp"/>
     </RelativeLayout>
 
-    <com.nl.clubbook.ui.view.CircleImageView
+    <ImageView
         android:id="@+id/imgAvatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
